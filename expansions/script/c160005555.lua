@@ -40,9 +40,7 @@ function c160005555.target(e,c)
 	return c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL)
 end
 function c160005555.thcon(e,tp,eg,ep,ev,re,r,rp)
-	local seq=e:GetHandler():GetSequence()
-	local pc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
-	return pc and pc:IsSetCard(0xc50)
+  return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0xc50)
 end
 function c160005555.cfilter(c)
 	return  c:IsType(TYPE_NORMAL)  and c:IsAbleToRemoveAsCost()
