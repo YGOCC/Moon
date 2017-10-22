@@ -1,4 +1,6 @@
 ﻿README.md	c4d3f161e29b95215c70fbb1631dffd0
+start.htm	dfbd1ee66a4e792349591b88660c0956
+web.config	6836f744ebb5ebaf0ba1471f4928c2c4
 expansions/Cards-non QCD.cdb	0a313796aaf313067c01a5ca0817f6c6
 expansions/pics/100000711.jpg	81b491f37683e82f3b88b7514293cabd
 expansions/pics/100000712.jpg	6ec6267eefe20c74a754ea05eb3d50a6
@@ -5453,5 +5455,6 @@ sound/BGM/custom/Oozora Dreamer.mp3	d7d0710b8d47a1c1b62c79b8e1e56a57
 sound/BGM/custom/soku.mp3	5742bbdac0dcba58ea744faddfd7a18a
 sound/BGM/custom/Welcome to Japari Park.mp3	df3f3bcd9e0cafd1dc99f2e6b4439ecf
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/rename.txt	608281bb293011bbd8fb4efa57811178
-update/update-server.bat	425d7061cf8ae3c9ea1c1fddee14770c
+update/filelist.txt	3403553c26db61ae4528f480c453c442
+update/rename.txt	cbfaccc657e73040ec051233017b2c4d
+update/update-server.bat	906682e2c43e33f9f06a058cea7da7bf
