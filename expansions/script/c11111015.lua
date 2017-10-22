@@ -56,7 +56,6 @@ function c11111015.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c11111015.spfilter(c,e,tp,zone)
 	return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK+ATTRIBUTE_EARTH) and c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
-		and (c:IsLevelBelow(7) or c:IsRankBelow(7) or c:GetLink()<=3)
 end
 function c11111015.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local zone=e:GetHandler():GetLinkedZone()
