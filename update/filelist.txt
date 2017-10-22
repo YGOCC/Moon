@@ -1,7 +1,4 @@
-﻿README.md	c4d3f161e29b95215c70fbb1631dffd0
-start.htm	dfbd1ee66a4e792349591b88660c0956
-web.config	6836f744ebb5ebaf0ba1471f4928c2c4
-expansions/Cards-non QCD.cdb	0a313796aaf313067c01a5ca0817f6c6
+﻿expansions/Cards-non QCD.cdb	882f4ca72e8aeee109288048cb86e816
 expansions/pics/100000711.jpg	81b491f37683e82f3b88b7514293cabd
 expansions/pics/100000712.jpg	6ec6267eefe20c74a754ea05eb3d50a6
 expansions/pics/100000713.jpg	dc3e348df3125ce3bf5df18dbfe60ff8
@@ -2352,6 +2349,9 @@ expansions/pics/71473123.jpg	ce3c88f71632432ffda3bcacdc45d671
 expansions/pics/71473124.jpg	66f0a1be7af73dc5f2fb6e1c9af49c69
 expansions/pics/71473125.jpg	2b60f3d6beb86629a55069b605bbd47f
 expansions/pics/78786867.jpg	cfdbe538f30909f4932ecf6511f806ae
+expansions/pics/80347321.jpg	32e52ce229d43018efc8751f53bb6282
+expansions/pics/80347322.jpg	13e0f63d7a1feeb9f6378551c678c716
+expansions/pics/80347323.jpg	06a539db3d95121a5ad4cbf2313bbb26
 expansions/pics/81400264.jpg	f7a094055ef44df3216341ad9d3ba157
 expansions/pics/81400654.jpg	cd30e147d1f7c99023378727ed6f0284
 expansions/pics/81450650.jpg	0e04ff1120cdd833ce8245caaf6d57ea
@@ -2682,15 +2682,6 @@ expansions/pics/99830044.jpg	e0d4fa775f7e12a0414682aaf721b6f0
 expansions/pics/99830045.jpg	1f1dd41eff81d063118ad221f921601f
 expansions/pics/99830046.jpg	bbae32cd23112a42b8c7d49a36bdb991
 expansions/pics/998721301.jpg	281cc31c4a9d8219421cb15758b62674
-expansions/pics/Paintress Amersterdima.jpg	9c9ed2b6a0d6a72ab59ffa2c3a4a7c7a
-expansions/pics/Paintress Bacouzu.jpg	b45b01775cafd4363853f0c6410a6e8f
-expansions/pics/Paintress Cesano.jpg	8932da773ff900463e695eb7b5b4eec7
-expansions/pics/Paintress EX Cubist Picassudu.jpg	15ae239da38d5d07306d62f09d7e30fe
-expansions/pics/Paintress Goghi .jpg	9a9301c154e264b107a1e1f4dcad3fbb
-expansions/pics/Paintress Gorgia .jpg	54ad4bff1f17d780d3779f7490af07ce
-expansions/pics/Paintress Matissa.jpg	f5695a08ca509f12c0a7ccfd696effe7
-expansions/pics/Paintress Rahpaelina.jpg	18fdd176c1c4708ce9db088732ec923e
-expansions/pics/pics here	81051bcc2cf1bedf378224b0a93e2877
 expansions/pics/field/100000736.jpg	9ce2918e1a53f421780a9b1d7af90ed3
 expansions/pics/field/100000761.png	9b554787f677a3d51653ff3b743a1e82
 expansions/pics/field/100000781.png	029c20352e61c46c95c1fdc8ca8480dd
@@ -2731,7 +2722,6 @@ expansions/pics/field/90000038.png	fab099f1576e2da385cbb57b25b55f1a
 expansions/pics/field/90000076.png	8afe36dcd0347707e4683d979e400814
 expansions/pics/field/90000094.png	828c0c2f4599e1be08736e7a7aebd94e
 expansions/pics/field/92219655.jpeg	2d283f55c01a8cbb60bf56a3b321d1c3
-expansions/pics/field/fields here	81051bcc2cf1bedf378224b0a93e2877
 expansions/script/c100000711.lua	7b481ee1f68c38dac1531c432f1802f4
 expansions/script/c100000712.lua	64a41474df4b09976c1a2bcc9995ff17
 expansions/script/c100000713.lua	937a536544b8c5193b52c6a6a021a662
@@ -5117,6 +5107,9 @@ expansions/script/c71473124.lua	3258e6f581979dcf2d7e16dd3ed71a18
 expansions/script/c71473125.lua	72285c4ed127cd2f1650ae9a820f07db
 expansions/script/c77777777.lua	c3e0541ed43ba49c06d18a4bccaf8127
 expansions/script/c78786867.lua	d769d6ef94568afa10fa85f139ef13c7
+expansions/script/c80347321.lua	041211663d035119f96665dc65b53dc0
+expansions/script/c80347322.lua	1118b7af24719c814b11e382442cfdab
+expansions/script/c80347323.lua	489dffc9a780dbac60861752f88c9bf6
 expansions/script/c81400264.lua	a763966addb6bbade7a08c4a9e687c7b
 expansions/script/c81400654.lua	9506151688dfdb4c8fa7c73b788fd226
 expansions/script/c81450650.lua	8e311e5b200ffac52338048b9e0cf850
@@ -5447,7 +5440,6 @@ expansions/script/c99830044.lua	0220d95558e82891bffdd41771bd0687
 expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
-expansions/script/scripts here	81051bcc2cf1bedf378224b0a93e2877
 sound/BGM/custom/Bad Apple.mp3	d311848fb68c40452d5a19b65b35f47d
 sound/BGM/custom/kyoshikyoku.mp3	332ffe2d5144e5d3848f3d43cbf39663
 sound/BGM/custom/My Friend.mp3	86774f3a02f7504aee3a5f543ffcef3c
@@ -5455,6 +5447,6 @@ sound/BGM/custom/Oozora Dreamer.mp3	d7d0710b8d47a1c1b62c79b8e1e56a57
 sound/BGM/custom/soku.mp3	5742bbdac0dcba58ea744faddfd7a18a
 sound/BGM/custom/Welcome to Japari Park.mp3	df3f3bcd9e0cafd1dc99f2e6b4439ecf
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/filelist.txt	3403553c26db61ae4528f480c453c442
+update/filelist.txt	7d98a5a17c7b9de87fb98cd0bdb80867
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/update-server.bat	906682e2c43e33f9f06a058cea7da7bf
+update/version.txt	3694fce9f0978406b4e8116490c3bbd9
