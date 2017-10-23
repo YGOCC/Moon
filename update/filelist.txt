@@ -1,4 +1,4 @@
-﻿expansions/Cards-non QCD.cdb	09d4bd9c11a0ae9b5f8bf12fc671171c
+﻿expansions/Cards-non QCD.cdb	09647242779e3e3be2ffbc5e550c48e0
 expansions/pics/100000711.jpg	81b491f37683e82f3b88b7514293cabd
 expansions/pics/100000712.jpg	6ec6267eefe20c74a754ea05eb3d50a6
 expansions/pics/100000713.jpg	dc3e348df3125ce3bf5df18dbfe60ff8
@@ -837,6 +837,8 @@ expansions/pics/121200148.jpg	37cec0ff6f853df30bd1b9a9d61de6fc
 expansions/pics/121200149.jpg	7974ec982cce7da013adeaea5c6c8b5f
 expansions/pics/121200150.jpg	78baef739784d0cb2acfcfd84c1ca7c5
 expansions/pics/121200151.jpg	cbc81a22ccd0968a6c61dc92a9144c10
+expansions/pics/121214.jpg	81cc51104fff025c83651fe0699d5f5e
+expansions/pics/121215.jpg	b750d8200bc3d337fdab3af277be0d8f
 expansions/pics/123364.jpg	7bd99eb3caa06c21c30487eea3b8ca58
 expansions/pics/123365.jpg	dc55766cb01f3bcd6040668cc539299d
 expansions/pics/123366.jpg	f9e2111fa6148c93231c28a834ef10e4
@@ -866,6 +868,7 @@ expansions/pics/12387.jpg	54ac9b0114e183bfdfc25d110c99a524
 expansions/pics/12388.jpg	2679654052b03a851bf8ac696d0b1d6c
 expansions/pics/12389.jpg	d0dc7887c91b00fea4fc9a7f99df93e0
 expansions/pics/12827544.jpg	40cafd108105a5fb07f807a0914350d2
+expansions/pics/131313.jpg	ff1db29b64c3a9de3540b7457308fcad
 expansions/pics/13300.jpg	da260b779225711c66c58d83d642da3d
 expansions/pics/13301.jpg	4b8d1e7050881e334072ab8eabe80840
 expansions/pics/13302.jpg	e18c9bc0b938973b61db2a83334f5b09
@@ -3601,6 +3604,8 @@ expansions/script/c121200148.lua	06f625bf985ca7b3232233316e6549e3
 expansions/script/c121200149.lua	3ab5a6e7b1e989a2690a90ddb342a81d
 expansions/script/c121200150.lua	3539fda8afdf4b02c05dedaf88f1bb97
 expansions/script/c121200151.lua	e568be6cc4bf09ab1ae6eb762e1b1498
+expansions/script/c121214.lua	7d3fbc191375667142ec403a47e8fd38
+expansions/script/c121215.lua	115006dfc83106627eaf771c954bd687
 expansions/script/c123364.lua	ead52c4a461bb4c585c2f678e86da71d
 expansions/script/c123365.lua	37b464e2c1df52657be383765115de45
 expansions/script/c123366.lua	a6782740dc7d33ec81a1a8925f9c1f64
@@ -3630,6 +3635,7 @@ expansions/script/c12387.lua	a9ce8fe853083174aba896767aea249d
 expansions/script/c12388.lua	a2a2543e1587b9ddf7aac5f99d84ed24
 expansions/script/c12389.lua	040fad40d641938161eae16d873616c1
 expansions/script/c12827544.lua	78521757b6c8ac5274a40d334653e126
+expansions/script/c131313.lua	892733bc9ab2fc6d0b961cc175691a7e
 expansions/script/c13300.lua	ef7868a2d5c876ca135d286318a8d894
 expansions/script/c13301.lua	263847a6b5a68cd451af1781128540dc
 expansions/script/c13302.lua	a656900997ffd6985de5bd7c26ce2b9e
@@ -5479,6 +5485,6 @@ sound/BGM/custom/Oozora Dreamer.mp3	d7d0710b8d47a1c1b62c79b8e1e56a57
 sound/BGM/custom/soku.mp3	5742bbdac0dcba58ea744faddfd7a18a
 sound/BGM/custom/Welcome to Japari Park.mp3	df3f3bcd9e0cafd1dc99f2e6b4439ecf
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/filelist.txt	aa6b29c8ed0d35c3ef290d5c15fcb070
+update/filelist.txt	2f9590299074ec8651ebf5e823f71a8b
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/version.txt	252bfe1f74b8d67b03c96cceed0e120e
+update/version.txt	662aecf8af3a58e92659e735b0c11064
