@@ -1,24 +1,7 @@
 --Red Moon Order - Akali
 function c92219649.initial_effect(c)
-	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x39a),3,true)
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c92219649.splimit)
-	c:RegisterEffect(e1)
-	--special summon rule
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_SPSUMMON_PROC)
-	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(LOCATION_EXTRA)
-	e2:SetCondition(c92219649.sprcon)
-	e2:SetOperation(c92219649.sprop)
-	c:RegisterEffect(e2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x39a),3,3)
 	 --damage reduce
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
@@ -38,28 +21,6 @@ function c92219649.initial_effect(c)
 	e4:SetOperation(c92219649.spop)
 	c:RegisterEffect(e4)
 end
-function c92219649.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
-end
-function c92219649.spfilter(c)
-	return c:IsFusionSetCard(0x39a) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
-end
-function c92219649.sprcon(e,c)
-	if c==nil then return true end 
-	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3
-		and Duel.IsExistingMatchingCard(c92219649.spfilter,tp,LOCATION_MZONE,0,3,nil)
-end
-function c92219649.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c92219649.spfilter,tp,LOCATION_MZONE,0,3,3,nil)
-	local tc=g:GetFirst()
-	while tc do
-		if not tc:IsFaceup() then Duel.ConfirmCards(1-tp,tc) end
-		tc=g:GetNext()
-	end
-	Duel.SendtoGrave(g,nil,3,REASON_COST)
-end
 function c92219649.rdcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and e:GetHandler()==Duel.GetAttacker()
 end
@@ -67,7 +28,7 @@ function c92219649.rdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(ep,ev/2)
 end
 function c92219649.filter(c,e,tp)
-	return c:IsLevelBelow(4) and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(4) and c:IsSetCard(0x39a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c92219649.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c92219649.filter(chkc,e,tp) end

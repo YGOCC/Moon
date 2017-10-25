@@ -73,7 +73,7 @@ function c240100214.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c240100214.sfilter1(c,e,tp)
 	return c:GetLevel()>0 and c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingTarget(c240100214.spfilter2,tp,LOCATION_GRAVE,0,1,c,c:GetLevel(),e,tp)
+		and Duel.IsExistingTarget(c240100214.sfilter2,tp,LOCATION_GRAVE,0,1,c,c:GetLevel(),e,tp)
 end
 function c240100214.sfilter2(c,lv,e,tp)
 	return c:GetLevel()==lv and c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
