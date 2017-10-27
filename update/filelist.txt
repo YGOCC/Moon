@@ -5463,14 +5463,14 @@ expansions/script/c96770214.lua	e0c907e2d6f746dfa04e71f0bf20bcbe
 expansions/script/c96770215.lua	57a94c5583099211af56b577c8bac954
 expansions/script/c96770216.lua	811a7def996842b41755d431dcc11f63
 expansions/script/c96770217.lua	c440194470dd0f2c1ee5fc76be5e86af
-expansions/script/c96770218.lua	144f22c9eea3ad3adb3bc9d63430c227
-expansions/script/c96770219.lua	8f6eeaa4e01342c9f7a76a196d26ab5c
-expansions/script/c96770220.lua	2b99ff9d551b5898316a9d6c8e144fbc
-expansions/script/c96770221.lua	e6acbfea5fdc9eb063ebff04e31dd7cb
-expansions/script/c96770222.lua	848fba9f38679efb32714245da232735
+expansions/script/c96770218.lua	b35d045984b1f69ae43b458f5c9b4d75
+expansions/script/c96770219.lua	f2ae917bfa4985c31132214d819a5e25
+expansions/script/c96770220.lua	e9f23015b492f4a3bada81b391032531
+expansions/script/c96770221.lua	f9bd34a30e0a3616fcbf0841e566c44c
+expansions/script/c96770222.lua	574e5a250cb147d0e5022a899218fda9
 expansions/script/c96770223.lua	964990b85df91ae444b65838a14f3542
 expansions/script/c96770224.lua	7c5d0dabb7693ea5c990f15552c4c4fd
-expansions/script/c96770225.lua	dd2aa18bebda5a69c5d72e002579a881
+expansions/script/c96770225.lua	442270d003a28f9d7ae63aa34c433ce8
 expansions/script/c967899123.lua	944ab631913e818a8317a9fae0c5f034
 expansions/script/c968901272.lua	854c18ac656f3c2774aa272a1e3931dc
 expansions/script/c969832102.lua	a24aae7d07710135bdd7e5d9116c0148
@@ -5544,6 +5544,7 @@ sound/BGM/custom/Oozora Dreamer.mp3	d7d0710b8d47a1c1b62c79b8e1e56a57
 sound/BGM/custom/soku.mp3	5742bbdac0dcba58ea744faddfd7a18a
 sound/BGM/custom/Welcome to Japari Park.mp3	df3f3bcd9e0cafd1dc99f2e6b4439ecf
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/filelist.txt	a7322f3e32df9454a634731ab370f763
+update/filelist.txt	dc2fbbc1c979f496bc53b603664b5f12
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/version.txt	79df656199cbc5d9f23e311873e94929
+update/version.txt	7dcf33691510eda11982adf93a0096f3
+update/version_new.txt	7dcf33691510eda11982adf93a0096f3
