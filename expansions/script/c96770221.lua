@@ -35,15 +35,15 @@ function c96770221.initial_effect(c)
 	e4:SetCode(EFFECT_EXTRA_ATTACK)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
---spsummon
+	--spsummon
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(96770221,2))
 	e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e6:SetCode(EVENT_TO_GRAVE)
 	e6:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e6:SetCondition(c96770221.spcon)
 	e6:SetCountLimit(1,96770221)
+	e6:SetCondition(c96770221.spcon)
 	e6:SetTarget(c96770221.sptg)
 	e6:SetOperation(c96770221.spop)
 	c:RegisterEffect(e6)
@@ -66,11 +66,11 @@ function c96770221.checkop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		tc=eg:GetNext()
 	end
-	if p1 then Duel.RegisterFlagEffect(0,96770221,RESET_PHASE+PHASE_END,0,1) end
-	if p2 then Duel.RegisterFlagEffect(1,96770221,RESET_PHASE+PHASE_END,0,1) end
+	if p1 then Duel.RegisterFlagEffect(0,96770220,RESET_PHASE+PHASE_END,0,1) end
+	if p2 then Duel.RegisterFlagEffect(1,96770220,RESET_PHASE+PHASE_END,0,1) end
 end
 function c96770221.linkfilter(c)
-	return Duel.GetFlagEffect(c:GetControler(),96770221)==0 and c:IsSetCard(0xff7)
+	return Duel.GetFlagEffect(c:GetControler(),96770220)==0 and c:IsSetCard(0xff7)
 end
 function c96770221.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
@@ -122,7 +122,8 @@ function c96770221.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c96770221.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetPreviousLocation()==LOCATION_MZONE and  e:GetHandler():GetSummonType(SUMMON_TYPE_LINK)
+	local c=e:GetHandler()
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_LINK)
 end
 function c96770221.spfilter(c,e,tp)
 	return c:IsSetCard(0xff7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

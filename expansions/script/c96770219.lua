@@ -23,7 +23,7 @@ function c96770219.initial_effect(c)
 	e3:SetCategory(CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCondition(c96770219.condition)
 	e3:SetTarget(c96770219.target)
 	e3:SetOperation(c96770219.operation)
@@ -35,8 +35,8 @@ function c96770219.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_TO_GRAVE)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e5:SetCondition(c96770219.spcon)
 	e5:SetCountLimit(1,96770219)
+	e5:SetCondition(c96770219.spcon)
 	e5:SetTarget(c96770219.sptg)
 	e5:SetOperation(c96770219.spop)
 	c:RegisterEffect(e5)
@@ -59,11 +59,11 @@ function c96770219.checkop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		tc=eg:GetNext()
 	end
-	if p1 then Duel.RegisterFlagEffect(0,96770219,RESET_PHASE+PHASE_END,0,1) end
-	if p2 then Duel.RegisterFlagEffect(1,96770219,RESET_PHASE+PHASE_END,0,1) end
+	if p1 then Duel.RegisterFlagEffect(0,96770220,RESET_PHASE+PHASE_END,0,1) end
+	if p2 then Duel.RegisterFlagEffect(1,96770220,RESET_PHASE+PHASE_END,0,1) end
 end
 function c96770219.linkfilter(c)
-	return Duel.GetFlagEffect(c:GetControler(),96770219)==0 and c:IsSetCard(0xff7)
+	return Duel.GetFlagEffect(c:GetControler(),96770220)==0 and c:IsSetCard(0xff7)
 end
 function c96770219.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
@@ -94,7 +94,7 @@ function c96770219.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
 	if chk==0 then return Duel.IsExistingTarget(c96770219.filter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c96770219.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,c96770219.filter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 end
 function c96770219.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -107,7 +107,8 @@ function c96770219.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c96770219.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetPreviousLocation()==LOCATION_MZONE and  e:GetHandler():GetSummonType(SUMMON_TYPE_LINK)
+	local c=e:GetHandler()
+	return c:GetPreviousLocation()==LOCATION_MZONE and  c:GetSummonType(SUMMON_TYPE_LINK)
 end
 function c96770219.spfilter(c,e,tp)
 	return c:IsSetCard(0xff7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -115,9 +116,9 @@ end
 function c96770219.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c96770219.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c96770218.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(c96770219.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c96770218.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c96770219.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c96770219.spop(e,tp,eg,ep,ev,re,r,rp)

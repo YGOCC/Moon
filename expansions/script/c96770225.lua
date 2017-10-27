@@ -55,25 +55,25 @@ function c96770225.cfilter(c,e,tp)
 	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsSummonType(SUMMON_TYPE_LINK)
 		and Duel.IsExistingTarget(c96770225.filter,tp,LOCATION_GRAVE,0,1,nil)
 end
+function c96770225.filter(c)
+	return c:IsSetCard(0xff7) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
 function c96770225.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(96770225)==0 end
 	e:GetHandler():RegisterFlagEffect(96770225,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
-function c96770225.filter(c)
-	return c:IsSetCard(0xff7) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
-end
 function c96770225.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c96770225.filter(chkc) end
-	if chk==0 then return eg:IsExists(c96770225.cfilter,1,nil,e,tp)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c96770225.filter(chkc) end
+	if chk==0 then return eg:IsExists(c96770225.cfilter,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c96770225.filter,tp,LOCATION_GRAVE,0,1,1,nil,eg:GetFirst():GetLevel(),e,tp)
+	local g=Duel.SelectTarget(tp,c96770225.filter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c96770225.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end
 function c96770225.thcon(e,tp,eg,ep,ev,re,r,rp)

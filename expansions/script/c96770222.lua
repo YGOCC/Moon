@@ -11,7 +11,7 @@ function c96770222.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_LEAVE_FIELD)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1)
@@ -34,7 +34,7 @@ function c96770222.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c96770222.thcfilter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsPreviousSetCard(0xff7)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xff7)
 		and c:GetPreviousControler()==tp
 		and c:IsPreviousLocation(LOCATION_MZONE)
 end
