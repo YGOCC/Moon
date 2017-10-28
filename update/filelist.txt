@@ -1,4 +1,4 @@
-﻿expansions/Cards-non QCD.cdb	ec8f9cfde6aff88f82ba2d58020d8137
+﻿expansions/Cards-non QCD.cdb	56723d0849aec638a1ffc8a96a52ea45
 expansions/pics/100000711.jpg	81b491f37683e82f3b88b7514293cabd
 expansions/pics/100000712.jpg	6ec6267eefe20c74a754ea05eb3d50a6
 expansions/pics/100000713.jpg	dc3e348df3125ce3bf5df18dbfe60ff8
@@ -4032,14 +4032,19 @@ expansions/script/c240100113.lua	28394c27a18976212d23e60095283079
 expansions/script/c240100188.lua	f7fc384f06328220854fac581ed7e537
 expansions/script/c240100189.lua	42f85fb534a942bbd8e127291f0bb187
 expansions/script/c240100190.lua	8b73b7997a77e1b0de916a2b389e3f4a
+expansions/script/c240100191.lua	db2ecfb6214ea329beca42f4a6c16d98
+expansions/script/c240100192.lua	7f9d7b9166601d8ec6bb1c3dd5e1826d
 expansions/script/c240100214.lua	34f63f9694b51878eb8552ee82a9c896
 expansions/script/c240100222.lua	187c0682372f8e492b5eee49c6982ceb
 expansions/script/c240100223.lua	487abe991890d501fd9eb2e4996c6abd
 expansions/script/c240100230.lua	ef3fdb5700b4a5a1f6c4c0ab53e9ee27
 expansions/script/c240100254.lua	44c53482ab0b2e8456c2787efbb1d459
 expansions/script/c240100255.lua	2f6985424a31642f0c7c555f7b7ea330
+expansions/script/c240100256.lua	2a90dab5075f173145f574819af57b44
+expansions/script/c240100257.lua	3eca0c0c36a47d974cca2260ebefad5f
+expansions/script/c240100258.lua	a8402f757e1bee8b09b6ed8c650997ae
 expansions/script/c240100301.lua	5ca490e85d0262dcbf7549da4eacc441
-expansions/script/c240100348.lua	3482b04ff494d26323818fdd2c314bee
+expansions/script/c240100348.lua	399e551f75fdfbb684ee4684bfcc7a31
 expansions/script/c240100349.lua	a1c2d15d2e3f2d9af479bbabe461defb
 expansions/script/c240100350.lua	a1a233129269b5199f8b21cd818e902f
 expansions/script/c240100364.lua	008394f820b4619699d6a9b98a4791cf
@@ -5647,7 +5652,7 @@ sound/BGM/custom/Oozora Dreamer.mp3	d7d0710b8d47a1c1b62c79b8e1e56a57
 sound/BGM/custom/soku.mp3	5742bbdac0dcba58ea744faddfd7a18a
 sound/BGM/custom/Welcome to Japari Park.mp3	df3f3bcd9e0cafd1dc99f2e6b4439ecf
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/filelist.txt	0d78b89cfa00da92bb498a58eea1e0b5
+update/filelist.txt	98791ab6a35e35617ef2307f999f043b
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/version.txt	c555106839e1423accfc8aa2d67e7a80
+update/version.txt	0bdeec457a35b6979f882a21be65d9f3
 update/version_new.txt	7dcf33691510eda11982adf93a0096f3
