@@ -1,4 +1,7 @@
-﻿expansions/Cards-non QCD.cdb	12416e38d19649c286a882818cb1f6cd
+﻿README.md	c4d3f161e29b95215c70fbb1631dffd0
+start.htm	dfbd1ee66a4e792349591b88660c0956
+web.config	a9adb4b5585a7df1ee682584ffc246b5
+expansions/Cards-non QCD.cdb	12416e38d19649c286a882818cb1f6cd
 expansions/pics/100000711.jpg	81b491f37683e82f3b88b7514293cabd
 expansions/pics/100000712.jpg	6ec6267eefe20c74a754ea05eb3d50a6
 expansions/pics/100000713.jpg	dc3e348df3125ce3bf5df18dbfe60ff8
@@ -4616,28 +4619,28 @@ expansions/script/c35697499.lua	d430692b3a79810fe9a451f8bf4f409e
 expansions/script/c35697500.lua	4eadddc73591a7aeba9d3d5b4ee00cae
 expansions/script/c35697501.lua	cb040af8b3efe0f8cd9cce2d77340d47
 expansions/script/c37564552.lua	e3f088c69d3f4534803b202b297f595f
-expansions/script/c37564765.lua	35065640370ffe56f614045fc64adf37
-expansions/script/c37564901.lua	42cdb9392b12fa330cebefed8237cf58
-expansions/script/c37564902.lua	005e47285160a23c36e4379247f2c5c9
-expansions/script/c37564903.lua	2e222e17162fd984e081bc2e347fbc4b
+expansions/script/c37564765.lua	cb399592af9f3036e6c9621828c84357
+expansions/script/c37564901.lua	d1829ad0b5ab4bc41b6773b3068d38de
+expansions/script/c37564902.lua	ab44ca7a7d37da0b784467cb960440d6
+expansions/script/c37564903.lua	092a4c3acf325f07925a4a0d45ab4e0b
 expansions/script/c37564904.lua	a8a4699e7ed2c499705636da180d3a09
-expansions/script/c37564905.lua	8beb284f4a80e519a7686dfe1babab1b
-expansions/script/c37564906.lua	49f6da71fdab0024b674a6fe26a5221a
+expansions/script/c37564905.lua	b5b92d117f0fa98cbf132db5456f05c2
+expansions/script/c37564906.lua	80b53564736982fbde653d004287775b
 expansions/script/c37564907.lua	8bd2a7000f67da4341b140732fb80190
-expansions/script/c37564908.lua	d837c6f79c8534327d19ed62d71d5bc3
+expansions/script/c37564908.lua	5dc3c54441c04147b6e79f1356cbbf3a
 expansions/script/c37564909.lua	8ad85de5b0c13311cb512e5305ae303f
-expansions/script/c37564910.lua	30e5b06c0f3d90fb992e344ed7e7fd1c
+expansions/script/c37564910.lua	31bec657d469d44a6428d0911eda5e16
 expansions/script/c37564911.lua	9adeef5430eaa01fe2eaf72cf64e99ac
 expansions/script/c37564912.lua	21de6b5b5a5f4d0844e7da5a08b103db
-expansions/script/c37564913.lua	603848478d018037750488aac3edd1b7
+expansions/script/c37564913.lua	39582c34eccb60b2b8641fa0f318f615
 expansions/script/c37564914.lua	557c252200d8076a45d775d7524d2f5f
-expansions/script/c37564915.lua	34201c0c7007c8c6f9f7cc6f77ccaecc
-expansions/script/c37564916.lua	025e4615390e62df4f4b1db3db694297
+expansions/script/c37564915.lua	16b62bba12f82210f5de40fbb191936c
+expansions/script/c37564916.lua	3ee9487aa8130a514d16654025628b87
 expansions/script/c37564917.lua	8acc1a93154986ab24a5438182eee8c8
-expansions/script/c37564918.lua	62bb11028875d130f6488794ea509641
+expansions/script/c37564918.lua	db876b262c0429e75dd8bf231193009c
 expansions/script/c37564919.lua	938ec11473f651e90b465f0944742c71
 expansions/script/c37564920.lua	490fdd1cc58fe637df0c67d140656457
-expansions/script/c37564921.lua	7b080ddc7f8df09a6f98025896533bb2
+expansions/script/c37564921.lua	d24dccc72633373f9b55798c75132f53
 expansions/script/c388.lua	6ca2173c4b2965c60e454f7d7792b9d6
 expansions/script/c39201.lua	866af58e7a32659ec7fb5e29905d5190
 expansions/script/c39202.lua	6e42de5bc49b7f6ca125e68662cd4bc0
@@ -5544,7 +5547,8 @@ sound/BGM/custom/Oozora Dreamer.mp3	d7d0710b8d47a1c1b62c79b8e1e56a57
 sound/BGM/custom/soku.mp3	5742bbdac0dcba58ea744faddfd7a18a
 sound/BGM/custom/Welcome to Japari Park.mp3	df3f3bcd9e0cafd1dc99f2e6b4439ecf
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/filelist.txt	dc2fbbc1c979f496bc53b603664b5f12
+update/filelist.txt	9d6c618a736f8dd2f985aa97c75d6d82
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/version.txt	7dcf33691510eda11982adf93a0096f3
+update/update-server.bat	906682e2c43e33f9f06a058cea7da7bf
+update/version.txt	b5fd49dad6f5bac04e44c68a36dea63e
 update/version_new.txt	7dcf33691510eda11982adf93a0096f3
