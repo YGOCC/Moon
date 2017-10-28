@@ -1,0 +1,106 @@
+--Mantra Mantis
+--Automate ID
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local scard=_G[str]
+	local s_id=tonumber(string.sub(str,2))
+	return scard,s_id
+end
+
+local scard,s_id=getID()
+
+function scard.initial_effect(c)
+	--Activate(summon)
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DISABLE_SUMMON+CATEGORY_DESTROY)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_SUMMON)
+	e1:SetCondition(scard.condition1)
+	e1:SetCost(scard.cost1)
+	e1:SetTarget(scard.target1)
+	e1:SetOperation(scard.activate1)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1,s_id+EFFECT_COUNT_CODE_OATH)
+	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_FLIP_SUMMON)
+	c:RegisterEffect(e2)
+	local e3=e1:Clone()
+	e3:SetCode(EVENT_SPSUMMON)
+	c:RegisterEffect(e3)
+	--Activate(effect)
+	local e4=Effect.CreateEffect(c)
+	e4:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
+	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetCode(EVENT_CHAINING)
+	e4:SetCondition(scard.condition2)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCost(scard.cost2)
+	e4:SetTarget(scard.target2)
+	e4:SetOperation(scard.activate2)
+	e4:SetCountLimit(1,s_id+EFFECT_COUNT_CODE_OATH)
+	c:RegisterEffect(e4)
+	if not scard.global_check then
+		scard.global_check=true
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetCode(EVENT_ADJUST)
+		ge2:SetCountLimit(1)
+		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge2:SetOperation(scard.archchk)
+		Duel.RegisterEffect(ge2,0)
+	end
+end
+function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(0,30000)==0 then 
+		Duel.CreateToken(tp,30000)
+		Duel.CreateToken(1-tp,30000)
+		Duel.RegisterFlagEffect(0,30000,0,0,0)
+	end
+end
+function scard.condition1(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0
+end
+function scard.cfilter1(c)
+	return c:IsMantra() and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+end
+function scard.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(scard.cfilter1,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,scard.cfilter1,1,1,REASON_COST)
+end
+function scard.target1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE_SUMMON,eg,eg:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,eg:GetCount(),0,0)
+end
+function scard.activate1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.NegateSummon(eg)
+	Duel.Destroy(eg,REASON_EFFECT)
+end
+function scard.condition2(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsChainNegatable(ev) then return false end
+	if re:IsActiveType(TYPE_MONSTER) and re:IsHasType(EFFECT_TYPE_ACTIVATE) then return true end
+	return re:IsHasCategory(CATEGORY_SPECIAL_SUMMON)
+end
+function scard.cfilter2(c)
+	return c:IsMantra() and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+end
+function scard.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(scard.cfilter2,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,scard.cfilter2,1,1,REASON_COST)
+end
+function scard.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+	end
+end
+function scard.activate2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.NegateActivation(ev)
+	if re:GetHandler():IsRelateToEffect(re) then
+		Duel.Destroy(eg,REASON_EFFECT)
+	end
+end
