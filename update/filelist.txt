@@ -5652,7 +5652,7 @@ sound/BGM/custom/Oozora Dreamer.mp3	d7d0710b8d47a1c1b62c79b8e1e56a57
 sound/BGM/custom/soku.mp3	5742bbdac0dcba58ea744faddfd7a18a
 sound/BGM/custom/Welcome to Japari Park.mp3	df3f3bcd9e0cafd1dc99f2e6b4439ecf
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/filelist.txt	98791ab6a35e35617ef2307f999f043b
+update/filelist.txt	33e3b14b3ff278e8cd9def04d3d8d55f
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/version.txt	0bdeec457a35b6979f882a21be65d9f3
+update/version.txt	0bbff0c359af3100d691dac39b55ef02
 update/version_new.txt	7dcf33691510eda11982adf93a0096f3
