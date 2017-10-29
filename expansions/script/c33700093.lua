@@ -1,4 +1,5 @@
 --动物朋友 土狼
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function c33700093.initial_effect(c)
 	   --tohand
 	local e1=Effect.CreateEffect(c)
@@ -35,6 +36,7 @@ function c33700093.thfilter(c)
 end
 function c33700093.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c33700093.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.Hint(12,0,aux.Stringid(33700093,0))
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c33700093.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -49,7 +51,7 @@ end
 function c33700093.spcon(e,c)
 	if c==nil then return true end
 	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0
-		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.GetMZoneCount(c:GetControler())>0
 end
 function c33700093.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

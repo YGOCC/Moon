@@ -74,10 +74,10 @@ function c33700072.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmDecktop(tp,5)
 	local g=Duel.GetDecktopGroup(tp,5)
 	if g:GetCount()>0 then
-	 if g:GetClassCount(Card.GetCode)==g:GetCount() then
+	 if g:GetClassCount(Card.GetCode)==g:GetCount() and g then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local sg=g:FilterSelect(tp,Card.IsType,1,1,nil,TYPE_MONSTER)
-		if sg:GetFirst():IsAbleToRemove() then
+		if sg:GetCount()>0 and sg:GetFirst():IsAbleToRemove() then
 			Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 			sg:GetFirst():RegisterFlagEffect(33700072,RESET_EVENT+RESET_TOGRAVE+RESET_TOHAND+RESET_TODECK+RESET_TOFIELD,0,1)
 			Duel.ShuffleHand(tp)
@@ -88,7 +88,7 @@ function c33700072.op(e,tp,eg,ep,ev,re,r,rp)
    end
 end
 	 Duel.BreakEffect()
-	 local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	 local ft=Duel.GetMZoneCount(tp)
 	if ft>0 and Duel.IsExistingMatchingCard(c33700072.spfilter,tp,LOCATION_REMOVED,0,1,nil,e,tp) and e:GetHandler():IsAbleToGrave() and Duel.SelectYesNo(tp,aux.Stringid(33700072,0)) then
 	 Duel.SendtoGrave(e:GetHandler(),REASON_EFFECT)
 	 if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end 

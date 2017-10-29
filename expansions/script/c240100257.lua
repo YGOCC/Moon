@@ -23,7 +23,7 @@ function c240100257.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetOperation(c240100257.regop)
 	c:RegisterEffect(e2)
-	--If this card is destroyed: You can target 1 Attack Position monster your opponent controls; change its battle position. A "Swordsmaster" Xyz Monster must be in your GY to activate and to resolve this effect. Gains this effect, while it has a "Swordsmaster" Xyz Monster as an Xyz Material. If another "Swordsmaster" monster you control is destroyed: You can target 1 Attack Position monster your opponent controls; change its battle position.
+	--If this card is destroyed: You can target 1 Attack Position monster your opponent controls; change its battle position. A "Swordsmaster" Xyz Monster must be in your GY to activate and to resolve this effect. Gains this effect, while it has a "Swordsmaster" monster as an Xyz Material. If another "Swordsmaster" monster you control is destroyed: You can detach 1 material from this card, then target 1 Attack Position monster your opponent controls; change its battle position.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)

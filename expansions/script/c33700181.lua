@@ -3,6 +3,7 @@ local m=33700181
 local cm=_G["c"..m]
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function cm.initial_effect(c)
+	Senya.AddSummonSE(c,aux.Stringid(m,1))
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -60,13 +61,14 @@ function cm.filter(c,e,tp)
 	return c:IsCode(33700055) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetMZoneCount(tp)>0
 		and Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.Hint(12,0,aux.Stringid(m,2))
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if Duel.GetMZoneCount(tp)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 and c:IsRelateToEffect(e) and c:IsAbleToHand() and Duel.SelectYesNo(tp,m*16) then

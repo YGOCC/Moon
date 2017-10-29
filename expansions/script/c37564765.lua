@@ -9,7 +9,38 @@ aux.BeginPuzzle=aux.TRUE
 cm.delay=0x14000
 cm.fix=0x40400
 cm.m=37564765
-
+--supporting mr3
+if not Duel.GetLocationCountFromEx then
+	cm.master_rule_3_flag=true
+	Card.IsSynchroType=Card.IsFusionType
+	Card.IsXyzType=Card.IsFusionType
+	Card.IsLinkType=Card.IsFusionType
+	Duel.FilterPlayerEffect=Duel.IsPlayerAffectedByEffect
+	TYPE_LINK=bit.lshift(TYPE_SPSUMMON,1)
+	SUMMON_TYPE_LINK=0x4c000000
+	EFFECT_CANNOT_BE_LINK_MATERIAL=0
+	function Duel.GetLocationCountFromEx(tp,p,sg,c)		
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		if sg then ft=ft+sg:FilterCount(aux.FConditionCheckF,nil,tp) end
+		return ft
+	end
+	function Duel.GetUsableMZoneCount(tp)
+		return Duel.GetLocationCount(tp,LOCATION_MZONE)
+	end
+	local pz=LOCATION_PZONE
+	LOCATION_PZONE=LOCATION_SZONE
+	local effect_set_range=Effect.SetRange
+	function Effect.SetRange(e,r)
+		local r=r
+		if e:GetOwner():IsType(TYPE_PENDULUM) and r==LOCATION_SZONE then
+			r=pz
+		end
+		return effect_set_range(e,r)
+	end
+	function Card.IsSummonType(c,t)
+		return bit.band(c:GetSummonType(),t)==t
+	end
+end
 function cm.DescriptionInNanahira(id)
 	id=id or 0
 	return 37564765*16+id
@@ -144,98 +175,51 @@ function cm.CheckGroup(g,f,cg,min,max,...)
 	if ct>=min and ct<max and f(sg,...) then return true end
 	return g:IsExists(cm.CheckGroupRecursive,1,sg,sg,g,f,min,max,ext_params)
 end
-if Group.SelectUnselect then
-	function cm.SelectGroup(tp,desc,g,f,cg,min,max,...)
-		local min=min or 1
-		local max=max or g:GetCount()
-		local ext_params={...}
-		local sg=Group.CreateGroup()
-		local cg=cg or Group.CreateGroup()
+--if Group.SelectUnselect then
+function cm.SelectGroup(tp,desc,g,f,cg,min,max,...)
+	local min=min or 1
+	local max=max or g:GetCount()
+	local ext_params={...}
+	local sg=Group.CreateGroup()
+	if cg then
 		sg:Merge(cg)
-		local ct=sg:GetCount()
-		local ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)	
-		while ct<max and ag:GetCount()>0 do
-			local finish=(ct>=min and f(sg,...))
-			local seg=sg:Clone()
-			local dmin=min-cg:GetCount()
-			local dmax=math.min(max-cg:GetCount(),g:GetCount())
-			seg:Sub(cg)
-			Duel.Hint(HINT_SELECTMSG,tp,desc)
-			local tc=ag:SelectUnselect(seg,tp,finish,finish,dmin,dmax)
-			if not tc then break end
-			if sg:IsContains(tc) then
-				sg:RemoveCard(tc)
-			else
-				sg:AddCard(tc)
-			end
-			ct=sg:GetCount()
-			ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)
-		end
-		return sg
 	end
-	function cm.SelectGroupWithCancel(tp,desc,g,f,cg,min,max,...)
-		local min=min or 1
-		local max=max or g:GetCount()
-		local ext_params={...}
-		local sg=Group.CreateGroup()
-		local cg=cg or Group.CreateGroup()
-		sg:Merge(cg)
-		local ct=sg:GetCount()
-		local ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)	
-		while ct<max and ag:GetCount()>0 do
-			local finish=(ct>=min and f(sg,...))
-			local cancel=finish or ct==0
-			local seg=sg:Clone()
-			local dmin=min-cg:GetCount()
-			local dmax=math.min(max-cg:GetCount(),g:GetCount())
-			seg:Sub(cg)
-			Duel.Hint(HINT_SELECTMSG,tp,desc)
-			local tc=ag:SelectUnselect(seg,tp,finish,cancel,dmin,dmax)
-			if not tc then
-				if not finish then return end
-				break
-			end
-			if sg:IsContains(tc) then
-				sg:RemoveCard(tc)
-			else
-				sg:AddCard(tc)
-			end
-			ct=sg:GetCount()
-			ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)
+	local ct=sg:GetCount()
+	local ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)	
+	while ct<max and ag:GetCount()>0 do
+		local minc=1
+		local finish=(ct>=min and f(sg,...))
+		if finish then
+			minc=0
+			if cm.master_rule_3_flag and not Duel.SelectYesNo(tp,210) then break end
 		end
-		return sg
+		Duel.Hint(HINT_SELECTMSG,tp,desc)
+		local tg=ag:Select(tp,minc,1,nil)
+		if tg:GetCount()==0 then break end
+		sg:Merge(tg)
+		ct=sg:GetCount()
+		ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)
 	end
-else
-	function cm.SelectGroup(tp,desc,g,f,cg,min,max,...)
-		local min=min or 1
-		local max=max or g:GetCount()
-		local ext_params={...}
-		local sg=Group.CreateGroup()
-		if cg then
-			sg:Merge(cg)
-		end
-		local ct=sg:GetCount()
-		local ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)	
-		while ct<max and ag:GetCount()>0 do
-			local minc=1
-			local finish=(ct>=min and f(sg,...))
-			if finish then
-				minc=0
-				if cm.master_rule_3_flag and not Duel.SelectYesNo(tp,210) then break end
-			end
-			Duel.Hint(HINT_SELECTMSG,tp,desc)
-			local tg=ag:Select(tp,minc,1,nil)
-			if tg:GetCount()==0 then break end
-			sg:Merge(tg)
-			ct=sg:GetCount()
-			ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)
-		end
-		return sg
-	end
-	function cm.SelectGroupWithCancel(tp,desc,g,f,cg,min,max,...)
-		return cm.SelectGroup(tp,desc,g,f,cg,min,max,...)
-	end
+	return sg
 end
+--else
+--[[function cm.SelectGroup(tp,desc,g,f,cg,min,max,...)
+	local min=min or 1
+	local max=max or g:GetCount()
+	local ext_params={...}
+	local sg=Group.CreateGroup()
+	if cg then sg:Merge(cg) end
+	local ct=sg:GetCount()
+	while ct<max and not (ct>=min and f(sg,...) and not (g:IsExists(cm.CheckGroupRecursive,1,sg,sg,g,f,min,max,ext_params) and Duel.SelectYesNo(tp,210))) do
+		Duel.Hint(HINT_SELECTMSG,tp,desc)
+		local tg=g:FilterSelect(tp,cm.CheckGroupRecursive,1,1,sg,sg,g,f,min,max,ext_params)
+		if tg:GetCount()==0 then error("Incorrect Group Filter",2) end
+		sg:Merge(tg)
+		ct=sg:GetCount()
+	end
+	return sg
+end]]
+--end
 
 --updated overlay
 function cm.OverlayCard(c,tc,xm,nchk)
@@ -276,25 +260,80 @@ function cm.OverlayGroup(c,g,xm,nchk)
 	end
 	Duel.Overlay(c,tg)
 end
-function cm.CheckFieldFilter(g,tp,c,f,...)
-	if c:IsLocation(LOCATION_EXTRA) then
-		return Duel.GetLocationCountFromEx(tp,tp,g,c)>0 and (not f or f(g,...))
-	else
-		return Duel.GetMZoneCount(tp,g,tp)>0 and (not f or f(g,...))
-	end
-end
 --xyz summon of prim
 function cm.AddXyzProcedureRank(c,rk,f,minct,maxct,xm,...)
 	local ext_params={...}
-	return cm.AddXyzProcedureCustom(c,cm.XyzProcedureRankFilter(rk,f,ext_params),cm.XyzProcedureRankCheck,minct,maxct,xm)
+	c:EnableReviveLimit()
+	local e1=Effect.CreateEffect(c)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetRange(LOCATION_EXTRA)
+	e1:SetCondition(cm.XyzProcedureRankCondition(rk,f,minct,maxct,ext_params))
+	e1:SetOperation(cm.XyzProcedureRankOperation(rk,f,minct,maxct,xm,ext_params))
+	e1:SetValue(SUMMON_TYPE_XYZ)
+	c:RegisterEffect(e1)
+	return e1
 end
-function cm.XyzProcedureRankFilter(rk,f,ext_params)
-return function(c,xyzc)
-	return c:IsXyzType(TYPE_XYZ) and (not rk or c:GetRank()==rk) and (not f or f(c,xyzc,table.unpack(ext_params)))
+function cm.XyzProcedureRankFilter(c,xyzc,rk,f,ext_params)
+	return c:IsFaceup() and c:IsXyzType(TYPE_XYZ) and c:IsCanBeXyzMaterial(xyzc) and (not rk or c:GetRank()==rk) and (not f or f(c,xyzc,table.unpack(ext_params)))
+end
+function cm.XyzProcedureRankFirst(c,tp,g,xyzc,minc,maxc)
+	local tg=g:Filter(cm.XyzProcedureRankCheck,c,c:GetRank())
+	return cm.CheckGroup(tg,cm.CheckFieldFilter,Group.FromCards(c),minc,maxc,tp,xyzc)
+end
+function cm.XyzProcedureRankCheck(c,rk)
+	return c:GetRank()==rk
+end
+function cm.CheckFieldFilter(g,tp,c,f,...)
+	return Duel.GetLocationCountFromEx(tp,tp,g,c)>0 and (not f or f(g,...))
+end
+function cm.XyzProcedureRankCondition(rk,f,minct,maxct,ext_params)
+return function(e,c,og,min,max)
+	if c==nil then return true end
+	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+	local tp=c:GetControler()
+	local minc=minct or 2
+	local maxc=maxct or minct or 63
+	if min then
+		minc=math.max(minc,min)
+		maxc=math.min(maxc,max)
+	end
+	local mg=nil
+	if og then
+		mg=og:Filter(cm.XyzProcedureRankFilter,nil,c,rk,f,ext_params)
+	else
+		mg=Duel.GetMatchingGroup(cm.XyzProcedureRankFilter,tp,LOCATION_MZONE,0,nil,c,rk,f,ext_params)
+	end
+	return maxc>=minc and mg:IsExists(cm.XyzProcedureRankFirst,1,nil,tp,mg,c,minc,maxc)
 end
 end
-function cm.XyzProcedureRankCheck(g,xyzc)
-	return g:GetClassCount(Card.GetRank)==1
+function cm.XyzProcedureRankOperation(rk,f,minct,maxct,xm,ext_params)
+return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
+	local g=nil
+	if og and not min then
+		g=og
+	else
+		local mg=nil
+		if og then
+			mg=og:Filter(cm.XyzProcedureRankFilter,nil,c,rk,f,ext_params)
+		else
+			mg=Duel.GetMatchingGroup(cm.XyzProcedureRankFilter,tp,LOCATION_MZONE,0,nil,c,rk,f,ext_params)
+		end
+		local minc=minct or 2
+		local maxc=maxct or minct or 63
+		if min then
+			minc=math.max(minc,min)
+			maxc=math.min(maxc,max)
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		local g1=mg:FilterSelect(tp,cm.XyzProcedureRankFirst,1,1,nil,tp,mg,c,minc,maxc)
+		local tg=mg:Filter(cm.XyzProcedureRankCheck,g1:GetFirst(),g1:GetFirst():GetRank())
+		g=cm.SelectGroup(tp,HINTMSG_XMATERIAL,tg,cm.CheckFieldFilter,g1,minc,maxc,tp,c)
+	end
+	c:SetMaterial(g)
+	cm.OverlayGroup(c,g,xm,true)
+end
 end
 function cm.AddXyzProcedureCustom(c,func,gf,minc,maxc,xm,...)
 	local ext_params={...}
@@ -306,8 +345,7 @@ function cm.AddXyzProcedureCustom(c,func,gf,minc,maxc,xm,...)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetCondition(cm.XyzProcedureCustomCondition(func,gf,minc,maxc,ext_params))
-	e1:SetTarget(cm.XyzProcedureCustomTarget(func,gf,minc,maxc,ext_params))
-	e1:SetOperation(cm.XyzProcedureCustomOperation(xm))
+	e1:SetOperation(cm.XyzProcedureCustomOperation(func,gf,minc,maxc,xm,ext_params))
 	e1:SetValue(SUMMON_TYPE_XYZ)
 	c:RegisterEffect(e1)
 	return e1
@@ -336,8 +374,8 @@ function cm.XyzProcedureCustomCondition(func,gf,minct,maxct,ext_params)
 		return maxc>=minc and cm.CheckGroup(mg,cm.CheckFieldFilter,nil,minc,maxc,tp,c,gf,c)
 	end
 end
-function cm.XyzProcedureCustomTarget(func,gf,minct,maxct,ext_params)
-	return function(e,tp,eg,ep,ev,re,r,rp,chk,c,og,min,max)
+function cm.XyzProcedureCustomOperation(func,gf,minct,maxct,xm,ext_params)
+	return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 		local g=nil
 		if og and not min then
 			g=og
@@ -354,21 +392,10 @@ function cm.XyzProcedureCustomTarget(func,gf,minct,maxct,ext_params)
 				minc=math.max(minc,min)
 				maxc=math.min(maxc,max)
 			end
-			g=cm.SelectGroupWithCancel(tp,HINTMSG_XMATERIAL,mg,cm.CheckFieldFilter,nil,minc,maxc,tp,c,gf,c)
+			g=cm.SelectGroup(tp,HINTMSG_XMATERIAL,mg,cm.CheckFieldFilter,nil,minc,maxc,tp,c,gf,c)
 		end
-		if g then
-			g:KeepAlive()
-			e:SetLabelObject(g)
-			return true
-		else return false end
-	end
-end
-function cm.XyzProcedureCustomOperation(xm)
-	return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
-		local g=e:GetLabelObject()
 		c:SetMaterial(g)
 		cm.OverlayGroup(c,g,xm,true)
-		g:DeleteGroup()
 	end
 end
 cm.proc_check_list={
@@ -470,7 +497,7 @@ function cm.MokouRebornCondition(eff,con)
 end
 function cm.MokouRebornTarget(comp)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetMZoneCount(tp)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,comp,comp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
@@ -478,7 +505,7 @@ end
 function cm.MokouRebornOperation(exop,excon,comp)
 return function(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetMZoneCount(tp)<=0 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	if not c:IsRelateToEffect(e) or not c:IsCanBeSpecialSummoned(e,0,tp,comp,comp) then return end
 	if Duel.SpecialSummon(c,0,tp,tp,comp,comp,POS_FACEUP)>0 and exop and (not excon or excon(e,tp,eg,ep,ev,re,r,rp)) then
 		exop(e,tp,eg,ep,ev,re,r,rp)
@@ -681,7 +708,7 @@ function cm.SawawaSpsummonCost(ct,exf)
 		   end
 end
 function cm.SelfSpsummonTarget(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetMZoneCount(tp)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
@@ -745,8 +772,9 @@ function cm.PrismCommonEffect(c,tg,op,istg,ctg)
 	end
 	return e1
 end
-function cm.PrismSpsummonFilter(c,tp)
-	return c:IsAbleToHand() and cm.CheckPrism(c) and c:IsFaceup() and Duel.GetMZoneCount(tp,c,tp)>0
+function cm.PrismSpsummonFilter(c,ft)
+	if ft==0 and c:GetSequence()>4 then return false end
+	return c:IsAbleToHand() and cm.CheckPrism(c) and c:IsFaceup()
 end
 function cm.PrismSpsummonCost(cd)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -756,10 +784,12 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 end
 function cm.PrismSpsummonTarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.PrismSpsummonFilter(chkc,tp) end
-	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingTarget(cm.PrismSpsummonFilter,tp,LOCATION_MZONE,0,1,nil,tp) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.PrismSpsummonFilter(chkc,ft) end
+	if chk==0 then return ft>-1
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingTarget(cm.PrismSpsummonFilter,tp,LOCATION_MZONE,0,1,nil,ft) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,cm.PrismSpsummonFilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	local g=Duel.SelectTarget(tp,cm.PrismSpsummonFilter,tp,LOCATION_MZONE,0,1,1,nil,ft)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,tp,LOCATION_MZONE)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
@@ -904,16 +934,19 @@ function cm.PrismAdvanceCommonEffect(c,fr)
 	end
 	return e1
 end
-function cm.PrismProcFilter(c,tp)
-	return cm.CheckPrism(c) and Duel.GetMZoneCount(tp,c,tp)>0
+function cm.PrismProcFilter(c,ft)
+	if ft==0 and c:GetSequence()>4 then return false end
+	return cm.CheckPrism(c)
 end
 function cm.PrismProcCondition(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.CheckReleaseGroup(tp,cm.PrismProcFilter,1,nil,tp)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-1 and Duel.CheckReleaseGroup(tp,cm.PrismProcFilter,1,nil,ft)
 end
 function cm.PrismProcOperation(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.SelectReleaseGroup(tp,cm.PrismProcFilter,1,1,nil,tp)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local g=Duel.SelectReleaseGroup(tp,cm.PrismProcFilter,1,1,nil,ft)
 	Duel.Release(g,REASON_COST)
 end
 --prism xyz multi-count xyz proc
@@ -1065,7 +1098,7 @@ function cm.PendConditionNanahira()
 				if lscale>rscale then lscale,rscale=rscale,lscale end
 				local ft=Duel.GetUsableMZoneCount(tp)
 				if ft<=0 then return false end
-				local mft=Duel.GetMZoneCount(tp)
+				local mft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				local eft=Duel.GetLocationCountFromEx(tp)
 				local g=nil
 				if og then
@@ -1119,7 +1152,7 @@ function cm.PendOperationNanahira()
 				local rscale=rpz:GetRightScale()
 				if lscale>rscale then lscale,rscale=rscale,lscale end
 				local ft=Duel.GetUsableMZoneCount(tp)
-				local mft=Duel.GetMZoneCount(tp)
+				local mft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				local eft=Duel.GetLocationCountFromEx(tp)
 				if Duel.IsPlayerAffectedByEffect(tp,59822133) then
 					mft=math.min(1,mft)
@@ -2396,10 +2429,13 @@ function cm.CheckPendulum(c)
 	local tp=c:GetControler()
 	return cm.GetPendulumCard(tp,0)==c or cm.GetPendulumCard(tp,1)==c
 end
+function cm.CheckMFilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and c:IsControler(tp)
+end
 function cm.CheckSummonLocation(c,tp,g)
 	local g=g or Group.CreateGroup()
 	if c:IsLocation(LOCATION_EXTRA) then return Duel.GetLocationCountFromEx(tp,tp,g,c)>0 end
-	return Duel.GetMZoneCount(tp,g,tp)>0
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)+g:FilterCount(cm.CheckMFilter,nil)>0
 end
 function cm.AND(...)
 	local t={...}
@@ -2500,65 +2536,14 @@ function cm.DFCBackSideCommonEffect(c)
 	e2:SetRange(LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_HAND+LOCATION_EXTRA)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
 	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-		return c.dfc_back_side
+		return c.dfc_front_side and c:GetOriginalCode()==c.dfc_back_side
 	end)
 	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-		local tcode=c.dfc_back_side
+		local tcode=c.dfc_front_side
 		c:SetEntityCode(tcode)
 		Duel.ConfirmCards(tp,Group.FromCards(c))
 		Duel.ConfirmCards(1-tp,Group.FromCards(c))
 		c:ReplaceEffect(tcode,0,0)
-		Duel.SetMetatable(c,_G["c"..tcode])
 	end)
 	c:RegisterEffect(e2)	
-end
---for ritual update
-function cm.CheckRitualMaterialGoal(g,c,tp,lv,f)
-	local ct=g:GetCount()
-	return cm.CheckSummonLocation(c,tp,g) and g:CheckWithSumEqual(f,lv,ct,ct,c)
-end
-function cm.CheckRitualMaterial(c,g,tp,lv,f)
-	local f=f or Card.GetRitualLevel
-	return cm.CheckGroup(g,cm.CheckRitualMaterialGoal,nil,1,99,c,tp,lv,f)
-end
-function cm.SelectRitualMaterial(c,g,tp,lv,f)
-	local f=f or Card.GetRitualLevel
-	return cm.SelectGroup(tp,HINTMSG_RELEASE,g,cm.CheckRitualMaterialGoal,nil,1,99,c,tp,lv,f)
-end
---for anifriends sound effects
-function cm.AddSummonSE(c,desc)
-	if c:IsStatus(STATUS_COPYING_EFFECT) or Senya.master_rule_3_flag then return end
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_SUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetOperation(function()
-		Duel.Hint(12,0,desc)
-	end)
-	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
-	c:RegisterEffect(e2)
-	local e3=e1:Clone()
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e3)
-end
-function cm.AddAttackSE(c,desc)
-	if not cm.AttackSEList then
-		cm.AttackSEList={}
-		local e1=Effect.GlobalEffect()
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCondition(function()
-			return cm.AttackSEList[Duel.GetAttacker()]
-		end)
-		e1:SetOperation(function()
-			Duel.Hint(12,0,cm.AttackSEList[Duel.GetAttacker()])
-		end)
-		Duel.RegisterEffect(e1,0)
-	end
-	cm.AttackSEList[c]=desc
 end

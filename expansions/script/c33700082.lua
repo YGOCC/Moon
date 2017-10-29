@@ -1,5 +1,8 @@
 --动物朋友 东之青龙
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function c33700082.initial_effect(c)
+	Senya.AddSummonSE(c,aux.Stringid(33700082,1))
+	Senya.AddAttackSE(c,aux.Stringid(33700082,2))
 	 c:EnableReviveLimit()
 	--deck check
 	local e1=Effect.CreateEffect(c)
@@ -12,14 +15,37 @@ function c33700082.initial_effect(c)
 	e1:SetOperation(c33700082.operation)
 	c:RegisterEffect(e1)
    --special summon rule
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e0:SetCode(EFFECT_SPSUMMON_PROC)
+	e0:SetRange(LOCATION_EXTRA)
+	e0:SetCondition(c33700082.lkcon)
+	e0:SetOperation(c33700082.lkop)
+	e0:SetValue(SUMMON_TYPE_LINK)
+	c:RegisterEffect(e0)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_SPSUMMON_PROC)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCondition(c33700082.spcon)
-	e2:SetOperation(c33700082.spop)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e2:SetTarget(c33700082.indtg)
+	e2:SetValue(1)
 	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e3:SetTarget(c33700082.indtg)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
+end
+function c33700082.indtg(e,c)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,e:GetHandlerPlayer(),0,LOCATION_ONFIELD,nil)
+	local ct1=g:GetClassCount(Card.GetCode)
+	local ct2=g:GetCount()
+	return ct1<ct2 and e:GetHandler():GetLinkedGroup():IsContains(c)
 end
 function c33700082.target(e,tp,eg,ep,ev,re,r,rp,chk)
    local hg=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
@@ -27,6 +53,7 @@ function c33700082.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<hg then return false end
 		return Duel.GetLocationCount(tp,LOCATION_MZONE,0)>0
 	end
+	Duel.Hint(12,0,aux.Stringid(33700082,3))
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_DECK)
 end
 function c33700082.spfilter(c,e,tp)
@@ -54,19 +81,26 @@ function c33700082.operation(e,tp,eg,ep,ev,re,r,rp)
    end
 end
 end
-function c33700082.confilter(c)
-	return c:IsSetCard(0x442) and c:IsFaceup() and c:IsAbleToGraveAsCost()
-   and c:IsSummonableCard()
+function c33700082.lkfilter1(c,lc,tp)
+	return c:IsFaceup() and c:IsCanBeLinkMaterial(lc) and Duel.IsExistingMatchingCard(c33700082.lkfilter2,tp,LOCATION_MZONE,0,1,c,lc,c,tp)
 end
-function c33700082.spcon(e,c)
+function c33700082.lkfilter2(c,lc,mc,tp)
+	local mg=Group.FromCards(c,mc)
+	return c:IsFaceup() and c:IsCanBeLinkMaterial(lc) and Duel.GetLocationCountFromEx(tp,tp,mg,lc)>0
+		and not c:IsCode(mc:GetCode())
+		and not c:IsRace(mc:GetRace())
+		and not c:IsAttribute(mc:GetAttribute())
+end
+function c33700082.lkcon(e,c)
 	if c==nil then return true end
+	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
-	local mg=Duel.GetMatchingGroup(c33700082.confilter,tp,LOCATION_MZONE,0,nil)
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-4
-		and mg:CheckWithSumEqual(Card.GetLevel,4,1,5,c)
+	return Duel.IsExistingMatchingCard(c33700082.lkfilter1,tp,LOCATION_MZONE,0,1,nil,c,tp)
 end
-function c33700082.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local mg=Duel.GetMatchingGroup(c33700082.confilter,tp,LOCATION_MZONE,0,nil)
-	local g=mg:SelectWithSumEqual(tp,Card.GetLevel,4,1,5,nil)
-	Duel.SendtoGrave(g,REASON_COST)
+function c33700082.lkop(e,tp,eg,ep,ev,re,r,rp,c)
+	local g1=Duel.SelectMatchingCard(tp,c33700082.lkfilter1,tp,LOCATION_MZONE,0,1,1,nil,c,tp)
+	local g2=Duel.SelectMatchingCard(tp,c33700082.lkfilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst(),c,g1:GetFirst(),tp)
+	g1:Merge(g2)
+	c:SetMaterial(g1)
+	Duel.SendtoGrave(g1,REASON_MATERIAL+REASON_LINK)
 end
