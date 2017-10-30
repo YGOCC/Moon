@@ -27,7 +27,7 @@ function c353719489.initial_effect(c)
 	e3:SetValue(aux.tgoval)
 	c:RegisterEffect(e3)
 end	
-function c14541657.tglimit(e,c)
+function c353719489.tglimit(e,c)
 	return c:IsSetCard(0x21ca) and c~=e:GetHandler()
 	end
 function c353719489.thfilter(c)
