@@ -1,44 +1,70 @@
---Empire War Chief
+--Staff of Freeze Barrier
 function c90000068.initial_effect(c)
-	c:EnableReviveLimit()
-	--To Hand
+	--Activate
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_ACTIVATE)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e0)
+	--Negate Attack
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetCondition(c90000068.condition)
-	e1:SetTarget(c90000068.target)
-	e1:SetOperation(c90000068.operation)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_BE_BATTLE_TARGET)
+	e1:SetRange(LOCATION_SZONE)
+	e1:SetCountLimit(1)
+	e1:SetCondition(c90000068.condition1)
+	e1:SetCost(c90000068.cost1)
+	e1:SetOperation(c90000068.operation1)
 	c:RegisterEffect(e1)
-	--Cannot Attack
+	--Set Card
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_ATTACK)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCountLimit(1,90000068)
+	e2:SetCondition(c90000068.condition2)
+	e2:SetCost(c90000068.cost2)
 	e2:SetTarget(c90000068.target2)
+	e2:SetOperation(c90000068.operation2)
 	c:RegisterEffect(e2)
 end
-function c90000068.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_RITUAL
+function c90000068.condition1(e,tp,eg,ep,ev,re,r,rp)
+	local tc=eg:GetFirst()
+	return tc:IsFaceup() and tc:IsSetCard(0x2d) and tc:IsControler(tp) and tc:IsLocation(LOCATION_MZONE)
 end
-function c90000068.filter(c)
-	return c:IsSetCard(0x2d) and c:IsAbleToHand()
+function c90000068.filter1(c)
+	return c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToGraveAsCost()
 end
-function c90000068.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90000068.filter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c90000068.filter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+function c90000068.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c90000068.filter1,tp,LOCATION_DECK,0,1,nil) end
+	local g=Duel.GetMatchingGroup(c90000068.filter1,tp,LOCATION_DECK,0,nil):RandomSelect(tp,1)
+	Duel.SendtoGrave(g,REASON_COST)
 end
-function c90000068.operation(e,tp,eg,ep,ev,re,r,rp)
+function c90000068.operation1(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	Duel.NegateAttack()
+end
+function c90000068.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
+		and not Duel.IsExistingMatchingCard(Card.IsFacedown,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+end
+function c90000068.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToDeckAsCost() end
+	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_COST)
+end
+function c90000068.filter2(c)
+	return c:IsSetCard(0x2d) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
+end
+function c90000068.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and Duel.IsExistingTarget(c90000068.filter2,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+	local g=Duel.SelectTarget(tp,c90000068.filter2,tp,LOCATION_GRAVE,0,1,1,nil)
+end
+function c90000068.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,tp,REASON_EFFECT)
+		Duel.SSet(tp,tc)
 		Duel.ConfirmCards(1-tp,tc)
 	end
-end
-function c90000068.target2(e,c)
-	return c:GetCounter(0x1000)>0
 end

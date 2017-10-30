@@ -1,107 +1,88 @@
---Empire Final Room
+--Black Flag Artificer
 function c90000073.initial_effect(c)
-	--Ritual Summon
+	--Pendulum Summon
+	aux.EnablePendulumAttribute(c)
+	--Pendulum Condition
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetTarget(c90000073.target)
-	e1:SetOperation(c90000073.operation)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetRange(LOCATION_PZONE)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c90000073.target1)
 	c:RegisterEffect(e1)
-	--Salvage
+	--Special Summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TOHAND)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,90000073)
-	e2:SetCost(c90000073.cost)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_BATTLE_DESTROYED)
+	e2:SetRange(LOCATION_PZONE)
+	e2:SetCountLimit(1)
 	e2:SetTarget(c90000073.target2)
 	e2:SetOperation(c90000073.operation2)
 	c:RegisterEffect(e2)
+	--Pierce
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_PIERCE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(LOCATION_MZONE,0)
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_ZOMBIE))
+	c:RegisterEffect(e3)
+	--Change Equip
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetCode(EVENT_FREE_CHAIN)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetHintTiming(0,TIMING_EQUIP)
+	e4:SetCountLimit(1)
+	e4:SetTarget(c90000073.target4)
+	e4:SetOperation(c90000073.operation4)
+	c:RegisterEffect(e4)
 end
-function c90000073.filter1(c,e,tp,m1,m2,ft)
-	if not c:IsSetCard(0x2d) or bit.band(c:GetType(),0x81)~=0x81
-		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
-	local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)
-	mg:Merge(m2)
-	if ft>0 then
-		return mg:CheckWithSumGreater(Card.GetRitualLevel,c:GetLevel(),c)
-	else
-		return ft>-1 and mg:IsExists(c90000073.filter2,1,nil,tp,mg,c)
-	end
-end
-function c90000073.filter2(c,tp,mg,rc)
-	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
-		Duel.SetSelectedCard(c)
-		return mg:CheckWithSumGreater(Card.GetRitualLevel,rc:GetLevel(),rc)
-	else return false end
-end
-function c90000073.filter3(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
-end
-function c90000073.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		local mg1=Duel.GetRitualMaterial(tp)
-		local mg2=Duel.GetMatchingGroup(c90000073.filter3,tp,LOCATION_GRAVE,0,nil)
-		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		return Duel.IsExistingMatchingCard(c90000073.filter1,tp,LOCATION_HAND,0,1,nil,e,tp,mg1,mg2,ft)
-	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
-end
-function c90000073.operation(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local mg1=Duel.GetRitualMaterial(tp)
-	local mg2=Duel.GetMatchingGroup(c90000073.filter3,tp,LOCATION_GRAVE,0,nil)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c90000073.filter1,tp,LOCATION_HAND,0,1,1,nil,e,tp,mg1,mg2,ft)
-	local tc=g:GetFirst()
-	if tc then
-		local mg=mg1:Filter(Card.IsCanBeRitualMaterial,tc,tc)
-		mg:Merge(mg2)
-		local mat=nil
-		if ft>0 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			mat=mg:SelectWithSumGreater(tp,Card.GetRitualLevel,tc:GetLevel(),tc)
-		else
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			mat=mg:FilterSelect(tp,c90000073.filter2,1,1,nil,tp,mg,tc)
-			Duel.SetSelectedCard(mat)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			local mat2=SelectWithSumGreater(tp,Card.GetRitualLevel,tc:GetLevel(),tc)
-			mat:Merge(mat2)
-		end
-		tc:SetMaterial(mat)
-		local mrel=Group.CreateGroup()
-		local mshf=Group.CreateGroup()
-		local mc=mat:GetFirst()
-		while mc do
-			if mg2:IsContains(mc) then
-				mshf:AddCard(mc)
-			else
-				mrel:AddCard(mc)
-			end
-			mc=mat:GetNext()
-		end
-		Duel.ReleaseRitualMaterial(mrel)
-		Duel.SendtoDeck(mshf,nil,2,REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)
-		Duel.BreakEffect()
-		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
-		tc:CompleteProcedure()
-	end
-end
-function c90000073.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,800) end
-	Duel.PayLPCost(tp,800)
+function c90000073.target1(e,c,sump,sumtype,sumpos,targetp)
+	return not c:IsRace(RACE_ZOMBIE) and bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function c90000073.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+	local tc=eg:GetFirst()
+	if chk==0 then return Duel.GetLocationCount(tc:GetPreviousControler(),LOCATION_MZONE)>0 and eg:GetCount()==1 and tc:IsRace(RACE_ZOMBIE)
+		and tc:IsReason(REASON_BATTLE) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,tc:GetPreviousPosition(),tc:GetPreviousControler()) end
+	tc:CreateEffectRelation(e)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,eg,1,0,0)
 end
 function c90000073.operation2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,c)
+	local tc=eg:GetFirst()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tc:GetPreviousControler(),false,false,tc:GetPreviousPosition())
+	end
+end
+function c90000073.filter4_1(tc,ec)
+	return tc:IsFaceup() and ec:CheckEquipTarget(tc)
+end
+function c90000073.filter4_2(c)
+	return c:IsType(TYPE_EQUIP) and c:GetEquipTarget()~=nil
+		and Duel.IsExistingTarget(c90000073.filter4_1,0,LOCATION_MZONE,LOCATION_MZONE,1,c:GetEquipTarget(),c)
+end
+function c90000073.target4(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(c90000073.filter4_2,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(90000073,0))
+	local g=Duel.SelectTarget(tp,c90000073.filter4_2,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil)
+	local ec=g:GetFirst()
+	e:SetLabelObject(ec)
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(90000073,1))
+	local tc=Duel.SelectTarget(tp,c90000073.filter4_1,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,ec:GetEquipTarget(),ec)
+end
+function c90000073.operation4(e,tp,eg,ep,ev,re,r,rp)
+	local ec=e:GetLabelObject()
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local tc=g:GetFirst()
+	if tc==ec then tc=g:GetNext() end
+	if ec:IsFaceup() and ec:IsRelateToEffect(e) then 
+		if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+			Duel.Equip(tp,ec,tc)
+		else 
+			Duel.SendtoGrave(ec,REASON_EFFECT) 
+		end
 	end
 end

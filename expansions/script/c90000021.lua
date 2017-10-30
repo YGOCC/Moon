@@ -1,41 +1,58 @@
---Night Clock Copycat
+--Toxic Sun Flower
 function c90000021.initial_effect(c)
-	--Pendulum Summon
-	aux.EnablePendulumAttribute(c)
-	--Pierce
+	--Special Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_PIERCE)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_FUSION))
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCountLimit(1,90000021)
+	e1:SetCondition(c90000021.condition1)
 	c:RegisterEffect(e1)
-	--Copy Name
+	--Tuner
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,90000021)
-	e2:SetCost(c90000021.cost)
-	e2:SetOperation(c90000021.operation)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetOperation(c90000021.operation2)
 	c:RegisterEffect(e2)
+	--Draw
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DRAW)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetCode(EVENT_BE_MATERIAL)
+	e3:SetCondition(c90000021.condition3)
+	e3:SetTarget(c90000021.target3)
+	e3:SetOperation(c90000021.operation3)
+	c:RegisterEffect(e3)
 end
-function c90000021.filter(c)
-	return c:IsSetCard(0x3) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+function c90000021.filter1(c)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
-function c90000021.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90000021.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c90000021.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
-	e:SetLabel(g:GetFirst():GetCode())
+function c90000021.condition1(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c90000021.filter1,tp,0,LOCATION_MZONE,1,nil)
 end
-function c90000021.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
-	local e1=Effect.CreateEffect(c)
+function c90000021.operation2(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_CHANGE_CODE)
-	e1:SetValue(e:GetLabel())
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	c:RegisterEffect(e1)
+	e1:SetCode(EFFECT_ADD_TYPE)
+	e1:SetValue(TYPE_TUNER)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e:GetHandler():RegisterEffect(e1)
+end
+function c90000021.condition3(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
+end
+function c90000021.target3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function c90000021.operation3(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end

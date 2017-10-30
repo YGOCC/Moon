@@ -1,35 +1,53 @@
---Empire Oriental Kingslayer
+--Archimage Crystal Token
 function c90000069.initial_effect(c)
-	c:EnableReviveLimit()
-	--Add Counter
+	--Damage
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetCondition(c90000069.condition)
-	e1:SetTarget(c90000069.target)
-	e1:SetOperation(c90000069.operation)
+	e1:SetCategory(CATEGORY_DAMAGE)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1)
+	e1:SetCondition(c90000069.condition1)
+	e1:SetTarget(c90000069.target1)
+	e1:SetOperation(c90000069.operation1)
 	c:RegisterEffect(e1)
-	--Attack All
+	--Recover
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_ATTACK_ALL)
-	e2:SetValue(c90000069.value)
+	e2:SetCategory(CATEGORY_RECOVER)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
+	e2:SetCondition(c90000069.condition2)
+	e2:SetTarget(c90000069.target2)
+	e2:SetOperation(c90000069.operation2)
 	c:RegisterEffect(e2)
 end
-function c90000069.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_RITUAL
+function c90000069.condition1(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
 end
-function c90000069.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
+function c90000069.target1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local dam=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)*100
+	Duel.SetTargetPlayer(1-tp)
+	Duel.SetTargetParam(dam)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,0,0,1-tp,dam)
 end
-function c90000069.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
-		tc:AddCounter(0x1000,1)
-		tc=g:GetNext()
-	end
+function c90000069.operation1(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Damage(p,d,REASON_EFFECT)
 end
-function c90000069.value(e,c)
-	return c:GetCounter(0x1000)>0
+function c90000069.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()~=tp
+end
+function c90000069.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local rec=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)*100
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(rec)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,0,0,tp,rec)
+end
+function c90000069.operation2(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Recover(p,d,REASON_EFFECT)
 end

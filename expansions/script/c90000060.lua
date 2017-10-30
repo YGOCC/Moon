@@ -1,79 +1,81 @@
---Royal Raid Reserve Base
+--Archimage Light Priestress
 function c90000060.initial_effect(c)
-	--Activate
+	--Copy Name
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetCode(EFFECT_CHANGE_CODE)
+	e1:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
+	e1:SetValue(90000056)
 	c:RegisterEffect(e1)
-	--Draw
+	--ATK/DEF Up
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1)
-	e2:SetTarget(c90000060.target)
-	e2:SetOperation(c90000060.operation)
+	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCost(c90000060.cost2)
+	e2:SetOperation(c90000060.operation2)
 	c:RegisterEffect(e2)
-	--Attach
+	--Battle Damage /2
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1)
-	e3:SetCondition(c90000060.condition)
-	e3:SetTarget(c90000060.target2)
-	e3:SetOperation(c90000060.operation2)
+	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1,90000060)
+	e3:SetCondition(c90000060.condition3)
+	e3:SetCost(c90000060.cost3)
+	e3:SetOperation(c90000060.operation3)
 	c:RegisterEffect(e3)
 end
-function c90000060.filter(c)
-	return c:IsSetCard(0x1c) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeck()
-end
-function c90000060.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingTarget(c90000060.filter,tp,LOCATION_REMOVED,0,2,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,c90000060.filter,tp,LOCATION_REMOVED,0,2,2,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-end
-function c90000060.operation(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=2 then return end
-	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup()
-	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
-	if ct==2 then
-		Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_EFFECT)
-	end
-end
-function c90000060.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
-end
 function c90000060.filter2(c)
-	return c:IsFaceup() and c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()==0
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(1) and c:IsAbleToRemoveAsCost()
 end
-function c90000060.filter3(c)
-	return c:IsSetCard(0x1c) and c:IsType(TYPE_MONSTER)
-end
-function c90000060.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c90000060.filter2,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(c90000060.filter3,tp,LOCATION_DECK,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c90000060.filter2,tp,LOCATION_MZONE,0,1,1,nil)
+function c90000060.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c90000060.filter2,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c90000060.filter2,tp,LOCATION_GRAVE,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:SetLabel(g:GetFirst():GetLevel()*300)
 end
 function c90000060.operation2(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsImmuneToEffect(e) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local g=Duel.GetMatchingGroup(c90000060.filter3,tp,LOCATION_DECK,0,nil)
-		if g:GetCount()>0 then
-			local og=g:Select(tp,1,1,nil)
-			Duel.Overlay(tc,og)
-		end
+	local c=e:GetHandler()
+	local tc=e:GetLabel()
+	if c:IsRelateToEffect(e) and c:IsFaceup() then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(tc)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		c:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		c:RegisterEffect(e2)
 	end
+end
+function c90000060.condition3(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetBattleDamage(tp)>0
+end
+function c90000060.filter3(c)
+	return c:IsSetCard(0x2d) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+end
+function c90000060.cost3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c90000060.filter3,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c90000060.filter3,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
+function c90000060.operation3(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsType,tp,LOCATION_REMOVED,0,1,1,nil,TYPE_MONSTER)
+	Duel.SendtoGrave(g,REASON_EFFECT+REASON_RETURN)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e1:SetOperation(c90000060.op1)
+	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+	Duel.RegisterEffect(e1,tp)
+end
+function c90000060.op1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(tp,ev/2)
 end

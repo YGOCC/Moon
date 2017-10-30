@@ -1,47 +1,44 @@
---Empire Royal Guard
+--Black Flag Sword
 function c90000079.initial_effect(c)
-	--Special Summon
+	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(Card.IsRace,RACE_ZOMBIE))
+	--ATK/DEF Up
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e1:SetCondition(c90000079.condition)
-	e1:SetTarget(c90000079.target)
-	e1:SetOperation(c90000079.operation)
+	e1:SetType(EFFECT_TYPE_EQUIP)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(c90000079.value1)
 	c:RegisterEffect(e1)
+	--Draw
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_DRAW)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCode(EVENT_BATTLE_DESTROYED)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCondition(c90000079.condition2)
+	e2:SetTarget(c90000079.target2)
+	e2:SetOperation(c90000079.operation2)
+	c:RegisterEffect(e2)
 end
-function c90000079.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and Duel.GetAttackTarget()==nil
-		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
+function c90000079.filter1(c)
+	return c:IsFaceup() and c:IsRace(RACE_ZOMBIE)
 end
-function c90000079.filter1(c,e,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost() and c:IsLevelAbove(1)
-		and Duel.IsExistingTarget(c90000079.filter2,tp,LOCATION_DECK,0,1,c,e,tp,c:GetLevel())
+function c90000079.value1(e,c)
+	return Duel.GetMatchingGroupCount(c90000079.filter1,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,nil)*300
 end
-function c90000079.filter2(c,e,tp,lv)
-	return c:GetLevel()==lv and c:IsSetCard(0x2d) and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
+function c90000079.filter2(c,rc)
+	return c:IsLocation(LOCATION_GRAVE) and c:IsReason(REASON_BATTLE) and c:GetReasonCard()==rc
 end
-function c90000079.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c90000079.filter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c90000079.filter1,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	local lv=g:GetFirst():GetLevel()
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:SetLabel(lv)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+function c90000079.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c90000079.filter2,1,nil,e:GetHandler():GetEquipTarget())
 end
-function c90000079.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c90000079.filter2,tp,LOCATION_DECK,0,1,1,nil,e,tp,e:GetLabel())
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,true,POS_FACEUP)
-		local gc=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-		local tc=gc:GetFirst()
-		while tc do
-			tc:AddCounter(0x1000,1)
-			tc=gc:GetNext()
-		end
-	end
+function c90000079.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function c90000079.operation2(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end

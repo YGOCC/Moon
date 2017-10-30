@@ -1,74 +1,75 @@
---Pirate Abordage
+--Empire Sky City
 function c90000095.initial_effect(c)
-	--Search
+	--Activate
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_ACTIVATE)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e0)
+	--To Hand
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e1:SetCode(EVENT_DESTROYED)
-	e1:SetCountLimit(1,90000095)
-	e1:SetCondition(c90000095.condition)
-	e1:SetTarget(c90000095.target)
-	e1:SetOperation(c90000095.operation)
+	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetRange(LOCATION_FZONE)
+	e1:SetCountLimit(1)
+	e1:SetTarget(c90000095.target1)
+	e1:SetOperation(c90000095.operation1)
 	c:RegisterEffect(e1)
-	--Change Position
+	--Cost Change
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_POSITION)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(c90000095.condition2)
-	e2:SetCost(c90000095.cost)
-	e2:SetTarget(c90000095.target2)
-	e2:SetOperation(c90000095.operation2)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCode(EFFECT_LPCOST_CHANGE)
+	e2:SetRange(LOCATION_FZONE)
+	e2:SetTargetRange(1,0)
+	e2:SetValue(c90000095.value2)
 	c:RegisterEffect(e2)
+	--Add Counter
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_COUNTER)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCode(EVENT_PHASE+PHASE_END)
+	e3:SetRange(LOCATION_FZONE)
+	e3:SetCountLimit(1)
+	e3:SetTarget(c90000095.target3)
+	e3:SetOperation(c90000095.operation3)
+	c:RegisterEffect(e3)
 end
-function c90000095.filter(c,tp)
-	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp
-		and bit.band(c:GetPreviousRaceOnField(),RACE_ZOMBIE)~=0
+function c90000095.filter1(c)
+	return c:IsFaceup() and c:IsSetCard(0x5d) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
-function c90000095.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c90000095.filter,1,nil,tp)
-end
-function c90000095.filter2(c)
-	return c:IsSetCard(0x4d) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
-end
-function c90000095.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90000095.filter2,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function c90000095.operation(e,tp,eg,ep,ev,re,r,rp)
+function c90000095.target1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(c90000095.filter1,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c90000095.filter2,tp,LOCATION_DECK,0,1,2,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+	local g=Duel.SelectTarget(tp,c90000095.filter1,tp,LOCATION_REMOVED,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+end
+function c90000095.operation1(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end
-function c90000095.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer()
+function c90000095.value2(e,re,rp,val)
+	if re and re:GetHandler():IsSetCard(0x5d) then
+		return 0
+	else
+		return val
+	end
 end
-function c90000095.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+function c90000095.target3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(Card.IsCanAddCounter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,0x1000,1) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,Card.IsCanAddCounter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,0x1000,1)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0x1000,1)
 end
-function c90000095.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
-	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,sg,sg:GetCount(),0,0)
-end
-function c90000095.operation2(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	if sg:GetCount()>0 then
-		Duel.ChangePosition(sg,POS_FACEUP_ATTACK,0,POS_FACEUP_ATTACK,0)
-		local tc=sg:GetFirst()
-		while tc do
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_MUST_ATTACK)
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e1)
-			tc=sg:GetNext()
-		end
+function c90000095.operation3(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		tc:AddCounter(0x1000,1)
 	end
 end

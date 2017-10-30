@@ -1,62 +1,95 @@
---Toxic Bright Princess
+--Toxic Atomic Gate
 function c90000030.initial_effect(c)
-	c:EnableReviveLimit()
-	--Synchro Summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x14),aux.NonTuner(Card.IsType,TYPE_SYNCHRO),1)
-	--Battle Indestructable
+	--Activate
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_ACTIVATE)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e0)
+	--Special Summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e1:SetValue(1)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_SZONE)
+	e1:SetCountLimit(1,90000030)
+	e1:SetTarget(c90000030.target1)
+	e1:SetOperation(c90000030.operation1)
 	c:RegisterEffect(e1)
-	--Change Battle Target
+	--Special Summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_BE_BATTLE_TARGET)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c90000030.condition)
-	e2:SetTarget(c90000030.target)
-	e2:SetOperation(c90000030.operation)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCountLimit(1)
+	e2:SetCondition(c90000030.condition2)
+	e2:SetCost(c90000030.cost2)
+	e2:SetTarget(c90000030.target2)
+	e2:SetOperation(c90000030.operation2)
 	c:RegisterEffect(e2)
-	--Draw
+	--Damage
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_DRAW)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetRange(LOCATION_MZONE)
+	e3:SetCategory(CATEGORY_DAMAGE)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1)
-	e3:SetCost(c90000030.cost)
-	e3:SetTarget(c90000030.target2)
-	e3:SetOperation(c90000030.operation2)
+	e3:SetCondition(c90000030.condition3)
+	e3:SetTarget(c90000030.target3)
+	e3:SetOperation(c90000030.operation3)
 	c:RegisterEffect(e3)
 end
-function c90000030.condition(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local bt=eg:GetFirst()
-	return r~=REASON_REPLACE and c~=bt and bt:IsFaceup() and bt:IsSetCard(0x14) and bt:GetControler()==c:GetControler()
+function c90000030.filter1(c,e,tp)
+	return c:IsSetCard(0x14) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c90000030.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetAttacker():GetAttackableTarget():IsContains(e:GetHandler()) end
+function c90000030.target1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c90000030.filter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
-function c90000030.operation(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) and not Duel.GetAttacker():IsImmuneToEffect(e) then
-		Duel.ChangeAttackTarget(e:GetHandler())
+function c90000030.operation1(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c90000030.filter1),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c90000030.filter(c)
-	return c:IsSetCard(0x14) and c:IsDiscardable()
+function c90000030.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE) and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
-function c90000030.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90000030.filter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,c90000030.filter,1,1,REASON_COST+REASON_DISCARD)
+function c90000030.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
+function c90000030.filter2(c,e,tp)
+	return c:IsSetCard(0x14) and c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c90000030.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c90000030.filter2,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function c90000030.operation2(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c90000030.filter2,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
+function c90000030.condition3(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
+function c90000030.target3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(700)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,0,0,tp,700)
+end
+function c90000030.operation3(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
+	Duel.Damage(p,d,REASON_EFFECT)
 end

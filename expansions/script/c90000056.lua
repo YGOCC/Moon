@@ -1,73 +1,77 @@
---Royal Raid General
+--Archimage Lady
 function c90000056.initial_effect(c)
-	c:EnableReviveLimit()
-	--Xyz Summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE),10,3)
-	--Immune
+	--Search
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(c90000056.condition)
-	e1:SetValue(c90000056.value)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetTarget(c90000056.target1)
+	e1:SetOperation(c90000056.operation1)
 	c:RegisterEffect(e1)
-	--ATK X2
+	--Special Summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_ATKCHANGE)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1)
-	e2:SetCost(c90000056.cost)
-	e2:SetTarget(c90000056.target)
-	e2:SetOperation(c90000056.operation)
+	e2:SetCountLimit(1,90000056)
+	e2:SetCost(c90000056.cost2)
+	e2:SetTarget(c90000056.target2)
+	e2:SetOperation(c90000056.operation2)
 	c:RegisterEffect(e2)
+	--Special Summon
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCode(EVENT_BATTLE_DESTROYED)
+	e3:SetTarget(c90000056.target3)
+	e3:SetOperation(c90000056.operation3)
+	c:RegisterEffect(e3)
 end
-function c90000056.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
+function c90000056.filter1(c)
+	return c:IsSetCard(0x2d) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
-function c90000056.value(e,te)
-	if te:IsActiveType(TYPE_MONSTER) and te:IsActivated() and not (te:GetOwner():IsSetCard(0x1c) and te:GetOwner():IsType(TYPE_XYZ)) then
-		local rk=e:GetHandler():GetRank()
-		local ec=te:GetOwner()
-		if ec:IsType(TYPE_XYZ) then
-			return ec:GetOriginalRank()<rk
-		else
-			return ec:GetOriginalLevel()<rk
-		end
-	else
-		return false
+function c90000056.target1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c90000056.filter1,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c90000056.operation1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c90000056.filter1,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function c90000056.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+function c90000056.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
-function c90000056.filter(c)
-	return c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ)
+function c90000056.filter2(c,e,tp)
+	return c:IsSetCard(0x2d) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c90000056.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90000056.filter,tp,LOCATION_MZONE,0,1,nil) end
+function c90000056.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c90000056.filter2,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
-function c90000056.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c90000056.filter,tp,LOCATION_MZONE,0,nil)
-	local tc=g:GetFirst()
-	while tc do
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetValue(tc:GetAttack()*2)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e1)
-		tc=g:GetNext()
+function c90000056.operation2(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c90000056.filter2,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
-	if e:GetHandler():IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_CANNOT_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e:GetHandler():RegisterEffect(e1)
+end
+function c90000056.target3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+end
+function c90000056.operation3(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,90000069,0,0x2d,0,0,1,RACE_ROCK,ATTRIBUTE_LIGHT) then
+		local token=Duel.CreateToken(tp,90000069)
+		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

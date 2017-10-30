@@ -1,58 +1,83 @@
---Pirate Space Machine
+--Empire Wing Archer
 function c90000089.initial_effect(c)
-	--Activate
+	c:EnableReviveLimit()
+	--Disable
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,90000089)
-	e1:SetOperation(c90000089.operation)
+	e1:SetCategory(CATEGORY_DISABLE)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c90000089.condition1)
+	e1:SetTarget(c90000089.target1)
+	e1:SetOperation(c90000089.operation1)
 	c:RegisterEffect(e1)
-	--Decrease Tribute
+	--Indestructable
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_DECREASE_TRIBUTE)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetTargetRange(LOCATION_HAND,0)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4d))
-	e2:SetValue(0x1)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
+	e2:SetCost(c90000089.cost2)
+	e2:SetTarget(c90000089.target2)
+	e2:SetOperation(c90000089.operation2)
 	c:RegisterEffect(e2)
-	--Return
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1)
-	e3:SetTarget(c90000089.target)
-	e3:SetOperation(c90000089.operation2)
-	c:RegisterEffect(e3)
 end
-function c90000089.filter(c)
-	return c:IsType(TYPE_FIELD) and c:IsAbleToHand()
+function c90000089.condition1(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_RITUAL
 end
-function c90000089.operation(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(c90000089.filter,tp,LOCATION_DECK,0,nil)
-	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(90000089,0)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg=g:Select(tp,1,1,nil)
-		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg)
+function c90000089.filter1(c)
+	return c:GetCounter(0x1000)>0 and not c:IsDisabled() and (not c:IsType(TYPE_NORMAL) or bit.band(c:GetOriginalType(),TYPE_EFFECT)~=0)
+end
+function c90000089.target1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c90000089.filter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+end
+function c90000089.operation1(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c90000089.filter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	local tc=g:GetFirst()
+	if not tc then return end
+	while tc do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e2)
+		if tc:IsType(TYPE_TRAPMONSTER) then
+			local e3=Effect.CreateEffect(e:GetHandler())
+			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+			e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e3)
+		end
+		tc=g:GetNext()
 	end
 end
-function c90000089.filter2(c)
-	return c:IsFaceup() and c:IsType(TYPE_FIELD) and c:IsAbleToHand()
+function c90000089.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLPCost(tp,800) end
+	Duel.PayLPCost(tp,800)
 end
-function c90000089.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c90000089.filter2,tp,LOCATION_SZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,c90000089.filter2,tp,LOCATION_SZONE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+function c90000089.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c90000089.operation2(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+		e1:SetValue(1)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+		tc:RegisterEffect(e2)
 	end
 end

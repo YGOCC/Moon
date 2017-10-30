@@ -1,87 +1,97 @@
---Empire Moon Ninja #2
+--Gunboat Graveyard
 function c90000082.initial_effect(c)
-	--Pendulum Summon
-	aux.EnablePendulumAttribute(c)
-	--Pendulum Condition
+	--Activate
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_ACTIVATE)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e0)
+	--Level Down
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(c90000082.tg)
+	e1:SetCode(EFFECT_UPDATE_LEVEL)
+	e1:SetRange(LOCATION_FZONE)
+	e1:SetTargetRange(LOCATION_HAND,LOCATION_HAND)
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_ZOMBIE))
+	e1:SetValue(-2)
 	c:RegisterEffect(e1)
-	--Special Summon
+	--Negate Effect
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_PZONE)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetCountLimit(1)
-	e2:SetCondition(c90000082.condition)
-	e2:SetCost(c90000082.cost)
-	e2:SetTarget(c90000082.target)
-	e2:SetOperation(c90000082.operation)
+	e2:SetCondition(c90000082.condition2)
+	e2:SetCost(c90000082.cost2)
+	e2:SetOperation(c90000082.operation2)
 	c:RegisterEffect(e2)
-	--Level Up
+	--ATK /2
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,90000082)
-	e3:SetTarget(c90000082.target2)
-	e3:SetOperation(c90000082.operation2)
+	e3:SetCategory(CATEGORY_ATKCHANGE)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCondition(c90000082.condition3)
+	e3:SetCost(c90000082.cost3)
+	e3:SetTarget(c90000082.target3)
+	e3:SetOperation(c90000082.operation3)
 	c:RegisterEffect(e3)
 end
-function c90000082.tg(e,c,sump,sumtype,sumpos,targetp)
-	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
+function c90000082.filter2_1(c,tp)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and c:IsType(TYPE_ZOMBIE)
 end
-function c90000082.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldCard(tp,LOCATION_SZONE,13-e:GetHandler():GetSequence())
+function c90000082.condition2(e,tp,eg,ep,ev,re,r,rp)
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
+	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	return g and g:IsExists(c90000082.filter2_1,1,nil,tp) and Duel.IsChainNegatable(ev)
 end
-function c90000082.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,800) end
-	Duel.PayLPCost(tp,800)
+function c90000082.filter2_2(c)
+	return c:IsSetCard(0x4d) and not c:IsPublic()
 end
-function c90000082.filter(c,e,tp,lsc,rsc)
-	return c:GetLevel()>lsc and c:GetLevel()<rsc and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsType(TYPE_RITUAL)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
-end
-function c90000082.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local lsc=Duel.GetFieldCard(tp,LOCATION_SZONE,6):GetLeftScale()
-	local rsc=Duel.GetFieldCard(tp,LOCATION_SZONE,7):GetRightScale()
-	if lsc>rsc then lsc,rsc=rsc,lsc end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c90000082.filter,tp,LOCATION_HAND,0,1,nil,e,tp,lsc,rsc) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
-end
-function c90000082.operation(e,tp,eg,ep,ev,re,r,rp)
-	local lsc=Duel.GetFieldCard(tp,LOCATION_SZONE,6):GetLeftScale()
-	local rsc=Duel.GetFieldCard(tp,LOCATION_SZONE,7):GetRightScale()
-	if lsc>rsc then lsc,rsc=rsc,lsc end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c90000082.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp,lsc,rsc)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,true,POS_FACEUP)
-	end
-end
-function c90000082.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
+function c90000082.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c90000082.filter2_2,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+	local g=Duel.SelectMatchingCard(tp,c90000082.filter2_2,tp,LOCATION_HAND,0,1,1,nil)
+	Duel.ConfirmCards(1-tp,g)
+	Duel.ShuffleHand(tp)
 end
 function c90000082.operation2(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
-	if g:GetCount()>0 then
-		Duel.ConfirmCards(tp,g)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-		local tg=g:FilterSelect(tp,Card.IsType,1,1,nil,TYPE_MONSTER)
-		local tc=tg:GetFirst()
-		if tc then
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_LEVEL)
-			e1:SetValue(tc:GetLevel())
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-			e:GetHandler():RegisterEffect(e1)
-		end
-		Duel.ShuffleHand(1-tp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	Duel.NegateActivation(ev)
+end
+function c90000082.condition3(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()~=tp and (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE)
+end
+function c90000082.cost3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+end
+function c90000082.filter3(c)
+	return c:IsFaceup() and not c:IsRace(RACE_ZOMBIE)
+end
+function c90000082.target3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c90000082.filter3,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+end
+function c90000082.operation3(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c90000082.filter3,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local tc=g:GetFirst()
+	while tc do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e1:SetValue(tc:GetAttack()/2)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+		tc=g:GetNext()
+	end
+	local g=Duel.GetMatchingGroup(Card.IsAttackPos,tp,0,LOCATION_MZONE,nil)
+	local tc=g:GetFirst()
+	while tc do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_MUST_ATTACK)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+		tc=g:GetNext()
 	end
 end

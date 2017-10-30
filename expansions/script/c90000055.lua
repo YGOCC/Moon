@@ -1,136 +1,91 @@
---Royal Raid Officer
+--Archimage Copycat
 function c90000055.initial_effect(c)
-	c:EnableReviveLimit()
-	--Xyz Summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE),9,3)
-	--Immune
+	--Draw
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(c90000055.condition)
-	e1:SetValue(c90000055.value)
+	e1:SetCategory(CATEGORY_DRAW)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetTarget(c90000055.target1)
+	e1:SetOperation(c90000055.operation1)
 	c:RegisterEffect(e1)
-	--Untargetable
+	--Special Summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(c90000055.target)
-	e2:SetValue(aux.tgoval)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_TO_HAND)
+	e2:SetCondition(c90000055.condition2)
+	e2:SetTarget(c90000055.target2)
+	e2:SetOperation(c90000055.operation2)
 	c:RegisterEffect(e2)
-	--Direct Attack
+	--Copy Name
 	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DAMAGE+CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
-	e3:SetCondition(c90000055.condition2)
-	e3:SetCost(c90000055.cost)
-	e3:SetTarget(c90000055.target2)
-	e3:SetOperation(c90000055.operation)
+	e3:SetTarget(c90000055.target3)
+	e3:SetOperation(c90000055.operation3)
 	c:RegisterEffect(e3)
-	--Special Summon
-	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e4:SetCode(EVENT_PHASE+PHASE_END)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetCondition(c90000055.condition3)
-	e4:SetTarget(c90000055.target3)
-	e4:SetOperation(c90000055.operation2)
-	c:RegisterEffect(e4)
 end
-function c90000055.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
+function c90000055.target1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c90000055.value(e,te)
-	if te:IsActiveType(TYPE_MONSTER) and te:IsActivated() and not (te:GetOwner():IsSetCard(0x1c) and te:GetOwner():IsType(TYPE_XYZ)) then
-		local rk=e:GetHandler():GetRank()
-		local ec=te:GetOwner()
-		if ec:IsType(TYPE_XYZ) then
-			return ec:GetOriginalRank()<rk
-		else
-			return ec:GetOriginalLevel()<rk
-		end
-	else
-		return false
-	end
-end
-function c90000055.target(e,c)
-	return c~=e:GetHandler() and c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ)
+function c90000055.operation1(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
 function c90000055.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return tp==Duel.GetTurnPlayer() and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
-end
-function c90000055.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
-end
-function c90000055.filter(c)
-	return c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ)
+	local c=e:GetHandler()
+	return bit.band(r,REASON_EFFECT)~=0 and (c:IsPreviousLocation(LOCATION_DECK) or c:IsPreviousLocation(LOCATION_GRAVE)) and c:GetPreviousControler()==tp
 end
 function c90000055.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90000055.filter,tp,LOCATION_MZONE,0,1,nil) end
-end
-function c90000055.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c90000055.filter,tp,LOCATION_MZONE,0,nil)
-	local tc=g:GetFirst()
-	while tc do
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_DIRECT_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e2:SetValue(tc:GetAttack()/2)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e2)
-		tc=g:GetNext()
-	end
-end
-function c90000055.condition3(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer()
-end
-function c90000055.filter2(c,e,tp,rk)
-	return c:GetRank()==rk+1 and c:IsSetCard(0x1c) and e:GetHandler():IsCanBeXyzMaterial(c)
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
-end
-function c90000055.target3(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c90000055.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,e:GetHandler():GetRank()) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+	if chk==0 then return e:GetHandler():IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c90000055.operation2(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
 	local c=e:GetHandler()
-	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:IsControler(1-tp) or c:IsImmuneToEffect(e) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c90000055.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,c:GetRank())
-	local sc=g:GetFirst()
-	if sc then
-		local mg=c:GetOverlayGroup()
-		if mg:GetCount()~=0 then
-			Duel.Overlay(sc,mg)
-		end
-		sc:SetMaterial(Group.FromCards(c))
-		Duel.Overlay(sc,Group.FromCards(c))
-		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
-		sc:CompleteProcedure()
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(c90000055.tg)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
 end
-function c90000055.tg(e,c)
-	return c:IsLocation(LOCATION_EXTRA)
+function c90000055.filter3(c)
+	return c:IsFaceup() and c:IsSetCard(0x2d) and c:IsLevelAbove(1)
+end
+function c90000055.target3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(c90000055.filter3,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,c90000055.filter3,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	local tc=g:GetFirst()
+	local dam=tc:GetLevel()*200
+	Duel.SetTargetParam(dam)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,dam)
+end
+function c90000055.operation3(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	local dam=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	if tc:IsRelateToEffect(e) and c:IsFaceup() and Duel.Damage(tp,dam,REASON_EFFECT)~=0 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_CODE)
+		e1:SetValue(tc:GetCode())
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_ATTACK)
+		e2:SetValue(tc:GetAttack())
+		c:RegisterEffect(e2)
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_UPDATE_DEFENSE)
+		e3:SetValue(tc:GetDefense())
+		c:RegisterEffect(e3)
+	end
 end
