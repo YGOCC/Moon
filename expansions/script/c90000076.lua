@@ -117,7 +117,7 @@ function c90000076.target2(e,c,sump,sumtype,sumpos,targetp)
 	return not c:IsRace(RACE_ZOMBIE) and bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function c90000076.filter3(c)
-	return c:IsType(TYPE_ZOMBIE) and c:IsAbleToRemoveAsCost()
+	return c:IsRace(RACE_ZOMBIE) and c:IsAbleToRemoveAsCost()
 end
 function c90000076.cost3(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90000076.filter3,tp,LOCATION_GRAVE,0,1,nil) end
