@@ -9,6 +9,16 @@ function c240100258.initial_effect(c)
 	e1:SetTarget(c240100258.target)
 	e1:SetOperation(c240100258.activate)
 	c:RegisterEffect(e1)
+	--(Quick Effect): You can banish this card from your GY, then target 1 DARK Warrior-Type Xyz Monster you control; detach 1 material from a monster your opponent controls and attach it to that monster you control as a material.
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCost(aux.bfgcost)
+	e2:SetTarget(c240100258.mattg)
+	e2:SetOperation(c240100258.matop)
+	c:RegisterEffect(e2)
 end
 function c240100258.filter1(c,e,tp)
 	local rk=c:GetRank()
@@ -45,4 +55,24 @@ function c240100258.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
 	end
+end
+function c240100258.xyzfilter(c)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_XYZ) and c:IsRace(RACE_WARRIOR)
+end
+function c240100258.mattg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c240100258.xyzfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c240100258.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.GetOverlayCount(tp,0,1)~=0 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,c240100258.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil)
+end
+function c240100258.matop(e,tp,eg,ep,ev,re,r,rp)
+	local sc=Duel.GetFirstTarget()
+	if not sc:IsRelateToEffect(e) or sc:IsControler(1-tp) then return end
+	local g1=Duel.GetOverlayGroup(tp,0,1)
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(240100258,0))
+	local mg2=g1:Select(tp,1,1,nil)
+	local oc=mg2:GetFirst():GetOverlayTarget()
+	Duel.Overlay(sc,mg2)
+	Duel.RaiseSingleEvent(oc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
 end
