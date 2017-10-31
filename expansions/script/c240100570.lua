@@ -41,10 +41,10 @@ function c240100570.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c240100570.mfilter(c,xyzc)
-	return c:IsFaceup() and c:IsSetCard(0xbb2)
+	return c:IsFaceup() and c:IsSetCard(0xbb2) and c:IsLevelAbove(1)
 end
 function c240100570.xyzcheck(g)
-	return g:GetClassCount(Card.GetLevel)==1 and not g:IsExists(Card.IsLevelBelow,1,nil,0)
+	return g:GetClassCount(Card.GetLevel)==1
 end
 function c240100570.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xbb2)
