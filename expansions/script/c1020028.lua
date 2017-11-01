@@ -56,14 +56,14 @@ function c1020028.condition(e,tp,eg,ep,ev,re,r,rp,chk)
 	return eg:IsExists(c1020028.ssdfilter,1,nil,tp) and Duel.GetFlagEffect(tp,1020028)==0
 end
 function c1020028.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c1020028.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.GetFlagEffect(tp,1020028)==0 then
-		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
 			Duel.RegisterFlagEffect(tp,1020028,RESET_PHASE+PHASE_END,0,1)
 		end
 	end

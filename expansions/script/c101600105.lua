@@ -72,8 +72,13 @@ end
 function c101600105.exfilter(c,lv,e,tp)
 	return c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and c:IsRace(RACE_DRAGON) and c:IsType(TYPE_SYNCHRO)
 end
+function c101600105.ex(c,tc)
+	return c:GetSequence()==4 or c:GetSequence()==5 and c:GetLinkedGroup():IsContains(tc)
+end
 function c101600105.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and e:GetHandler():IsAbleToRemoveAsCost()
+	local xtra=Duel.GetMatchingGroup(c101600105.ex,tp,LOCATION_MZONE,LOCATION_MZONE,nil,e:GetHandler())
+	if chk==0 then return (Duel.GetLocationCountFromEx(tp)>0 or xtra:GetCount()>0)
+		and e:GetHandler():IsAbleToRemoveAsCost()
 		and Duel.IsExistingMatchingCard(c101600105.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c101600105.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
@@ -85,7 +90,7 @@ end
 function c101600105.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local lv=e:GetLabel()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+	if Duel.GetLocationCountFromEx(tp)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,c101600105.exfilter,tp,LOCATION_EXTRA,0,1,1,nil,lv,e,tp)
 		local sc=sg:GetFirst()

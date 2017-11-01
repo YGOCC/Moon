@@ -62,11 +62,6 @@ function c101600114.initial_effect(c)
 	e5:SetOperation(c101600114.desrepop)
 	e5:SetCountLimit(1,101600114)
 	c:RegisterEffect(e5)
-	--Equip check
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_SINGLE)
-	e6:SetCode(101600114)	
-	c:RegisterEffect(e6)
 end
 function c101600114.CanEquipMonster(c)
 	return true
@@ -83,7 +78,7 @@ function c101600114.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
 function c101600114.eqlimit(e,c)
-	return e:GetOwner()==c and c:IsHasEffect(101600114)
+	return e:GetOwner()==c and e:GetLabelObject():GetFlagEffect(101600114)>0
 end
 function c101600114.EquipMonster(c,tp,tc)
 	if not Duel.Equip(tp,tc,c,false) then return end
@@ -94,6 +89,7 @@ function c101600114.EquipMonster(c,tp,tc)
 	e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
 	e1:SetCode(EFFECT_EQUIP_LIMIT)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetLabelObject(tc)
 	e1:SetValue(c101600114.eqlimit)
 	tc:RegisterEffect(e1)
 end

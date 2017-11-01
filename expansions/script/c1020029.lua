@@ -24,6 +24,9 @@ function c1020029.initial_effect(c)
 	local e5=e3:Clone()
 	e5:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
 	c:RegisterEffect(e5)
+	local e5b=e3:Clone()
+	e5b:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	c:RegisterEffect(e5b)
 	--special summon
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(1020029,0))
@@ -61,14 +64,14 @@ function c1020029.condition(e,tp,eg,ep,ev,re,r,rp,chk)
 	return eg:IsExists(c1020029.ssdfilter,1,nil,tp) and Duel.GetFlagEffect(tp,1020029)==0
 end
 function c1020029.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c1020029.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.GetFlagEffect(tp,1020029)==0 then
-		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
 			Duel.RegisterFlagEffect(tp,1020029,RESET_PHASE+PHASE_END,0,1)
 		end
 	end
@@ -89,7 +92,7 @@ function c1020029.lvop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
 		e1:SetValue(4)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 	end
 end
