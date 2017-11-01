@@ -136,8 +136,7 @@ end
 function scard.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(scard.desfilter,tp,LOCATION_MZONE,0,nil,e)
 	local gain=g:GetCount()*500
-	Duel.Destroy(g,REASON_EFFECT)
-	Duel.Damage(1-tp,gain,REASON_EFFECT)
+	if Duel.Destroy(g,REASON_EFFECT)>0 then Duel.Damage(1-tp,gain,REASON_EFFECT) end
 end
 function scard.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,e:GetHandler(),0xded) end

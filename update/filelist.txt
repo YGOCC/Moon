@@ -3286,7 +3286,7 @@ expansions/script/c1020004.lua	aac9dc5e8d896b5e77b80ea1186ad46f
 expansions/script/c1020005.lua	43f063d0e6a314914d80d4b97b05c743
 expansions/script/c1020006.lua	b993fa631d4ce3be382c5112eec4b94d
 expansions/script/c1020007.lua	7c50d25c68765f9efb86c3c889c44340
-expansions/script/c1020008.lua	2a200acfdd352a5ea7b328456f574c05
+expansions/script/c1020008.lua	842c508f4eb4c6808382222db06cf12d
 expansions/script/c1020009.lua	fff0b815291bb81fd6c28ae82ec3b1cd
 expansions/script/c1020010.lua	17b98d62d22f40ea782af4e032b0dc68
 expansions/script/c1020011.lua	e44db09dcadc9d65dfd4a366ba8b72fe
@@ -4561,11 +4561,11 @@ expansions/script/c30408.lua	144c43fcb6361e34c934fce81647ac01
 expansions/script/c30410.lua	32e64ecc7838470ffeb3ff2097d34d71
 expansions/script/c30411.lua	b9c931a6ba08e3564c4fb9367603ea75
 expansions/script/c30412.lua	a5c85a19e242f5cfc33583d6559adcc2
-expansions/script/c30413.lua	9a6e9495cfed3fcd49fcb6696edecb25
+expansions/script/c30413.lua	b80d7dc5256b2a83c7915bdb297dc9be
 expansions/script/c30414.lua	fb73fa83abc9be7cf910b9233b04828b
-expansions/script/c30415.lua	3093725eb3f2f9435713261a46686258
-expansions/script/c30416.lua	c1a97df276844e5df3857d8a0990b0e4
-expansions/script/c30417.lua	49b17117e5007d66f5cf2d36a780f7a6
+expansions/script/c30415.lua	16eb8907c1401a4a74ab0fc6a03a3288
+expansions/script/c30416.lua	5f14d25256f7fbb4d0cc90160d866867
+expansions/script/c30417.lua	6492c056c8e1f84ecc94edbb4f8d8aa4
 expansions/script/c30418.lua	7f77ecaf5135ca86791e3f80768c4a05
 expansions/script/c31880000.lua	2d035c82b6d735b83e1361d158b7ac9d
 expansions/script/c31880001.lua	147ba92521247ad5bcf9e440fb784f4d
@@ -5791,7 +5791,7 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/filelist.txt	32f7e0dbae740add26dfaa520542189b
+update/filelist.txt	023e8f88a7734731a773943a8db016c6
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/version.txt	0f21618af7f8840cd43ed3a8ab449523
+update/version.txt	57dcb9934521121a1a27c07929e8e03c
 update/version_new.txt	7dcf33691510eda11982adf93a0096f3
