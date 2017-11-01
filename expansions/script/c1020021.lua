@@ -35,12 +35,12 @@ function c1020021.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c1020021.csfilter(c)
-	return c:IsSetCard(0x1ded) and c:IsType(TYPE_MONSTER) and not c:IsCode(1020021) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x1ded) and c:IsType(TYPE_MONSTER) and not c:IsCode(1020021) and c:IsDiscardable()
 end
 function c1020021.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c1020021.tgfilter,tp,LOCATION_HAND,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,c1020021.csfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c1020021.tgfilter,tp,LOCATION_HAND,0,1,nil)
+		and Duel.IsExistingMatchingCard(c1020021.csfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,c1020021.csfilter,1,1,REASON_COST,nil)
 end
 function c1020021.tgfilter(c)
 	return c:IsSetCard(0x1ded) and c:IsType(TYPE_MONSTER) and c:GetLevel()==7 and c:IsAbleToGraveAsCost()
