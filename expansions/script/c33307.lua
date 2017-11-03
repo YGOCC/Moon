@@ -1,6 +1,7 @@
 --Girl Of The Skies: Artemis
 function c33307.initial_effect(c)
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(nil),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),1,1,aux.NonTuner(nil),2,99)
+
 	c:EnableReviveLimit()
 
 --pop

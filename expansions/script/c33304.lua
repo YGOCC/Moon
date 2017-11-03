@@ -1,7 +1,7 @@
 --Girl Of The Skies: Aegis
 function c33304.initial_effect(c)
 	 --synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(nil),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),1,1,aux.NonTuner(nil),1,99)
 	c:EnableReviveLimit()
 --reflect
 	local e2=Effect.CreateEffect(c)

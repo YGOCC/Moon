@@ -1,8 +1,7 @@
 --Girl Of The Skies: Corvus
 function c33303.initial_effect(c)
-   --synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(nil),1)
-	c:EnableReviveLimit()
+  --synchro summon
+   aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),1,1,aux.NonTuner(nil),1,99)
 
 --Negate
 	local e2=Effect.CreateEffect(c)
