@@ -101,7 +101,50 @@ function c17029606.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetReset(RESET_EVENT+0x47e0000)
 		e4:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e4,true)
+		local e5=Effect.CreateEffect(c)
+		e5:SetCategory(CATEGORY_TOHAND)
+		e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+		e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
+		e5:SetCode(EVENT_PREDRAW)
+		e5:SetRange(LOCATION_MZONE)
+		e5:SetCondition(c17029606.thcon)
+		e5:SetTarget(c17029606.thtg)
+		e5:SetOperation(c17029606.thop)
+		e5:SetReset(RESET_EVENT+0x1fe0000)
+		c:RegisterEffect(e5,true)
 		Duel.SpecialSummonComplete()
+	end
+end
+function c17029606.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer() and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
+end
+function c17029606.thfilter(c)
+	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x720) and not c:IsCode(17029606) and c:IsAbleToHand() and c:IsFaceup()
+end
+function c17029606.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c17029606.thfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c17029606.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
+	local dt=Duel.GetDrawCount(tp)
+	if dt~=0 then
+		e:SetLabel(1)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local g=Duel.SelectTarget(tp,c17029606.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+		Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetCode(EFFECT_DRAW_COUNT)
+		e1:SetTargetRange(1,0)
+		e1:SetReset(RESET_PHASE+PHASE_DRAW)
+		e1:SetValue(0)
+		Duel.RegisterEffect(e1,tp)
+	else e:SetLabel(0) end
+end
+function c17029606.thop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if e:GetLabel()==1 and tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end
 function c17029606.cfilter2(c)

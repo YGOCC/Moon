@@ -1,16 +1,5 @@
---created by Meedogh, coded by MoonBurst & Lyris
---パンデモニウム召喚
+--Pandemonium
 function c326.initial_effect(c)
-	local f1=Card.IsType
-	Card.IsType=function(tc,ctype)
-		if tc.pandemonium and not tc:IsOnField() then return bit.band(tc:GetType(),0x3e05c21-TYPE_PENDULUM)==ctype
-		end
-		return f1(tc,ctype)
-	end
-	local f2=Card.GetType
-	Card.GetType=function(tc)
-		if tc.pandemonium and not tc:IsOnField() then return bit.band(f2(tc),0x3e05c21-TYPE_PENDULUM) else return f2(tc) end
-	end
 	if not c326.global_check then
 		c326.global_check=true
 		local e=Effect.CreateEffect(c)
@@ -38,6 +27,7 @@ function c326.op(e,tp,eg,ep,ev,re,r,rp)
 			ge1:SetReset(RESET_EVENT+EVENT_ADJUST)
 			ge1:SetValue(function(e,se,sp,st) local c=e:GetHandler() if c:IsFaceup() then return bit.band(st,0x100)==0x100 end return true end)
 			tc:RegisterEffect(ge1)
+			--set as face up trap/pandimonium
 			local ge2=Effect.CreateEffect(tc)
 			ge2:SetType(EFFECT_TYPE_SINGLE)
 			ge2:SetCode(EFFECT_MONSTER_SSET)
@@ -59,17 +49,19 @@ function c326.op(e,tp,eg,ep,ev,re,r,rp)
 			ge4:SetReset(RESET_EVENT+EVENT_ADJUST)
 			ge4:SetCondition(function(e) return e:GetHandler():GetDestination()==LOCATION_GRAVE end)
 			tc:RegisterEffect(ge4)
+			--Activate
 			local ge5=Effect.CreateEffect(tc)
 			ge5:SetType(EFFECT_TYPE_ACTIVATE+EFFECT_TYPE_QUICK_O)
 			ge5:SetCode(EVENT_FREE_CHAIN)
 			ge5:SetRange(LOCATION_PZONE+LOCATION_SZONE)
 			ge5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-			ge5:SetCondition(function(e) return not e:GetHandler():IsStatus(STATUS_SET_TURN) end)
-			ge5:SetTarget(c326.distg)
+			ge5:SetCondition(function(e) return e:GetHandler():IsFaceup() or not e:GetHandler():IsStatus(STATUS_SET_TURN) end) --not e:GetHandler():IsStatus(STATUS_SET_TURN) end)
+			ge5:SetCost(c326.actcost)
 			ge5:SetReset(RESET_EVENT+EVENT_ADJUST)
 			tc:RegisterEffect(ge5)
+			--tribute to sp summon
 			local ge6=Effect.CreateEffect(tc)
-			ge6:SetDescription(aux.Stringid(43708640,0))
+			ge6:SetDescription(aux.Stringid(326,0))
 			ge6:SetCategory(CATEGORY_SPECIAL_SUMMON)
 			ge6:SetType(EFFECT_TYPE_QUICK_O)
 			ge6:SetCode(EVENT_FREE_CHAIN)
@@ -77,19 +69,21 @@ function c326.op(e,tp,eg,ep,ev,re,r,rp)
 			ge6:SetHintTiming(0,0x1e0)
 			ge6:SetCountLimit(1,10000000)
 			ge6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-			ge6:SetCondition(function(e,tp) return Duel.GetFlagEffect(tp,326)==0 end)
 			ge6:SetCost(c326.spcost)
 			ge6:SetTarget(c326.sptg)
 			ge6:SetOperation(c326.spop)
 			tc:RegisterEffect(ge6)
+			--redirect
 			local ge7=Effect.CreateEffect(tc)
 			ge7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 			ge7:SetCode(EFFECT_DESTROY_REPLACE)
 			ge7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 			ge7:SetRange(LOCATION_ONFIELD)
+			ge7:SetCondition(c326.recon)
 			ge7:SetTarget(c326.reop)
 			ge7:SetReset(RESET_EVENT+EVENT_ADJUST)
 			tc:RegisterEffect(ge7)
+			--highlander clause
 			local ge8=Effect.CreateEffect(tc)
 			ge8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			ge8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
@@ -114,7 +108,8 @@ function c326.op(e,tp,eg,ep,ev,re,r,rp)
 		tc=g:GetNext()
 	end
 end
-function c326.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+--Set as trap
+function c326.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)-Group.FromCards(Duel.GetFieldCard(tp,LOCATION_SZONE,5),Duel.GetFieldCard(tp,LOCATION_SZONE,6),Duel.GetFieldCard(tp,LOCATION_SZONE,7)):GetCount()>0 end
 	local e1=Effect.CreateEffect(c)
@@ -124,7 +119,12 @@ function c326.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetReset(RESET_EVENT+0x1fc0000)
 	e1:SetValue(TYPE_TRAP+TYPE_CONTINUOUS)
 	c:RegisterEffect(e1)
-	Duel.RegisterFlagEffect(tp,326,RESET_PHASE+PHASE_END,0,1)
+	if c326.spcost(e,tp,eg,ep,ev,re,r,rp,0) and c326.sptg(e,tp,eg,ep,ev,re,r,rp,0) and Duel.SelectYesNo(tp,aux.Stringid(326,0)) then
+		c326.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+		e:SetTarget(c326.sptg)
+		e:SetOperation(c326.spop)
+	end
+	--Duel.RegisterFlagEffect(tp,326,RESET_PHASE+PHASE_END,0,1)
 end
 function c326.filter(c,e,tp,lscale,rscale)
 	return ((c:IsFaceup() and (c:IsType(TYPE_PENDULUM) or c.pandemonium)) or c:IsLocation(LOCATION_HAND)) and c:GetLevel()>lscale and c:GetLevel()<rscale and c:IsCanBeSpecialSummoned(e,0x100,tp,false,false)
@@ -132,15 +132,17 @@ function c326.filter(c,e,tp,lscale,rscale)
 end
 function c326.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsReleasableByEffect() end
-	Duel.Release(c,REASON_COST)
+	if chk==0 then return c:IsReleasable() end
+	Duel.SendtoExtraP(c,nil,REASON_COST+REASON_RELEASE)
 end
+--if chk==0 then return c:IsReleasableByEffect() end
+--Duel.Release(c,REASON_COST)
 function c326.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local c=e:GetHandler()
-		local lscale=c:GetLeftScale() local rscale=c:GetRightScale()
-		if c.pandemonium_lscale then lscale=c.pandemonium_lscale end
-		if c.pandemonium_rscale then rscale=c.pandemonium_rscale end
+		local lscale=c.pandemonium_lscale local rscale=c.pandemonium_rscale
+		if not lscale then lscale=c:GetLeftScale() end
+		if not rscale then rscale=c:GetRightScale() end
 		if lscale>rscale then lscale,rscale=rscale,lscale end
 		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c326.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp,lscale,rscale)
 	end
@@ -152,7 +154,7 @@ function c326.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not lscale then lscale=c:GetLeftScale() end
 	if not rscale then rscale=c:GetRightScale() end
 	if lscale>rscale then lscale,rscale=rscale,lscale end
-	local tg=Duel.GetMatchingGroup(c326.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,nil,e,tp,lscale,rscale)
+	local tg=Duel.GetMatchingGroup(c326.filter,tp,LOCATION_HAND+LOCATION_EXTRA,0,c,e,tp,lscale,rscale)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=math.min(ft,1) end
 	if ft<=0 then return end
@@ -183,6 +185,9 @@ function c326.spop(e,tp,eg,ep,ev,re,r,rp)
 	if sg:GetCount()>0 then
 		Duel.SpecialSummon(sg,0x100,tp,tp,false,false,POS_FACEUP)
 	end
+end
+function c326.recon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetDestination()==LOCATION_GRAVE
 end
 function c326.reop(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not re or re~=e end

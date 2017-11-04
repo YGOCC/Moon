@@ -94,8 +94,31 @@ function c17029608.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetReset(RESET_EVENT+0x47e0000)
 		e4:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e4,true)
+		local e5=Effect.CreateEffect(c)
+		e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e5:SetCode(EFFECT_DESTROY_REPLACE)
+		e5:SetRange(LOCATION_MZONE)
+		e5:SetTarget(c17029608.reptg)
+		e5:SetValue(c17029608.repval)
+		e5:SetOperation(c17029608.repop)
+		e5:SetReset(RESET_EVENT+0x1fe0000)
+		c:RegisterEffect(e5,true)
 		Duel.SpecialSummonComplete()
 	end
+end
+function c17029608.repfilter(c,tp)
+	return c:IsFaceup() and c:IsSetCard(0x720) and c:IsLocation(LOCATION_ONFIELD)
+		and c:IsControler(tp) and c:IsReason(REASON_EFFECT)
+end
+function c17029608.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(c17029608.repfilter,1,nil,tp,e:GetHandler()) end
+	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
+end
+function c17029608.repval(e,c)
+	return c17029608.repfilter(c,e:GetHandlerPlayer())
+end
+function c17029608.repop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 end
 function c17029608.cfilter2(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x720) and not c:IsCode(17029608)

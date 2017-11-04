@@ -34,7 +34,7 @@ function c17029611.initial_effect(c)
 	e4:SetCode(EVENT_TO_GRAVE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCategory(CATEGORY_TODECK)
-	e4:SetCountLimit(1,17029611)
+	e4:SetCountLimit(1,17029621)
 	e4:SetCondition(c17029611.tdcon)
 	e4:SetTarget(c17029611.tdtg)
 	e4:SetOperation(c17029611.tdop)
@@ -71,13 +71,13 @@ function c17029611.tdcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c17029611.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD_FILTER)
+end
+function c17029611.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 	c17029611.announce_filter={TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT}
 	local ac=Duel.AnnounceCardFilter(tp,table.unpack(c17029611.announce_filter))
 	Duel.SetTargetParam(ac)
-	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD_FILTER)
-end
-function c17029611.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_HAND,nil,ac)
 	if g:GetCount()>0 then

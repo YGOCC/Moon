@@ -32,19 +32,21 @@ function c17029609.revtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD_FILTER)
 end
 function c17029609.revop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_HAND,nil,ac)
 	if g:GetCount()>0 then
 		local g1=Duel.GetMatchingGroup(c17029609.revfilter,tp,LOCATION_MZONE,0,nil)
 		local tc=g1:GetFirst()
 		while tc do
+			local e1=Effect.CreateEffect(c)
 			e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 			e1:SetValue(1)
 			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
-			tc=g:GetNext()
+			tc=g1:GetNext()
 		end
 	end
 end

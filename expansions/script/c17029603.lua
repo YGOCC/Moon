@@ -33,7 +33,7 @@ function c17029603.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c17029603.thfilter(c)
-	return c:IsSetCard(0x720) and c:IsAbleToHand() and not c:IsCode(17029603)
+	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x720) and c:IsAbleToHand() and not c:IsCode(17029603)
 end
 function c17029603.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and chkc:IsAbleToHand() end

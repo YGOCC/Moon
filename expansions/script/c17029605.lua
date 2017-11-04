@@ -98,7 +98,57 @@ function c17029605.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetReset(RESET_EVENT+0x47e0000)
 		e4:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e4,true)
+		local e5=Effect.CreateEffect(c)
+		e5:SetDescription(aux.Stringid(17029605,3))
+		e5:SetCategory(CATEGORY_ATKCHANGE)
+		e5:SetHintTiming(TIMING_DAMAGE_STEP)
+		e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+		e5:SetType(EFFECT_TYPE_QUICK_O)
+		e5:SetRange(LOCATION_MZONE)
+		e5:SetCode(EVENT_FREE_CHAIN)
+		e5:SetCondition(c17029605.atkcon1)
+		e5:SetTarget(c17029605.atktg1)
+		e5:SetOperation(c17029605.atkop1)
+		e5:SetReset(RESET_EVENT+0x1fe0000)
+		c:RegisterEffect(e5,true)
 		Duel.SpecialSummonComplete()
+	end
+end
+function c17029605.atkcon1(e,tp,eg,ep,ev,re,r,rp)
+	local phase=Duel.GetCurrentPhase()
+	if phase~=PHASE_DAMAGE or Duel.IsDamageCalculated() then return false end
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	return d~=nil and d:IsFaceup() and ((a:GetControler()==tp and a:IsSetCard(0x720) and a:IsRelateToBattle())
+		or (d:GetControler()==tp and d:IsSetCard(0x720) and d:IsRelateToBattle()))
+end
+function c17029605.atktg1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD_FILTER)
+end
+function c17029605.atkop1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
+	c17029605.announce_filter={TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT}
+	local ac=Duel.AnnounceCardFilter(tp,table.unpack(c17029605.announce_filter))
+	Duel.SetTargetParam(ac)
+	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_HAND,nil,ac)
+	if g:GetCount()>0 then
+		local a=Duel.GetAttacker()
+		local d=Duel.GetAttackTarget()
+		if not a:IsRelateToBattle() or not d:IsRelateToBattle() then return end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetOwnerPlayer(tp)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		if a:GetControler()==tp then
+			e1:SetValue(d:GetAttack()/2)
+			a:RegisterEffect(e1)
+		else
+			e1:SetValue(a:GetAttack()/2)
+			d:RegisterEffect(e1)
+		end
 	end
 end
 function c17029605.cfilter2(c)

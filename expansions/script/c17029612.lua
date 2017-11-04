@@ -36,18 +36,18 @@ function c17029612.initial_effect(c)
 	e5:SetTarget(c17029612.cftg)
 	e5:SetOperation(c17029612.cfop)
 	c:RegisterEffect(e5)
-	--Declare and to top
+	--Banish
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(17029612,1))
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e6:SetProperty(EFFECT_FLAG_DELAY)
 	e6:SetCode(EVENT_TO_GRAVE)
 	e6:SetRange(LOCATION_MZONE)
-	e6:SetCategory(CATEGORY_TODECK)
+	e6:SetCategory(CATEGORY_REMOVE)
 	e6:SetCountLimit(1,17029622)
-	e6:SetCondition(c17029612.tdcon)
-	e6:SetTarget(c17029612.tdtg)
-	e6:SetOperation(c17029612.tdop)
+	e6:SetCondition(c17029612.rmcon)
+	e6:SetTarget(c17029612.rmtg)
+	e6:SetOperation(c17029612.rmop)
 	c:RegisterEffect(e6)
 end
 function c17029612.cfcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -58,8 +58,8 @@ function c17029612.revfilter(c)
 	return not c:IsPublic()
 end
 function c17029612.cftg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFacedown,tp,0,LOCATION_ONFIELD,1,nil)
-		and Duel.IsExistingMatchingCard(c17029612.revfilter,tp,0,LOCATION_HAND,1,nil) end
+	if chk==0 then return (Duel.IsExistingMatchingCard(Card.IsFacedown,tp,0,LOCATION_ONFIELD,1,nil)
+		or Duel.IsExistingMatchingCard(c17029612.revfilter,tp,0,LOCATION_HAND,1,nil)) end
 	Duel.SetChainLimit(c17029612.chlimit)
 end
 function c17029612.chlimit(e,ep,tp)
@@ -67,39 +67,39 @@ function c17029612.chlimit(e,ep,tp)
 end
 function c17029612.cfop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_ONFIELD,nil)
-	if g:GetCount()>0 then
-		Duel.ConfirmCards(tp,g)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_PUBLIC)
-		e1:SetRange(LOCATION_MZONE)
-		e1:SetTargetRange(0,LOCATION_HAND)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1)
-	end
+	Duel.ConfirmCards(tp,g)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_PUBLIC)
+	e1:SetTargetRange(0,LOCATION_HAND)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1)
 end
 function c17029612.afilter(c,tp)
 	return c:IsType(TYPE_SPELL) and c:GetPreviousControler()==tp 
 		and c:IsSetCard(0x720)
 end
-function c17029612.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c17029611.afilter,nil,tp)
+function c17029612.bfilter(c)
+	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x720)
+end
+function c17029612.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	local g1=Duel.GetMatchingGroup(c17029612.bfilter,c:GetControler(),LOCATION_GRAVE,0,nil)
+	local ct=g1:GetClassCount(Card.GetCode)
+	local g2=eg:Filter(c17029611.afilter,nil,tp)
 	local c=e:GetHandler()
 	return c:GetOverlayGroup():IsExists(Card.IsType,1,nil,TYPE_SPELL)
-		and g:GetCount()>0
+		and g2:GetCount()>0 and ct>3
 end
-function c17029612.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
-	c17029612.announce_filter={TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT}
-	local ac=Duel.AnnounceCardFilter(tp,table.unpack(c17029612.announce_filter))
-	Duel.SetTargetParam(ac)
-	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD_FILTER)
+function c17029612.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_HAND,1,nil) end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_HAND,nil)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
-function c17029612.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
-	local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_HAND,nil,ac)
+function c17029612.rmop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_HAND,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.SendtoDeck(g,nil,0,REASON_EFFECT)
+		Duel.HintSelection(g)
+		Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 	end
 end

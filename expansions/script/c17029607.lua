@@ -92,8 +92,36 @@ function c17029607.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetReset(RESET_EVENT+0x47e0000)
 		e4:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e4,true)
+		--draw
+		local e5=Effect.CreateEffect(c)
+		e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e5:SetCode(EVENT_TO_HAND)
+		e5:SetProperty(EFFECT_FLAG_DELAY)
+		e5:SetRange(LOCATION_MZONE)
+		e5:SetCountLimit(1)
+		e5:SetCondition(c17029607.drcon)
+		e5:SetTarget(c17029607.drtg)
+		e5:SetOperation(c17029607.drop)
+		e5:SetReset(RESET_EVENT+0x1fe0000)
+		c:RegisterEffect(e5)
 		Duel.SpecialSummonComplete()
 	end
+end
+function c17029607.drfilter(c)
+	return c:IsSetCard(0x720) and c:IsType(TYPE_SPELL)
+end
+function c17029607.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c17029607.drfilter,1,nil,1-tp)
+end
+function c17029607.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function c17029607.drop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
 function c17029607.cfilter2(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x720) and not c:IsCode(17029607)
