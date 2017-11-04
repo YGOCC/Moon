@@ -58,8 +58,11 @@ end
 function c240100257.filter(c)
 	return c:IsType(TYPE_XYZ) and c:IsSetCard(0xbb2)
 end
+function c240100257.cfilter(c)
+	return c:IsSetCard(0xbb2) and c:IsPreviousLocation(LOCATION_MZONE)
+end
 function c240100257.poscon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0xbb2) and eg:IsExists(Card.IsSetCard,1,e:GetHandler(),0xbb2)
+	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0xbb2) and eg:IsExists(c240100257.cfilter,1,e:GetHandler())
 end
 function c240100257.posfilter(c)
 	return c:IsPosition(POS_FACEUP_ATTACK) and c:IsCanChangePosition()
