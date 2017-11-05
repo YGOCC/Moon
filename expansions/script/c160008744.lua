@@ -37,7 +37,7 @@ c:EnableCounterPermit(0x1075)
 	e6:SetType(EFFECT_TYPE_FIELD)
 	e6:SetRange(LOCATION_FZONE)
 	e6:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e6:SetCode(EFFECT_DISABLE)
+	e6:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
 	e6:SetTarget(c160008744.distg)
 	c:RegisterEffect(e6)
 		--Atk up
@@ -59,18 +59,7 @@ c:EnableCounterPermit(0x1075)
 	e8:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0xc50))
 	e8:SetValue(-300)
 	c:RegisterEffect(e8)
-	--to hand
-	local e9=Effect.CreateEffect(c)
-	e9:SetDescription(aux.Stringid(160008744,0))
-	e9:SetCategory(CATEGORY_DRAW)
-	e9:SetType(EFFECT_TYPE_IGNITION)
-	e9:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e9:SetRange(LOCATION_FZONE)
-	e9:SetCountLimit(1,160008744)
-	e9:SetCost(c160008744.thcost)
-	e9:SetTarget(c160008744.thtg)
-	e9:SetOperation(c160008744.thop)
-	c:RegisterEffect(e9)
+  
 		--to hand
 	local e10=Effect.CreateEffect(c)
 	e10:SetDescription(aux.Stringid(6666,4))
@@ -79,30 +68,10 @@ c:EnableCounterPermit(0x1075)
 	e10:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e10:SetRange(LOCATION_FZONE)
 	e10:SetCountLimit(1,160008744)
-	e10:SetCost(c160008744.spcost)
-	e10:SetTarget(c160008744.sptg)
-	e10:SetOperation(c160008744.spop)
-	c:RegisterEffect(e10)
-		 local e11=e10:Clone()
-	e11:SetDescription(aux.Stringid(6666,1))
-	e11:SetCost(c160008744.spcost4)
-	e11:SetTarget(c160008744.sptg4)
-	e11:SetOperation(c160008744.spop4)
-	c:RegisterEffect(e11)
-		 local e12=e10:Clone()
-	e12:SetDescription(aux.Stringid(6666,2))
-	e12:SetCost(c160008744.spcost2)
-	e12:SetTarget(c160008744.sptg2)
-	e12:SetOperation(c160008744.spop2)
-	c:RegisterEffect(e12)
-	
-		 local e13=e10:Clone()
-	e13:SetDescription(aux.Stringid(6666,3))
-	e13:SetCost(c160008744.spcost3)
-	e13:SetTarget(c160008744.sptg3)
-	e13:SetOperation(c160008744.spop3)
-	c:RegisterEffect(e13)
-	
+	e10:SetCost(c160008744.spcost4)
+	e10:SetTarget(c160008744.sptg4)
+	e10:SetOperation(c160008744.spop4)
+	c:RegisterEffect(e10)	
 end
 function c160008744.cfilter(c)
 	return  (c:IsSetCard(0xc50) or not c:IsType(TYPE_EFFECT) ) and not c:IsType(TYPE_SPELL+TYPE_TRAP)
@@ -233,21 +202,17 @@ function c160008744.spcost4(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RemoveCounter(tp,10,10,0x1075,4,REASON_COST)
 end
 function c160008744.sptg4(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-		if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,500319546,0x55,0x4011,0,0,4,RACE_AQUA,ATTRIBUTE_LIGHT) end
-	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,4,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,4,0,0)
+  if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,500319546,0,0x4011,0,0,4,RACE_AQUA,ATTRIBUTE_LIGHT) end
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
 function c160008744.spop4(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,500319546,0x55,0x4011,0,0,4,RACE_AQUA,ATTRIBUTE_LIGHT) then
-		for i=1,4 do
-			local token=Duel.CreateToken(tp,500319546)
-			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
-		end
-		Duel.SpecialSummonComplete()
-	end
+
+ if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		or not Duel.IsPlayerCanSpecialSummonMonster(tp,500319546,0,0x4011,0,0,4,RACE_AQUA,ATTRIBUTE_LIGHT) then return end
+	local token=Duel.CreateToken(tp,500319546)
+	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 end
+  
 
