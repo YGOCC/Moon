@@ -40,7 +40,7 @@ function c1020022.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c1020022.condition(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttackTarget()
-	return tp~=Duel.GetTurnPlayer() and at and at:IsFaceup() and at:IsSetCard(0x1ded) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	return tp~=Duel.GetTurnPlayer() and at and at:IsFaceup() and at:IsSetCard(0xded) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c1020022.filter1,tp,LOCATION_DECK,0,1,nil,e,tp)
 end
 function c1020022.filter1(c,e,tp)
