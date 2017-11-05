@@ -8,6 +8,8 @@ function c16000535.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_MZONE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,0x1e0)
 	e1:SetCost(c16000535.cost)
 	e1:SetTarget(c16000535.target)
 	e1:SetOperation(c16000535.operation)
@@ -45,7 +47,6 @@ end
 
 function c16000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST) and Duel.GetCurrentPhase()~=PHASE_MAIN2 end
-	e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
 		local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_BP)
@@ -53,22 +54,20 @@ if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST)
 	e1:SetTargetRange(1,0)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
+e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
 end
-function c16000535.filter(c)
-local lv=c:GetLevel()
-	return c:IsControlerCanBeChanged() and c:IsFaceup() and lv>0
-end
+
 function c16000535.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()~=tp and chkc:IsControlerCanBeChanged() end
+	  if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:GetControler()~=tp and chkc:IsControlerCanBeChanged() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
 end
 function c16000535.operation(e,tp,eg,ep,ev,re,r,rp)
-local c=e:GetHandler()
+  local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e)  then
 		Duel.GetControl(tc,tp)
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
@@ -86,23 +85,24 @@ local c=e:GetHandler()
 		e5:SetCode(EFFECT_DISABLE_EFFECT)
 		e5:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e5)
-	end
+	 end
 end
+
 function c16000535.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
-function c16000535.filter(c)
+function c16000535.xfilter(c)
 	return c:IsType(TYPE_PENDULUM) and  c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsAbleToDeck()
 end
 function c16000535.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2)
-		and Duel.IsExistingMatchingCard(c16000535.filter,tp,LOCATION_EXTRA,0,5,nil) end
+		and Duel.IsExistingMatchingCard(c16000535.xfilter,tp,LOCATION_EXTRA,0,5,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,5,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 function c16000535.thop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c16000535.filter),tp,LOCATION_EXTRA,0,nil)
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c16000535.xfilter),tp,LOCATION_EXTRA,0,nil)
 	if g:GetCount()<5 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local sg=g:Select(tp,5,5,nil)

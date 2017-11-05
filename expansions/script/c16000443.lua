@@ -52,13 +52,13 @@ function c16000443.spcon(e,c)
 		and Duel.IsExistingMatchingCard(c16000443.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,3,nil)
 end
 function c16000443.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c16000443.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,3,3,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_LINK)
-	e:GetHandler():SetMaterial(g:Filter(Card.IsLocation,nil,LOCATION_REMOVED))
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+    local g=Duel.SelectMatchingCard(tp,c16000443.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,3,3,nil)
+    Duel.Remove(g,POS_FACEUP,REASON_LINK)
+    e:GetHandler():SetMaterial(g:Filter(Card.IsLocation,nil,LOCATION_REMOVED))
 end
 function c16000443.tgtg(e,c)
-	return e:GetHandler():GetLinkedGroup():IsContains(c) and c:IsType(TYPE_NORMAL)
+	return e:GetHandler():GetLinkedGroup():IsContains(c)
 end
 function c16000443.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
@@ -68,15 +68,15 @@ function c16000443.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,PLAYER_ALL,LOCATION_REMOVED)
 end
 function c16000443.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):Filter(c16000443.filter,nil,c:GetMaterial())
-	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
-	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
-	if c:IsFaceup() and c:IsRelateToEffect(e) then
-	Duel.Recover(tp,ct*500,REASON_EFFECT)
-	
-	end
+    local c=e:GetHandler()
+    local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):Filter(c16000443.filter,nil,c:GetMaterial())
+    Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+    local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
+    if c:IsFaceup() and c:IsRelateToEffect(e) then
+    Duel.Recover(tp,ct*500,REASON_EFFECT)
+    
+    end
 end
 function c16000443.filter(c,mg)
-	return not mg:IsContains(c)
+    return not mg:IsContains(c)
 end

@@ -37,8 +37,8 @@ function c50031668.initial_effect(c)
 	end
 end
 c50031668.evolute=true
-c50031668.material1=function(mc) return mc:IsCode(160001123) and mc:IsFaceup() end
-c50031668.material2=function(mc) return mc:IsType(TYPE_NORMAL) and mc:GetLevel()==4 and mc:IsFaceup() end
+c50031668.material1=function(mc) return mc:GetLevel()==1 and mc:IsFaceup() or mc:IsType(TYPE_NORMAL) end
+c50031668.material2=function(mc) return  mc:GetLevel()==4 and mc:IsFaceup() or mc:IsType(TYPE_NORMAL) end
 function c50031668.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)
@@ -80,7 +80,7 @@ function c50031668.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 		else Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)end
 		Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)
-	end	
+	end 
 	end
 function c50031668.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY) 
