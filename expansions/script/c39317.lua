@@ -11,7 +11,7 @@ function c39317.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c39317.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
+	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 and Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)>0
 end
 function c39317.filter(c,e)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and (not e or not c:IsImmuneToEffect(e))
