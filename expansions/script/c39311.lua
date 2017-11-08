@@ -18,7 +18,7 @@ function c39311.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetTarget(c39311.target)
+	e2:SetTarget(c39311.target1)
 	e2:SetOperation(c39311.activate)
 	c:RegisterEffect(e2)
 end
@@ -44,7 +44,7 @@ end
 function c39311.cfilter(c)
 	return c:IsFaceup() and c:GetCode()>39300 and c:GetCode()<39319 and not c:IsCode(39311,39312)
 end
-function c39311.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c39311.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) end
 	if chk==0 then return Duel.IsExistingMatchingCard(c39311.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
