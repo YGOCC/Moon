@@ -1,5 +1,5 @@
 function c39309.initial_effect(c)
-	aux.AddFusionProcCode2(c,39301,39306,true,false)
+	aux.AddFusionProcCode2(c,39301,39308,true,false)
 	c:EnableReviveLimit()
 	--Remove
 	local e3=Effect.CreateEffect(c)
