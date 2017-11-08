@@ -1,4 +1,4 @@
-﻿expansions/Cards-non QCD.cdb	c2cc3f99d9a827d8299a5a9595cf3880
+﻿expansions/Cards-non QCD.cdb	0
 expansions/pics/100000711.jpg	81b491f37683e82f3b88b7514293cabd
 expansions/pics/100000712.jpg	6ec6267eefe20c74a754ea05eb3d50a6
 expansions/pics/100000713.jpg	dc3e348df3125ce3bf5df18dbfe60ff8
@@ -5020,18 +5020,23 @@ expansions/script/c39210.lua	b298716605a1975f62fb6a1ed0dec1d9
 expansions/script/c39211.lua	2157431dfbd5005655e0255afe565a75
 expansions/script/c39212.lua	d35da9a9391ef402d288aa02e893547c
 expansions/script/c39213.lua	f31e660ce39a14c23aa94c701696957d
-expansions/script/c39302.lua	32dc8641eb66d65ccf7cf729d7b82759
+expansions/script/c39302.lua	1bfd6890de644bdf282a9d6e331ec1eb
 expansions/script/c39303.lua	699f949358b97fab3130ec2de2425b53
-expansions/script/c39304.lua	c6570693ac025002c5416580cea622b9
-expansions/script/c39305.lua	58cbb886cd51636d612c6a90b2d0f600
+expansions/script/c39304.lua	daa074e4f5fe47e8ce310fb582cb49e1
+expansions/script/c39305.lua	b4dd4524f9c35dadb4ee627989b1de0e
 expansions/script/c39306.lua	586a4ceb23537ecb09e803b126e264ff
 expansions/script/c39307.lua	4ab5b2bb3326fdb14d2b30c77229f18d
 expansions/script/c39308.lua	43de332c2c4de656fd89218a0baabb8d
 expansions/script/c39309.lua	284df5b0284757235d7230839a375692
-expansions/script/c39310.lua	5a3c771738b227f3f419b93b690dfb56
-expansions/script/c39311.lua	1e0823a71b386c7c368f6758200b1219
+expansions/script/c39310.lua	9da8de1c4cb6ab770b92985770d9b40c
+expansions/script/c39311.lua	70ee4fafa5bdba94c32f613a5d06e436
 expansions/script/c39312.lua	a7e183fc27933fddee9222766ad9e743
-expansions/script/c39313.lua	ae3ff2c47e595265b0f8360866fdffb6
+expansions/script/c39313.lua	9ad1600b2e39fb744a098c487777c5b0
+expansions/script/c39314.lua	310b271e1626b95a04a144fe54c13405
+expansions/script/c39315.lua	b9ff45ce8bfece7f185cda363ce88500
+expansions/script/c39316.lua	047a9d3ac3a049d8cc020a31bca32717
+expansions/script/c39317.lua	15593f00dcbe165fcf40a581ec6d29a3
+expansions/script/c39318.lua	abd0cc982952f86e6f716f2743823a4c
 expansions/script/c40444917.lua	15561b4a86723d3d77bcfa16f9059860
 expansions/script/c405100.lua	635455079dde35983f46527a142520f6
 expansions/script/c405101.lua	83c636322cee42ed9e12f615427d64c0
@@ -5972,7 +5977,7 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
-update/filelist.txt	a8eb5bdb769c8a8309b27f2326b5e4a8
+update/filelist.txt	dba86abe24e7a44b232e2fe7f1dec6ae
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/version.txt	e40f79f8b89583406865f635c51c7638
+update/version.txt	a95c9bd4ea97427c8d7dc3aa3d78c216
 update/version_new.txt	7dcf33691510eda11982adf93a0096f3
