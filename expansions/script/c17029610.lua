@@ -18,11 +18,8 @@ function c17029610.discond(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 		and Duel.IsExistingMatchingCard(c17029610.disfilter,tp,LOCATION_MZONE,0,1,nil)
 end
-function c17029610.thfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x720) and c:IsType(TYPE_SPELL+TYPE_TRAP)
-end
 function c17029610.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c17029610.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
+	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
