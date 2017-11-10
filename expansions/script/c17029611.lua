@@ -39,6 +39,7 @@ function c17029611.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c17029611.drcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	return c:GetOverlayGroup():IsExists(Card.IsType,1,nil,TYPE_SPELL)
 end
 function c17029611.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -65,8 +66,8 @@ function c17029611.afilter(c,tp)
 		and c:IsSetCard(0x720)
 end
 function c17029611.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c17029611.afilter,nil,tp)
 	local c=e:GetHandler()
+	local g=eg:Filter(c17029611.afilter,nil,tp)
 	return g:GetCount()>0
 end
 function c17029611.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
