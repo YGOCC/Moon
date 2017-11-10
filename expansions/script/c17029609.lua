@@ -9,15 +9,6 @@ function c17029609.initial_effect(c)
 	e1:SetTarget(c17029609.revtg)
 	e1:SetOperation(c17029609.revop)
 	c:RegisterEffect(e1)
---	--Banish replace
---	local e2=Effect.CreateEffect(c)
---	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
---	e2:SetCode(EFFECT_DESTROY_REPLACE)
---	e2:SetRange(LOCATION_GRAVE)
---	e2:SetTarget(c17029608.reptg)
---	e2:SetValue(c17029608.repval)
---	e2:SetOperation(c17029608.repop)
---	c:RegisterEffect(e2)
 end
 function c17029609.revfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_FAIRY)
@@ -50,10 +41,3 @@ function c17029609.revop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-
---function c17029609.bancon(e,tp,eg,ep,ev,re,r,rp)
---	if  re:IsHasCategory(CATEGORY_NEGATE)
---		and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
---	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_REMOVE)
---	return ex and tg~=nil
---end

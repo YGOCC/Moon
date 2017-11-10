@@ -54,11 +54,20 @@ end
 function c17029607.cfilter(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x720) and c:IsAbleToRemoveAsCost()
 end
+function c17029607.cfcost(c)
+	return c:IsCode(17029609) and c:IsAbleToRemoveAsCost()
+end
 function c17029607.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c17029607.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c17029607.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	local b1=Duel.IsExistingMatchingCard(c17029607.cfilter,tp,LOCATION_GRAVE,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(c17029607.cfcost,tp,LOCATION_GRAVE,0,1,nil)
+	if chk==0 then return b1 or b2 end
+	if b2 and (not b1 or Duel.SelectYesNo(tp,aux.Stringid(17029609,1))) then
+		local tg=Duel.GetFirstMatchingCard(c17029607.cfcost,tp,LOCATION_GRAVE,0,nil)
+		Duel.Remove(tg,POS_FACEUP,REASON_COST)
+	else
+		local g=Duel.SelectMatchingCard(tp,c17029607.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
+	end
 end
 function c17029607.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -94,7 +103,9 @@ function c17029607.spop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e4,true)
 		--draw
 		local e5=Effect.CreateEffect(c)
-		e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e5:SetDescription(aux.Stringid(17029607,3))
+		e5:SetCategory(CATEGORY_DRAW)
+		e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 		e5:SetCode(EVENT_TO_HAND)
 		e5:SetProperty(EFFECT_FLAG_DELAY)
 		e5:SetRange(LOCATION_MZONE)
@@ -107,11 +118,11 @@ function c17029607.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonComplete()
 	end
 end
-function c17029607.drfilter(c)
+function c17029607.drfilter(c,tp)
 	return c:IsSetCard(0x720) and c:IsType(TYPE_SPELL)
 end
 function c17029607.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c17029607.drfilter,1,nil,1-tp)
+	return eg:IsExists(c17029607.drfilter,1,nil,tp)
 end
 function c17029607.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

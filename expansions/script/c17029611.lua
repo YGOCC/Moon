@@ -11,24 +11,22 @@ function c17029611.initial_effect(c)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	c:RegisterEffect(e2)
 	--draw
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(17029611,0))
+	e3:SetDescription(aux.Stringid(17029611,1))
 	e3:SetCategory(CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetCountLimit(1,17029611)
+	e3:SetCondition(c17029611.drcon)
 	e3:SetCost(c17029611.drcost)
 	e3:SetTarget(c17029611.drtg)
 	e3:SetOperation(c17029611.drop)
 	c:RegisterEffect(e3)
 	--Declare and to top
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(17029611,1))
+	e4:SetDescription(aux.Stringid(17029611,0))
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_TO_GRAVE)
@@ -39,6 +37,9 @@ function c17029611.initial_effect(c)
 	e4:SetTarget(c17029611.tdtg)
 	e4:SetOperation(c17029611.tdop)
 	c:RegisterEffect(e4)
+end
+function c17029611.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return c:GetOverlayGroup():IsExists(Card.IsType,1,nil,TYPE_SPELL)
 end
 function c17029611.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -66,8 +67,7 @@ end
 function c17029611.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(c17029611.afilter,nil,tp)
 	local c=e:GetHandler()
-	return c:GetOverlayGroup():IsExists(Card.IsType,1,nil,TYPE_SPELL)
-		and g:GetCount()>0
+	return g:GetCount()>0
 end
 function c17029611.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end

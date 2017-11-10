@@ -65,11 +65,20 @@ end
 function c17029604.cfilter(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x720) and c:IsAbleToRemoveAsCost()
 end
+function c17029604.cfcost(c)
+	return c:IsCode(17029609) and c:IsAbleToRemoveAsCost()
+end
 function c17029604.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c17029604.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c17029604.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	local b1=Duel.IsExistingMatchingCard(c17029604.cfilter,tp,LOCATION_GRAVE,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(c17029604.cfcost,tp,LOCATION_GRAVE,0,1,nil)
+	if chk==0 then return b1 or b2 end
+	if b2 and (not b1 or Duel.SelectYesNo(tp,aux.Stringid(17029609,1))) then
+		local tg=Duel.GetFirstMatchingCard(c17029604.cfcost,tp,LOCATION_GRAVE,0,nil)
+		Duel.Remove(tg,POS_FACEUP,REASON_COST)
+	else
+		local g=Duel.SelectMatchingCard(tp,c17029604.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
+	end
 end
 function c17029604.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -104,6 +113,7 @@ function c17029604.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e4,true)
 		local e5=Effect.CreateEffect(c)
+		e5:SetDescription(aux.Stringid(17029604,3))
 		e5:SetCategory(CATEGORY_TOGRAVE)
 		e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 		e5:SetProperty(EFFECT_FLAG_DELAY)
