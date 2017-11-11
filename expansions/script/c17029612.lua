@@ -74,14 +74,18 @@ function c17029612.cfop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_ONFIELD,nil)
 	Duel.ConfirmCards(tp,g)
-	local hand=Duel.GetMatchingGroup(c17029612.handfilter,tp,0,LOCATION_HAND,nil)
-	local rv=hand:GetFirst()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_PUBLIC)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	rv:RegisterEffect(e1)
-	rv=hand:GetNext()
+	local g2=Duel.GetMatchingGroup(c17029612.handfilter,tp,0,LOCATION_HAND,nil)
+	if g2:GetCount()>0 then
+		local tc=g2:GetFirst()
+		while tc do
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_PUBLIC)
+			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e1)
+			tc=g2:GetNext()
+		end
+	end
 end
 function c17029612.afilter(c,tp)
 	return c:IsType(TYPE_SPELL) and c:GetPreviousControler()==tp 
@@ -94,8 +98,8 @@ function c17029612.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g1=Duel.GetMatchingGroup(c17029612.bfilter,c:GetControler(),LOCATION_GRAVE,0,nil)
 	local ct=g1:GetClassCount(Card.GetCode)
-	local g2=eg:Filter(c17029611.afilter,nil,tp)
-	return g2:GetCount()>0 and ct>3
+--	local g2=eg:Filter(c17029611.afilter,nil,tp)
+	return eg:IsExists(c17029611.afilter,1,nil,tp) and ct>3
 end
 function c17029612.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_HAND,1,nil) end

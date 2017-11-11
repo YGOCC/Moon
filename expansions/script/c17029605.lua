@@ -89,10 +89,13 @@ function c17029605.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP_ATTACK)
 		c:AddMonsterAttributeComplete()
 		local e2=Effect.CreateEffect(c)
+		e2:SetDescription(aux.Stringid(17029602,4))
 		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetValue(1)
+		e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+		e2:SetRange(LOCATION_MZONE)
+		e2:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+		e2:SetCountLimit(1)
+		e2:SetValue(c17029605.valct)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		c:RegisterEffect(e2,true)
 		local e3=Effect.CreateEffect(c)
@@ -123,6 +126,11 @@ function c17029605.spop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e5,true)
 		Duel.SpecialSummonComplete()
 	end
+end
+function c17029605.valct(e,re,r,rp)
+	if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
+		return 1
+	else return 0 end
 end
 function c17029605.atkcon1(e,tp,eg,ep,ev,re,r,rp)
 	local phase=Duel.GetCurrentPhase()
