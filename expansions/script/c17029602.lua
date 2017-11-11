@@ -91,9 +91,7 @@ function c17029602.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c17029602.valct(e,re,r,rp)
-	if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
-		return 1
-	else return 0 end
+	return bit.band(r,REASON_BATTLE)~=0
 end
 function c17029602.cfilter2(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x720) and not c:IsCode(17029602)
@@ -111,6 +109,7 @@ function c17029602.revop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.SelectMatchingCard(tp,c17029602.revfilter,tp,0,LOCATION_HAND,1,1,nil)
     local tc=g:GetFirst()
     if tc then
+    	Duel.HintSelection(tc)
         local e1=Effect.CreateEffect(e:GetHandler())
         e1:SetType(EFFECT_TYPE_SINGLE)
         e1:SetCode(EFFECT_PUBLIC)

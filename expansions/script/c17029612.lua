@@ -98,7 +98,6 @@ function c17029612.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g1=Duel.GetMatchingGroup(c17029612.bfilter,c:GetControler(),LOCATION_GRAVE,0,nil)
 	local ct=g1:GetClassCount(Card.GetCode)
---	local g2=eg:Filter(c17029611.afilter,nil,tp)
 	return eg:IsExists(c17029611.afilter,1,nil,tp) and ct>3
 end
 function c17029612.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
