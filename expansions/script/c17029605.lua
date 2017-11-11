@@ -181,9 +181,9 @@ function c17029605.revtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c17029605.revop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.SelectMatchingCard(tp,c17029605.revfilter,tp,0,LOCATION_HAND,1,1,nil)
+    Duel.HintSelection(g)
     local tc=g:GetFirst()
     if tc then
-    	Duel.HintSelection(tc)
         local e1=Effect.CreateEffect(e:GetHandler())
         e1:SetType(EFFECT_TYPE_SINGLE)
         e1:SetCode(EFFECT_PUBLIC)
