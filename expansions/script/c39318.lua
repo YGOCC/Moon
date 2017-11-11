@@ -48,7 +48,6 @@ function c39318.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	local sel=e:GetLabel()
-	Debug.Message(sel)
 	if sel==0 then return end
 	if sel==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
