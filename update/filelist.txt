@@ -1,7 +1,4 @@
-﻿README.md	c4d3f161e29b95215c70fbb1631dffd0
-start.htm	dfbd1ee66a4e792349591b88660c0956
-web.config	a9adb4b5585a7df1ee682584ffc246b5
-expansions/Cards-non QCD.cdb	a2cd5cccd76cc9a5201e6f936241f362
+﻿expansions/Cards-non QCD.cdb	a2cd5cccd76cc9a5201e6f936241f362
 expansions/pics/100000711.jpg	81b491f37683e82f3b88b7514293cabd
 expansions/pics/100000712.jpg	6ec6267eefe20c74a754ea05eb3d50a6
 expansions/pics/100000713.jpg	dc3e348df3125ce3bf5df18dbfe60ff8
@@ -6008,7 +6005,6 @@ expansions/script/c99830044.lua	0220d95558e82891bffdd41771bd0687
 expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
-expansions/script/desktop.ini	c02c6fd29c52546a413b15abd8b3bc90
 sound/BGM/custom/Bad Apple.mp3	d311848fb68c40452d5a19b65b35f47d
 sound/BGM/custom/kyoshikyoku.mp3	332ffe2d5144e5d3848f3d43cbf39663
 sound/BGM/custom/My Friend.mp3	86774f3a02f7504aee3a5f543ffcef3c
@@ -6059,6 +6055,5 @@ sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	c9b2ae557a77257e12e9a5599336afeb
 update/filelist.txt	32f20646e3c8f7eeb7fbd89776f294ef
 update/rename.txt	cbfaccc657e73040ec051233017b2c4d
-update/update-server.bat	9d0fefd8697d19b107d63588625b8fb6
 update/version.txt	ce75e79d2471cd0f996c6ac421719347
 update/version_new.txt	7dcf33691510eda11982adf93a0096f3
