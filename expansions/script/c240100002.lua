@@ -3,7 +3,7 @@ function c240100002.initial_effect(c)
 	c:EnableReviveLimit()
 	--2+ monsters
 	aux.AddLinkProcedure(c,nil,2)
-	--You can also Link Summon this card using 2 of your "T.G." Synchro Monsters on the field as the Link Materials.
+	--You can also Link Summon this card using 1 "T.G." Synchro Monster as the Link Material.
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(240100002,1))
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -14,7 +14,7 @@ function c240100002.initial_effect(c)
 	e0:SetOperation(c240100002.linkop)
 	e0:SetValue(SUMMON_TYPE_LINK)
 	c:RegisterEffect(e0)
-	--If a monster(s) with a monster card type(s) (Fusion, Synchro, Xyz, Pendulum, or Link) of a monster this card points to is Special Summoned: Draw 1 card, then unless this card is co-linked, shuffle 1 random card from your hand into the Deck.
+	--If a monster(s) with a monster card type(s) (Fusion, Synchro, Xyz, Pendulum, or Link) of a monster this card points to is Special Summoned: Draw 1 card. This card must be face-up on the field to activate and to resolve this effect.
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(240100002,0))
 	e1:SetCategory(CATEGORY_DRAW)
@@ -36,24 +36,18 @@ function c240100002.initial_effect(c)
 	e2:SetOperation(c240100002.spop)
 	c:RegisterEffect(e2)
 end
-function c240100002.linkfilter1(c,tp,lc)
-	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0x27) and c:IsCanBeLinkMaterial(lc) and Duel.IsExistingMatchingCard(c240100002.linkfilter2,tp,LOCATION_MZONE,0,1,nil,tp,lc,c)
-end
-function c240100002.linkfilter2(c,tp,lc,fc)
-	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0x27) and c:IsCanBeLinkMaterial(lc) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,fc),lc)>0
+function c240100002.linkfilter(c,lc)
+	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:IsSetCard(0x27) and c:IsCanBeLinkMaterial(lc) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c),lc)>0
 end
 function c240100002.linkcon(e,c)
 	if c==nil then return true end
 	if (c:IsType(TYPE_PENDULUM) or not Card.IsTypeCustom or c:IsTypeCustom("Pandemonium") or c:IsTypeCustom("Relay")) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(c240100002.linkfilter1,tp,LOCATION_MZONE,0,1,nil,tp,c)
+	return Duel.IsExistingMatchingCard(c240100002.linkfilter,tp,LOCATION_MZONE,0,1,nil,c)
 end
 function c240100002.linkop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local sg=Duel.SelectMatchingCard(tp,c240100002.linkfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local mg=Duel.SelectMatchingCard(tp,c240100002.linkfilter2,tp,LOCATION_MZONE,0,1,1,nil,tp,c,sg:GetFirst())
-	sg:Merge(mg)
+	local sg=Duel.SelectMatchingCard(tp,c240100002.linkfilter,tp,LOCATION_MZONE,0,1,1,nil,c)
 	c:SetMaterial(sg)
 	Duel.SendtoGrave(sg,REASON_MATERIAL+REASON_LINK)
 end
@@ -75,13 +69,9 @@ function c240100002.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c240100002.drop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) or e:GetHandler():IsFacedown() then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
-	if e:GetHandler():GetMutualLinkedGroupCount()==0 and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0 then
-		local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0):RandomSelect(tp,1)
-		Duel.BreakEffect()
-		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
-	end
 end
 function c240100002.spfilter(c,e,tp)
 	return c:IsSetCard(0x27) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
