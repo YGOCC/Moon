@@ -11,17 +11,6 @@ function c17029612.initial_effect(c)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--disable spsummon
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCode(EFFECT_CANNOT_SUMMON)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetTargetRange(1,0)
-	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EFFECT_CANNOT_MSET)
-	c:RegisterEffect(e4)
 	--confirm
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(17029612,1))
@@ -98,7 +87,7 @@ function c17029612.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g1=Duel.GetMatchingGroup(c17029612.bfilter,c:GetControler(),LOCATION_GRAVE,0,nil)
 	local ct=g1:GetClassCount(Card.GetCode)
-	return eg:IsExists(c17029611.afilter,1,nil,tp) and ct>3
+	return eg:IsExists(c17029611.afilter,1,nil,tp) and ct>2
 end
 function c17029612.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD+LOCATION_HAND,1,nil) end
