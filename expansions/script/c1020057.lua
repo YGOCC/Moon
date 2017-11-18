@@ -33,14 +33,14 @@ function c1020057.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c1020057.matfilter(c,lc,sumtype,tp)
-	return c:IsSetCard(0x4B0) and c:GetSummonLocation()==LOCATION_EXTRA
+	return c:IsSetCard(0x4b0) and c:GetSummonLocation()==LOCATION_EXTRA
 end
 function c1020057.unval(e,re)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsControler(1-e:GetHandlerPlayer()) and re:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020057.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0)
+	return c:IsFaceup() and c:IsSetCard(0x4b0)
 end
 function c1020057.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetMatchingGroupCount(c1020057.cfilter,tp,LOCATION_MZONE,0,nil)
@@ -59,7 +59,7 @@ function c1020057.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1020057.filter(c,tp)
-	return c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and c:GetPreviousControler()==tp
+	return c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and c:GetPreviousControler()==tp
 end
 function c1020057.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:Filter(c1020057.filter,nil,tp)

@@ -1,7 +1,7 @@
 --Bushido God Freezing Beast
 function c1020053.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x4B0),4,3)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x4b0),4,3)
 	c:EnableReviveLimit()
 	--cannot be target
 	local e1=Effect.CreateEffect(c)
@@ -78,7 +78,7 @@ function c1020053.reccon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
 function c1020053.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0)
+	return c:IsFaceup() and c:IsSetCard(0x4b0)
 end
 function c1020053.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -97,7 +97,7 @@ function c1020053.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c1020053.tdfilter(c)
-	return c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function c1020053.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1020053.tdfilter,tp,LOCATION_REMOVED,0,1,nil) end
@@ -118,7 +118,7 @@ function c1020053.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c1020053.filter(c)
-	return c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c1020053.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)

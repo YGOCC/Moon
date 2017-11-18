@@ -33,7 +33,7 @@ function c1020043.tgval(e,re,rp)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020043.filter(c)
-	return c:IsSetCard(0x4B0) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0x4b0) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function c1020043.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1020043.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -58,7 +58,7 @@ function c1020043.regop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c1020043.descon(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
-	return Duel.GetAttacker():IsSetCard(0x4B0) and d and d:IsControler(1-tp) and d:IsDefensePos()
+	return Duel.GetAttacker():IsSetCard(0x4b0) and d and d:IsControler(1-tp) and d:IsDefensePos()
 end
 function c1020043.desop(e,tp,eg,ep,ev,re,r,rp)
 	if d:IsRelateToBattle() then

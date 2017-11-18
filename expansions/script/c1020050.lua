@@ -1,7 +1,7 @@
 --Bushido God Thunderbird
 function c1020050.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,nil,1,1,aux.NonTuner(Card.IsSetCard,0x4B0),1,99)
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x4b0),1)
 	c:EnableReviveLimit()
 	--cannot be target
 	local e1=Effect.CreateEffect(c)
@@ -41,7 +41,7 @@ function c1020050.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function c1020050.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER)
 end
 function c1020050.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

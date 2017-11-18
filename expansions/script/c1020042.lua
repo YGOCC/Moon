@@ -35,7 +35,7 @@ function c1020042.tgval(e,re,rp)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020042.filter(c,e,tp)
-	return c:IsSetCard(0x4B0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return c:IsSetCard(0x4b0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function c1020042.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c1020042.filter(chkc,e,tp) end
@@ -53,7 +53,7 @@ function c1020042.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
 		e1:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
-		e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4B0))
+		e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4b0))
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e1,tp)
 	end

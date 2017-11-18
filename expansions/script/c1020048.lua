@@ -9,9 +9,9 @@ function c1020048.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetRange(LOCATION_FZONE)
+	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4B0))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4b0))
 	e2:SetValue(400)
 	c:RegisterEffect(e2)
 	--pierce
@@ -46,7 +46,7 @@ function c1020048.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c1020048.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER)
 end
 function c1020048.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -62,7 +62,7 @@ function c1020048.recop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c1020041.filter(c)
 	if c:IsCode(1020048) then return false end
-	return (c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER)) or (c:IsSetCard(0x14B0) and c:IsType(TYPE_SPELL+TYPE_TRAP))
+	return (c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER)) or (c:IsSetCard(0x4b0) and c:IsType(TYPE_SPELL+TYPE_TRAP))
 end
 function c1020041.thfilter(c)
 	return c:IsAbleToHand() and c1020041.filter(c)

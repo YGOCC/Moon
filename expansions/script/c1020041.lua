@@ -36,7 +36,7 @@ function c1020041.tgval(e,re,rp)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020041.filter(c,tpe)
-	return c:IsSetCard(0x4B0) and c:IsType(tpe) and c:IsAbleToHand()
+	return c:IsSetCard(0x4b0) and c:IsType(tpe) and c:IsAbleToHand()
 end
 function c1020041.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tpe=e:GetLabel()

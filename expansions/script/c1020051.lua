@@ -2,8 +2,7 @@
 function c1020051.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMixN(c,true,true,c1020051.ffilter,3)
-	aux.AddContactFusion(c,c1020051.contactfil,c1020051.contactop,c1020051.splimit)
+	aux.AddFusionProcFunRep(c,c1020051.ffilter,3,false)
 	--cannot be target
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -35,12 +34,15 @@ function c1020051.initial_effect(c)
 	e3:SetOperation(c1020051.spop)
 	c:RegisterEffect(e3)
 end
+--function c1020051.ffilter(c)
+--	return c:IsLevelAbove(4) and c:IsFusionSetCard(0x4b0)
+--end
 function c1020051.unval(e,re)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsControler(1-e:GetHandlerPlayer()) and re:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020051.ffilter(c,fc,sumtype,tp)
-	return c:IsLevelAbove(4) and c:IsFusionSetCard(0x4B0)
+-return c:IsLevelAbove(4) and c:IsFusionSetCard(0x4b0)
 end
 function c1020051.contactfil(tp)
 	return Duel.GetReleaseGroup(tp)
@@ -52,7 +54,7 @@ function c1020051.retcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
 function c1020051.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER)
 end
 function c1020051.retcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c1020051.cfilter,tp,LOCATION_REMOVED,0,nil)
@@ -73,7 +75,7 @@ function c1020051.retop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(1-tp,lp,REASON_EFFECT)
 end
 function c1020051.spfilter(c)
-	return c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c1020051.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1020051.spfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -82,7 +84,7 @@ function c1020051.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c1020051.filter(c,e,tp)
-	return c:IsSetCard(0x4B0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return c:IsSetCard(0x4b0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function c1020051.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

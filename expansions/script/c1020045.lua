@@ -46,7 +46,7 @@ function c1020045.unval(e,re)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020045.otfilter(c,tp)
-	return c:IsSetCard(0x4B0) and (c:IsControler(tp) or c:IsFaceup())
+	return c:IsSetCard(0x4b0) and (c:IsControler(tp) or c:IsFaceup())
 end
 function c1020045.otcon(e,c,minc)
 	if c==nil then return true end
@@ -92,7 +92,7 @@ function c1020045.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1020045.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER)
 end
 function c1020045.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

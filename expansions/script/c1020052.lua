@@ -41,7 +41,7 @@ function c1020052.unval(e,re)
 end
 function c1020052.valcheck(e,c)
 	local g=c:GetMaterial()
-	if g:IsExists(Card.IsSetCard,2,nil,0x4B0) then
+	if g:IsExists(Card.IsSetCard,2,nil,0x4b0) then
 		e:GetLabelObject():SetLabel(1)
 	else
 		e:GetLabelObject():SetLabel(0)

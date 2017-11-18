@@ -32,14 +32,14 @@ function c1020049.tgval(e,re,rp)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020049.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return c:IsFaceup() and c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function c1020049.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
 end
 function c1020049.cfilter(c)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsSetCard(0x4B0) and c:IsType(TYPE_MONSTER)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER)
 end
 function c1020049.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(c1020049.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
@@ -55,7 +55,7 @@ function c1020049.regop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
 	e1:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4B0))
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4b0))
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end

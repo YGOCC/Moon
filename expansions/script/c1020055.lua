@@ -45,7 +45,7 @@ function c1020055.initial_effect(c)
 	end
 end
 function c1020055.matfilter(c,lc,sumtype,tp)
-	return c:GetFlagEffect(1020055)>0 and c:IsSetCard(0x4B0)
+	return c:GetFlagEffect(1020055)>0 and c:IsSetCard(0x4b0)
 end
 function c1020055.unval(e,re)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsControler(1-e:GetHandlerPlayer()) and re:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)
@@ -67,13 +67,13 @@ function c1020055.sumop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
 	e1:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4B0))
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4b0))
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 	Duel.RegisterFlagEffect(tp,1020055,RESET_PHASE+PHASE_END,0,1)
 end
 function c1020055.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0)
+	return c:IsFaceup() and c:IsSetCard(0x4b0)
 end
 function c1020055.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:Filter(c1020055.filter,nil)

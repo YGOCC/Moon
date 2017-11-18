@@ -61,7 +61,7 @@ function c1020046.unval(e,re)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020046.ntfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4B0) and c:IsAbleToDeckAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x4b0) and c:IsAbleToDeckAsCost()
 end
 function c1020046.ntcon(e,c,minc)
 	if c==nil then return true end
@@ -102,7 +102,7 @@ function c1020046.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0x13)
 end
 function c1020046.spfilter(c,e,tp)
-	return c:IsLevelBelow(7) and c:IsSetCard(0x4B0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(7) and c:IsSetCard(0x4b0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c1020046.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

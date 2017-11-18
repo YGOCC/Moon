@@ -2,7 +2,7 @@
 function c1020056.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x4B0),3)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x4b0),3)
 	--cannot be target
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
