@@ -50,7 +50,7 @@ function c171000112.initial_effect(c)
 end
 function c171000112.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_SZONE) and (c:GetPreviousSequence()==6 or c:GetPreviousSequence()==7)
+	return c:IsPreviousLocation(LOCATION_PZONE)
 end
 function c171000112.penfilter(c)
 	return c:IsSetCard(0xfef) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
@@ -71,13 +71,13 @@ function c171000112.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return at:IsControler(tp) and at:IsSetCard(0xfef)
 end
 function c171000112.atkfilter(c)
-	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0xfef) and (c:GetSequence()==6 or c:GetSequence()==7)
+	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0xfef)
 end
 function c171000112.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local at=Duel.GetAttacker()
 	if at:IsFaceup() and at:IsRelateToBattle() then
-		local atkval=Duel.GetMatchingGroupCount(c171000112.atkfilter,tp,LOCATION_SZONE,0,nil)*500
+		local atkval=Duel.GetMatchingGroupCount(c171000112.atkfilter,tp,LOCATION_PZONE,0,nil)*500
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -91,17 +91,17 @@ function c171000112.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function c171000112.spfilter(c,e,tp)
-	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0xfef) and (c:GetSequence()==6 or c:GetSequence()==7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0xfef) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c171000112.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c171000112.spfilter,tp,LOCATION_ONFIELD,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(c171000112.spfilter,tp,LOCATION_PZONE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end
 function c171000112.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c171000112.spfilter,tp,LOCATION_ONFIELD,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c171000112.spfilter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end

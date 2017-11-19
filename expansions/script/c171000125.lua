@@ -11,11 +11,8 @@ function c171000125.initial_effect(c)
 	e1:SetOperation(ref.activate)
 	c:RegisterEffect(e1)
 end
-function ref.filter(c)
-	return (c:GetSequence()==6 or c:GetSequence()==7)
-end
 function ref.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(ref.filter,tp,LOCATION_SZONE,0,nil)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_PZONE,0,nil)
 	if chk==0 then return 
 		(g:GetCount()>0 and Duel.IsExistingMatchingCard(ref.thfilter1,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil))
 		or (g:GetCount()==2 and Duel.IsExistingMatchingCard(ref.thfilter2,tp,LOCATION_GRAVE,0,1,nil))
@@ -32,7 +29,7 @@ function ref.thfilter2(c)
 	return c:IsType(TYPE_SPELL) and not c:IsCode(171000125) and c:IsAbleToHand()
 end
 function ref.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(ref.filter,tp,LOCATION_SZONE,0,nil)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_PZONE,0,nil)
 	local ct=Duel.Destroy(g,REASON_EFFECT)
 	local opt=0
 	if ct==2 and Duel.IsExistingMatchingCard(ref.thfilter2,tp,LOCATION_GRAVE,0,1,nil) then

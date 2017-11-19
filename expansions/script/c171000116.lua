@@ -78,7 +78,7 @@ function ref.splimit(e,c,sump,sumtype,sumpos,targetp)
 end
 function ref.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_SZONE) and (c:GetPreviousSequence()==6 or c:GetPreviousSequence()==7)
+	return c:IsPreviousLocation(LOCATION_PZONE)
 end
 function ref.penfilter(c)
 	return c:IsSetCard(0xfef) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
@@ -148,15 +148,15 @@ function c171000116.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(e:GetHandler(),REASON_COST)
 end 
 function c171000116.desfilter(c)
-	return c:IsSetCard(0xfef) and(c:GetSequence()==6 or c:GetSequence()==7) and c:IsDestructable()
+	return c:IsSetCard(0xfef) and c:IsDestructable()
 end
 function c171000116.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(c171000116.desfilter,tp,LOCATION_SZONE,0,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(c171000116.desfilter,tp,LOCATION_PZONE,0,1,nil)
 		and Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g1=Duel.SelectTarget(tp,c171000116.desfilter,tp,LOCATION_SZONE,0,1,1,nil)
+	local g1=Duel.SelectTarget(tp,c171000116.desfilter,tp,LOCATION_PZONE,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g2=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,g1:GetFirst())
 	g1:Merge(g2)

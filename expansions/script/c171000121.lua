@@ -93,15 +93,15 @@ function ref.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(c,nil,1,REASON_COST)
 end
 function ref.desfilter(c)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsSetCard(0xfef)
+	return c:IsSetCard(0xfef)
 end
 function ref.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(ref.desfilter,tp,LOCATION_SZONE,0,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(ref.desfilter,tp,LOCATION_PZONE,0,1,nil)
 		and Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,nil)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g1=Duel.SelectTarget(tp,ref.desfilter,tp,LOCATION_SZONE,0,1,1,nil)
+	local g1=Duel.SelectTarget(tp,ref.desfilter,tp,LOCATION_PZONE,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g2=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
