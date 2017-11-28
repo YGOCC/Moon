@@ -1,6 +1,6 @@
 --Operation - Last Raid
 function c90000054.initial_effect(c)
-	--Remove & Damage
+	--Damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(90000054,0))
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_DAMAGE)
@@ -11,7 +11,7 @@ function c90000054.initial_effect(c)
 	e1:SetTarget(c90000054.target1)
 	e1:SetOperation(c90000054.operation1)
 	c:RegisterEffect(e1)
-	--Send & Draw
+	--Draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(90000054,1))
 	e2:SetCategory(CATEGORY_TOGRAVE+CATEGORY_DRAW)

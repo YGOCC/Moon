@@ -12,17 +12,17 @@ function c90000041.initial_effect(c)
 	c:RegisterEffect(e1)
 	--ATK Up
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(90000041,0))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
-	e2:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetCondition(c90000041.condition2)
+	e2:SetTarget(c90000041.target2)
 	e2:SetOperation(c90000041.operation2)
 	c:RegisterEffect(e2)
 end
 function c90000041.filter1(c,e,tp)
-	return c:IsSetCard(0x1c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_MACHINE) and c:IsLevelBelow(7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c90000041.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -38,16 +38,26 @@ function c90000041.operation1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c90000041.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
+	local c=e:GetHandler()
+	return c:IsReason(REASON_COST) and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_MONSTER)
+		and bit.band(c:GetPreviousLocation(),LOCATION_OVERLAY)~=0
+end
+function c90000041.filter2(c)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ)
+end
+function c90000041.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(c90000041.filter2,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,c90000041.filter2,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c90000041.operation2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		local e1=Effect.CreateEffect(c)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(1000)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
-		c:RegisterEffect(e1)
+		tc:RegisterEffect(e1)
 	end
 end

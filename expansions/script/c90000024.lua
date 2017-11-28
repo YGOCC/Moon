@@ -49,7 +49,7 @@ function c90000024.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function c90000024.filter2_1(c)
-	return c:IsSummonType(SUMMON_TYPE_SPECIAL) and c:IsDestructable()
+	return c:IsSummonType(SUMMON_TYPE_SPECIAL)
 end
 function c90000024.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90000024.filter2_1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
@@ -61,8 +61,7 @@ function c90000024.filter2_2(c,e,tp)
 end
 function c90000024.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(c90000024.filter2_1,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if Duel.Destroy(sg,REASON_EFFECT)==0 then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if Duel.Destroy(sg,REASON_EFFECT)==0 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local g=Duel.GetMatchingGroup(c90000024.filter2_2,tp,LOCATION_GRAVE,0,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.BreakEffect()

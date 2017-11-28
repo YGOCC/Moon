@@ -41,13 +41,13 @@ function c90000033.initial_effect(c)
 	e5:SetTarget(c90000033.target5)
 	e5:SetOperation(c90000033.operation5)
 	c:RegisterEffect(e5)
-	--ATK/DEF 0
+	--Change Attribute
 	local e6=Effect.CreateEffect(c)
-	e6:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
-	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e6:SetCode(EVENT_DESTROYED)
+	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e6:SetCode(EVENT_SUMMON_SUCCESS)
+	e6:SetRange(LOCATION_FZONE)
+	e6:SetCountLimit(1)
 	e6:SetCondition(c90000033.condition6)
-	e6:SetTarget(c90000033.target6)
 	e6:SetOperation(c90000033.operation6)
 	c:RegisterEffect(e6)
 end
@@ -86,28 +86,24 @@ function c90000033.operation5(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c90000033.condition6(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEUP) and rp~=tp and c:IsStatus(STATUS_ACTIVATED)
-end
-function c90000033.filter6(c)
-	return c:IsFaceup() and not c:IsSetCard(0x14)
-end
-function c90000033.target6(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90000033.filter6,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local tc=eg:GetFirst()
+	return tc:IsControler(tp) and tc:IsSetCard(0x14) and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
 end
 function c90000033.operation6(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c90000033.filter6,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
+	local sc=g:GetFirst()
+	if sc and sc:IsFaceup() then
+		Duel.Hint(HINT_SELECTMSG,tp,562)
+		local catt=sc:GetAttribute()
+		local att=Duel.AnnounceAttribute(tp,1,0xffff - catt)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetValue(0)
-		e1:SetReset(RESET_EVENT+0x1fe0000) 
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
-		tc:RegisterEffect(e2)
-		tc=g:GetNext()
+		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
+		e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+		e1:SetValue(att)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		sc:RegisterEffect(e1)
 	end
 end

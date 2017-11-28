@@ -11,12 +11,13 @@ function c90000029.initial_effect(c)
 	e1:SetOperation(c90000029.operation1)
 	e1:SetValue(SUMMON_TYPE_SYNCHRO)
 	c:RegisterEffect(e1)
-	--Summon Condition
+	--ATK/DEF /2
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e2:SetValue(aux.synlimit)
+	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCondition(c90000029.condition2)
+	e2:SetOperation(c90000029.operation2)
 	c:RegisterEffect(e2)
 	--Copy Effect
 	local e3=Effect.CreateEffect(c)
@@ -198,6 +199,29 @@ function c90000029.operation1(e,tp,eg,ep,ev,re,r,rp,c,tuner,mg)
 	end
 	c:SetMaterial(g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_SYNCHRO)
+end
+function c90000029.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
+end
+function c90000029.filter2(c)
+	return c:IsFaceup() and not c:IsSetCard(0x14)
+end
+function c90000029.operation2(e,tp,eg,ep,ev,re,r,rp)
+	local tg=Duel.GetMatchingGroup(c90000029.filter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local tc=tg:GetFirst()
+	while tc do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e1:SetValue(tc:GetAttack()/2)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
+		e2:SetValue(tc:GetDefense()/2)
+		tc:RegisterEffect(e2)
+		tc=tg:GetNext()
+	end
 end
 function c90000029.target3(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(Card.IsType,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,TYPE_MONSTER) end

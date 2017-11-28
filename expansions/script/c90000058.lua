@@ -10,10 +10,12 @@ function c90000058.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Special Summon
 	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,90000058)
 	e2:SetCondition(c90000058.condition2)
+	e2:SetTarget(c90000058.target2)
 	e2:SetOperation(c90000058.operation2)
 	c:RegisterEffect(e2)
 	--Special Summon
@@ -26,19 +28,16 @@ function c90000058.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c90000058.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)~=0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)~=0
 end
-function c90000058.filter2_1(c)
-	return c:IsType(TYPE_SPELL) and c:IsAbleToHand()
-end
-function c90000058.filter2_2(c)
-	return c:IsType(TYPE_TRAP) and c:IsAbleToHand()
+function c90000058.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c90000058.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)==0
-		or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if not c:IsRelateToEffect(e) or Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)==0 then return end
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1,nil)
 	local tc=g:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CARDTYPE)
@@ -46,37 +45,10 @@ function c90000058.operation2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmCards(tp,tc)
 	Duel.ShuffleHand(1-tp)
 	if (op==0 and tc:IsType(TYPE_MONSTER)) or (op==1 and tc:IsType(TYPE_SPELL)) or (op==2 and tc:IsType(TYPE_TRAP)) then
+		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 			and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 			Duel.SendtoGrave(c,REASON_RULE)
-		end
-		if (op==0) then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(tc:GetAttack()/2)
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
-			c:RegisterEffect(e1)
-			local e2=e1:Clone()
-			e2:SetCode(EFFECT_UPDATE_DEFENSE)
-			e2:SetValue(tc:GetDefense()/2)
-			c:RegisterEffect(e2)
-		end
-		if (op==1 and Duel.IsExistingMatchingCard(c90000058.filter2_1,tp,LOCATION_GRAVE,0,1,nil)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local g=Duel.SelectMatchingCard(tp,c90000058.filter2_1,tp,LOCATION_GRAVE,0,1,1,nil)
-			if g:GetCount()>0 then
-				Duel.SendtoHand(g,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,g)
-			end
-		end
-		if (op==2 and Duel.IsExistingMatchingCard(c90000058.filter2_2,tp,LOCATION_GRAVE,0,1,nil)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local g=Duel.SelectMatchingCard(tp,c90000058.filter2_2,tp,LOCATION_GRAVE,0,1,1,nil)
-			if g:GetCount()>0 then
-				Duel.SendtoHand(g,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,g)
-			end
 		end
 	end
 end
@@ -87,8 +59,8 @@ function c90000058.target3(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c90000058.operation3(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,90000069,0,0x2d,0,0,1,RACE_ROCK,ATTRIBUTE_LIGHT) then
-		local token=Duel.CreateToken(tp,90000069)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,90000067,0,0x2d,0,0,1,RACE_ROCK,ATTRIBUTE_LIGHT) then
+		local token=Duel.CreateToken(tp,90000067)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

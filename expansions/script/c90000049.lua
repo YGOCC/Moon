@@ -1,6 +1,6 @@
---Operation - Royal Ascent
+--Operation - Rising
 function c90000049.initial_effect(c)
-	--Rank Change
+	--Rank Up
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(90000049,0))
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -9,7 +9,7 @@ function c90000049.initial_effect(c)
 	e1:SetTarget(c90000049.target1)
 	e1:SetOperation(c90000049.operation1)
 	c:RegisterEffect(e1)
-	--Level Change
+	--Level Up
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(90000049,1))
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
@@ -31,7 +31,7 @@ function c90000049.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c90000049.filter1(c)
-	return c:IsFaceup() and c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsType(TYPE_XYZ)
 end
 function c90000049.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90000049.filter1,tp,LOCATION_MZONE,0,1,nil) end
@@ -51,7 +51,7 @@ function c90000049.operation1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c90000049.filter2(c)
-	return c:IsFaceup() and c:IsSetCard(0x1c) and c:IsLevelAbove(1)
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsLevelAbove(1)
 end
 function c90000049.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90000049.filter2,tp,LOCATION_MZONE,0,1,nil) end

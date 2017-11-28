@@ -107,15 +107,17 @@ function c160004545.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c160004545.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) and 	Duel.Destroy(eg,REASON_EFFECT) ~=0  then
-		for i=1,2 do
-		local token=Duel.CreateToken(tp,160005414)
-Duel.SpecialSummonStep(token,0,tp,1-tp,false,false,POS_FACEUP)		
-	Duel.SpecialSummonComplete()
-	
-	
+   if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+		Duel.Destroy(eg,REASON_EFFECT)
+	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0 then return end
+	Duel.BreakEffect()
+for i=1,2 do
+		  Duel.Hint(HINT_CARD,PLAYER_ALL,160005414)
+	local token=Duel.CreateToken(1-tp,160005414)
+	Duel.SpecialSummon(token,0,1-tp,1-tp,false,false,POS_FACEUP)
 end
-Duel.Recover(1-tp,1000,REASON_EFFECT)
-end
+   Duel.SpecialSummonComplete()
+	Duel.Recover(1-tp,1000,REASON_EFFECT)
 
+end
 end

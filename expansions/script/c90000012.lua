@@ -9,14 +9,14 @@ function c90000012.initial_effect(c)
 	e1:SetTarget(c90000012.target1)
 	e1:SetOperation(c90000012.operation1)
 	c:RegisterEffect(e1)
-	--Negate Attack
+	--Copy Name
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetHintTiming(0,TIMING_ATTACK)
-	e2:SetCondition(c90000012.condition2)
 	e2:SetCost(c90000012.cost2)
+	e2:SetTarget(c90000012.target2)
 	e2:SetOperation(c90000012.operation2)
 	c:RegisterEffect(e2)
 end
@@ -90,27 +90,31 @@ function c90000012.operation1(e,tp,eg,ep,ev,re,r,rp)
 		tc:CompleteProcedure()
 	end
 end
-function c90000012.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and (Duel.IsAbleToEnterBP()
-		or (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE))
+function c90000012.filter2(c)
+	return c:IsSetCard(0x3) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c90000012.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
+		and Duel.IsExistingMatchingCard(c90000012.filter2,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c90000012.filter2,tp,LOCATION_GRAVE,0,1,1,nil)
+	e:SetLabel(g:GetFirst():GetOriginalCode())
+	g:AddCard(e:GetHandler())
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
+function c90000012.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
 function c90000012.operation2(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetAttacker() then Duel.NegateAttack()
-	else
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-		e1:SetCountLimit(1)
-		e1:SetOperation(c90000012.op1)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_CODE)
+		e1:SetValue(e:GetLabel())
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
 	end
-end
-function c90000012.op1(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,90000012)
-	Duel.NegateAttack()
 end

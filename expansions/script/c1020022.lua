@@ -26,7 +26,6 @@ function c1020022.filter(c,e,tp)
 end
 function c1020022.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetFieldGroup(tp,LOCATION_MZONE,0):FilterCount(aux.TRUE,e:GetHandler())==0
 		and Duel.IsExistingMatchingCard(c1020022.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end

@@ -4,7 +4,7 @@
 --Pfpfpfpfpfpfpfpffffpppt!
 function c500314723.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x285a),5,3,c500314723.ovfilter,aux.Stringid(500314723,1),2,c500314723.xyzop)
+ aux.AddXyzProcedure(c,nil,5,3,c500314723.ovfilter,aux.Stringid(38495396,1),2,c500314723.xyzop)
 	c:EnableReviveLimit()
 --Let's get to the Point.
 	--Activate(effect)

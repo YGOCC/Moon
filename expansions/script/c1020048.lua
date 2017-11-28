@@ -30,9 +30,8 @@ function c1020048.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
-	e4:SetCost(aux.bfgcost)
-	e4:SetTarget(c1020041.thtg)
-	e4:SetOperation(c1020041.thop)
+	e4:SetTarget(c1020048.thtg)
+	e4:SetOperation(c1020048.thop)
 	c:RegisterEffect(e4)
 	--search
 	local e5=Effect.CreateEffect(c)
@@ -40,9 +39,8 @@ function c1020048.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
-	e5:SetCost(aux.bfgcost)
-	e5:SetTarget(c1020041.tgtg)
-	e5:SetOperation(c1020041.tgop)
+	e5:SetTarget(c1020048.tgtg)
+	e5:SetOperation(c1020048.tgop)
 	c:RegisterEffect(e5)
 end
 function c1020048.cfilter(c)
@@ -60,35 +58,35 @@ function c1020048.recop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	Duel.Recover(p,ct*500,REASON_EFFECT)
 end
-function c1020041.filter(c)
+function c1020048.filter(c)
 	if c:IsCode(1020048) then return false end
 	return (c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER)) or (c:IsSetCard(0x4b0) and c:IsType(TYPE_SPELL+TYPE_TRAP))
 end
-function c1020041.thfilter(c)
-	return c:IsAbleToHand() and c1020041.filter(c)
+function c1020048.thfilter(c)
+	return c:IsAbleToHand() and c:IsSetCard(0x4b0) and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsCode(1020048)
 end
-function c1020041.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1020041.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
+function c1020048.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c1020048.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
-function c1020041.thop(e,tp,eg,ep,ev,re,r,rp)
+function c1020048.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c1020041.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c1020048.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function c1020041.tgfilter(c)
-	return c:IsAbleToGrave() and c1020041.filter(c)
+function c1020048.tgfilter(c)
+	return c:IsAbleToGrave() and (c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER)) or (c:IsSetCard(0x4b0) and c:IsType(TYPE_SPELL+TYPE_TRAP))
 end
-function c1020041.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1020041.tgfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil) end
+function c1020048.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c1020048.tgfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end
-function c1020041.tgop(e,tp,eg,ep,ev,re,r,rp)
+function c1020048.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c1020041.tgfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c1020048.tgfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoGrave(g,REASON_EFFECT)
 	end

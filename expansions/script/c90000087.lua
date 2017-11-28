@@ -1,75 +1,75 @@
---Empire Mystic Caster
+--Empire Fog Palace
 function c90000087.initial_effect(c)
-	c:EnableReviveLimit()
-	--Control
+	--Activate
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_ACTIVATE)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e0)
+	--Immune
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_CONTROL)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetCondition(c90000087.condition1)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_IMMUNE_EFFECT)
+	e1:SetRange(LOCATION_SZONE)
+	e1:SetTargetRange(LOCATION_MZONE,0)
 	e1:SetTarget(c90000087.target1)
-	e1:SetOperation(c90000087.operation1)
+	e1:SetValue(c90000087.value1)
 	c:RegisterEffect(e1)
-	--Add Counter
+	--Special Summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_COUNTER)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e2:SetCode(EVENT_LEAVE_FIELD)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1)
-	e2:SetCondition(c90000087.condition2)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCountLimit(1,90000087)
 	e2:SetCost(c90000087.cost2)
+	e2:SetTarget(c90000087.target2)
 	e2:SetOperation(c90000087.operation2)
 	c:RegisterEffect(e2)
 end
-function c90000087.condition1(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_RITUAL
+function c90000087.target1(e,c)
+	return c:IsStatus(STATUS_SPSUMMON_TURN) and c:IsSetCard(0x5d) and c:IsSummonType(SUMMON_TYPE_RITUAL)
 end
-function c90000087.filter1(c)
-	return c:IsControlerCanBeChanged() and c:GetCounter(0x1000)>0
-end
-function c90000087.target1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c90000087.filter1,tp,0,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g=Duel.SelectTarget(tp,c90000087.filter1,tp,0,LOCATION_MZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
-end
-function c90000087.operation1(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(c90000087.tg1)
-	e1:SetLabel(e:GetHandler():GetFieldID())
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-	if tc:IsRelateToEffect(e) then
-		Duel.GetControl(tc,tp,PHASE_END,1)
-	end
-end
-function c90000087.tg1(e,c)
-	return e:GetLabel()~=c:GetFieldID()
-end
-function c90000087.condition2(e,tp,eg,ep,ev,re,r,rp)
-	local c=eg:GetFirst()
-	local ct=c:GetCounter(0x1000)
-	e:SetLabel(ct)
-	return eg:GetCount()==1 and c:IsPreviousLocation(LOCATION_ONFIELD) and ct>0
+function c90000087.value1(e,te)
+	return te:IsActiveType(TYPE_SPELL+TYPE_TRAP) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
 function c90000087.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,800) end
-	Duel.PayLPCost(tp,800)
+	if chk==0 then return Duel.CheckLPCost(tp,700) end
+	Duel.PayLPCost(tp,700)
+end
+function c90000087.filter2_1(c,e,tp,m)
+	if not c:IsSetCard(0x5d) or bit.band(c:GetType(),0x81)~=0x81
+		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
+	if c.mat_filter then
+		m=m:Filter(c.mat_filter,nil)
+	end
+	return m:CheckWithSumEqual(Card.GetRitualLevel,c:GetLevel(),1,99,c)
+end
+function c90000087.filter2_2(c)
+	return c:IsSetCard(0x5d) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+end
+function c90000087.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
+		local mg=Duel.GetMatchingGroup(c90000087.filter2_2,tp,LOCATION_DECK,0,nil)
+		return Duel.IsExistingMatchingCard(c90000087.filter2_1,tp,LOCATION_HAND,0,1,nil,e,tp,mg)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function c90000087.operation2(e,tp,eg,ep,ev,re,r,rp)
-	local ct=e:GetLabel()
-	local g=Duel.GetMatchingGroup(Card.IsCanAddCounter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,0x1000,1)
-	if g:GetCount()==0 then return end
-	for i=1,ct do
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(90000087,0))
-		local sg=g:Select(tp,1,1,nil)
-		sg:GetFirst():AddCounter(0x1000,1)
+	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local mg=Duel.GetMatchingGroup(c90000087.filter2_2,tp,LOCATION_DECK,0,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local tg=Duel.SelectMatchingCard(tp,c90000087.filter2_1,tp,LOCATION_HAND,0,1,1,nil,e,tp,mg)
+	if tg:GetCount()>0 then
+		local tc=tg:GetFirst()
+		if tc.mat_filter then
+			mg=mg:Filter(tc.mat_filter,nil)
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local mat=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel(),1,99,tc)
+		tc:SetMaterial(mat)
+		Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)
+		Duel.BreakEffect()
+		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
+		tc:CompleteProcedure()
 	end
 end

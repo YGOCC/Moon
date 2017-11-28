@@ -20,8 +20,9 @@ function c90000027.initial_effect(c)
 	c:RegisterEffect(e2)
 	--Disable
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_BATTLE_CONFIRM)
+	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(c90000027.condition3)
 	e3:SetOperation(c90000027.operation3)
 	c:RegisterEffect(e3)
@@ -44,28 +45,30 @@ function c90000027.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c90000027.filter1,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end
 function c90000027.condition3(e,tp,eg,ep,ev,re,r,rp)
-	local bc=e:GetHandler():GetBattleTarget()
-	return bc and bc:IsType(TYPE_EFFECT)
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	if a:IsControler(1-tp) then a,d=d,a end
+	e:SetLabelObject(d)
+	return a and d and a:IsFaceup() and a:IsSetCard(0x14) and a:IsRelateToBattle() and d:IsFaceup() and d:IsRelateToBattle() and d:IsType(TYPE_EFFECT)
 end
 function c90000027.operation3(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local bc=c:GetBattleTarget()
-	if c:IsRelateToBattle() and c:IsFaceup() and bc:IsRelateToBattle() and bc:IsFaceup() then
-		local e1=Effect.CreateEffect(c)
+	local tc=e:GetLabelObject()
+	if tc:IsFaceup() and tc:IsRelateToBattle() then
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
-		bc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
-		bc:RegisterEffect(e2)
+		tc:RegisterEffect(e2)
 	end
 end
 function c90000027.target4(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local val=Duel.GetMatchingGroupCount(c90000027.filter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)*300
+	local val=Duel.GetMatchingGroupCount(c90000027.filter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)*200
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(val)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,val)

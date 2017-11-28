@@ -23,12 +23,20 @@ function c90000048.initial_effect(c)
 	e2:SetTarget(c90000048.target2)
 	e2:SetOperation(c90000048.operation2)
 	c:RegisterEffect(e2)
+	--Unattackable
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(0,LOCATION_MZONE)
+	e3:SetValue(c90000048.value3)
+	c:RegisterEffect(e3)
 end
 function c90000048.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
 end
 function c90000048.value1(e,te)
-	if te:IsActiveType(TYPE_MONSTER) and te:IsActivated() and not (te:GetOwner():IsSetCard(0x1c) and te:GetOwner():IsType(TYPE_XYZ)) then
+	if te:IsActiveType(TYPE_MONSTER) and te:IsActivated() and not te:GetOwner():IsSetCard(0x1c) then
 		local rk=e:GetHandler():GetRank()
 		local ec=te:GetOwner()
 		if ec:IsType(TYPE_XYZ) then
@@ -41,15 +49,15 @@ function c90000048.value1(e,te)
 	end
 end
 function c90000048.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)
-		and e:GetHandler():GetAttackAnnouncedCount()==0 end
-	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local c=e:GetHandler()
+	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetAttackAnnouncedCount()==0 end
+	c:RemoveOverlayCard(tp,1,1,REASON_COST)
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
 	e1:SetCode(EFFECT_CANNOT_ATTACK)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	e:GetHandler():RegisterEffect(e1)
+	c:RegisterEffect(e1)
 end
 function c90000048.filter2(c)
 	return c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ)
@@ -69,4 +77,10 @@ function c90000048.operation2(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 		tc=g:GetNext()
 	end
+end
+function c90000048.filter3(c,rk)
+	return c:IsFaceup() and c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ) and c:GetRank()>rk
+end
+function c90000048.value3(e,c)
+	return c:IsFaceup() and c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(c90000048.filter3,c:GetControler(),LOCATION_MZONE,0,1,nil,c:GetRank())
 end

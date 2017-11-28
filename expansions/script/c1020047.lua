@@ -14,7 +14,7 @@ function c1020047.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4b0))
-	e2:SetValue(500)
+	e2:SetValue(400)
 	c:RegisterEffect(e2)
 	--pierce
 	local e3=Effect.CreateEffect(c)
@@ -58,10 +58,10 @@ function c1020047.pierceop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c1020047.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=eg:GetFirst()
-	if chk==0 then return eg:GetCount()==1 and tc:GetSummonPlayer()~=tp and e:GetHandler():GetFlagEffect(1020044)==0 end
+	if chk==0 then return eg:GetCount()==1 and tc:GetSummonPlayer()~=tp and e:GetHandler():GetFlagEffect(1020047)==0 end
 	Duel.SetTargetCard(tc)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,tc,1,0,0)
-	e:GetHandler():RegisterFlagEffect(1020044,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+	e:GetHandler():RegisterFlagEffect(1020047,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 end
 function c1020047.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

@@ -1,6 +1,6 @@
 --Operation - Fuel
 function c90000052.initial_effect(c)
-	--Shuffle & Draw
+	--Draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(90000052,0))
 	e1:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
@@ -11,7 +11,7 @@ function c90000052.initial_effect(c)
 	e1:SetTarget(c90000052.target1)
 	e1:SetOperation(c90000052.operation1)
 	c:RegisterEffect(e1)
-	--Shuffle & Recover
+	--Recover
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(90000052,1))
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_RECOVER)

@@ -31,7 +31,7 @@ function c90000053.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,1000)
 end
 function c90000053.filter1_1(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsType(TYPE_XYZ)
 		and Duel.IsExistingMatchingCard(c90000053.filter1_2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetRank())
 end
 function c90000053.filter1_2(c,e,tp,rk)
@@ -63,11 +63,11 @@ function c90000053.operation1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c90000053.filter2_1(c,e,tp)
-	return c:IsSetCard(0x1c) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_MACHINE) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.IsExistingMatchingCard(c90000053.filter2_2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank())
 end
 function c90000053.filter2_2(c,e,tp,mc,rk)
-	return c:GetRank()==rk+2 and mc:IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:GetRank()==rk+2 and c:IsSetCard(0x1c) and mc:IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c90000053.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanSpecialSummonCount(tp,2) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
