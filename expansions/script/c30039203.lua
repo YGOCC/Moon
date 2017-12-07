@@ -1,5 +1,5 @@
 --Levelution Axelotl
-
+local ref=_G['c'..30039203]
 function c30039203.initial_effect(c)
 
 	--special summon self
@@ -21,14 +21,13 @@ function c30039203.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 
-	--sp summon Nebula
+	--Combine Levelutions
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,30039203)
-	e2:SetCost(c30039203.lvcost)
-	e2:SetTarget(c30039203.lvtg)
-	e2:SetOperation(c30039203.lvop)
+	e2:SetTarget(ref.sstg)
+	e2:SetOperation(ref.ssop)
 	c:RegisterEffect(e2)
 end
 	
@@ -55,41 +54,39 @@ function c30039203.spop(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 		Duel.SendtoGrave(c,REASON_RULE)
 	end
-	end
-	
-function c30039203.lvfilter(c,e,tp)
-	return c:IsCode(30039206) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
-function c30039203.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c30039203.lvfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	
+function ref.ssfilter(c,e,tp,lv)
+	return c:IsSetCard(0x12F) and c:GetLevel()==lv
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+end
+function ref.matfilter(c,tp)
+	return c:IsSetCard(0x12F)
+end
+function ref.ssfilterchk(c,e,tp,mg)
+	return c:IsSetCard(0x12F) and mg:CheckWithSumEqual(Card.GetLevel,c:GetLevel(),2,64,tp)
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+end
+function ref.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local mg=Duel.GetReleaseGroup(tp):Filter(Card.IsSetCard,nil,0x12F)
+	if chk==0 then return Duel.IsExistingMatchingCard(ref.ssfilterchk,tp,LOCATION_DECK,0,1,nil,e,tp,mg) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local tc=Duel.SelectMatchingCard(tp,ref.ssfilterchk,tp,LOCATION_DECK,0,1,1,nil,e,tp,mg):GetFirst()
+	local sg=mg:SelectWithSumEqual(tp,Card.GetLevel,tc:GetLevel(),2,64)
+	local lv=0
+	local lvc=sg:GetFirst()
+	while lvc do
+		lv=lv+lvc:GetLevel()
+		lvc=sg:GetNext()
+	end
+	e:SetLabel(lv)
+	Duel.Release(sg,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
-function c30039203.spfilter(c,code)
-	local code1,code2=c:GetOriginalCodeRule()
-	return code1==code or code2==code
-end
-function c30039203.lvcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-4
-		and Duel.CheckReleaseGroup(tp,c30039203.spfilter,1,nil,30039201)
-		and Duel.CheckReleaseGroup(tp,c30039203.spfilter,1,nil,30039202)
-		and Duel.CheckReleaseGroup(tp,c30039203.spfilter,1,nil,30039203)
-		and Duel.CheckReleaseGroup(tp,c30039203.spfilter,1,nil,30039204) end
-		
-	local g1=Duel.SelectReleaseGroup(tp,c30039203.spfilter,1,1,nil,30039201)
-	local g2=Duel.SelectReleaseGroup(tp,c30039203.spfilter,1,1,nil,30039202)
-	local g3=Duel.SelectReleaseGroup(tp,c30039203.spfilter,1,1,nil,30039203)
-	local g4=Duel.SelectReleaseGroup(tp,c30039203.spfilter,1,1,nil,30039204)
-	g1:Merge(g2)
-	g1:Merge(g3)
-	g1:Merge(g4)
-	Duel.Release(g1,REASON_COST)
-end
-
-function c30039203.lvop(e,tp,eg,ep,ev,re,r,rp)
+function ref.ssop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c30039203.lvfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,ref.ssfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,e:GetLabel())
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 	end

@@ -144,8 +144,7 @@ function c1020019.indfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0xded)
 end
 function c1020019.indtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(c1020019.indfilter,1,nil,tp) end
-	return true
+	if chk==0 then return eg:IsExists(c1020019.indfilter,1,nil,tp) and bit.band(r,REASON_EFFECT)>0 end
 end
 function c1020019.indval(e,c)
 	return c1020019.indfilter(c,e:GetHandlerPlayer())

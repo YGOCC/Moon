@@ -36,7 +36,7 @@ function c92720010.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c92720010.spfilter(c,e,tp)
-	return c:IsSetCard(0xf92) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK)
+	return c:IsSetCard(0xf92) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function c92720010.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c92720010.spfilter(chkc,e,tp) end
@@ -54,7 +54,7 @@ function c92720010.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK)==0 then return end
+		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
 		Duel.Equip(tp,c,tc)
 		c:CancelToGrave()
 		--Add Equip limit

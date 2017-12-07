@@ -15,7 +15,7 @@ function c30039201.initial_effect(c)
 end
 
 function c30039201.desfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsFaceup()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 
 function c30039201.sumfilter(c,e,tp)
@@ -24,9 +24,9 @@ end
 
 function c30039201.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c30039201.desfilter(chkc) and chkc~=e:GetHandler() end
-	if chk==0 then return Duel.IsExistingTarget(c30039201.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingTarget(c30039201.desfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c30039201.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	local g=Duel.SelectTarget(tp,c30039201.desfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 

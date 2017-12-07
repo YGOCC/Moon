@@ -1,4 +1,5 @@
 --Levelution Nebula
+local ref=_G['c'..30039206]
 function c30039206.initial_effect(c)
 	c:EnableReviveLimit()
 	--immune
@@ -15,8 +16,8 @@ function c30039206.initial_effect(c)
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
 	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e2:SetRange(LOCATION_HAND)
-	e2:SetCondition(c30039206.spcon)
-	e2:SetOperation(c30039206.spop)
+	e2:SetCondition(ref.spcon)
+	e2:SetOperation(ref.spop)
 	c:RegisterEffect(e2)
 	--spsummon condition
 	local e3=Effect.CreateEffect(c)
@@ -65,24 +66,19 @@ function c30039206.spfilter(c,code)
 	local code1,code2=c:GetOriginalCodeRule()
 	return code1==code or code2==code
 end
-function c30039206.spcon(e,c)
+function ref.matfilter(c,tp)
+	return c:IsSetCard(0x12F) and Duel.IsPlayerCanRelease(tp,c)
+end
+function ref.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-4
-		and Duel.CheckReleaseGroup(tp,c30039206.spfilter,1,nil,30039201)
-		and Duel.CheckReleaseGroup(tp,c30039206.spfilter,1,nil,30039202)
-		and Duel.CheckReleaseGroup(tp,c30039206.spfilter,1,nil,30039203)
-		and Duel.CheckReleaseGroup(tp,c30039206.spfilter,1,nil,30039204)
+	local mg=Duel.GetMatchingGroup(ref.matfilter,tp,LOCATION_MZONE,0,nil,tp)
+	return mg:CheckWithSumEqual(Card.GetLevel,e:GetHandler():GetLevel(),2,64,tp)
 end
-function c30039206.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g1=Duel.SelectReleaseGroup(tp,c30039206.spfilter,1,1,nil,30039201)
-	local g2=Duel.SelectReleaseGroup(tp,c30039206.spfilter,1,1,nil,30039202)
-	local g3=Duel.SelectReleaseGroup(tp,c30039206.spfilter,1,1,nil,30039203)
-	local g4=Duel.SelectReleaseGroup(tp,c30039206.spfilter,1,1,nil,30039204)
-	g1:Merge(g2)
-	g1:Merge(g3)
-	g1:Merge(g4)
-	Duel.Release(g1,REASON_COST)
+function ref.spop(e,tp,eg,ep,ev,re,r,rp,c)
+	local mg=Duel.GetReleaseGroup(tp)
+	local g=mg:SelectWithSumEqual(tp,Card.GetLevel,e:GetHandler():GetLevel(),2,64)
+	Duel.Release(g,REASON_COST)
 end
 
 function c30039206.cost(e,tp,eg,ep,ev,re,r,rp,chk)

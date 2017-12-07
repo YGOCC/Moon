@@ -7,6 +7,7 @@ function c30039202.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetRange(LOCATION_HAND)
+	e1:SetCountLimit(1,30039202+EFFECT_COUNT_CODE_OATH)
 	e1:SetCondition(c30039202.spcon)
 	c:RegisterEffect(e1)
 	-- discard opponent or self
