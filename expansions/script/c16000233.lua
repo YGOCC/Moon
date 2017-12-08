@@ -85,8 +85,8 @@ function c16000233.sumop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c16000233.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToExtra()  end
- Duel.Destroy(e:GetHandler(),REASON_COST)
+	if chk==0 then return e:GetHandler():IsReleasable()  end
+ Duel.Release(e:GetHandler(),REASON_COST)
 end
 function c16000233.filter(c,e,tp,b1,setcode)
 	return c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_NORMAL) and not c:IsForbidden()

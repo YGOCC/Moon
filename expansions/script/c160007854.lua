@@ -71,7 +71,7 @@ end
 function c160007854.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c160007854.costfilter,tp,LOCATION_SZONE,0,1,nil) end
 	local g=Duel.GetMatchingGroup(c160007854.costfilter,tp,LOCATION_SZONE,0,nil)
-	Duel.Destroy(g,REASON_COST)
+	Duel.Release(g,REASON_COST)
 end
 
 	

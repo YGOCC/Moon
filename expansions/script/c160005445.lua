@@ -30,7 +30,7 @@ end
 function c160005445.splimcon(e)
 	return not e:GetHandler():IsForbidden()
 end
-ffunction c160005445.pfilter(c)
+function c160005445.pfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and (c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL)) and c:IsAbleToHand()
 end
 function c160005445.ptg(e,tp,eg,ep,ev,re,r,rp,chk)

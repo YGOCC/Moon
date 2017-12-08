@@ -46,7 +46,7 @@ function c160007800.splimcon(e)
 end
 function c160007800.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToExtra()  end
-	Duel.Destroy(e:GetHandler(),REASON_COST)
+	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function c160007800.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

@@ -78,7 +78,7 @@ function c101010389.pencost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c101010389.cfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c101010389.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
-Duel.Destroy(g,REASON_COST)
+Duel.Release(g,REASON_COST)
 end
 function c101010389.penfilter(c)
 	return c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM)   and  c:IsFaceup() and not c:IsForbidden()
@@ -112,7 +112,7 @@ function c101010389.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c101010389.cfilter,tp,LOCATION_SZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c101010389.cfilter,tp,LOCATION_SZONE,0,1,1,nil)
-   Duel.Destroy(g,REASON_COST)
+   Duel.Release(g,REASON_COST)
 end
 function c101010389.extrasfilter(c,e,tp)
 	return c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

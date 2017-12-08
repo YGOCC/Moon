@@ -37,7 +37,7 @@ end
 function c160001123.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToExtra()  end
   --  Duel.SendtoExtraP(e:GetHandler(),POS_FACEUP,REASON_EFFECT+REASON_COST)
-  Duel.Destroy(e:GetHandler(),REASON_COST)
+  Duel.Release(e:GetHandler(),REASON_COST)
 end
 function c160001123.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

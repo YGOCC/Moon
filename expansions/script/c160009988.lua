@@ -18,31 +18,14 @@ function c160009988.initial_effect(c)
 	e2:SetCondition(c160009988.splimcon)
 	c:RegisterEffect(e2)
 	--extra summon
-	local e3=Effect.CreateEffect(c)
+	   local e3=Effect.CreateEffect(e3)
 	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetRange(LOCATION_PZONE)
-	e3:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
-	e3:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
-	e3:SetTarget(c160009988.filter)
-	e3:SetCondition(c160009988.con)
-	c:RegisterEffect(e3)
-	if not c160009988.global_check then
-		c160009988.global_check=true
-		c160009988[0]=false
-		c160009988[1]=false
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_SUMMON_SUCCESS)
-		ge1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-		ge1:SetOperation(c160009988.checkop)
-		Duel.RegisterEffect(ge1,0)
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetOperation(c160009988.clear)
-		Duel.RegisterEffect(ge2,0)
-	end
+	e3:SetTargetRange(1,0)
+	e3:SetValue(2)
+	Duel.RegisterEffect(e3)
 end
 function c160009988.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
