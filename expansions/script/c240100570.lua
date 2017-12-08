@@ -44,7 +44,7 @@ function c240100570.mfilter(c,xyzc)
 	return c:IsFaceup() and c:IsSetCard(0xbb2)
 end
 function c240100570.xyzcheck(g)
-	return g:GetClassCount(Card.GetLevel)==1 and not g:IsExists(Card.IsLevelBelow,1,nil,0)
+	return g:GetClassCount(Card.GetLevel)==1 and g:IsExists(Card.IsLevelAbove,g:GetCount(),nil,1)
 end
 function c240100570.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xbb2)
