@@ -55,7 +55,6 @@ function c171000118.initial_effect(c)
 	e7:SetRange(LOCATION_MZONE)
 	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e7:SetCode(EVENT_BE_BATTLE_TARGET)
-	e7:SetCost(ref.attgcost)
 	e7:SetTarget(ref.attgtg)
 	e7:SetOperation(ref.attgop)
 	c:RegisterEffect(e7)
@@ -66,7 +65,6 @@ function c171000118.initial_effect(c)
 	e8:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e8:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e8:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e8:SetCost(ref.attgcost)
 	e8:SetCondition(ref.atcon)
 	e8:SetTarget(ref.attg)
 	e8:SetOperation(ref.atop)
@@ -112,27 +110,15 @@ function c171000118.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function ref.attgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local c=e:GetHandler()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE+PHASE_BATTLE)
-	e1:SetOperation(ref.selfdesop)
-	e1:SetReset(RESET_PHASE+PHASE_END+0x1fe0000)
-	c:RegisterEffect(e1)
-end
-function ref.selfdesop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Destroy(e:GetHandler())
-end
 function ref.rdfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xfef)
 end
 function ref.attgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and ref.rdfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(ref.rdfilter,tp,LOCATION_MZONE,0,1,c) end
+	if chk==0 then return Duel.GetFlagEffect(tp,171000118)==0 and Duel.IsExistingTarget(ref.rdfilter,tp,LOCATION_MZONE,0,1,c) end
 	Duel.SelectTarget(tp,ref.rdfilter,tp,LOCATION_MZONE,0,1,1,c)
+	Duel.RegisterFlagEffect(tp,171000118,RESET_PHASE+PHASE_END,0,1)
 end
 function ref.attgop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -151,7 +137,7 @@ function ref.attgop(e,tp,eg,ep,ev,re,r,rp)
 	tc:RegisterEffect(e2)
 	if a:IsAttackable() and not a:IsImmuneToEffect(e) and ag:IsContains(tc) then
 		Duel.BreakEffect()
-		Duel.ChangeAttackTarget(tc)
+		Duel.CalculateDamage(a,tc)
 	end
 end
 
@@ -161,10 +147,11 @@ end
 function ref.attg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and ref.rdfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(ref.rdfilter,tp,LOCATION_MZONE,0,1,c) end
+	if chk==0 then return Duel.GetFlagEffect(tp,171000118)==0 and Duel.IsExistingTarget(ref.rdfilter,tp,LOCATION_MZONE,0,1,c) end
 	Duel.NegateAttack()
 	local ac=Duel.SelectTarget(tp,ref.rdfilter,tp,LOCATION_MZONE,0,1,1,c)
 	Duel.GetAttackTarget():RegisterFlagEffect(171000118,RESET_PHASE+PHASE_BATTLE_START,0,1)
+	Duel.RegisterFlagEffect(tp,171000118,RESET_PHASE+PHASE_END,0,1)
 end
 function ref.atkfilter(c)
 	return c:GetFlagEffect(171000118)~=0 and c:IsFaceup()
