@@ -40,8 +40,8 @@ function c500314819.initial_effect(c)
 	end
 end
 c500314819.evolute=true
-c500314819.material1=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL) and mc:GetLevel()==4 and mc:IsFaceup() end
-c500314819.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL) and mc:GetLevel()==4 and mc:IsFaceup() end
+c500314819.material1=function(mc) return mc:IsFaceup() and mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL) end
+c500314819.material2=function(mc) return mc:IsFaceup() and mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL)  end
 function c500314819.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)

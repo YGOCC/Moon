@@ -1,5 +1,6 @@
---created by Chadook, coded by Michael Lawrence Dee
+--created by Chadook, coded by Michael Lawrence Dee, updated by Kinny (GetCount fix, ref val)
 --エーボルート召喚
+local ref=_G['c'..388]
 function c388.initial_effect(c)
 	if not c388.global_check then
 		c388.global_check=true
@@ -76,29 +77,60 @@ function c388.amafilter(c)
 	return c:GetOriginalCode()==47594939
 end
 function c388.nlrfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsStatus(STATUS_NO_LEVEL)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsStatus(STATUS_NO_LEVEL)
+end
+function ref.matlevel(c)
+	if c:IsLevelAbove(1) then
+		return c:GetLevel()
+	end
+	if c:IsRankAbove(1) then
+		return c:GetRank()
+	end
+	return 0
 end
 function c388.matfilter1(c,evo,tp)
+	local max_ct = 1
+	local min_ct = 1
+	if evo.max_material_count then
+		max_ct = evo.max_material_count
+	end
+	if c.min_material_count then
+		min_ct = c.min_material_count-1
+	end
+	if ref.matlevel(c)==0 then return false end
 	local mg2=Duel.GetMatchingGroup(c388.matfilter2,tp,LOCATION_MZONE,0,c,evo)
+	local RemainingValue = evo.stage_o - ref.matlevel(c)
 	return evo.material1 and evo.material1(c)
-		and mg2:GetCount()>0
+		and mg2:CheckWithSumEqual(ref.matlevel,RemainingValue,min_ct,max_ct)
 end
 function c388.matfilter2(c,evo)
-	return evo.material2 and evo.material2(c)
+	return ref.matlevel(c)>0 and evo.material2 and evo.material2(c)
 end
 function c388.sumcon(e,c,og)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local mg1=Duel.GetMatchingGroup(c388.matfilter1,tp,LOCATION_MZONE,0,nil,c,tp)
+	local mg1=Duel.GetMatchingGroup(ref.matfilter1,tp,LOCATION_MZONE,0,nil,c,tp)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and mg1:GetCount()>0
 end
 function c388.sumop(e,tp,eg,ep,ev,re,r,rp,c,og)
+	local max_ct = 1
+	local min_ct = 1
+	if c.max_material_count then
+		max_ct = c.max_material_count
+	end
+	if c.min_material_count then
+		min_ct = c.min_material_count-1
+	end
+
 	local mg1=Duel.GetMatchingGroup(c388.matfilter1,tp,LOCATION_MZONE,0,nil,c,tp)
-	local mg2=Duel.GetMatchingGroup(c388.matfilter2,tp,LOCATION_MZONE,0,nil,c)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(388,1))
 	local sg1=mg1:Select(tp,1,1,nil)
+	local sc=sg1:GetFirst()
+	local RemainingValue = c.stage_o - ref.matlevel(sc)
+	
+	local mg2=Duel.GetMatchingGroup(c388.matfilter2,tp,LOCATION_MZONE,0,sc,c)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(388,1))
-	local sg2=mg2:Select(tp,1,1,sg1:GetFirst())
+	local sg2=mg2:SelectWithSumEqual(tp,ref.matlevel,RemainingValue,min_ct,max_ct)
 	sg1:Merge(sg2)
 	c:SetMaterial(sg1)
 	Duel.SendtoGrave(sg1,REASON_MATERIAL+0x10000000)

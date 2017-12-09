@@ -41,8 +41,8 @@ end
 c160002321.evolute=true
 c160002321.stage_o=5
 c160002321.stage=c160002321.stage_o
-c160002321.material1=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL) and mc:GetLevel()==2 and mc:IsFaceup() end
-c160002321.material2=function(mc) return mc:IsRace(RACE_FAIRY) and mc:IsType(TYPE_NORMAL) and mc:GetLevel()==3 and mc:IsFaceup() end
+c160002321.material1=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL)end
+c160002321.material2=function(mc) return mc:IsRace(RACE_FAIRY) and mc:IsType(TYPE_NORMAL) end
 function c160002321.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)

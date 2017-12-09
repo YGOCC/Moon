@@ -46,8 +46,8 @@ function c160008741.initial_effect(c)
 	end
 end
 c160008741.evolute=true
-c160008741.material1=function(mc) return  mc:IsFaceup() and not mc:IsType(TYPE_EFFECT) and mc:GetLevel()==4 or mc:GetRank()==4  end
-c160008741.material2=function(mc) return  mc:IsFaceup() and not mc:IsType(TYPE_EFFECT) and mc:GetLevel()==4 or mc:GetRank()==4 end
+c160008741.material1=function(mc) return  (not mc:IsType(TYPE_MONSTER)) end
+c160008741.material2=function(mc) return   (not mc:IsType(TYPE_MONSTER)) end
 function c160008741.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)

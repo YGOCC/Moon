@@ -37,8 +37,8 @@ e2:SetCondition(c500314216.condition)
 	end
 end
 c500314216.evolute=true
-c500314216.material1=function(mc) return  mc:IsType(TYPE_NORMAL) and mc:GetLevel()==3 and mc:IsFaceup() end
-c500314216.material2=function(mc) return mc:IsType(TYPE_NORMAL) and mc:GetLevel()==3 and mc:IsFaceup() end
+c500314216.material1=function(mc) return  mc:IsType(TYPE_NORMAL)  end
+c500314216.material2=function(mc) return mc:IsType(TYPE_NORMAL)  end
 function c500314216.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)

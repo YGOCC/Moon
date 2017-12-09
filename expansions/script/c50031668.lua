@@ -3,7 +3,6 @@
 --Scripted by Chadook
 function c50031668.initial_effect(c)
 --synchro summon
-	
 	c:EnableReviveLimit()
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(50031668,0))
@@ -37,13 +36,16 @@ function c50031668.initial_effect(c)
 	end
 end
 c50031668.evolute=true
-c50031668.material1=function(mc) return mc:GetLevel()==1 and mc:IsFaceup() or mc:IsType(TYPE_NORMAL) end
-c50031668.material2=function(mc) return  mc:GetLevel()==4 and mc:IsFaceup() or mc:IsType(TYPE_NORMAL) end
+c50031668.material1=function(mc) return  mc:IsFaceup() end
+c50031668.material2=function(mc) return mc:IsFaceup() and mc:IsType(TYPE_NORMAL)  end
 function c50031668.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)
 		c50031668.stage_o=5
 c50031668.stage=c50031668.stage_o
+end
+function c50031668.lcheck(g,lc)
+	return g:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function c50031668.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,2,REASON_COST) end
@@ -70,13 +72,13 @@ function c50031668.operation(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetValue(RESET_TURN_SET)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e2)
 		else Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)end
 		Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)

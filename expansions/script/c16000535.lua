@@ -36,8 +36,8 @@ function c16000535.initial_effect(c)
 	end
 end
 c16000535.evolute=true
-c16000535.material1=function(mc)return  mc:IsType(TYPE_NORMAL) and mc:GetLevel()==3 and mc:IsFaceup() end
-c16000535.material2=function(mc)  return mc:IsType(TYPE_NORMAL) and mc:GetLevel()==3 and mc:IsFaceup() end
+c16000535.material1=function(mc)return  mc:IsType(TYPE_NORMAL)  end
+c16000535.material2=function(mc)  return mc:IsType(TYPE_NORMAL) end
 function c16000535.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)

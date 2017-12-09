@@ -2,7 +2,7 @@
 function c50031666.initial_effect(c)
 aux.EnablePendulumAttribute(c)
 c:EnableReviveLimit()
- 	--atk
+	--atk
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(50031666,1))
 	e1:SetCategory(CATEGORY_ATKCHANGE)
@@ -39,7 +39,7 @@ c:EnableReviveLimit()
 	e4:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e4:SetCountLimit(1)
 	e4:SetCondition(c50031666.condition)
---	e3:SetCost(c50031666.cost)
+--  e3:SetCost(c50031666.cost)
 	e4:SetTarget(c50031666.tg)
 	e4:SetOperation(c50031666.op)
 	c:RegisterEffect(e4)
@@ -76,8 +76,8 @@ c:EnableReviveLimit()
 end
 
 c50031666.evolute=true
-c50031666.material1=function(mc) return mc:GetLevel()==2 or mc:GetRank()==2 and mc:IsFaceup() end
-c50031666.material2=function(mc) return  mc:GetLevel()==2 or mc:GetRank()==2 and mc:IsFaceup() end
+c50031666.material1=function(mc)  end
+c50031666.material2=function(mc) end
 function c50031666.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)
@@ -86,18 +86,18 @@ c50031666.stage=c50031666.stage_o
 end
 --function c50031666.spcon(e,c)
 	--if c==nil then return true end
---	local tp=c:GetControler()
---	local g1=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,nil,160007854)
---	if g1:GetCount()>0 then
---		local g2=Duel.IsCanRemoveCounter(c:GetControler(),1,1,0x1075,4,REASON_COST)
-	--	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and g2
---	end
---	return false
+--  local tp=c:GetControler()
+--  local g1=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,nil,160007854)
+--  if g1:GetCount()>0 then
+--	  local g2=Duel.IsCanRemoveCounter(c:GetControler(),1,1,0x1075,4,REASON_COST)
+	--  return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and g2
+--  end
+--  return false
 --end
 --function c50031666.spop(e,tp,eg,ep,ev,re,r,rp,c)
---	local g1=Duel.SelectMatchingCard(tp,Card.IsCode,tp,LOCATION_MZONE,0,1,1,nil,160007854)
---	local g2=Duel.RemoveCounter(tp,1,1,0x1075,4,REASON_RULE)
---	Duel.SendtoGrave(g1,REASON_MATERIAL+REASON_SYNCHRO)
+--  local g1=Duel.SelectMatchingCard(tp,Card.IsCode,tp,LOCATION_MZONE,0,1,1,nil,160007854)
+--  local g2=Duel.RemoveCounter(tp,1,1,0x1075,4,REASON_RULE)
+--  Duel.SendtoGrave(g1,REASON_MATERIAL+REASON_SYNCHRO)
 --end
 function c50031666.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL) then return false end
