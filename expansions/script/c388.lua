@@ -62,6 +62,7 @@ function c388.op(e,tp,eg,ep,ev,re,r,rp)
 			e3:SetReset(RESET_EVENT+EVENT_ADJUST,1)
 			e3:SetValue(TYPE_XYZ)
 			tc:RegisterEffect(e3)
+		
 			tc:RegisterFlagEffect(388,RESET_EVENT+EVENT_ADJUST,0,1)  
 		end
 		tc=g:GetNext()
@@ -77,7 +78,7 @@ function c388.amafilter(c)
 	return c:GetOriginalCode()==47594939
 end
 function c388.nlrfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsStatus(STATUS_NO_LEVEL)
+	return c:IsType(TYPE_MONSTER) and c:IsStatus(STATUS_NO_LEVEL)
 end
 function ref.matlevel(c)
 	if c:IsLevelAbove(1) then
@@ -100,11 +101,11 @@ function c388.matfilter1(c,evo,tp)
 	if ref.matlevel(c)==0 then return false end
 	local mg2=Duel.GetMatchingGroup(c388.matfilter2,tp,LOCATION_MZONE,0,c,evo)
 	local RemainingValue = evo.stage_o - ref.matlevel(c)
-	return evo.material1 and evo.material1(c)
+	return c:IsFaceup() and evo.material1 and evo.material1(c)
 		and mg2:CheckWithSumEqual(ref.matlevel,RemainingValue,min_ct,max_ct)
 end
 function c388.matfilter2(c,evo)
-	return ref.matlevel(c)>0 and evo.material2 and evo.material2(c)
+	return c:IsFaceup() and ref.matlevel(c)>0 and evo.material2 and evo.material2(c)
 end
 function c388.sumcon(e,c,og)
 	if c==nil then return true end

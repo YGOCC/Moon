@@ -3,6 +3,7 @@
 --Scripted by Chadook
 function c50031668.initial_effect(c)
 --synchro summon
+	
 	c:EnableReviveLimit()
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(50031668,0))

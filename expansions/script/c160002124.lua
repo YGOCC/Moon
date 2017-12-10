@@ -44,16 +44,16 @@ function c160002124.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg=Duel.GetRitualMaterial(tp)
 		local sg=Duel.GetMatchingGroup(c160002124.filter,tp,LOCATION_SZONE+LOCATION_EXTRA,0,nil,e,tp,mg)
-		local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_SZONE,6),Duel.GetFieldCard(tp,LOCATION_SZONE,7)):Filter(c160002124.sfilter,nil,e,tp,mg)
+		local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_PZONE,0)):Filter(c160002124.sfilter,nil,e,tp,mg)
 		sg:Merge(pg)
 		return sg:GetCount()>0
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_SZONE+LOCATION_EXTRA)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_PZONE+LOCATION_EXTRA)
 end
 function c160002124.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetRitualMaterial(tp)
-	local sg=Duel.GetMatchingGroup(c160002124.filter,tp,LOCATION_SZONE+LOCATION_EXTRA,0,nil,e,tp,mg)
-	local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_SZONE,6),Duel.GetFieldCard(tp,LOCATION_SZONE,7)):Filter(c160002124.sfilter,nil,e,tp,mg)
+	local sg=Duel.GetMatchingGroup(c160002124.filter,tp,LOCATION_PZONE+LOCATION_EXTRA,0,nil,e,tp,mg)
+	local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_PZONE,0)):Filter(c160002124.sfilter,nil,e,tp,mg)
 	sg:Merge(pg)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=sg:Select(tp,1,1,nil)

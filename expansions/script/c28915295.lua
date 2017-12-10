@@ -108,7 +108,7 @@ function ref.matop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetValue(1000)
+	e2:SetValue(600)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
 	rc:RegisterEffect(e2)
 end

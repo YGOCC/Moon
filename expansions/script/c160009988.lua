@@ -25,7 +25,7 @@ function c160009988.initial_effect(c)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetTargetRange(1,0)
 	e3:SetValue(2)
-	c.RegisterEffect(e3)
+	c:RegisterEffect(e3)
 end
 function c160009988.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()

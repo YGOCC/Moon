@@ -1,5 +1,6 @@
 function c500315455.initial_effect(c)
 	c:EnableReviveLimit()
+c500315455.max_material_count=3
 --equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500315455,0))
@@ -37,8 +38,8 @@ if not c500315455.global_check then
 	end
 end
 c500315455.evolute=true
-c500315455.material1=function(mc) return  mc:IsCode(500314712) and mc:IsFaceup() end
-c500315455.material2=function(mc) return  mc:GetLevel()==3  and mc:IsFaceup() end
+c500315455.material1=function(mc) return  mc:IsCode(500314712) end
+c500315455.material2=function(mc) return mc:IsSetCard(0x85a) end
 function c500315455.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)

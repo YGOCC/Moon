@@ -1,5 +1,6 @@
 --ESPergear Leader :Supreme Swordtress
 function c16000035.initial_effect(c)
+c16000032.max_material_count=6
 	--Disable
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16000035,0))
@@ -44,8 +45,8 @@ function c16000035.initial_effect(c)
 	end
 end
 c16000035.evolute=true
-c16000035.material1=function(mc) return mc:IsCode(16000020) and mc:IsFaceup() end
-c16000035.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION) and mc:GetLevel()==4 and mc:IsFaceup() end
+c16000035.material1=function(mc) return mc:IsCode(16000020)  end
+c16000035.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION) end
 function c16000035.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)

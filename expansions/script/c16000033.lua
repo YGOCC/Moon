@@ -1,5 +1,6 @@
 --ESPergear Knight: Knigtie
 function c16000033.initial_effect(c)
+c16000033.max_material_count=6
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(16000033,0))
 	e3:SetCategory(CATEGORY_REMOVE)
@@ -41,8 +42,8 @@ function c16000033.initial_effect(c)
 	end
 end
 c16000033.evolute=true
-c16000033.material1=function(mc) return mc:IsCode(16000020) and mc:IsFaceup() end
-c16000033.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION) and mc:GetLevel()==2 and mc:IsFaceup() end
+c16000033.material1=function(mc) return mc:IsCode(16000020)  end
+c16000033.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION) end
 function c16000033.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)

@@ -39,13 +39,25 @@ function ref.matfilter2(c)
 end
 
 --Custom Fusion
+function ref.FConditionCheckF(c,chkf)
+	return c:IsOnField() and c:IsControler(chkf)
+end
 function ref.FConditionFilterFFR(c,f1,f2,mg,minc,chkf)
 	if not f1(c) then return false end
-	if chkf==PLAYER_NONE or aux.FConditionCheckF(c,chkf) then
+	if chkf==PLAYER_NONE or ref.FConditionCheckF(c,chkf) then
 		return minc<=0 or mg:IsExists(f2,minc,c)
 	else
 		local mg2=mg:Filter(f2,c)
-		return mg2:GetCount()>=minc and mg2:IsExists(aux.FConditionCheckF,1,nil,chkf)
+		return mg2:GetCount()>=minc and mg2:IsExists(ref.FConditionCheckF,1,nil,chkf)
+	end
+end
+function ref.FConditionFilterFFR(c,f1,f2,mg,minc,chkf)
+	if not f1(c) then return false end
+	if chkf==PLAYER_NONE or ref.FConditionCheckF(c,chkf) then
+		return minc<=0 or mg:IsExists(f2,minc,c)
+	else
+		local mg2=mg:Filter(f2,c)
+		return mg2:GetCount()>=minc and mg2:IsExists(ref.FConditionCheckF,1,nil,chkf)
 	end
 end
 function ref.FConditionFunFunRep(f1,f2,minc,maxc,insf)
@@ -55,16 +67,19 @@ function ref.FConditionFunFunRep(f1,f2,minc,maxc,insf)
 			local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
 			if gc then
 				if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
-				if aux.FConditionFilterFFR(gc,f1,f2,mg,minc,chkf) then
+				if ref.FConditionFilterFFR(gc,f1,f2,mg,minc,chkf) then
 					return true
 				elseif f2(gc) then
 					mg:RemoveCard(gc)
-					if aux.FConditionCheckF(gc,chkf) then chkf=PLAYER_NONE end
-					return mg:IsExists(aux.FConditionFilterFFR,1,nil,f1,f2,mg,minc-1,chkf)
+					if ref.FConditionCheckF(gc,chkf) then chkf=PLAYER_NONE end
+					return mg:IsExists(ref.FConditionFilterFFR,1,nil,f1,f2,mg,minc-1,chkf)
 				else return false end
 			end
-			return mg:IsExists(aux.FConditionFilterFFR,1,nil,f1,f2,mg,minc,chkf)
+			return mg:IsExists(ref.FConditionFilterFFR,1,nil,f1,f2,mg,minc,chkf)
 		end
+end
+function ref.FConditionCheckF(c,chkf)
+	return c:IsOnField() and c:IsControler(chkf)
 end
 function ref.FOperationFunFunRep(f1,f2,minc,maxc,insf)
 	return	function(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
@@ -74,18 +89,18 @@ function ref.FOperationFunFunRep(f1,f2,minc,maxc,insf)
 			local maxct=maxc
 			if gc then
 				g:RemoveCard(gc)
-				if aux.FConditionFilterFFR(gc,f1,f2,g,minct,chkf) then
-					if aux.FConditionCheckF(gc,chkf) then chkf=PLAYER_NONE end
+				if ref.FConditionFilterFFR(gc,f1,f2,g,minct,chkf) then
+					if ref.FConditionCheckF(gc,chkf) then chkf=PLAYER_NONE end
 					local g1=Group.CreateGroup()
 					if f2(gc) then
-						local mg1=g:Filter(aux.FConditionFilterFFR,nil,f1,f2,g,minct-1,chkf)
+						local mg1=g:Filter(ref.FConditionFilterFFR,nil,f1,f2,g,minct-1,chkf)
 						if mg1:GetCount()>0 then
 							--if gc fits both, should allow an extra material that fits f1 but doesn't fit f2
 							local mg2=g:Filter(f2,nil)
 							mg1:Merge(mg2)
 							if chkf~=PLAYER_NONE then
 								Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-								local sg=mg1:FilterSelect(tp,aux.FConditionCheckF,1,1,nil,chkf)
+								local sg=mg1:FilterSelect(tp,ref.FConditionCheckF,1,1,nil,chkf)
 								g1:Merge(sg)
 								mg1:Sub(sg)
 								minct=minct-1
@@ -129,7 +144,7 @@ function ref.FOperationFunFunRep(f1,f2,minc,maxc,insf)
 					local mg=g:Filter(f2,nil)
 					if chkf~=PLAYER_NONE then
 						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-						local sg=mg:FilterSelect(tp,aux.FConditionCheckF,1,1,nil,chkf)
+						local sg=mg:FilterSelect(tp,ref.FConditionCheckF,1,1,nil,chkf)
 						g1:Merge(sg)
 						mg:Sub(sg)
 						minct=minct-1
@@ -144,17 +159,17 @@ function ref.FOperationFunFunRep(f1,f2,minc,maxc,insf)
 					Duel.SetFusionMaterial(g1)
 					return
 				else
-					if aux.FConditionCheckF(gc,chkf) then chkf=PLAYER_NONE end
+					if ref.FConditionCheckF(gc,chkf) then chkf=PLAYER_NONE end
 					minct=minct-1
 					maxct=maxct-1
 				end
 			end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-			local g1=g:FilterSelect(tp,aux.FConditionFilterFFR,1,1,nil,f1,f2,g,minct,chkf)
+			local g1=g:FilterSelect(tp,ref.FConditionFilterFFR,1,1,nil,f1,f2,g,minct,chkf)
 			local mg=g:Filter(f2,g1:GetFirst())
-			if chkf~=PLAYER_NONE and not aux.FConditionCheckF(g1:GetFirst(),chkf) then
+			if chkf~=PLAYER_NONE and not ref.FConditionCheckF(g1:GetFirst(),chkf) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-				local sg=mg:FilterSelect(tp,aux.FConditionCheckF,1,1,nil,chkf)
+				local sg=mg:FilterSelect(tp,ref.FConditionCheckF,1,1,nil,chkf)
 				g1:Merge(sg)
 				mg:Sub(sg)
 				minct=minct-1

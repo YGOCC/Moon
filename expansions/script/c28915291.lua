@@ -21,7 +21,6 @@ function ref.initial_effect(c)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_MZONE+LOCATION_GRAVE+LOCATION_EXTRA+LOCATION_REMOVED)
 	e2:SetCondition(ref.chaincon)
-	e2:SetTarget(ref.chaintg)
 	e2:SetOperation(ref.chainop)
 	c:RegisterEffect(e2)
 	--Recover
@@ -52,11 +51,6 @@ end
 function ref.chaincon(e,tp,eg,ep,ev,re,r,rp)
 	AI.Chat("Con Chk")
 	return re:GetHandler()==e:GetHandler()
-end
-function ref.chaintg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	AI.Chat("Chain Sealed")
-	Duel.SetChainLimit(ref.chlimit)
 end
 function ref.chainop(e,tp,eg,ep,ev,re,r,rp)
 	AI.Chat("Chain Sealed")

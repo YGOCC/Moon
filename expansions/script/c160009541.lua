@@ -16,7 +16,7 @@ function c160009541.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
 	e2:SetValue(500314712)
 	c:RegisterEffect(e2)
-    --
+	--
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(160009541,0))
 	e3:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -70,8 +70,8 @@ function c160009541.initial_effect(c)
 	end
 end
 c160009541.evolute=true
-c160009541.material1=function(mc) return mc:IsRace(RACE_PLANT) and (mc:GetLevel()==4 or mc:GetRank()==4) and mc:IsFaceup() end
-c160009541.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_EARTH) and (mc:GetLevel()==4 or mc:GetRank()==4) and mc:IsFaceup() end
+c160009541.material1=function(mc) return mc:IsRace(RACE_PLANT)   end
+c160009541.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_EARTH)  end
 function c160009541.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)
@@ -80,22 +80,22 @@ c160009541.stage=c160009541.stage_o
 
 end
 --function c160009541.descon(e,tp,eg,ep,ev,re,r,rp)
---	Debug.Message("Appear, Queen of Cursed Fallen Warriors!")
---	return  e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388
+--  Debug.Message("Appear, Queen of Cursed Fallen Warriors!")
+--  return  e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388
 --end
 --function c160009541.deesfilter(c)
 	--return c:GetSummonLocation()==LOCATION_EXTRA and c:IsDestructable()
 --end
 --function c160009541.destg(e,tp,eg,ep,ev,re,r,rp,chk)
---	if chk==0 then return true end
---	local g=Duel.GetMatchingGroup(c160009541.deesfilter,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
---	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+--  if chk==0 then return true end
+--  local g=Duel.GetMatchingGroup(c160009541.deesfilter,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
+--  Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 --end
 --function c160009541.desop(e,tp,eg,ep,ev,re,r,rp)
---	local g=Duel.GetMatchingGroup(c160009541.deesfilter,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
---	if g:GetCount()>0 then
---		Duel.Destroy(g,REASON_EFFECT)
---	end
+--  local g=Duel.GetMatchingGroup(c160009541.deesfilter,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
+--  if g:GetCount()>0 then
+--	  Duel.Destroy(g,REASON_EFFECT)
+--  end
 --end
 function c160009541.costfilter(c)
 	return c:IsCode(500311028) and c:IsAbleToRemoveAsCost()

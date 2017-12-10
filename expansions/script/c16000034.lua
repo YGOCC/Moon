@@ -1,5 +1,6 @@
 --ESPergear Knight : Lancie
 function c16000034.initial_effect(c)
+c16000032.max_material_count=6
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16000034,0))
@@ -37,8 +38,8 @@ function c16000034.initial_effect(c)
 	end
 end
 c16000034.evolute=true
-c16000034.material1=function(mc) return mc:IsCode(16000020) and mc:IsFaceup() end
-c16000034.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION) and mc:GetLevel()==3 and mc:IsFaceup() end
+c16000034.material1=function(mc) return mc:IsCode(16000020)  end
+c16000034.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION)  end
 function c16000034.chk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,388)
 	Duel.CreateToken(1-tp,388)
@@ -121,20 +122,20 @@ function c16000034.dgct(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 	e:SetLabel(g:GetFirst():GetBaseAttack())
 	local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_SINGLE)
-    e1:SetCode(EFFECT_CANNOT_ATTACK)
-    e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
-    e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-    c:RegisterEffect(e1)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_CANNOT_ATTACK)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	c:RegisterEffect(e1)
 end
 
 function c16000034.dgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-    Duel.SetTargetPlayer(1-tp)
-    Duel.SetTargetParam(e:GetLabel())
-    Duel.SetOperationInfo(0,CATEGORY_DAMAGE,0,0,1-tp,e:GetLabel())
+	Duel.SetTargetPlayer(1-tp)
+	Duel.SetTargetParam(e:GetLabel())
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,0,0,1-tp,e:GetLabel())
 end
 function c16000034.dgop(e,tp,eg,ep,ev,re,r,rp)
-    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Damage(p,d,REASON_EFFECT)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Damage(p,d,REASON_EFFECT)
 end
