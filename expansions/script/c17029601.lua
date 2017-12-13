@@ -151,7 +151,7 @@ function c17029601.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c17029601.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_OVERLAY) and re:IsHasType(0x720)
+	return e:GetHandler():IsPreviousLocation(LOCATION_OVERLAY) and re:GetHandler():IsSetCard(0x720) --re:IsHasType(0x720)
 end
 function c17029601.thfilter(c,e,tp)
 	return c:IsSetCard(0x720) and not c:IsCode(17029601)
