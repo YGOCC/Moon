@@ -23,6 +23,17 @@ function c10505095.initial_effect(c)
 	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x1a4))
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
+	--special summon
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(10505095,1))
+	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e5:SetType(EFFECT_TYPE_IGNITION)
+	e5:SetRange(LOCATION_GRAVE)
+	e5:SetCountLimit(1,10506095)
+	e5:SetCost(c10505095.spcost)
+	e5:SetTarget(c10505095.sptg)
+	e5:SetOperation(c10505095.spop)
+	c:RegisterEffect(e5)
 end
 function c10505095.condition(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_RITUAL)==SUMMON_TYPE_RITUAL
@@ -47,4 +58,24 @@ end
 function c10505095.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+end
+function c10505095.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+end
+function c10505095.spfilter(c,e,tp)
+	return c:IsSetCard() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c10505095.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c10505095.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
+end
+function c10505095.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c10505095.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
