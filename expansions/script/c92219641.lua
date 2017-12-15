@@ -19,7 +19,7 @@ function c92219641.tgfilter(c)
 	return c:IsType(TYPE_DUAL) and c:IsAbleToGrave()
 end
 function c92219641.thfilter(c)
-	return c:IsSetCard(0x39a) and c:IsType(TYPE_MONSTER) and not c:IsCode(92219641) and c:IsAbleToHand()
+	return c:IsSetCard(0x39a) and not c:IsCode(92219641) and c:IsAbleToHand()
 end
 function c92219641.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c92219641.filter,tp,LOCATION_DECK,0,1,nil,tp) end

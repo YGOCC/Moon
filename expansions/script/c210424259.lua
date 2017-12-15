@@ -34,7 +34,6 @@ function c210424259.initial_effect(c)
 	e3:SetCode(EVENT_BECOME_TARGET)
 	e3:SetCountLimit(1,210424264)
 	e3:SetCondition(c210424259.swapcon)
-	e3:SetCost(c210424259.cost)
 	e3:SetTarget(c210424259.target)
 	e3:SetOperation(c210424259.operation)
 	c:RegisterEffect(e3)
@@ -43,36 +42,18 @@ end
 function c210424259.swapcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsContains(e:GetHandler())
 end
-function c210424259.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
-	e:GetHandler():CreateEffectRelation(e)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+function c210424259.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
-function c210424259.searchfilter(c)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
-end
-function c210424259.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand() and Duel.IsExistingMatchingCard(c210424259.searchfilter,tp,LOCATION_DECK,0,1,nil) end
-	e:GetHandler():CreateEffectRelation(e)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	
-end
-
 function c210424259.operation(e,tp,eg,ep,ev,re,r,rp)
-local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,c)
-	
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c210424259.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
-end
 end
 
 

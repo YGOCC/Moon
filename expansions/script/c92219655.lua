@@ -30,19 +30,25 @@ function c92219655.initial_effect(c)
 	e3:SetOperation(c92219655.tdop)
 	c:RegisterEffect(e3)
 end
-function c92219655.dafilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_DUAL) and not c:IsDualState()
+function c92219655.cfilter(c)
+	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsAbleToDeckAsCost()
 end
-function c92219655.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c92219655.dafilter(chkc) end
-	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c92219655.dafilter,tp,LOCATION_MZONE,0,1,1,nil)
+function c92219655.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
+		and Duel.IsExistingMatchingCard(c92219655.cfilter,tp,LOCATION_HAND,0,2,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_HAND)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c92219655.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and c92219655.dafilter(tc) and Duel.SelectYesNo(tp,aux.Stringid(92219655,0)) then
-		tc:EnableDualState()
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local g=Duel.GetMatchingGroup(c92219655.cfilter,tp,LOCATION_HAND,0,nil)
+	if g:GetCount()>0 and Duel.IsPlayerCanDraw(tp) and Duel.SelectYesNo(tp,aux.Stringid(92219655,0)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local dg=g:Select(tp,1,1,nil)
+		Duel.SendtoDeck(dg,nil,1,REASON_EFFECT)
+		Duel.ShuffleDeck(tp)
+		Duel.BreakEffect()
+		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
 function c92219655.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -75,7 +75,7 @@ end
 
 
 function c210424261.sfilter(c,tpe)
-	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
 end
 function c210424261.scon(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tpe=e:GetLabel()

@@ -27,6 +27,7 @@ function c210424266.initial_effect(c)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetCountLimit(1,210424269)
 	e4:SetCost(c210424266.descost)
+	e4:SetTarget(c210424266.destarget)
 	e4:SetOperation(c210424266.desop)
 	c:RegisterEffect(e4)
 end
@@ -39,12 +40,18 @@ if chk==0 then return Duel.IsExistingMatchingCard(c210424266.desfilter,tp,LOCATI
 local g=Duel.SelectMatchingCard(tp,c210424266.desfilter,tp,LOCATION_EXTRA,0,2,2,nil)
 Duel.SendtoGrave(g,REASON_COST)
 end
-function c210424266.desop(e,tp,eg,ep,ev,re,r,rp)
+function c210424266.destarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDestroy,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil) end
+	
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDestroy,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.HintSelection(g)
-		Duel.Destroy(g,REASON_EFFECT)
+	local g=Duel.SelectTarget(tp,Card.IsAbleToDestroy,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function c210424266.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
 function c210424266.tgtg(e,c)

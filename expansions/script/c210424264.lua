@@ -1,9 +1,9 @@
 --Lunar Guardian's Blessing
 function c210424264.initial_effect(c)
 c:EnableCounterPermit(0x5)
-		--Activate
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_COUNTER)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c210424264.target)
@@ -16,7 +16,6 @@ c:EnableCounterPermit(0x5)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCondition(c210424264.accon)
-	
 	e3:SetOperation(c210424264.acop)
 	c:RegisterEffect(e3)
 		--destroy replace
@@ -41,16 +40,13 @@ c:EnableCounterPermit(0x5)
 end
 
 function c210424264.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c210424264.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	if chk==0 then return Duel.IsCanAddCounter(tp,0x5,3,e:GetHandler()) end
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,3,0,0x5)
 end
 function c210424264.activate(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c210424264.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		c:AddCounter(0x5,3)
 	end
 end
 function c210424264.thcost(e,tp,eg,ep,ev,re,r,rp,chk)

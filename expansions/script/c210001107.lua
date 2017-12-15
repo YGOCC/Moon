@@ -73,13 +73,12 @@ function c210001107.sprcondition(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local mg=Duel.GetMatchingGroup(c210001107.sprfilter,tp,LOCATION_MZONE,0,nil)
-	return ft>-1 and aux.SelectUnselectGroup(mg,e,tp,1,1,aux.ChkfMMZ(1),0)
+	return ft>-1 and Duel.IsExistingMatchingCard(c210001107.sprfilter,c:GetControler(),LOCATION_MZONE,0,1,nil,ft)
 end
 function c210001107.sproperation(e,tp,eg,ep,ev,re,r,rp,c)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local mg=Duel.GetMatchingGroup(c210001107.sprfilter,tp,LOCATION_MZONE,0,nil)
-	local g=aux.SelectUnselectGroup(mg,e,tp,1,1,aux.ChkfMMZ(1),1,tp,HINTMSG_RTOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g=Duel.SelectMatchingCard(tp,c210001107.sprfilter,tp,LOCATION_MZONE,0,1,1,nil,ft)
 	Duel.SendtoHand(g,nil,REASON_COST)
 end
 function c210001107.dmcondition(e,tp,eg,ep,ev,re,r,rp)
