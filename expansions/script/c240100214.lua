@@ -51,7 +51,7 @@ function c240100214.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c240100214.spfilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK)
 end
 function c240100214.setop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -59,12 +59,10 @@ function c240100214.setop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		if Duel.Draw(tp,1,REASON_EFFECT)==0 then return end
 		local dr=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_HAND):GetFirst()
-		Duel.ConfirmCards(1-tp,dr)
-		if c240100214.spfilter(dr,e,tp) and Duel.SelectYesNo(tp,2) then
-			if Duel.SpecialSummon(dr,0,tp,tp,false,false,POS_FACEUP_ATTACK)==0 then
-				Duel.ShuffleHand(tp)
-			end
-		else Duel.ShuffleHand(tp) end
+		if c240100214.spfilter(dr,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,2) then
+			Duel.ConfirmCards(1-tp,dr)
+			Duel.SpecialSummon(dr,0,tp,tp,false,false,POS_FACEUP_ATTACK)
+		end
 	end
 end
 function c240100214.spcon(e,tp,eg,ep,ev,re,r,rp)
