@@ -1,5 +1,7 @@
 --Lovely Paintress Goghi
 function c160002321.initial_effect(c)
+ aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,c160002321.checku,5,c160002321.filter1,c160002321.filter2)
 	c:EnableReviveLimit()
 		--atk
 	local e99=Effect.CreateEffect(c)
@@ -8,8 +10,8 @@ function c160002321.initial_effect(c)
 	e99:SetType(EFFECT_TYPE_QUICK_O)
 	e99:SetCode(EVENT_FREE_CHAIN)
 	e99:SetRange(LOCATION_MZONE)
-	e99:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
-	e99:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+0x1c0)
+	e99:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e99:SetHintTiming(0,0x1e0)
 	e99:SetCountLimit(1)
 	e99:SetCost(c160002321.cost)
 	e99:SetTarget(c160002321.target)
@@ -27,37 +29,45 @@ function c160002321.initial_effect(c)
 	e2:SetTarget(c160002321.target2)
 	e2:SetOperation(c160002321.operation2)
 	c:RegisterEffect(e2)
-	if not c160002321.global_check then
-		c160002321.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c160002321.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
+	  -- if not c50031668.global_check then
+	   -- c50031668.global_check=true
+	   -- local ge2=Effect.CreateEffect(c)
+	   -- ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	   -- ge2:SetCode(EVENT_ADJUST)
+	   -- ge2:SetCountLimit(1)
+	   -- ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+	   -- ge2:SetOperation(c50031668.chk)
+	   -- Duel.RegisterEffect(ge2,0)
+	--end
 end
-c160002321.evolute=true
-c160002321.stage_o=5
-c160002321.stage=c160002321.stage_o
-c160002321.material1=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL)end
-c160002321.material2=function(mc) return mc:IsRace(RACE_FAIRY) and mc:IsType(TYPE_NORMAL) end
-function c160002321.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
+--c50031668.evolute=true
+--c50031668.material1=function(mc) return  mc:IsFaceup() end
+--c50031668.material2=function(mc) return mc:IsFaceup() and mc:IsType(TYPE_NORMAL)  end
+--function c50031668.chk(e,tp,eg,ep,ev,re,r,rp)
+  --  Duel.CreateToken(tp,388)
+   -- Duel.CreateToken(1-tp,388)
+		--c50031668.stage_o=5
+--c50031668.stage=c50031668.stage_o
+--end
 
+function c160002321.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
-
+function c160002321.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) 
+end
+function c160002321.filter2(c,ec,tp)
+	return c:IsRace(RACE_FAIRY) 
+end
 function c160002321.costfilter(c)
 	return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_NORMAL) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
 function c160002321.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,2,REASON_COST) and Duel.IsExistingMatchingCard(c160002321.costfilter,tp,LOCATION_EXTRA,0,1,c) end
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,2,REASON_COST) and Duel.IsExistingMatchingCard(c160002321.costfilter,tp,LOCATION_EXTRA,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c160002321.costfilter,tp,LOCATION_EXTRA,0,1,1,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:GetHandler():RemoveCounter(tp,0x1088,2,REASON_COST)
+	e:GetHandler():RemoveCounter(tp,0x88,2,REASON_COST)
 end
 function c160002321.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()

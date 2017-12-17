@@ -1,6 +1,8 @@
 --Paintress Dragon
 function c160008741.initial_effect(c)
+   aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
+  aux.AddEvoluteProc(c,nil,8,c160008741.filter1,c160008741.filter1)
 	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160008741,0))
@@ -34,26 +36,7 @@ function c160008741.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetValue(c160008741.atkval)
 	c:RegisterEffect(e4)
-		if not c160008741.global_check then
-		c160008741.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c160008741.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-c160008741.evolute=true
-c160008741.material1=function(mc) return  (not mc:IsType(TYPE_MONSTER)) end
-c160008741.material2=function(mc) return   (not mc:IsType(TYPE_MONSTER)) end
-function c160008741.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c160008741.stage_o=8
-c160008741.stage=c160008741.stage_o
-end
+ end
 function c160008741.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetAttackTarget()
@@ -66,6 +49,9 @@ function c160008741.regop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_DAMAGE)
 	c:RegisterEffect(e1)
 end
+function c160008741.filter1(c,ec,tp)
+	return not c:IsType(TYPE_MONSTER)
+end
 function c160008741.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local bc=e:GetHandler():GetBattleTarget()
 	return e:GetHandler()==Duel.GetAttacker() and ep~=tp and bc~=nil   and  bc:IsType(TYPE_EFFECT)
@@ -77,8 +63,8 @@ function c160008741.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388
 end
 function c160008741.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,6,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,6,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,6,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,6,REASON_COST)
 end
 function c160008741.filter(c)
 	return c:IsType(TYPE_EFFECT) and c:IsFaceup()  and c:IsDestructable()

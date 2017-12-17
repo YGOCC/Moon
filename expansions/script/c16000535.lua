@@ -1,5 +1,8 @@
 --Paintress EX: Cubist Picassudu
 function c16000535.initial_effect(c)
+   aux.AddOrigEvoluteType(c)
+	c:EnableReviveLimit()
+  aux.AddEvoluteProc(c,nil,6,c16000535.filter1,c16000535.filter1)
 	--attack up
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_CONTROL)
@@ -24,29 +27,12 @@ function c16000535.initial_effect(c)
 	e2:SetTarget(c16000535.thtg)
 	e2:SetOperation(c16000535.thop)
 	c:RegisterEffect(e2)
-	if not c16000535.global_check then
-		c16000535.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c16000535.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c16000535.evolute=true
-c16000535.material1=function(mc)return  mc:IsType(TYPE_NORMAL)  end
-c16000535.material2=function(mc)  return mc:IsType(TYPE_NORMAL) end
-function c16000535.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-			c16000535.stage_o=6
-c16000535.stage=c16000535.stage_o
+function c16000535.filter1(c,ec,tp)
+	return c:IsType(TYPE_NORMAL)
 end
-
 function c16000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST) and Duel.GetCurrentPhase()~=PHASE_MAIN2 end
+if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) and Duel.GetCurrentPhase()~=PHASE_MAIN2 end
 		local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_BP)
@@ -54,7 +40,7 @@ if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST)
 	e1:SetTargetRange(1,0)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
+e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 
 function c16000535.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

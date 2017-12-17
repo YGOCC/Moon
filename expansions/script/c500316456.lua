@@ -2,8 +2,9 @@
 --Created by Chadook
 --Scripted by Chadook
 function c500316456.initial_effect(c)
-	
+	 aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
+  aux.AddEvoluteProc(c,nil,6,c500316456.filter1,c500316456.filter1)
 		--sp summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(500316456,1))
@@ -18,25 +19,9 @@ function c500316456.initial_effect(c)
 	e3:SetTarget(c500316456.target)
 	e3:SetOperation(c500316456.operation)
 	c:RegisterEffect(e3)
-	if not c500316456.global_check then
-		c500316456.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c500316456.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c500316456.evolute=true
-c500316456.material1=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL)  end
-c500316456.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsType(TYPE_NORMAL)  end
-function c500316456.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-			c500316456.stage_o=6
-c500316456.stage=c500316456.stage_o
+function c500316456.filter1(c,ec,tp)
+	return c:IsType(TYPE_NORMAL)
 end
 function c500316456.filter(c,e,tp)
 	return c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -49,11 +34,11 @@ function c500316456.costfilter(c)
 	return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_NORMAL) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
 function c500316456.adcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST) and Duel.IsExistingMatchingCard(c500316456.costfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) and Duel.IsExistingMatchingCard(c500316456.costfilter,tp,LOCATION_EXTRA,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c500316456.costfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
+	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 
 function c500316456.cfilter(c)
@@ -68,7 +53,7 @@ function c500316456.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c500316456.zzfilter(c)
-	return c:IsFaceup() and  c:IsType(TYPE_EFFECT)and bit.band(tg:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL and c:IsAbleToRemove() 
+	return c:IsFaceup() and  c:IsType(TYPE_EFFECT)and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL and c:IsAbleToRemove() 
 end
 function c500316456.operation(e,tp,eg,ep,ev,re,r,rp)
 local tc=Duel.GetFirstTarget()

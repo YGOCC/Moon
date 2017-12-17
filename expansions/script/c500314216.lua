@@ -3,7 +3,9 @@
 --Scripted by Chadook
 function c500314216.initial_effect(c)
 	--synchro summon
+	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
+  aux.AddEvoluteProc(c,nil,6,c500314216.filter1,c500314216.filter1)
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500314216,0))
 	e1:SetCategory(CATEGORY_DRAW)
@@ -25,25 +27,9 @@ e2:SetCondition(c500314216.condition)
 	e2:SetCost(c500314216.cost)
 	e2:SetOperation(c500314216.operation)
 	c:RegisterEffect(e2)
-	if not c500314216.global_check then
-		c500314216.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c500314216.chk)
-		Duel.RegisterEffect(ge2,0)
 	end
-end
-c500314216.evolute=true
-c500314216.material1=function(mc) return  mc:IsType(TYPE_NORMAL)  end
-c500314216.material2=function(mc) return mc:IsType(TYPE_NORMAL)  end
-function c500314216.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-			c500314216.stage_o=6
-c500314216.stage=c500314216.stage_o
+function c500314216.filter1(c,ec,tp)
+	return c:IsType(TYPE_NORMAL)
 end
 function c500314216.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388

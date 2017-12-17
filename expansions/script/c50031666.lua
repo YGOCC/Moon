@@ -1,6 +1,8 @@
---Paintress-Ama Radiant Goghi
+
 function c50031666.initial_effect(c)
 aux.EnablePendulumAttribute(c)
+	 aux.AddOrigEvoluteType(c)
+   aux.AddEvoluteProc(c,nil,4,aux.TRUE,aux.TRUE)
 c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)
@@ -63,33 +65,13 @@ c:EnableReviveLimit()
 	e6:SetValue(c50031666.aclimit2)
 	e6:SetCondition(c50031666.actcon2)
 	c:RegisterEffect(e6)
-			if not c50031666.global_check then
-		c50031666.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c50031666.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-
-c50031666.evolute=true
-c50031666.material1=function(mc)  end
-c50031666.material2=function(mc) end
-function c50031666.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c50031666.stage_o=7
-c50031666.stage=c50031666.stage_o
 end
 --function c50031666.spcon(e,c)
 	--if c==nil then return true end
 --  local tp=c:GetControler()
 --  local g1=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,nil,160007854)
 --  if g1:GetCount()>0 then
---	  local g2=Duel.IsCanRemoveCounter(c:GetControler(),1,1,0x1075,4,REASON_COST)
+--  local g2=Duel.IsCanRemoveCounter(c:GetControler(),1,1,0x1075,4,REASON_COST)
 	--  return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and g2
 --  end
 --  return false
@@ -200,11 +182,11 @@ function c50031666.costfilter(c)
 end
 function c50031666.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 local c=e:GetHandler()
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,2,REASON_COST) and Duel.IsExistingMatchingCard(c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,2,REASON_COST) and Duel.IsExistingMatchingCard(c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:GetHandler():RemoveCounter(tp,0x1088,2,REASON_COST)
+	e:GetHandler():RemoveCounter(tp,0x88,2,REASON_COST)
 		c:RegisterFlagEffect(50031666,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
 

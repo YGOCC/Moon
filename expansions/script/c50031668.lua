@@ -3,7 +3,9 @@
 --Scripted by Chadook
 function c50031668.initial_effect(c)
 --synchro summon
-	
+	 aux.AddOrigEvoluteType(c)
+   aux.AddEvoluteProc(c,c50031668.checku,5,aux.TRUE,aux.TRUE)
+
 	c:EnableReviveLimit()
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(50031668,0))
@@ -25,34 +27,34 @@ function c50031668.initial_effect(c)
 	e2:SetTarget(c50031668.sptg)
 	e2:SetOperation(c50031668.spop)
 	c:RegisterEffect(e2)
-		if not c50031668.global_check then
-		c50031668.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c50031668.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
+	   -- if not c50031668.global_check then
+	   -- c50031668.global_check=true
+	   -- local ge2=Effect.CreateEffect(c)
+	   -- ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	   -- ge2:SetCode(EVENT_ADJUST)
+	   -- ge2:SetCountLimit(1)
+	   -- ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+	   -- ge2:SetOperation(c50031668.chk)
+	   -- Duel.RegisterEffect(ge2,0)
+	--end
 end
-c50031668.evolute=true
-c50031668.material1=function(mc) return  mc:IsFaceup() end
-c50031668.material2=function(mc) return mc:IsFaceup() and mc:IsType(TYPE_NORMAL)  end
-function c50031668.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c50031668.stage_o=5
-c50031668.stage=c50031668.stage_o
-end
-function c50031668.lcheck(g,lc)
-	return g:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
-end
-function c50031668.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,2,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,2,REASON_COST)
-end
+--c50031668.evolute=true
+--c50031668.material1=function(mc) return  mc:IsFaceup() end
+--c50031668.material2=function(mc) return mc:IsFaceup() and mc:IsType(TYPE_NORMAL)  end
+--function c50031668.chk(e,tp,eg,ep,ev,re,r,rp)
+  --  Duel.CreateToken(tp,388)
+   -- Duel.CreateToken(1-tp,388)
+		--c50031668.stage_o=5
+--c50031668.stage=c50031668.stage_o
+--end
 
+function c50031668.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,2,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,2,REASON_COST)
+end
+function c50031668.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
+end
 function c50031668.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE)  end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
