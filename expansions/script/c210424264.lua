@@ -1,6 +1,7 @@
 --Lunar Guardian's Blessing
 function c210424264.initial_effect(c)
-c:EnableCounterPermit(0x5)
+c:EnableCounterPermit(0x99)
+c:SetCounterLimit (0x99,15)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_COUNTER)
@@ -10,23 +11,15 @@ c:EnableCounterPermit(0x5)
 	e1:SetOperation(c210424264.activate)
 	c:RegisterEffect(e1)
 	--add counter
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e3:SetCode(EVENT_BECOME_TARGET)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetCondition(c210424264.accon)
-	e3:SetOperation(c210424264.acop)
-	c:RegisterEffect(e3)
-		--destroy replace
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_DESTROY_REPLACE)
-	e4:SetRange(LOCATION_SZONE)
-	e4:SetTarget(c210424264.destg)
-	e4:SetValue(c210424264.value)
-	e4:SetOperation(c210424264.desop)
-	c:RegisterEffect(e4)
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_COUNTER)
+	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e2:SetCode(EVENT_BECOME_TARGET)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCondition(c210424264.accon)
+	e2:SetOperation(c210424264.acop)
+	c:RegisterEffect(e2)
 		--to hand
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -37,21 +30,31 @@ c:EnableCounterPermit(0x5)
 	e3:SetTarget(c210424264.thtg)
 	e3:SetOperation(c210424264.thop)
 	c:RegisterEffect(e3)
+			--destroy replace
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_DESTROY_REPLACE)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetTarget(c210424264.destg)
+	e4:SetValue(c210424264.value)
+	e4:SetOperation(c210424264.desop)
+	c:RegisterEffect(e4)
 end
 
 function c210424264.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanAddCounter(tp,0x5,3,e:GetHandler()) end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,3,0,0x5)
+	if chk==0 then return Duel.IsCanAddCounter(tp,0x99,3,e:GetHandler()) end
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,3,0,0x99)
 end
 function c210424264.activate(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		c:AddCounter(0x5,3)
+		c:AddCounter(0x99,3)
 	end
 end
 function c210424264.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x5,5,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x5,5,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x99,5,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x99,5,REASON_COST)
 end
 function c210424264.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsAbleToHand()
@@ -91,7 +94,7 @@ function c210424264.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local count=eg:FilterCount(c210424264.dfilter,nil,tp)
 		e:SetLabel(count)
-		return count>0 and Duel.IsCanRemoveCounter(tp,1,0,0x5,count*3,REASON_EFFECT)
+		return count>0 and Duel.IsCanRemoveCounter(tp,1,0,0x99,count*3,REASON_EFFECT)
 	end
 	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end
@@ -100,8 +103,9 @@ function c210424264.value(e,c)
 		and c:IsSetCard(0x666) and c:IsControler(e:GetHandlerPlayer()) and c:IsReason(REASON_EFFECT)
 end
 function c210424264.desop(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 	local count=e:GetLabel()
-	Duel.RemoveCounter(tp,1,0,0x5,count*3,REASON_EFFECT)
+	Duel.RemoveCounter(tp,1,0,0x99,count*3,REASON_EFFECT)
 end
 
 
@@ -122,6 +126,7 @@ end
 
 
 function c210424264.acop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(0x5,1)
+if not e:GetHandler():IsRelateToEffect(e) then return end
+	e:GetHandler():AddCounter(0x99,1)
 	
 end

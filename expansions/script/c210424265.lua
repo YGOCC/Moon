@@ -1,7 +1,7 @@
 --Moon Burst's Big Bang
 function c210424265.initial_effect(c)
-	c:EnableCounterPermit(0x5)
-	c:SetCounterLimit(0x5,3)
+	c:EnableCounterPermit(0xc)
+	c:SetCounterLimit(0xc,3)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -9,6 +9,7 @@ function c210424265.initial_effect(c)
 	c:RegisterEffect(e1)
 	--add counter
 	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_COUNTER)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e2:SetCode(EVENT_BECOME_TARGET)
 	e2:SetRange(LOCATION_SZONE)
@@ -28,30 +29,31 @@ function c210424265.initial_effect(c)
     e3:SetOperation(c210424265.ctop2)
     c:RegisterEffect(e3)
 		--destroy&damage
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(210424265,0))
-	e5:SetCategory(CATEGORY_DESTROY)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e5:SetRange(LOCATION_SZONE)
-	e5:SetCode(EVENT_CUSTOM+210424265)
-	e5:SetCost(c210424265.descost)
-	e5:SetTarget(c210424265.destg)
-	e5:SetOperation(c210424265.desop)
-	c:RegisterEffect(e5)
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(210424265,0))
+	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCode(EVENT_CUSTOM+210424265)
+	e4:SetCost(c210424265.descost)
+	e4:SetTarget(c210424265.destg)
+	e4:SetOperation(c210424265.desop)
+	c:RegisterEffect(e4)
 end
 
 function c210424265.ctop2(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
  
     local c=e:GetHandler()
-    local ct=c:GetCounter(0x5)
+    local ct=c:GetCounter(0xc)
 
-    c:RemoveCounter(tp,0x5,ct,REASON_EFFECT) 
+    c:RemoveCounter(tp,0xc,ct,REASON_EFFECT) 
 end
 
 function c210424265.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler() and e:GetHandler():GetCounter(0x5)==3 end 
+	if chk==0 then return e:GetHandler() and e:GetHandler():GetCounter(0xc)==3 end 
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	e:GetHandler():RemoveCounter(tp,0x5,3,REASON_COST)
+	e:GetHandler():RemoveCounter(tp,0xc,3,REASON_COST)
 end
 function c210424265.desfilter(c)
 	return c:IsDestructable()
@@ -64,6 +66,7 @@ function c210424265.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c210424265.desop(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
@@ -98,11 +101,12 @@ function c210424265.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c210424265.acop(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 local c=e:GetHandler()
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
-	e:GetHandler() c:AddCounter(0x5,1)
-			if c:GetCounter(0x5)==3 then
+	e:GetHandler() c:AddCounter(0xc,1)
+			if c:GetCounter(0xc)==3 then
 			Duel.RaiseSingleEvent(c,EVENT_CUSTOM+210424265,re,0,0,p,0)
 end
 end

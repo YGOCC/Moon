@@ -143,6 +143,7 @@ function c210424262.desfilter(c)
 	return c:IsFaceup() and c:IsDestructable()
 end
 function c210424262.activate(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	Duel.Destroy(g,REASON_EFFECT)
 	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)

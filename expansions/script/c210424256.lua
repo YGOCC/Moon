@@ -50,6 +50,7 @@ if chk==0 then return Duel.IsExistingTarget(c210424256.filter1,tp,LOCATION_MZONE
 end
 
 function c210424256.activate(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then

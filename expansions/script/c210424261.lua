@@ -17,7 +17,7 @@ function c210424261.initial_effect(c)
 		--NS/Monster Search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(1020041,0))
-	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetCountLimit(1)
@@ -30,23 +30,18 @@ function c210424261.initial_effect(c)
 			--swap
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(4066,0))
-	e4:SetCategory(CATEGORY_DISABLE)
+	e4:SetCategory(CATEGORY_ATKCHANGE)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_CHAINING)
+	e4:SetCode(EVENT_BECOME_TARGET)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
-	e4:SetCondition(c210424261.atkcon)
+	e4:SetCondition(c210424261.swapcon)
     e4:SetOperation(c210424261.atkop)
 	c:RegisterEffect(e4)
 	
 end
-function c210424261.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
-	local loc,tg=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TARGET_CARDS)
-	if not tg or not tg:IsContains(c) then return false end
-	return Duel.IsChainDisablable(ev) and loc~=LOCATION_DECK
+function c210424261.swapcon(e,tp,eg,ep,ev,re,r,rp)
+		return eg:IsContains(e:GetHandler())
 end
 function c210424261.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
@@ -128,6 +123,7 @@ Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g1,2,0,0)
 end
 function c210424261.activate(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	if g:GetCount()==2 then
 		Duel.ChangePosition(g,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)

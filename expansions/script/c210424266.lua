@@ -22,7 +22,7 @@ function c210424266.initial_effect(c)
 -- Send 2 ponies from extra to grave, kill 1	
 		local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(52467217,0))
-	e4:SetCategory(CATEGORY_TOGRAVE+CATEGORY_DESTROY)
+	e4:SetCategory(CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetCountLimit(1,210424269)
@@ -36,7 +36,7 @@ function c210424266.desfilter(c)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGraveAsCost() and c:IsFaceup()
 end
 function c210424266.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return Duel.IsExistingMatchingCard(c210424266.desfilter,tp,LOCATION_EXTRA,0,1,nil) end
+if chk==0 then return Duel.IsExistingMatchingCard(c210424266.desfilter,tp,LOCATION_EXTRA,0,2,nil) end
 local g=Duel.SelectMatchingCard(tp,c210424266.desfilter,tp,LOCATION_EXTRA,0,2,2,nil)
 Duel.SendtoGrave(g,REASON_COST)
 end
@@ -49,6 +49,7 @@ function c210424266.destarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c210424266.desop(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)

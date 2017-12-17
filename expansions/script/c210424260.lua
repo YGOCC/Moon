@@ -19,7 +19,7 @@ function c210424260.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,210424265)
 	e2:SetTarget(c210424260.destg)
 	e2:SetOperation(c210424260.desop)
@@ -27,11 +27,10 @@ function c210424260.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-		
 		--swap
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(4066,0))
-	e4:SetCategory(CATEGORY_DISABLE)
+	e4:SetCategory(CATEGORY_POSITION)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_BECOME_TARGET)
 	e4:SetRange(LOCATION_MZONE)
@@ -124,11 +123,16 @@ end
 
 
 
+function c210424260.filter1(c,e)
+	local code=c:GetCode()
+	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
 
-
+end
 function c210424260.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,2,nil) end
+	if chk==0 then return 
+	Duel.IsExistingTarget(c210424260.filter1,tp,LOCATION_MZONE,0,1,nil,e,tp) and
+	Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(34016756,0))
 	local g1=Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 	e:SetLabelObject(g1:GetFirst())
@@ -136,6 +140,7 @@ function c210424260.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g2=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,g1:GetFirst())
 end
 function c210424260.activate(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 	local hc=e:GetLabelObject()
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tc=g:GetFirst()

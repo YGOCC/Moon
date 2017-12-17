@@ -56,6 +56,10 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function cm.aclimit(e,re,tp)
+	local tc=e:GetLabelObject()
+	return  re:GetHandler():IsCode(tc:GetCode()) and not re:GetHandler():IsImmuneToEffect(e)
+end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
@@ -84,6 +88,13 @@ function cm.operation1(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoHand(tg,nil,REASON_EFFECT)
 			g:Sub(Duel.GetOperatedGroup())
 			Duel.ConfirmCards(1-tp,tg)			
+		end
+	else
+		local hg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_HAND,0,nil)
+		if hg:GetCount()>=3 then
+			local tg=hg:RandomSelect(tp,3)
+			Duel.BreakEffect()
+			Duel.SendtoDeck(tg,nil,2,REASON_EFFECT)
 		end
 	end
 	if g:GetCount()>0 then
