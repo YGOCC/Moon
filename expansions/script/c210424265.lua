@@ -1,7 +1,6 @@
 --Moon Burst's Big Bang
 function c210424265.initial_effect(c)
 	c:EnableCounterPermit(0xc)
-	c:SetCounterLimit(0xc,3)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -42,7 +41,7 @@ function c210424265.initial_effect(c)
 end
 
 function c210424265.ctop2(e,tp,eg,ep,ev,re,r,rp)
-if not e:GetHandler():IsRelateToEffect(e) then return end
+
  
     local c=e:GetHandler()
     local ct=c:GetCounter(0xc)
@@ -66,7 +65,6 @@ function c210424265.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c210424265.desop(e,tp,eg,ep,ev,re,r,rp)
-if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
@@ -101,7 +99,6 @@ function c210424265.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c210424265.acop(e,tp,eg,ep,ev,re,r,rp)
-if not e:GetHandler():IsRelateToEffect(e) then return end
 local c=e:GetHandler()
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)

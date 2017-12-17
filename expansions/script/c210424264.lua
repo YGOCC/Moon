@@ -1,7 +1,7 @@
 --Lunar Guardian's Blessing
 function c210424264.initial_effect(c)
 c:EnableCounterPermit(0x99)
-c:SetCounterLimit (0x99,15)
+c:SetCounterLimit(0x99,15)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_COUNTER)
@@ -46,7 +46,6 @@ function c210424264.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,3,0,0x99)
 end
 function c210424264.activate(e,tp,eg,ep,ev,re,r,rp)
-if not e:GetHandler():IsRelateToEffect(e) then return end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		c:AddCounter(0x99,3)
@@ -103,7 +102,6 @@ function c210424264.value(e,c)
 		and c:IsSetCard(0x666) and c:IsControler(e:GetHandlerPlayer()) and c:IsReason(REASON_EFFECT)
 end
 function c210424264.desop(e,tp,eg,ep,ev,re,r,rp)
-if not e:GetHandler():IsRelateToEffect(e) then return end
 	local count=e:GetLabel()
 	Duel.RemoveCounter(tp,1,0,0x99,count*3,REASON_EFFECT)
 end
@@ -126,7 +124,6 @@ end
 
 
 function c210424264.acop(e,tp,eg,ep,ev,re,r,rp)
-if not e:GetHandler():IsRelateToEffect(e) then return end
 	e:GetHandler():AddCounter(0x99,1)
 	
 end
