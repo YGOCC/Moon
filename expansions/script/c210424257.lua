@@ -4,6 +4,7 @@ function c210424257.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	--destroy 1 pony you control, destroy 1 spell/trap opp controls
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -15,7 +16,7 @@ function c210424257.initial_effect(c)
 		--swap
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(4066,0))
-	e2:SetCategory(CATEGORY_DISABLE)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_BECOME_TARGET)
 	e2:SetRange(LOCATION_MZONE)
@@ -27,7 +28,7 @@ function c210424257.initial_effect(c)
 			--change target's battle position
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(4066,2))
-	e3:SetCategory(CATEGORY_DISABLE)
+	e3:SetCategory(CATEGORY_POSITION)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_BECOME_TARGET)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -138,7 +139,9 @@ function c210424257.swapop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+		if not Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) then
+			Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		end
 	end
 end
 

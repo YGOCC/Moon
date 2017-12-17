@@ -1,7 +1,7 @@
 --Moon Burst: Child of Light
 function c210424269.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_PENDULUM),2,2)
+	aux.AddLinkProcedure(c,c210424269.lfilter,2,2)
 	c:SetUniqueOnField(1,0,210424269)
 		--special summon
 	local e1=Effect.CreateEffect(c)
@@ -15,7 +15,7 @@ function c210424269.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(4066,0))
-	e2:SetCategory(CATEGORY_DISABLE)
+	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_BECOME_TARGET)
 	e2:SetRange(LOCATION_MZONE)
@@ -24,6 +24,9 @@ function c210424269.initial_effect(c)
 	e2:SetTarget(c210424269.target)
 	e2:SetOperation(c210424269.operation)
 	c:RegisterEffect(e2)
+end
+function c210424269.lfilter(c)
+	return c:IsType(TYPE_PENDULUM) and c:IsAttribute(ATTRIBUTE_WIND)
 end
 function c210424269.filter2(c,tp)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x666)
@@ -44,7 +47,7 @@ end
 
 function c210424269.operation(e,tp,eg,ep,ev,re,r,rp)
 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c210424259.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c210424269.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
@@ -66,17 +69,24 @@ Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 function c210424269.filter(c,e,tp)
 	return c:IsCode(210424268) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function c210424269.spfilter(c)
+	return  c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGrave() and c:IsFaceup()
+end
+
+
 function c210424269.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c210424269.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+		and Duel.IsExistingMatchingCard(c210424269.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(c210424269.spfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_EXTRA)
 end
 function c210424269.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local g=Duel.SelectMatchingCard(tp,c210424269.spfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+Duel.SendtoGrave(g,REASON_Effect)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c210424269.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c210424269.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-

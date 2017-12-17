@@ -15,7 +15,7 @@ function c210424256.initial_effect(c)
 		--swap
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(4066,0))
-	e2:SetCategory(CATEGORY_DISABLE)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_BECOME_TARGET)
 	e2:SetRange(LOCATION_MZONE)
@@ -27,7 +27,7 @@ function c210424256.initial_effect(c)
 			--return 2 to deck, draw 1
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(4066,1))
-	e3:SetCategory(CATEGORY_DISABLE)
+	e3:SetCategory(CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_BECOME_TARGET)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -113,7 +113,9 @@ function c210424256.swapop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+		if not Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) then
+			Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		end
 	end
 end
 
