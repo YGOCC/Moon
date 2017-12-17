@@ -65,11 +65,11 @@ function c210001108.eccondition(e,tp,eg,ep,ev,re,r,rp)
 		or ((re:GetActiveType()==TYPE_SPELL or re:GetActiveType()==TYPE_TRAP) and re:IsHasType(EFFECT_TYPE_ACTIVATE))
 end
 function c210001108.eccostfilter(c)
-	return c:IsSetCard(0xfed) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+	return c:IsSetCard(0xfed) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c210001108.eccost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c210001108.eccostfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,c210001108.eccostfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c210001108.eccostfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	local g=Duel.SelectMatchingCard(tp,c210001108.eccostfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.Remove(g,0,REASON_COST)
 end
 function c210001108.cfilter(c)
