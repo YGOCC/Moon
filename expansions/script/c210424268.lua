@@ -29,7 +29,7 @@ function c210424268.lfilter(c)
 	return c:IsType(TYPE_PENDULUM) and c:IsAttribute(ATTRIBUTE_WIND)
 end
 function c210424268.filter2(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x666)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD) and c:IsSetCard(0x666)
 end
 function c210424268.swapcon(e,tp,eg,ep,ev,re,r,rp)
 		if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end

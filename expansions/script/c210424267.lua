@@ -6,25 +6,36 @@ function c210424267.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetCountLimit(1)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c210424267.indtg)
 	e1:SetOperation(c210424267.indop)
 	c:RegisterEffect(e1)
-
-		--move card to scale
+			--indes
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(210424267,0))
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetTarget(c210424267.pentg)
-	e2:SetCost(aux.bfgcost)
-	e2:SetOperation(c210424267.activate)
+	e2:SetTarget(c210424267.indtg)
+	e2:SetOperation(c210424267.indop)
 	c:RegisterEffect(e2)
+		--move card to scale
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCondition(c210424267.pencon)
+	e3:SetCost(aux.bfgcost)
+	e3:SetTarget(c210424267.pentg)
+	e3:SetOperation(c210424267.activate)
+	c:RegisterEffect(e3)
 end
 function c210424267.filter(c)
 	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x666) and not c:IsForbidden()
 end
+function c210424267.pencon(e,tp,eg,ep,ev,re,r,rp,chk)
+return Duel.IsExistingMatchingCard(c210424267.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil) end
 function c210424267.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end
 end
@@ -58,9 +69,10 @@ function c210424267.indfilter(c)
 end
 function c210424267.indtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c210424267.indfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c210424267.indfilter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c210424267.indfilter,tp,LOCATION_MZONE,0,1,nil) and e:GetHandler():GetFlagEffect(210424267)==0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c210424267.indfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	e:GetHandler():RegisterFlagEffect(210424267,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c210424267.indop(e,tp,eg,ep,ev,re,r,rp)
 if not e:GetHandler():IsRelateToEffect(e) then return end

@@ -59,14 +59,15 @@ function c210424257.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		Duel.Destroy(tc,REASON_EFFECT)
+		
+		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 	
 local g=Duel.SelectMatchingCard(tp,c210424257.desfilter2,tp,0,LOCATION_SZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.Destroy(g,REASON_EFFECT)
 end
 end
-
+end
 
 
 
