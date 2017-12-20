@@ -1,4 +1,4 @@
-﻿expansions/Cards-non QCD.cdb	b3226c7522c079f1cd28c7d20a8511df
+﻿expansions/Cards-non QCD.cdb	775b0e8c0aaf91dc022287a1bc70e20d
 expansions/strings.conf	181b3253501dfe0f464d9d2b99f8d321
 expansions/pics/100000711.jpg	aa8bf82e7f0dfa8e81b79ad68d6dc709
 expansions/pics/100000712.jpg	ac33caae5686e66b2239e2d037f4c177
@@ -1335,6 +1335,9 @@ expansions/pics/210171112.jpg	c67c5216d2564d5ee6d8cd475d0a7fa8
 expansions/pics/210171113.jpg	f79a3e94801a1db10135b39514dc1f0f
 expansions/pics/210171115.jpg	afa67e7c0a1ee80120e863abf412567f
 expansions/pics/210171116.jpg	75109429a35ed33c8395a5272d199fc2
+expansions/pics/210310305.jpg	cda1291162d7b06494488fc83fdeddc1
+expansions/pics/210310306.jpg	6f79bcc1dd433be2cbb6105e014b8c12
+expansions/pics/210310307.jpg	39acf0d5c22683ab01727a236d3e0232
 expansions/pics/210424256.jpg	98fd8a9de13815c595164fca2895f787
 expansions/pics/210424257.jpg	ce8ea984cc45041b62c8558426e8ebb5
 expansions/pics/210424258.jpg	33eac62788582dd4e1aa098cc2bae1c6
@@ -4543,6 +4546,9 @@ expansions/script/c210171112.lua	698e642d27e4ef12b942f3f38ac32b04
 expansions/script/c210171113.lua	8d90b3600ca145edfa47850c06f5d195
 expansions/script/c210171115.lua	8ca5791476b4e6f3508e6360e221644a
 expansions/script/c210171116.lua	234a887558df3f409570818f014fea36
+expansions/script/c210310305.lua	5fe04d38e3b46e5cd3b85f1a7e9a08e3
+expansions/script/c210310306.lua	c7dca1e33bb476a7567c40638b66991e
+expansions/script/c210310307.lua	0a4f33d15c365dff488af6ab9c62ddb9
 expansions/script/c210424256.lua	62713707ce66a56b2f2230ac65ba3de3
 expansions/script/c210424257.lua	d0d06999fdb118225daceb2ec133036f
 expansions/script/c210424258.lua	6c033a3658947e59168d2c8a3777779b
@@ -6486,6 +6492,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	ce985ecb7e83e7819c94b4273881e6e2
+update/filelist.txt	caa7713723d79b8740a9a43c0798f13c
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	3914851686ff3d745b37d62cc9a1f23f
+update/version.txt	f27ebe7a58634bd10e484d9533662813
