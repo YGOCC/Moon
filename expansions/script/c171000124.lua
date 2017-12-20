@@ -1,4 +1,4 @@
---Discarded Amethyst
+--Cracked Amethyst
 local ref=_G['c'..171000124]
 function ref.initial_effect(c)
 	--Activate
@@ -15,15 +15,13 @@ function ref.initial_effect(c)
 end
 
 function ref.cfilter(c,tp)
-	return c:GetPreviousControler()==tp --and c:IsPreviousPosition(POS_FACEUP)
-		and c:IsPreviousSetCard(0xfef) and not c:IsReason(REASON_RULE)
+	return c:GetPreviousControler()==tp and c:IsPreviousSetCard(0xfef) and not c:IsReason(REASON_RULE)
 end
 function ref.sscon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(ref.cfilter,1,nil,tp)
 end
 function ref.ssfilter(c,e,tp)
-	return c:IsSetCard(0xfef) and c:IsFaceup()
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xfef) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function ref.sscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -47,7 +45,7 @@ function ref.sscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e3,tp)
 end
 function ref.distg(e,c)
-	return c:IsSetCard(0xfef) and c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT
+	return c:IsSetCard(0xfef) and (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT)
 end
 function ref.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

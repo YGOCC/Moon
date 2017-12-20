@@ -1,4 +1,4 @@
---Cracked Amethyst
+--Discarded Amethyst
 local ref=_G['c'..171000128]
 function ref.initial_effect(c)
 	--Activate
