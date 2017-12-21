@@ -62,7 +62,7 @@ function c500317511.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabel(Duel.AnnounceNumber(tp,3,4,5,6,7,8))
 end
 function c500317511.lvfilter2(c)
-	return c:IsFaceup() and (c:IsSetCard(0x85a) or c:IsSetCard(0x85b) or c:IsSetCard(0x3b)) and not c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and (c:IsSetCard(0x85a) or c:IsSetCard(0x85b) or c:IsSetCard(0x3b))and c:GetLevel()>0
 end
 function c500317511.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

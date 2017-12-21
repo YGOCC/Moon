@@ -1,7 +1,8 @@
 --ESPergear Knight: Swordie
 function c16000032.initial_effect(c)
-	c:EnableReviveLimit()
-c16000032.max_material_count=5
+		 aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,c16000032.checku,5,c16000032.matfilter,c16000032.filter2)
+	c:EnableReviveLimit() 
 --atk
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(16000032,1))
@@ -32,30 +33,19 @@ c16000032.max_material_count=5
 	local e6=e4:Clone()
 	e6:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e6)
-		if not c16000032.global_check then
-		c16000032.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c16000032.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c16000032.evolute=true
-c16000032.material1=function(mc) return mc:IsCode(16000020)  end
-c16000032.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION)  end
-function c16000032.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c16000032.stage_o=5
-c16000032.stage=c16000032.stage_o
-
+function c16000032.matfilter(c,ec,tp)
+   return c:IsAttribute(ATTRIBUTE_LIGHT) 
+end
+function c16000032.checku(sg,ec,tp)
+return sg:IsExists(Card.IsCode,1,nil,16000020)
+end
+function c16000032.filter2(c,ec,tp)
+	return c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE) 
 end
 function c16000032.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 function c16000032.filter(c)
 	return c:GetSummonLocation()==LOCATION_EXTRA and not (c:GetAttack()==0 and c:IsDisabled())

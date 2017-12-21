@@ -1,7 +1,8 @@
 --Carole, Queen of Fiber Vine #2 
 function c160009541.initial_effect(c)
-
-	c:EnableReviveLimit()
+   aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,nil,8,c160009541.filter1,c160009541.filter2)
+	c:EnableReviveLimit() 
 	--local e1=Effect.CreateEffect(c)
 	--e1:SetType(EFFECT_TYPE_SINGLE)
 	--e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -58,26 +59,12 @@ function c160009541.initial_effect(c)
 	e6:SetTarget(c160009541.sptg)
 	e6:SetOperation(c160009541.spop)
 	c:RegisterEffect(e6)
-	if not c160009541.global_check then
-		c160009541.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c160009541.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c160009541.evolute=true
-c160009541.material1=function(mc) return mc:IsRace(RACE_PLANT)   end
-c160009541.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_EARTH)  end
-function c160009541.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c160009541.stage_o=8
-c160009541.stage=c160009541.stage_o
-
+function c160009541.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_EARTH) 
+end
+function c160009541.filter2(c,ec,tp)
+	return c:IsRace(RACE_PLANT) 
 end
 --function c160009541.descon(e,tp,eg,ep,ev,re,r,rp)
 --  Debug.Message("Appear, Queen of Cursed Fallen Warriors!")
@@ -94,7 +81,7 @@ end
 --function c160009541.desop(e,tp,eg,ep,ev,re,r,rp)
 --  local g=Duel.GetMatchingGroup(c160009541.deesfilter,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
 --  if g:GetCount()>0 then
---	  Duel.Destroy(g,REASON_EFFECT)
+--  Duel.Destroy(g,REASON_EFFECT)
 --  end
 --end
 function c160009541.costfilter(c)
@@ -108,8 +95,8 @@ function c160009541.discon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsChainNegatable(ev)
 end
 function c160009541.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,4,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
 end
 function c160009541.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -126,7 +113,7 @@ function c160009541.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c160009541.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetCounter(0x1088)>0 then
+	if c:GetCounter(0x88)>0 then
 		c:RegisterFlagEffect(160009541,RESET_EVENT+0x17a0000,0,0)
 	end
 end

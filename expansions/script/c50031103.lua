@@ -1,6 +1,8 @@
 --Romana, Princess of Rose VINE
 function c50031103.initial_effect(c)
-   c:EnableReviveLimit()
+	aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,c50031103.checku,4,c50031103.filter1,c50031103.filter2)
+	c:EnableReviveLimit()
 local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(50031103,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -22,27 +24,16 @@ local e1=Effect.CreateEffect(c)
 	--e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	e2:SetOperation(c50031103.spop)
 	c:RegisterEffect(e2)
-		   if not c50031103.global_check then
-		c50031103.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c50031103.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c50031103.evolute=true
-c50031103.material1=function(mc) return mc:IsAttribute (ATTRIBUTE_FIRE) end
-c50031103.material2=function(mc) return mc:IsRace(RACE_PLANT) and mc:IsType(TYPE_NORMAL)  end
-function c50031103.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c50031103.stage_o=4
-c50031103.stage=c50031103.stage_o
+function c50031103.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
-
+function c50031103.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_FIRE) 
+end
+function c50031103.filter2(c,ec,tp)
+	return c:IsRace(RACE_PLANT) 
+end
 function c50031103.condition(e,tp,eg,ep,ev,re,r,rp)
 	return  e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388 and e:GetHandler():IsLinkState()
 end
@@ -92,8 +83,8 @@ function c50031103.filter(c)
 end
 function c50031103.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x1088,3,REASON_COST) end
-	c:RemoveCounter(tp,0x1088,3,REASON_COST) 
+	if chk==0 then return c:IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	c:RemoveCounter(tp,0x88,3,REASON_COST) 
 	--local e1=Effect.CreateEffect(c)
   --  e1:SetType(EFFECT_TYPE_FIELD)
    -- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)

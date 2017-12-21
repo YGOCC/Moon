@@ -1,6 +1,8 @@
 --Shomesa, Sunflower  of Rose VINE
 function c50031912.initial_effect(c)
-	   c:EnableReviveLimit()
+		aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,c50031912.checku,9,c50031912.filter1,c50031912.filter2)
+	c:EnableReviveLimit()
   --spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -35,38 +37,26 @@ function c50031912.initial_effect(c)
 	local e6=e4:Clone()
 	e6:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e6)
-	   if not c50031912.global_check then
-		c50031912.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c50031912.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-c50031912.evolute=true
-c50031912.material1=function(mc) return mc:IsAttribute (ATTRIBUTE_FIRE) end
-c50031912.material2=function(mc) return mc:IsRace(RACE_PLANT) and mc:IsType(TYPE_NORMAL)  end
-
-function c50031912.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c50031912.stage_o=9
-c50031912.max_material_count=5   
-c50031912.stage=c50031912.stage_o
 end
 function c50031912.splimit(e,se,sp,st)
 	return st==SUMMON_TYPE_SPECIAL+388
+end
+function c50031912.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
+end
+function c50031912.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_FIRE) 
+end
+function c50031912.filter2(c,ec,tp)
+	return c:IsRace(RACE_PLANT) 
 end
 function c50031912.remcon(e,tp,eg,ep,ev,re,r,rp)
 		return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388 and e:GetHandler():IsLinkState()
 end
 function c50031912.remcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x1088,3,REASON_COST) end
-	c:RemoveCounter(tp,0x1088,3,REASON_COST) 
+	if chk==0 then return c:IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	c:RemoveCounter(tp,0x88,3,REASON_COST) 
 	--local e1=Effect.CreateEffect(c)
   --  e1:SetType(EFFECT_TYPE_FIELD)
    -- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
@@ -81,10 +71,13 @@ function c50031912.remtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,0x1e,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,0x1e)
 end
+function c50031912.xxfilter(c)
+	return c:IsFaceup() and c:IsAbleToRemove()
+end
 function c50031912.remop(e,tp,eg,ep,ev,re,r,rp)
 	local g1=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
 	local g2=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,nil)
-	local g3=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil)
+	local g3=Duel.GetMatchingGroup(c50031912.xxfilter,tp,0,LOCATION_EXTRA,nil)
 	local g4=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil)
 	
 	local sg=Group.CreateGroup()

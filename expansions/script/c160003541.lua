@@ -1,5 +1,7 @@
 function c160003541.initial_effect(c)
-	c:EnableReviveLimit()
+	   aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,nil,7,c160003541.filter1,c160003541.filter2)
+	c:EnableReviveLimit() 
 
 		--destroy
 	local e1=Effect.CreateEffect(c)
@@ -37,26 +39,12 @@ function c160003541.initial_effect(c)
 	e5:SetTarget(c160003541.eqtg)
 	e5:SetOperation(c160003541.eqop)
 	c:RegisterEffect(e5)
-if not c160003541.global_check then
-		c160003541.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c160003541.chk)
-		Duel.RegisterEffect(ge2,0)
-		
-	end
 end
-c160003541.evolute=true
-c160003541.material1=function(mc) return  mc:IsAttribute(ATTRIBUTE_EARTH) end
-c160003541.material2=function(mc) return  mc:IsRace(RACE_PLANT) end
-function c160003541.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c160003541.stage_o=7
-c160003541.stage=c160003541.stage_o
+function c160003541.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_EARTH) 
+end
+function c160003541.filter2(c,ec,tp)
+	return c:IsRace(RACE_PLANT) 
 end
 
 function c160003541.damcon(e,tp,eg,ep,ev,re,r,rp)
@@ -90,8 +78,8 @@ function c160003541.descon(e,tp,eg,ep,ev,re,r,rp)
 	return c:GetSummonType()==SUMMON_TYPE_SPECIAL+388 and c:GetMaterial():IsExists(c160003541.pmfilter,1,nil)
 end
 function c160003541.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,4,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
 end
 function c160003541.pmfilter(c)
 	return c:IsType(TYPE_RITUAL)
@@ -117,8 +105,8 @@ function c160003541.con(e,c)
 end
 
 function c160003541.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 function c160003541.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

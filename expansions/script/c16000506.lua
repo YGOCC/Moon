@@ -44,7 +44,7 @@ function c16000506.chainlm(e,rp,tp)
 	return tp==rp
 end
 function c16000506.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x85a) and c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x85a)  and c:IsAbleToHand()
 end
 function c16000506.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)

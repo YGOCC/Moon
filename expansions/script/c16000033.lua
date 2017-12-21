@@ -1,6 +1,8 @@
 --ESPergear Knight: Knigtie
 function c16000033.initial_effect(c)
-c16000033.max_material_count=6
+	   aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,c16000033.checku,6,c16000033.matfilter,c16000033.filter2)
+	c:EnableReviveLimit() 
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(16000033,0))
 	e3:SetCategory(CATEGORY_REMOVE)
@@ -30,31 +32,19 @@ c16000033.max_material_count=6
 	local e6=e4:Clone()
 	e6:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e6)
-		if not c16000033.global_check then
-		c16000033.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c16000033.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c16000033.evolute=true
-c16000033.material1=function(mc) return mc:IsCode(16000020)  end
-c16000033.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION) end
-function c16000033.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c16000033.stage_o=6
-c16000033.stage=c16000033.stage_o
-
+function c16000033.matfilter(c,ec,tp)
+   return c:IsAttribute(ATTRIBUTE_LIGHT) 
 end
-
+function c16000033.checku(sg,ec,tp)
+return sg:IsExists(Card.IsCode,1,nil,16000020)
+end
+function c16000033.filter2(c,ec,tp)
+	return c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE) 
+end
 function c16000033.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 function c16000033.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsFaceup() end

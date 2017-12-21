@@ -51,7 +51,7 @@ function c16000247.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c16000247.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x285a)and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(1)
+	return c:IsFaceup() and c:IsSetCard(0x285a)and c:IsType(TYPE_MONSTER) and c:GetLevel()>0 and c:IsLevelAbove(1)
 end
 function c16000247.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end

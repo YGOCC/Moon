@@ -17,7 +17,6 @@ function c500315100.initial_effect(c)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetCountLimit(1,500315100)
 	e3:SetCondition(c500315100.condition)
-	e3:SetCost(c500315100.cost)
 	e3:SetTarget(c500315100.target)
 	e3:SetOperation(c500315100.operation)
 	c:RegisterEffect(e3)
@@ -34,14 +33,14 @@ function c500315100.initial_effect(c)
 	
 		--Immune
  local e6=Effect.CreateEffect(c)
-    e6:SetType(EFFECT_TYPE_FIELD)
-    e6:SetCode(EFFECT_CANNOT_REMOVE)
-    e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    --e6:SetRange(0x3f)
+	e6:SetType(EFFECT_TYPE_FIELD)
+	e6:SetCode(EFFECT_CANNOT_REMOVE)
+	e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	--e6:SetRange(0x3f)
 	  e6:SetRange(LOCATION_MZONE)
-    e6:SetTargetRange(0,1)
-    e6:SetTarget(c500315100.remtg)
-    c:RegisterEffect(e6)
+	e6:SetTargetRange(0,1)
+	e6:SetTarget(c500315100.remtg)
+	c:RegisterEffect(e6)
 		--Activate
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(500315100,0))
@@ -109,16 +108,20 @@ end
 function c500315100.cfilter(c)
 	return  c:IsSetCard(0x885a) and c:IsType(TYPE_MONSTER)  and c:IsAbleToGrave() --and not c:IsCode(500315100) 
 end
-function c500315100.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-			if chk==0 then return Duel.IsExistingMatchingCard(c500315100.cfilter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c500315100.cfilter,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_EFFECT)
-end
+
 function c500315100.filter(c)
 	return  c:IsSetCard(0x885a) and c:IsType(TYPE_MONSTER) and not c:IsCode(500315100) and c:IsAbleToHand()
 end
-function c500315100.operation(e,tp,eg,ep,ev,re,r,rp)
+function c16000874.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c16000874.xxfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_HAND)
+end
+function c500315100.operation(e,tp,eg,ep,ev,re,r,rp)	
+	 local c=e:GetHandler()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,c16000874.xxfilter,tp,LOCATION_HAND,0,1,1,nil)
+	local tc=g:GetFirst()
+	if Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_GRAVE) and c:IsRelateToEffect(e) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c500315100.filter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
@@ -126,9 +129,9 @@ function c500315100.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-
+end
 function c500315100.remtg(e,c)
-    return c==e:GetHandler()
+	return c==e:GetHandler()
 end
 function c500315100.descon(e,tp,eg,ep,ev,re,r,rp)
 	return  ( e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION or e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION+0x786)and e:GetHandler():GetMaterial():IsExists(Card.IsSetCard,2,nil,0x885a)

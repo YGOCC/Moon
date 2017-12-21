@@ -1,6 +1,8 @@
 --ESPErgear Knight:Valkyrie
 function c16000039.initial_effect(c)
---remove
+	 aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,c16000039.checku,9,c16000039.matfilter,c16000039.filter2,c16000039.filter2)
+	c:EnableReviveLimit()
 	--negate
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(16000039,0))
@@ -41,25 +43,15 @@ function c16000039.initial_effect(c)
 	local e6=e4:Clone()
 	e6:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e6)
-		if not c16000039.global_check then
-		c16000039.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c16000039.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c16000039.evolute=true
-c16000039.material1=function(mc) return mc:IsCode(16000020) and mc:IsFaceup() end
-c16000039.material2=function(mc) return mc:IsAttribute(ATTRIBUTE_LIGHT) and mc:IsRace(RACE_MACHINE) and mc:IsType(TYPE_UNION) and mc:GetLevel()==5 and mc:IsFaceup() end
-function c16000039.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c16000039.stage_o=9
-c16000039.stage=c16000039.stage_o
+function c16000039.matfilter(c,ec,tp)
+   return c:IsAttribute(ATTRIBUTE_LIGHT) 
+end
+function c16000039.checku(sg,ec,tp)
+return sg:IsExists(Card.IsCode,1,nil,16000020)
+end
+function c16000039.filter2(c,ec,tp)
+	return c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE) 
 end
 function c16000039.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -68,8 +60,8 @@ function c16000039.negcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c16000039.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 function c16000039.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

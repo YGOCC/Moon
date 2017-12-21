@@ -1,6 +1,8 @@
 --Saber Yasmin of Gust VINE
 function c160002156.initial_effect(c)
+	  aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
+  aux.AddEvoluteProc(c,nil,4,c160002156.filter1,c160002156.filter2)
 		--immune
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -32,36 +34,24 @@ function c160002156.initial_effect(c)
 	e3:SetTarget(c160002156.distg)
 	e3:SetOperation(c160002156.disop)
 	c:RegisterEffect(e3)
-	if not c160002156.global_check then
-		c160002156.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c160002156.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
+	
 end
-c160002156.evolute=true
-c160002156.material1=function(mc) return mc:IsAttribute(ATTRIBUTE_WIND) and (mc:GetLevel()==2 or mc:GetRank()==2) and mc:IsFaceup() end
-c160002156.material2=function(mc) return mc:IsRace(RACE_SPELLCASTER) and (mc:GetLevel()==2 or mc:GetRank()==2) and mc:IsFaceup() end
-function c160002156.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c160002156.stage_o=4
-c160002156.stage=c160002156.stage_o
+function c160002156.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_WIND) 
+end
+function c160002156.filter2(c,ec,tp)
+	return c:IsRace(RACE_SPELLCASTER) 
 end
 function c160002156.efilter(e,te)
-	return te:IsActiveType(TYPE_MONSTER) or te:IsActiveType(TYPE_TRAP)
+	return te:IsActiveType(TYPE_MONSTER)
 end
 
 function c160002156.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 end
 function c160002156.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,4,REASON_COST)
+if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
 end
 function c160002156.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

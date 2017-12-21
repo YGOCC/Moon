@@ -61,7 +61,7 @@ function c16000224.xyzlimit(e,c)
 	return not c:IsSetCard(0x285a)
 end
 function c16000224.bfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x285a) and not c:IsType(TYPE_XYZ) and not c:IsType(TYPE_EVOLUTE)
+	return c:IsFaceup() and c:IsSetCard(0x285a) and c:GetLevel()>=0
 end
 function c16000224.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsOnField() and chkc:IsDestructable() end

@@ -50,7 +50,7 @@ function c160008741.regop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c160008741.filter1(c,ec,tp)
-	return not c:IsType(TYPE_MONSTER)
+	return not c:IsType(TYPE_EFFECT)
 end
 function c160008741.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local bc=e:GetHandler():GetBattleTarget()

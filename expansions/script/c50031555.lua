@@ -1,7 +1,9 @@
 --Yasmin Queen of Rose VINE
 
 function c50031555.initial_effect(c)
-   c:EnableReviveLimit()
+	 aux.AddOrigEvoluteType(c)
+  aux.AddEvoluteProc(c,c50031555.checku,10,c50031555.filter1,c50031555.filter2,c50031555.filter3)
+	c:EnableReviveLimit()
   --spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -53,28 +55,18 @@ function c50031555.initial_effect(c)
 	local e7=e5:Clone()
 	e7:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e7)
-  if not c50031555.global_check then
-		c50031555.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c50031555.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c50031555.evolute=true
-c50031555.material1=function(mc) return  mc:IsAttribute(ATTRIBUTE_FIRE)end
-c50031555.material2=function(mc) return mc:IsRace(RACE_PLANT) and mc:IsType(TYPE_NORMAL)  end
-c50031555.min_material_count=3
---c50031555.max_material_count=3
-
-function c50031555.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c50031555.stage_o=10
-c50031555.stage=c50031555.stage_o
+function c50031555.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
+end
+function c50031555.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_FIRE) 
+end
+function c50031555.filter2(c,ec,tp)
+	return c:IsRace(RACE_PLANT) 
+end
+function c50031555.filter3(c,ec,tp)
+	return c:IsRace(RACE_PLANT) or c:IsAttribute(ATTRIBUTE_FIRE) 
 end
 function c50031555.splimit(e,se,sp,st)
 	return st==SUMMON_TYPE_SPECIAL+388
@@ -82,21 +74,24 @@ end
 function c50031555.immcon(e)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388 and e:GetHandler():IsLinkState()
 end
+--function c50031555.efilter(e,te)
+  --  if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return true end
+   -- if te:IsActiveType(TYPE_MONSTER) and (te:IsHasType(0x7e0) or te:IsHasProperty(EFFECT_FLAG_FIELD_ONLY) or te:IsHasProperty(EFFECT_FLAG_OWNER_RELATE)) then
+	 --   local evc=e:GetHandler():GetCounter(0x88)
+	 --   local ec=te:GetOwner()
+	 --   if ec:IsType(TYPE_XYZ) then
+	 --	return ec:GetOriginalRank()<evc
+	 --   else if ec:IsType(TYPE_LINK) then
+	  --	  return ec:GetLink()<evc
+	  --  else
+		 --   return ec:GetOriginalLevel()<evc
+	 --   end
+   -- end
+   -- return false
+--end
+--end
 function c50031555.efilter(e,te)
-	if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return true end
-	if te:IsActiveType(TYPE_MONSTER) and (te:IsHasType(0x7e0) or te:IsHasProperty(EFFECT_FLAG_FIELD_ONLY) or te:IsHasProperty(EFFECT_FLAG_OWNER_RELATE)) then
-		local evc=e:GetHandler():GetCounter(0x1088)
-		local ec=te:GetOwner()
-		if ec:IsType(TYPE_XYZ) then
-			return ec:GetOriginalRank()<evc
-		else if ec:IsType(TYPE_LINK) then
-			return ec:GetLink()<evc
-		else
-			return ec:GetOriginalLevel()<evc
-		end
-	end
-	return false
-end
+	return te:GetOwner()~=e:GetOwner()
 end
 function c50031555.condition(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
@@ -113,8 +108,8 @@ function c50031555.condition2(e,tp,eg,ep,ev,re,r,rp)
 end
 function c50031555.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	   local c=e:GetHandler()
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x1088,3,REASON_COST) end
-	c:RemoveCounter(tp,0x1088,3,REASON_COST) 
+	if chk==0 then return c:IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	c:RemoveCounter(tp,0x88,3,REASON_COST) 
 end
 function c50031555.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

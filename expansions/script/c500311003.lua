@@ -1,5 +1,8 @@
 --Sarah The K , Pirncess of Gust Vine
 function c500311003.initial_effect(c)
+	   aux.AddOrigEvoluteType(c)
+   aux.AddEvoluteProc(c,nil,7,aux.TRUE,aux.TRUE)
+
 	c:EnableReviveLimit()
 		--cannot be target
 	local e1=Effect.CreateEffect(c)
@@ -22,6 +25,9 @@ function c500311003.initial_effect(c)
 	e2:SetTarget(c500311003.target)
 	e2:SetOperation(c500311003.operation)
 	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+		e3:SetCondition(c500311003.condition3)
+		c:RegisterEffect(e3)
 		--pierce
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
@@ -33,26 +39,7 @@ function c500311003.initial_effect(c)
 	e5:SetCondition(c500311003.damcon)
 	e5:SetOperation(c500311003.damop)
 	c:RegisterEffect(e5)
-if not c500311003.global_check then
-		c500311003.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c500311003.chk)
-		Duel.RegisterEffect(ge2,0)
-		
-	end
-end
-c500311003.evolute=true
-c500311003.material1=function(mc) return  (mc:GetLevel()==4 or mc:GetRank()==4) and mc:IsFaceup() end
-c500311003.material2=function(mc) return  (mc:GetLevel()==3 or mc:GetRank()==3) and mc:IsFaceup() end
-function c500311003.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c500311003.stage_o=7
-c500311003.stage=c500311003.stage_o
+
 end
 function c500311003.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -66,14 +53,21 @@ function c500311003.condition(e,tp,eg,ep,ev,re,r,rp)
 	if  re:IsHasCategory(CATEGORY_NEGATE)
 		and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_REMOVE)
-	return ex and tg~=nil and tc+tg:FilterCount(Card.IsOnField,nil)-tg:GetCount()>0
+	return ex and tg~=nil
+end
+function c500311003.condition3(e,tp,eg,ep,ev,re,r,rp)
+	if not  e:GetHandler():GetMaterial():IsExists(c500311003.pmfilter,1,nil) and  e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
+	if  re:IsHasCategory(CATEGORY_NEGATE)
+		and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
+	return ex and tg~=nil
 end
 function c500311003.pmfilter(c)
 	return c:IsType(TYPE_FUSION)
 end
 function c500311003.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,4,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
 end
 function c500311003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

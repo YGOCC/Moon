@@ -53,7 +53,7 @@ function c50031421.xyzfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285a) or c:IsRace(RACE_WINDBEAST)
 end
 function c50031421.spfilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285a)  and c:IsLevelAbove(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285a) and c:GetLevel()>0 and c:IsLevelAbove(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c50031421.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
