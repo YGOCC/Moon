@@ -73,7 +73,7 @@ function c50031569.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	local ct=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE):FilterCount(function(c,e) return c:IsType(TYPE_LINK) and c:GetLinkedGroup():IsContains(e:GetHandler()) end,nil,e)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE) and c50031569.thfilter(chkc) end
-	if chk==0 then return ct>0 and Duel.IsExistingTarget(c50031569.thfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil) end
+	if chk==0 then return ct>0 and Duel.IsExistingTarget(c50031569.thfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,c50031569.thfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
