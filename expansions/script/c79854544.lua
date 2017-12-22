@@ -16,8 +16,9 @@ function c79854544.initial_effect(c)
 	c:RegisterEffect(e2)
 	--Damage halved
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_EQUIP)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e3:SetRange(LOCATION_SZONE)
 	e3:SetCondition(c79854544.atkcon)
 	e3:SetOperation(c79854544.atkop)
 	c:RegisterEffect(e3)
@@ -75,7 +76,7 @@ end
 --Halve battle damage
 function c79854544.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
-	return ep~=tp and Duel.GetAttacker()==ec and ec:IsAttackAbove(1000)
+	return ep~=tp and Duel.GetAttacker()==ec and ec:GetAttack()>1000
 		and Duel.GetAttackTarget()==nil
 end
 function c79854544.atkop(e,tp,eg,ep,ev,re,r,rp)

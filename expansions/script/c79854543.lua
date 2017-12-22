@@ -29,7 +29,7 @@ function c79854543.initial_effect(c)
 	c:RegisterEffect(e2)
 	--ATK drop
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINOUS)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(c79854543.valcon)
