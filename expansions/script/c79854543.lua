@@ -29,12 +29,11 @@ function c79854543.initial_effect(c)
 	c:RegisterEffect(e2)
 	--ATK drop
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINOUS)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetTarget(c79854543.atktarget)
 	e3:SetCondition(c79854543.valcon)
+	e3:SetTarget(c79854543.atktarget)
 	e3:SetValue(0)
 	c:RegisterEffect(e3)
 end
@@ -51,18 +50,19 @@ function c79854543.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c79854543.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-	end
-	if tc:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(c:GetAttack()*2)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
+		if c:IsRelateToEffect(e) then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(c:GetAttack()*2)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			c:RegisterEffect(e1)
+		end
 	end
 end
 --atkdrop
@@ -71,11 +71,11 @@ function c79854543.vfilter(c)
 end
 function c79854543.valcon(e)
 	local c=e:GetHandler()
-	return Duel.IsExistingMatchingCard(c79854543.vfilter,c:GetControler(),LOCATION_MZONE,0,2,c)
+	return Duel.IsExistingMatchingCard(c79854543.vfilter,c:GetControler(),LOCATION_MZONE,0,2,nil)
 end
 function c79854543.atkfilter(c)
 	return c:IsFaceup() and c:GetAttack()>0 and c:GetSummonLocation()==LOCATION_EXTRA and not c:IsType(TYPE_SYNCHRO)
 end
 function c79854543.atktarget(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c79854543.atkfilter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c79854543.atkfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 end

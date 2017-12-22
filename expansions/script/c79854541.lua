@@ -30,6 +30,14 @@ function c79854541.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
+	--Make ATK 0
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_ATKCHANGE)
+	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e3:SetCondition(c79854541.atkcon)
+	e3:SetOperation(c79854541.atkop)
+	c:RegisterEffect(e3)
 end
 --negatability
 function c79854541.discon(e,tp,eg,ep,ev,re,r,rp)
@@ -52,11 +60,29 @@ function c79854541.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c79854541.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=tg:GetFirst()
-	while tc do
-		tc:AddCounter(0x7700,1)
-		tc=tg:GetNext()
+		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+		local tc=g:GetFirst()
+		while tc do
+			tc:AddCounter(0x7700,1)
+			tc=g:GetNext()
+		end
 	end
+end
+--Make ATK 0
+function c79854541.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local bc=c:GetBattleTarget()
+	return bc and bc:GetCounter(0x7700)~=0 and bc:IsControler(1-tp)
+end
+function c79854541.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local bc=c:GetBattleTarget()
+	if c:IsRelateToBattle() and c:IsFaceup() and bc:IsRelateToBattle() and bc:IsFaceup() then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
+		e1:SetValue(0)
+		bc:RegisterEffect(e1)
 	end
 end

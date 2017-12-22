@@ -1,7 +1,7 @@
 --Woodland Ghost
 function c79854523.initial_effect(c)
---search effect
-local e1=Effect.CreateEffect(c)
+	--search effect
+	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(79854523,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -15,7 +15,7 @@ local e1=Effect.CreateEffect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
---burn effect
+	--burn effect
 	local e3=Effect.CreateEffect (c)
 	e3:SetDescription(aux.Stringid(79854523,1))
 	e3:SetCategory(CATEGORY_DAMAGE)
@@ -74,7 +74,7 @@ function c79854523.coste(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c79854523.thtge(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsRace,tp,LOCATION_GRAVE,0,1,nil,RACE_PLANT) end
 	Duel.SetTargetPlayer(1-tp)
 	local dam=Duel.GetMatchingGroupCount(Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_PLANT)*300
 	Duel.SetTargetParam(dam)
