@@ -79,8 +79,8 @@ function c240100257.posop(e,tp,eg,ep,ev,re,r,rp)
 	if mg:GetCount()>=sg:GetCount() and Duel.SelectYesNo(tp,aux.Stringid(240100257,0)) then
 		Duel.BreakEffect()
 		for c in aux.Next(dg) do
-			ec=mg:Select(tp,1,1,ec)
-			Duel.Overlay(c,ec)
+			Duel.Overlay(c,mg:Select(tp,1,1,ec))
+			ec=c
 		end
 	end
 end

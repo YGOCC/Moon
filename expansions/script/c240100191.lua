@@ -33,27 +33,29 @@ function c240100191.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
 end
 function c240100191.spfilter(c,e,tp)
-	return c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(240100191)
+	return c:IsSetCard(0xbb2) and not c:IsCode(240100191) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c240100191.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	--Target 1 Spell/Trap you control and 1 "Swordsmaster" monster in your GY, except "Swordsmasterror Siegfried"
 	if chkc then return false end
 	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g1=Duel.SelectTarget(tp,c240100191.desfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g2=Duel.SelectTarget(tp,c240100191.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g2,1,0,0)
+	if Duel.IsExistingTarget(c240100191.desfilter,tp,LOCATION_ONFIELD,0,1,nil) and Duel.IsExistingTarget(c240100191.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local g1=Duel.SelectTarget(tp,c240100191.desfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g2=Duel.SelectTarget(tp,c240100191.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g2,1,0,0)
+	end
 end
 function c240100191.spop(e,tp,eg,ep,ev,re,r,rp)
 	--destroy the first target and Special Summon the second target
 	local ex1,dg=Duel.GetOperationInfo(0,CATEGORY_DESTROY)
 	local ex2,cg=Duel.GetOperationInfo(0,CATEGORY_SPECIAL_SUMMON)
+	if not dg or not cg then return end
 	local dc=dg:GetFirst()
 	local cc=cg:GetFirst()
-	if dc and dc:IsRelateToEffect(e) and dc:IsDestructable()
-		and cc and cc:IsRelateToEffect(e) and cc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
+	if dc:IsRelateToEffect(e) and cc:IsRelateToEffect(e) and dc:IsDestructable() and cc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 		Duel.Destroy(dc,REASON_EFFECT)
 		Duel.SpecialSummon(cc,0,tp,tp,false,false,POS_FACEUP)
 	end
