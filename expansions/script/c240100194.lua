@@ -1,92 +1,91 @@
 --Reneutrix Cadence
 function c240100194.initial_effect(c)
-	--If a card(s) is added to your opponent's hand, except during the Draw Phase: Target 1 "Reneutrix" monster in your GY; Special Summon this card from your hand, then return that target to your hand (if any).
+	c:EnableReviveLimit()
+	--Materials: 2 Cyberse monsters
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERS),2,2)
+	--Once per turn, if a "Newtrix" monster(s) is Normal or Special Summoned to a zone(s) this card points to: Return all monsters this card points to to the hand.
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetDescription(1104)
+	e2:SetCondition(c240100194.mcon(c240100194.spcon))
+	e2:SetTarget(c240100194.sptg)
+	e2:SetOperation(c240100194.spop)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e3)
+	local o2=e2:Clone()
+	o2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	o2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_DELAY)
+	o2:SetCondition(c240100194.ocon(c240100194.spcon))
+	c:RegisterEffect(o2)
+	local o3=o2:Clone()
+	o3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(o3)
+	--If you would Special Summon this card without using materials while you control a monster, you must use the Monster Zone of those monsters' columns or 1 of their adjacent columns.
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_SPSUMMON_COST)
+	e0:SetCost(c240100194.spchk)
+	e0:SetOperation(c240100194.spcost)
+	c:RegisterEffect(e0)
+	--If this card and/or another monster(s) is Special Summoned while a Link Monster is on the field: Rotate the Link Arrows of all monsters currently on the field by 90 degrees clockwise.
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e1:SetCode(EVENT_CUSTOM+240100194)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
-	e1:SetCondition(c240100194.mcon(c240100194.spcon))
-	e1:SetTarget(c240100194.sptg)
-	e1:SetOperation(c240100194.spop)
+	e1:SetType(EFFECT_TYPE_TRIGGER_F)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCondition(c240100194.mcon(c240100194.modcon))
+	e1:SetOperation(c240100194.lmop)
 	c:RegisterEffect(e1)
 	local o1=e1:Clone()
 	o1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	o1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
-	o1:SetCondition(c240100194.ocon(c240100194.spcon))
+	o1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	o1:SetCondition(c240100194.ocon(c240100194.modcon))
 	c:RegisterEffect(o1)
-	--If your opponent activates a Trap Card or effect (Quick Effect): Flip the Link Arrows of all monsters currently on the field vertically.
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_QUICK_F)
-	e2:SetCode(EVENT_CHAINING)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c240100194.mcon(c240100194.condition))
-	e2:SetOperation(c240100194.lmop)
-	c:RegisterEffect(e2)
-	local o2=e2:Clone()
-	o2:SetType(EFFECT_TYPE_QUICK_O)
-	o2:SetCondition(c240100194.ocon(c240100194.condition))
-	c:RegisterEffect(o2)
-	if not c240100194.global_check then
-		c240100194.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_TO_HAND)
-		ge1:SetCondition(c240100194.regcon)
-		ge1:SetOperation(c240100194.regop)
-		Duel.RegisterEffect(ge1,0)
+end
+function c240100194.spchk(e,te_or_c,tp)
+	if e:GetHandler():GetMaterialCount()>0 then return true end
+	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
+	if g:GetCount()==0 then return true end
+	for tc in aux.Next(g) do
+		if tc:GetColumnZone(LOCATION_MZONE,1,1,tp)>0 then return true end
 	end
+	return false
+end
+function c240100194.spcost(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():GetMaterialCount()>0 then return end
+	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
+	if g:GetCount()==0 then return end
+	local flag=0
+	for tc in aux.Next(g) do
+		flag=flag|tc:GetColumnZone(LOCATION_MZONE,1,1,e:GetHandlerPlayer())
+	end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_MUST_USE_MZONE)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetValue(flag)
+	Duel.RegisterEffect(e1,tp)
+end
+function c240100194.modcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,eg,TYPE_LINK) and not e:GetHandler():IsStatus(STATUS_CHAINING) and (Duel.GetCurrentPhase()~=PHASE_DAMAGE (or not Duel.IsDamageCalculated() and (e:IsHasType(EFFECT_TYPE_TRIGGER_F) or (eg:GetCount()==1 and eg:IsContains(e:GetHandler())))))
 end
 function c240100194.mcon(excon)
 	return  function(e,tp,eg,ep,ev,re,r,rp)
-				return not e:GetHandler():IsHasEffect(240100233) and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
+				return not e:GetHandler():IsHasEffect(240100233)
+					and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
 			end
 end
 function c240100194.ocon(excon)
 	return  function(e,tp,eg,ep,ev,re,r,rp)
-				return e:GetHandler():IsHasEffect(240100233) and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
+				return e:GetHandler():IsHasEffect(240100233)
+					and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
 			end
-end
-function c240100194.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return ev==1-tp or ev==PLAYER_ALL
-end
-function c240100194.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xd10) and c:IsAbleToHand()
-end
-function c240100194.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c240100194.filter(chkc) end
-	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c240100194.filter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
-end
-function c240100194.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		local tc=Duel.GetFirstTarget()
-		if tc and tc:IsRelateToEffect(e) then
-			Duel.BreakEffect()
-			Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		end
-	end
-end
-function c240100194.regcon(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetCurrentPhase()==PHASE_DRAW then return false end
-	local v=0
-	if eg:IsExists(Card.IsControler,1,nil,0) then v=v+1 end
-	if eg:IsExists(Card.IsControler,1,nil,1) then v=v+2 end
-	if v==0 then return false end
-	e:SetLabel(({0,1,PLAYER_ALL})[v])
-	return true
-end
-function c240100194.regop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RaiseEvent(eg,EVENT_CUSTOM+240100194,re,r,rp,ep,e:GetLabel())
-end
-function c240100194.condition(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_TRAP) and ep~=tp
-		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c240100194.lmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_LINK)
@@ -106,10 +105,10 @@ function c240100194.lmval(e,c)
 		[LINK_MARKER_BOTTOM_LEFT]   =LINK_MARKER_TOP_LEFT,
 		[LINK_MARKER_BOTTOM]		=LINK_MARKER_TOP,
 		[LINK_MARKER_BOTTOM_RIGHT]  =LINK_MARKER_TOP_RIGHT,
-		[LINK_MARKER_LEFT]	=LINK_MARKER_LEFT,
+		[LINK_MARKER_LEFT]  =LINK_MARKER_LEFT,
 		[LINK_MARKER_RIGHT]   =LINK_MARKER_RIGHT,
 		[LINK_MARKER_TOP_LEFT]  =LINK_MARKER_BOTTOM_LEFT,
-		[LINK_MARKER_TOP]		=LINK_MARKER_BOTTOM,
+		[LINK_MARKER_TOP]   =LINK_MARKER_BOTTOM,
 		[LINK_MARKER_TOP_RIGHT]  =LINK_MARKER_BOTTOM_RIGHT,
 	}
 	local chgMark=0
@@ -117,4 +116,20 @@ function c240100194.lmval(e,c)
 		if 1<<mark&curMark==1<<mark then chgMark=chgMark|linkMod[1<<mark] end
 	end
 	return chgMark
+end
+function c240100194.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0xd10) and g:IsContains(c)
+end
+function c240100194.damcon(e,tp,eg,ep,ev,re,r,rp)
+	local lg=e:GetHandler():GetLinkedGroup()
+	return lg and eg:IsExists(c240100194.filter,1,nil,lg)
+end
+function c240100194.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local lg=e:GetHandler():GetLinkedGroup():Filter(Card.IsAbleToHand,nil)
+	if chk==0 then return lg:GetCount()>0 end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,lg,lg:GetCount(),0,0)
+end
+function c240100194.thop(e,tp,eg,ep,ev,re,r,rp)
+	local lg=e:GetHandler():GetLinkedGroup():Filter(Card.IsAbleToHand,nil)
+	Duel.SendtoHand(lg,nil,REASON_EFFECT)
 end

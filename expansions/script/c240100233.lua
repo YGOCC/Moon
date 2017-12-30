@@ -1,23 +1,24 @@
 --Reneutrix Night Club
 function c240100233.initial_effect(c)
-	--When this card is activated: You can add 1 "Reneutrix" card from your Deck to your hand, except "Reneutrix Night Club".
+	--When this card is activated: You can add 1 "Newtrix" card from your GY to your hand, except "Newtrix Nightness".
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetOperation(c240100233.activate)
 	c:RegisterEffect(e1)
-	--Once per turn: You can target 1 face-up card in your opponent's Spell & Trap Zone; while this card is in the Field Zone, that card remains on the field after activation, also it cannot activate its effects until the End Phase, and your opponent must activate 1 of its effects during the End Phase or else send it to the GY.
+	--Once per turn (Quick Effect): You can target 1 face-up card in your opponent's Spell & Trap Zone; while this card is in the Field Zone, that card remains on the field after activation, also it cannot activate its effects until the End Phase, and your opponent must activate 1 of its effects during the End Phase or else send it to the GY.
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(240100233,1))
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1)
 	e2:SetTarget(c240100233.target)
 	e2:SetOperation(c240100233.operation)
 	c:RegisterEffect(e2)
-	--"Reneutrix" monsters do not have to activate their effects.
+	--"Newtrix" monsters do not have to activate their effects.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(240100233)
@@ -30,9 +31,9 @@ function c240100233.thfilter(c)
 end
 function c240100233.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(c240100233.thfilter,tp,LOCATION_DECK,0,nil)
-	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(240100233,0)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c240100233.thfilter),tp,LOCATION_GRAVE,0,nil)
+	if g:GetCount()>0 and Duel.SelectYesNo(tp,2) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
