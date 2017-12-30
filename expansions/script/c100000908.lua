@@ -45,7 +45,9 @@ c:SetUniqueOnField(1,0,100000908)
 	e4:SetDescription(aux.Stringid(100000908,1))
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
+		e4:SetCategory(CATEGORY_COUNTER)
 	e4:SetCountLimit(1)
+	e4:SetTarget(c100000908.cttg)
 	e4:SetOperation(c100000908.operationcou1)
 	c:RegisterEffect(e4)
 		local e11=Effect.CreateEffect(c)
@@ -57,17 +59,20 @@ c:SetUniqueOnField(1,0,100000908)
 	e11:SetValue(c100000908.efilterua)
 	c:RegisterEffect(e11)
 end
+function c100000908.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c100000908.filtersc,tp,LOCATION_MZONE,0,1,nil) end
+end
 function c100000908.efilterua(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end
 function c100000908.filterua(c)
-	return c:IsFaceup() and c:IsSetCard(0x110) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x763) and c:IsType(TYPE_MONSTER)
 end
 function c100000908.conua(e)
 	return Duel.IsExistingMatchingCard(c100000908.filterua,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end
 function c100000908.filtersc(c)
-	return c:IsFaceup() and c:IsCanAddCounter(0x50,1) and c:IsSetCard(0x110)
+	return c:IsFaceup() and c:IsCanAddCounter(0x50,1) and c:IsSetCard(0x763)
 end
 function c100000908.operationcou1(e,tp,eg,ep,ev,re,r,rp)
 local g=Duel.GetMatchingGroup(c100000908.filtersc,tp,LOCATION_ONFIELD,0,nil)
@@ -97,7 +102,7 @@ function c100000908.operationh(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.ConfirmCards(1-tp,g)
 end
 function c100000908.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x110)
+	return c:IsFaceup() and c:IsSetCard(0x763)
 end
 function c100000908.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c100000908.cfilter,1,nil)

@@ -121,7 +121,7 @@ function c100000912.thophhatk(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function c100000912.spfilterm(c)
-	return c:IsFaceup() and c:IsSetCard(0x111) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x75D) and c:IsType(TYPE_MONSTER)
 end
 function c100000912.spconm(e,c)
 	if c==nil then return true end
@@ -133,7 +133,7 @@ function c100000912.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c100000912.cfilter,1,nil,tp)
 end
 function c100000912.cfilter(c,tp)
-	return c:IsSetCard(0x111) and c:IsFaceup()
+	return c:IsSetCard(0x75D) and c:IsFaceup()
 end
 function c100000912.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsRelateToEffect(e) and e:GetHandler():IsFaceup() end
@@ -179,7 +179,7 @@ function c100000912.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c100000912.targetx(e,c)
-	return c:GetSummonLocation()==LOCATION_DECK and not c:IsSetCard(0x111)
+	return c:GetSummonLocation()==LOCATION_DECK and not c:IsSetCard(0x75D)
 end
 function c100000912.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

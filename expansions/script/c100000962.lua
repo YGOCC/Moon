@@ -50,7 +50,7 @@ function c100000962.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
 function c100000962.filtersea(c)
-	return c:IsSetCard(0x115) and c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsSetCard(0x768) and c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c100000962.targetf(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000962.filtersea,tp,LOCATION_DECK,0,1,nil) end
@@ -69,7 +69,7 @@ function c100000962.ntcon(e,c,minc)
 end
 function c100000962.remcon(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
-	return bit.band(r,REASON_EFFECT) and re:GetHandler():IsSetCard(0x115)
+	return bit.band(r,REASON_EFFECT) and re:GetHandler():IsSetCard(0x768)
 end
 function c100000962.operation(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -81,7 +81,7 @@ function c100000962.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c100000962.cfilter(c)
-	return c:IsSetCard(0x115)
+	return c:IsSetCard(0x768)
 end
 function c100000962.spcon(e,c)
 		if c==nil then return true end

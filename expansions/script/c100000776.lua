@@ -75,7 +75,7 @@ function c100000776.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=2000
 end
 function c100000776.filter(c,e,tp)
-	return c:IsSetCard(0x119) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x75F) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000776.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_DECK) and c100000776.filter(chkc,e,tp) end

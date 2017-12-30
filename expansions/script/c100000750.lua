@@ -22,7 +22,7 @@ function c100000750.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000750.filter1(c)
-	return c:IsSetCard(0x117) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x765) and c:IsType(TYPE_MONSTER)
 end
 function c100000750.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000750.filter1,tp,LOCATION_HAND,0,1,nil) end
@@ -35,16 +35,17 @@ function c100000750.operation(e,tp,eg,ep,ev,re,r,rp)
 Duel.SendtoGrave(g,REASON_EFFECT)
 	end
 function c100000750.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.CheckLPCost(tp,2000) end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+	Duel.PayLPCost(tp,2000)
 end
 function c100000750.filter(c,e,tp)
 	return c:IsCanBeEffectTarget(e)
-		and c:GetPreviousControler()==tp and c:IsSetCard(0x117)
+		and c:GetPreviousControler()==tp and c:IsSetCard(0x765)
 		and c:IsType(TYPE_SYNCHRO) and Duel.IsExistingMatchingCard(c100000750.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c)
 end
 function c100000750.spfilter(c,e,tp,tc)
-	return c:IsType(TYPE_SYNCHRO)and c:IsSetCard(0x117) and c:GetCode()~=tc:GetCode()
+	return c:IsType(TYPE_SYNCHRO)and c:IsSetCard(0x765) and c:GetCode()~=tc:GetCode()
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000750.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

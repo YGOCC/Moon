@@ -1,6 +1,6 @@
 --gate
 function c100000754.initial_effect(c)
-	aux.AddEquipProcedure(c,0,aux.FilterBoolFunction(Card.IsSetCard,0x111),c100000754.eqlimit)
+	aux.AddEquipProcedure(c,0,aux.FilterBoolFunction(Card.IsSetCard,0x75D),c100000754.eqlimit)
 	--atk/def
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_EQUIP)
@@ -21,7 +21,7 @@ function c100000754.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c100000754.eqlimit(e,c)
-	return c:IsSetCard(0x111) and c:GetControler()==e:GetHandler():GetControler()
+	return c:IsSetCard(0x75D) and c:GetControler()==e:GetHandler():GetControler()
 end
 function c100000754.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()

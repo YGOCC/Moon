@@ -41,7 +41,7 @@ function c100000775.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c100000775.coffilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) 
+	return c:IsFaceup() and c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) 
 end
 function c100000775.descon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c100000775.coffilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) and Duel.GetLP(tp)<=5000 and Duel.GetCurrentChain()==0

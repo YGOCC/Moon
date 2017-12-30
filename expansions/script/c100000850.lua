@@ -29,12 +29,12 @@ function c100000850.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x10C))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x75B))
 	e3:SetValue(c100000850.val)
 	c:RegisterEffect(e3)
 end
 function c100000850.filt(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c100000850.val(e,c)
 	return Duel.GetMatchingGroupCount(c100000850.filt,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)*100
@@ -60,7 +60,7 @@ function c100000850.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RegisterFlagEffect(100000850,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c100000850.filter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function c100000850.tgtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000850.filter,tp,LOCATION_DECK,0,1,nil) end

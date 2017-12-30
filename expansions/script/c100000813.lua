@@ -82,7 +82,7 @@ function c100000813.hop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(p,d,REASON_EFFECT)
 end
 function c100000813.filter(c,e,tp)
-	return c:IsSetCard(0x10A)  and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x758)  and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000813.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_HAND) and chkc:IsControler(tp) and c100000813.filter(chkc,e,tp) end
@@ -103,7 +103,7 @@ function c100000813.damval(e,re,val,r,rp,rc)
 end
 function c100000813.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x10A)
+	return not c:IsSetCard(0x758)
 end
 function c100000813.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp

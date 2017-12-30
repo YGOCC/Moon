@@ -45,7 +45,7 @@ end
 	return c:IsFaceup() and (c:IsCode(100001100) or c:IsCode(100001101) or c:IsCode(100001102) or c:IsCode(100001103)) and c:IsType(TYPE_MONSTER)
 end
 function c100001112.filtersp(c,e,tp)
-	return c:IsLevelBelow(4) and c:IsSetCard(0x11B) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(100001112)
+	return c:IsLevelBelow(4) and c:IsSetCard(0x755) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(100001112)
 end
 function c100001112.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

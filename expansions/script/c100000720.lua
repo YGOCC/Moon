@@ -44,7 +44,7 @@ function c100000720.initial_effect(c)
 	c:RegisterEffect(e12)
 end
 function c100000720.filterd(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end
 function c100000720.descon(e)
 	return not Duel.IsExistingMatchingCard(c100000720.filterd,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
@@ -53,7 +53,7 @@ function c100000720.handcon(e)
 	return Duel.IsExistingMatchingCard(c100000720.filter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function c100000720.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end
 function c100000720.aclimit1(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or not re:IsActiveType(TYPE_MONSTER) then return end

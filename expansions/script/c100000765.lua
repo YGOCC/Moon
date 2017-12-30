@@ -46,7 +46,7 @@ c:EnableUnsummonable()
 	c:RegisterEffect(e11)
 end
 function c100000765.splimit(e,c)
-	return not c:IsSetCard(0x11A)
+	return not c:IsSetCard(0x75A)
 end
 function c100000765.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsType(TYPE_TRAP)

@@ -2,7 +2,7 @@
 function c100000951.initial_effect(c)
 c:SetUniqueOnField(1,0,100000951)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x114),aux.NonTuner(Card.IsSetCard,0x114),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x75C),aux.NonTuner(Card.IsSetCard,0x75C),1)
 	c:EnableReviveLimit()
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100000951,1))
@@ -72,7 +72,7 @@ function c100000951.dxop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100000951.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x114)
+	return not c:IsSetCard(0x75C)
 end
 function c100000951.activatehh3(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()

@@ -30,7 +30,7 @@ function c100000839.con(e)
 	return Duel.IsExistingMatchingCard(c100000839.filter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function c100000839.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10B)
+	return c:IsFaceup() and (c:IsSetCard(0x751) or c:IsSetCard(0x752))
 end
 function c100000839.infilter(e,c)
 	return c:IsFaceup() and (c:IsCode(100000839) or c:IsCode(100000838) or c:IsCode(100000837) or c:IsCode(100000836))

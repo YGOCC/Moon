@@ -33,7 +33,7 @@ function c100000988.activated(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 function c100000988.filter(c)
-	return c:IsSetCard(0x117)
+	return c:IsSetCard(0x765)
 end
 function c100000988.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000988.filter,tp,LOCATION_HAND,0,1,nil) end

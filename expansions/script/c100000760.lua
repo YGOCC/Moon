@@ -11,7 +11,7 @@ function c100000760.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000760.filter(c)
-	return c:IsSetCard(0x11A) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()  or c:IsAbleToExtra()
+	return c:IsSetCard(0x75A) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()  or c:IsAbleToExtra()
 end
 function c100000760.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return Duel.IsExistingMatchingCard(c100000760.filter,tp,LOCATION_GRAVE,0,1,nil) end

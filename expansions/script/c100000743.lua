@@ -32,7 +32,7 @@ function c100000743.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000743.spfilter(c)
-	return c:IsSetCard(0x112) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x757) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c100000743.hspcon(e,c)
 	if c==nil then return true end
@@ -46,7 +46,7 @@ function c100000743.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function c100000743.condition(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
-	return bit.band(r,REASON_EFFECT) and re:GetHandler():IsSetCard(0x112)
+	return bit.band(r,REASON_EFFECT) and re:GetHandler():IsSetCard(0x757)
 end
 function c100000743.activate3(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_DECK+LOCATION_EXTRA)
@@ -57,11 +57,14 @@ function c100000743.activate3(e,tp,eg,ep,ev,re,r,rp,c)
 	if tg==nil then return end
 		Duel.SendtoGrave(sg,REASON_EFFECT)
 end
+function c100000743.filter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
+end
 function c100000743.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and c100000743.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c100000743.filter,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	Duel.SelectTarget(tp,c100000743.filter,tp,0,LOCATION_MZONE,1,1,nil)
 end
 function c100000743.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

@@ -45,7 +45,7 @@ function c100000922.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 function c100000922.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10B) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and (c:IsSetCard(0x751) or c:IsSetCard(0x752)) and c:IsType(TYPE_MONSTER)
 end
 function c100000922.hspcon(e,c)
 	if c==nil then return true end
@@ -62,7 +62,7 @@ function c100000922.atkvalr(e,c)
 end
 
 function c100000922.filter(c,e,tp)
-	return c:IsSetCard(0x10B)
+	return (c:IsSetCard(0x751) or c:IsSetCard(0x752))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(100000922)
 end
 function c100000922.condition(e,tp,eg,ep,ev,re,r,rp)

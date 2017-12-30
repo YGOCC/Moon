@@ -32,7 +32,7 @@ function c100000729.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c100000729.chainop(e,tp,eg,ep,ev,re,r,rp)
-	if re:GetHandler():IsSetCard(0x114) then
+	if re:GetHandler():IsSetCard(0x75C) then
 		Duel.SetChainLimit(c100000729.chainlm)
 	end
 end
@@ -40,17 +40,17 @@ function c100000729.chainlm(e,rp,tp)
 	return tp==rp
 end
 function c100000729.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x114) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x75C) and c:IsType(TYPE_MONSTER)
 end
 function c100000729.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c100000729.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c100000729.mfilter(c)
-	return c:IsSetCard(0x114)
+	return c:IsSetCard(0x75C)
 end
 function c100000729.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x114)
+	return not c:IsSetCard(0x75C)
 end
 function c100000729.htg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

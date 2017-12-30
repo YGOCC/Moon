@@ -20,6 +20,19 @@ function c100000891.initial_effect(c)
 	e2:SetTarget(c100000891.eqtg)
 	e2:SetOperation(c100000891.eqop)
 	c:RegisterEffect(e2)
+		--atk
+	local e23=Effect.CreateEffect(c)
+	e23:SetType(EFFECT_TYPE_SINGLE)
+	e23:SetCode(EFFECT_UPDATE_ATTACK)
+	e23:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e23:SetRange(LOCATION_MZONE)
+	e23:SetValue(c100000891.atkval)
+	c:RegisterEffect(e23)
+	-- def
+	local e24=e23:Clone()
+	e24:SetCode(EFFECT_UPDATE_DEFENSE)
+	e24:SetValue(c100000891.defval)
+	c:RegisterEffect(e24)
 		local e8=Effect.CreateEffect(c)
 	e8:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e8:SetCode(EVENT_TO_GRAVE)
@@ -47,39 +60,42 @@ end
 function c100000891.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then end
-		if c:IsFaceup() and c:IsRelateToEffect(e) then end
-			local atk=tc:GetTextAttack()
-			local def=tc:GetTextDefense()
-			if tc:IsFacedown() or atk<0 then atk=0 end
-			if tc:IsFacedown() or def<0 then def=0 end
+	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and tc:IsControler(1-tp) then end
+		if c:IsFaceup() and c:IsRelateToEffect(e) then
 			if not Duel.Equip(tp,tc,c,false) then return end
 			--Add Equip limit
 			tc:RegisterFlagEffect(100000891,RESET_EVENT+0x1fe0000,0,0)
 			e:SetLabelObject(tc)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetProperty(EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_OWNER_RELATE)
+			e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
 			e1:SetCode(EFFECT_EQUIP_LIMIT)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
 			e1:SetValue(c100000891.eqlimit)
 			tc:RegisterEffect(e1)
-			if atk>0 then
-				local e2=Effect.CreateEffect(c)
-				e2:SetType(EFFECT_TYPE_EQUIP)
-				e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
-				e2:SetCode(EFFECT_UPDATE_ATTACK)
-				e2:SetReset(RESET_EVENT+0x1fe0000)
-				e2:SetValue(atk)
-				tc:RegisterEffect(e2)
 			end
-			if def>0 then
-				local e3=Effect.CreateEffect(c)
-				e3:SetType(EFFECT_TYPE_EQUIP)
-				e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
-				e3:SetCode(EFFECT_UPDATE_DEFENSE)
-				e3:SetReset(RESET_EVENT+0x1fe0000)
-				e3:SetValue(def)
-				tc:RegisterEffect(e3)
+			end
+function c100000891.atkval(e,c)
+	local atk=0
+	local g=c:GetEquipGroup()
+	local tc=g:GetFirst()
+	while tc do
+		if tc:GetFlagEffect(100000891)~=0 and tc:IsFaceup() and tc:GetAttack()>=0 then
+			atk=atk+tc:GetAttack()
+		end
+		tc=g:GetNext()
 	end
+	return atk
+end
+function c100000891.defval(e,c)
+	local def=0
+	local g=c:GetEquipGroup()
+	local tc=g:GetFirst()
+	while tc do
+		if tc:GetFlagEffect(100000891)~=0 and tc:IsFaceup() and tc:GetDefense()>=0 then
+			def=def+tc:GetDefense()
+		end
+		tc=g:GetNext()
+	end
+	return def
 end

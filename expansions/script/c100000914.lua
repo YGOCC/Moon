@@ -55,7 +55,7 @@ function c100000914.initial_effect(c)
 	e11:SetRange(LOCATION_MZONE)
 	e11:SetTargetRange(LOCATION_MZONE,0)
 	e11:SetCode(EFFECT_UPDATE_ATTACK)
-	e11:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x111))
+	e11:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x75D))
 	e11:SetValue(500)
 	c:RegisterEffect(e11)
 		--shuffle
@@ -83,7 +83,7 @@ function c100000914.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function c100000914.spfilterm(c)
-	return c:IsFaceup() and c:IsSetCard(0x111) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x75D) and c:IsType(TYPE_MONSTER)
 end
 function c100000914.spconm(e,c)
 	if c==nil then return true end
@@ -95,7 +95,7 @@ function c100000914.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c100000914.cfilter,1,nil,tp)
 end
 function c100000914.cfilter(c,tp)
-	return c:IsSetCard(0x111) and c:IsFaceup()
+	return c:IsSetCard(0x75D) and c:IsFaceup()
 end
 function c100000914.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsRelateToEffect(e) and e:GetHandler():IsFaceup() end
@@ -114,5 +114,5 @@ function c100000914.operation2(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c100000914.filtersf(c)
-	return c:IsSetCard(0x111) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0x75D) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end

@@ -20,10 +20,10 @@ local e1=Effect.CreateEffect(c)
 	c:RegisterEffect(e4)
 end
 function c100000753.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11A) and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsSetCard(0x75A) and c:IsType(TYPE_XYZ)
 end
 function c100000753.filter3(c)
-	return c:IsSetCard(0x11A) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x75A) and c:IsType(TYPE_MONSTER)
 end
 function c100000753.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c100000753.filter(chkc) end
@@ -51,5 +51,5 @@ function c100000753.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,sg)
 end
 function c100000753.filter2(c)
-	return c:IsSetCard(0x11A) and c:IsAbleToHand() and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and not c:IsCode(100000753)
+	return c:IsSetCard(0x75A) and c:IsAbleToHand() and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and not c:IsCode(100000753)
 end

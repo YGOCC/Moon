@@ -32,7 +32,7 @@ function c100000807.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c100000807.spfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x109) and c:GetCode()~=100000807
+	return c:IsFaceup() and c:IsSetCard(0x767) and c:GetCode()~=100000807
 end
 function c100000807.spcon(e,c)
 	if c==nil then return true end
@@ -42,5 +42,5 @@ function c100000807.spcon(e,c)
 end
 function c100000807.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109)
+	return not c:IsSetCard(0x767)
 end

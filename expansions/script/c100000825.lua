@@ -55,7 +55,7 @@ function c100000825.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c100000825.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10A) and c:IsAbleToGraveAsCost() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+	return c:IsFaceup() and c:IsSetCard(0x758) and c:IsAbleToGraveAsCost() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c100000825.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

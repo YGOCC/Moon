@@ -20,7 +20,7 @@ function c100000732.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c100000732.sfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10C) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x75B) and c:IsType(TYPE_MONSTER)
 end
 function c100000732.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c100000732.sfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -45,8 +45,8 @@ function c100000732.activate1(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 	end
 function c100000732.filt(c)
-	return c:IsSetCard(0x10C) and c:IsFaceup() and not c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsSetCard(0x75B) and c:IsFaceup() and not c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c100000732.val(e,c)
-	return Duel.GetMatchingGroupCount(c100000732.filt,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)*-100
+	return Duel.GetMatchingGroupCount(c100000732.filt,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)*-200
 end

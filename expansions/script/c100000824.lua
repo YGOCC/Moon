@@ -38,10 +38,10 @@ function c100000824.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000824.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 end
 function c100000824.cfilter(c)
-	return c:IsFaceup() and not c:IsSetCard(0x10A)
+	return c:IsFaceup() and not c:IsSetCard(0x758)
 end
 function c100000824.confilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10A)
+	return c:IsFaceup() and c:IsSetCard(0x758)
 end
 function c100000824.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c100000824.confilter,tp,LOCATION_MZONE,0,1,nil)

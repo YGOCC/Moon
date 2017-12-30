@@ -63,29 +63,29 @@ end
 end
 function c100000721.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_HAND) then
-		Duel.RegisterFlagEffect(rp,88851326,RESET_PHASE+PHASE_END,0,1)
+		Duel.RegisterFlagEffect(rp,100000721,RESET_PHASE+PHASE_END,0,1)
 	end
 end
 function c100000721.settg(e,c)
 	return c:IsLocation(LOCATION_HAND)
 end
 function c100000721.setcon1(e)
-	return Duel.GetFlagEffect(1-e:GetHandlerPlayer(),88851326)>0
+	return Duel.GetFlagEffect(1-e:GetHandlerPlayer(),100000721)>0
 end
 function c100000721.descon(e)
 	return not Duel.IsExistingMatchingCard(c100000721.filterd,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function c100000721.ccfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end
 function c100000721.handcon(e)
 	return Duel.IsExistingMatchingCard(c100000721.filter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function c100000721.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end
 function c100000721.filterd(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end
 function c100000721.aclimit1(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or not re:IsHasType(EFFECT_TYPE_ACTIVATE) then return end

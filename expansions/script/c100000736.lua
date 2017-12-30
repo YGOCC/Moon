@@ -31,7 +31,7 @@ function c100000736.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x110))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x763))
 	e3:SetValue(c100000736.atkval)
 	c:RegisterEffect(e3)
 	local e5=e3:Clone()
@@ -53,7 +53,7 @@ function c100000736.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
 function c100000736.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x110)
+	return c:IsFaceup() and c:IsSetCard(0x763)
 end
 function c100000736.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c100000736.cfilter,1,nil)
@@ -62,7 +62,7 @@ function c100000736.ctop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x54,1)
 end
 function c100000736.spfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x110) and c:IsAbleToRemoveAsCost()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x763) and c:IsAbleToRemoveAsCost()
 end
 function c100000736.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x54,7,REASON_COST) end

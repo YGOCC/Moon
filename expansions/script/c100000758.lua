@@ -2,7 +2,7 @@ function c100000758.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	c:EnableUnsummonable()
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x11A),2,true)
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x75A),2,true)
 			--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -73,7 +73,7 @@ function c100000758.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c100000758.spfilter(c)
-	return c:IsSetCard(0x11A) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x75A) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
 end
 function c100000758.sprcon(e,c)
 	if c==nil then return true end 
@@ -95,7 +95,7 @@ function c100000758.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c100000758.cfilter,1,nil,tp)
 end
 function c100000758.cfilter(c,tp)
-	return c:IsSetCard(0x11A) and c:IsFaceup()
+	return c:IsSetCard(0x75A) and c:IsFaceup()
 end
 function c100000758.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsRelateToEffect(e) and e:GetHandler():IsFaceup() end

@@ -106,7 +106,7 @@ function c100000904.costh(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
 function c100000904.filterh(c)
-	return c:IsSetCard(0x110) and c:IsAbleToHand()
+	return c:IsSetCard(0x763) and c:IsAbleToHand()
 end
 function c100000904.targeth(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000904.filterh,tp,LOCATION_DECK,0,1,nil) end
@@ -126,7 +126,7 @@ function c100000904.operationh(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function c100000904.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x110)
+	return c:IsFaceup() and c:IsSetCard(0x763)
 end
 function c100000904.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c100000904.cfilter,1,nil)

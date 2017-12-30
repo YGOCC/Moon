@@ -37,7 +37,7 @@ c:EnableReviveLimit()
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(100000716,0))
 	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e7:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e7:SetCode(EVENT_TO_HAND)
 	e7:SetRange(LOCATION_MZONE)
 	e7:SetCountLimit(1)
@@ -56,7 +56,7 @@ c:EnableReviveLimit()
 	c:RegisterEffect(e18)
 end
 function c100000716.filtersend(c)
-	return c:IsFaceup() and not c:IsSetCard(0x11D)
+	return c:IsFaceup() and not c:IsSetCard(0x764)
 end
 function c100000716.sop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c100000716.filtersend,tp,LOCATION_ONFIELD,0,e:GetHandler())
@@ -64,10 +64,10 @@ function c100000716.sop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100000716.filter22(c,tp)
 	return c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEUP)
-		and c:IsControler(tp) and c:IsSetCard(0x11D) and c:IsType(TYPE_TRAP+TYPE_CONTINUOUS)
+		and c:IsControler(tp) and c:IsSetCard(0x764) and c:IsType(TYPE_TRAP+TYPE_CONTINUOUS)
 end
 function c100000716.condition22(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c100000716.filter22,1,nil,tp)
+	return eg:IsExists(c100000716.filter22,1,nil,tp) and Duel.GetTurnPlayer()==tp
 end
 function c100000716.target22(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsAbleToHand() end
@@ -83,7 +83,7 @@ function c100000716.operation22(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000716.filter(c,e,tp)
-	return c:IsSetCard(0x11D)  and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and not (c:IsCode(100000716) or c:IsType(TYPE_SPELL+TYPE_TRAP))
+	return c:IsSetCard(0x764)  and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and not (c:IsCode(100000716) or c:IsType(TYPE_SPELL+TYPE_TRAP))
 end
 function c100000716.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -98,7 +98,7 @@ function c100000716.spop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 end	
 function c100000716.spcfilter(c)
-	return c:IsSetCard(0x11D) and c:IsType(TYPE_TRAP+TYPE_CONTINUOUS) and not c:IsPublic()
+	return c:IsSetCard(0x764) and c:IsType(TYPE_TRAP+TYPE_CONTINUOUS) and not c:IsPublic()
 end
 function c100000716.spcon(e,c)
 	if c==nil then return true end
@@ -120,7 +120,7 @@ function c100000716.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.ShuffleHand(tp)
 end
 function c100000716.condition(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP+TYPE_CONTINUOUS) and re:GetHandler():IsSetCard(0x11D)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP+TYPE_CONTINUOUS) and re:GetHandler():IsSetCard(0x764)
 end
 function c100000716.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

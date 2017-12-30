@@ -2,12 +2,13 @@
 function c100001160.initial_effect(c)	
 c:EnableReviveLimit()
 	--special summon
-		--special summon condition
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_SINGLE)
-	e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e7:SetCode(EFFECT_SPSUMMON_CONDITION)
-	c:RegisterEffect(e7)
+	--spson
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_SINGLE)
+	e8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e8:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e8:SetValue(aux.FALSE)
+	c:RegisterEffect(e8)
 	local e30=Effect.CreateEffect(c)
 	e30:SetType(EFFECT_TYPE_FIELD)
 	e30:SetCode(EFFECT_SPSUMMON_PROC)
@@ -81,7 +82,7 @@ function c100001160.atklimit(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterEffect(e1)
 end
 function c100001160.spcfilter(c)
-	return c:IsSetCard(0x11E) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x750) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function c100001160.spcon(e,c)
 	if c==nil then return true end

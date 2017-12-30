@@ -20,7 +20,7 @@ function c100001140.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100001140.tgfilter(c)
-	return c:IsSetCard(0x11C) and c:IsAbleToGrave() 
+	return c:IsSetCard(0x756) and c:IsAbleToGrave() 
 	end
 function c100001140.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100001140.tgfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil) end

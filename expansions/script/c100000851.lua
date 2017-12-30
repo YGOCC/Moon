@@ -27,6 +27,14 @@ function c100000851.initial_effect(c)
 	e3:SetCategory(CATEGORY_RECOVER)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
 	c:RegisterEffect(e3)
+		--immune
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_IMMUNE_EFFECT)
+	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetRange(LOCATION_REMOVED)
+	e5:SetValue(c100000851.efilter)
+	c:RegisterEffect(e5)
 		--recover
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(100000851,0))
@@ -39,6 +47,9 @@ function c100000851.initial_effect(c)
 	e4:SetTarget(c100000851.tgw)
 	e4:SetOperation(c100000851.opw)
 	c:RegisterEffect(e4)
+end
+function c100000851.efilter(e,te)
+	return te:GetOwner()~=e:GetOwner()
 end
 function c100000851.actb(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() end

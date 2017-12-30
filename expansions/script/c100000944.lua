@@ -87,7 +87,7 @@ function c100000944.operationex(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000944.mfilter(c)
-	return c:IsSetCard(0x114)
+	return c:IsSetCard(0x75C)
 end
 function c100000944.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -107,7 +107,7 @@ function c100000944.scop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100000944.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x114)
+	return not c:IsSetCard(0x75C)
 end
 function c100000944.htg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

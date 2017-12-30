@@ -10,7 +10,7 @@ function c100000788.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x118))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x754))
 	e3:SetValue(c100000788.val)
 	c:RegisterEffect(e3)
 		local e9=e3:Clone()
@@ -27,13 +27,13 @@ function c100000788.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c100000788.filt(c)
-	return c:IsSetCard(0x118) and c:IsType(TYPE_EQUIP) and c:IsFaceup()
+	return c:IsSetCard(0x754) and c:IsType(TYPE_EQUIP) and c:IsFaceup()
 end
 function c100000788.val(e,c)
 	return Duel.GetMatchingGroupCount(c100000788.filt,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,nil)*500
 end
 function c100000788.filterrgr(c)
-	return  c:IsSetCard(0x118) and c:IsType(TYPE_EQUIP) and c:IsAbleToHand()
+	return  c:IsSetCard(0x754) and c:IsType(TYPE_EQUIP) and c:IsAbleToHand()
 end
 function c100000788.rmtgr(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000788.filterrgr,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end

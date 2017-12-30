@@ -54,14 +54,14 @@ function c100000723.initial_effect(c)
 	c:RegisterEffect(e8)
 end
 function c100000723.filtersend(c)
-	return c:IsFaceup() and not c:IsSetCard(0x11D)
+	return c:IsFaceup() and not c:IsSetCard(0x764)
 end
 function c100000723.sop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c100000723.filtersend,tp,LOCATION_ONFIELD,0,e:GetHandler())
 	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 function c100000723.filtersend(c)
-	return c:IsFaceup() and not c:IsSetCard(0x11D)
+	return c:IsFaceup() and not c:IsSetCard(0x764)
 end
 function c100000723.filter(c)
 	return c:IsCode(100000718) and c:IsAbleToHand()
@@ -80,7 +80,7 @@ function c100000723.operation2(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c100000723.tdfilter2(c)
-	return c:IsFaceup() and c:IsAbleToHand() and c:IsSetCard(0x11D) and c:IsType(TYPE_TRAP+TYPE_CONTINUOUS)
+	return c:IsFaceup() and c:IsAbleToHand() and c:IsSetCard(0x764) and c:IsType(TYPE_TRAP+TYPE_CONTINUOUS) and not c:IsType(TYPE_SPELL)
 end
 function c100000723.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c100000723.tdfilter2(chkc) end
@@ -97,7 +97,7 @@ function c100000723.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c100000723.condition(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP+TYPE_CONTINUOUS) and re:GetHandler():IsSetCard(0x11D)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP+TYPE_CONTINUOUS) and re:GetHandler():IsSetCard(0x764)
 end
 function c100000723.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

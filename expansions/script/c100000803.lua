@@ -42,7 +42,7 @@ function c100000803.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function c100000803.filter(c)
-	return c:IsSetCard(0x109) and not c:IsCode(100000809) and c:IsType(TYPE_TUNER) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsSetCard(0x767) and not c:IsCode(100000809) and c:IsType(TYPE_TUNER) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c100000803.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000803.filter,tp,LOCATION_GRAVE,0,1,nil) end
@@ -56,7 +56,7 @@ function c100000803.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 end
 function c100000803.spfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x109) and c:IsType(TYPE_TUNER)
+	return c:IsFaceup() and c:IsSetCard(0x767) and c:IsType(TYPE_TUNER)
 end
 function c100000803.spcon(e,c)
 	if c==nil then return true end
@@ -66,7 +66,7 @@ function c100000803.spcon(e,c)
 end
 function c100000803.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109)
+	return not c:IsSetCard(0x767)
 end
 function c100000803.ddcon(e,tp,eg,ep,ev,re,r,rp)
 	return r==REASON_SYNCHRO

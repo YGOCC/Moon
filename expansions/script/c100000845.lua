@@ -71,7 +71,7 @@ function c100000845.thop(e,tp,eg,ep,ev,re,r,rp)
 				c:RegisterEffect(e1)
 			end
 function c100000845.gfilter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function c100000845.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000845.gfilter,tp,LOCATION_DECK,0,1,nil) end

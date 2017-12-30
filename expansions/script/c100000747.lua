@@ -22,7 +22,7 @@ if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 	end
 end
 function c100000747.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x118) and c:IsType(TYPE_EQUIP)
+	return c:IsFaceup() and c:IsSetCard(0x754) and c:IsType(TYPE_EQUIP)
 end
 function c100000747.condition(e,tp,eg,ep,ev,re,r,rp)
 	return (re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:IsActiveType(TYPE_MONSTER)) and Duel.IsChainNegatable(ev)

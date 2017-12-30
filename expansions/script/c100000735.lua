@@ -2,7 +2,7 @@
 function c100000735.initial_effect(c)
 c:EnableUnsummonable()
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x11A),1,2,nil,nil,5)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x75A),1,2,nil,nil,5)
 	c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)

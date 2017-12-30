@@ -74,7 +74,7 @@ function c100000817.hop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(p,d,REASON_EFFECT)
 end
 function c100000817.cfilter(c)
-	return c:IsFaceup() and c:GetLevel()==4 and c:IsSetCard(0x10A)
+	return c:IsFaceup() and c:GetLevel()==4 and c:IsSetCard(0x758)
 end
 function c100000817.spcon(e,c)
 	if c==nil then return true end
@@ -87,7 +87,7 @@ function c100000817.damval(e,re,val,r,rp,rc)
 end
 function c100000817.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x10A)
+	return not c:IsSetCard(0x758)
 end
 function c100000817.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp

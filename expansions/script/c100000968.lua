@@ -12,7 +12,7 @@ function c100000968.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000968.filter(c)
-	return c:IsSetCard(0x115) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return c:IsSetCard(0x768) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function c100000968.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c100000968.filter(chkc) end

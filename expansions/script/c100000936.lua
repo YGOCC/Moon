@@ -31,7 +31,7 @@ function c100000936.spcon(e)
 	return Duel.IsExistingMatchingCard(c100000936.filterd,tp,0,LOCATION_MZONE,1,nil)
 end
 function c100000936.filter(c)
-	return c:IsSetCard(0x113) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x766) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c100000936.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000936.filter,tp,LOCATION_DECK,0,1,nil) end

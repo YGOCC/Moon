@@ -24,7 +24,7 @@ function c100000730.dacon(e)
 	return Duel.IsExistingMatchingCard(c100000730.filterdi,e:GetHandlerPlayer(),0,LOCATION_ONFIELD,1,nil)
 end
 function c100000730.filter(c,e,tp)
-	return c:IsSetCard(0x113) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
+	return c:IsSetCard(0x766) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
 end
 function c100000730.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE+LOCATION_HAND) and c100000730.filter(chkc,e,tp) end

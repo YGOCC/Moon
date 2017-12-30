@@ -86,15 +86,15 @@ function c100000856.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100000856.aclimit(e,re,tp)
 	local rc=re:GetHandler()
-	return re:IsActiveType(TYPE_TRAP) and not rc:IsSetCard(0x10D) and not rc:IsImmuneToEffect(e)
+	return re:IsActiveType(TYPE_TRAP) and not rc:IsSetCard(0x759) and not rc:IsImmuneToEffect(e)
 end
 function c100000856.distg(e,c)
-	return c:IsType(TYPE_TRAP) and not c:IsSetCard(0x10D) and not c:IsImmuneToEffect(e)
+	return c:IsType(TYPE_TRAP) and not c:IsSetCard(0x759) and not c:IsImmuneToEffect(e)
 end
 function c100000856.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tl=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	local rc=re:GetHandler()
-	if tl==LOCATION_SZONE and re:IsActiveType(TYPE_TRAP) and not rc:IsSetCard(0x10D) and not rc:IsImmuneToEffect(e) then
+	if tl==LOCATION_SZONE and re:IsActiveType(TYPE_TRAP) and not rc:IsSetCard(0x759) and not rc:IsImmuneToEffect(e) then
 		Duel.NegateEffect(ev)
 	end
 end

@@ -13,7 +13,7 @@ function c100001152.initial_effect(c)
 	c:RegisterEffect(e2)
 	end
 	function c100001152.drfilter(c,e)
-	return c:IsSetCard(0x11C) and c:IsAbleToDeck() and c:IsCanBeEffectTarget(e)
+	return c:IsSetCard(0x756) and c:IsAbleToDeck() and c:IsCanBeEffectTarget(e)
 end
 function c100001152.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if chkc then return false end
@@ -53,5 +53,5 @@ function c100001152.drop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	end
 	function c100001152.filter(c)
-	return c:IsSetCard(0x11B) and c:IsAbleToHand() and not c:IsCode(100001152)
+	return c:IsSetCard(0x755) and c:IsAbleToHand() and not c:IsCode(100001152)
 end

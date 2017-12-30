@@ -1,7 +1,7 @@
 	--created and scripted by rising phoenix
 function c100000742.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x109),aux.NonTuner(Card.IsSetCard,0x109),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x767),aux.NonTuner(Card.IsSetCard,0x767),1)
 	c:EnableReviveLimit()
 		--cannot be target/attle indestructable
 	local e1=Effect.CreateEffect(c)
@@ -26,11 +26,11 @@ function c100000742.initial_effect(c)
 	c:RegisterEffect(e9)
 end
 function c100000742.filt(c)
-	return c:IsSetCard(0x109) and c:IsType(TYPE_TUNER) and c:IsFaceup()
+	return c:IsSetCard(0x767) and c:IsType(TYPE_TUNER) and c:IsFaceup()
 end
 function c100000742.val(e,c)
 	return Duel.GetMatchingGroupCount(c100000742.filt,c:GetControler(),LOCATION_GRAVE,0,nil)*100
 end
 function c100000742.target(e,c)
-	return c~=e:GetHandler() and c:IsSetCard(0x109) and c:IsType(TYPE_MONSTER)
+	return c~=e:GetHandler() and c:IsSetCard(0x767) and c:IsType(TYPE_MONSTER)
 end

@@ -43,7 +43,7 @@ function c100000940.operationsf(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(g,REASON_EFFECT)
 end
 function c100000940.filter(c)
-	return c:IsSetCard(0x113) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x766) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c100000940.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000940.filter,tp,LOCATION_DECK,0,1,nil) end

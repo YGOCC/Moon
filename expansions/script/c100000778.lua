@@ -52,7 +52,7 @@ function c100000778.initial_effect(c)
 	c:RegisterEffect(e21)
 end
 function c100000778.cfilter(c)
-	return c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
+	return c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
 end
 function c100000778.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000778.cfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -91,7 +91,7 @@ function c100000778.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=7000
 end
 function c100000778.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-		if chk==0 then return true end Duel.IsPlayerCanDraw(1-tp,1)  
+		if chk==0 then return Duel.IsPlayerCanDraw(1-tp,1) and Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,1-tp,1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,1-tp,1)
 end

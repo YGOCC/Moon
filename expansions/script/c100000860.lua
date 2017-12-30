@@ -33,7 +33,7 @@ function c100000860.filterse1(c)
 	return c:IsCode(100000857) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c100000860.filterse2(c)
-	return c:IsSetCard(0x10D) and c:IsAbleToGrave()
+	return c:IsSetCard(0x759) and c:IsAbleToGrave()
 end
 function c100000860.targetse(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000860.filterse1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end

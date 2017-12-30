@@ -26,7 +26,7 @@ c:EnableCounterPermit(0x51)
 	c:RegisterEffect(e4)
 	end
 function c100000965.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x115)
+	return c:IsFaceup() and c:IsSetCard(0x768)
 end
 function c100000965.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c100000965.cfilter,1,nil)
@@ -36,7 +36,7 @@ function c100000965.ctop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100000965.dfilter(c,tp)
 	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-		and c:IsSetCard(0x115) and c:IsControler(tp) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
+		and c:IsSetCard(0x768) and c:IsControler(tp) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function c100000965.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -48,7 +48,7 @@ function c100000965.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100000965.value(e,c)
 	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-		and c:IsSetCard(0x115) and c:IsControler(e:GetHandlerPlayer()) and c:IsReason(REASON_BATTLE+REASON_EFFECT) 
+		and c:IsSetCard(0x768) and c:IsControler(e:GetHandlerPlayer()) and c:IsReason(REASON_BATTLE+REASON_EFFECT) 
 end
 function c100000965.desop(e,tp,eg,ep,ev,re,r,rp)
 	local count=e:GetLabel()

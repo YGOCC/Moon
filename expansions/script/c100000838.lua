@@ -27,7 +27,7 @@ function c100000838.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c100000838.desfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10B)
+	return c:IsFaceup() and (c:IsSetCard(0x751) or c:IsSetCard(0x752))
 end
 function c100000838.con(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(c100000838.desfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) then return end

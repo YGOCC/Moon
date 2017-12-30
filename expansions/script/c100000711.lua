@@ -61,7 +61,7 @@ function c100000711.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c100000711.cfilter(c)
-	return c:IsSetCard(0x10B) and (c:IsAbleToDeckAsCost() or c:IsAbleToExtraAsCost()) 
+	return (c:IsSetCard(0x751) or c:IsSetCard(0x752)) and (c:IsAbleToDeckAsCost() or c:IsAbleToExtraAsCost()) 
 end
 function c100000711.tdop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -69,7 +69,7 @@ function c100000711.tdop(e,tp,eg,ep,ev,re,r,rp)
 		if g2:GetCount()>0 then Duel.SendtoDeck(g2,nil,2,REASON_EFFECT) end
 end
 function c100000711.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10B) and c:IsLevelAbove(1)
+	return c:IsFaceup() and (c:IsSetCard(0x751) or c:IsSetCard(0x752)) and c:IsLevelAbove(1)
 end
 function c100000711.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c100000711.filter(chkc) end

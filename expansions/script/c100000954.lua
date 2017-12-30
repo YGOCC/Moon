@@ -36,7 +36,7 @@ function c100000954.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c100000954.filterrgr(c)
-	return  c:IsSetCard(0x114) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsFacedown()
+	return  c:IsSetCard(0x75C) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsFacedown()
 end
 function c100000954.rmtgr(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000954.filterrgr,tp,LOCATION_REMOVED,0,1,nil) end
@@ -51,7 +51,7 @@ function c100000954.rmopr(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 end
 function c100000954.filter(c)
-	return c:IsSetCard(0x114) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand() and not c:IsCode(100000954)
+	return c:IsSetCard(0x75C) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand() and not c:IsCode(100000954)
 end
 function c100000954.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end

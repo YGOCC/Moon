@@ -11,7 +11,7 @@ function c100000772.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000772.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10D) and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsSetCard(0x759) and c:IsAbleToHand()
 end
 function c100000772.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c100000772.filter(chkc) end

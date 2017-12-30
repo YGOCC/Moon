@@ -12,7 +12,7 @@ function c100000952.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000952.filter(c,e,tp)
-	return c:IsSetCard(0x114) and c:GetLevel()==3 and c:IsCanBeSpecialSummoned(e,0,tp,true,false) 
+	return c:IsSetCard(0x75C) and c:GetLevel()==3 and c:IsCanBeSpecialSummoned(e,0,tp,true,false) 
 end
 function c100000952.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c100000952.filter(chkc,e,tp) end

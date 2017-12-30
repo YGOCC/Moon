@@ -1,7 +1,7 @@
  --Created and coded by Rising Phoenix
 function c100000887.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x210F),4,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x762),4,2)
 	c:EnableReviveLimit()
 	--remove field
 	local e1=Effect.CreateEffect(c)

@@ -13,7 +13,7 @@ function c100001156.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100001156.filt,tp,LOCATION_MZONE,0,1,nil) end
 end
 function c100001156.filt(c)
-	return c:IsFaceup() and c:IsSetCard(0x11E)
+	return c:IsFaceup() and c:IsSetCard(0x750)
 end
 function c100001156.efilter(e,re)
 	return re:GetOwnerPlayer()~=e:GetHandlerPlayer()

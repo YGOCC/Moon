@@ -33,10 +33,10 @@ function c100000737.ctcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c100000737.filtershu(c)
-	return c:IsSetCard(0x110) and c:IsAbleToDeck()  and c:GetType()==0x82
+	return c:IsSetCard(0x763) and c:IsAbleToDeck()  and c:GetType()==0x82
 end
 function c100000737.filter(c)
-	return c:IsSetCard(0x110)   and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x763)   and c:IsType(TYPE_MONSTER)
 end
 function c100000737.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return  chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c100000737.filtershu(chkc) end

@@ -10,7 +10,7 @@ function c100000942.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x113))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x766))
 	e3:SetValue(c100000942.val)
 	c:RegisterEffect(e3)
 			--defup
@@ -48,7 +48,7 @@ function c100000942.hspcon(e,tp,eg,ep,ev,re,r,rp)
 		return Duel.IsExistingMatchingCard(c100000942.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c100000942.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x113)
+	return c:IsFaceup() and c:IsSetCard(0x766)
 end
 function c100000942.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_SZONE) and c100000942.filter(chkc) end

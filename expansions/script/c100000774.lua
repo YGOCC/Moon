@@ -1,6 +1,6 @@
 --Created and scripted by Rising Phoenix
 function c100000774.initial_effect(c)
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x119),3,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x75F),3,2)
 	c:EnableReviveLimit()
 		--destroy
 	local e4=Effect.CreateEffect(c)
@@ -69,23 +69,23 @@ function c100000774.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c100000774.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x119) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x75F) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,0)
 end
 function c100000774.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	local d=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x119)*100
+	local d=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x75F)*100
 	Duel.Damage(p,d,REASON_EFFECT)
 end
 function c100000774.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x119) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0x75F) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,0)
 end
 function c100000774.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	local d=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x119)*100
+	local d=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x75F)*100
 	Duel.Recover(p,d,REASON_EFFECT)
 end
 function c100000774.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -93,7 +93,7 @@ function c100000774.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function c100000774.cfilter(c)
-	return c:IsSetCard(0x119)
+	return c:IsSetCard(0x75F)
 end
 function c100000774.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=7000
@@ -140,7 +140,7 @@ function c100000774.desop2(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function c100000774.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER)
 end
 function c100000774.descon3(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=2000

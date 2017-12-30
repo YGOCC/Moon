@@ -50,7 +50,7 @@ function c100000999.operationfie(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 function c100000999.rfilter(c)
-	return c:IsSetCard(0x10D) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x759) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c100000999.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000999.rfilter,tp,LOCATION_GRAVE,0,3,e:GetHandler()) end

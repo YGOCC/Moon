@@ -52,7 +52,7 @@ function c100000827.retop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(e:GetLabelObject(),nil,REASON_EFFECT,nil)
 	end
 function c100000827.filter(c,e,tp)
-	return c:IsSetCard(0x10B)
+	return (c:IsSetCard(0x751) or c:IsSetCard(0x752))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000827.target(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -40,7 +40,7 @@ function c100000808.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100000808.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109)
+	return not c:IsSetCard(0x767)
 end
 function c100000808.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -62,7 +62,7 @@ function c100000808.operationf(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.ConfirmCards(1-tp,tg)
 	end
 function c100000808.filterf(c)
-	return c:IsSetCard(0x109) and c:IsType(TYPE_MONSTER) and not c:IsCode(100000808) and not c:IsCode(100000802) and not c:IsCode(100000809) and c:IsAbleToHand()
+	return c:IsSetCard(0x767) and c:IsType(TYPE_MONSTER) and not c:IsCode(100000808) and not c:IsCode(100000802) and not c:IsCode(100000809) and c:IsAbleToHand()
 end
 function c100000808.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000808.filterf,tp,LOCATION_DECK,0,1,nil) end

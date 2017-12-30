@@ -12,7 +12,7 @@ function c100000759.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000759.cfilter(c)
-	return c:IsSetCard(0x11A) and c:IsAbleToDeckAsCost() and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x75A) and c:IsAbleToDeckAsCost() and c:IsType(TYPE_MONSTER)
 end
 function c100000759.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000759.cfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -21,7 +21,7 @@ function c100000759.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c100000759.filter(c)
-	return c:IsSetCard(0x11A) and c:IsAbleToHand() and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP))
+	return c:IsSetCard(0x75A) and c:IsAbleToHand() and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP))
 end
 function c100000759.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_DECK) and c100000759.filter(chkc) end

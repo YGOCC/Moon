@@ -1,7 +1,7 @@
 --object r1
 function c100000828.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x10B),1,1)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x752),1,1)
 	c:EnableReviveLimit()
 	--destroy
 	local e1=Effect.CreateEffect(c)
@@ -64,7 +64,7 @@ function c100000828.retop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(e:GetLabelObject(),nil,REASON_EFFECT,nil)
 	end
 function c100000828.filters(c,e,tp)
-	return c:IsSetCard(0x10B)
+	return (c:IsSetCard(0x751) or c:IsSetCard(0x752))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000828.target(e,tp,eg,ep,ev,re,r,rp,chk)

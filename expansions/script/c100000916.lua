@@ -15,7 +15,7 @@ function c100000916.initial_effect(c)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x111))
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x75D))
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
 end

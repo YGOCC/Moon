@@ -10,7 +10,7 @@ function c100000989.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x117))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x765))
 	e3:SetValue(c100000989.val)
 	c:RegisterEffect(e3)
 		local e9=e3:Clone()
@@ -28,10 +28,10 @@ function c100000989.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000989.filt(c)
-	return c:IsSetCard(0x117)
+	return c:IsSetCard(0x765) and c:IsType(TYPE_MONSTER)
 end
 function c100000989.val(e,c)
-	return Duel.GetMatchingGroupCount(c100000989.filt,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)*100
+	return Duel.GetMatchingGroupCount(c100000989.filt,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)*50
 end
 function c100000989.cfilter(c)
 	return c:GetPreviousLocation()==LOCATION_HAND
@@ -39,14 +39,14 @@ end
 function c100000989.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	if not re then return false end
 	local rc=re:GetHandler()
-	return rp==tp and bit.band(r,REASON_EFFECT)~=0 and rc:IsSetCard(0x117)
+	return rp==tp and bit.band(r,REASON_EFFECT)~=0 and rc:IsSetCard(0x765)
 		and eg:IsExists(c100000989.cfilter,1,nil)
 end
 function c100000989.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(500)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,500)
+	Duel.SetTargetParam(300)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,300)
 end
 function c100000989.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end

@@ -64,7 +64,7 @@ function c100000841.initial_effect(c)
 	c:RegisterEffect(e8)
 end
 function c100000841.filter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeckAsCost()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeckAsCost()
 end
 function c100000841.spcon(e,c)
 	if c==nil then return true end
@@ -82,7 +82,7 @@ end
 function c100000841.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	if not re then return false end
 	local rc=re:GetHandler()
-	return rp==tp and bit.band(r,REASON_EFFECT)~=0 and rc:IsSetCard(0x10C)
+	return rp==tp and bit.band(r,REASON_EFFECT)~=0 and rc:IsSetCard(0x75B)
 		and eg:IsExists(c100000841.cfilter,1,nil)
 end
 function c100000841.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -97,7 +97,7 @@ function c100000841.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 end
 function c100000841.gfilter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function c100000841.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000841.gfilter,tp,LOCATION_DECK,0,1,nil) end

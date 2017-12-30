@@ -12,7 +12,7 @@ function c100000931.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c100000931.filterrgr(c)
-	return  c:IsSetCard(0x112) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return  c:IsSetCard(0x757) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c100000931.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=e:GetLabel()

@@ -13,8 +13,16 @@ function c100000893.initial_effect(c)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
 	e3:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x10F))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x761))
 	c:RegisterEffect(e3)
+		--extra summon
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetRange(LOCATION_FZONE)
+	e4:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
+	e4:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
+	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x762))
+	c:RegisterEffect(e4)
 		--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -27,7 +35,7 @@ function c100000893.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000893.filters(c)
-	return c:IsSetCard(0x10F) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return (c:IsSetCard(0x760) or c:IsSetCard(0x761) or c:IsSetCard(0x762)) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c100000893.targets(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000893.filters,tp,LOCATION_GRAVE,0,1,nil) end

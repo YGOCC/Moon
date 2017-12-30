@@ -44,7 +44,7 @@ function c100000731.filter(c,e,tp)
 	return (c:IsCode(100000814) or c:IsCode(100000816)) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c100000731.filter2(c)
-	return c:IsFaceup() and c:IsSetCard(0x10A) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x758) and c:IsType(TYPE_MONSTER)
 end
 function c100000731.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

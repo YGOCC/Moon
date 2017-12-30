@@ -48,7 +48,7 @@ function c100000941.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsReason(REASON_DESTROY) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function c100000941.rfilter(c)
-	return c:IsSetCard(0x113)
+	return c:IsSetCard(0x766)
 end
 function c100000941.spcon(e,c)
 	if c==nil then return true end
@@ -84,5 +84,5 @@ function c100000941.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000941.filter(c)
-	return c:IsSetCard(0x113) and c:IsAbleToHand() and c:IsType(TYPE_MONSTER) and not c:IsCode(100000941)
+	return c:IsSetCard(0x766) and c:IsAbleToHand() and c:IsType(TYPE_MONSTER) and not c:IsCode(100000941)
 end

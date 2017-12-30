@@ -11,7 +11,7 @@ function c100000740.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000740.cfilter(c,tc)
-	return c:IsSetCard(0x109) and c:IsSynchroSummonable(tc)
+	return c:IsSetCard(0x767) and c:IsSynchroSummonable(tc)
 end
 function c100000740.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,182,tp,false,false)

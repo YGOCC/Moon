@@ -56,7 +56,7 @@ function c100000847.contp(e)
 	return not Duel.IsPlayerAffectedByEffect(e:GetHandler():GetControler(),EFFECT_NECRO_VALLEY_IM)
 end
 function c100000847.filter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeckAsCost()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeckAsCost()
 end
 function c100000847.spcon(e,c)
 	if c==nil then return true end
@@ -69,7 +69,7 @@ function c100000847.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c100000847.gfilter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function c100000847.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000847.gfilter,tp,LOCATION_DECK,0,1,nil) end

@@ -45,7 +45,7 @@ function c100000935.damcon(e)
 	return c:IsRelateToBattle() and bit.band(bc:GetBattlePosition(),POS_FACEDOWN)~=0
 end
 function c100000935.filter(c)
-	return c:IsSetCard(0x113) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x766) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c100000935.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000935.filter,tp,LOCATION_DECK,0,1,nil) end

@@ -21,7 +21,7 @@ function c100000728.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000728.filter(c,e,tp)
-	return  c:IsType(TYPE_MONSTER) and c:IsSetCard(0x10F) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return  c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x760) or c:IsSetCard(0x761) or c:IsSetCard(0x762)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000728.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -66,7 +66,7 @@ function c100000728.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c100000728.tgfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x10F) and c:IsAbleToGrave()
+	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x760) or c:IsSetCard(0x761) or c:IsSetCard(0x762)) and c:IsAbleToGrave()
 end
 function c100000728.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000728.tgfilter,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,nil) end

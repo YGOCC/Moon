@@ -25,7 +25,7 @@ function c100000933.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000933.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x113)
+	return c:IsFaceup() and c:IsSetCard(0x766)
 end
 function c100000933.hspcon(e,tp,eg,ep,ev,re,r,rp)
 		return Duel.IsExistingMatchingCard(c100000933.cfilter,tp,LOCATION_MZONE,0,1,nil)

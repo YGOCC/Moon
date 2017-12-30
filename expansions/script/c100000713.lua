@@ -1,9 +1,9 @@
 --created abd scripted by rising phoenix
 function c100000713.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x115),7,1)
-		aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x115),8,1)
-			aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x115),10,1)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x768),7,1)
+		aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x768),8,1)
+			aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x768),10,1)
 	c:EnableReviveLimit()
 		--counter
 	local e1=Effect.CreateEffect(c)
@@ -14,6 +14,7 @@ function c100000713.initial_effect(c)
 		e1:SetCountLimit(1)
 		e1:SetCategory(CATEGORY_COUNTER)
 			e1:SetCost(c100000713.costs)
+				e1:SetTarget(c100000713.cttg)
 		e1:SetOperation(c100000713.operation)
 	c:RegisterEffect(e1)
 	local e6=Effect.CreateEffect(c)
@@ -39,12 +40,15 @@ function c100000713.initial_effect(c)
 	e11:SetOperation(c100000713.op)
 	c:RegisterEffect(e11)
 end
+function c100000713.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c100000713.filterop,tp,LOCATION_ONFIELD,0,1,nil) end
+end
 function c100000713.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,0,0x51,3,REASON_COST) end
 	Duel.RemoveCounter(tp,1,0,0x51,3,REASON_COST)
 end
 function c100000713.filter(c)
-	return  c:IsSetCard(0x115) and c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return  c:IsSetCard(0x768) and c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c100000713.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000713.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
@@ -65,7 +69,7 @@ end
 function c100000713.atkval(e,c)
 	return Duel.GetCounter(0,1,1,0x51)*50
 end
-function c100000713.filterp(c)
+function c100000713.filterop(c)
 	return c:IsFaceup() and c:IsCanAddCounter(0x51,1)
 end
 function c100000713.operation(e,tp,eg,ep,ev,re,r,rp)

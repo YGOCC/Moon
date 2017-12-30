@@ -18,7 +18,7 @@ function c100000781.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000781.filter(c)
-	return c:IsSetCard(0x119) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand() and not c:IsCode(100000781)
+	return c:IsSetCard(0x75F) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand() and not c:IsCode(100000781)
 end
 function c100000781.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end

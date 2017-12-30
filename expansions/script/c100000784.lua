@@ -52,7 +52,7 @@ function c100000784.initial_effect(c)
 	c:RegisterEffect(e21)
 end
 function c100000784.cfilter(c)
-	return c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
+	return c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
 end
 function c100000784.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000784.cfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -91,56 +91,44 @@ function c100000784.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=7000
 end
 function c100000784.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) end
-	if chk==0 then return true end
-	if Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) then
+	if chkc then return chkc:IsOnField() and c100000784.filter(chkc) and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(c100000784.filter,tp,0,LOCATION_MZONE,1,nil) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-	end
+		local g=Duel.SelectTarget(tp,c100000784.filter,tp,0,LOCATION_MZONE,1,1,nil)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c100000784.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not g then return end
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if sg:GetCount()~=1 then return end
+		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	Duel.Destroy(g,REASON_EFFECT)
 end
 function c100000784.descon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=5000
 end
 function c100000784.destg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) end
-	if chk==0 then return true end
-	if Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_MZONE,2,nil) then
+	if chkc then return chkc:IsOnField() and c100000784.filter(chkc) and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(c100000784.filter,tp,0,LOCATION_MZONE,2,nil) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,2,2,nil)
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-	end
+		local g=Duel.SelectTarget(tp,c100000784.filter,tp,0,LOCATION_MZONE,2,2,nil)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 end
 function c100000784.desop2(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not g then return end
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if sg:GetCount()~=2 then return end
+		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	Duel.Destroy(g,REASON_EFFECT)
 end
 function c100000784.descon3(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=2000
 end
 function c100000784.destg3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) end
-	if chk==0 then return true end
-	if Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_MZONE,3,nil) then
+	if chkc then return chkc:IsOnField() and c100000784.filter(chkc) and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(c100000784.filter,tp,0,LOCATION_MZONE,3,nil) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,3,3,nil)
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+		local g=Duel.SelectTarget(tp,c100000784.filter,tp,0,LOCATION_MZONE,3,3,nil)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,3,0,0)
 	end
-end
 function c100000784.desop3(e,tp,eg,ep,ev,re,r,rp)
-		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not g then return end
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if sg:GetCount()~=3 then return end
+		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	Duel.Destroy(g,REASON_EFFECT)
+end
+function c100000784.filter(c)
+	return c:IsType(TYPE_MONSTER)
 end

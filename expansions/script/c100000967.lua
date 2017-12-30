@@ -19,7 +19,7 @@ function c100000967.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x115))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x768))
 	e3:SetValue(c100000967.atkval)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
@@ -60,7 +60,7 @@ function c100000967.atkval(e,c)
 	return Duel.GetCounter(0,1,1,0x51)*100
 end
 function c100000967.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x115)
+	return c:IsFaceup() and c:IsSetCard(0x768)
 end
 function c100000967.ctop(e,tp,eg,ep,ev,re,r,rp)
 		e:GetHandler():AddCounter(0x51,1)

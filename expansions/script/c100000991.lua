@@ -6,12 +6,38 @@ function c100000991.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1)
+		e1:SetCountLimit(1,100000991+EFFECT_COUNT_CODE_OATH)
 	e1:SetCost(c100000991.reccost)
 	e1:SetTarget(c100000991.rectg)
 	e1:SetOperation(c100000991.recop)
 	c:RegisterEffect(e1)
+			--Activate
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCost(c100000991.cost)
+	e2:SetTarget(c100000991.targetb)
+	e2:SetOperation(c100000991.op)
+	c:RegisterEffect(e2)
 end
+function c100000991.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+end
+function c100000991.filter(c,e,sp)
+	return c:IsCode(100000992) and c:IsAbleToDeck() and c:IsFaceup()
+end
+function c100000991.targetb(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c100000991.filter,tp,LOCATION_REMOVED,0,1,nil) end
+	local g=Duel.GetMatchingGroup(c100000991.filter,tp,LOCATION_REMOVED,0,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
+end
+function c100000991.op(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c100000991.filter,tp,LOCATION_REMOVED,0,nil)
+	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+		end
 function c100000991.filter1(c)
 	return c:IsCode(41426869) and c:IsAbleToHand()
 end

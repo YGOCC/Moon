@@ -13,7 +13,7 @@ function c100000770.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000770.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return (e:GetHandler():IsReason(REASON_EFFECT) or e:GetHandler():IsReason(REASON_DISCARD)) and re and re:GetHandler():IsSetCard(0x10D)
+	return (e:GetHandler():IsReason(REASON_EFFECT) or e:GetHandler():IsReason(REASON_DISCARD)) and re and re:GetHandler():IsSetCard(0x759)
 end
 function c100000770.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

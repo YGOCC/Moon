@@ -25,10 +25,10 @@ aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	c:RegisterEffect(e2)
 end
 function c100000986.filter(c)
-	return c:IsSetCard(0x117)
+	return c:IsSetCard(0x765)
 end
 function c100000986.filterd(c)
-	return c:IsSetCard(0x117) and c:IsAbleToHand()
+	return c:IsSetCard(0x765) and c:IsAbleToHand()
 end
 function c100000986.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
@@ -38,6 +38,7 @@ function c100000986.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100000986.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.DiscardHand(tp,c100000986.filter,1,1,REASON_EFFECT)~=0 then
+		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
 function c100000986.targets(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

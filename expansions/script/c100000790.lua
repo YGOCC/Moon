@@ -11,13 +11,13 @@ function c100000790.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000790.cfilter(c)
-	return c:IsSetCard(0x118) and c:IsAbleToDeckAsCost() and c:IsCode(100000793)
+	return c:IsSetCard(0x754) and c:IsAbleToDeckAsCost() and c:IsCode(100000793)
 end
 function c100000790.cfilter2(c)
-	return c:IsSetCard(0x118) and c:IsAbleToDeckAsCost() and c:IsCode(100000794)
+	return c:IsSetCard(0x754) and c:IsAbleToDeckAsCost() and c:IsCode(100000794)
 end
 function c100000790.cfilter3(c)
-	return c:IsSetCard(0x118) and c:IsAbleToDeckAsCost() and c:IsCode(100000799)
+	return c:IsSetCard(0x754) and c:IsAbleToDeckAsCost() and c:IsCode(100000799)
 end
 function c100000790.spcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000790.cfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD,0,1,nil) 

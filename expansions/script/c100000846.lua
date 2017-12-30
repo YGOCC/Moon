@@ -7,7 +7,7 @@ function c100000846.initial_effect(c)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x10C))
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x75B))
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
 		--tograve
@@ -54,7 +54,7 @@ function c100000846.initial_effect(c)
 	c:RegisterEffect(e8)
 end
 function c100000846.filter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeckAsCost()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeckAsCost()
 end
 function c100000846.spcon(e,c)
 	if c==nil then return true end
@@ -67,7 +67,7 @@ function c100000846.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c100000846.gfilter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function c100000846.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000846.gfilter,tp,LOCATION_DECK,0,1,nil) end

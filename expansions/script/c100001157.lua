@@ -47,5 +47,5 @@ function c100001157.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100001157.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 end
 function c100001157.cfilter(c)
-	return c:IsFaceup() and not c:IsSetCard(0x11E)
+	return c:IsFaceup() and not c:IsSetCard(0x750)
 end

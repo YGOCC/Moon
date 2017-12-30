@@ -1,7 +1,7 @@
 --osiris
 function c100000820.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x10A),4,3)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x758),4,3)
 	c:EnableReviveLimit()
 	--destroy field
 	local e1=Effect.CreateEffect(c)

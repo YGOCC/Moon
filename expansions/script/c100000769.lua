@@ -39,7 +39,7 @@ function c100000769.remtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE)
 end
 function c100000769.filter(c)
-	return c:IsSetCard(0x10D) and c:IsAbleToDeck()
+	return c:IsSetCard(0x759) and c:IsAbleToDeck()
 end
 function c100000769.remop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATODECK)

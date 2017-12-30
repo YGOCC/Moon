@@ -56,7 +56,7 @@ function c100000810.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RegisterFlagEffect(100000810,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c100000810.filtertog(c)
-	return c:IsSetCard(0x109) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
+	return c:IsSetCard(0x767) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function c100000810.tgtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000810.filtertog,tp,LOCATION_DECK,0,1,nil) end
@@ -88,7 +88,7 @@ function c100000810.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 function c100000810.cfilter(c)
-	return c:IsFaceup() and c:IsAbleToExtraAsCost() and c:IsSetCard(0x109) and c:IsType(TYPE_SYNCHRO)
+	return c:IsFaceup() and c:IsAbleToExtraAsCost() and c:IsSetCard(0x767) and c:IsType(TYPE_SYNCHRO)
 end
 function c100000810.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000810.cfilter,tp,LOCATION_GRAVE,0,1,nil) end

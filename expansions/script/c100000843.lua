@@ -44,7 +44,7 @@ function c100000843.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c100000843.hfilter(c)
-	return c:IsSetCard(0x10C) and c:IsAbleToHand()
+	return c:IsSetCard(0x75B) and c:IsAbleToHand()
 end
 function c100000843.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_DECK and chkc:GetControler()==tp and c100000843.hfilter(chkc) end
@@ -60,7 +60,7 @@ function c100000843.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,tc)
 end
 function c100000843.gfilter(c)
-	return c:IsSetCard(0x10C) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
+	return c:IsSetCard(0x75B) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function c100000843.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000843.gfilter,tp,LOCATION_DECK,0,1,nil) end

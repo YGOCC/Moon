@@ -53,14 +53,14 @@ function c100000722.sdcon(e)
 	return not Duel.IsExistingMatchingCard(c100000722.sdfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function c100000722.ccfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end
 function c100000722.handcon(e)
 	return Duel.IsExistingMatchingCard(c100000722.filter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function c100000722.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end
 function c100000722.sdfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end

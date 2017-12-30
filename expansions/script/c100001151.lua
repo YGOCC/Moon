@@ -25,7 +25,7 @@ function c100001151.filter1(c,e)
 	return c:IsOnField() and not c:IsImmuneToEffect(e)
 end
 function c100001151.filter2(c,e,tp,m,f,chkf)
-	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x11B) and not (c:IsCode(100001122) or c:IsCode(100001123) or c:IsCode(100001124)) and (not f or f(c))
+	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x755) and not (c:IsCode(100001122) or c:IsCode(100001123) or c:IsCode(100001124)) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,true,true) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function c100001151.target(e,tp,eg,ep,ev,re,r,rp,chk)

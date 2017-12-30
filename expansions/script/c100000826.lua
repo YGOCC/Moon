@@ -11,7 +11,7 @@ function c100000826.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000826.confilter(c)
-	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x10A)and c:IsAbleToRemoveAsCost()
+	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x758)and c:IsAbleToRemoveAsCost()
 end
 function c100000826.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000826.confilter,tp,LOCATION_GRAVE,0,1,nil) end

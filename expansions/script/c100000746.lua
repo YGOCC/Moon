@@ -14,10 +14,10 @@ aux.AddEquipProcedure(c,0,c100000746.filtere)
 	c:RegisterEffect(e3)
 end
 function c100000746.filtere(c)
-	return c:IsFaceup() and c:IsSetCard(0x118) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x754) and c:IsType(TYPE_MONSTER)
 end
 function c100000746.filt(c)
-	return c:IsSetCard(0x118) and c:IsType(TYPE_EQUIP) and c:IsFaceup()
+	return c:IsSetCard(0x754) and c:IsType(TYPE_EQUIP) and c:IsFaceup()
 end
 function c100000746.value(e,c)
 	return Duel.GetMatchingGroupCount(c100000746.filt,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)*500

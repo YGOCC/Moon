@@ -32,7 +32,7 @@ c:EnableCounterPermit(0x52)
 	c:RegisterEffect(e4)
 	end
 function c100001148.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11B)
+	return c:IsFaceup() and c:IsSetCard(0x755)
 end
 function c100001148.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c100001148.cfilter,1,nil) 
@@ -42,7 +42,7 @@ function c100001148.ctop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100001148.dfilter(c,tp)
 	return c:IsFaceup() and c:IsLocation(LOCATION_ONFIELD)
-		and c:IsSetCard(0x11B) and c:IsControler(tp) and c:IsReason(REASON_BATTLE) and c:IsType(TYPE_MONSTER)
+		and c:IsSetCard(0x755) and c:IsControler(tp) and c:IsReason(REASON_BATTLE) and c:IsType(TYPE_MONSTER)
 end
 function c100001148.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x52,1,REASON_COST) and eg:IsExists(c100001148.dfilter,1,nil,tp)

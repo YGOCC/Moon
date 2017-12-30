@@ -19,7 +19,7 @@ function c100000917.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000917.target(e,c)
-	return c:IsSetCard(0x111)
+	return c:IsSetCard(0x75D)
 end
 function c100000917.targetd(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

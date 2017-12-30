@@ -1,7 +1,7 @@
  --Created and coded by Rising Phoenix
 function c100000889.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x110F),aux.NonTuner(Card.IsSetCard,0x110F),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x761),aux.NonTuner(Card.IsSetCard,0x761),1)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100000889,0))

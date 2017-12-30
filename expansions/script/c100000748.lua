@@ -12,7 +12,7 @@ function c100000748.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000748.filter(c)
-	return c:IsSetCard(0x118) and c:IsAbleToGraveAsCost() and not c:IsCode(100000748)
+	return c:IsSetCard(0x754) and c:IsAbleToGraveAsCost() and not c:IsCode(100000748)
 end
 function c100000748.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000748.filter,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,nil) end

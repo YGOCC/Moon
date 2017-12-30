@@ -64,8 +64,8 @@ function c100000719.handcon(e)
 	return Duel.IsExistingMatchingCard(c100000719.filter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function c100000719.filterd(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end
 function c100000719.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11D) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x764) and c:IsType(TYPE_MONSTER)
 end

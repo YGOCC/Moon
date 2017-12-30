@@ -20,7 +20,7 @@ c:EnableCounterPermit(0x51)
 	e11:SetRange(LOCATION_SZONE)
 	e11:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
 	e11:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
-	e11:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x115))
+	e11:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x768))
 	c:RegisterEffect(e11)
 		--draw
 	local e3=Effect.CreateEffect(c)
@@ -35,7 +35,7 @@ c:EnableCounterPermit(0x51)
 	c:RegisterEffect(e3)
 	end
 function c100000966.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x115)
+	return c:IsFaceup() and c:IsSetCard(0x768)
 end
 function c100000966.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c100000966.cfilter,1,nil)
@@ -50,6 +50,7 @@ function c100000966.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c100000966.drop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end

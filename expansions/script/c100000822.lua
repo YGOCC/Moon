@@ -14,7 +14,7 @@ function c100000822.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<Duel.GetLP(1-tp)
 end
 function c100000822.filter(c)
-	return c:IsSetCard(0x10A) and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsCode(100000822) and c:IsAbleToHand()
+	return c:IsSetCard(0x758) and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsCode(100000822) and c:IsAbleToHand()
 end
 function c100000822.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000822.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end

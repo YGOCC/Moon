@@ -52,7 +52,7 @@ function c100000777.initial_effect(c)
 	c:RegisterEffect(e21)
 end
 function c100000777.cfilter(c)
-	return c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
+	return c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
 end
 function c100000777.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000777.cfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -91,7 +91,7 @@ function c100000777.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=7000
 end
 function c100000777.filtertogr(c)
-	return c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c100000777.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if chk==0 then return Duel.IsExistingMatchingCard(c100000777.filtertogr,tp,LOCATION_DECK,0,1,nil) end
@@ -108,7 +108,7 @@ function c100000777.descon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=5000
 end
 function c100000777.filtertogr2(c)
-	return c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(100000777)
+	return c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(100000777)
 end
 function c100000777.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000777.filtertogr2,tp,LOCATION_GRAVE,0,1,nil) end
@@ -127,7 +127,7 @@ function c100000777.descon3(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=2000
 end
 function c100000777.filtertogr3(c)
-	return c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() 
+	return c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() 
 end
 function c100000777.destg3(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000777.filtertogr3,tp,LOCATION_DECK,0,1,nil) end

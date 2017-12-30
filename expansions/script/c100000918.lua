@@ -20,7 +20,7 @@ function c100000918.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000918.filter(c)
-	return c:IsSetCard(0x111) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
+	return c:IsSetCard(0x75D) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
 function c100000918.tgtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000918.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil) end

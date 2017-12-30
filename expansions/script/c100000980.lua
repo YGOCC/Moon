@@ -23,7 +23,7 @@ function c100000980.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100000980.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_HAND) and e:GetHandler():IsReason(REASON_EFFECT) and re and re:GetHandler():IsSetCard(0x117)
+	return e:GetHandler():IsPreviousLocation(LOCATION_HAND) and e:GetHandler():IsReason(REASON_EFFECT) and re and re:GetHandler():IsSetCard(0x765)
 end
 function c100000980.filterd(c)
 	return c:IsFaceup() and c:IsDestructable()
@@ -42,7 +42,7 @@ function c100000980.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000980.filter(c)
-	return c:IsSetCard(0x117)
+	return c:IsSetCard(0x765)
 end
 function c100000980.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)

@@ -17,7 +17,7 @@ function c100000787.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function c100000787.filter(c,e,tp)
-	return c:IsSetCard(0x118)  and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x754)  and c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000787.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE) and chkc:IsControler(tp) and c100000787.filter(chkc,e,tp) end

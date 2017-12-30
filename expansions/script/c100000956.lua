@@ -2,7 +2,7 @@
 function c100000956.initial_effect(c)
 c:SetUniqueOnField(1,0,100000956)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x114),aux.NonTuner(Card.IsSetCard,0x114),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x75C),aux.NonTuner(Card.IsSetCard,0x75C),1)
 	c:EnableReviveLimit()
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100000956,1))
@@ -52,7 +52,7 @@ function c100000956.conua(e)
 end
 function c100000956.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x114)
+	return not c:IsSetCard(0x75C)
 end
 function c100000956.rfilter(c,att)
 	return c:IsAbleToRemoveAsCost() and c:IsCode(100000950)

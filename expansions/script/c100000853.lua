@@ -76,7 +76,7 @@ function c100000853.initial_effect(c)
 	c:RegisterEffect(e15)
 end
 function c100000853.spslimit(e,c)
-	return not c:IsSetCard(0x10D)
+	return not c:IsSetCard(0x759)
 end
 function c100000853.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumpos,POS_FACEDOWN)~=0
@@ -97,10 +97,10 @@ function c100000853.sop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100000853.actset(e,re,tp)
 	local rc=re:GetHandler()
-	return not rc:IsSetCard(0x10D) and not rc:IsImmuneToEffect(e)
+	return not rc:IsSetCard(0x759) and not rc:IsImmuneToEffect(e)
 end
 function c100000853.filter(c,e,tp)
-	return  c:IsSetCard(0x10D) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and not c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return  c:IsSetCard(0x759) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and not c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c100000853.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

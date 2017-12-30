@@ -2,6 +2,13 @@
 function c100001164.initial_effect(c)	
 c:EnableReviveLimit()
 	--special summon
+	--spson
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_SINGLE)
+	e8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e8:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e8:SetValue(aux.FALSE)
+	c:RegisterEffect(e8)
 	local e30=Effect.CreateEffect(c)
 	e30:SetType(EFFECT_TYPE_FIELD)
 	e30:SetCode(EFFECT_SPSUMMON_PROC)
@@ -77,7 +84,7 @@ function c100001164.cfilter(c)
 	return c:IsFaceup() and c:IsCode(100001155)
 end
 function c100001164.spcfilter(c)
-	return c:IsSetCard(0x11E) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
+	return c:IsSetCard(0x750) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
 end
 function c100001164.spcon(e,c)
 	if c==nil then return true end

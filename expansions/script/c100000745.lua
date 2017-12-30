@@ -11,10 +11,10 @@ function c100000745.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000745.spfilter(c,code,lv,e,tp)
-	return c:GetLevel()==lv and c:IsSetCard(0x118) and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:GetLevel()==lv and c:IsSetCard(0x754) and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c100000745.filter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x118)  and c:IsAbleToDeck()
+	return c:IsFaceup() and c:IsSetCard(0x754)  and c:IsAbleToDeck()
 		and Duel.IsExistingMatchingCard(c100000745.spfilter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,nil,c:GetCode(),c:GetOriginalLevel(),e,tp)
 end
 function c100000745.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

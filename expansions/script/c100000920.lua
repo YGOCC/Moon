@@ -75,10 +75,10 @@ function c100000920.eqopa(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000920.shu(c)
-	return c:IsSetCard(0x111) and not c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsSetCard(0x75D) and not c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c100000920.hfilterh(c)
-	return c:IsSetCard(0x111) and c:IsAbleToHand() and not c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsCode(100000920)
+	return c:IsSetCard(0x75D) and c:IsAbleToHand() and not c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsCode(100000920)
 end
 function c100000920.thtghh(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_GRAVE and chkc:GetControler()==tp and c100000920.hfilterh(chkc) end
@@ -94,7 +94,7 @@ function c100000920.thophh(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,tc)
 end
 function c100000920.spfilterm(c)
-	return c:IsFaceup() and c:IsSetCard(0x111) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x75D) and c:IsType(TYPE_MONSTER)
 end
 function c100000920.spconm(e,c)
 	if c==nil then return true end
@@ -106,7 +106,7 @@ function c100000920.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c100000920.cfilter,1,nil,tp)
 end
 function c100000920.cfilter(c,tp)
-	return c:IsSetCard(0x111) and c:IsFaceup()
+	return c:IsSetCard(0x75D) and c:IsFaceup()
 end
 function c100000920.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsRelateToEffect(e) and e:GetHandler():IsFaceup() end

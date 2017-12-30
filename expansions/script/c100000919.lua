@@ -48,7 +48,7 @@ function c100000919.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c100000919.cfilter,1,nil,tp)
 end
 function c100000919.cfilter(c,tp)
-	return c:IsSetCard(0x111) and c:IsFaceup()
+	return c:IsSetCard(0x75D) and c:IsFaceup()
 end
 function c100000919.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

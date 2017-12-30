@@ -53,7 +53,7 @@ function c100000782.initial_effect(c)
 	c:RegisterEffect(e21)
 end
 function c100000782.spfilter(c)
-	return c:IsSetCard(0x119) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and not c:IsCode(100000782)
+	return c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and not c:IsCode(100000782)
 end
 function c100000782.spcon(e,c)
 	if c==nil then return true end

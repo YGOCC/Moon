@@ -10,7 +10,7 @@ function c100000771.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000771.filter(c)
-	return c:IsType(TYPE_FIELD) and c:IsSetCard(0x10D) and c:IsAbleToHand()
+	return c:IsType(TYPE_FIELD) and c:IsSetCard(0x759) and c:IsAbleToHand()
 end
 function c100000771.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000771.filter,tp,LOCATION_DECK,0,1,nil) end

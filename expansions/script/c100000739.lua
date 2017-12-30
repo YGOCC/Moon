@@ -2,7 +2,7 @@ function c100000739.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	c:EnableUnsummonable()
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x11A),2,true)
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x75A),2,true)
 			--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -39,10 +39,10 @@ function c100000739.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c100000739.filter(c,e,tp)
-	return c:IsSetCard(0x11A) and c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x75A) and c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000739.filt(c)
-	return c:IsSetCard(0x11A) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
+	return c:IsSetCard(0x75A) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
 end
 function c100000739.val(e,c)
 	return Duel.GetMatchingGroupCount(c100000739.filt,c:GetControler(),LOCATION_GRAVE,0,nil)*100
@@ -51,7 +51,7 @@ function c100000739.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c100000739.spfilter(c)
-	return c:IsSetCard(0x11A) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x75A) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
 end
 function c100000739.sprcon(e,c)
 	if c==nil then return true end 

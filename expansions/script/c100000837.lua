@@ -22,9 +22,36 @@ function c100000837.initial_effect(c)
 	e3:SetTarget(c100000837.rettg)
 	e3:SetOperation(c100000837.retop)
 	c:RegisterEffect(e3)
+		--act limit
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_CHAINING)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetOperation(c100000837.chainop)
+	c:RegisterEffect(e4)
+		--act limit
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_CHAINING)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetOperation(c100000837.chainop2)
+	c:RegisterEffect(e5)
+end
+function c100000837.chainlm(e,rp,tp)
+	return tp==rp
+end
+function c100000837.chainop2(e,tp,eg,ep,ev,re,r,rp)
+	if re:GetHandler():IsSetCard(0x752) then
+		Duel.SetChainLimit(c100000837.chainlm)
+	end
+end
+function c100000837.chainop(e,tp,eg,ep,ev,re,r,rp)
+	if re:GetHandler():IsSetCard(0x751) then
+		Duel.SetChainLimit(c100000837.chainlm)
+	end
 end
 function c100000837.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10B)
+	return c:IsFaceup() and (c:IsSetCard(0x751) or c:IsSetCard(0x752))
 end
 function c100000837.activate(e,tp,eg,ep,ev,re,r,rp)
 	local opt=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
@@ -33,7 +60,7 @@ function c100000837.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_CANNOT_DISABLE_SUMMON)
 		e1:SetProperty(EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_SET_AVAILABLE)
-		e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x10B))
+		e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x751,0x752))
 		Duel.RegisterEffect(e1,tp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_CANNOT_DISABLE_SPSUMMON)

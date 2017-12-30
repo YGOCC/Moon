@@ -158,32 +158,32 @@ function c100000857.initial_effect(c)
 	c:RegisterEffect(e24)
 end
 function c100000857.distgm(e,c)
-	return c:IsType(TYPE_MONSTER) and not c:IsSetCard(0x10D) and not c:IsImmuneToEffect(e)
+	return c:IsType(TYPE_MONSTER) and not c:IsSetCard(0x759) and not c:IsImmuneToEffect(e)
 end
 function c100000857.disopm(e,tp,eg,ep,ev,re,r,rp)
 	local tl=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	local rc=re:GetHandler()
-	if tl==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER) and not rc:IsSetCard(0x10D) and not rc:IsImmuneToEffect(e) then
+	if tl==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER) and not rc:IsSetCard(0x759) and not rc:IsImmuneToEffect(e) then
 		Duel.NegateEffect(ev)
 	end
 end
 function c100000857.distgz(e,c)
-	return c:IsType(TYPE_SPELL) and not c:IsSetCard(0x10D) and not c:IsImmuneToEffect(e)
+	return c:IsType(TYPE_SPELL) and not c:IsSetCard(0x759) and not c:IsImmuneToEffect(e)
 end
 function c100000857.disopz(e,tp,eg,ep,ev,re,r,rp)
 	local tl=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	local rc=re:GetHandler()
-	if tl==LOCATION_SZONE and re:IsActiveType(TYPE_SPELL) and not rc:IsSetCard(0x10D) and not rc:IsImmuneToEffect(e) then
+	if tl==LOCATION_SZONE and re:IsActiveType(TYPE_SPELL) and not rc:IsSetCard(0x759) and not rc:IsImmuneToEffect(e) then
 		Duel.NegateEffect(ev)
 	end
 end
 function c100000857.distgf(e,c)
-	return c:IsType(TYPE_TRAP) and not c:IsSetCard(0x10D) and not c:IsImmuneToEffect(e)
+	return c:IsType(TYPE_TRAP) and not c:IsSetCard(0x759) and not c:IsImmuneToEffect(e)
 end
 function c100000857.disopf(e,tp,eg,ep,ev,re,r,rp)
 	local tl=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	local rc=re:GetHandler()
-	if tl==LOCATION_SZONE and re:IsActiveType(TYPE_TRAP) and not rc:IsSetCard(0x10D) and not rc:IsImmuneToEffect(e) then
+	if tl==LOCATION_SZONE and re:IsActiveType(TYPE_TRAP) and not rc:IsSetCard(0x759) and not rc:IsImmuneToEffect(e) then
 		Duel.NegateEffect(ev)
 	end
 end
@@ -204,7 +204,7 @@ function c100000857.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000857.spslimit(e,c)
-	return not c:IsSetCard(0x10D)
+	return not c:IsSetCard(0x759)
 end
 function c100000857.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumpos,POS_FACEDOWN)~=0
@@ -233,5 +233,5 @@ function c100000857.sop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100000857.actset(e,re,tp)
 	local rc=re:GetHandler()
-	return not rc:IsSetCard(0x10D) and not rc:IsImmuneToEffect(e)
+	return not rc:IsSetCard(0x759) and not rc:IsImmuneToEffect(e)
 end

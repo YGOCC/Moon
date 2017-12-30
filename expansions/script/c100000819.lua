@@ -102,7 +102,7 @@ function c100000819.damval(e,re,val,r,rp,rc)
 end
 function c100000819.synlimit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x10A)
+	return not c:IsSetCard(0x758)
 end
 function c100000819.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
@@ -118,7 +118,7 @@ function c100000819.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
 function c100000819.filter(c)
-	return c:IsSetCard(0x10A) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x758) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c100000819.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000819.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -132,7 +132,7 @@ function c100000819.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 end
 function c100000819.filtersg(c)
-	return c:IsSetCard(0x10A) and c:IsType(TYPE_MONSTER) and not c:IsCode(100000819) and not c:IsCode(100000812) and c:GetLevel()==4 and c:IsAbleToHand()
+	return c:IsSetCard(0x758) and c:IsType(TYPE_MONSTER) and not c:IsCode(100000819) and not c:IsCode(100000812) and c:GetLevel()==4 and c:IsAbleToHand()
 end
 function c100000819.stg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000819.filtersg,tp,LOCATION_GRAVE,0,1,nil) end

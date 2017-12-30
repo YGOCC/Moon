@@ -97,10 +97,10 @@ function c100001155.initial_effect(c)
 end
 function c100001155.actset(e,re,tp)
 	local rc=re:GetHandler()
-	return not rc:IsSetCard(0x11E) and not rc:IsImmuneToEffect(e)
+	return not rc:IsSetCard(0x750) and not rc:IsImmuneToEffect(e)
 end
 function c100001155.spslimit(e,c)
-	return not c:IsSetCard(0x11E)
+	return not c:IsSetCard(0x750)
 end
 function c100001155.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumpos,POS_FACEDOWN)~=0
