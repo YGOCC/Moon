@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主一
+--created & coded by Lyris, art by hiliuyun of DeviantArt
+--剣主一リク
 function c240100189.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)

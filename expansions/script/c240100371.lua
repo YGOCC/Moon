@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主のエアリアル・アドバンテージ
+--created & coded by Lyris, art from "Celestial Rage"
+--剣主のアドバンテージ
 function c240100371.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DRAW)

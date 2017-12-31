@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from "Solemn Strike"
 --剣主御注意
 function c240100223.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

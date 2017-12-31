@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主翼六
+--created & coded by Lyris, art by kreegan of DeviantArt
+--剣主翼シ六ミ
 function c240100348.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)

@@ -1,17 +1,13 @@
---Winged Blademaster Iona
+--created & coded by Lyris, art by Sinad Jaruartjanapat
+--剣主翼女王十
 function c240100570.initial_effect(c)
 	c:EnableReviveLimit()
-	--2 "Blademaster" monsters with the same Level
-	--xyz summon
 	aux.AddXyzProcedureLevelFree(c,c240100570.mfilter,c240100570.xyzcheck,2,2)
-	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xbb2),2,2,c240100570.xyzcheck)
-	--Inflicts piercing battle damage if it attacks a Defense Position monster.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e0)
-	--Gains 200 ATK for "Blademaster" monster you control and 100 ATK for each monster it points to.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -19,7 +15,6 @@ function c240100570.initial_effect(c)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(c240100570.val)
 	c:RegisterEffect(e1)
-	--Once per turn while this card is on the field with material attached to it, if a "Blademaster" monster this card points to activates its effect, you can Special Summon 1 "Blademaster" monster from your GY to either field in a zone this card does not point to in face-up Defense Position immediately after that effect resolves.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_CHAIN_SOLVED)
@@ -32,7 +27,6 @@ function c240100570.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetOperation(function(e) local c=e:GetHandler() if c:GetFlagEffect(240100570)==0 then c:RegisterFlagEffect(240100570,RESET_PHASE+PHASE_END+RESET_EVENT+0x1fe0000,0,1) end end)
 	c:RegisterEffect(e3)
-	--Attach as many of this card's Link Materials as possible to this card as Xyz Materials immediately after it is Link Summoned.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -76,11 +70,11 @@ function c240100570.op(e,tp,eg,ep,ev,re,r,rp)
 		local b2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,1-tp)
 		local op=0
 		if b1 and b2 then
-			op=Duel.SelectOption(tp,aux.Stringid(240100570,0),aux.Stringid(240100570,1))
+			op=Duel.SelectOption(tp,aux.Stringid(122518919,0),aux.Stringid(122518919,1))
 		elseif b1 then
-			op=Duel.SelectOption(tp,aux.Stringid(240100570,0))
+			op=Duel.SelectOption(tp,aux.Stringid(122518919,0))
 		elseif b2 then
-			op=Duel.SelectOption(tp,aux.Stringid(240100570,1))+1
+			op=Duel.SelectOption(tp,aux.Stringid(122518919,1))+1
 		else return end
 		if op==0 then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE,zone)

@@ -1,11 +1,10 @@
---Swordsmasterror Tiberius
+--created & coded by Lyris, art by Animekidky of DeviantArt
+--復剣主ティベリウス
 function c240100192.initial_effect(c)
-	--If this card attacks a Defense Position monster, inflict piercing battle damage.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e0)
-	--Gains 100 ATK for each "Swordsmaster" monster in the GY.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -13,7 +12,6 @@ function c240100192.initial_effect(c)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(c240100192.val)
 	c:RegisterEffect(e1)
-	--If this card is sent to the GY: Add 1 "Swordsmaster" monster from your Deck to your hand. You must have another "Swordsmaster" monster in your GY in order to activate and to resolve this effect.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_TO_GRAVE)

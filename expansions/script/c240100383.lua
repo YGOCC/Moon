@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主フライト
+--created & coded by Lyris, art from "Raidraptor - Call"
+--剣主翼翔
 function c240100383.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
@@ -18,7 +18,7 @@ function c240100383.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
-	e2:SetDescription(aux.Stringid(240100383,1))
+	e2:SetDescription(1104)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_CHAINING)
@@ -50,7 +50,7 @@ function c240100383.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tg=Duel.GetChainInfo(ct-1,CHAININFO_TARGET_CARDS)
 	if not tg or not tg:IsExists(c240100383.cfilter,1,nil) then return end
 	if not Duel.IsChainNegatable(ct-1) then return end
-	if Duel.SelectYesNo(tp,aux.Stringid(240100383,0)) then
+	if Duel.SelectEffectYesNo(tp,e:GetHandler(),94) then
 		e:SetLabel(1)
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_MZONE)

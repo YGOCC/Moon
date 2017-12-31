@@ -1,26 +1,19 @@
---T.G. Malice Witch
+--created & coded by Lyris, art from Yu-Gi-Oh! 5D's Episode 74
+--TG マリス・ウィッチ
 function c240100001.initial_effect(c)
 	c:EnableReviveLimit()
-	--2 monsters with different Types
-	local e0=Effect.CreateEffect(c)
-	e0:SetDescription(aux.Stringid(240100001,1))
-	e0:SetType(EFFECT_TYPE_FIELD)
-	e0:SetCode(EFFECT_SPSUMMON_PROC)
-	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e0:SetRange(LOCATION_EXTRA)
-	e0:SetCondition(c240100001.linkcon)
-	e0:SetOperation(c240100001.linkop)
-	e0:SetValue(SUMMON_TYPE_LINK)
-	c:RegisterEffect(e0)
-	--You can also Link Summon this card using 1 "T.G. Wonder Magician" you control as the Link Material. 
-	local e3=e0:Clone()
-	e3:SetDescription(aux.Stringid(240100001,2))
+	aux.AddLinkProcedure(c,nil,2,2,c240100001.lcheck)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_SPSUMMON_PROC)
+	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e3:SetRange(LOCATION_EXTRA)
+	e3:SetDescription(aux.Stringid(122518919,3))
 	e3:SetCondition(c240100001.alcon)
 	e3:SetOperation(c240100001.alop)
+	e3:SetValue(SUMMON_TYPE_LINK)
 	c:RegisterEffect(e3)
-	--Once per turn: You can target 1 other "T.G." monster you control and 1 Spell/Trap your opponent controls; destroy them.
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(240100001,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_MZONE)
@@ -29,7 +22,6 @@ function c240100001.initial_effect(c)
 	e1:SetTarget(c240100001.destg)
 	e1:SetOperation(c240100001.desop)
 	c:RegisterEffect(e1)
-	--If this card is destroyed: You can Special Summon 1 "T.G. Wonder Magican" from your Extra Deck.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
@@ -39,25 +31,8 @@ function c240100001.initial_effect(c)
 	e2:SetOperation(c240100001.spop)
 	c:RegisterEffect(e2)
 end
-function c240100001.linkfilter1(c,lc,tp)
-	return c:IsFaceup() and c:IsCanBeLinkMaterial(lc) and Duel.IsExistingMatchingCard(c240100001.linkfilter2,tp,LOCATION_MZONE,0,1,c,lc,c,tp)
-end
-function c240100001.linkfilter2(c,lc,mc,tp)
-	local mg=Group.FromCards(c,mc)
-	return c:IsFaceup() and c:IsCanBeLinkMaterial(lc) and not c:IsRace(mc:GetRace()) and Duel.GetLocationCountFromEx(tp,tp,mg,lc)>0
-end
-function c240100001.linkcon(e,c)
-	if c==nil then return true end
-	if (c:IsType(TYPE_PENDULUM) or (not Card.IsTypeCustom or c:IsTypeCustom("Pandemonium") or c:IsTypeCustom("Relay"))) and c:IsFaceup() then return false end
-	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(c240100001.linkfilter1,tp,LOCATION_MZONE,0,1,nil,c,tp)
-end
-function c240100001.linkop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g1=Duel.SelectMatchingCard(tp,c240100001.linkfilter1,tp,LOCATION_MZONE,0,1,1,nil,c,tp)
-	local g2=Duel.SelectMatchingCard(tp,c240100001.linkfilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst(),c,g1:GetFirst(),tp)
-	g1:Merge(g2)
-	c:SetMaterial(g1)
-	Duel.SendtoGrave(g1,REASON_MATERIAL+REASON_LINK)
+function c240100001.lcheck(g)
+	return g:GetClassCount(Card.GetRace)==g:GetCount()
 end
 function c240100001.linkfilter(c,lc)
 	return c:IsFaceup() and c:IsCode(98558751) and c:IsCanBeLinkMaterial(lc) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c),lc)>0

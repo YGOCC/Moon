@@ -1,12 +1,11 @@
---Soul Charge
+--created & coded by Lyris, art from Cardfight!! Vanguard's Soul Charge
+--ソウル・チャージ
 function c240100000.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--You can only control 1 "Soul Charge".
 	c:SetUniqueOnField(1,0,240100000)
-	--If an Xyz Monster you control activates its effect: Attach the top card of your Deck to that card as a material. If an Xyz Monster your opponent controls activates its effect: Attach the top card of their Deck to that card as a material.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetRange(LOCATION_SZONE)
@@ -25,6 +24,11 @@ function c240100000.initial_effect(c)
 	e4:SetCode(EFFECT_SELF_DESTROY)
 	e4:SetCondition(c240100000.sdcon)
 	c:RegisterEffect(e4)
+	if not c240100000.global_check then
+		c240100000.global_check=true
+		c240100000[0]=aux.Stringid(122518919,0)
+		c240100000[1]=aux.Stringid(122518919,1)
+	end
 end
 function c240100000.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=re:GetHandler()
@@ -32,6 +36,7 @@ function c240100000.checkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c240100000.attg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsRelateToEffect(e) end
+	Duel.Hint(HINT_OPSELECTED,0,c240100000[rp])
 	local tc=Group.FromCards(re:GetHandler())
 	Duel.HintSelection(tc)
 	Duel.SetTargetCard(tc)
@@ -45,7 +50,6 @@ function c240100000.atop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	Duel.DisableShuffleCheck()
 	Duel.Overlay(tc,g)
-	--Destroy this card if both of the following effects (above) are activated in the same turn.
 	local ap=0x0+p+0x1
 	local ct=c:GetFlagEffectLabel(240100000)
 	if not ct then

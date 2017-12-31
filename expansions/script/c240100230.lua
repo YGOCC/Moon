@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://i.ytimg.com/vi/2tvp5emvTzc/0.jpg
 --剣主トレーニング
 function c240100230.initial_effect(c)
 	c:SetUniqueOnField(1,0,240100230)
@@ -21,8 +21,8 @@ function c240100230.filter(c)
 end
 function c240100230.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(c240100230.filter,tp,LOCATION_GRAVE,0,nil)
-	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(240100230,0)) then
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c240100230.filter),tp,LOCATION_GRAVE,0,nil)
+	if g:GetCount()>0 and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(122518919,7)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)

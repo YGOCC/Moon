@@ -1,22 +1,20 @@
---T.G. V-LAN Hyperion
+--created & coded by Lyris, art from Just Dance 2017's Titanium by David Guetta ft. Sia
+--TG V－LAN・ハイペリオン
 function c240100002.initial_effect(c)
 	c:EnableReviveLimit()
-	--2+ monsters
 	aux.AddLinkProcedure(c,nil,2)
-	--You can also Link Summon this card using 1 "T.G." Synchro Monster as the Link Material.
 	local e0=Effect.CreateEffect(c)
-	e0:SetDescription(aux.Stringid(240100002,1))
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetCode(EFFECT_SPSUMMON_PROC)
 	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 	e0:SetRange(LOCATION_EXTRA)
+	e0:SetDescription(aux.Stringid(122518919,3))
 	e0:SetCondition(c240100002.linkcon)
 	e0:SetOperation(c240100002.linkop)
 	e0:SetValue(SUMMON_TYPE_LINK)
 	c:RegisterEffect(e0)
-	--If a monster(s) with a monster card type(s) (Fusion, Synchro, Xyz, Pendulum, or Link) of a monster this card points to is Special Summoned: Draw 1 card. This card must be face-up on the field to activate and to resolve this effect.
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(240100002,0))
+	e1:SetDescription(1108)
 	e1:SetCategory(CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetRange(LOCATION_MZONE)
@@ -25,11 +23,9 @@ function c240100002.initial_effect(c)
 	e1:SetTarget(c240100002.drtg)
 	e1:SetOperation(c240100002.drop)
 	c:RegisterEffect(e1)
-	--If this card is destroyed: You can target 1 other "T.G." monster in your GY; Special Summon it.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
-	e2:SetCountLimit(1,240100002)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetTarget(c240100002.sptg)

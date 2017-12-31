@@ -1,14 +1,12 @@
---CXyz Swordsmasterror Genghis
+--created & coded by Lyris, art from Assassin's Creed: Memories' Genghis Khan
+--CXyz 復剣主王テムジン
 function c240100257.initial_effect(c)
 	c:EnableReviveLimit()
-	--3 Level 5 monsters
 	aux.AddXyzProcedure(c,nil,5,3)
-	--If this card attacks a Defense Position monster, inflict piercing battle damage.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e0)
-	--Gains 200 ATK for each material attached to it and 100 ATK for each "Swordsmaster" monster in the GY.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -16,7 +14,6 @@ function c240100257.initial_effect(c)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(c240100257.val)
 	c:RegisterEffect(e1)
-	--If this card is sent to the GY: You can target up to 2 "Swordsmaster" Xyz Monsters in your GY, except "CXyz Swordsmasterror Genghis"; Special Summon those targets, then you can attach 1 "Swordsmaster" monster from your GY to each target as a material, except "CXyz Swordsmasterror Genghis".
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_TO_GRAVE)
@@ -25,7 +22,6 @@ function c240100257.initial_effect(c)
 	e3:SetTarget(c240100257.postg)
 	e3:SetOperation(c240100257.posop)
 	c:RegisterEffect(e3)
-	--Gains this effect, while it has a "Swordsmaster" monster as a material. Once per turn, if a "Swordmaster" monster is sent to the GY while you control this face-up card: You can detach 1 material from this card, then target 1 "Swordmaster" monster in your GY, except "CXyz Swordmasterror Genghis"; Special Summon that target.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_TO_GRAVE)
@@ -76,7 +72,7 @@ function c240100257.posop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetOperatedGroup()
 	local mg=Duel.GetMatchingGroup(c240100257.afilter,tp,LOCATION_GRAVE,0,nil)
 	local ec=nil
-	if mg:GetCount()>=sg:GetCount() and Duel.SelectYesNo(tp,aux.Stringid(240100257,0)) then
+	if mg:GetCount()>=sg:GetCount() and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(122518919,7)) then
 		Duel.BreakEffect()
 		for c in aux.Next(dg) do
 			Duel.Overlay(c,mg:Select(tp,1,1,ec))

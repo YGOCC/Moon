@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主翼九
+--created & coded by Lyris, art by Akira-san on MiniTokyo.net
+--剣主翼九ナコ
 function c240100350.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xbb2),4,2)
@@ -26,7 +26,6 @@ function c240100350.initial_effect(c)
 	e2:SetTarget(c240100350.distg)
 	e2:SetOperation(c240100350.disop)
 	c:RegisterEffect(e2)
-	--If this card is in your GY, except the turn this card was sent to the GY: You can banish this card, then target 1 "Swordsmaster" monster in your GY; Special Summon it.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)

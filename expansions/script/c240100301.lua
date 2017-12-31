@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from "Raidraptor" cards
 --剣主のオース
 function c240100301.initial_effect(c)
 	local e2=Effect.CreateEffect(c)

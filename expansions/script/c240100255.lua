@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主五
+--created & coded by Lyris, art from Swordsman Online
+--剣主ツ五シ
 function c240100255.initial_effect(c)
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xbb2),4,2)
 	local e0=Effect.CreateEffect(c)
@@ -30,7 +30,6 @@ function c240100255.initial_effect(c)
 	e3:SetTarget(c240100255.tg)
 	e3:SetOperation(c240100255.op)
 	c:RegisterEffect(e3)
-	--If this card is in your GY, except the turn this card was sent to the GY: You can banish this card, then target 1 "Swordsmaster" monster in your GY; Special Summon it.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)

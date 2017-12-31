@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from Three Kingdoms
 --剣主アレ四ャンド王
 function c240100214.initial_effect(c)
 c:EnableReviveLimit()
@@ -24,7 +24,6 @@ c:EnableReviveLimit()
 	e2:SetTarget(c240100214.settg)
 	e2:SetOperation(c240100214.setop)
 	c:RegisterEffect(e2)
-	--If this card is in your GY, except the turn this card was sent to the GY: You can banish this card, then target 1 "Swordsmaster" monster in your GY; Special Summon it.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)

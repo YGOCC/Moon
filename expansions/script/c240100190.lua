@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主二
+--created & coded by Lyris, art by ryanorosco of DeviantArt
+--剣主二サン
 function c240100190.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)

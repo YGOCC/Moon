@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主翼レイ八タン
+--created & coded by Lyris, art from Magic the Gathering's "Serra Angel"
+--剣主翼レイ八
 function c240100364.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)

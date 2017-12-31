@@ -1,5 +1,5 @@
---created & coded by Lyris
---剣主零
+--created & coded by Lyris, art from Metal Gear Rising: Revengance's Raiden
+--剣主零マン
 function c240100188.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)

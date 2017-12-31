@@ -1,6 +1,6 @@
---Rank-Up-Magic - The Cursed Swordsmaster
+--created & coded by Lyris, art from Naruto Episode 33
+--RUM－呪わしい剣主
 function c240100258.initial_effect(c)
-	--Target 1 LIGHT Warrior-Type Xyz Monster you control; Special Summon from your Extra Deck, 1 DARK Warrior-Type monster that is 1 Rank higher than that target by using that target as the material. (This Special Summon is treated as an Xyz Summon. Transfer its materials to this card.)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -9,7 +9,6 @@ function c240100258.initial_effect(c)
 	e1:SetTarget(c240100258.target)
 	e1:SetOperation(c240100258.activate)
 	c:RegisterEffect(e1)
-	--(Quick Effect): You can banish this card from your GY, then target 1 DARK Warrior-Type Xyz Monster you control; detach 1 material from a monster your opponent controls and attach it to that monster you control as a material.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -70,7 +69,7 @@ function c240100258.matop(e,tp,eg,ep,ev,re,r,rp)
 	local sc=Duel.GetFirstTarget()
 	if not sc:IsRelateToEffect(e) or sc:IsControler(1-tp) then return end
 	local g1=Duel.GetOverlayGroup(tp,0,1)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(240100258,0))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(122518919,8))
 	local mg2=g1:Select(tp,1,1,nil)
 	local oc=mg2:GetFirst():GetOverlayTarget()
 	Duel.Overlay(sc,mg2)
