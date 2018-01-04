@@ -25,7 +25,7 @@ function c240100249.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<=1
 end
 function c240100249.spfilter(c,e,tp)
-	return c:IsSetCard(0x785e) and not c:IsCode(240100249) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x285b) and not c:IsCode(240100249) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c240100249.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

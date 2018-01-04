@@ -20,7 +20,7 @@ function c240100183.initial_effect(c)
 	c:RegisterEffect(sl)
 end
 function c240100183.filter(c,e,tp)
-	return c:IsSetCard(0x785e) and c:GetCode()~=240100183 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x285b) and c:GetCode()~=240100183 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c240100183.con1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

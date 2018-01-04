@@ -56,7 +56,7 @@ function c240100185.tfop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100185.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and c:IsAbleToGraveAsCost()
 end
 function c240100185.ntcon(e,c,minc)
 	if c==nil then return true end
@@ -96,10 +96,10 @@ function c240100185.sumcost(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e2)
 end
 function c240100185.thfilter(c)
-	return c:IsSetCard(0x785e) and c:IsAbleToHand()
+	return c:IsSetCard(0x285b) and c:IsAbleToHand()
 end
 function c240100185.trfilter(c)
-	return c:IsSetCard(0x785e) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+	return c:IsSetCard(0x285b) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function c240100185.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -120,6 +120,7 @@ function c240100185.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	end
+end
 function c240100185.fdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if e:GetLabel()==0 then

@@ -208,7 +208,7 @@ end
 Duel.ChangePosition=function(cc, au, ad, du, dd)
 	local cc,au,ad,du,dd=cc,au,ad,du,dd
 	local exg,eau,ead,edu,edd=nil,au,ad,du,dd
-	if type(cc)=='group' then
+	if cc:GetFirst() then
 		local tg=cc:Filter(function(c) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 end,nil)
 		if tg:GetCount()>0 then
 			exg=cc:Clone()
@@ -245,7 +245,7 @@ end
 --Evolutes
 function Card.GetStage(c)
 	if not Auxiliary.Evolutes[c] then return 0 end
-	local te=c:GetCardEffect(EFFECT_STAGE)
+	local te=c:IsHasEffect(EFFECT_STAGE)
 	if type(te:GetValue())=='function' then
 		return te:GetValue()(te,c)
 	else
@@ -257,7 +257,7 @@ function Card.IsStage(c,stage)
 end
 function Card.IsCanBeEvoluteMaterial(c,ec)
 	if c:GetLevel()<=0 and c:GetRank()<=0 and not c:IsStatus(STATUS_NO_LEVEL) then return false end
-	local tef={c:GetCardEffect(EFFECT_CANNOT_BE_EVOLUTE_MATERIAL)}
+	local tef={c:IsHasEffect(EFFECT_CANNOT_BE_EVOLUTE_MATERIAL)}
 	for _,te in ipairs(tef) do
 		if te:GetValue()(te,ec) then return false end
 	end
@@ -629,7 +629,7 @@ end
 --Polarities
 function Card.GetStability(c)
 	if not c:IsHasEffect(EFFECT_STABLE) then return 0 end
-	local te=c:GetCardEffect(EFFECT_STABLE)
+	local te=c:IsHasEffect(EFFECT_STABLE)
 	if type(te:GetValue())=='function' then
 		return te:GetValue()(te,c)
 	else
@@ -641,7 +641,7 @@ function Card.IsStability(c,stability)
 end
 function Card.IsCanBePolarityMaterial(c,ec)
 	if c:GetLevel()<=0 and not c:IsStatus(STATUS_NO_LEVEL) then return false end
-	local tef={c:GetCardEffect(EFFECT_CANNOT_BE_POLARITY_MATERIAL)}
+	local tef={c:IsHasEffect(EFFECT_CANNOT_BE_POLARITY_MATERIAL)}
 	for _,te in ipairs(tef) do
 		if te:GetValue()(te,ec) then return false end
 	end
@@ -819,12 +819,13 @@ function Auxiliary.AddSpatialProc(c,sptcheck,djn,adiff,ddiff,...)
 	local ge4=Effect.CreateEffect(c)
 	ge4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	ge4:SetCode(EFFECT_SEND_REPLACE)
+	ge4:SetRange(0xdf)
 	ge4:SetTarget(Auxiliary.SpatialToGraveReplace)
 	c:RegisterEffect(ge4)
 end
 function Auxiliary.SpatialToGraveReplace(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return not c:IsLocation(LOCATION_REMOVED)==0 and c:GetDestination()==LOCATION_GRAVE end
+	if chk==0 then return c:GetDestination()==LOCATION_GRAVE end
 	Duel.Remove(c,POS_FACEUP,r)
 	return true
 end

@@ -14,6 +14,11 @@ function c240100181.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	c:RegisterEffect(e2)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e0:SetValue(c240100181.indes)
+	c:RegisterEffect(e0)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_REMOVE)
@@ -46,13 +51,17 @@ function c240100181.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1ff0000)
 		e1:SetValue(8)
 		c:RegisterEffect(e1)
+		Duel.SpecialSummonComplete()
 	elseif Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 		Duel.SendtoGrave(c,REASON_RULE)
 	end
 end
+function c240100181.indes(e,c)
+	return Card.IsLevel and not c:IsLevel(e:GetHandler():GetLevel()) or c:GetLevel()~=e:GetHandler():GetLevel()
+end
 function c240100181.filter(c)
-	return c:IsSetCard(0x785e) and (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsAbleToHand()
+	return c:IsSetCard(0x285b) and (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsAbleToHand()
 end
 function c240100181.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

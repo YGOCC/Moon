@@ -32,7 +32,7 @@ function c240100294.initial_effect(c)
 	c:RegisterEffect(ae2)
 end
 function c240100294.cfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b)
 end
 function c240100294.acop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -60,7 +60,7 @@ function c240100294.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveCounter(tp,0x1088,2,REASON_COST)
 end
 function c240100294.filter(c,e,tp)
-	return c:IsSetCard(0x785e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x285b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c240100294.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil)>0

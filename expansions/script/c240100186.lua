@@ -1,6 +1,6 @@
 --created by LionHeartKIng of Wikia, coded by Lyris
 --S・VINEのネクロマスター
-,function c240100186.initial_effect(c)
+function c240100186.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -21,7 +21,7 @@
 	c:RegisterEffect(e2)
 end
 function c240100186.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e) and not c:IsCode(240100186) and c:IsAbleToGrave()
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and not c:IsCode(240100186) and c:IsAbleToGrave()
 end
 function c240100186.sptg(e,c)
 	if c==nil then return true end
@@ -35,7 +35,7 @@ function c240100186.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 function c240100186.filter(c,e,tp)
-	return c:IsSetCard(0x785e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=240100186
+	return c:IsSetCard(0x285b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=240100186
 end
 function c240100186.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

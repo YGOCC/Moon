@@ -20,7 +20,7 @@ function c240100182.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c240100182.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b)
 end
 function c240100182.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1 and Duel.IsExistingMatchingCard(c240100182.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler())
@@ -30,7 +30,7 @@ function c240100182.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,3,1-tp,LOCATION_DECK)
 end
 function c240100182.filter(c)
-	return c:IsLocation(LOCATION_REMOVED) and c:IsSetCard(0x785a) and c:IsType(TYPE_MONSTER)
+	return c:IsLocation(LOCATION_REMOVED) and c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER)
 end
 function c240100182.op(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,3)
