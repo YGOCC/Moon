@@ -93,18 +93,5 @@ function c249000058.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(ac)
 		c:RegisterEffect(e1)
 		c:CopyEffect(ac,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-		e2:SetCondition(c249000058.damcon)
-		e2:SetOperation(c249000058.damop)
-		c:RegisterEffect(e2)
-		c:CopyEffect(ac,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
 	end
-end
-function c249000058.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp
-end
-function c249000058.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(ep,ev/2)
 end

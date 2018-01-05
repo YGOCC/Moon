@@ -5,7 +5,7 @@ function c249000357.initial_effect(c)
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(c249000357.matfilter),4,3,c249000357.ovfilter,aux.Stringid(249000357,1))
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetDescription(aux.Stringid(249000357,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
@@ -14,11 +14,11 @@ function c249000357.initial_effect(c)
 	e1:SetOperation(c249000357.operation)
 	c:RegisterEffect(e1)
 	--summon success
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetOperation(c249000357.sumsuc)
-	c:RegisterEffect(e2)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetOperation(c249000357.sumsuc)
+	c:RegisterEffect(e1)
 end
 function c249000357.matfilter(c)
 	return c:IsRace(RACE_WARRIOR) and c:IsAttribute(ATTRIBUTE_LIGHT)
@@ -30,7 +30,7 @@ function c249000357.filter1(c)
 	return (c:IsSetCard(0x48) or c:IsSetCard(0x107F)) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
 end
 function c249000357.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOATION_GRAVE) and c249000357.filter1(chkc) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOATION_GRAVE) and c249000091.filter1(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c249000357.filter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
@@ -53,13 +53,13 @@ function c249000357.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.MoveSequence(c,seq)
 	local rk=tc:GetRank()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local ac=Duel.AnnounceCardFilter(tp,0x48,OPCODE_ISSETCARD)
+	ac=Duel.AnnounceCard(tp)
 	sc=Duel.CreateToken(tp,ac)
 	while not (sc:IsType(TYPE_XYZ) and sc:IsSetCard(0x48)
 	and (sc:GetRank() == rk +1 or sc:GetRank() == rk +2 or sc:GetRank() == rk +3)
 	and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false))
 	do
-		ac=Duel.AnnounceCardFilter(tp,0x48,OPCODE_ISSETCARD,OPCODE_AND,OPCODE_ISTYPE,TYPE_XYZ)
+		ac=Duel.AnnounceCard(tp)
 		sc=Duel.CreateToken(tp,ac)
 		if sc:IsType(TYPE_TRAP) then return end
 	end

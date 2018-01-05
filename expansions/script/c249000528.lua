@@ -16,7 +16,7 @@ function c249000528.initial_effect(c)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCondition(c249000528.spcon)
 	c:RegisterEffect(e2)
-	--destroy
+	--tohand
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -26,18 +26,18 @@ function c249000528.initial_effect(c)
 	e3:SetTarget(c249000528.target)
 	e3:SetOperation(c249000528.operation)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
+	local e4=e1:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-function c249000528.spfilter(c)
-	return c:IsFacedown() or not c:IsSetCard(0x8)
+function c249000528.cfilter(c)
+	return (c:IsFacedown() or not c:IsSetCard(0x8)) and c:IsType(TYPE_MONSTER)
 end
 function c249000528.spcon(e,c)
 	if c==nil then return true end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 		and	Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)>0
-		and not Duel.IsExistingMatchingCard(c249000528.spfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
+		and not Duel.IsExistingMatchingCard(c249000528.cfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function c249000528.cfilter(c)
 	return c:IsSetCard(0x8) and c:IsDiscardable()

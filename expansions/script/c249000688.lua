@@ -3,7 +3,6 @@ function c249000688.initial_effect(c)
 	c:EnableReviveLimit()
 	c:SetUniqueOnField(1,0,249000688)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x1E5),1)
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT+ATTRIBUTE_DARK),8,3)
 	aux.EnablePendulumAttribute(c,false)
 	--draw
 	local e1=Effect.CreateEffect(c)
@@ -17,13 +16,6 @@ function c249000688.initial_effect(c)
 	e1:SetTarget(c249000688.drtg)
 	e1:SetOperation(c249000688.drop)
 	c:RegisterEffect(e1)
-	--level and rank
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_RANK_LEVEL)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(0xFF)
-	c:RegisterEffect(e2)
 	--special summon other
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(31786629,0))
@@ -96,14 +88,13 @@ end
 function c249000688.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler() 
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c249000688.chkfilter(chkc,e:GetLabel()) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c249000688.filter,tp,LOCATION_MZONE,0,1,c,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectTarget(tp,c249000688.filter,tp,LOCATION_MZONE,0,1,1,c,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-	e:SetLabel(g:GetFirst():GetAttribute())
 end
 function c249000688.operation(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) or tc:IsFacedown() then return end
@@ -111,9 +102,18 @@ function c249000688.operation(e,tp,eg,ep,ev,re,r,rp)
 	local lvrk
 	if tc:GetLevel() > tc:GetRank() then lvrk = tc:GetLevel() else lvrk = tc:GetRank() end
 	if Duel.SendtoGrave(tc,REASON_EFFECT)==0 then return end
+	local t={}
+	local i=1
+	local p=1
+	for i=0,4 do 
+		if Duel.CheckLocation(tp,LOCATION_MZONE,i) then t[p]=i p=p+1 end
+	end
+	t[p]=nil
+	local seq=Duel.AnnounceNumber(tp,table.unpack(t))
+	Duel.MoveSequence(c,seq)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sc=Duel.SelectMatchingCard(tp,c249000688.tfilter,tp,LOCATION_EXTRA,0,1,1,nil,att,e,tp,lvrk):GetFirst()
-	if not sc then return end
+	if not sc or not Duel.SelectYesNo(tp,2) then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CHANGE_DAMAGE)
@@ -126,14 +126,6 @@ function c249000688.operation(e,tp,eg,ep,ev,re,r,rp)
 		sc:SetMaterial(Group.FromCards(tc))
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
-		if c:GetOverlayGroup():GetCount()>0 then
-			local g1=c:GetOverlayGroup()
-			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(47660516,0))
-			local mg2=g1:Select(tp,1,1,nil)
-			local oc=mg2:GetFirst()
-			Duel.Overlay(sc,mg2)
-			Duel.RaiseSingleEvent(oc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
-		end
 		sc:CompleteProcedure()
 	else
 		sc:SetMaterial(Group.FromCards(tc))

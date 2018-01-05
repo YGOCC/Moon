@@ -121,8 +121,9 @@ function c249000692.sop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+function c249000692.slfilter(c)
+	return c:IsSetCard(0x1E5)
+end
 function c249000692.slcon(e)
-	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-	return not tc or (not tc:IsSetCard(0x1E5))
+	return not Duel.IsExistingMatchingCard(c249000692.slfilter,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,e:GetHandler())
 end

@@ -89,11 +89,9 @@ function c249000618.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsLocation(LOCATION_MZONE) and e:GetHandler():IsPosition(POS_FACEUP_DEFENSE) end
 	return true
 end
-function c249000618.slcon(e)
-	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-	return not tc or (not tc:IsSetCard(0x1D8))
+function c249000618.slfilter(c)
+	return c:IsSetCard(0x1D8)
 end
-function c249000618.dacon(e)
-	return e:GetHandler():IsDefensePos()
+function c249000618.slcon(e)
+	return not Duel.IsExistingMatchingCard(c249000618.slfilter,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,e:GetHandler())
 end

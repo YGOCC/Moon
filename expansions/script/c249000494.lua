@@ -1,5 +1,14 @@
 --Chroma-Distortion Xyz Distorter
 function c249000494.initial_effect(c)
+	if Auxiliary.AddXyzProcedure then
+		if not c249000494_AddXyzProcedure then
+			c2490000494_AddXyzProcedure=Auxiliary.AddXyzProcedure
+			Auxiliary.AddXyzProcedure = function (c,f,lv,ct,alterf,desc,maxct,op)
+				c.minxyzct=ct
+				c249000494_AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
+			end
+		end
+	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)

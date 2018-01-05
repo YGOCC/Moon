@@ -60,7 +60,7 @@ function c249000617.tunertg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c249000617.tunerop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and c:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_ADD_TYPE)
@@ -70,13 +70,11 @@ function c249000617.tunerop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000617.condition2(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return Duel.IsExistingMatchingCard(c249000617.confilter,tp,LOCATION_ONFIELD,0,1,nil,e) and (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE)
-		and	Duel.GetTurnPlayer()==tp
+	return Duel.GetTurnPlayer()==tp
 end
 function c249000617.filter1(c,e,tp)
 	local lv=c:GetLevel()
-	return lv>0 and Duel.IsExistingMatchingCard(c249000617.filter2,tp,LOCATION_EXTRA,0,1,nil,lv,c:GetRace(),e,tp)
+	return lv>0 and Duel.IsExistingMatchingCard(c249000617.filter2,tp,LOCATION_EXTRA,0,1,nil,lv*2,c:GetRace(),e,tp)
 end
 function c249000617.filter2(c,lv,rc,e,tp)
 	return (c:GetRank()==lv or c:GetRank()==lv-1 or c:GetRank()==lv+1) and
@@ -94,7 +92,7 @@ function c249000617.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,c249000617.filter1,tp,LOCATION_HAND,0,1,1,nil,e,tp):GetFirst()
 	if tc and Duel.SendtoGrave(tc,REASON_EFFECT)~=0 then
-		local g2=Duel.SelectMatchingCard(tp,c249000617.filter2,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetLevel(),tc:GetRace(),e,tp)
+		local g2=Duel.SelectMatchingCard(tp,c249000617.filter2,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetLevel()*2,tc:GetRace(),e,tp)
 		local sc=g2:GetFirst()
 		if sc then
 			local ovg=Group.FromCards(c)

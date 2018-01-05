@@ -1,15 +1,14 @@
 --Overlay-Evolve Summoner Mage
 function c249000616.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
-	--2mat
+	--xyz level
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_PZONE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1)
-	e2:SetCondition(c249000616.condition)
-	e2:SetTarget(c249000616.twomattg)
-	e2:SetOperation(c249000616.twomatop)
+	e2:SetTarget(c249000616.xyztg)
+	e2:SetOperation(c249000616.xyzop)
 	c:RegisterEffect(e2)
 	--synchro
 	local e3=Effect.CreateEffect(c)
@@ -34,35 +33,25 @@ function c249000616.initial_effect(c)
 	e5:SetCode(EFFECT_CHANGE_RSCALE)
 	c:RegisterEffect(e5)
 end
-function c249000616.confilter(c,e) 
-	return c:IsSetCard(0x1D8) and c:GetCode()~=e:GetHandler():GetCode()
+function c249000616.xyzfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
-function c249000616.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c249000616.confilter,tp,LOCATION_ONFIELD,0,1,nil,e)
+function c249000616.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c249000616.xyzfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c249000616.xyzfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	Duel.SelectTarget(tp,c249000616.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function c249000616.twomattg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsFaceup() and chkc:IsControler(tp) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
-end
-function c249000616.twomatop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+function c249000616.xyzop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local e1=Effect.CreateEffect(c)
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(511001225)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetCode(EFFECT_XYZ_LEVEL)
+		e1:SetValue(c249000616.xyzlv)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
-		if tc:IsType(TYPE_XYZ) then
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_XYZ_LEVEL)
-			e1:SetValue(c249000616.xyzlv)
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e1)
-		end
 	end
 end
 function c249000616.xyzlv(e,c,rc)
@@ -103,18 +92,8 @@ function c249000616.operation(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
 			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
+			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 			sc:RegisterEffect(e1,true)
-			local e2=Effect.CreateEffect(e:GetHandler())
-			e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e2:SetCode(EVENT_PHASE+PHASE_END)
-			e2:SetCountLimit(1)
-			e2:SetRange(LOCATION_MZONE)
-			e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
-			e2:SetCondition(c249000616.retcon)
-			e2:SetOperation(c249000616.retop)
-			sc:RegisterEffect(e2)
-			sc:CompleteProcedure()
 		end
 	end
 end
@@ -124,8 +103,9 @@ end
 function c249000616.retop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(e:GetHandler(),nil,0,REASON_EFFECT)
 end
+function c249000616.slfilter(c)
+	return c:IsSetCard(0x1D8)
+end
 function c249000616.slcon(e)
-	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-	return not tc or (not tc:IsSetCard(0x1D8))
+	return not Duel.IsExistingMatchingCard(c249000616.slfilter,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,e:GetHandler())
 end
