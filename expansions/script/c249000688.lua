@@ -1,7 +1,7 @@
 --Angelic Summoner of Twilight
 function c249000688.initial_effect(c)
 	c:EnableReviveLimit()
-	c:SetUniqueOnField(1,0,249000688)
+	c:SetSPSummonOnce(249000688)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x1E5),1)
 	aux.EnablePendulumAttribute(c,false)
 	--draw

@@ -2,9 +2,11 @@
 function c249000494.initial_effect(c)
 	if Auxiliary.AddXyzProcedure then
 		if not c249000494_AddXyzProcedure then
-			c2490000494_AddXyzProcedure=Auxiliary.AddXyzProcedure
+			c249000494_AddXyzProcedure=Auxiliary.AddXyzProcedure
 			Auxiliary.AddXyzProcedure = function (c,f,lv,ct,alterf,desc,maxct,op)
-				c.minxyzct=ct
+				local code=c:GetOriginalCode()
+				local mt=_G["c" .. code]
+				mt.xyz_minct=ct
 				c249000494_AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
 			end
 		end

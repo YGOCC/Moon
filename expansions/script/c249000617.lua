@@ -92,7 +92,7 @@ function c249000617.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,c249000617.filter1,tp,LOCATION_HAND,0,1,1,nil,e,tp):GetFirst()
 	if tc and Duel.SendtoGrave(tc,REASON_EFFECT)~=0 then
-		local g2=Duel.SelectMatchingCard(tp,c249000617.filter2,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetLevel()*2,tc:GetRace(),e,tp)
+		local g2=Duel.SelectMatchingCard(tp,c249000617.filter2,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetLevel(),tc:GetRace(),e,tp)
 		local sc=g2:GetFirst()
 		if sc then
 			local ovg=Group.FromCards(c)
