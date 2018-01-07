@@ -5,10 +5,10 @@ function c240100217.initial_effect(c)
 	aux.AddOrigSpatialType(c)
 	--Materials: 1 WATER "VINE" monster + 1 WATER monster with lower ATK (max. 300)
 	aux.AddSpatialProc(c,c240100217.mcheck,4,300,nil,c240100217.mfilter,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER))
-	--When exactly 1 "Stellar VINE" monster that has a Level (and no other Monster Cards) is sent to the GY (Quick Effect): You can banish a number of "Stellar VINE" monsters from your Deck, up to that monster's Level.
+	--When exactly 1 "Stellar VINE" monster that has a Level (and no other Monster Cards) is sent to the GY: You can banish a number of "Stellar VINE" monsters from your Deck, up to that monster's Level.
 	local ae3=Effect.CreateEffect(c)
 	ae3:SetCategory(CATEGORY_REMOVE)
-	ae3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	ae3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	ae3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	ae3:SetCode(EVENT_TO_GRAVE)
 	ae3:SetRange(LOCATION_MZONE)
@@ -31,8 +31,10 @@ function c240100217.cfilter(c)
 	return c:IsLevelAbove(1) and c:IsSetCard(0x285b)
 end
 function c240100217.condition(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	return eg:FilterCount(Card.IsType,nil,TYPE_MONSTER)==1 and c240100217.cfilter(tc)
+	local g=eg:Filter(Card.IsType,nil,TYPE_MONSTER)
+	local tc=g:GetFirst()
+	e:SetLabel(tc:GetLevel())
+	return g:GetCount()==1 and c240100218.cfilter(tc)
 end
 function c240100217.filter2(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and c:IsAbleToRemove()
@@ -43,7 +45,7 @@ function c240100217.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c240100217.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c240100217.filter2,tp,LOCATION_DECK,0,1,eg:GetFirst():GetLevel(),nil)
+	local g=Duel.SelectMatchingCard(tp,c240100217.filter2,tp,LOCATION_DECK,0,1,e:GetLabel(),nil)
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end

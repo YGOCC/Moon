@@ -207,38 +207,21 @@ Card.IsLevelAbove=function(c,lv)
 end
 Duel.ChangePosition=function(cc, au, ad, du, dd)
 	local cc,au,ad,du,dd=cc,au,ad,du,dd
-	local exg,eau,ead,edu,edd=nil,au,ad,du,dd
-	if cc:GetFirst() then
+	if pcall(Group.GetFirst,cc) then
 		local tg=cc:Filter(function(c) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 end,nil)
 		if tg:GetCount()>0 then
-			exg=cc:Clone()
-			exg:Sub(tg)
-			cc=tg:Clone()
 			for tc in aux.Next(tg) do
 				tc:SwitchSpace()
-				if tc:IsPosition(POS_FACEUP_DEFENSE) then cc:RemoveCard(tc)
-				else
-					if au and au>0 then au=POS_FACEUP_DEFENSE end
-					if ad and ad>0 then ad=POS_FACEUP_DEFENSE end
-					if du and du>0 then du=POS_FACEUP_DEFENSE end
-					if dd and dd>0 then dd=POS_FACEUP_DEFENSE end
-				end
+				cc:RemoveCard(tc)
 			end
 		end
 	else
 		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500 then
 			cc:SwitchSpace()
-			if cc:IsPosition(POS_FACEUP_DEFENSE) then return
-			else
-				if au and au>0 then au=POS_FACEUP_DEFENSE end
-				if ad and ad>0 then ad=POS_FACEUP_DEFENSE end
-				if du and du>0 then du=POS_FACEUP_DEFENSE end
-				if dd and dd>0 then dd=POS_FACEUP_DEFENSE end
-			end
+			return
 		end
 	end
 	change_position(cc,au,ad,du,dd)
-	if exg then change_position(exg,eau,ead,edu,edd) end
 end
 
 --Custom Functions
