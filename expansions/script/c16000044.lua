@@ -36,7 +36,7 @@ function c16000044.initial_effect(c)
 	e3:SetValue(c16000044.repval)
 	c:RegisterEffect(e3) 
 end
-unction c16000044.filter(c)
+function c16000044.filter(c)
 local ct1,ct2=c:GetUnionCount()
 	return c:IsFaceup() and c:IsCode(16000020) and ct2==0
 end
