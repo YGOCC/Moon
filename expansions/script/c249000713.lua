@@ -2,14 +2,6 @@
 function c249000713.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--Double ATK
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(86943389,0))
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_BATTLE_START)
-	e1:SetCondition(c249000713.atkcon)
-	e1:SetOperation(c249000713.atkop)
-	c:RegisterEffect(e1)
 	--destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(19221310,1))
@@ -40,22 +32,6 @@ function c249000713.initial_effect(c)
 	e6:SetTarget(c249000713.target)
 	e6:SetOperation(c249000713.operation)
 	c:RegisterEffect(e6)
-end
-function c249000713.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local bc=c:GetBattleTarget()
-	return bc
-end
-function c249000713.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsFaceup() and c:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetValue(c:GetAttack()*2)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
-		c:RegisterEffect(e1)
-	end
 end
 function c249000713.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,nil) end
@@ -144,26 +120,26 @@ function c249000713.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c249000713.filter1(c,e,tp)
-	return c:IsReason(REASON_DESTROY) and c:GetLevel() > 0
-		and Duel.IsExistingMatchingCard(c249000713.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetAttribute(),c:GetLevel()*2)
+	return Duel.IsExistingMatchingCard(c249000713.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetRace())
 end
-function c249000713.filter2(c,e,tp,att,rk)
-	return c:GetRank() > 0 and c:IsAttribute(att) and (c:GetRank()==rk or c:GetRank()==rk-1 or c:GetRank()==rk-2) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+function c249000713.filter2(c,e,tp,rc)
+	return c:GetRank() > 0 and c:GetRank() < 6 and c:IsRace(rc) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c249000713.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c249000713.filter1(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
 		and Duel.IsExistingTarget(c249000713.filter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c249000713.filter1,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,tp,LOCATION_EXTRA)
 end
 function c249000713.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local c=e:GetHandler()
+	if Duel.GetLocationCountFromEx(tp)<=0 then return end
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c249000713.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc:GetAttribute(),tc:GetLevel()*2)
+	local g=Duel.SelectMatchingCard(tp,c249000713.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc:GetRace())
 	local sc=g:GetFirst()
 	if sc then
 		Duel.Overlay(sc,Group.FromCards(tc))
@@ -173,5 +149,55 @@ function c249000713.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Overlay(sc,tc2)
 		end
 		sc:CompleteProcedure()
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_LEAVE_FIELD)
+		e1:SetOperation(c249000713.rmop2)
+		e1:SetReset(RESET_EVENT+0x4020000)
+		sc:RegisterEffect(e1)
+	end
+end
+function c249000713.filter3(c,rc,rk)
+	return (c:GetRank()==rk or c:GetRank()==rk+1) and c:IsRace(rc)
+end
+function c249000713.rmop2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local tg=Duel.SelectMatchingCard(tp,c249000713.filter3,tp,LOCATION_EXTRA,0,1,1,nil,c:GetRace(),c:GetRank()+1)
+	local tc=tg:GetFirst()
+	e:Reset()
+	if tc==nil then return end
+	if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+		e1:SetRange(LOCATION_REMOVED)
+		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e1:SetCountLimit(1)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetTarget(c249000713.sptg)
+		e1:SetOperation(c249000713.spop)
+		tc:RegisterEffect(e1)
+	end
+end
+function c249000713.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,true,true) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c249000713.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		if Duel.SpecialSummon(c,SUMMON_TYPE_XYZ,tp,tp,true,true,POS_FACEUP) then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+			e1:SetCode(EVENT_LEAVE_FIELD)
+			e1:SetOperation(c249000713.rmop2)
+			e1:SetReset(RESET_EVENT+0x4020000)
+			c:RegisterEffect(e1)
+			local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
+			if tc2 then
+				Duel.Overlay(c,tc2)
+			end
+		end
 	end
 end

@@ -95,3 +95,6 @@ end
 function c249000618.slcon(e)
 	return not Duel.IsExistingMatchingCard(c249000618.slfilter,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,e:GetHandler())
 end
+function c249000618.dacon(e)
+	return e:GetHandler():IsDefensePos()
+end

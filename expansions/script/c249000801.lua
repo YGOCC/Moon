@@ -112,7 +112,9 @@ function c249000801.spop(e,tp,eg,ep,ev,re,r,rp)
 				end
 				Duel.SpecialSummonComplete()
 				if sc:IsType(TYPE_XYZ) then
-					if c:IsRelateToEffect(e) then Duel.Overlay(sc,c) end
+					if c:IsRelateToEffect(e) then
+					c:CancelToGrave()
+					Duel.Overlay(sc,Group.FromCards(c)) end
 					local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
 					if tc2 then
 						Duel.Overlay(sc,tc2)

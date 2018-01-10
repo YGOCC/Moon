@@ -28,12 +28,22 @@ function c249000799.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000799.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
+function c249000222.filter2(c)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x1D8) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+end
 function c249000799.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c249000799.filter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
+		if Duel.SelectYesNo(tp,505) then
+			local g2=Duel.SelectMatchingCard(tp,c249000799.filter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,1,nil)
+			if g2:GetCount()>0 then
+				Duel.SendtoHand(g2,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-tp,g2)
+			end
+		end
 	end
 end
 function c249000799.cfilter(c,tp)

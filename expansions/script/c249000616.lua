@@ -57,6 +57,12 @@ end
 function c249000616.xyzlv(e,c,rc)
 	return c:GetRank()
 end
+function c249000616.confilter(c,e) 
+	return c:IsSetCard(0x1D8) and c:GetCode()~=e:GetHandler():GetCode()
+end
+function c249000616.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c249000616.confilter,tp,LOCATION_ONFIELD,0,1,nil,e)
+end
 function c249000616.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
