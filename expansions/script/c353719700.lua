@@ -33,7 +33,7 @@ function c353719700.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c353719700.cfilter(c,tp)
-	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE)and c:GetPreviousControler()==tp and c:IsSetCode(0x9f) 
+	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE)and c:GetPreviousControler()==tp and c:IsSetCard(0x9f) 
 end
 function c353719700.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c353719700.cfilter,1,nil,tp)
