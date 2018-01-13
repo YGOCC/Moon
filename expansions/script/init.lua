@@ -208,7 +208,11 @@ end
 Duel.ChangePosition=function(cc, au, ad, du, dd)
 	local cc,au,ad,du,dd=cc,au,ad,du,dd
 	if pcall(Group.GetFirst,cc) then
-		local tg=cc:Filter(function(c) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 end,nil)
+		local tg=cc:Filter(function(c) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500
+			and ((au and au&POS_FACEDOWN~=0 and (not du or du&POS_FACEDOWN~=0))
+			or (ad and ad&POS_FACEDOWN~=0 and (not dd or dd&POS_FACEDOWN~=0))
+			or (du and du&POS_FACEDOWN~=0 and (not au or au&POS_FACEDOWN~=0))
+			or (dd and dd&POS_FACEDOWN~=0) and (not ad or ad&POS_FACEDOWN~=0)) end,nil,au,ad,du,dd)
 		if tg:GetCount()>0 then
 			for tc in aux.Next(tg) do
 				tc:SwitchSpace()
@@ -216,7 +220,11 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 			end
 		end
 	else
-		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500 then
+		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500
+			and (au and au&POS_FACEDOWN~=0 and (not du or du&POS_FACEDOWN~=0))
+			or (ad and ad&POS_FACEDOWN~=0 and (not dd or dd&POS_FACEDOWN~=0))
+			or (du and du&POS_FACEDOWN~=0 and (not au or au&POS_FACEDOWN~=0))
+			or (dd and dd&POS_FACEDOWN~=0 and (not ad or ad&POS_FACEDOWN~=0)) then
 			cc:SwitchSpace()
 			return
 		end
