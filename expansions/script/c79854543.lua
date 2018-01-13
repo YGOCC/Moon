@@ -55,12 +55,13 @@ function c79854543.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		if c:IsRelateToEffect(e) then
-			local e1=Effect.CreateEffect(e:GetHandler())
+			local c=e:GetHandler()
+			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetValue(c:GetAttack()*2)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
+			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
 			c:RegisterEffect(e1)
 		end
 	end

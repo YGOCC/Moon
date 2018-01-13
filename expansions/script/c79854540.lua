@@ -92,7 +92,7 @@ function c79854540.sop(e,tp,eg,ep,ev,re,r,rp)
 end
 --on first Summon
 function c79854540.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(Card.IsControler,1,nil,1-tp)
+	return eg:IsExists(Card.IsControler,1,nil,1-tp) and Duel.GetTurnPlayer()~=tp
 end
 function c79854540.atkfilter(c)
 	return c:IsFaceup()
