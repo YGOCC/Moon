@@ -1,14 +1,15 @@
---Emerald-Gaze Pendulm-Angel
+--Emerald-Gaze Pendulum-Angel
 function c249000381.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
 	--draw
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DRAW)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCountLimit(1,2490003811)
 	e3:SetCondition(c249000381.drawcon)
 	e3:SetOperation(c249000381.drawop)
 	c:RegisterEffect(e3)
@@ -17,7 +18,7 @@ function c249000381.initial_effect(c)
 	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_PZONE)
-	e2:SetCountLimit(1,249000381)
+	e2:SetCountLimit(1,2490003812)
 	e2:SetCondition(c249000381.condition)
 	e2:SetOperation(c249000381.operation)
 	c:RegisterEffect(e2)
@@ -27,8 +28,7 @@ function c249000381.confilter(c)
 end
 function c249000381.drawcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return eg:GetCount()==1 and eg:GetFirst()==c
-		and c:GetSummonType()==SUMMON_TYPE_PENDULUM and c:IsPreviousLocation(LOCATION_HAND)
+	return c:GetSummonType()==SUMMON_TYPE_PENDULUM and c:IsPreviousLocation(LOCATION_HAND)
 		and Duel.IsExistingMatchingCard(c249000381.filter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c249000381.drawop(e,tp,eg,ep,ev,re,r,rp)

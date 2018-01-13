@@ -44,7 +44,7 @@ function c249000382.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c249000382.filter2(c)
-	return c:IsSetCard(0x1B7) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x1B7) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(249000382)
 end
 function c249000382.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000382.filter2,tp,LOCATION_DECK,0,1,nil) end
@@ -62,7 +62,7 @@ function c249000382.drfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1B7)
 end
 function c249000382.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsFaceup() and Duel.IsExistingMatchingCard(c249000538.drconfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return e:GetHandler():IsFaceup() and Duel.IsExistingMatchingCard(c249000382.drconfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c249000382.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

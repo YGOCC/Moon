@@ -21,7 +21,6 @@ function c249000380.initial_effect(c)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCountLimit(1)
 	e2:SetCondition(c249000380.condition)
-	e2:SetCost(c249000380.cost)
 	e2:SetTarget(c249000380.target)
 	e2:SetOperation(c249000380.operation)
 	c:RegisterEffect(e2)
@@ -44,10 +43,6 @@ function c249000380.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c249000380.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0x1B7)
-end
-function c249000380.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c249000380.filter(c)
 	return c:IsFaceup() and c:IsDestructable()
