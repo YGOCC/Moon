@@ -1,11 +1,10 @@
---Osa, Princess of Stellar VINE
+--created & coded by Lyris
+--S・VINEの姫オサ
 c240100431.spt_another_space=240100434
 function c240100431.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
-	--Materials: 1 WATER monster + 1 WATER monster with less DEF (max. 400)
 	aux.AddSpatialProc(c,nil,4,nil,400,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER))
-	--Once per turn: You can shuffle 1 of your banished monsters into the Deck, then target up to 3 of your banished "Stellar VINE" monsters; return all of those targets to the GY, then draw 1 card.
 	local ae1=Effect.CreateEffect(c)
 	ae1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_DRAW)
 	ae1:SetType(EFFECT_TYPE_IGNITION)

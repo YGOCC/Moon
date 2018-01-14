@@ -1,11 +1,10 @@
---Ragna Clarissa of Stellar VINE (Altered)
+--created & coded by Lyris
+--S・VINEの零嬢天使ラグナクライッシャ(アナザー宙)
 c240100218.spt_origin_space=240100217
 function c240100218.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
-	--Materials: 1 WATER "VINE" monster + 1 WATER monster with lower ATK (max. 300)
 	aux.AddSpatialProc(c,c240100218.mcheck,4,300,nil,c240100218.mfilter,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER))
-	--When exactly 1 "Stellar VINE" monster that has a Level (and no other Monster Cards) is sent to the GY: You can banish a number of "Stellar VINE" monsters from your Deck, up to that monster's Level.
 	local ae3=Effect.CreateEffect(c)
 	ae3:SetCategory(CATEGORY_REMOVE)
 	ae3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -32,6 +31,7 @@ function c240100218.cfilter(c)
 end
 function c240100218.condition(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(Card.IsType,nil,TYPE_MONSTER)
+	if g:GetCount()==0 then return false end
 	local tc=g:GetFirst()
 	e:SetLabel(tc:GetLevel())
 	return g:GetCount()==1 and c240100218.cfilter(tc)

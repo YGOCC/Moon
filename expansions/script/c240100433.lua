@@ -1,11 +1,10 @@
---Clarissa, Knight of Constellar VINE
+--created & coded by Lyris
+--S－VINEの騎士クライッシャ
 c240100433.spt_another_space=240100436
 function c240100433.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
-	--Materials: 1 monster + 1 monster with lower ATK (max. 300)
 	aux.AddSpatialProc(c,nil,8,300,nil,aux.TRUE,aux.TRUE)
-	--(Quick Effect): You can banish 1 card from your hand, then target 1 card on the field; return it to the hand, but banish all cards with the same name as that face-up returned card from the hand and Extra Deck during the End Phase of the next turn. (HOPT)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
@@ -35,7 +34,6 @@ end
 function c240100433.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsPreviousPosition(POS_FACEUP) then
-		--Banish all cards with the same name as that face-up returned card from the hand and Extra Deck during the End Phase of the next turn.
 		tc:RegisterFlagEffect(240100433,RESET_EVENT+0x3fc0000+RESET_PHASE+PHASE_END,0,2)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetDescription(1102)

@@ -206,26 +206,28 @@ Card.IsLevelAbove=function(c,lv)
 	return is_level_above(c,lv)
 end
 Duel.ChangePosition=function(cc, au, ad, du, dd)
-	local cc,au,ad,du,dd=cc,au,ad,du,dd
 	if pcall(Group.GetFirst,cc) then
-		local tg=cc:Filter(function(c) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500
-			and ((au and au&POS_FACEDOWN~=0 and (not du or du&POS_FACEDOWN~=0))
-			or (ad and ad&POS_FACEDOWN~=0 and (not dd or dd&POS_FACEDOWN~=0))
-			or (du and du&POS_FACEDOWN~=0 and (not au or au&POS_FACEDOWN~=0))
-			or (dd and dd&POS_FACEDOWN~=0) and (not ad or ad&POS_FACEDOWN~=0)) end,nil,au,ad,du,dd)
+		local ct=0
+		local tg=cc:Filter(function(c,a,d) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and c:GetFlagEffect(500)>0
+			and (d and d&POS_FACEDOWN~=0 or a&POS_FACEDOWN~=0) end,nil,au,du)
 		if tg:GetCount()>0 then
 			for tc in aux.Next(tg) do
 				tc:SwitchSpace()
+				ct=tc:GetFlagEffectLabel(500)
+				if ct>1 then
+					tc:SetFlagEffectLabel(500,ct-1)
+				else tc:ResetFlagEffect(500) end
 				cc:RemoveCard(tc)
 			end
 		end
 	else
-		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500
-			and (au and au&POS_FACEDOWN~=0 and (not du or du&POS_FACEDOWN~=0))
-			or (ad and ad&POS_FACEDOWN~=0 and (not dd or dd&POS_FACEDOWN~=0))
-			or (du and du&POS_FACEDOWN~=0 and (not au or au&POS_FACEDOWN~=0))
-			or (dd and dd&POS_FACEDOWN~=0 and (not ad or ad&POS_FACEDOWN~=0)) then
+		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and cc:GetFlagEffect(500)>0
+			and (d and d&POS_FACEDOWN~=0 or a&POS_FACEDOWN~=0) then
 			cc:SwitchSpace()
+			local ct=cc:GetFlagEffectLabel(500)
+			if ct>1 then
+				cc:SetFlagEffectLabel(500,ct-1)
+			else cc:ResetFlagEffect(500) end
 			return
 		end
 	end

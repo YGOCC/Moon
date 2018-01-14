@@ -1,11 +1,10 @@
---Clarissa, Queen of Stellar VINE
+--created & coded by Lyris, art by Chahine Sfar
+--S・VINEの女王クライッシャ(アナザー宙)
 c240100187.spt_origin_space=240100180
 function c240100187.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
-	--Materials: 1 "Stellar VINE" monster + 1 "VINE" monster with less ATK (max. 300)
 	aux.AddSpatialProc(c,c240100187.mcheck,8,300,nil,aux.FilterBoolFunction(Card.IsSetCard,0x285b),c240100187.mfilter)
-	--Cannot be Tributed while face-up on the field.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -16,7 +15,6 @@ function c240100187.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_UNRELEASABLE_NONSUM)
 	c:RegisterEffect(e2)
-	--Once per turn: You can banish 1 "VINE" monster you control, then target 1 of your banished cards; shuffle it into the Deck.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
@@ -27,7 +25,6 @@ function c240100187.initial_effect(c)
 	e3:SetTarget(c240100187.target)
 	e3:SetOperation(c240100187.operation)
 	c:RegisterEffect(e3)
-	--If this card is banished from the field: You can banish 1 "Stellar VINE" monster from your hand; add 1 "Stellar VINE" monster from your Deck to your hand.
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(1109)
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
