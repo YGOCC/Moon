@@ -60,7 +60,7 @@ function c269000008.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,5)
 	local ct=g:FilterCount(Card.IsType,nil,TYPE_TUNER)
 	Duel.ShuffleDeck(tp)
-	if ct>1 then
+	if ct>0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EXTRA_ATTACK)
