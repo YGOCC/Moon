@@ -67,7 +67,7 @@ function c25386874.initial_effect(c)
 end
 --filters
 function c25386874.eqfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x63d0)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x63d0) and not c:IsCode(25386874)
 end
 function c25386874.eqcheck(c,eqcard)
 	return c==eqcard
