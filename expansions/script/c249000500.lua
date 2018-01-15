@@ -69,7 +69,7 @@ function c249000500.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000500.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
+	return e:GetHandler():IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and r==REASON_SYNCHRO
 end
 function c249000500.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

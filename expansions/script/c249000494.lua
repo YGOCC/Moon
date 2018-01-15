@@ -1,16 +1,16 @@
 --Chroma-Distortion Xyz Distorter
 function c249000494.initial_effect(c)
-	if Auxiliary.AddXyzProcedure then
-		if not c249000494_AddXyzProcedure then
-			c249000494_AddXyzProcedure=Auxiliary.AddXyzProcedure
-			Auxiliary.AddXyzProcedure = function (c,f,lv,ct,alterf,desc,maxct,op)
-				local code=c:GetOriginalCode()
-				local mt=_G["c" .. code]
-				mt.xyz_minct=ct
-				c249000494_AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
-			end
+if Auxiliary.AddXyzProcedure then
+	if not c249000494_AddXyzProcedure then
+		c249000494_AddXyzProcedure=Auxiliary.AddXyzProcedure
+		Auxiliary.AddXyzProcedure = function (c,f,lv,ct,alterf,desc,maxct,op)
+			local code=c:GetOriginalCode()
+			local mt=_G["c" .. code]
+			mt.xyz_minct=ct
+			c249000494_AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
 		end
 	end
+end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
@@ -54,21 +54,24 @@ function c249000494.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c249000494.filterx(c)
-	return c:IsType(TYPE_XYZ) and c:GetRank() < 12 and c.minxyzct and not (c:IsRace(RACE_WINDBEAST) and c:GetRank()==10)
+	local code=c:GetOriginalCode()
+	local mt=_G["c" .. code]
+	return c:IsType(TYPE_XYZ) and c:GetRank() < 12 and mt.xyz_minct and not (c:IsRace(RACE_WINDBEAST) and c:GetRank()==10)
 end
 function c249000494.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(c249000494.filterx,c:GetControler(),LOCATION_EXTRA,0,nil)
+	local g=Duel.GetMatchingGroup(c249000494.filterx,c:GetControler(),0xFF,0,nil)
 	local tc=g:GetFirst()
 	while tc do
 		local e1=Effect.CreateEffect(tc)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetDescription(1063)
 		e1:SetCode(EFFECT_SPSUMMON_PROC)
-		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
 		e1:SetRange(LOCATION_EXTRA)
 		e1:SetValue(SUMMON_TYPE_XYZ)
 		e1:SetCondition(c249000494.xyzcon)
+		--e1:SetTarget(aux.TRUE)
 		e1:SetOperation(c249000494.xyzop)
 		e1:SetReset(RESET_EVENT+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
@@ -76,22 +79,39 @@ function c249000494.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000494.mfilter(c,rk)
-	return c:GetLevel() < rk and c:GetLevel() > 0 and not (c:IsFacedown() and c:IsLocation(LOCATION_MZONE))
+	return c:GetLevel() < rk and c:GetLevel() > 0 and c:IsAbleToRemove()
 end
 function c249000494.xyzcon(e,c,og)
 	if c==nil then return true end
+	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
 	local rk=c:GetRank()
-	local mg=Duel.GetMatchingGroup(c249000494.mfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil,rk)
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and mg:CheckWithSumEqual(Card.GetLevel,rk,c.minxyzct,c.minxyzct,c)
+	local mg=Duel.GetMatchingGroup(c249000494.mfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,nil,rk)
+	local code=c:GetOriginalCode()
+	local mt=_G["c" .. code]
+	return Duel.GetLocationCountFromEx(tp)>0 and mg:CheckWithSumEqual(Card.GetLevel,rk,mt.xyz_minct,mt.xyz_minct,c)
 end
 function c249000494.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og)
 	local c=e:GetHandler()
 	local rk=c:GetRank()
-	local mg=Duel.GetMatchingGroup(c249000494.mfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil,rk)
+	local mg=Duel.GetMatchingGroup(c249000494.mfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,nil,rk)
 	local g1=Group.CreateGroup()
+	local code=c:GetOriginalCode()
+	local mt=_G["c" .. code]
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g1=mg:SelectWithSumEqual(tp,Card.GetLevel,rk,c.minxyzct,c.minxyzct,c)
-	c:SetMaterial(g1)
-	Duel.Overlay(c,g1)
+	local g1=mg:SelectWithSumEqual(tp,Card.GetLevel,rk,mt.xyz_minct,mt.xyz_minct,c)
+    Duel.Remove(g1,POS_FACEUP,REASON_MATERIAL+REASON_XYZ)
+    c:SetMaterial(g1)
+    local g2=Group.CreateGroup()
+    local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
+	if tc2 then
+		g2:AddCard(tc2)
+	end
+	tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
+	if tc2 then
+		g2:AddCard(tc2)
+	end
+	if g2:GetCount() > 0 then
+		Duel.Overlay(c,g2)
+	end
 end

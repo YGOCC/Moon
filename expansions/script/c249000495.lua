@@ -42,21 +42,21 @@ function c249000495.filters(c)
 end
 function c249000495.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(c249000495.filters,c:GetControler(),LOCATION_EXTRA,0,nil)
+	local g=Duel.GetMatchingGroup(c249000495.filters,c:GetControler(),0xFF,0,nil)
 	local tc=g:GetFirst()
 	while tc do
 		local e1=Effect.CreateEffect(tc)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetDescription(1073)
 		e1:SetCode(EFFECT_SPSUMMON_PROC)
-		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
 		e1:SetRange(LOCATION_EXTRA)
 		e1:SetValue(SUMMON_TYPE_SYNCHRO)
 		e1:SetCondition(c249000495.syncon)
+		--e1:SetTarget(aux.TRUE)
 		e1:SetOperation(c249000495.synop)
 		e1:SetReset(RESET_EVENT+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e1)
-		tc:RegisterFlagEffect(249000495,RESET_EVENT+RESET_PHASE+PHASE_END,0,1) 	
+		tc:RegisterEffect(e1)	
 		tc=g:GetNext()
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -72,23 +72,24 @@ function c249000495.damval(e,re,val,r,rp,rc)
 	return val/2
 end
 function c249000495.mfilter(c,lv)
-	return c:GetLevel()==lv and not (c:IsFacedown() and c:IsLocation(LOCATION_MZONE))
+	return c:GetLevel()==lv and c:IsAbleToRemove()
 end
 function c249000495.syncon(e,c,og)
 	if c==nil then return true end
+	if c:IsFaceup() then return false end
 	local tp=c:GetControler()
 	local lv=c:GetLevel()
-	local mg=Duel.GetMatchingGroup(c249000495.mfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil,lv/2)
+	local mg=Duel.GetMatchingGroup(c249000495.mfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,nil,lv/2)
 	if mg:GetCount() < 2 then return false end
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
+	return Duel.GetLocationCountFromEx(tp)>0
 end
 function c249000495.synop(e,tp,eg,ep,ev,re,r,rp,c,og)
 	local c=e:GetHandler()
 	local lv=c:GetLevel()
-	local mg=Duel.GetMatchingGroup(c249000495.mfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil,lv/2)
+	local mg=Duel.GetMatchingGroup(c249000495.mfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,nil,lv/2)
 	local g1=Group.CreateGroup()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
 	local g1=mg:Select(tp,2,2,nil)
-	Duel.SendtoGrave(g1,REASON_MATERIAL+REASON_SYNCHRO)
+	Duel.Remove(g1,POS_FACEUP,REASON_MATERIAL+REASON_SYNCHRO)
 	c:SetMaterial(g1)
 end
