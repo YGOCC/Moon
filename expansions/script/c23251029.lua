@@ -4,8 +4,9 @@ function cod.initial_effect(c)
 	--Indes.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e1:SetValue(1)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+    	e1:SetValue(cod.valcon)
+    	e1:SetCountLimit(1)
 	c:RegisterEffect(e1)
 	--Tohand
 	local e2=Effect.CreateEffect(c)
@@ -18,6 +19,9 @@ function cod.initial_effect(c)
 	e2:SetTarget(cod.thtg)
 	e2:SetOperation(cod.thop)
 	c:RegisterEffect(e2)
+end
+function cod.valcon(e,re,r,rp)
+    return bit.band(r,REASON_BATTLE)~=0
 end
 function cod.hfilter(c)
 	return (c:IsCode(23251026) or c:IsCode(23251030) or c:IsCode(23251031) or c:IsCode(23251032) or c:IsCode(23251033)) and c:IsAbleToHand()
