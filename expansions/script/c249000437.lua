@@ -1,62 +1,28 @@
 --Heterochromic Neo Tuner
 function c249000437.initial_effect(c)
-	--Synchro monster, 1 tuner + n or more monsters
-	function aux.AddSynchroProcedure(c,f1,f2,ct)
-		local code=c:GetOriginalCode()
-		local mt=_G["c" .. code]
-		if f1 then
-			mt.tuner_filter=function(mc) return mc and f1(mc) end
-		else
-			mt.tuner_filter=function(mc) return true end
+	if aux.AddSynchroProcedure then
+		if not c249000437_AddSynchroProcedure then
+			c249000437_AddSynchroProcedure=aux.AddSynchroProcedure
+			aux.AddSynchroProcedure = function (c,f1,f2,minc,maxc)
+				local code=c:GetOriginalCode()
+				local mt=_G["c" .. code]
+				if f1 then
+					mt.tuner_filter=function(mc) return mc and f1(mc) end
+				else
+					mt.tuner_filter=function(mc) return true end
+				end
+				if f2 then
+					mt.nontuner_filter=function(mc) return mc and f2(mc) end
+				else
+					mt.nontuner_filter=function(mc) return true end
+				end
+				mt.minntct=minc
+				if maxc==nil then mt.maxntct=99 else mt.maxntct=maxc end
+				mt.sync=true
+				c249000437_AddSynchroProcedure(c,f1,f2,minc,maxc)
+			end
 		end
-		if f2 then
-			mt.nontuner_filter=function(mc) return mc and f2(mc) end
-		else
-			mt.nontuner_filter=function(mc) return true end
-		end
-		mt.minntct=ct
-		mt.maxntct=99
-		mt.sync=true
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_SPSUMMON_PROC)
-		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetRange(LOCATION_EXTRA)
-		e1:SetCondition(Auxiliary.SynCondition(f1,f2,ct,99))
-		e1:SetTarget(Auxiliary.SynTarget(f1,f2,ct,99))
-		e1:SetOperation(Auxiliary.SynOperation(f1,f2,ct,99))
-		e1:SetValue(SUMMON_TYPE_SYNCHRO)
-		c:RegisterEffect(e1)
 	end
-	--Synchro monster, 1 tuner + 1 monster
-	function Auxiliary.AddSynchroProcedure2(c,f1,f2)
-		local code=c:GetOriginalCode()
-		local mt=_G["c" .. code]
-		if f1 then
-			mt.tuner_filter=function(mc) return mc and f1(mc) end
-		else
-			mt.tuner_filter=function(mc) return true end
-		end
-		if f2 then
-			mt.nontuner_filter=function(mc) return mc and f2(mc) end
-		else
-			mt.nontuner_filter=function(mc) return true end
-		end
-		mt.minntct=1
-		mt.maxntct=1
-		mt.sync=true
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_SPSUMMON_PROC)
-		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetRange(LOCATION_EXTRA)
-		e1:SetCondition(Auxiliary.SynCondition(f1,f2,1,1))
-		e1:SetTarget(Auxiliary.SynTarget(f1,f2,1,1))
-		e1:SetOperation(Auxiliary.SynOperation(f1,f2,1,1))
-		e1:SetValue(SUMMON_TYPE_SYNCHRO)
-		c:RegisterEffect(e1)
-	end
-	
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(89326990,0))
@@ -116,13 +82,13 @@ function c249000437.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	local ac=Duel.AnnounceCard(tp)
+	local ac=Duel.AnnounceCardFilter(tp,TYPE_SYNCHRO,OPCODE_ISTYPE,c:GetOriginalCode(),OPCODE_ISCODE,OPCODE_OR)
 	local tc=Duel.CreateToken(tp,ac)
 	while not c249000437.filter(tc,e,tp,c)
 	do
 		ac=Duel.AnnounceCard(tp)
 		tc=Duel.CreateToken(tp,ac)
-		if tc:IsType(TYPE_TRAP) then return end
+		if tc:IsCode(249000437) then return end
 	end
 --	local g=Duel.GetMatchingGroup(c249000437.filter,tp,LOCATION_EXTRA,0,nil,e,tp,c)
 --		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

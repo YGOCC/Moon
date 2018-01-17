@@ -91,33 +91,31 @@ function c249000438.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c249000438.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	local att=tc:GetAttribute()
+	local att=tc:GetOriginalAttribute()
 	local rk=tc:GetRank()
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
+	if Duel.SendtoGrave(tc,REASON_EFFECT)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local ac=Duel.AnnounceCard(tp)
+	local ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,c:GetOriginalCode(),OPCODE_ISCODE,OPCODE_OR)
 	local sc=Duel.CreateToken(tp,ac)
 	while not (sc:IsType(TYPE_XYZ) and sc:GetRank() == rk +2 and sc:IsAttribute(att) and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false))
 	do
 		ac=Duel.AnnounceCard(tp)
 		sc=Duel.CreateToken(tp,ac)
-		if sc:IsType(TYPE_TRAP) then return end
+		if sc:IsCode(249000438) then return end
 	end
-	Duel.SendtoDeck(sc,nil,0,REASON_RULE)
 	if sc then
-		local mg=tc:GetOverlayGroup()
-		if mg:GetCount()~=0 then
-			Duel.Overlay(sc,mg)
-		end
-		sc:SetMaterial(Group.FromCards(tc))
-		Duel.Overlay(sc,Group.FromCards(tc))
+		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
+		sc:CompleteProcedure()
 		local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
 		if tc2 then
 			Duel.Overlay(sc,tc2)
 		end
-		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
-		sc:CompleteProcedure()
+		tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
+		if tc2 then
+			Duel.Overlay(sc,tc2)
+		end
 	end
 end
