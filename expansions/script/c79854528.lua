@@ -43,7 +43,7 @@ function c79854528.spop(e,tp,eg,ep,ev,re,r,rp)
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_CHANGE_LEVEL)
-		e3:SetReset(RESET_EVENT+0x1fe0000)
+		e3:SetReset(RESET_EVENT+79854528)
 		e3:SetValue(4)
 		tc:RegisterEffect(e3)
 	end

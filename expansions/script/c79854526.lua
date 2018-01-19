@@ -5,7 +5,7 @@
 --from your Deck or Graveyard. 
 
 function c79854526.initial_effect(c)
-	--equip
+--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -25,6 +25,7 @@ function c79854526.initial_effect(c)
 	e2:SetTarget(c79854526.ltarget)
 	e2:SetOperation(c79854526.loperation)
 	c:RegisterEffect(e2)
+
 end
 --equip
 function c79854526.tcfilter(tc,ec)
@@ -81,7 +82,7 @@ end
 function c79854526.loperation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c79854526.filter,tp,LOCATION_GRAVE+LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c79854526.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end

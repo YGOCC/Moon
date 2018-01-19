@@ -5,13 +5,14 @@ During your Main Phase: You can target 1 Level 4 or lower Plant Monster in your 
  from your Deck to your hand. You can only use each effect of "Plantkings Scepter" once per turn.]]
 
 function c79854538.initial_effect(c)
-	--ATKboost
+
+--ATKboost
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_EQUIP)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(c79854538.atkval)
 	c:RegisterEffect(e1)
-	--special Summon
+--special Summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(79854538,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -28,26 +29,25 @@ function c79854538.initial_effect(c)
 	e3:SetCondition(c79854538.descon)
 	e3:SetOperation(c79854538.desop)
 	c:RegisterEffect(e3)
-	--search effect
+--search effect
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(79854538,0))
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_TO_GRAVE)
-	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCountLimit(1,79854638)
 	e4:SetCondition(c79854538.srcon)
 	e4:SetTarget(c79854538.srtg)
 	e4:SetOperation(c79854538.srop)
 	c:RegisterEffect(e4)
-	--equiplimit
+--equiplimit
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_EQUIP_LIMIT)
 	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e5:SetValue(c79854538.eqlimit)
 	c:RegisterEffect(e5)
-	--Activate
+--Activate
 	local e6=Effect.CreateEffect(c)
 	e6:SetCategory(CATEGORY_EQUIP)
 	e6:SetType(EFFECT_TYPE_ACTIVATE)
@@ -83,7 +83,7 @@ function c79854538.operation(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
 		c:SetCardTarget(tc)
-	end
+end
 end
 function c79854538.desfilter(c,rc)
 	return rc:GetCardTarget():IsContains(c)
@@ -100,8 +100,7 @@ function c79854538.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c79854538.srcon(e,tp,eg,ep,ev,re,r,rp)
-	return (re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_COST)~=0) or
-	(re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_EFFECT)~=0)
+	return e:GetHandler():IsLocation(LOCATION_GRAVE) and e:GetHandler():GetReasonEffect():IsActiveType(TYPE_MONSTER) 
  end
 function c79854538.srtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c79854538.srfilter,tp,LOCATION_DECK,0,1,nil) end
