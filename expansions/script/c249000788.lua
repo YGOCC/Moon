@@ -1,11 +1,12 @@
---Chaos Mage's Creation Ritual
+--Chaos-Mage's Effect Gain
 function c249000788.initial_effect(c)
-	--activate
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCost(c249000788.cost)
+	e1:SetCondition(c249000788.condition)
+	e1:SetTarget(c249000788.target)
 	e1:SetOperation(c249000788.activate)
 	c:RegisterEffect(e1)
 	--set
@@ -19,84 +20,54 @@ function c249000788.initial_effect(c)
 	e2:SetOperation(c249000788.setop)
 	c:RegisterEffect(e2)
 end
-function c249000788.costfilter(c)
-	return c:IsSetCard(0x30CF) and c:IsAbleToRemoveAsCost() and c:IsType(TYPE_MONSTER)
+function c249000788.cfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x30CF)
 end
-function c249000788.costfilter2(c)
-	return c:IsSetCard(0x30CF) and not c:IsPublic() and c:IsType(TYPE_MONSTER)
+function c249000788.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c249000788.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
-function c249000788.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.IsExistingMatchingCard(c249000788.costfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler())
-	or Duel.IsExistingMatchingCard(c249000788.costfilter2,tp,LOCATION_HAND,0,1,e:GetHandler())) end
-	local option
-	if Duel.IsExistingMatchingCard(c249000788.costfilter2,tp,LOCATION_HAND,0,1,e:GetHandler())  then option=0 end
-	if Duel.IsExistingMatchingCard(c249000788.costfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) then option=1 end
-	if Duel.IsExistingMatchingCard(c249000788.costfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler())
-	and Duel.IsExistingMatchingCard(c249000788.costfilter2,tp,LOCATION_HAND,0,1,e:GetHandler()) then
-		option=Duel.SelectOption(tp,526,1102)
-	end
-	if option==0 then
-		g=Duel.SelectMatchingCard(tp,c249000788.costfilter2,tp,LOCATION_HAND,0,1,1,nil,e)
-		Duel.ConfirmCards(1-tp,g)
-		Duel.ShuffleHand(tp)
-	end
-	if option==1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,c249000788.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-		Duel.Remove(g,POS_FACEUP,REASON_COST)
-	end
+function c249000788.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:GetLocation()==LOCATION_MZONE and chkc:IsFaceup() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function c249000788.racefilter(c,race)
-	return c:IsRace(race) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
-end
-function c249000788.codefilter(c)
-	return c:IsType(TYPE_MONSTER) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
-end
-function c249000788.rmfilter(c)
-	return c:IsLevelAbove(1) and c:IsAbleToRemove()
+function c249000788.filter(c)
+	return c:IsType(TYPE_EFFECT) and c:IsFaceup()
 end
 function c249000788.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local race=0
-	local i=1
-	while i < 0x1000000 do
-		if Duel.IsExistingMatchingCard(c249000788.racefilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,i)
-			then race=race+i
-		end
-	i=i*2
+	local tc=Duel.GetFirstTarget()
+	local g=Duel.GetMatchingGroup(c249000788.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,nil)
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and g:GetCount() > 0 then
+		local tg=g:Select(tp,1,1,nil)
+		local tc2=tg:GetFirst()
+		local code=tc2:GetOriginalCode()
+		local cid=tc:CopyEffect(code,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
+		local e1=Effect.CreateEffect(tc)
+		e1:SetDescription(aux.Stringid(30312361,1))
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_END)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e1:SetCountLimit(1)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetLabel(cid)
+		e1:SetOperation(c249000788.rstop)
+		tc:RegisterEffect(e1)
 	end
-	local code_table={}
-	local g=Duel.GetMatchingGroup(c249000788.codefilter,tp,0xFF,0,nil)
-	i=1
-	local tc=g:GetFirst()
-	while tc do
-		code_table[i]=tc:GetOriginalCode()
-		i=i+1
-		code_table[i]=OPCODE_ISCODE
-		i=i+1
-		code_table[i]=OPCODE_NOT
-		i=i+1
-		code_table[i]=OPCODE_AND
-		i=i+1		
-		tc=g:GetNext()
-	end
-	local sc
-	local g
-	repeat
-		local announce_filter={race,OPCODE_ISRACE,TYPE_MONSTER,OPCODE_ISTYPE,OPCODE_AND,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT,OPCODE_AND,table.unpack(code_table)}
-		local ac=Duel.AnnounceCardFilter(tp,table.unpack(announce_filter))
-		sc=Duel.CreateToken(tp,ac)
-		g=Duel.GetMatchingGroup(c249000788.rmfilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE,0,nil)
-	until (g:CheckWithSumEqual(Card.GetLevel,sc:GetLevel(),1,99,nil) and sc:IsCanBeSpecialSummoned(e,0,tp,false,false))
-	local sg=g:SelectWithSumEqual(tp,Card.GetLevel,sc:GetLevel(),1,99,nil)
-	Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
-	Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
 end
-function c249000788.cfilter(c,tp)
+function c249000788.rstop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local cid=e:GetLabel()
+	c:ResetEffect(cid,RESET_COPY)
+	Duel.HintSelection(Group.FromCards(c))
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+end
+function c249000788.setfilter(c,tp)
 	return c:IsSetCard(0x30CF) and c:GetControler()==tp
 end
 function c249000788.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c249000788.cfilter,1,nil,tp)
+	return eg:IsExists(c249000788.setfilter,1,nil,tp)
 end
 function c249000788.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsSSetable() end
@@ -112,7 +83,7 @@ function c249000788.setop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetReset(RESET_EVENT+0x47e0000)
-		e1:SetValue(LOCATION_DECKSHF)
+		e1:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e1)
 	end
 end

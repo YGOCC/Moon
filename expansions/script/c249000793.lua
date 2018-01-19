@@ -20,15 +20,15 @@ function c249000793.initial_effect(c)
 	e2:SetOperation(c249000793.desop)
 	c:RegisterEffect(e2)
 	--set
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(c249000793.setcon)
-	e2:SetTarget(c249000793.settg)
-	e2:SetOperation(c249000793.setop)
-	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCondition(c249000793.setcon)
+	e3:SetTarget(c249000793.settg)
+	e3:SetOperation(c249000793.setop)
+	c:RegisterEffect(e3)
 end
 function c249000793.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetBattleDamage(tp)>0
@@ -43,7 +43,7 @@ function c249000793.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local g=Duel.GetMatchingGroup(c249000793.spfilter,tp,LOCATION_DECK,0,nil,e,tp,dv)
-		if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(1621413,2)) then
+		if g:GetCount()>0 and Duel.SelectYesNo(tp,2) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=g:Select(tp,1,1,nil)
