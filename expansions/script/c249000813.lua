@@ -53,7 +53,6 @@ function c249000813.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabelObject(g1:GetFirst())
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(19310321,2))
 	local g2=Duel.SelectTarget(tp,c249000813.filter2,tp,LOCATION_REMOVED,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g2,1,0,0)
 end
 function c249000813.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()

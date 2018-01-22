@@ -44,21 +44,21 @@ function cod.initial_effect(c)
 	e4:SetValue(cod.eqlimit)
 	c:RegisterEffect(e4)
 	--Pierce
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_EQUIP)
-	e5:SetCode(EFFECT_PIERCE)
-	c:RegisterEffect(e5)
+    local e5=Effect.CreateEffect(c)
+    e5:SetType(EFFECT_TYPE_EQUIP)
+    e5:SetCode(EFFECT_PIERCE)
+    c:RegisterEffect(e5)
 	--Destroy
 	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(id,2))
-	e6:SetCategory(CATEGORY_DESTROY)
-	e6:SetType(EFFECT_TYPE_IGNITION)
-	e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e6:SetRange(LOCATION_MZONE)
-	e6:SetCountLimit(1,id)
-	e6:SetTarget(cod.destg)
-	e6:SetOperation(cod.desop)
-	c:RegisterEffect(e6)
+    e6:SetDescription(aux.Stringid(id,2))
+    e6:SetCategory(CATEGORY_DESTROY)
+    e6:SetType(EFFECT_TYPE_IGNITION)
+    e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    e6:SetRange(LOCATION_MZONE)
+    e6:SetCountLimit(1,id)
+    e6:SetTarget(cod.destg)
+    e6:SetOperation(cod.desop)
+    c:RegisterEffect(e6)
 end
 
 --Equip
@@ -120,7 +120,7 @@ function cod.cfilter(c)
 		and Duel.IsExistingMatchingCard(cod.cfilter2,tp,0,LOCATION_SZONE,1,nil) 
 end
 function cod.cfilter2(c)
-	return c:IsDestructable()
+	return c:IsFaceup() and c:IsDestructable()
 end
 function cod.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(cod.cfilter,tp,LOCATION_SZONE,0,1,nil) end

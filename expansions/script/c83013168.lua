@@ -144,10 +144,6 @@ end
 function cod.eqfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsType(TYPE_UNION)
 end
-function cod.filter2(c)
-	local ct1,ct2=c:GetUnionCount()
-	return c:IsFaceup() and c:IsSetCard(0x33F) and ct2==0
-end
 function cod.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
@@ -156,7 +152,7 @@ function cod.spop2(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:Select(tp,1,1,nil)
 		if sg:GetCount()==0 then return end
 		local tc=sg:GetFirst()
-		if c:IsFacedown() or not cod.filter2(c) then
+		if c:IsFacedown() or not cod.filter(c) then
 			Duel.SendtoGrave(tc,REASON_EFFECT)
 			return
 		end

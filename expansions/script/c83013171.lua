@@ -142,14 +142,14 @@ function cod.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	local eg=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_HAND,0,nil,0x33F)
 	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 and eg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3))then
-		local sg=eg:Select(tp,1,1,nil)
+		local sg=g:Select(tp,1,1,nil)
 		if sg:GetCount()==0 then return end
 		local ec=sg:GetFirst()
-		if tc:IsFacedown() or not cod.filter2(tc) then
+		if tc:IsFacedown() or not cod.filter2(ec) then
 			Duel.SendtoGrave(ec,REASON_EFFECT)
 			return
 		end
-		if not Duel.Equip(tp,ec,tc,true) then return end
+		if not Duel.Equip(tp,ec,tc,false) then return end
 		aux.SetUnionState(ec)
 	end
 end

@@ -53,16 +53,18 @@ function cod.initial_effect(c)
 	e5:SetValue(LOCATION_REMOVED)
 	e5:SetTarget(cod.rmtg)
 	c:RegisterEffect(e5)
-	--Level Change
-	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(id,2))
-	e6:SetCategory(CATEGORY_LVCHANGE)
-	e6:SetType(EFFECT_TYPE_IGNITION)
-	e6:SetRange(LOCATION_MZONE)
-	e6:SetCountLimit(1)
-	e6:SetTarget(cod.lvtg)
-	e6:SetOperation(cod.lvop)
-	c:RegisterEffect(e6)
+	
+	  --Equip
+    local e2=Effect.CreateEffect(c)
+    e2:SetDescription(aux.Stringid(id,2))
+    e2:SetCategory(CATEGORY_EQUIP)
+    e2:SetType(EFFECT_TYPE_IGNITION)
+    e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    e2:SetRange(LOCATION_MZONE)
+    e2:SetCountLimit(1)
+    e2:SetTarget(cod.eqtg)
+    e2:SetOperation(cod.eqop)
+    c:RegisterEffect(e2)
 	--Special Summon
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(id,5))
@@ -133,41 +135,37 @@ function cod.rmtg(e,c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 
---Level Change
-function cod.cfilter(c)
-	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsType(TYPE_UNION) and not c:IsPublic()
+
+--Equip
+function cod.ecfilter1(c,mc)
+	return c:IsSetCard(0x33F) and cod.ecfilter2(c,mc)
 end
-function cod.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cod.cfilter,tp,LOCATION_HAND,0,1,nil) end
+function cod.ecfilter2(ec,mc)
+	local ct1,ct2=mc:GetUnionCount()
+	return mc:IsFaceup() and mc:IsSetCard(0x33F) and ec:CheckEquipTarget(mc) and ec:GetCode()~=mc:GetCode() and ct2==0
 end
-function cod.lvop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,cod.cfilter,tp,LOCATION_HAND,0,1,99,nil)
-	local ct=g:GetCount()
-	if ct>0 then
-		Duel.ConfirmCards(1-tp,g)
-		Duel.ShuffleHand(tp)
-		local op=0
-		if c:GetLevel()==1 then op=Duel.SelectOption(tp,aux.Stringid(id,3))
-		else op=Duel.SelectOption(tp,aux.Stringid(id,3),aux.Stringid(id,4)) end
---[[		if c:GetLevel()+ct>=12 then
-			ct=12
-		else
-			if c:GetLevel()-ct<=1 then
-				ct=0
-			end
-		end]]--
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_UPDATE_LEVEL)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		if op==0 then
-			e1:SetValue(ct)
-		else e1:SetValue(-ct) end
-		c:RegisterEffect(e1)
+function cod.mfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x33F) 
+		and Duel.IsExistingMatchingCard(cod.ecfilter1,tp,LOCATION_DECK,0,1,nil,c)
+end
+function cod.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cod.ecfilter1(chkc) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 
+		and Duel.IsExistingTarget(cod.mfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,cod.mfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SetOperaionInfo(0,CATEGORY_EQUIP,g,1,0,0)
+end
+function cod.eqop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	local eg=Duel.GetMatchingGroup(cod.ecfilter1,tp,LOCATION_DECK,0,nil,tc)
+	if tc and tc:IsRelateToEffect(e) and eg:GetCount()>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+		local eqc=eg:FilterSelect(tp,cod.ecfilter1,1,1,nil,tc):GetFirst()
+		if not eqc then return end
+		if not Duel.Equip(tp,eqc,tc,false) then return end
+		eqc:RegisterFlagEffect(eqc:GetCode(),RESET_EVENT+0x7e0000+RESET_PHASE+PHASE_END,0,1)
+		aux.SetUnionState(eqc)
 	end
 end
 

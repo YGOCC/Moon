@@ -137,18 +137,11 @@ function cod.eqtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+0x7e0000+RESET_PHASE+PHASE_END,0,1)
 end
-function cod.filter2(c)
-	local ct1,ct2=c:GetUnionCount()
-	return c:IsFaceup() and c:IsSetCard(0x33F) and ct2==0
-end
 function cod.eqop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not c:IsRelateToEffect(e) then return end
-	if not tc:IsRelateToEffect(e) or not cod.filter2(tc) then
-		Duel.SendtoGrave(c,REASON_EFFECT)
-		return
-	end
+	if not tc:IsRelateToEffect(e) then return end
 	if not Duel.Equip(tp,c,tc,true) then return end
 	aux.SetUnionState(c)
 end

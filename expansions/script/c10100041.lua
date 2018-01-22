@@ -5,15 +5,12 @@ function c10100041.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--confirm
+	--
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_PUBLIC)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1)
-	e2:SetTarget(c10100041.cftg)
-	e2:SetOperation(c10100041.cfop)
+	e2:SetTargetRange(0,LOCATION_HAND)
 	c:RegisterEffect(e2)
 	--cannot be target
 	local e3=Effect.CreateEffect(c)
@@ -31,7 +28,7 @@ function c10100041.initial_effect(c)
 	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e4:SetCode(EFFECT_UPDATE_ATTACK)
 	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x323))
-	e4:SetValue(350)
+	e4:SetValue(500)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
 	e5:SetCode(EFFECT_UPDATE_DEFENSE)
@@ -43,7 +40,7 @@ function c10100041.initial_effect(c)
 	e6:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e6:SetCode(EFFECT_UPDATE_ATTACK)
 	e6:SetTarget(aux.TargetBoolFunction(Card.IsCode,86137485))
-	e6:SetValue(350)
+	e6:SetValue(500)
 	c:RegisterEffect(e6)
 	local e7=e6:Clone()
 	e7:SetCode(EFFECT_UPDATE_DEFENSE)
@@ -55,7 +52,7 @@ function c10100041.initial_effect(c)
 	e8:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e8:SetCode(EFFECT_UPDATE_ATTACK)
 	e8:SetTarget(aux.TargetBoolFunction(Card.IsCode,13521194))
-	e8:SetValue(350)
+	e8:SetValue(500)
 	c:RegisterEffect(e8)
 	local e9=e8:Clone()
 	e9:SetCode(EFFECT_UPDATE_DEFENSE)
@@ -67,25 +64,42 @@ function c10100041.initial_effect(c)
 	e10:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e10:SetCode(EFFECT_UPDATE_ATTACK)
 	e10:SetTarget(aux.TargetBoolFunction(Card.IsCode,50732780))
-	e10:SetValue(350)
+	e10:SetValue(500)
 	c:RegisterEffect(e10)
 	local e11=e10:Clone()
 	e11:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e11)
-end
-function c10100041.cftg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
-	Duel.SetTargetPlayer(tp)
-end
-function c10100041.cfop(e,tp,eg,ep,ev,re,r,rp)
-	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(p,nil,p,0,LOCATION_HAND,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.ConfirmCards(p,g)
-		Duel.ShuffleHand(1-p)
-	end
+	--search
+	local e12=Effect.CreateEffect(c)
+	e12:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e12:SetType(EFFECT_TYPE_IGNITION)
+	e12:SetRange(LOCATION_SZONE)
+	e12:SetCountLimit(1,10100041)
+	e12:SetCondition(c10100041.thcon)
+	e12:SetTarget(c10100041.target)
+	e12:SetOperation(c10100041.operation)
+	c:RegisterEffect(e12)
 end
 function c10100041.tgtg(e,c)
 	return c:IsSetCard(0x323) or c:IsCode(86137485) and c:IsType(TYPE_SYNCHRO)
+end
+function c10100041.filter(c)
+	return c:IsSetCard(0x323) and c:IsAbleToHand() or c:IsCode(86137485,50732780,13521194) and c:IsAbleToHand()
+end
+function c10100041.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c10100041.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c10100041.operation(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c10100041.filter),tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+		Duel.ShuffleDeck(tp)
+	end
+end
+function c10100041.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
