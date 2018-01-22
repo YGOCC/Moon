@@ -1,4 +1,4 @@
-﻿expansions/Cards-non QCD.cdb	1320029a68958fa14d2dbc4f57708aa3
+﻿expansions/Cards-non QCD.cdb	b001f88c6002c9b72a9e5a2e3a909bb1
 expansions/pre-release.cdb	ef46a6d68357cf6fcba751f3d3671c68
 expansions/pre-update.cdb	0be77ab89ff78547ae1e9719da64d6e1
 expansions/strings.conf	07d8be2b24d19faff67a6647c7f34581
@@ -4860,7 +4860,7 @@ expansions/script/c160001239.lua	52bd740389f2b411dece5ec6aea5c2ff
 expansions/script/c16000128.lua	133116d4a08b9f1542d0666407b1d690
 expansions/script/c160001305.lua	405921e4e33ebd5e3e2d59121e6f23fc
 expansions/script/c160002123.lua	af0d00a3ccb3676dd8ceae402fb0d99c
-expansions/script/c160002124.lua	f0ba6454ccc84c2aa02f64b4cd5563e4
+expansions/script/c160002124.lua	df8bf5ed14a61a8b3dc4e8923e221b8d
 expansions/script/c160002125.lua	ed47014f4004948d394e859d20819263
 expansions/script/c160002156.lua	d8dc54f8398e0344d96c529f5d39c770
 expansions/script/c16000219.lua	12205268ae92ff9e21566b5a54e12824
@@ -4891,7 +4891,7 @@ expansions/script/c16000536.lua	c329fd04397bffe3e690e2e7c053e922
 expansions/script/c16000538.lua	9c838983384455176f82ea135607e1f6
 expansions/script/c160005413.lua	e68453ecb6b4e5d92f7fec699b9d1fc5
 expansions/script/c160005445.lua	e97a1b81ec2eb72dc20dbd47a13c75c1
-expansions/script/c160005512.lua	f48f5ee3e072b3d07315cca1da649f55
+expansions/script/c160005512.lua	94e6c7a9d1ce3d211d878006eec11498
 expansions/script/c160005555.lua	e531edaebc555eb4078d02a93910da97
 expansions/script/c160006669.lua	f18a4a5c7d598b4f218da03ab50d34b8
 expansions/script/c160007800.lua	9806fd74aec908b951ed539915bfe7e2
@@ -7178,6 +7178,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	d38a681416e8c2a824dfcf6a58f99868
+update/filelist.txt	07a60d56012eeb52a3e72195cc762018
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	5e9864304095acb846d4dbcb5ac96f73
+update/version.txt	6c1b8f7049e402e4f98d7f523c3eee10
