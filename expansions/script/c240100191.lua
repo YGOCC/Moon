@@ -22,7 +22,7 @@ function c240100191.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c240100191.val(e,c)
-	return Duel.GetMatchingGroupCount(c240100191.rfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)*100
+	return Duel.GetMatchingGroupCount(c240100191.rfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*100
 end
 function c240100191.rfilter(c)
 	return c:IsSetCard(0xbb2) and c:IsType(TYPE_MONSTER)

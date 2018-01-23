@@ -206,23 +206,24 @@ Card.IsLevelAbove=function(c,lv)
 	return is_level_above(c,lv)
 end
 Duel.ChangePosition=function(cc, au, ad, du, dd)
+	if not ad then ad=au end if not du then du=au end if not dd then dd=au end
 	if pcall(Group.GetFirst,cc) then
 		local ct=0
-		local tg=cc:Filter(function(c,a,d) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and c:GetFlagEffect(500)>0
-			and (d and d&POS_FACEDOWN~=0 or a&POS_FACEDOWN~=0) end,nil,au,du)
-		if tg:GetCount()>0 then
-			for tc in aux.Next(tg) do
-				tc:SwitchSpace()
-				ct=tc:GetFlagEffectLabel(500)
-				if ct>1 then
-					tc:SetFlagEffectLabel(500,ct-1)
-				else tc:ResetFlagEffect(500) end
-				cc:RemoveCard(tc)
-			end
+		local tg=cc:Filter(function(c,au,du) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and c:GetFlagEffect(500)>0 and c:IsFaceup()
+			and ((du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0))
+		end,nil,au,du)
+		for tc in aux.Next(tg) do
+			tc:SwitchSpace()
+			ct=tc:GetFlagEffectLabel(500)
+			if ct>1 then
+				tc:SetFlagEffectLabel(500,ct-1)
+			else tc:ResetFlagEffect(500) end
+			cc:RemoveCard(tc)
 		end
 	else
-		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and cc:GetFlagEffect(500)>0
-			and (d and d&POS_FACEDOWN~=0 or a&POS_FACEDOWN~=0) then
+		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and cc:GetFlagEffect(500)>0 and cc:IsFaceup()
+			and ((du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0))
+		then
 			cc:SwitchSpace()
 			local ct=cc:GetFlagEffectLabel(500)
 			if ct>1 then
@@ -857,11 +858,11 @@ function Auxiliary.SptMatCheckRecursive(c,mg,sg,adiff,ddiff,fc)
 	if fc and mg:FilterCount(aux.TRUE,sg)==0 then
 		if adiff then
 			diff=math.abs(c:GetAttack()-fc:GetAttack())
-			res=diff>0 and diff<=adiff
+			res=diff>0 and (not adiff or diff<=adiff)
 		end
 		if ddiff then
 			diff=math.abs(c:GetDefense()-fc:GetDefense())
-			res=res and diff>0 and diff<=ddiff
+			res=(res) or (diff>0 and (not ddiff or diff<=ddiff))
 		end
 	else res=mg:IsExists(Auxiliary.SptMatCheckRecursive,1,sg,mg,sg,adiff,ddiff,c) end
 	sg:RemoveCard(c)

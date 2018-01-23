@@ -35,7 +35,7 @@ function c240100257.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c240100257.val(e,c)
-	return Duel.GetMatchingGroupCount(c240100257.rfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)*100+c:GetOverlayCount()*200
+	return Duel.GetMatchingGroupCount(c240100257.rfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*100+c:GetOverlayCount()*200
 end
 function c240100257.rfilter(c)
 	return c:IsSetCard(0xbb2) and c:IsType(TYPE_MONSTER)
@@ -75,8 +75,9 @@ function c240100257.posop(e,tp,eg,ep,ev,re,r,rp)
 	if mg:GetCount()>=sg:GetCount() and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(122518919,7)) then
 		Duel.BreakEffect()
 		for c in aux.Next(dg) do
-			Duel.Overlay(c,mg:Select(tp,1,1,ec))
-			ec=c
+			local tc=mg:Select(tp,1,1,ec)
+			Duel.Overlay(c,tc)
+			ec=tc
 		end
 	end
 end
