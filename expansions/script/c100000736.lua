@@ -20,9 +20,10 @@ function c100000736.initial_effect(c)
 		e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_FZONE)
-	e4:SetCountLimit(1)
+	e4:SetCondition(c100000736.effcon)
 	e4:SetCost(c100000736.descost)
 	e4:SetTarget(c100000736.destarg)
+	e4:SetLabel(7)
 	e4:SetOperation(c100000736.damop)
 	c:RegisterEffect(e4)
 			--atkup
@@ -64,18 +65,10 @@ end
 function c100000736.spfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x763) and c:IsAbleToRemoveAsCost()
 end
+function c100000736.effcon(e)
+	return Duel.GetMatchingGroup(c100000736.spfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil):GetClassCount(Card.GetCode)>=e:GetLabel()
+end
 function c100000736.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x54,7,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x54,7,REASON_COST)
-		local g=Duel.GetMatchingGroup(c100000736.spfilter,tp,LOCATION_GRAVE,0,nil)
-	local rg=Group.CreateGroup()
-	for i=1,7 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=g:Select(tp,1,1,nil):GetFirst()
-		if tc then
-			rg:AddCard(tc)
-			g:Remove(Card.IsCode,nil,tc:GetCode())
-		end
-	end
-	Duel.Remove(rg,POS_FACEUP,REASON_COST)
 end
