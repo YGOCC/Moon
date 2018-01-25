@@ -113,7 +113,7 @@ function c240100185.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		op=Duel.SelectOption(tp,aux.Stringid(122518919,5))
 	else op=Duel.SelectOption(tp,aux.Stringid(122518919,6))+1 end
 	e:SetLabel(op)
-	if op==0 then
+	if op~=0 then
 		e:SetCategory(CATEGORY_REMOVE)
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
 	else
@@ -123,7 +123,7 @@ function c240100185.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c240100185.fdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if e:GetLabel()==0 then
+	if e:GetLabel()~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.SelectMatchingCard(tp,c240100185.trfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then

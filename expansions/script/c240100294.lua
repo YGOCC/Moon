@@ -2,7 +2,8 @@
 --S・VINEの第二女王クライッシャ
 function c240100294.initial_effect(c)
 	c:EnableCounterPermit(0x1)
-	aux.AddEvoluteProc(c,8,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER))
+	aux.AddOrigEvoluteType(c)
+	aux.AddEvoluteProc(c,nil,8,aux.TRUE,aux.TRUE)
 	local ae3=Effect.CreateEffect(c)
 	ae3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	ae3:SetCode(EVENT_REMOVE)

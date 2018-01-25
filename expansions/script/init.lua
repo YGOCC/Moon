@@ -209,7 +209,7 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 	if not ad then ad=au end if not du then du=au end if not dd then dd=au end
 	if pcall(Group.GetFirst,cc) then
 		local ct=0
-		local tg=cc:Filter(function(c,au,du) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and c:GetFlagEffect(500)>0 and c:IsFaceup()
+		local tg=cc:Filter(function(c,au,du) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and c:GetFlagEffect(500)>0
 			and ((du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0))
 		end,nil,au,du)
 		for tc in aux.Next(tg) do
@@ -221,7 +221,7 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 			cc:RemoveCard(tc)
 		end
 	else
-		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and cc:GetFlagEffect(500)>0 and cc:IsFaceup()
+		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and cc:GetFlagEffect(500)>0
 			and ((du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0))
 		then
 			cc:SwitchSpace()
