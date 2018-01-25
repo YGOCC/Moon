@@ -106,7 +106,7 @@ function c100000778.descon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=5000
 end
 function c100000778.destg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end 
+	if chk==0 then return Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)~=0 end 
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,1-tp,1)
 end
 function c100000778.desop2(e,tp,eg,ep,ev,re,r,rp)
@@ -117,7 +117,7 @@ function c100000778.descon3(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=2000
 end
 function c100000778.destg3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end 
+	if chk==0 then return Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)~=0 end 
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,1-tp,2)
 end
 function c100000778.desop3(e,tp,eg,ep,ev,re,r,rp)

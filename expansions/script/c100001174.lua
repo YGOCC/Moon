@@ -36,7 +36,7 @@ function c100001174.spfilter(c)
 end
 function c100001174.hspcon(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-1
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c100001174.spfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_HAND,0,1,c)
 end
 function c100001174.hspop(e,tp,eg,ep,ev,re,r,rp,c)
