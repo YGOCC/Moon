@@ -24,7 +24,6 @@ function c1020050.initial_effect(c)
 	c:RegisterEffect(e2)
 	--salvage
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(20210570,0))
 	e3:SetCategory(CATEGORY_TODECK)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
@@ -56,11 +55,11 @@ function c1020050.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,ct*300,REASON_EFFECT)
 end
 function c1020050.tdfilter(c)
-	return c1020050.cfilter(c) and c:IsAbleToDeck()
+	return c:IsFaceup() and c:IsSetCard(0x4b0) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function c1020050.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1020050.tdfilter,0,LOCATION_REMOVED,0,1,c) end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,0,LOCATION_REMOVED)
+	if chk==0 then return Duel.IsExistingMatchingCard(c1020050.tdfilter,tp,LOCATION_REMOVED,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
 end
 function c1020050.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)

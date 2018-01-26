@@ -13,8 +13,8 @@ function c1020047.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x4b0))
-	e2:SetValue(400)
+	e2:SetTarget(c1020047.atktg)
+	e2:SetValue(200)
 	c:RegisterEffect(e2)
 	--pierce
 	local e3=Effect.CreateEffect(c)
@@ -78,4 +78,8 @@ function c1020047.disop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
 	end
+end
+--values
+function c1020047.atktg(e,c)
+	return c:IsSetCard(0x4b0) and c:IsSummonType(SUMMON_TYPE_NORMAL)
 end
