@@ -207,30 +207,13 @@ Card.IsLevelAbove=function(c,lv)
 end
 Duel.ChangePosition=function(cc, au, ad, du, dd)
 	if not ad then ad=au end if not du then du=au end if not dd then dd=au end
-	if pcall(Group.GetFirst,cc) then
-		local ct=0
-		local tg=cc:Filter(function(c,au,du) return Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and c:GetFlagEffect(500)>0
-			and ((du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0))
-		end,nil,au,du)
-		for tc in aux.Next(tg) do
-			tc:SwitchSpace()
-			ct=tc:GetFlagEffectLabel(500)
-			if ct>1 then
-				tc:SetFlagEffectLabel(500,ct-1)
-			else tc:ResetFlagEffect(500) end
-			cc:RemoveCard(tc)
-		end
-	else
-		if Auxiliary.Spatials[cc] and cc:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and cc:GetFlagEffect(500)>0
-			and ((du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0))
-		then
-			cc:SwitchSpace()
-			local ct=cc:GetFlagEffectLabel(500)
-			if ct>1 then
-				cc:SetFlagEffectLabel(500,ct-1)
-			else cc:ResetFlagEffect(500) end
-			return
-		end
+	if (du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0) then
+		if pcall(Group.GetFirst,cc) then
+			local tg=cc:Clone()
+			for c in aux.Next(tg) do
+				if c:SwitchSpace() then cc=cc-c end
+			end
+		elseif cc:SwitchSpace() then return end
 	end
 	change_position(cc,au,ad,du,dd)
 end
@@ -747,12 +730,18 @@ function Auxiliary.PolarityOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 end
 --Spatials
 function Card.SwitchSpace(c)
+	if not (Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and c:GetFlagEffect(500)>0) then return false end
 	Auxiliary.Spatials[c]=nil
 	local tcode=c.spt_another_space or c.spt_origin_space
 	c:SetEntityCode(tcode,true)
 	c:ReplaceEffect(tcode,0,0)
 	Duel.SetMetatable(c,_G["c"..tcode])
 	Auxiliary.AddOrigSpatialType(c)
+	local ct=c:GetFlagEffectLabel(500)
+	if ct>1 then
+		c:SetFlagEffectLabel(500,ct-1)
+	else c:ResetFlagEffect(500) end
+	return true
 end
 function Card.GetDimensionNo(c)
 	if not Auxiliary.Spatials[c] then return 0 end
