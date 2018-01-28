@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at https://i.pinimg.com/originals/6e/a3/fc/6ea3fc8bd27dcbd64f96ed70b67ec2d9.jpg
 --「S・VINE」ベイブ
 function c240100182.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

@@ -1,4 +1,4 @@
---created by LionHeartKIng of Wikia, coded by Lyris
+--created by LionHeartKIng of Wikia, coded by Lyris, art at http://hbimg.b0.upaiyun.com/cf68c15e38ade72cbfd759f2d3ba028405df669218af3-OONFL4
 --S・VINEのネクロマスター
 function c240100186.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

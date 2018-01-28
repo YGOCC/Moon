@@ -1,4 +1,4 @@
---Original created by RandyPandy of FanFiction.net, coded by Lyris
+--Original created by RandyPandy of FanFiction.net, coded by Lyris, art at http://stuffpoint.com/dragons/image/126028-dragons-fast-black-dragon.jpg
 --アクセル・バースト・ドラゴン
 function c240100004.initial_effect(c)
 	c:EnableReviveLimit()

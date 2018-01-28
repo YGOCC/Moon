@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at https://innocentmin.files.wordpress.com/2012/05/chinaprince.jpg
 --S・VINE王子ザフィル
 function c240100247.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

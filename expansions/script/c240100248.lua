@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by b0uysel of deviantArt
 --S・VINE曲芸師ズンバ
 function c240100248.initial_effect(c)
 aux.EnableDualAttribute(c)

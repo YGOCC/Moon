@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://goctruyen.com/public/frontend/images/vuongphimuoibatuoiDU2SSfF5oa.jpg
 --S・VINEの乙女ジャッキー
 function c240100181.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

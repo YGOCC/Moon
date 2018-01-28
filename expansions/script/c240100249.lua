@@ -1,4 +1,4 @@
---created by LionHeartKIng of Wikia, coded by Lyris
+--created by LionHeartKIng of Wikia, coded by Lyris, art at http://dharmata.net/wp-content/uploads/2017/12/Chi-Chern-Fashi-534x462.jpg
 --S・VINEのコースタル・プリースト
 function c240100249.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
