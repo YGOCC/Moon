@@ -21,12 +21,12 @@ function c16000536.initial_effect(c)
 	c:RegisterEffect(e3)
 		--tohand
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetCountLimit(1,16000536)
 	e4:SetCondition(c16000536.thcon)
-	e4:SetCost(c16000536.thcost)
+   -- e4:SetCost(c16000536.thcost)
 	e4:SetTarget(c16000536.thtg)
 	e4:SetOperation(c16000536.thop)
 	c:RegisterEffect(e4)
@@ -56,12 +56,19 @@ function c16000536.filter(c)
 	return  c:IsSetCard(0xc52)  and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function c16000536.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	  if chk==0 then return Duel.IsExistingMatchingCard(c16000536.filter,tp,LOCATION_DECK,0,1,nil) end
+	local g=Duel.GetFieldGroup(tp,LOCATION_PZONE,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c16000536.thop(e,tp,eg,ep,ev,re,r,rp)
+   local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	local dg=Duel.GetFieldGroup(tp,LOCATION_PZONE,0)
+	if dg:GetCount()<2 then return end
+	if Duel.Destroy(dg,REASON_EFFECT)~=2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c16000536.filter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c16000536.filter),tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

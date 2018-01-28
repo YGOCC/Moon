@@ -2,7 +2,7 @@
 function c16000535.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,6,c16000535.filter1,c16000535.filter1)
+  aux.AddEvoluteProc(c,c16000535.checku,6,c16000535.filter1,c16000535.filter2)
 	--attack up
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_CONTROL)
@@ -28,8 +28,14 @@ function c16000535.initial_effect(c)
 	e2:SetOperation(c16000535.thop)
 	c:RegisterEffect(e2)
 end
+function c16000535.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
+end
 function c16000535.filter1(c,ec,tp)
-	return c:IsType(TYPE_NORMAL)
+	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+function c16000535.filter1(c,ec,tp)
+	return c:IsRace(RACE_FAIRY)
 end
 function c16000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) and Duel.GetCurrentPhase()~=PHASE_MAIN2 end

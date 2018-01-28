@@ -2,7 +2,7 @@
 function c160008741.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,8,c160008741.filter1,c160008741.filter1)
+  aux.AddEvoluteProc(c,nil,8,c160008741.filter1,c160008741.filter2)
 	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160008741,0))
@@ -50,7 +50,10 @@ function c160008741.regop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c160008741.filter1(c,ec,tp)
-	return not c:IsType(TYPE_EFFECT)
+	return  c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+function c160008741.filter2(c,ec,tp)
+	return  c:IsRace(RACE_FAIRY)
 end
 function c160008741.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local bc=e:GetHandler():GetBattleTarget()

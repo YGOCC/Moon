@@ -4,7 +4,7 @@
 function c50031668.initial_effect(c)
 --synchro summon
 	 aux.AddOrigEvoluteType(c)
-   aux.AddEvoluteProc(c,c50031668.checku,5,aux.TRUE,aux.TRUE)
+	aux.AddEvoluteProc(c,c50031668.checku,5,c50031668.filter1,c50031668.filter2)
 
 	c:EnableReviveLimit()
 		local e1=Effect.CreateEffect(c)
@@ -47,7 +47,15 @@ end
 		--c50031668.stage_o=5
 --c50031668.stage=c50031668.stage_o
 --end
-
+function c50031668.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
+end
+function c50031668.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+function c50031668.filter1(c,ec,tp)
+	return c:IsRace(RACE_FAIRY)
+end
 function c50031668.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,2,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x88,2,REASON_COST)

@@ -7,25 +7,31 @@ function c160009988.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--splimit
+   --atk down
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetRange(LOCATION_PZONE)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c160009988.splimit)
-	e2:SetCondition(c160009988.splimcon)
+	e2:SetCode(EFFECT_UPDATE_ATTACK)
+	e2:SetTargetRange(0,LOCATION_MZONE)
+	e2:SetTarget(c160009988.atktg)
+	e2:SetValue(-300)
 	c:RegisterEffect(e2)
-	--extra summon
-	   local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetRange(LOCATION_PZONE)
-	e3:SetTargetRange(1,0)
-	e3:SetValue(2)
+	local e3=e2:Clone()
+	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
+	--extra summon
+	   local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e4:SetRange(LOCATION_PZONE)
+	e4:SetTarget(c160009988.target)
+	e4:SetTargetRange(1,0)
+	e4:SetValue(2)
+	c:RegisterEffect(e4)
+end
+function c160009988.atktg(e,c)
+	return c:IsType(TYPE_EFFECT)
 end
 function c160009988.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
@@ -53,3 +59,7 @@ end
 function c160009988.filter(e,c)
 	return c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL)
 end
+function c160009988.target(e,c)
+	return c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL)
+end
+

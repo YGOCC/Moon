@@ -16,6 +16,7 @@ function c500319545.initial_effect(c)
 	e2:SetCountLimit(1,500319545)
 	e2:SetCode(EVENT_DAMAGE)
 	e2:SetCondition(c500319545.sumcon)
+	e2:SetCost(c500319545.cost)
 	e2:SetTarget(c500319545.sumtg)
 	e2:SetOperation(c500319545.sumop)
 	e2:SetLabelObject(e2)
@@ -25,12 +26,20 @@ end
 function c500319545.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_PENDULUM)~=SUMMON_TYPE_PENDULUM
 end
-
+function c500319545.costfilter(c)
+	return not c:IsType(TYPE_EFFECT) and c:IsAbleToRemoveAsCost()
+end
+function c500319545.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c500319545.costfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c500319545.costfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
 function c500319545.filter(c)
 	return c:IsFaceup() and c:IsCode(500319546)
 end
 function c500319545.sumcon(e,tp,eg,ep,ev,re,r,rp)
-	return ep==tp and tp~=rp and not Duel.IsExistingMatchingCard(c500319545.filter,tp,LOCATION_MZONE,0,1,nil)
+	return ep==tp and tp~=rp
 end
 function c500319545.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>3

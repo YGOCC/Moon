@@ -2,7 +2,7 @@
 function c50031666.initial_effect(c)
 aux.EnablePendulumAttribute(c)
 	 aux.AddOrigEvoluteType(c)
-   aux.AddEvoluteProc(c,nil,4,aux.TRUE,aux.TRUE)
+	aux.AddEvoluteProc(c,c50031666.checku,5,c50031666.filter1,c50031666.filter2)
 c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)
@@ -15,16 +15,7 @@ c:EnableReviveLimit()
 	e1:SetCost(c50031666.atkcost)
 	e1:SetOperation(c50031666.atkop)
 	c:RegisterEffect(e1)
-	--splimit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetRange(LOCATION_PZONE)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c50031666.splimit)
-	e2:SetCondition(c50031666.splimcon)
-	c:RegisterEffect(e2)
+ 
 		--active limit
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -65,6 +56,16 @@ c:EnableReviveLimit()
 	e6:SetValue(c50031666.aclimit2)
 	e6:SetCondition(c50031666.actcon2)
 	c:RegisterEffect(e6)
+end
+c50031666.pendulum_level=8
+function c50031666.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
+end
+function c50031666.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+function c50031666.filter1(c,ec,tp)
+	return c:IsRace(RACE_FAIRY)
 end
 --function c50031666.spcon(e,c)
 	--if c==nil then return true end

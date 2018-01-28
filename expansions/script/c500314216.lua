@@ -5,7 +5,7 @@ function c500314216.initial_effect(c)
 	--synchro summon
 	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,6,c500314216.filter1,c500314216.filter1)
+   aux.AddEvoluteProc(c,c500314216.checku,6,c500314216.filter1,c500314216.filter2)
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500314216,0))
 	e1:SetCategory(CATEGORY_DRAW)
@@ -28,8 +28,14 @@ e2:SetCondition(c500314216.condition)
 	e2:SetOperation(c500314216.operation)
 	c:RegisterEffect(e2)
 	end
+function c500314216.checku(sg,ec,tp)
+return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
+end
 function c500314216.filter1(c,ec,tp)
-	return c:IsType(TYPE_NORMAL)
+	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+function c500314216.filter1(c,ec,tp)
+	return c:IsRace(RACE_FAIRY)
 end
 function c500314216.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388

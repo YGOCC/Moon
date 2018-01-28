@@ -27,11 +27,11 @@ function c16000233.initial_effect(c)
 	--Negate
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(16000233,1))
-	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetCountLimit(1,16000233)
-	e4:SetCost(c16000233.cost)
+	--e4:SetCost(c16000233.cost)
 	e4:SetTarget(c16000233.target)
 	e4:SetOperation(c16000233.operation)
 	c:RegisterEffect(e4)
@@ -102,8 +102,10 @@ function c16000233.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (b1 or b2)
 		and Duel.IsExistingMatchingCard(c16000233.filter,tp,LOCATION_DECK,0,1,nil,e,tp,b1,nil)
 		and Duel.IsExistingMatchingCard(c16000233.filter2,tp,LOCATION_DECK,0,1,nil,e,tp,b1,nil) end
+	 Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c16000233.operation(e,tp,eg,ep,ev,re,r,rp)
+	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local b1=Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7)
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	if not b1 and not b2 then return end

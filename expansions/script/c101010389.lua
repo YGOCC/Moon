@@ -8,16 +8,7 @@ function c101010389.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--splimit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetRange(LOCATION_PZONE)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c101010389.splimit)
-	e2:SetCondition(c101010389.splimcon)
-	c:RegisterEffect(e2)
+   
 		--pendulum set
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
@@ -52,13 +43,13 @@ e4:SetCondition(c101010389.discon)
 	--SpecialSummon
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(101010389,0))
-	e7:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e7:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 	e7:SetType(EFFECT_TYPE_IGNITION)
 	e7:SetCountLimit(1)
 	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e7:SetRange(LOCATION_MZONE)
 	e7:SetCondition(aux.IsDualState)
-	e7:SetCost(c101010389.cost)
+	--e7:SetCost(c101010389.cost)
 	e7:SetTarget(c101010389.target)
 	e7:SetOperation(c101010389.operation)
 	c:RegisterEffect(e7)
@@ -89,7 +80,7 @@ function c101010389.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c101010389.penop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	  if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0  then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 		local g=Duel.SelectMatchingCard(tp,c101010389.penfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 		local tc=g:GetFirst()
@@ -108,26 +99,30 @@ function c101010389.discon(e,tp,eg,ep,ev,re,r,rp)
 	return  aux.IsDualState(e) and  Duel.IsExistingMatchingCard(c101010389.pfilter,tp,LOCATION_SZONE,0,1,nil)
 end
 
-function c101010389.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c101010389.cfilter,tp,LOCATION_SZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c101010389.cfilter,tp,LOCATION_SZONE,0,1,1,nil)
-   Duel.Release(g,REASON_COST)
-end
+
 function c101010389.extrasfilter(c,e,tp)
-	return c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and c:IsFaceup() 
+end
+
+function c101010389.penfilterxx(c)
+	return c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM)  and  c:IsDestructable()
 end
 function c101010389.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_EXTRA) and c101010389.extrasfilter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c101010389.extrasfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+  if chkc then return false end
+	if chk==0 then return Duel.IsExistingTarget(c101010389.penfilterxx,tp,LOCATION_PZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(c101010389.extrasfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g1=Duel.SelectTarget(tp,c101010389.penfilterxx,tp,LOCATION_PZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,1,0,0)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c101010389.extrasfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	local g2=Duel.SelectMatchingCard(tp,c101010389.extrasfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	 Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g2,1,0,0)
 end
 function c101010389.operation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	  local ex,g1=Duel.GetOperationInfo(0,CATEGORY_DESTROY)
+	local ex,g2=Duel.GetOperationInfo(0,CATEGORY_SPECIAL_SUMMON)
+	if g1:GetFirst():IsRelateToEffect(e) and Duel.Destroy(g1,REASON_EFFECT)~=0 then
+		local hg=g2:Filter(c101010389.extrasfilter,nil,e)
+	Duel.SpecialSummon(hg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

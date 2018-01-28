@@ -7,16 +7,7 @@ function c500310786.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--splimit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetRange(LOCATION_PZONE)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c500310786.splimit)
-	e2:SetCondition(c500310786.splimcon)
-	c:RegisterEffect(e2)
+	
 
   local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -27,11 +18,11 @@ function c500310786.initial_effect(c)
 	c:RegisterEffect(e3)
   --tohand
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_PZONE)
 	--e4:SetCountLimit(1,500310786)
-	e4:SetCost(c500310786.cost)
+	--e4:SetCost(c500310786.cost)
 	e4:SetTarget(c500310786.target)
 	e4:SetOperation(c500310786.operation)
 	c:RegisterEffect(e4)
@@ -48,10 +39,13 @@ end
 function c500310786.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local g=Duel.GetMatchingGroup(c500310786.filter,tp,LOCATION_DECK,0,nil)
-		return g:GetClassCount(Card.GetCode)>=2
-	end
+		return g:GetClassCount(Card.GetCode)>=2 end
+	 Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+
 end
 function c500310786.operation(e,tp,eg,ep,ev,re,r,rp)
+	 local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local g=Duel.GetMatchingGroup(c500310786.filter,tp,LOCATION_DECK,0,nil)
 	if g:GetClassCount(Card.GetCode)<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(500310786,0))
