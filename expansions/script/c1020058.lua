@@ -40,7 +40,7 @@ function c1020058.ncheck(c)
 	return c:IsFaceup() and c:IsSetCard(0x4b0)
 end
 function c1020058.spcheck(c)
-	return c:IsFaceup() and c:IsSetCard(0x4b0) and (c:GetLevel()<=4 or c:GetRank()<=4)
+	return c:IsFaceup() and c:IsSetCard(0x4b0) and ((not c:IsType(TYPE_XYZ) and c:GetLevel()<=4) or (c:IsType(TYPE_XYZ) and c:GetRank()<=4))
 end
 function c1020058.rccheck(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x4b0) and (c:GetLevel()>=5 or c:GetRank()>=5) and c:GetSummonPlayer()==tp
@@ -60,8 +60,9 @@ function c1020058.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 --spsummon
-function c1020058.spscon(e,tp,eg,ep,ev,re,r,rp,chk)
-	return Duel.IsExistingMatchingCard(c1020058.spcheck,tp,LOCATION_MZONE,0,1,nil)
+function c1020058.spscon(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
+	return g:GetCount()>0 and g:IsExists(c1020058.spcheck,1,nil)
 end
 function c1020058.spstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
