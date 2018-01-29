@@ -27,7 +27,7 @@ function c88523891.initial_effect(c)
 end
 --filters
 function c88523891.spfilter(c,e,tp)
-	return c:IsSetCard(0x215a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x215a) and c:GetLevel()<=4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c88523891.excfilter(c)
 	return c:IsRace(RACE_BEASTWARRIOR) or c:GetSummonLocation()~=LOCATION_EXTRA
