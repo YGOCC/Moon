@@ -39,7 +39,7 @@ function c1020044.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and aux.disfilter1(chkc) end
 	local ct=Duel.GetMatchingGroupCount(c1020044.cfilter,tp,LOCATION_MZONE,0,e:GetHandler())
 	if chk==0 then return Duel.IsExistingTarget(aux.disfilter1,tp,0,LOCATION_ONFIELD,ct,nil) end
-	local sg=Duel.SelectTarget(tp,aux.disfilter1,tp,0,LOCATION_SZONE,ct:GetCount(),ct:GetCount(),nil)
+	local sg=Duel.SelectTarget(tp,aux.disfilter1,tp,0,LOCATION_ONFIELD,ct,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,sg:GetCount(),0,0)
 end
 function c1020044.disop(e,tp,eg,ep,ev,re,r,rp)
@@ -47,6 +47,7 @@ function c1020044.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	local tc=tg:GetFirst()
 	while tc do
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)

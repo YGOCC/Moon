@@ -50,7 +50,7 @@ function c1020961.initial_effect(c)
 end
 --filters
 function c1020961.spfilter(c)
-	return c:IsFusionSetCard(0x4b0) and c:IsCanBeFusionMaterial() and c:IsAbleToRemoveAsCost()
+	return c:IsFusionSetCard(0x4b0) and c:IsFusionType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemoveAsCost()
 end
 function c1020961.atkcount(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x4b0)
