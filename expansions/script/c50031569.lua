@@ -53,7 +53,7 @@ function c50031569.filter2(c,ec,tp)
 	return c:IsRace(RACE_PLANT) 
 end
 function c50031569.thfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+	return  c:IsAbleToRemove()
 end
    function c50031569.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

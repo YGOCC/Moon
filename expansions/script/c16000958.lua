@@ -88,16 +88,18 @@ function c16000958.sumop(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetCode(EFFECT_DISABLE_EFFECT)
 			e2:SetReset(RESET_EVENT+0x1fe0000)
 			tc:RegisterEffect(e2)   
-			if c:IsRelateToEffect(e) then
+	 
+
+if c:IsRelateToEffect(e) then
 			c:SetCardTarget(tc)
 			e:GetLabelObject():SetLabelObject(tc)
 			c:CreateRelation(tc,RESET_EVENT+0x5020000)
 			tc:CreateRelation(c,RESET_EVENT+0x5fe0000)
-			tc:RegisterFlagEffect(16000958,RESET_EVENT+0x1fe0000,0,1,fid)
+tc:RegisterFlagEffect(16000958,RESET_EVENT+0x1fe0000,0,1,fid)
 			tc=sg:GetNext()
 		end
-end
-end
+		end
+	end
 end
 function c16000958.leave(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

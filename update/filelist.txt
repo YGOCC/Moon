@@ -1,4 +1,4 @@
-﻿expansions/Cards-non QCD.cdb	8f30fdfaa1ce13aead26a99fcb4ca5ed
+﻿expansions/Cards-non QCD.cdb	bfe7524f79c75c748726d9ab5411ac5e
 expansions/pre-release.cdb	ef46a6d68357cf6fcba751f3d3671c68
 expansions/pre-update.cdb	0be77ab89ff78547ae1e9719da64d6e1
 expansions/strings.conf	8c7d223e1d7f602510f4d6ac44a590e9
@@ -1303,6 +1303,7 @@ expansions/pics/16000044.jpg	6bd4698ade97a5353905b2b85d50fbfa
 expansions/pics/160000575.jpg	46179a8d96da22705aede8e4e573107c
 expansions/pics/160000613.jpg	dfc5d66629e2baff0c253ccee895990d
 expansions/pics/16000067.jpg	1870ec5892ca95635a35f6d0cf3be1d7
+expansions/pics/160000786.jpg	75d70c3e070fd2bfa9bc531dae92289d
 expansions/pics/160000895.jpg	f76dde93442a94bbd69a61b09f153489
 expansions/pics/160000911.jpg	67983bee0777ede90874689d62f1cef9
 expansions/pics/160001123.jpg	fb7ba8b9959bf9f3af713abf777004f9
@@ -1348,6 +1349,7 @@ expansions/pics/16000538.jpg	8e5b5a4f8a93d55c3c548b88501d8dfe
 expansions/pics/160005413.jpg	b39493e205f8daf22986e3d9f37beb8d
 expansions/pics/160005414.jpg	44be8fd0349f18f4f5e96dfef4595bb6
 expansions/pics/160005445.jpg	b4fa8c9ae3532f4c06705fcb770b1640
+expansions/pics/16000550.jpg	bd3f7925b68e920f51aca4a8dc5a0d10
 expansions/pics/160005512.jpg	7f09861619c4d97a5fe8488101a49a79
 expansions/pics/160005555.jpg	bf5819501657b5401c89c79a0ba2453c
 expansions/pics/160006669.jpg	fdf00bdec023d6beb065bb21de0cceca
@@ -2899,6 +2901,7 @@ expansions/pics/50031159.jpg	d13446a1f0d160406f1d7c5edb9848d9
 expansions/pics/500311592.jpg	d0c0f884d5e3f0df45663f13a186f0b6
 expansions/pics/500311666.jpg	2460d78aceec2ad8a8c8ff44c426017c
 expansions/pics/500311692.jpg	5d3d0aacf6e90a4b8a1cd3ad913a2184
+expansions/pics/500311990.jpg	fdc88161aad7a111b8dfa4a192151a2c
 expansions/pics/500311994.jpg	da7391d21d9ae050b22a4f16037a9f66
 expansions/pics/500312121.jpg	9e54b61d207882626f3bd66b8f629981
 expansions/pics/50031222.jpg	2ddccf89aacc8ca1e64d5b6537d42f89
@@ -2920,7 +2923,7 @@ expansions/pics/50031481.jpg	394a70aff63294f6769b93a5d0b6b805
 expansions/pics/500314819.jpg	9eda892ca4ba7a55ff7ca5fa72e0137d
 expansions/pics/500315100.jpg	5cbe2336c330e42eb8b7c5f76d13c723
 expansions/pics/500315112.jpg	f42a1281fc8d2d6f3f3b7c7efa790a1b
-expansions/pics/50031516.jpg	6dd2ef0a70587f27e4060a942648e203
+expansions/pics/50031516.jpg	6b72b23a06d788e2178d7533b048abbb
 expansions/pics/500315424.jpg	4146d2baa0f2b65a0d78b7dc1b4fc97a
 expansions/pics/500315455.jpg	a7a7322208732278f2260b75bd8d2ec8
 expansions/pics/50031555.jpg	fd28e2a9f3b6bda78a683dcc70057301
@@ -4986,6 +4989,7 @@ expansions/script/c16000044.lua	a554ee1a806e31cea3efd211382aa1d1
 expansions/script/c160000575.lua	99816f341b0f9d5c44c19fd28a68d071
 expansions/script/c160000613.lua	b546d864a8bd53a2fbd2fdf42d07d104
 expansions/script/c16000067.lua	3d12b67b566c81e82de9ce49fc015e2d
+expansions/script/c160000786.lua	296176817270692dc5326bf6dd3411c8
 expansions/script/c160000895.lua	1da2e4deb19a125da5c6fb9b20ab5b17
 expansions/script/c160000911.lua	07187d328d501aacade6f51eb5e530c6
 expansions/script/c160001123.lua	72d768f4830f6bc577e25bca4ad508cf
@@ -4997,7 +5001,7 @@ expansions/script/c160001239.lua	52bd740389f2b411dece5ec6aea5c2ff
 expansions/script/c16000128.lua	133116d4a08b9f1542d0666407b1d690
 expansions/script/c160001305.lua	405921e4e33ebd5e3e2d59121e6f23fc
 expansions/script/c160002123.lua	af0d00a3ccb3676dd8ceae402fb0d99c
-expansions/script/c160002124.lua	e18312cb39d865591c7d2022003dc936
+expansions/script/c160002124.lua	d41ce4e0f76a4ae2f1b84b74233a7880
 expansions/script/c160002125.lua	ed47014f4004948d394e859d20819263
 expansions/script/c160002156.lua	d8dc54f8398e0344d96c529f5d39c770
 expansions/script/c16000219.lua	12205268ae92ff9e21566b5a54e12824
@@ -5030,7 +5034,8 @@ expansions/script/c16000536.lua	d8b0efab6731f25f8d05648de09dee6d
 expansions/script/c16000538.lua	9c838983384455176f82ea135607e1f6
 expansions/script/c160005413.lua	e68453ecb6b4e5d92f7fec699b9d1fc5
 expansions/script/c160005445.lua	5af0f4d9cd8d8f6e3f7d669f7c043f2c
-expansions/script/c160005512.lua	eff45f2ac58e35fb4651d1c6ae339968
+expansions/script/c16000550.lua	c99329448458fc4adfa95eb82f06e553
+expansions/script/c160005512.lua	5e03060f99fdc19dc845469ec73ddf93
 expansions/script/c160005555.lua	180a0cee65e792cc60c0ae78b8270864
 expansions/script/c160006669.lua	f18a4a5c7d598b4f218da03ab50d34b8
 expansions/script/c160006969.lua	eef0e52c93840ad415c12b3176bb1a60
@@ -5067,7 +5072,7 @@ expansions/script/c160008951.lua	5d7abf0a2ed4d746d9a5af2312b9f729
 expansions/script/c160008952.lua	db3892080330642d87f263cac284a945
 expansions/script/c160008986.lua	90bf3726b7ef84a96d1000f1aa53a32a
 expansions/script/c160009541.lua	10ef49b38bcdea62ade70ee6e1e62692
-expansions/script/c16000958.lua	15f657f233ee4fbf9900649b6d0c2032
+expansions/script/c16000958.lua	de46056e94479cf2a755deb5f05ad9d5
 expansions/script/c160009696.lua	d039275b12557d72bb4caddd93d2e7a3
 expansions/script/c160009850.lua	87026bfa907861ac9b9e9b8f2f86f5a0
 expansions/script/c16000987.lua	f61b1364d6ba8396b8c7fab033e44ca1
@@ -6621,6 +6626,7 @@ expansions/script/c500311550.lua	dad931da9b53527ed9a06a6e8a34e391
 expansions/script/c50031159.lua	9b3b2e7c5949855992dfdbb563e6a185
 expansions/script/c500311592.lua	702243ff84ae21b26033206fc7b1e20d
 expansions/script/c500311692.lua	c6ee906be1dc7da2d0eec5e89ec484c8
+expansions/script/c500311990.lua	4b38f5481f4f5f26a472b459a75100ca
 expansions/script/c500311994.lua	ec90cc5bb00c6d4fe2d89291706b8090
 expansions/script/c500312121.lua	2075c8b553463965bf696a1a289c9c9f
 expansions/script/c50031222.lua	752c3e101b16901d0870b27807159ffc
@@ -6637,11 +6643,11 @@ expansions/script/c500314723.lua	59ebb1bb4f6c38e0bce9895cd549bd25
 expansions/script/c50031481.lua	89f2f163aa7bef02979f7222af55cd52
 expansions/script/c500314819.lua	4d105d51f10617842814d2c5675ff2b9
 expansions/script/c500315100.lua	0d3b54577183d901ac7c4972029f5416
-expansions/script/c50031516.lua	97d3921c09d3d7dc0bc2d1c4452136f2
+expansions/script/c50031516.lua	96478edb06e236f5dcdf656097d6c195
 expansions/script/c500315424.lua	df7d163a31f2761ba6eabfd14c5e36b3
 expansions/script/c500315455.lua	2485bbb0bbbd91344f910fdb219f989c
 expansions/script/c50031555.lua	976060cbe23c172a6c47677830a5a9f7
-expansions/script/c50031569.lua	6f99ffd53b48e20f958baf11450f9819
+expansions/script/c50031569.lua	d31051d1a8f93ded77426f396dd83e6e
 expansions/script/c500315806.lua	84bcebdfd64a4cfa1b205fc63970b7ad
 expansions/script/c500315978.lua	b44dc51a994c2e1532fc525f6579b123
 expansions/script/c500315980.lua	6924f74b897e965f86b44409f76975e7
@@ -7400,6 +7406,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	f87bd85dca91fa8bba4bc194a3a871a0
+update/filelist.txt	8ea3aa97b1f033e8f5f5696d50319b33
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	3a071df57b76ea46c0c4ee5e3be378df
+update/version.txt	0935e6c68c2b1e1102614d74079fda05
