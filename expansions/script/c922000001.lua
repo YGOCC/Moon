@@ -12,14 +12,25 @@ function c922000001.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetCondition(c922000001.condition)
 	e2:SetCost(c922000001.cost)
 	e2:SetTarget(c922000001.target)
 	e2:SetOperation(c922000001.activate)
 	c:RegisterEffect(e2)
 end
 c922000001.material_spell=12580477
+function c922000001.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsAbleToEnterBP() and not e:GetHandler():IsHasEffect(EFFECT_DIRECT_ATTACK)
+end
 function c922000001.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,500) end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_ATTACK)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(c922000001.antarget)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e:GetHandler():RegisterEffect(e1)
 	Duel.PayLPCost(tp,500)
 end
 function c922000001.target(e,tp,eg,ep,ev,re,r,rp,chk)

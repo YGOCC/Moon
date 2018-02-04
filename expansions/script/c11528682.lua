@@ -23,7 +23,7 @@ function c11528682.initial_effect(c)
 end
 
 function c11528682.cfilter(c)
-	return c:IsSetCard(0x104) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x850) and c:IsAbleToGraveAsCost()
 end
 function c11528682.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11528682.cfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -43,7 +43,7 @@ function c11528682.damop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c11528682.thfilter(c)
-	return c:IsSetCard(0x104) and not c:IsCode(11528682) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x850) and not c:IsCode(11528682) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c11528682.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

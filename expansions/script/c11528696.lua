@@ -11,7 +11,7 @@ function c11528696.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c11528696.filter1(c)
-	return c:IsSetCard(0x104) and c:IsType(TYPE_MONSTER) and c:IsDiscardable(REASON_EFFECT)
+	return c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER) and c:IsDiscardable(REASON_EFFECT)
 end
 function c11528696.filter2(c)
 	return c:IsFaceup() and c:IsAbleToRemove()

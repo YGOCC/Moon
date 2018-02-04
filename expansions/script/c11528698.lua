@@ -1,7 +1,7 @@
 --Revenge Dragon
 function c11528698.initial_effect(c)
 --Synchro Summon
-	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x104),1)
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x850),1)
 	c:EnableReviveLimit()
 --destroy
 	local e1=Effect.CreateEffect(c)
@@ -52,7 +52,7 @@ function c11528698.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c11528698.filter(c,e,tp)
-	return c:IsSetCard(0x104) and not c:IsCode(11528698) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x850) and not c:IsCode(11528698) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c11528698.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c11528698.filter(chkc,e,tp) end

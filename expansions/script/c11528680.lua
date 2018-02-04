@@ -28,7 +28,7 @@ function c11528680.initial_effect(c)
 end
 
 function c11528680.thfilter(c)
-	return c:IsSetCard(0x104) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0x850) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function c11528680.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11528680.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -44,7 +44,7 @@ function c11528680.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c11528680.hsfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x104) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER)
 end
 function c11528680.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c11528680.hsfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -55,7 +55,7 @@ function c11528680.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c11528680.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsSetCard(0x104)
+	return not c:IsSetCard(0x850)
 end
 function c11528680.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

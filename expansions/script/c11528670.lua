@@ -2,7 +2,7 @@
 function c11528670.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x104),3,true)
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x850),3,true)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -47,13 +47,13 @@ function c11528670.efilter(e,te)
 end
 --Special Summon
 function c11528670.vfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x104) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER)
 end
 function c11528670.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c11528670.spfilter(c)
-	return c:IsSetCard(0x104) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x850) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
 end
 function c11528670.sprcon(e,c)
 	if c==nil then return true end 

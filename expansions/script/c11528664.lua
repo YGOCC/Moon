@@ -12,7 +12,7 @@ function c11528664.initial_effect(c)
 end
 
 function c11528664.filter1(c)
-	return c:IsSetCard(0x104) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function c11528664.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

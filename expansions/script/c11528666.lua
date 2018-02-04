@@ -11,7 +11,7 @@ function c11528666.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c11528666.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x104)
+	return c:IsFaceup() and c:IsSetCard(0x850)
 end
 function c11528666.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c11528666.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
@@ -25,7 +25,7 @@ function c11528666.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c11528666.desfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x104) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER)
 end
 function c11528666.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ec=re:GetHandler()

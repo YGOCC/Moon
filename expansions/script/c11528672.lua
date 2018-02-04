@@ -10,7 +10,7 @@ local e1=Effect.CreateEffect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x104))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x850))
 	e2:SetValue(300)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
@@ -29,7 +29,7 @@ local e1=Effect.CreateEffect(c)
 	c:RegisterEffect(e4)
 end
 function c11528672.cfilter(c)
-	return c:IsSetCard(0x104) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER)
 end
 function c11528672.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,c11528672.cfilter,1,nil) end
@@ -42,7 +42,7 @@ function c11528672.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c11528672.spfilter(c,e,tp)
-	return c:IsSetCard(0x104) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x850) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c11528672.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end

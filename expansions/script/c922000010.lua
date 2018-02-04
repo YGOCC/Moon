@@ -12,6 +12,7 @@ function c922000010.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
+	e2:SetCost(c922000010.rmcost)
 	e2:SetTarget(c922000010.target)
 	e2:SetOperation(c922000010.activate)
 	c:RegisterEffect(e2)
@@ -19,6 +20,15 @@ end
 c922000010.material_spell=81439173
 function c922000010.tgfilter(c)
 	return c:IsAbleToGrave()
+end
+function c922000010.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():GetAttackAnnouncedCount()==0 end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_ATTACK)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	e:GetHandler():RegisterEffect(e1,true)
 end
 function c922000010.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c922000010.tgfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -30,10 +40,4 @@ function c922000010.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoGrave(g,REASON_EFFECT)
 	end
-	local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_CANNOT_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-		e:GetHandler():RegisterEffect(e1)
 end

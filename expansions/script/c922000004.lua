@@ -14,6 +14,7 @@ function c922000004.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetCountLimit(1)
 	e2:SetCost(c922000004.cost)
 	e2:SetTarget(c922000004.target)
 	e2:SetOperation(c922000004.activate)
@@ -28,7 +29,7 @@ function c922000004.filter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c922000004.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and c43898403.filter(chkc) and chkc~=e:GetHandler() end
+	if chkc then return chkc:IsOnField() and c922000004.filter(chkc) and chkc~=e:GetHandler() end
 	if chk==0 then return Duel.IsExistingTarget(c922000004.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,c922000004.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,e:GetHandler())

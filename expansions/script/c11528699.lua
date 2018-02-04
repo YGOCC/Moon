@@ -14,7 +14,7 @@ function c11528699.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 	
-c11528699.material_setcode=0x104
+c11528699.material_setcode=0x850
 function c11528699.tfilter(c)
 	return c:IsCode(11528682)
 end
@@ -25,7 +25,7 @@ end
 function c11528699.cfilter(c,tp)
 	local atk=c:GetAttack()
 	if atk<0 then atk=0 end
-	return c:IsSetCard(0x104) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 		and Duel.IsExistingMatchingCard(c11528699.dfilter,tp,0,LOCATION_MZONE,1,nil,atk)
 end
 function c11528699.dfilter(c,atk)

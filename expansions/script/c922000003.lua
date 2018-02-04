@@ -40,6 +40,10 @@ function c922000003.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c922000003.filter,tp,0,LOCATION_ONFIELD,1,nil) end
 	local sg=Duel.GetMatchingGroup(c922000003.filter,tp,0,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+	Duel.SetChainLimit(c922000003.chlimit)
+end
+function c922000003.chlimit(e,ep,tp)
+	return tp==ep
 end
 function c922000003.desop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(c922000003.filter,tp,0,LOCATION_ONFIELD,nil)

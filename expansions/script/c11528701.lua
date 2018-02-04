@@ -36,7 +36,7 @@ end
 
 
 function c11528701.filter(c)
-	return c:IsSetCard(0x104) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckAsCost()
+	return c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckAsCost()
 end
 function c11528701.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11528701.filter,tp,LOCATION_GRAVE,0,2,nil) end
@@ -57,7 +57,7 @@ end
 
 
 function c11528701.spfilter(c,e,tp)
-	return c:IsSetCard(0x104) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x850) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c11528701.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsContains(e:GetHandler()) and rp~=tp 

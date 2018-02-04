@@ -20,7 +20,7 @@ function c11528683.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c11528683.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x104)
+	return c:IsFaceup() and c:IsSetCard(0x850)
 end
 function c11528683.spcon(e,c)
 	if c==nil then return true end
@@ -28,7 +28,7 @@ function c11528683.spcon(e,c)
 		and Duel.IsExistingMatchingCard(c11528683.cfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function c11528683.thfilter(c)
-	return c:IsSetCard(0x104) and not c:IsCode(11528683) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x850) and not c:IsCode(11528683) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c11528683.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

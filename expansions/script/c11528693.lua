@@ -12,7 +12,7 @@ function c11528693.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c11528693.filter(c)
-	return c:IsSetCard(0x104) and c:IsDiscardable()
+	return c:IsSetCard(0x850) and c:IsDiscardable()
 end
 function c11528693.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11528693.filter,tp,LOCATION_HAND,0,1,nil) end

@@ -24,7 +24,7 @@ function c11528685.spcon(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function c11528685.thfilter(c)
-	return c:IsSetCard(0x104) and not c:IsCode(11528685)and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x850) and not c:IsCode(11528685)and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c11528685.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
