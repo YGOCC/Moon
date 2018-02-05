@@ -6,7 +6,7 @@ function c11528683.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_SPSUM_PARAM)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetTargetRange(POS_FACEUP_DEFENSE,0)
+	e1:SetTargetRange(POS_FACEUP,0)
 	e1:SetCondition(c11528683.spcon)
 	c:RegisterEffect(e1)
 --Search

@@ -1,6 +1,6 @@
 --Ditch, The Giant Maw
 function c5237.initial_effect(c)
-  aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
+  aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x104a),1)
 	c:EnableReviveLimit()
   	--spsummon
 	local e1=Effect.CreateEffect(c)
