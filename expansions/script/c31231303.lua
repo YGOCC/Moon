@@ -32,7 +32,7 @@ function c31231303.initial_effect(c)
 	--effect gain
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(31231303,2))
-	e5:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_QUICK_O)
+	e5:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_TRIGGER_O)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e5:SetCountLimit(1)
@@ -65,19 +65,21 @@ function c31231303.millcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c31231303.milltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(1-tp,3)
-	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,3)
-		and g:FilterCount(Card.IsAbleToRemove,nil)==3 
+	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1)
+		and g:FilterCount(Card.IsAbleToRemove,nil)>=1
 	end
 	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,1)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,3,1-tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_DECK)
 end
 function c31231303.millop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<=2 then return end
-	if Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)<=2 then return end
-	Duel.DiscardDeck(tp,3,REASON_EFFECT)
+	local sd=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
+	local od=Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)
+	if sd==0 or od==0 then return end
+	if sd>3 then sd=3 end
+	Duel.DiscardDeck(tp,sd,REASON_EFFECT)
 	local g=Duel.GetOperatedGroup()
-	if g:GetCount()==3 then
-		local mill=Duel.GetDecktopGroup(1-tp,3)
+	if g:GetCount()>0 then
+		local mill=Duel.GetDecktopGroup(1-tp,g:GetCount())
 		Duel.DisableShuffleCheck()
 		Duel.Remove(mill,POS_FACEUP,REASON_EFFECT)
 	end

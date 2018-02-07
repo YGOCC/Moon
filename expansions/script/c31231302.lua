@@ -32,8 +32,9 @@ function c31231302.fcheck(c)
 end
 --rearrange and spsummon
 function c31231302.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local deck=Duel.GetFieldGroup(tp,LOCATION_DECK,0)
 	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
-	return g:GetCount()==0 or (g:GetCount()>0 and g:FilterCount(c31231302.fcheck,nil)==g:GetCount())
+	return deck:GetCount()>=3 and (g:GetCount()==0 or (g:GetCount()>0 and g:FilterCount(c31231302.fcheck,nil)==g:GetCount()))
 end
 function c31231302.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end

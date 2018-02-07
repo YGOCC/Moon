@@ -40,8 +40,8 @@ function c31231310.spfilter(c,e,tp)
 end
 --Activate
 function c31231310.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c31231310.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	if e:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) then
+	if chk==0 then return true end
+	if e:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) and Duel.IsExistingMatchingCard(c31231310.cfilter,tp,LOCATION_GRAVE,0,1,nil) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.SelectMatchingCard(tp,c31231310.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 		if g:GetCount()>0 then

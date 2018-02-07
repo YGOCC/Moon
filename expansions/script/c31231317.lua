@@ -36,6 +36,13 @@ function c31231317.initial_effect(c)
 	e3:SetOperation(c31231317.rmop)
 	c:RegisterEffect(e3)
 end
+local pack={}
+	pack[1]={
+		31231300
+	}
+	pack[2]={
+		31231200
+	}
 --column checks
 function c31231317.left(c,tp)
 	return c:GetSequence()==0 and c:IsControler(1-tp)
@@ -52,9 +59,8 @@ end
 function c31231317.right(c,tp)
 	return c:GetSequence()==4 and c:IsControler(1-tp)
 end
-function c31231317.adjacent(c,s,tp)
-	local seq=c:GetSequence()
-	return math.abs(seq-s)==1 and c:IsControler(1-tp)
+function c31231317.adjacent(c,g,p)
+	return g:IsContains(c) and c:GetSequence()<=4 and c:IsControler(p)
 end
 --filters
 function c31231317.efilter(e,re)
@@ -62,6 +68,9 @@ function c31231317.efilter(e,re)
 end
 function c31231317.matcheck(c)
 	return c:IsSetCard(0x3233) and c:IsType(TYPE_MONSTER)
+end
+function c31231317.check(c)
+	return c:GetSequence()<=5
 end
 function c31231317.rmfilter(c,p)
 	return c:IsFaceup() and c:IsSetCard(0x3233) and c:IsLevelBelow(4) and c:IsControler(p)
@@ -74,7 +83,7 @@ end
 function c31231317.cltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return 
-		Duel.IsExistingMatchingCard(c31231317.check,tp,0,LOCATION_MZONE,1,nil)
+		Duel.IsExistingMatchingCard(c31231317.check,tp,0,LOCATION_ONFIELD,1,nil)
 	 end
 	local op=0
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(31231317,1))
@@ -82,28 +91,94 @@ function c31231317.cltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(op)
 	--column response check
 	if op==0 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.left,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,g1:GetCount(),0,0)
 	elseif op==1 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.mdleft,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local adj=g1:GetFirst():GetColumnGroup(1,1)
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,g1:GetCount(),0,0)
 	elseif op==2 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.middle,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,g1:GetCount(),0,0)
 	elseif op==3 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.mdright,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,g1:GetCount(),0,0)
 	elseif op==4 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.right,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,g1:GetCount(),0,0)
 	else return end
@@ -113,36 +188,101 @@ function c31231317.clop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local seq=e:GetLabel()
 	if seq==0 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.left,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		if g1:GetCount()>0 then
 			Duel.Destroy(g1,REASON_EFFECT)
 		end
 	elseif seq==1 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.mdleft,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		if g1:GetCount()>0 then
 			Duel.Destroy(g1,REASON_EFFECT)
 		end
 	elseif seq==2 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.middle,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		if g1:GetCount()>0 then
 			Duel.Destroy(g1,REASON_EFFECT)
 		end
 	elseif seq==3 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.mdright,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		if g1:GetCount()>0 then
 			Duel.Destroy(g1,REASON_EFFECT)
 		end
 	elseif seq==4 then
+		local adj=nil
 		local g1=Duel.GetMatchingGroup(c31231317.right,tp,0,LOCATION_ONFIELD,nil,tp)
-		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,g1:GetFirst():GetSequence(),g1:GetFirst():GetControler())
+		if g1:GetCount()<=0 then
+			local marker=Group.CreateGroup()
+			local cpack=pack[1]
+			local mk=cpack[math.random(#cpack)]
+			marker:AddCard(Duel.CreateToken(tp,mk))
+			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+			Duel.MoveSequence(marker:GetFirst(),0)
+			adj=marker:GetFirst():GetColumnGroup(1,1)
+			Duel.Exile(marker:GetFirst(),REASON_RULE)
+		else
+			adj=g1:GetFirst():GetColumnGroup(1,1)
+		end
+		local g2=Duel.GetMatchingGroup(c31231317.adjacent,tp,0,LOCATION_ONFIELD,nil,adj,1-tp)
 		g1:Merge(g2)
 		if g1:GetCount()>0 then
 			Duel.Destroy(g1,REASON_EFFECT)
@@ -154,15 +294,19 @@ function c31231317.rmcon(e)
 	return e:GetHandler():GetOverlayGroup():IsExists(c31231317.matcheck,1,nil)
 end
 function c31231317.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local od=Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)
 	local ct=Duel.GetMatchingGroupCount(c31231317.rmfilter,tp,LOCATION_REMOVED,0,nil,tp)
+	if ct>od then ct=od end
 	local tg=Duel.GetDecktopGroup(1-tp,ct)
 	if chk==0 then return ct>0
 		and tg:FilterCount(Card.IsAbleToRemove,nil)==ct end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,ct,1-tp,LOCATION_DECK)
 end
 function c31231317.rmop(e,tp,eg,ep,ev,re,r,rp)
+	local od=Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)
 	local ct=Duel.GetMatchingGroupCount(c31231317.rmfilter,tp,LOCATION_REMOVED,0,nil,tp)
 	if ct==0 then return end
+	if ct>od then ct=od end
 	local tg=Duel.GetDecktopGroup(1-tp,ct)
 	Duel.DisableShuffleCheck()
 	Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
