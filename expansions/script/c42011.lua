@@ -30,7 +30,7 @@ function c42011.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c42011.cfilter(c)
-	return c:IsSetCard(0x98) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x264) and c:IsType(TYPE_MONSTER)
 end
 function c42011.filter(c)
 	return c:IsType(TYPE_MONSTER)
@@ -50,7 +50,7 @@ function c42011.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c42011.filter1(c)
-	return c:IsFaceup() and c:IsLevelAbove(1) and c:IsSetCard(0x98)
+	return c:IsFaceup() and c:IsLevelAbove(1) and c:IsSetCard(0x264)
 end
 function c42011.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c42011.filter1,tp,LOCATION_MZONE,0,1,nil) end

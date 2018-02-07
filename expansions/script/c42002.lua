@@ -6,6 +6,7 @@ function c42002.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCountLimit(1,42002)
 	e1:SetCost(c42002.cost)
 	e1:SetTarget(c42002.tg)
 	e1:SetOperation(c42002.op)
@@ -39,7 +40,7 @@ function c42002.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RegisterEffect(e1)
 end
 function c42002.filter(c)
-	return c:IsSetCard(0x98) and c:IsAbleToHand()
+	return c:IsSetCard(0x264) and c:IsAbleToHand()
 end
 function c42002.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c42002.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -55,7 +56,7 @@ function c42002.op(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c42002.thfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x98) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x264) and c:IsAbleToHand()
 end
 function c42002.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c101001059.thfilter(chkc) end

@@ -28,7 +28,7 @@ function c42000.initial_effect(c)
 end
 
 function c42000.filter(c)
-	return c:IsSetCard(0x98) and not c:IsType(TYPE_SPELL+TYPE_TRAP)and c:IsAbleToHand()
+	return c:IsSetCard(0x264) and not c:IsType(TYPE_SPELL+TYPE_TRAP)and c:IsAbleToHand()
 end
 function c42000.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c42000.filter,tp,LOCATION_DECK,0,1,nil)end
@@ -44,7 +44,7 @@ function c42000.op(e,tp,eg,ep,ev,re,r,rp)
 end	
 
 function c42000.filter1(c)
-	return c:IsFaceup() and c:GetLevel()>0 and c:IsSetCard(0x98) and c:IsAbleToHand()
+	return c:IsFaceup() and c:GetLevel()>0 and c:IsSetCard(0x264) and c:IsAbleToHand()
 end
 function c42000.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c42000.filter1(chkc) end
@@ -55,7 +55,7 @@ function c42000.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c42000.spfilter(c,e,tp,lv)
-	return c:IsSetCard(0x98) and c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x264) and c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c42000.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

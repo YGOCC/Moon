@@ -30,7 +30,7 @@ function c42001.initial_effect(c)
 end
 
 function c42001.spfilter2(c,e,tp)
-	return c:IsSetCard(0x98) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x264) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c42001.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c42001.spfilter2(chkc,e,tp) end
@@ -60,7 +60,7 @@ end
 
 
 function c42001.costfilter(c)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsSetCard(0x98) and c:IsType(TYPE_MONSTER) and c:IsAbleToHandAsCost()
+	return c:IsLocation(LOCATION_GRAVE) and c:IsSetCard(0x264) and c:IsType(TYPE_MONSTER) and c:IsAbleToHandAsCost()
 end
 function c42001.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_GRAVE)

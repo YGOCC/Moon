@@ -102,7 +102,7 @@ end
 Card.IsType=function(c,tpe,scard,sumtype,p)
 	local custpe=tpe>>32
 	local otpe=tpe&0xffffffff
-	if (scard and is_type(c,otpe,scard,sumtype,p)) or (not scard and is_type(c,otpe)) then return true end
+	if (scard and c:GetType(scard,sumtype,p)&otpe>0) or (not scard and c:GetType()&otpe>0) then return true end
 	if custpe<=0 then return false end
 	return c:IsCustomType(custpe,scard,sumtype,p)
 end
@@ -207,14 +207,14 @@ Card.IsLevelAbove=function(c,lv)
 end
 Duel.ChangePosition=function(cc, au, ad, du, dd)
 	if not ad then ad=au end if not du then du=au end if not dd then dd=au end
-	if (du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0) then
-		if pcall(Group.GetFirst,cc) then
-			local tg=cc:Clone()
-			for c in aux.Next(tg) do
-				if c:SwitchSpace() then cc=cc-c end
-			end
-		elseif cc:SwitchSpace() then return end
-	end
+	-- if (du and (du&POS_FACEDOWN)~=0) or (au and (au&POS_FACEDOWN)~=0) then
+	if pcall(Group.GetFirst,cc) then
+		local tg=cc:Clone()
+		for c in aux.Next(tg) do
+			if c:SwitchSpace() then cc=cc-c end
+		end
+	elseif cc:SwitchSpace() then return end
+	-- end
 	change_position(cc,au,ad,du,dd)
 end
 
@@ -268,7 +268,12 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 		table.remove(t)
 	end
 	if not extramat then extramat,min,max=aux.FALSE,0,0 end
-	c:EnableCounterPermit(0x88)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_COUNTER_PERMIT+0x88)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0:SetValue(LOCATION_MZONE)
+	c:RegisterEffect(e0)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -730,7 +735,7 @@ function Auxiliary.PolarityOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 end
 --Spatials
 function Card.SwitchSpace(c)
-	if not (Auxiliary.Spatials[c] and c:GetSummonType()==SUMMON_TYPE_SPECIAL+500 and c:GetFlagEffect(500)>0) then return false end
+	if not Auxiliary.Spatials[c] or c:GetSummonType()~=SUMMON_TYPE_SPECIAL+500 or c:GetFlagEffect(500)==0 then return false end
 	Auxiliary.Spatials[c]=nil
 	local tcode=c.spt_another_space or c.spt_origin_space
 	c:SetEntityCode(tcode,true)

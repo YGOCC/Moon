@@ -6,6 +6,7 @@ function c42003.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCountLimit(1,42003)
 	e1:SetCost(c42003.cost)
 	e1:SetCondition(c42003.drwcon)
 	e1:SetTarget(c42003.target)
@@ -47,7 +48,7 @@ function c42003.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c42003.thfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x98) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x264) and c:IsAbleToHand()
 end
 function c42003.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c42003.thfilter(chkc) end

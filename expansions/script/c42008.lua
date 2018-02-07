@@ -24,7 +24,7 @@ function c42008.initial_effect(c)
 end
 
 function c42008.thfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x98) and c:IsAbleToHand()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x264) and c:IsAbleToHand()
 end
 function c42008.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -38,13 +38,13 @@ function c42008.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c42008.cfilter(c,tp)
-	return c:IsSetCard(0x98) and c:IsType(TYPE_MONSTER)and c:IsPreviousLocation(LOCATION_MZONE)
+	return c:IsSetCard(0x264) and c:IsType(TYPE_MONSTER)and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function c42008.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c42008.cfilter,1,nil,tp)
 end
 function c42008.filter(c,e,tp)
-	return c:IsSetCard(0x98)
+	return c:IsSetCard(0x264)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c42008.target(e,tp,eg,ep,ev,re,r,rp,chk)

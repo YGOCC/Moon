@@ -6,6 +6,7 @@ function c42005.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCountLimit(1,42005)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCost(c42005.rmcost)
 	e1:SetTarget(c42005.destg)
@@ -54,7 +55,7 @@ function c42005.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c42005.thfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x98) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x264) and c:IsAbleToHand()
 end
 function c42005.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c42005.thfilter(chkc) end
