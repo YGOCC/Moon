@@ -296,7 +296,7 @@ end
 function c31231317.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local od=Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)
 	local ct=Duel.GetMatchingGroupCount(c31231317.rmfilter,tp,LOCATION_REMOVED,0,nil,tp)
-	if ct>od then ct=od end
+	if ct>od then return end
 	local tg=Duel.GetDecktopGroup(1-tp,ct)
 	if chk==0 then return ct>0
 		and tg:FilterCount(Card.IsAbleToRemove,nil)==ct end
@@ -306,7 +306,7 @@ function c31231317.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local od=Duel.GetFieldGroupCount(1-tp,LOCATION_DECK,0)
 	local ct=Duel.GetMatchingGroupCount(c31231317.rmfilter,tp,LOCATION_REMOVED,0,nil,tp)
 	if ct==0 then return end
-	if ct>od then ct=od end
+	if ct>od then return end
 	local tg=Duel.GetDecktopGroup(1-tp,ct)
 	Duel.DisableShuffleCheck()
 	Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
