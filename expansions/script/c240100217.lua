@@ -34,7 +34,7 @@ function c240100217.condition(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return false end
 	local tc=g:GetFirst()
 	e:SetLabel(tc:GetLevel())
-	return g:GetCount()==1 and c240100218.cfilter(tc)
+	return g:GetCount()==1 and c240100217.cfilter(tc)
 end
 function c240100217.filter2(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and c:IsAbleToRemove()

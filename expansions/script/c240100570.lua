@@ -25,7 +25,7 @@ function c240100570.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHAIN_SOLVING)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetOperation(function(e) local c=e:GetHandler() if c:GetFlagEffect(240100570)==0 then c:RegisterFlagEffect(240100570,RESET_PHASE+PHASE_END+RESET_EVENT+0x1fe0000,0,1) end end)
+	e3:SetOperation(function(e) local c=e:GetHandler() if c:GetFlagEffect(240100570)==0 then c:RegisterFlagEffect(240100570,RESET_EVENT+0x1fe0000,0,1) end end)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -58,7 +58,7 @@ function c240100570.op(e,tp,eg,ep,ev,re,r,rp)
 	local zone=bit.bxor(0x1f,c:GetLinkedZone())
 	local g=Duel.GetMatchingGroup(c240100570.filter,tp,LOCATION_GRAVE,0,nil,e,tp,zone)
 	local rc=re:GetHandler()
-	if c:GetFlagEffect(240100570)~=0 or c:GetOverlayCount()==0 or not re:IsActiveType(TYPE_MONSTER) or not rc:IsSetCard(0xbb2)
+	if c:GetFlagEffect(241100570)~=0 or c:GetOverlayCount()==0 or not re:IsActiveType(TYPE_MONSTER) or not rc:IsSetCard(0xbb2)
 		or not c:GetLinkedGroup():IsContains(rc) or g:GetCount()==0
 		or not Duel.SelectEffectYesNo(tp,c) then return end
 	Duel.Hint(HINT_CARD,0,240100570)
@@ -82,7 +82,7 @@ function c240100570.op(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
 		end
 	end
-	c:RegisterFlagEffect(240100570,RESET_PHASE+PHASE_END+RESET_EVENT+0x1fe0000,0,1)
+	c:RegisterFlagEffect(241100570,RESET_PHASE+PHASE_END+RESET_EVENT+0x1fe0000,0,1)
 end
 function c240100570.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)

@@ -3,7 +3,7 @@
 function c240100294.initial_effect(c)
 	c:EnableCounterPermit(0x1)
 	aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,nil,8,aux.TRUE,aux.TRUE)
+	aux.AddEvoluteProc(c,nil,8,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER))
 	local ae3=Effect.CreateEffect(c)
 	ae3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	ae3:SetCode(EVENT_REMOVE)
