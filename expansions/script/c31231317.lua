@@ -117,7 +117,7 @@ function c31231317.cltg(e,tp,eg,ep,ev,re,r,rp,chk)
 			local mk=cpack[math.random(#cpack)]
 			marker:AddCard(Duel.CreateToken(tp,mk))
 			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(marker:GetFirst(),0)
+			Duel.MoveSequence(marker:GetFirst(),1)
 			adj=marker:GetFirst():GetColumnGroup(1,1)
 			Duel.Exile(marker:GetFirst(),REASON_RULE)
 		else
@@ -136,7 +136,7 @@ function c31231317.cltg(e,tp,eg,ep,ev,re,r,rp,chk)
 			local mk=cpack[math.random(#cpack)]
 			marker:AddCard(Duel.CreateToken(tp,mk))
 			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(marker:GetFirst(),0)
+			Duel.MoveSequence(marker:GetFirst(),2)
 			adj=marker:GetFirst():GetColumnGroup(1,1)
 			Duel.Exile(marker:GetFirst(),REASON_RULE)
 		else
@@ -154,7 +154,7 @@ function c31231317.cltg(e,tp,eg,ep,ev,re,r,rp,chk)
 			local mk=cpack[math.random(#cpack)]
 			marker:AddCard(Duel.CreateToken(tp,mk))
 			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(marker:GetFirst(),0)
+			Duel.MoveSequence(marker:GetFirst(),3)
 			adj=marker:GetFirst():GetColumnGroup(1,1)
 			Duel.Exile(marker:GetFirst(),REASON_RULE)
 		else
@@ -172,7 +172,7 @@ function c31231317.cltg(e,tp,eg,ep,ev,re,r,rp,chk)
 			local mk=cpack[math.random(#cpack)]
 			marker:AddCard(Duel.CreateToken(tp,mk))
 			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(marker:GetFirst(),0)
+			Duel.MoveSequence(marker:GetFirst(),4)
 			adj=marker:GetFirst():GetColumnGroup(1,1)
 			Duel.Exile(marker:GetFirst(),REASON_RULE)
 		else
@@ -216,7 +216,7 @@ function c31231317.clop(e,tp,eg,ep,ev,re,r,rp)
 			local mk=cpack[math.random(#cpack)]
 			marker:AddCard(Duel.CreateToken(tp,mk))
 			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(marker:GetFirst(),0)
+			Duel.MoveSequence(marker:GetFirst(),1)
 			adj=marker:GetFirst():GetColumnGroup(1,1)
 			Duel.Exile(marker:GetFirst(),REASON_RULE)
 		else
@@ -236,7 +236,7 @@ function c31231317.clop(e,tp,eg,ep,ev,re,r,rp)
 			local mk=cpack[math.random(#cpack)]
 			marker:AddCard(Duel.CreateToken(tp,mk))
 			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(marker:GetFirst(),0)
+			Duel.MoveSequence(marker:GetFirst(),2)
 			adj=marker:GetFirst():GetColumnGroup(1,1)
 			Duel.Exile(marker:GetFirst(),REASON_RULE)
 		else
@@ -256,7 +256,7 @@ function c31231317.clop(e,tp,eg,ep,ev,re,r,rp)
 			local mk=cpack[math.random(#cpack)]
 			marker:AddCard(Duel.CreateToken(tp,mk))
 			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(marker:GetFirst(),0)
+			Duel.MoveSequence(marker:GetFirst(),3)
 			adj=marker:GetFirst():GetColumnGroup(1,1)
 			Duel.Exile(marker:GetFirst(),REASON_RULE)
 		else
@@ -276,7 +276,7 @@ function c31231317.clop(e,tp,eg,ep,ev,re,r,rp)
 			local mk=cpack[math.random(#cpack)]
 			marker:AddCard(Duel.CreateToken(tp,mk))
 			Duel.MoveToField(marker:GetFirst(),tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(marker:GetFirst(),0)
+			Duel.MoveSequence(marker:GetFirst(),4)
 			adj=marker:GetFirst():GetColumnGroup(1,1)
 			Duel.Exile(marker:GetFirst(),REASON_RULE)
 		else

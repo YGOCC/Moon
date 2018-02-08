@@ -25,6 +25,7 @@ function c31231315.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
+	e2:SetCondition(c31231315.hlcon)
 	e2:SetCost(c31231315.tdcost)
 	e2:SetOperation(c31231315.hlop)
 	c:RegisterEffect(e2)
@@ -63,6 +64,9 @@ function c31231315.tdop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --halve stats
+function c31231315.hlcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
+end
 function c31231315.hlop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)

@@ -14,6 +14,7 @@ function c31231310.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_TRAP_ACT_IN_HAND)
+	e2:SetCondition(c31231310.handcon)
 	c:RegisterEffect(e2)
 	--spsummon
 	local e3=Effect.CreateEffect(c)
@@ -39,13 +40,18 @@ function c31231310.spfilter(c,e,tp)
 	return c:IsSetCard(0x3233) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --Activate
+function c31231310.handcon(e)
+	return Duel.IsExistingMatchingCard(c31231310.cfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,1,nil)
+end
 function c31231310.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	if e:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) and Duel.IsExistingMatchingCard(c31231310.cfilter,tp,LOCATION_GRAVE,0,1,nil) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,c31231310.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-		if g:GetCount()>0 then
-			Duel.Remove(g,POS_FACEUP,REASON_COST)
+	if e:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) then 
+		if Duel.IsExistingMatchingCard(c31231310.cfilter,tp,LOCATION_GRAVE,0,1,nil) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local g=Duel.SelectMatchingCard(tp,c31231310.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+			if g:GetCount()>0 then
+				Duel.Remove(g,POS_FACEUP,REASON_COST)
+			end
 		end
 	end
 end
