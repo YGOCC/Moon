@@ -30,9 +30,9 @@ function c500314819.initial_effect(c)
 	e4:SetOperation(c500314819.desop)
 	c:RegisterEffect(e4)
  --   if not c500314819.global_check then
-   --	c500314819.global_check=true
-   --	local ge2=Effect.CreateEffect(c)
-   --	ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+   --   c500314819.global_check=true
+   --   local ge2=Effect.CreateEffect(c)
+   --   ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	--  ge2:SetCode(EVENT_ADJUST)
 	--  ge2:SetCountLimit(1)
 	--  ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
@@ -46,7 +46,7 @@ function c500314819.initial_effect(c)
 --function c500314819.chk(e,tp,eg,ep,ev,re,r,rp)
   --  Duel.CreateToken(tp,388)
   --  Duel.CreateToken(1-tp,388)
-   --		c500314819.stage_o=8
+   --	   c500314819.stage_o=8
 --c500314819.stage=c500314819.stage_o
 end
 function c500314819.checku(sg,ec,tp)
@@ -55,7 +55,7 @@ end
 function c500314819.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT)
 end
-function c500314819.filter1(c,ec,tp)
+function c500314819.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY)
 end
 function c500314819.descon(e,tp,eg,ep,ev,re,r,rp)

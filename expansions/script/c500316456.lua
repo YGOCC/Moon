@@ -26,7 +26,7 @@ end
 function c500316456.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT)
 end
-function c500316456.filter1(c,ec,tp)
+function c500316456.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY)
 end
 function c500316456.filter(c,e,tp)

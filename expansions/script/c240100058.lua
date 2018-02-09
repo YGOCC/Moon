@@ -29,6 +29,7 @@ function c240100058.initial_effect(c)
 	local e4=e2:Clone()
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
+	local e5=e3:Clone()
 end
 function c240100058.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsSetCard(0x4093)
@@ -47,7 +48,7 @@ function c240100058.filter2(c)
 end
 function c240100058.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetLabelObject()
-	if chkc then return c:IsType(TYPE_FUSION) and chkc:IsLocation(LOCATION_GRAVE) and c240100058.filter(chkc,c) end
+	if chkc then return c:IsType(TYPE_FUSION) and chkc:IsLocation(LOCATION_GRAVE) and c240100058.filter(chkc,c,tp) end
 	if chk==0 then
 		local b=e:GetHandler():IsLocation(LOCATION_HAND)
 		local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
@@ -68,18 +69,33 @@ end
 function c240100058.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
-	local chk=false
 	local c=e:GetLabelObject()
-	local tc=Duel.GetFirstTarget()
-	for i=1,ev do
+	if c:IsLocation(LOCATION_GRAVE) and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		Duel.Equip(tp,e:GetHandler(),c)
+		--Add Equip limit
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EQUIP_LIMIT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetValue(function(e,c) return e:GetLabelObject()==c end)
+		e1:SetLabelObject(c)
+		e:GetHandler():RegisterEffect(e1)
+	elseif c:IsLocation(LOCATION_GRAVE) then return end
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	for ec in aux.Next(tg) do
+		if tg:GetCount()==1 then break end
+		tg:RemoveCard(ec)
+	end
+	for i=1,Duel.GetCurrentChain() do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-		if te:GetHandler()==c and c:IsStatus(STATUS_CHAINING) and c:IsRelateToEffect(te) and te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
-			Duel.ChangeTargetCard(ev,Group.FromCards(tc))
-			chk=true
-			break
+		if te:GetHandler()==c and te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+			Duel.ChangeTargetCard(i,tg)
+			return
 		end
 	end
-	if not chk and c:IsFaceup() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
+	local tc=tg:GetFirst()
+	if c:IsFaceup() and tc then
 		local atk=tc:GetTextAttack()
 		if atk<0 then atk=0 end
 		if not Duel.Equip(tp,tc,c,false) then return end
@@ -111,13 +127,13 @@ end
 function c240100058.repval(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE)~=0
 end
-function c240100058.filter3(c,tp)
-	return c240100058.cfilter(c) and Duel.IsExistingTarget(c240100058.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,c)
+function c240100058.filter3(c,tp,e)
+	return c240100058.cfilter(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingTarget(c240100058.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,c,tp)
 end
 function c240100058.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c240100058.filter3,tp,LOCATION_GRAVE,0,1,nil,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(c240100058.filter3,tp,LOCATION_GRAVE,0,1,nil,tp,e) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local tc=Duel.SelectTarget(c240100058.filter3,tp,LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
+	local tc=Duel.SelectTarget(tp,c240100058.filter3,tp,LOCATION_GRAVE,0,1,1,nil,tp,e):GetFirst()
 	e:SetLabelObject(tc)
 	Duel.BreakEffect()
 	c240100058.target(e,tp,eg,ep,ev,re,r,rp,1)

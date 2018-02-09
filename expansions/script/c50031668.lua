@@ -53,7 +53,7 @@ end
 function c50031668.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT)
 end
-function c50031668.filter1(c,ec,tp)
+function c50031668.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY)
 end
 function c50031668.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
