@@ -58,7 +58,7 @@ function c42003.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b2=Duel.IsExistingTarget(c42003.thfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 	local op=0
 	if b1 and b2 then
-		op=Duel.SelectOption(tp,aux.Stringid(42003,0),aux.Stringid(42003,1))
+		op=Duel.SelectOption(tp,aux.Stringid(42003,0))
 	else
 		op=2
 	end

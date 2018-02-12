@@ -14,7 +14,7 @@ function c5501.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(c5501.target)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
@@ -66,11 +66,11 @@ function c5501.tgop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c5501.target(e,c)
-	return c:IsSetCard(0x1b8)
+	return c:IsSetCard(0x258) and c:IsType(TYPE_MONSTER) or (c:IsCode(32918479) or c:IsCode(31571902) or c:IsCode(95701283) or c:IsCode(61231400) or c:IsCode(69303178))
 end
 
 function c5501.filter(c)
-	return c:IsSetCard(0x1b8) and c:IsAbleToHand()
+	return c:IsSetCard(0x258) and c:IsType(TYPE_MONSTER) or (c:IsCode(32918479) or c:IsCode(31571902) or c:IsCode(95701283) or c:IsCode(61231400) or c:IsCode(69303178)) and c:IsAbleToHand()
 end
 function c5501.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c5501.filter,tp,LOCATION_DECK,0,1,nil) end

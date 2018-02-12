@@ -76,7 +76,7 @@ function c5503.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c5503.filter(c,e,tp)
-	return c:IsSetCard(0x1b8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsSetCard(0x258) and c:IsType(TYPE_MONSTER) or (c:IsCode(32918479) or c:IsCode(31571902) or c:IsCode(95701283) or c:IsCode(61231400) or c:IsCode(69303178))) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c5503.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

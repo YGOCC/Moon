@@ -20,7 +20,7 @@ function c5506.initial_effect(c)
 end
 
 function c5506.thfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x258) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER)and c:IsSetCard(0x258) or c:IsCode(32918479) or c:IsCode(31571902) or c:IsCode(95701283) or c:IsCode(61231400)or c:IsCode(69303178) and c:IsAbleToHand()
 end
 function c5506.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end

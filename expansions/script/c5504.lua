@@ -3,32 +3,38 @@ function c5504.initial_effect(c)
 	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(c5504.hspcon)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	c:RegisterEffect(e1)
-	--spsummon
+	--procedure
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(5504,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetCountLimit(1,5504)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTarget(c5504.sptg)
-	e2:SetOperation(c5504.spop)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_SPSUMMON_PROC)
+	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCondition(c5504.hspcon)
 	c:RegisterEffect(e2)
-	--to grave
+	--spsummon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(5504,1))
-	e3:SetCategory(CATEGORY_TOGRAVE)
+	e3:SetDescription(aux.Stringid(5504,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetCountLimit(1,5504)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetTarget(c5504.tgtg)
-	e3:SetOperation(c5504.tgop)
+	e3:SetTarget(c5504.sptg)
+	e3:SetOperation(c5504.spop)
 	c:RegisterEffect(e3)
+	--to grave
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(5504,1))
+	e4:SetCategory(CATEGORY_TOGRAVE)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetCountLimit(1,5504)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetTarget(c5504.tgtg)
+	e4:SetOperation(c5504.tgop)
+	c:RegisterEffect(e4)
 end
 
 function c5504.cfilter(c)
@@ -42,7 +48,7 @@ function c5504.hspcon(e,c)
 end
 
 function c5504.filter(c,e,tp)
-	return c:IsSetCard(0x1b8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsSetCard(0x258) and c:IsType(TYPE_MONSTER) or (c:IsCode(32918479) or c:IsCode(31571902) or c:IsCode(95701283) or c:IsCode(61231400) or c:IsCode(69303178))) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c5504.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -59,7 +65,7 @@ function c5504.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c5504.tgfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1b8) and c:IsAbleToGrave()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x258) or (c:IsCode(32918479) or c:IsCode(31571902)or c:IsCode(95701283) or c:IsCode(61231400) or c:IsCode(69303178)) and c:IsAbleToGrave()
 end
 function c5504.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c5504.tgfilter,tp,LOCATION_DECK,0,1,nil) end
