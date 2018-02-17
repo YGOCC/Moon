@@ -18,7 +18,6 @@ function c10100057.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,1010057)
 	e2:SetCondition(c10100057.condition1)
-	e2:SetCondition(c10100057.spcon)
 	e2:SetCost(c10100057.spcost)
 	e2:SetTarget(c10100057.sptg)
 	e2:SetOperation(c10100057.spop)
@@ -31,7 +30,7 @@ function c10100057.ntfilter(c)
 	return c:IsFaceup() and c:IsCode(10100050)
 end
 function c10100057.condition1(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c10100057.ntfilter1,tp,LOCATION_MZONE+LOCATION_SZONE,0,1,e:GetHandler())
+	return Duel.IsExistingMatchingCard(c10100057.ntfilter1,tp,LOCATION_MZONE+LOCATION_SZONE,0,1,e:GetHandler()) and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 end
 function c10100057.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c10100057.ntfilter,tp,LOCATION_MZONE+LOCATION_SZONE,0,1,e:GetHandler())
@@ -58,9 +57,6 @@ function c10100057.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
 		tc:RegisterEffect(e1)
 	end
-end
-function c10100057.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 end
 function c10100057.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeckAsCost() end
