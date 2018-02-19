@@ -17,7 +17,7 @@ function c90210006.initial_effect(c)
 	e2:SetCondition(c90210006.spcon)
 	e2:SetOperation(c90210006.spop)
 	c:RegisterEffect(e2)
-	--destroy monster
+	--add card to your hand
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetDescription(aux.Stringid(90210006,0))
@@ -30,6 +30,17 @@ function c90210006.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
+	--Cannot used as Xyz-Material
+	local e13=Effect.CreateEffect(c)
+    e13:SetType(EFFECT_TYPE_SINGLE)
+    e13:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+    e13:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e13:SetValue(c90210006.synlimit)
+    c:RegisterEffect(e13)
+end
+function c90210006.synlimit(e,c)
+    if not c then return false end
+    return not c:IsSetCard(0x12D)
 end
 function c90210006.filtertarget(c)
 	return c:IsSetCard(0x12C) and c:IsAbleToHand()

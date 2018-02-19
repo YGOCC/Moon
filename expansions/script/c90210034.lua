@@ -21,7 +21,7 @@ function c90210034.filter(c,e,tp,m)
 	end
 end
 function c90210034.matfilter(c)
-	return c:GetLevel()>0 and c:IsAbleToDeckAsCost()
+	return c:GetLevel()>0 and c:IsAbleToDeckAsCost() and c:IsFaceup()
 end
 function c90210034.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

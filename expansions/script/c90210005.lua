@@ -26,6 +26,17 @@ function c90210005.initial_effect(c)
 	e3:SetTarget(c90210005.target)
 	e3:SetOperation(c90210005.operation)
 	c:RegisterEffect(e3)
+	--Cannot used as Xyz-Material
+	local e13=Effect.CreateEffect(c)
+    e13:SetType(EFFECT_TYPE_SINGLE)
+    e13:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+    e13:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e13:SetValue(c90210005.synlimit)
+    c:RegisterEffect(e13)
+end
+function c90210005.synlimit(e,c)
+    if not c then return false end
+    return not c:IsSetCard(0x12D)
 end
 function c90210005.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetBattleTarget()~=nil

@@ -19,7 +19,7 @@ function c90210016.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,c90210016.filter2,1,1,REASON_COST+REASON_DISCARD,nil)
 end
 function c90210016.filter(c)
-	return (c:IsSetCard(0x12C) or c:IsSetCard(0x12D) or c:IsSetCard(0x130)) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
+	return (c:IsSetCard(0x12C) or c:IsSetCard(0x12F) or c:IsSetCard(0x130)) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
 function c90210016.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90210016.filter,tp,LOCATION_DECK,0,1,nil) end

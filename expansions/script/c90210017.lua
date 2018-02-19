@@ -12,7 +12,7 @@ function c90210017.initial_effect(c)
 	c:RegisterEffect(e1)
 	--tohand
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(90210017,0))
+	e3:SetDescription(aux.Stringid(90210017,1))
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SUMMON_SUCCESS)

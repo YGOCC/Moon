@@ -19,7 +19,7 @@ function c90210010.initial_effect(c)
 	c:RegisterEffect(e2)
 	--destroy trap&spell
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(90210004,0))
+	e3:SetDescription(aux.Stringid(90210010,0))
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -30,6 +30,17 @@ function c90210010.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
+	--Cannot used as Xyz-Material
+	local e13=Effect.CreateEffect(c)
+    e13:SetType(EFFECT_TYPE_SINGLE)
+    e13:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+    e13:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e13:SetValue(c90210010.synlimit)
+    c:RegisterEffect(e13)
+end
+function c90210010.synlimit(e,c)
+    if not c then return false end
+    return not c:IsSetCard(0x12D)
 end
 function c90210010.filter(c)
 	return c:IsSetCard(0x12C) or c:IsSetCard(0x12D) or c:IsSetCard(0x130) and c:IsAbleToDeckAsCost()
@@ -70,10 +81,10 @@ end
 function c90210010.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local g=Duel.SelectMatchingCard(tp,c90210010.cfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if tc:IsRelateToEffect(e) then
-		Duel.Destroy(tc,REASON_EFFECT)
-	end
 	if g:GetCount()>0 then
 		Duel.SendtoGrave(g,REASON_EFFECT)
+	end
+	if tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

@@ -20,7 +20,7 @@ function c90210036.initial_effect(c)
 	--destroy monster
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetDescription(aux.Stringid(90210000,0))
+	e3:SetDescription(aux.Stringid(90210036,0))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e3:SetTarget(c90210036.target)
@@ -30,6 +30,17 @@ function c90210036.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
+	--Cannot used as Xyz-Material
+	local e13=Effect.CreateEffect(c)
+    e13:SetType(EFFECT_TYPE_SINGLE)
+    e13:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+    e13:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e13:SetValue(c90210036.synlimit)
+    c:RegisterEffect(e13)
+end
+function c90210036.synlimit(e,c)
+    if not c then return false end
+    return not c:IsSetCard(0x12D)
 end
 function c90210036.filter(c)
 	return c:IsSetCard(0x12C) or c:IsSetCard(0x12D) or c:IsSetCard(0x130) and c:IsAbleToDeckAsCost()
