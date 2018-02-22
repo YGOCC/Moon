@@ -36,7 +36,9 @@ function c33700067.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c33700067.condition(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_DECK) and e:GetHandler():GetPreviousControler()==tp and re:GetHandler():IsSetCard(0x442)
+	local c=e:GetHandler()
+	local rc=re and re:GetHandler()
+	return c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_RULE) and c:IsPreviousLocation(LOCATION_DECK) and c:GetPreviousControler()==tp and rc and rc:IsSetCard(0x442) and Duel.GetMZoneCount(tp)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c33700067.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetMZoneCount(tp)>0
@@ -100,7 +102,7 @@ function c33700067.con(e)
 	if g:GetClassCount(Card.GetCode)==5 then
 		if e:GetHandler():GetFlagEffect(33700067)==0 then
 			e:GetHandler():RegisterFlagEffect(33700067,0x1fe1000,0,1)
-			Duel.Hint(11,0,aux.Stringid(33700067,0))
+			Duel.Hint(HINT_MUSIC,0,aux.Stringid(33700067,0))
 		end
 		return true
 	else
