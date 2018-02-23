@@ -12,7 +12,7 @@ function c11528685.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(11528685,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetTarget(c11528685.thtg)
 	e2:SetOperation(c11528685.thop)
@@ -24,7 +24,7 @@ function c11528685.spcon(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function c11528685.thfilter(c)
-	return c:IsSetCard(0x850) and not c:IsCode(11528685)and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x850) and not c:IsCode(11528685) and c:IsAbleToHand()
 end
 function c11528685.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

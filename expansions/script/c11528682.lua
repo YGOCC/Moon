@@ -15,7 +15,7 @@ function c11528682.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(11528682,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetTarget(c11528682.thtg)
 	e2:SetOperation(c11528682.thop)
@@ -43,7 +43,7 @@ function c11528682.damop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c11528682.thfilter(c)
-	return c:IsSetCard(0x850) and not c:IsCode(11528682) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x850) and not c:IsCode(11528682) and c:IsAbleToHand()
 end
 function c11528682.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
