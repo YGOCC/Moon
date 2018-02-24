@@ -11,9 +11,10 @@ function c210310305.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_LEAVE_FIELD)
-	e2:SetCountLimit(1)
+	e2:SetCountLimit(1,210310305)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(c210310305.spcon1)
+	e2:SetCondition(c210310305.spcon(RACE_FAIRY))
 	e2:SetTarget(c210310305.sptg)
 	e2:SetOperation(c210310305.spop)
 	c:RegisterEffect(e2)
@@ -22,9 +23,10 @@ function c210310305.initial_effect(c)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_LEAVE_FIELD)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1)
-	e3:SetCondition(c210310305.spcon2)
+	e3:SetCountLimit(1,210310306)
+	e3:SetCondition(c210310305.spcon(RACE_AQUA))
 	e3:SetTarget(c210310305.htg)
 	e3:SetOperation(c210310305.hop)
 	c:RegisterEffect(e3)
@@ -35,42 +37,36 @@ function c210310305.initial_effect(c)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetCountLimit(1)
+	e4:SetCountLimit(1,210310307)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetTarget(c210310305.target)
 	e4:SetOperation(c210310305.operation)
 	c:RegisterEffect(e4)
 end
-function c210310305.spcon1(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c210310305.cfilter1,1,nil,tp)
+function c210310305.spcon(rc)
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		return eg:IsExists(c210310305.cfilter,1,nil,tp,rc)
+	end
 end
-function c210310305.cfilter1(c,tp,re,eg)
+function c210310305.cfilter(c,tp,rc)
+	local tc=c:GetReasonCard()
 	return  c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_MZONE) and
-	  c:GetPreviousControler()==tp and c:IsSetCard(0x18) and c:IsRace(RACE_FAIRY)
+	  c:GetPreviousControler()==tp and c:IsSetCard(0x18) and c:IsRace(rc) and tc~=c
 	
 	end
-function c210310305.spcon2(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c210310305.cfilter2,1,nil,tp)
-end
-function c210310305.cfilter2(c,tp,re,eg)
-	return  c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_MZONE) and
-	  c:GetPreviousControler()==tp and c:IsSetCard(0x18) and c:IsRace(RACE_AQUA)
-	
-	end
-
 function c210310305.spfilter(c,e,tp)
 	return c:IsSetCard(0x18) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsRace(RACE_AQUA)
 end
 function c210310305.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c210310305.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+		and Duel.IsExistingMatchingCard(c210310305.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 
 function c210310305.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c210310305.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c210310305.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
