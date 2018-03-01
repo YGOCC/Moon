@@ -16,7 +16,7 @@ function ref.initial_effect(c)
   e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
   e1:SetTargetRange(LOCATION_MZONE,0)
   e1:SetTarget(aux.TargetBoolFunction(ref.f))
-  e1:SetValue(aux.NOT(ref.tv))
+  e1:SetValue(ref.tv)
   c:RegisterEffect(e1)
   -- ATK
   local e2=Effect.CreateEffect(c)
@@ -41,8 +41,8 @@ end
 
 -- Cannot Target
 function ref.tv(e,re,rp)
-  local tp=e:GetHandlerPlayer()
-  return re:IsHasCategory(CATEGORY_POSITION) and tp~=rp
+  
+  return rp~=e:GetHandlerPlayer() and not re:IsHasCategory(CATEGORY_POSITION)
 end
 
 -- Cannot Destroy

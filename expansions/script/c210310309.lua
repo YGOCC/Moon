@@ -37,12 +37,12 @@ function c210310309.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c210310309.target(e,tp,eg,ep,ev,re,r,rp,chk)
-  local ct=0x1019 
-  local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
-  local n=g:GetSum(Card.GetCounter,ct)*200
-  Duel.SetTargetPlayer(tp)
-  Duel.SetTargetParam(n)
-  Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,n)
+ 	if chk==0 then return true end
+	local p=Duel.GetTurnPlayer()
+	local ct=Duel.GetCounter(p,LOCATION_ONFIELD,LOCATION_ONFIELD,0x1019)
+	Duel.SetTargetPlayer(p)
+	Duel.SetTargetParam(ct*200)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,p,ct*200)
 end
 function c210310309.operation(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
@@ -52,10 +52,11 @@ function c210310309.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 --special summon
 function c210310309.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetActivityCount(tp,ACTIVITY_NORMALSUMMON)==0 end
+	if chk==0 then return Duel.CheckLPCost(tp,500) end
+	Duel.PayLPCost(tp,500)
 end
 function c210310309.filter(c,e,tp)
-	return c:IsSetCode(0x18) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x18) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c210310309.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and c210310309.filter(chkc,e,tp) end
@@ -65,7 +66,7 @@ function c210310309.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,c210310309.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function c6795211.operation1(e,tp,eg,ep,ev,re,r,rp)
+function c210310309.operation1(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):GetFirst()
   if not tc:IsRelateToEffect(e) then return end
   Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
