@@ -71,6 +71,9 @@ function c1392007.spop(e,tp,eg,ep,ev,re,r,rp)
 			local e5=e2:Clone()
 			e5:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
 			tc:RegisterEffect(e5)
+			local e6=e2:Clone()
+			e6:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+			tc:RegisterEffect(e6)
 			tc=sg:GetNext()
 		end
 	end
