@@ -19,15 +19,7 @@ c:EnableReviveLimit()
 	e3:SetValue(c50031245.valcheck)
 	e3:SetLabelObject(e2)
 	c:RegisterEffect(e3)
-		--discard deck & draw
-	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_DECKDES+CATEGORY_DRAW)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetCountLimit(1)
-	e4:SetTarget(c50031245.distg)
-	e4:SetOperation(c50031245.drop)
-	c:RegisterEffect(e4)
+
 			--immune
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
@@ -43,31 +35,7 @@ c:EnableReviveLimit()
 	e6:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e6:SetValue(c50031245.splimit)
 	c:RegisterEffect(e6)
-	--cannot release
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_SINGLE)
-	e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e7:SetCode(EFFECT_UNRELEASABLE_SUM)
-	e7:SetValue(1)
-	c:RegisterEffect(e7)
-	local e8=e7:Clone()
-	e8:SetCode(EFFECT_UNRELEASABLE_NONSUM)
-	c:RegisterEffect(e8)
-	local e9=Effect.CreateEffect(c)
-	e9:SetType(EFFECT_TYPE_SINGLE)
-	e9:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e9:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-	e9:SetValue(1)
-	c:RegisterEffect(e9)
-	local e10=e9:Clone()
-	e10:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
-	c:RegisterEffect(e10)
-	local e11=e9:Clone()
-	e11:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
-	c:RegisterEffect(e11)
---	local e12=e9:Clone()
---	e12:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
---	c:RegisterEffect(e12)
+ 
 end
 function c50031245.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION or bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION +0x786
@@ -77,7 +45,7 @@ function c50031245.ffilter(c)
 	return c:IsSetCard(0x885a) and c:GetCode()~=50031245 and not c:IsCode(50031245) and not c:IsType(TYPE_FUSION) 
 end
 function c50031245.con(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
+	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION 
 end
 function c50031245.valcheck(e,c)
 	local ct=e:GetHandler():GetMaterial():GetCount()
@@ -90,12 +58,12 @@ function c50031245.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 		con3=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,3,nil)
 	end
 	if ct>=7 then
-		con5=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,1,nil)
-		local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,nil)
+		con5=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+		local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	end
 	if ct>=9 then
-		con8=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		con8=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,1,nil)
+		local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,nil)
 	end
 
 	if chk==0 then return con3 or con5 or con8 or con10 end
@@ -109,12 +77,12 @@ function c50031245.op(e,tp,eg,ep,ev,re,r,rp)
 		end
 	if ct>=7 then
 		Duel.BreakEffect()
-	local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,nil)
+	local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
 	end
 	if ct>=9 then
 		Duel.BreakEffect()
-	local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
+	local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,e:GetHandler())
 	Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
 	end
 	if ct>=11 then
