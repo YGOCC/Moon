@@ -48,7 +48,10 @@ function c79854527.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c79854527.sspcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsReason(REASON_EFFECT) and re:GetHandler():IsRace(RACE_PLANT) and not re:GetHandler():IsCode(79854527)
+	if not re then return false end
+	local rc=re:GetHandler()
+	return re:IsActiveType(TYPE_MONSTER) and rc:IsRace(RACE_PLANT) and bit.band(r,REASON_EFFECT)~=0
+		and not rc:IsCode(79854527)
 end
 function c79854527.ssptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -57,7 +60,6 @@ function c79854527.ssptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c79854527.sspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-	end
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
