@@ -77,7 +77,7 @@ end
 function c79854544.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
 	return ep~=tp and Duel.GetAttacker()==ec and ec:GetAttack()>1000
-		and Duel.GetAttackTarget()==nil
+		and Duel.GetAttackTarget()==nil and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 end
 function c79854544.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
