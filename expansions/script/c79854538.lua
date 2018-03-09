@@ -83,7 +83,7 @@ function c79854538.operation(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
 		c:SetCardTarget(tc)
-end
+	end
 end
 function c79854538.desfilter(c,rc)
 	return rc:GetCardTarget():IsContains(c)
@@ -100,7 +100,8 @@ function c79854538.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c79854538.srcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and e:GetHandler():GetReasonEffect():IsActiveType(TYPE_MONSTER) 
+	return (re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_COST)~=0) or
+	(re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_EFFECT)~=0)
  end
 function c79854538.srtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c79854538.srfilter,tp,LOCATION_DECK,0,1,nil) end
