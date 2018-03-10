@@ -8,7 +8,6 @@ function c11528670.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c11528670.splimit)
 	c:RegisterEffect(e1)
 	--special summon rule
 	local e2=Effect.CreateEffect(c)
@@ -48,9 +47,6 @@ end
 --Special Summon
 function c11528670.vfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER)
-end
-function c11528670.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c11528670.spfilter(c)
 	return c:IsSetCard(0x850) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()

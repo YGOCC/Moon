@@ -3,8 +3,13 @@ function c100000872.initial_effect(c)
 c:SetUniqueOnField(1,0,100000872)
 	--fusion material
 	c:EnableReviveLimit()
-	c:EnableUnsummonable()
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x753),2,true)
+		--spsummon condition
+	local e11=Effect.CreateEffect(c)
+	e11:SetType(EFFECT_TYPE_SINGLE)
+	e11:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e11:SetCode(EFFECT_SPSUMMON_CONDITION)
+	c:RegisterEffect(e11)
 	--Special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100000872,0))

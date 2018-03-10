@@ -1,14 +1,12 @@
 function c100000739.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	c:EnableUnsummonable()
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x75A),2,true)
 			--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c100000739.splimit)
 	c:RegisterEffect(e1)
 	--special summon rule
 	local e2=Effect.CreateEffect(c)
@@ -46,9 +44,6 @@ function c100000739.filt(c)
 end
 function c100000739.val(e,c)
 	return Duel.GetMatchingGroupCount(c100000739.filt,c:GetControler(),LOCATION_GRAVE,0,nil)*100
-end
-function c100000739.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c100000739.spfilter(c)
 	return c:IsSetCard(0x75A) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
