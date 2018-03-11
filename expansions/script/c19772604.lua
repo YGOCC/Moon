@@ -71,7 +71,7 @@ end
 c19772604.pendulum_level=4
 --xyz procedure
 function c19772604.matfilter(c,xyzc)
-	return c:IsXyzType(TYPE_XYZ) and c:IsRace(RACE_WARRIOR) and c:GetRank()==4
+	return c:IsType(TYPE_XYZ) and c:IsRace(RACE_WARRIOR) and c:GetRank()==4
 end
 function c19772604.xyzcheck(g)
 	return g:GetClassCount(Card.GetRank)==1

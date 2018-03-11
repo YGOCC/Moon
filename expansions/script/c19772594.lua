@@ -38,7 +38,7 @@ function c19772594.tdfilter(c,e,tp)
 end
 --Activate
 function c19772594.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
 end
 function c19772594.activate(e,tp,eg,ep,ev,re,r,rp)

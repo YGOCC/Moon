@@ -1,6 +1,7 @@
 --La Biblioteca degli AoJ - Cnolejia
 --Script by XGlitchy30
 function c19772592.initial_effect(c)
+	c:EnableCounterPermit(0x197)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -75,7 +76,7 @@ function c19772592.thfilter(c)
 		and not c:IsCode(19772592)
 end
 function c19772592.fsfilter(c,tp)
-	return c:IsSetCard(0x197) and c:IsControler(tp) and c:IsSummonType(SUMMON_TYPE_FUSION+SUMMON_TYPE_SYNCHRO)
+	return c:IsSetCard(0x197) and c:IsControler(tp) and (c:IsSummonType(SUMMON_TYPE_FUSION) or c:IsSummonType(SUMMON_TYPE_SYNCHRO))
 end
 function c19772592.xyzfilter(c,tp)
 	return c:IsSetCard(0x197) and c:IsControler(tp) and c:IsSummonType(SUMMON_TYPE_XYZ)
@@ -120,16 +121,17 @@ function c19772592.fstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,0,tp,LOCATION_GRAVE)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c19772592.fstg(e,tp,eg,ep,ev,re,r,rp)
+function c19772592.fsop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
 		e:GetHandler():AddCounter(0x197,1)
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATODECK)
 		local tc=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_GRAVE,0,1,1,nil)
-		if tc and tc:IsRelateToEffect(e) then
-			Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
-			Duel.BreakEffect()
-			Duel.Draw(tp,1,REASON_EFFECT)
+		if tc then
+			if Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)~=0 then
+				Duel.ShuffleDeck(tp)
+				Duel.Draw(tp,1,REASON_EFFECT)
+			end
 		end
 	end
 end
@@ -139,6 +141,7 @@ function c19772592.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c19772592.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c19772592.xyztarget,tp,LOCATION_MZONE,0,1,nil,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x197)
 end
 function c19772592.xyzop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -168,7 +171,7 @@ function c19772592.plumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x197)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,0,1-tp,LOCATION_GRAVE)
 end
-function c19772592.plumtg(e,tp,eg,ep,ev,re,r,rp)
+function c19772592.plumop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
 		e:GetHandler():AddCounter(0x197,1)
 		Duel.BreakEffect()
@@ -188,7 +191,7 @@ function c19772592.lktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x197)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,0,tp,LOCATION_DECK)
 end
-function c19772592.lktg(e,tp,eg,ep,ev,re,r,rp)
+function c19772592.lkop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
 		e:GetHandler():AddCounter(0x197,1)
 		Duel.BreakEffect()

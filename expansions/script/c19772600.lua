@@ -137,6 +137,7 @@ function c19772600.fselect(c,tp,mg,sg)
 end
 function c19772600.spcon(e,c)
 	if c==nil then return true end
+	if c:IsFaceup() and c:IsLocation(LOCATION_EXTRA) then return end
 	local tp=c:GetControler()
 	local mg=Duel.GetReleaseGroup(tp):Filter(c19772600.cfilter,nil)
 	local sg=Group.CreateGroup()

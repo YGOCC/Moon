@@ -147,6 +147,7 @@ function c19772602.sprfilter2(c,tp,mc,sc,lv)
 end
 function c19772602.sprcon(e,c)
 	if c==nil then return true end
+	if c:IsFaceup() and c:IsLocation(LOCATION_EXTRA) then return end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(c19772602.sprfilter,tp,LOCATION_MZONE,0,nil)
 	return g:IsExists(c19772602.sprfilter1,1,nil,tp,g,c)

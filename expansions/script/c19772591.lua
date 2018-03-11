@@ -147,8 +147,8 @@ function c19772591.atcon(e,tp,eg,ep,ev,re,r,rp)
 		and e:GetHandler():IsChainAttackable(0)
 end
 function c19772591.atcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local dg=Duel.GetMatchingGroup(c19772591.cffilter,tp,LOCATION_HAND,0,nil)
 	if chk==0 then 
-		local dg=Duel.GetMatchingGroup(c19772591.cffilter,tp,LOCATION_HAND,0,nil)
 		return dg:GetClassCount(Card.GetCode)>=3
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
@@ -161,7 +161,7 @@ function c19772591.atcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g3=dg:Select(tp,1,1,nil)
 	g1:Merge(g2)
 	g1:Merge(g3)
-	Duel.ConfirmCards(1-tp,g3)
+	Duel.ConfirmCards(1-tp,g1)
 	Duel.ShuffleHand(tp)
 end
 function c19772591.atop(e,tp,eg,ep,ev,re,r,rp)
