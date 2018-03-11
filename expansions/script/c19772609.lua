@@ -107,7 +107,7 @@ function c19772609.drytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c19772609.dryop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
-	if tc:IsAttackable() and not tc:IsStatus(STATUS_ATTACK_CANCELED) then
+	if not tc:IsStatus(STATUS_ATTACK_CANCELED) then
 		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 			local op=Duel.GetOperatedGroup():GetFirst()
 			local lp=Duel.GetLP(tp)/2
