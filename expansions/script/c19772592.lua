@@ -196,7 +196,7 @@ function c19772592.lkop(e,tp,eg,ep,ev,re,r,rp)
 		e:GetHandler():AddCounter(0x197,1)
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local tc=Duel.SelectMatchingCard(tp,c19772592.tgfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+		local tc=Duel.SelectMatchingCard(tp,c19772592.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if tc:GetCount()>0 then
 			Duel.SendtoGrave(tc,REASON_EFFECT)
 		end
