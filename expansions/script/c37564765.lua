@@ -1,8 +1,5 @@
 Senya=Senya or {}
 local cm=Senya
-os=require('os')
-table=require('table')
-io=require('io')
 --7CG universal scripts
 --test parts
 aux.BeginPuzzle=aux.TRUE
@@ -1610,11 +1607,8 @@ function cm.CheckFusionMaterialExact(c,g,chkf)
 end
 function cm.HoldGroup(mg)
 	return function(tp,g,fc)
-		return not (g:IsExists(cm.HoldGroupFilter,1,nil,mg) or mg:IsExists(cm.HoldGroupFilter,1,nil,g))
+		return mg:Equal(g)
 	end
-end
-function cm.HoldGroupFilter(c,mg)
-	return not mg:IsContains(c)
 end
 --3L fusion monster, c=card, m=code
 --exf=extra function
@@ -1769,15 +1763,6 @@ function cm.enable_kaguya_check_3L()
 			for code,v in pairs(t) do
 				cm.GainEffect_3L(tc,code)
 			end
-			if not tc:IsType(TYPE_EFFECT) then
-				local e2=Effect.CreateEffect(tc)
-				e2:SetType(EFFECT_TYPE_SINGLE)
-				e2:SetCode(EFFECT_ADD_TYPE)
-				e2:SetValue(TYPE_EFFECT)
-				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-				e2:SetReset(RESET_EVENT+0x1fe0000)
-				tc:RegisterEffect(e2,true)
-			end
 		end
 	end)
 	Duel.RegisterEffect(ge1,0)
@@ -1826,6 +1811,19 @@ function cm.GainEffect_3L(c,tc,pres,pctlm)
 	if not mt or c:GetFlagEffect(cd-4000)>0 or not mt.effect_operation_3L then return end
 	local ctlm=pctlm or cm.CheckKoishiCount(c)
 	local efft={mt.effect_operation_3L(c,ctlm)}
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_ADD_TYPE)
+	e2:SetValue(TYPE_EFFECT)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e2,true)
+	table.insert(efft,e2)
+	local e3=e2:Clone()
+	e3:SetCode(EFFECT_REMOVE_TYPE)
+	e3:SetValue(EFFECT_NORMAL)
+	c:RegisterEffect(e3,true)
+	table.insert(efft,e3)	
 	c:RegisterFlagEffect(cd-4000,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,cm.order_table_new(efft),cd*16+1)
 	if pres then
 		local info_list={
@@ -2201,6 +2199,41 @@ function cm.GetFusionMaterial(tp,loc,oloc,f,gc,e,...)
 	if gc then g1:RemoveCard(gc) end
 	if e then g1=g1:Filter(cm.NonImmuneFilter,nil,e) end
 	return g1
+end
+function cm.GetReleaseGroup(tp,loc,oloc,f,gc,...)
+	local g1=Duel.GetReleaseGroup(tp)
+	if loc then
+		local floc=(loc & LOCATION_MZONE)
+		if floc~=0 then
+			g1=g1:Filter(Card.IsLocation,nil,floc)
+		else
+			g1:Clear()
+		end
+		local eloc=loc-floc
+		if eloc~=0 then
+			local g2=Duel.GetMatchingGroup(Card.IsReleasable,tp,eloc,0,nil)
+			g1:Merge(g2)
+		end
+	end
+	if oloc and oloc~=0 then
+		local g3=Duel.GetMatchingGroup(Card.IsReleasable,tp,0,oloc,nil)
+		g1:Merge(g3)
+	end
+	if f then g1=g1:Filter(f,nil,...) end
+	if gc then g1:RemoveCard(gc) end
+	return g1
+end
+function cm.ReleaseCost(loc,oloc,f,self,...)
+	local ext_params={...}
+	return  function(e,tp,eg,ep,ev,re,r,rp,chk)
+					local ec=self and e:GetHandler()
+					local mg=cm.GetReleaseGroup(tp,loc,oloc,f,ec,table.unpack(ext_params))
+					if chk==0 then return #mg>0 and (not ec or ec:IsReleasable()) end
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+					local g=mg:Select(tp,1,1,nil)
+					if ec then g:AddCard(ec) end
+					Duel.Release(g,REASON_COST)
+				end
 end
 function cm.ChainLimitCost(original_cost)
 	return  function(e,tp,eg,ep,ev,re,r,rp,chk)
