@@ -8,6 +8,7 @@ function c101005026.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CHANGE_DAMAGE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(1,0)
 	e1:SetLabel(tp)
 	e1:SetValue(c101005026.val)
@@ -33,19 +34,16 @@ function c101005026.initial_effect(c)
 	c:RegisterEffect(e3)
 	--atk up
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(101005026,0))
-	e4:SetCategory(CATEGORY_ATKCHANGE)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e4:SetCondition(c101005026.atkcon)
 	e4:SetOperation(c101005026.atkop)
 	c:RegisterEffect(e4)
 	--to hand
 	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(83039729,0))
+	e5:SetDescription(aux.Stringid(101005026,0))
 	e5:SetCategory(CATEGORY_TOHAND)
-	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_DESTROYED)
 	e5:SetCondition(c101005026.thcon)
 	e5:SetTarget(c101005026.thtg)
@@ -53,10 +51,12 @@ function c101005026.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c101005026.val(e,re,dam,r,rp,rc)
-	if r&REASON_BATTLE>0 and Duel.IsPlayerAffectedByEffect(e:GetLabel(),92481084) then return dam end
-	elseif r&REASON_EFFECT~=0 or r&REASON_BATTLE~=0 then
+	if bit.band(r,REASON_BATTLE)>0 then return dam end
+	if bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_BATTLE)~=0 then
 		return dam/2
-	else return dam end
+	else
+		return dam
+	end
 end
 function c101005026.filter(c)
 	return c:IsType(TYPE_LINK)
@@ -81,7 +81,7 @@ function c101005026.atkop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_PHASE+PHASE_DAMAGE_CAL)
+		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_DAMAGE_CAL)
 		e1:SetValue(1000)
 		c:RegisterEffect(e1)
 	end
@@ -89,17 +89,19 @@ end
 function c101005026.thfilter(c)
 	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
+function c101005026.thcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:IsReason(REASON_EFFECT) and rp~=tp and c:GetPreviousControler()==tp
+end
 function c101005026.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_DECK) and c101005026.thfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c101005026.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c101005026.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(c101005026.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c101005026.thop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c101005026.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
 end
