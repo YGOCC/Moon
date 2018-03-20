@@ -13,6 +13,7 @@ function c100000984.initial_effect(c)
 		--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(100000984,0))
+		e2:SetCountLimit(1,100000984+EFFECT_COUNT_CODE_OATH)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)

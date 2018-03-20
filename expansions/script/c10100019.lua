@@ -12,7 +12,7 @@ function c10100019.initial_effect(c)
 	c:RegisterEffect(e1)
 	--recover&damage
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCategory(CATEGORY_RECOVER+CATEGORY_DAMAGE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)

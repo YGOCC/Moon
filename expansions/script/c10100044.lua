@@ -92,7 +92,7 @@ end
 function c10100044.hop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,10100046,0,0x4011,300,300,1,RACE_MACHINE,ATTRIBUTE_DARK) then return end
+	if not Duel.IsPlayerCanSpecialSummonMonster(tp,10100046,0,0x4011,400,400,1,RACE_MACHINE,ATTRIBUTE_DARK) then return end
 	for i=1,4 do
 		local token=Duel.CreateToken(tp,10100046)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
