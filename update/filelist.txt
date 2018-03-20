@@ -5700,13 +5700,13 @@ expansions/script/c192051219.lua	380a375f6b78398ddcbab77fa0b3260d
 expansions/script/c192051220.lua	1d8f29bd03db36988034076b43ff9316
 expansions/script/c192051221.lua	fa8ae31e693b83d7b84e2156c9f221f4
 expansions/script/c192051222.lua	9b41b1eb3c75566d549c076e784d4e72
-expansions/script/c192051223.lua	f53aca2d19210411b217c36ea3c54b67
-expansions/script/c192051224.lua	78c8a5c4215fbb7a602e669999599683
-expansions/script/c192051225.lua	d7d13f16e9f1ca7e6a08f28fcf8dee43
+expansions/script/c192051223.lua	5f5033491baed4ab76ee55843438e4cd
+expansions/script/c192051224.lua	4295dbc69ffe6c215006316ea2d5c542
+expansions/script/c192051225.lua	ffd4eb31b6e45bb2d14a663835e72329
 expansions/script/c192051226.lua	b052a231f8529845225c667d3b3598b4
-expansions/script/c192051227.lua	4bf34994a016d55ec340101e3df25188
+expansions/script/c192051227.lua	8d7b616eb5ac18c4f5608bb67f2d7472
 expansions/script/c192051228.lua	6400dc91c6dff0d74c2968fb6d18498b
-expansions/script/c192051229.lua	bd3a65e57882fa35682c5363f28cadac
+expansions/script/c192051229.lua	58389cf452c54dce6d7f212919bf5b02
 expansions/script/c192147484.lua	dab3730c81c7ca93fb73fea2bcf2a229
 expansions/script/c192147486.lua	1997dd7dea8c0cbae8568d8cbd847caa
 expansions/script/c192147487.lua	fdbbc9ed25ed1918ba7f971ebdc7fe6e
@@ -8127,7 +8127,7 @@ expansions/script/c99830044.lua	0220d95558e82891bffdd41771bd0687
 expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
-expansions/script/init.lua	fe104e356e1211b6d86ad138d3d73c15
+expansions/script/init.lua	93f858111de49db558185772a6f55b24
 sound/BGM/custom/Bad Apple.mp3	d311848fb68c40452d5a19b65b35f47d
 sound/BGM/custom/kyoshikyoku.mp3	332ffe2d5144e5d3848f3d43cbf39663
 sound/BGM/custom/My Friend.mp3	86774f3a02f7504aee3a5f543ffcef3c
@@ -8176,6 +8176,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	171c0297cf44ff8c17be132531d0b1de
+update/filelist.txt	1eae59fe348e18971b8c11145c4756cc
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	cfd0a9107ea351d58d4f4ce8abe8cc83
+update/version.txt	02915e5d83fff4ed5c02e80bba76de61

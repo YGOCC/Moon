@@ -36,9 +36,9 @@ end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-	get_prev_level_field, is_level, is_level_below, is_level_above, change_position = 
-	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
-	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition
+get_prev_level_field, is_level, is_level_below, is_level_above, change_position = 
+Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
+Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -225,7 +225,7 @@ function Card.GetStage(c)
 	local te=c:IsHasEffect(EFFECT_STAGE)
 	if type(te:GetValue())=='function' then
 		return te:GetValue()(te,c)
-	else
+		else
 		return te:GetValue()
 	end
 end
@@ -260,7 +260,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 			min=t[#t]
 			extramat=t[#t-1]
 			table.remove(t)
-		else
+			else
 			min=max
 			max=99
 			extramat=t[#t]
@@ -302,10 +302,10 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 end
 function Auxiliary.StageVal(stage)
 	return	function(e,c)
-				local stage=stage
-				--insert modifications here
-				return stage
-			end
+		local stage=stage
+		--insert modifications here
+		return stage
+	end
 end
 function Auxiliary.EvoluteMatFilter(c,ec,tp,...)
 	if c:IsFacedown() or not c:IsCanBeEvoluteMaterial(ec) then return false end
@@ -319,7 +319,7 @@ function Auxiliary.EvoluteValue(c)
 	local rk=c:GetRank()
 	if lv>0 or c:IsStatus(STATUS_NO_LEVEL) then
 		return lv+0x10000*rk
-	else
+		else
 		return rk+0x10000*lv
 	end
 end
@@ -330,12 +330,12 @@ function Auxiliary.EvolCheckRecursive(c,tp,mg,sg,ec,stage,echeck,extramat,min,ma
 	local res
 	if ... then
 		res=mg:IsExists(Auxiliary.EvolCheckRecursive,1,sg,tp,mg,sg,ec,stage,echeck,extramat,min,max,...)
-	else
+		else
 		if min>0 then
 			res=mg:IsExists(Auxiliary.ExEvolCheckRecursive,1,sg,tp,mg,sg,ec,stage,echeck,extramat,min,max,Group.CreateGroup())
-		else
+			else
 			res=(sg:CheckWithSumEqual(Auxiliary.EvoluteValue,stage,sg:GetCount(),sg:GetCount()) and (not echeck or echeck(sg,ec,tp)) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0) 
-				or (max>0 and mg:IsExists(Auxiliary.ExEvolCheckRecursive,1,sg,tp,mg,sg,ec,stage,echeck,extramat,min,max,Group.CreateGroup()))
+			or (max>0 and mg:IsExists(Auxiliary.ExEvolCheckRecursive,1,sg,tp,mg,sg,ec,stage,echeck,extramat,min,max,Group.CreateGroup()))
 		end
 	end
 	sg:RemoveCard(c)
@@ -348,10 +348,10 @@ function Auxiliary.ExEvolCheckRecursive(c,tp,mg,sg,ec,stage,echeck,extramat,min,
 	local res
 	if sg2:GetCount()<min then
 		res=mg:IsExists(Auxiliary.ExEvolCheckRecursive,1,sg,tp,mg,sg,ec,stage,echeck,extramat,min,max,sg2)
-	elseif sg2:GetCount()<max then
+		elseif sg2:GetCount()<max then
 		res=(sg:CheckWithSumEqual(Auxiliary.EvoluteValue,stage,sg:GetCount(),sg:GetCount()) and (not echeck or echeck(sg,ec,tp)) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0) 
-			or mg:IsExists(Auxiliary.ExEvolCheckRecursive,1,sg,tp,mg,sg,ec,stage,echeck,extramat,min,max,sg2)
-	else
+		or mg:IsExists(Auxiliary.ExEvolCheckRecursive,1,sg,tp,mg,sg,ec,stage,echeck,extramat,min,max,sg2)
+		else
 		res=sg:CheckWithSumEqual(Auxiliary.EvoluteValue,stage,sg:GetCount(),sg:GetCount()) and (not echeck or echeck(sg,ec,tp)) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0
 	end
 	sg:RemoveCard(c)
@@ -361,57 +361,57 @@ end
 function Auxiliary.EvoluteCondition(echeck,extramat,min,max,...)
 	local funs={...}
 	return	function(e,c)
-				if c==nil then return true end
-				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
-				local tp=c:GetControler()
-				local stage=c:GetStage()
-				local mg=Duel.GetMatchingGroup(Auxiliary.EvoluteMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,table.unpack(funs),extramat)
-				local sg=Group.CreateGroup()
-				return mg:IsExists(Auxiliary.EvolCheckRecursive,1,nil,tp,mg,sg,c,stage,echeck,extramat,min,max,table.unpack(funs))
-			end
+		if c==nil then return true end
+		if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+		local tp=c:GetControler()
+		local stage=c:GetStage()
+		local mg=Duel.GetMatchingGroup(Auxiliary.EvoluteMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,table.unpack(funs),extramat)
+		local sg=Group.CreateGroup()
+		return mg:IsExists(Auxiliary.EvolCheckRecursive,1,nil,tp,mg,sg,c,stage,echeck,extramat,min,max,table.unpack(funs))
+	end
 end
 function Auxiliary.EvoluteTarget(echeck,extramat,min,max,...)
 	local funs={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
-				local mg=Duel.GetMatchingGroup(Auxiliary.EvoluteMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,table.unpack(funs),extramat)
-				local ct=#funs
-				local stage=c:GetStage()
-				local sg
-				local sg2
-				local tempfun
-				::restart::
-				sg=Group.CreateGroup()
-				sg2=Group.CreateGroup()
-				tempfun={table.unpack(funs)}
-				while sg:GetCount()<ct+max do
-					local cg
-					if #tempfun>0 then
-						cg=mg:Filter(Auxiliary.EvolCheckRecursive,sg,tp,mg,sg,c,stage,echeck,extramat,min,max,table.unpack(tempfun))
-					elseif max>0 then
-						cg=mg:Filter(Auxiliary.ExEvolCheckRecursive,sg,tp,mg,sg,c,stage,echeck,extramat,min,max,sg2)
-					else
-						cg=Group.CreateGroup()
-					end
-					if cg:GetCount()==0 then break end
-					local tc=cg:SelectUnselect(sg,tp,true,true)
-					if not tc then break end
-					table.remove(tempfun,1)
-					if not sg:IsContains(tc) then
-						sg:AddCard(tc)
-						if #tempfun<=0 then
-							sg2:AddCard(tc)
-						end
-					end
-				end
-				if sg:GetCount()>=ct+min then
-					sg:KeepAlive()
-					e:SetLabelObject(sg)
-					return true
+		local mg=Duel.GetMatchingGroup(Auxiliary.EvoluteMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,table.unpack(funs),extramat)
+		local ct=#funs
+		local stage=c:GetStage()
+		local sg
+		local sg2
+		local tempfun
+		::restart::
+		sg=Group.CreateGroup()
+		sg2=Group.CreateGroup()
+		tempfun={table.unpack(funs)}
+		while sg:GetCount()<ct+max do
+			local cg
+			if #tempfun>0 then
+				cg=mg:Filter(Auxiliary.EvolCheckRecursive,sg,tp,mg,sg,c,stage,echeck,extramat,min,max,table.unpack(tempfun))
+				elseif max>0 then
+				cg=mg:Filter(Auxiliary.ExEvolCheckRecursive,sg,tp,mg,sg,c,stage,echeck,extramat,min,max,sg2)
 				else
-					if sg:GetCount()>0 then goto restart end
-					return false
+				cg=Group.CreateGroup()
+			end
+			if cg:GetCount()==0 then break end
+			local tc=cg:SelectUnselect(sg,tp,true,true)
+			if not tc then break end
+			table.remove(tempfun,1)
+			if not sg:IsContains(tc) then
+				sg:AddCard(tc)
+				if #tempfun<=0 then
+					sg2:AddCard(tc)
 				end
 			end
+		end
+		if sg:GetCount()>=ct+min then
+			sg:KeepAlive()
+			e:SetLabelObject(sg)
+			return true
+			else
+			if sg:GetCount()>0 then goto restart end
+			return false
+		end
+	end
 end
 function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=e:GetLabelObject()
@@ -434,25 +434,25 @@ end
 --Pandemoniums
 function Auxiliary.PendCondition()
 	return	function(e,c,og)
-				if c==nil then return true end
-				local tp=c:GetControler()
-				local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
+		if c==nil then return true end
+		local tp=c:GetControler()
+		local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
 				if rpz==nil or c==rpz or not rpz:IsType(TYPE_PENDULUM) or Duel.GetFlagEffect(tp,10000000)>0 then return false end
-				local lscale=c:GetLeftScale()
-				local rscale=rpz:GetRightScale()
-				if lscale>rscale then lscale,rscale=rscale,lscale end
-				local loc=0
-				if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
-				if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
-				if loc==0 then return false end
-				local g=nil
-				if og then
-					g=og:Filter(Card.IsLocation,nil,loc)
-				else
-					g=Duel.GetFieldGroup(tp,loc,0)
-				end
-				return g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale)
-			end
+		local lscale=c:GetLeftScale()
+		local rscale=rpz:GetRightScale()
+		if lscale>rscale then lscale,rscale=rscale,lscale end
+		local loc=0
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
+		if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
+		if loc==0 then return false end
+		local g=nil
+		if og then
+			g=og:Filter(Card.IsLocation,nil,loc)
+			else
+			g=Duel.GetFieldGroup(tp,loc,0)
+		end
+		return g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale,SUMMON_TYPE_PENDULUM)
+	end
 end
 function Auxiliary.AddOrigPandemoniumType(c,ispendulum,is_spell)
 	table.insert(Auxiliary.Pandemoniums,c)
@@ -461,34 +461,42 @@ function Auxiliary.AddOrigPandemoniumType(c,ispendulum,is_spell)
 	local is_spell=is_spell==nil and false or is_spell
 	Auxiliary.Pandemoniums[c]=function() return ispendulum, is_spell end
 end
-function Auxiliary.EnablePandemoniumAttribute(c,regfield,reghand,desc)
+function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,reghand)
+	local e5=Effect.CreateEffect(c)
+	
+	c:RegisterEffect(e5)
 	--summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	if desc then
-		e1:SetDescription(desc)
-	else
-		e1:SetDescription(1074)
-	end
-	e1:SetCode(EFFECT_SPSUMMON_PROC_G)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetCondition(Auxiliary.PandCondition)
-	e1:SetOperation(Auxiliary.PandOperation)
-	e1:SetValue(SUMMON_TYPE_SPECIAL+726)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	-- e1:SetCondition(Auxiliary.PandCondition(xe))
+	e1:SetTarget(Auxiliary.PandActTarget(xe))
+	e1:SetOperation(Auxiliary.PandOperation(xe))
 	c:RegisterEffect(e1)
+	local e0=e1:Clone()
+	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
+	c:RegisterEffect(e0)
 	--register by default
 	if regfield==nil or regfield then
-		local e2=Effect.CreateEffect(c)
-		e2:SetDescription(1160)
-		e2:SetCondition(Auxiliary.PandActHandCon)
-		e2:SetType(EFFECT_TYPE_ACTIVATE)
-		e2:SetCode(EVENT_FREE_CHAIN)
-		e2:SetTarget(Auxiliary.PandActTarget)
-		e2:SetRange(LOCATION_SZONE)
-		e2:SetLabel(LOCATION_SZONE)
-		e2:SetValue(LOCATION_PZONE)
-		c:RegisterEffect(e2)
+		-- local e2=Effect.CreateEffect(c)
+		-- e2:SetDescription(1160)
+		-- e2:SetCondition(Auxiliary.PandActHandCon)
+		-- e2:SetType(EFFECT_TYPE_ACTIVATE)
+		-- e2:SetCode(EVENT_FREE_CHAIN)
+		-- e2:SetTarget(Auxiliary.PandActTarget(xe))
+		-- e2:SetRange(LOCATION_SZONE)
+		-- e2:SetLabel(LOCATION_SZONE)
+		-- e2:SetValue(LOCATION_PZONE)
+		-- c:RegisterEffect(e2)
+		-- local e2=Effect.CreateEffect(c)
+		-- e2:SetType(EFFECT_TYPE_FIELD)
+		-- e2:SetCode(EFFECT_REMOVE_TYPE)
+		-- e2:SetTargetRange(0xff,0)
+		-- e2:SetTarget(function(e,c) return c==e:GetHandler() end)
+		-- e2:SetValue(TYPE_PENDULUM)
+		-- Duel.RegisterEffect(e2,0)
 		--set
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
@@ -496,115 +504,150 @@ function Auxiliary.EnablePandemoniumAttribute(c,regfield,reghand,desc)
 		--e3:SetValue(TYPE_TRAP+TYPE_PANDEMONIUM)
 		e3:SetValue(TYPE_TRAP+TYPE_PENDULUM) --by default, it minuses PENDULUM and adds PANDEMONIUM
 		c:RegisterEffect(e3)
+		-- local e2=Effect.CreateEffect(c)
+		-- e2:SetType(EFFECT_TYPE_SINGLE)
+		-- e2:SetCode(EFFECT_SSET_COST)
+		-- e2:SetRange(LOCATION_HAND)
+		-- e2:SetCost(aux.TRUE)
+		-- e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) local dis=Duel.SelectDisableField(tp,1,LOCATION_SZONE,,0) end)
+		-- c:RegisterEffect(e2)
 	end
-	if reghand==nil or reghand then
-		local e4=Effect.CreateEffect(c)
-		e4:SetDescription(1160)
-		e4:SetType(EFFECT_TYPE_ACTIVATE)
-		e4:SetCode(EVENT_FREE_CHAIN)
-		e4:SetRange(LOCATION_HAND)
-		e4:SetLabel(LOCATION_HAND)
-		e4:SetTarget(Auxiliary.PandActTarget)
-		e4:SetValue(LOCATION_PZONE)
-		c:RegisterEffect(e4)
-	end
+	-- if reghand==nil or reghand then
+	-- local e4=Effect.CreateEffect(c)
+	-- e4:SetDescription(1160)
+	-- e4:SetType(EFFECT_TYPE_ACTIVATE)
+	-- e4:SetCode(EVENT_FREE_CHAIN)
+	-- e4:SetRange(LOCATION_HAND)
+	-- e4:SetLabel(LOCATION_HAND)
+	-- e4:SetTarget(Auxiliary.PandActTarget)
+	-- e4:SetValue(LOCATION_PZONE)
+	-- c:RegisterEffect(e4)
+	-- end
 end
-function Auxiliary.PandActTarget(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (e:GetLabel()~=LOCATION_HAND or e:GetHandler():IsHasEffect(EFFECT_TRAP_ACT_IN_HAND)) 
-		and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) end
-	e:GetHandler():RegisterFlagEffect(EFFECT_PANDEMONIUM,RESET_EVENT+0x1fe0000,0,0)
-end
-function Auxiliary.PaConditionFilter(c,e,tp,lscale,rscale)
+function Auxiliary.PaConditionFilter(c,e,tp,lscale,rscale,st)
 	local lv=0
 	if c.pendulum_level then
 		lv=c.pendulum_level
-	else
+		else
 		lv=c:GetLevel()
 	end
-	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)))
-		and (lv>lscale and lv<rscale) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SPECIAL+726,tp,false,false)
-		and not c:IsForbidden()
+	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM))))
+	and (lv>lscale and lv<rscale) and c:IsCanBeSpecialSummoned(e,st,tp,false,false)
+	and not c:IsForbidden()
 end
-function Auxiliary.PandCondition(e,c,og)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	if Duel.GetFlagEffect(tp,10000000)>0 then return false end
-	local lscale=c:GetLeftScale()
-	local rscale=c:GetRightScale()
-	if lscale>rscale then lscale,rscale=rscale,lscale end
-	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
-	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
-	if loc==0 then return false end
-	local g=nil
-	if og then
-		g=og:Filter(Card.IsLocation,nil,loc)
-	else
-		g=Duel.GetFieldGroup(tp,loc,0)
+function Auxiliary.PandActTarget(xe)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+		local c=e:GetHandler()
+		local lscale=c:GetLeftScale()
+		local rscale=c:GetRightScale()
+		if lscale>rscale then lscale,rscale=rscale,lscale end
+		local loc=0
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
+		if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
+		local g=nil
+		if loc~=0 then
+			g=Duel.GetFieldGroup(tp,loc,0)
+		end
+		local b1=c:IsReleasable() and g and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale,SUMMON_TYPE_SPECIAL+726)
+		local te=xe
+		local cost=nil
+		local target=nil
+		local b2=te~=nil
+		if b2 then
+			local condition=te:GetCondition()
+			cost=te:GetCost()
+			target=te:GetTarget()
+			b2=b2 and (not condition or condition(te,tep,eg,ep,ev,re,r,rp))
+			and (not cost or cost(te,tep,eg,ep,ev,re,r,rp,0))
+			and (not target or target(te,tep,eg,ep,ev,re,r,rp,0))
+		end
+		if chk==0 then return (not c:IsStatus(STATUS_SET_TURN) or c:IsHasEffect(EFFECT_TRAP_ACT_IN_SET_TURN)) and (c:GetLocation()~=LOCATION_HAND and c:IsFacedown() or (c:IsHasEffect(EFFECT_TRAP_ACT_IN_HAND) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)))) end
+		--(b1 or b2) and 
+		local opt=nil
+		if b1 then
+			opt=Duel.SelectOption(tp,1150,1074)
+			else--f b2 then
+			opt=Duel.SelectOption(tp,1150)--[[
+			else opt=Duel.SelectOption(tp,1074)+1]] end
+			e:SetLabel(opt)
+			if opt~=0 then
+				e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+				e:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_HAND+LOCATION_EXTRA)
+				elseif b2 then
+				e:SetCategory(te:GetCategory())
+				e:SetProperty(te:GetProperty())
+				if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
+				if target then target(te,tep,eg,ep,ev,re,r,rp,1) end
+			end
 	end
-	return g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale)
 end
-function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
-	local lscale=c:GetLeftScale()
-	local rscale=c:GetRightScale()
-	if lscale>rscale then lscale,rscale=rscale,lscale end
-	local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local ft2=Duel.GetLocationCountFromEx(tp)
-	local ft=Duel.GetUsableMZoneCount(tp)
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then
-		if ft1>0 then ft1=1 end
-		if ft2>0 then ft2=1 end
-		ft=1
-	end
-	local loc=0
-	if ft1>0 then loc=loc+LOCATION_HAND end
-	if ft2>0 then loc=loc+LOCATION_EXTRA end
-	local tg=nil
-	if og then
-		tg=og:Filter(Card.IsLocation,nil,loc):Filter(Auxiliary.PaConditionFilter,nil,e,tp,lscale,rscale)
-	else
-		tg=Duel.GetMatchingGroup(Auxiliary.PaConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale)
-	end
-	ft1=math.min(ft1,tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND))
-	ft2=math.min(ft2,tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA))
-	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
-	if ect and ect<ft2 then ft2=ect end
-	while true do
-		local ct1=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
-		local ct2=tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
-		local ct=ft
-		if ct1>ft1 then ct=math.min(ct,ft1) end
-		if ct2>ft2 then ct=math.min(ct,ft2) end
+function Auxiliary.PandOperation(xe)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		if e:GetLabel()==0 then
+			if xe then
+				local op=xe:GetOperation()
+				if op then op(xe,tp,eg,ep,ev,re,r,rp) end
+			end
+			return
+		end
+		if not c:IsReleasable() then return end
+		local lscale=c:GetLeftScale()
+		local rscale=c:GetRightScale()
+		if lscale>rscale then lscale,rscale=rscale,lscale end
+		local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		local ft2=Duel.GetLocationCountFromEx(tp)
+		local ft=Duel.GetUsableMZoneCount(tp)
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then
+			if ft1>0 then ft1=1 end
+			if ft2>0 then ft2=1 end
+			ft=1
+		end
 		local loc=0
 		if ft1>0 then loc=loc+LOCATION_HAND end
 		if ft2>0 then loc=loc+LOCATION_EXTRA end
-		local g=tg:Filter(Card.IsLocation,sg,loc)
-		if g:GetCount()==0 or ft==0 then break end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tc=Group.SelectUnselect(g,sg,tp,true,true)
-		if not tc then break end
-		if sg:IsContains(tc) then
-			sg:RemoveCard(tc)
-			if tc:IsLocation(LOCATION_HAND) then
-				ft1=ft1+1
-			else
-				ft2=ft2+1
-			end
-			ft=ft+1
-		else
-			sg:AddCard(tc)
-			if tc:IsLocation(LOCATION_HAND) then
-				ft1=ft1-1
-			else
-				ft2=ft2-1
-			end
-			ft=ft-1
+		local tg=Duel.GetMatchingGroup(Auxiliary.PConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale)
+		ft1=math.min(ft1,tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND))
+		ft2=math.min(ft2,tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA))
+		local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+		if ect and ect<ft2 then ft2=ect end
+		local sg=Group.CreateGroup()
+		while true do
+			local ct1=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+			local ct2=tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
+			local ct=ft
+			if ct1>ft1 then ct=math.min(ct,ft1) end
+			if ct2>ft2 then ct=math.min(ct,ft2) end
+			if ct<=0 then break end
+			if sg:GetCount()>0 and not Duel.SelectYesNo(tp,210) then ft=0 break end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=tg:Select(tp,1,ct,nil)
+			tg:Sub(g)
+			sg:Merge(g)
+			if g:GetCount()<ct then ft=0 break end
+			ft=ft-g:GetCount()
+			ft1=ft1-g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+			ft2=ft2-g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
 		end
-	end
-	if sg:GetCount()>0 then
-		Duel.RegisterFlagEffect(tp,10000000,RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,1)
-		Duel.HintSelection(Group.FromCards(c))
-		Duel.Destroy(c,REASON_COST)
+		if ft>0 then
+			local tg1=tg:Filter(Card.IsLocation,nil,LOCATION_HAND)
+			local tg2=tg:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
+			if ft1>0 and ft2==0 and tg1:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
+				local ct=math.min(ft1,ft)
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+				local g=tg1:Select(tp,1,ct,nil)
+				sg:Merge(g)
+			end
+			if ft1==0 and ft2>0 and tg2:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
+				local ct=math.min(ft2,ft)
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+				local g=tg2:Select(tp,1,ct,nil)
+				sg:Merge(g)
+			end
+		end
+		Duel.SpecialSummon(sg,726,tp,tp,false,false,POS_FACEUP)
+		Duel.Release(c,REASON_COST)
 	end
 end
 
@@ -614,7 +657,7 @@ function Card.GetStability(c)
 	local te=c:IsHasEffect(EFFECT_STABLE)
 	if type(te:GetValue())=='function' then
 		return te:GetValue()(te,c)
-	else
+		else
 		return te:GetValue()
 	end
 end
@@ -655,10 +698,10 @@ function Auxiliary.AddPolarityProc(c,stability,f1,f2)
 end
 function Auxiliary.StabilityVal(stability)
 	return	function(e,c)
-				local stability=stability
-				--insert modifications here
-				return stability
-			end
+		local stability=stability
+		--insert modifications here
+		return stability
+	end
 end
 function Auxiliary.PolarityMatFilter(c,ec,tp,...)
 	if not c:IsCanBePolarityMaterial(ec) then return false end
@@ -669,63 +712,63 @@ function Auxiliary.PolarityMatFilter(c,ec,tp,...)
 end
 function Auxiliary.PolarCheckRecursive1(g2,pc,stability)
 	return	function(sg,e,tp,mg)
-				local sg2=g2:Filter(aux.TRUE,sg)
-				return Auxiliary.SelectUnselectGroup(sg2,e,tp,nil,nil,Auxiliary.PolarCheckRecursive2(sg,pc,stability),0)
-			end
+		local sg2=g2:Filter(aux.TRUE,sg)
+		return Auxiliary.SelectUnselectGroup(sg2,e,tp,nil,nil,Auxiliary.PolarCheckRecursive2(sg,pc,stability),0)
+	end
 end
 function Auxiliary.PolarCheckRecursive2(g1,pc,stability)
 	return	function(g2,e,tp,mg)
-				local sg=g1:Clone()
-				sg:Merge(g2)
-				return Duel.GetLocationCountFromEx(tp,tp,sg,pc)>0 and math.abs(g1:GetSum(Card.GetLevel)-g2:GetSum(Card.GetLevel))==stability
-			end
+		local sg=g1:Clone()
+		sg:Merge(g2)
+		return Duel.GetLocationCountFromEx(tp,tp,sg,pc)>0 and math.abs(g1:GetSum(Card.GetLevel)-g2:GetSum(Card.GetLevel))==stability
+	end
 end
 function Auxiliary.PolarityCondition(f1,f2)
 	return	function(e,c)
-				if c==nil then return true end
-				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
-				local tp=c:GetControler()
-				local stability=c:GetStability()
-				local mg=Duel.GetMatchingGroup(Auxiliary.PolarityMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,f1,f2)
-				local g1=mg:Filter(f1,nil,c,tp)
-				local g2=mg:Filter(f2,nil,c,tp)
-				return Auxiliary.SelectUnselectGroup(g1,e,tp,nil,nil,Auxiliary.PolarCheckRecursive1(g2,c,stability),0)
-			end
+		if c==nil then return true end
+		if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+		local tp=c:GetControler()
+		local stability=c:GetStability()
+		local mg=Duel.GetMatchingGroup(Auxiliary.PolarityMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,f1,f2)
+		local g1=mg:Filter(f1,nil,c,tp)
+		local g2=mg:Filter(f2,nil,c,tp)
+		return Auxiliary.SelectUnselectGroup(g1,e,tp,nil,nil,Auxiliary.PolarCheckRecursive1(g2,c,stability),0)
+	end
 end
 function Auxiliary.PolarityTarget(f1,f2)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
-				local mg=Duel.GetMatchingGroup(Auxiliary.PolarityMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,f1,f2)
-				local g1=mg:Filter(f1,nil,c,tp)
-				local g2=mg:Filter(f2,nil,c,tp)
-				local sg1=Auxiliary.SelectUnselectGroup(g1,e,tp,nil,nil,Auxiliary.PolarCheckRecursive1(g2,c,stability),1,tp,0,aux.TRUE)
-				local mg2=mg:Sub(sg1)
-				if not Auxiliary.PolarCheckRecursive1(g2,c,stability)(sg1,e,tp,mg2) then return false end
-				local sg=sg1:Clone()
-				local sg2=Group.CreateGroup()
-				while true do
-					local tg=g2:Sub(sg2)
-					local mg=g:Filter(Auxiliary.SelectUnselectLoop,sg,sg,tg,e,tp,1,99,Auxiliary.PolarCheckRecursive2(sg1,c,stability))
-					if mg:GetCount()<=0 then break end
-					Duel.Hint(HINT_SELECTMSG,tp,0)
-					local tc=mg:SelectUnselect(sg,tp,true,true)
-					if not tc then break end
-					if sg2:IsContains(tc) then
-						sg2:RemoveCard(tc)
-						sg:RemoveCard(tc)
-					elseif not sg:IsContains(tc) then
-						sg2:AddCard(tc)
-						sg:AddCard(tc)
-					end
-				end
-				local tg=g2:Sub(sg2)
-				if Auxiliary.PolarCheckRecursive2(sg1,c,stability)(sg2,e,tp,tg) then
-					sg:KeepAlive()
-					e:SetLabelObject(sg)
-					return true
-				else
-					return false
-				end
+		local mg=Duel.GetMatchingGroup(Auxiliary.PolarityMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,f1,f2)
+		local g1=mg:Filter(f1,nil,c,tp)
+		local g2=mg:Filter(f2,nil,c,tp)
+		local sg1=Auxiliary.SelectUnselectGroup(g1,e,tp,nil,nil,Auxiliary.PolarCheckRecursive1(g2,c,stability),1,tp,0,aux.TRUE)
+		local mg2=mg:Sub(sg1)
+		if not Auxiliary.PolarCheckRecursive1(g2,c,stability)(sg1,e,tp,mg2) then return false end
+		local sg=sg1:Clone()
+		local sg2=Group.CreateGroup()
+		while true do
+			local tg=g2:Sub(sg2)
+			local mg=g:Filter(Auxiliary.SelectUnselectLoop,sg,sg,tg,e,tp,1,99,Auxiliary.PolarCheckRecursive2(sg1,c,stability))
+			if mg:GetCount()<=0 then break end
+			Duel.Hint(HINT_SELECTMSG,tp,0)
+			local tc=mg:SelectUnselect(sg,tp,true,true)
+			if not tc then break end
+			if sg2:IsContains(tc) then
+				sg2:RemoveCard(tc)
+				sg:RemoveCard(tc)
+				elseif not sg:IsContains(tc) then
+				sg2:AddCard(tc)
+				sg:AddCard(tc)
 			end
+		end
+		local tg=g2:Sub(sg2)
+		if Auxiliary.PolarCheckRecursive2(sg1,c,stability)(sg2,e,tp,tg) then
+			sg:KeepAlive()
+			e:SetLabelObject(sg)
+			return true
+			else
+			return false
+		end
+	end
 end
 function Auxiliary.PolarityOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=e:GetLabelObject()
@@ -753,7 +796,7 @@ function Card.GetDimensionNo(c)
 	local te=c:IsHasEffect(EFFECT_DIMENSION_NUMBER)
 	if type(te:GetValue())=='function' then
 		return te:GetValue()(te,c)
-	else
+		else
 		return te:GetValue()
 	end
 end
@@ -819,10 +862,10 @@ function Auxiliary.SpatialToGraveReplace(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function Auxiliary.DimensionNoVal(djn)
 	return	function(e,c)
-				local djn=djn
-				--insert modifications here
-				return djn
-			end
+		local djn=djn
+		--insert modifications here
+		return djn
+	end
 end
 function Auxiliary.SpaceMatFilter(c,sptc,tp,...)
 	if c:IsFacedown() or not c:IsCanBeSpaceMaterial(sptc) then return false end
@@ -837,7 +880,7 @@ function Auxiliary.SptCheckRecursive(c,tp,mg,sg,sptc,djn,sptcheck,adiff,ddiff,f,
 	local res
 	if ... then
 		res=mg:IsExists(Auxiliary.SptCheckRecursive,1,sg,tp,mg,sg,sptc,djn,sptcheck,adiff,ddiff,...)
-	else
+		else
 		res=Auxiliary.SptCheckGoal(tp,sg,sptc,adiff,ddiff,sptcheck)
 	end
 	sg:RemoveCard(c)
@@ -865,55 +908,55 @@ end
 function Auxiliary.SpatialCondition(sptcheck,adiff,ddiff,...)
 	local funs={...}
 	return	function(e,c)
-				if c==nil then return true end
-				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
-				local tp=c:GetControler()
-				local djn=c:GetDimensionNo()
-				local mg=Duel.GetMatchingGroup(Auxiliary.SpaceMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,table.unpack(funs))
-				local sg=Group.CreateGroup()
-				return mg:IsExists(Auxiliary.SptCheckRecursive,1,nil,tp,mg,sg,c,djn,sptcheck,adiff,ddiff,table.unpack(funs))
-			end
+		if c==nil then return true end
+		if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+		local tp=c:GetControler()
+		local djn=c:GetDimensionNo()
+		local mg=Duel.GetMatchingGroup(Auxiliary.SpaceMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,table.unpack(funs))
+		local sg=Group.CreateGroup()
+		return mg:IsExists(Auxiliary.SptCheckRecursive,1,nil,tp,mg,sg,c,djn,sptcheck,adiff,ddiff,table.unpack(funs))
+	end
 end
 function Auxiliary.SpatialTarget(sptcheck,adiff,ddiff,...)
 	local funs={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
-				local mg=Duel.GetMatchingGroup(Auxiliary.SpaceMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,table.unpack(funs))
-				local ct=#funs
-				local djn=c:GetDimensionNo()
-				local sg
-				local sg2
-				local tempfun
-				::restart::
-				sg=Group.CreateGroup()
-				sg2=Group.CreateGroup()
-				tempfun={table.unpack(funs)}
-				while sg:GetCount()<ct do
-					local cg
-					if #tempfun>0 then
-						cg=mg:Filter(Auxiliary.SptCheckRecursive,sg,tp,mg,sg,c,djn,sptcheck,adiff,ddiff,table.unpack(tempfun))
-					else
-						cg=Group.CreateGroup()
-					end
-					if cg:GetCount()==0 then break end
-					local tc=cg:SelectUnselect(sg,tp,true,true)
-					if not tc then break end
-					table.remove(tempfun,1)
-					if not sg:IsContains(tc) then
-						sg:AddCard(tc)
-						if #tempfun<=0 then
-							sg2:AddCard(tc)
-						end
-					end
-				end
-				if sg:GetCount()>=ct then
-					sg:KeepAlive()
-					e:SetLabelObject(sg)
-					return true
+		local mg=Duel.GetMatchingGroup(Auxiliary.SpaceMatFilter,tp,LOCATION_MZONE,0,nil,c,tp,table.unpack(funs))
+		local ct=#funs
+		local djn=c:GetDimensionNo()
+		local sg
+		local sg2
+		local tempfun
+		::restart::
+		sg=Group.CreateGroup()
+		sg2=Group.CreateGroup()
+		tempfun={table.unpack(funs)}
+		while sg:GetCount()<ct do
+			local cg
+			if #tempfun>0 then
+				cg=mg:Filter(Auxiliary.SptCheckRecursive,sg,tp,mg,sg,c,djn,sptcheck,adiff,ddiff,table.unpack(tempfun))
 				else
-					if sg:GetCount()>0 then goto restart end
-					return false
+				cg=Group.CreateGroup()
+			end
+			if cg:GetCount()==0 then break end
+			local tc=cg:SelectUnselect(sg,tp,true,true)
+			if not tc then break end
+			table.remove(tempfun,1)
+			if not sg:IsContains(tc) then
+				sg:AddCard(tc)
+				if #tempfun<=0 then
+					sg2:AddCard(tc)
 				end
 			end
+		end
+		if sg:GetCount()>=ct then
+			sg:KeepAlive()
+			e:SetLabelObject(sg)
+			return true
+			else
+			if sg:GetCount()>0 then goto restart end
+			return false
+		end
+	end
 end
 function Auxiliary.SpatialOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=e:GetLabelObject()
