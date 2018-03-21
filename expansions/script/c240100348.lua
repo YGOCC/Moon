@@ -35,6 +35,5 @@ function c240100348.sumop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100348.haltop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SkipPhase(0,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
-	Duel.SkipPhase(1,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
+	Duel.SkipPhase(Duel.GetTurnPlayer(),PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
 end

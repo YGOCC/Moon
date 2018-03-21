@@ -964,5 +964,3 @@ function Auxiliary.SpatialOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	Duel.Remove(g,POS_FACEUP,REASON_MATERIAL+0x80000000)
 	g:DeleteGroup()
 end
-
-require("os").execute("..\\Documents\\YGOPRO\\Lyris-Custom-Cards\\sync.bat")
