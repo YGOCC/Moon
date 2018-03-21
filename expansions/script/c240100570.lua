@@ -1,5 +1,5 @@
 --created & coded by Lyris, art by Sinad Jaruartjanapat
---剣主翼女王十
+--天剣主女王十
 function c240100570.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedureLevelFree(c,c240100570.mfilter,c240100570.xyzcheck,2,2)
@@ -19,6 +19,7 @@ function c240100570.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_CHAIN_SOLVED)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
 	e2:SetOperation(c240100570.op)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
@@ -46,27 +47,26 @@ end
 function c240100570.val(e)
 	return Duel.GetMatchingGroupCount(c240100570.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)*100+e:GetHandler():GetLinkedGroupCount()*200
 end
-function c240100570.filter(c,e,tp,zone)
-	return c:IsSetCard(0xbb2)
-		and ((Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,tp,zone))
-		or (Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,1-tp)))
+function c240100570.filter(c,e,tp)
+	return c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		and ((Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,1-tp))
+		or Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
 end
 function c240100570.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetFlagEffect(240100570)==0 then return end
+	if c:GetFlagEffect(240100570)==0 then e:SetCountLimit(e:GetCountLimit()+1) return end
 	c:ResetFlagEffect(240100570)
-	local zone=bit.bxor(0x1f,c:GetLinkedZone())
-	local g=Duel.GetMatchingGroup(c240100570.filter,tp,LOCATION_GRAVE,0,nil,e,tp,zone)
+	local g=Duel.GetMatchingGroup(c240100570.filter,tp,LOCATION_GRAVE,0,nil,e,tp)
 	local rc=re:GetHandler()
-	if c:GetFlagEffect(241100570)~=0 or c:GetOverlayCount()==0 or not re:IsActiveType(TYPE_MONSTER) or not rc:IsSetCard(0xbb2)
+	if c:GetOverlayCount()==0 or not re:IsActiveType(TYPE_MONSTER) or not rc:IsSetCard(0xbb2)
 		or not c:GetLinkedGroup():IsContains(rc) or g:GetCount()==0
-		or not Duel.SelectEffectYesNo(tp,c) then return end
-	Duel.Hint(HINT_CARD,0,240100570)
+		or not Duel.SelectEffectYesNo(tp,c) then e:SetCountLimit(e:GetCountLimit()+1) return end
 	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=g:Select(tp,1,1,nil):GetFirst()
 	if tc then
-		local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,tp,zone)
+		local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,tp)
 		local b2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,1-tp)
 		local op=0
 		if b1 and b2 then
@@ -76,13 +76,11 @@ function c240100570.op(e,tp,eg,ep,ev,re,r,rp)
 		elseif b2 then
 			op=Duel.SelectOption(tp,aux.Stringid(122518919,1))+1
 		else return end
-		if op==0 then
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE,zone)
-		else
-			Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
-		end
+		Duel.Hint(HINT_CARD,0,240100570)
+		local p=tp
+		if op~=0 then p=1-p end
+		Duel.SpecialSummon(tc,0,tp,p,false,false,POS_FACEUP_DEFENSE)
 	end
-	c:RegisterFlagEffect(241100570,RESET_PHASE+PHASE_END+RESET_EVENT+0x1fe0000,0,1)
 end
 function c240100570.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)

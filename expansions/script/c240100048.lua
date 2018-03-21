@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by GENZOMAN of DeviantArt
 --襲雷神ズース
 function c240100048.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -21,14 +21,14 @@ function c240100048.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c240100048.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and 
-		Duel.IsPlayerCanSpecialSummonMonster(tp,240100132,0x7c4,0x21,2600,1400,6,RACE_DRAGON,0xff) end
+		Duel.IsPlayerCanSpecialSummonMonster(tp,240100048,0x7c4,0x21,2600,1400,6,RACE_DRAGON,0xff) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c240100048.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e)
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,240100132,0x7c4,0x21,2600,1400,6,RACE_DRAGON,0xff) then
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,240100048,0x7c4,0x21,2600,1400,6,RACE_DRAGON,0xff) then
 		c:AddMonsterAttribute(TYPE_EFFECT,0xff)
 		Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP)
 		c:AddMonsterAttributeComplete()
@@ -36,7 +36,7 @@ function c240100048.spop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCategory(CATEGORY_DESTROY)
 		e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 		e3:SetCode(EVENT_BE_BATTLE_TARGET)
-		e3:SetCountLimit(1,240100132)
+		e3:SetCountLimit(1,240100048)
 		e3:SetOperation(c240100048.deslop)
 		e3:SetReset(RESET_EVENT+0x1fe0000)
 		c:RegisterEffect(e3)

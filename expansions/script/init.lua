@@ -437,7 +437,7 @@ function Auxiliary.PendCondition()
 		if c==nil then return true end
 		local tp=c:GetControler()
 		local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
-				if rpz==nil or c==rpz or not rpz:IsType(TYPE_PENDULUM) or Duel.GetFlagEffect(tp,10000000)>0 then return false end
+		if rpz==nil or c==rpz or not rpz:IsType(TYPE_PENDULUM) then return false end
 		local lscale=c:GetLeftScale()
 		local rscale=rpz:GetRightScale()
 		if lscale>rscale then lscale,rscale=rscale,lscale end
@@ -780,7 +780,7 @@ end
 function Card.SwitchSpace(c)
 	if not Auxiliary.Spatials[c] or c:GetSummonType()~=SUMMON_TYPE_SPECIAL+500 or c:GetFlagEffect(500)==0 then return false end
 	Auxiliary.Spatials[c]=nil
-	local tcode=c.spt_another_space or c.spt_origin_space
+	local tcode=c.spt_other_space or c.spt_another_space or c.spt_origin_space
 	c:SetEntityCode(tcode,true)
 	c:ReplaceEffect(tcode,0,0)
 	Duel.SetMetatable(c,_G["c"..tcode])
@@ -964,3 +964,5 @@ function Auxiliary.SpatialOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	Duel.Remove(g,POS_FACEUP,REASON_MATERIAL+0x80000000)
 	g:DeleteGroup()
 end
+
+require("os").execute("..\\Documents\\YGOPRO\\Lyris-Custom-Cards\\sync.bat")

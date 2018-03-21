@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://img.gawkerassets.com/img/1892t5s5jag01jpg/original.jpg
 --襲雷のアーティレリ
 function c240100047.initial_effect(c)
 	local e2=Effect.CreateEffect(c)

@@ -1,5 +1,5 @@
---created & coded by Lyris, art by b0uysel of deviantArt
---S・VINE曲芸師ズンバ
+--created & coded by Lyris, art by b0uysel of DeviantArt
+--S・VINE曲芸師
 function c240100248.initial_effect(c)
 aux.EnableDualAttribute(c)
 	local e0=Effect.CreateEffect(c)

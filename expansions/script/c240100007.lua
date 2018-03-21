@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by Jessada-Art of DeviantArt
 --機光襲雷－ドーン
 function c240100007.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
@@ -19,7 +19,7 @@ function c240100007.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e3:SetCountLimit(1,240100028)
+	e3:SetCountLimit(1,240100007)
 	e3:SetTarget(c240100007.tg)
 	e3:SetOperation(c240100007.op)
 	c:RegisterEffect(e3)
@@ -35,7 +35,7 @@ function c240100007.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100007.filter(c)
-	return c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:GetCode()~=240100028
+	return c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:GetCode()~=240100007
 end
 function c240100007.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c240100007.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -52,7 +52,7 @@ end
 function c240100007.regop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsReason(REASON_DESTROY) then
 		if Duel.GetTurnPlayer()~=tp then
-			Duel.Hint(HINT_CARD,0,240100028)
+			Duel.Hint(HINT_CARD,0,240100007)
 			if Duel.GetAttacker() then Duel.NegateAttack()
 			else
 				local e1=Effect.CreateEffect(e:GetHandler())
@@ -67,6 +67,6 @@ function c240100007.regop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100007.disop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,240100028)
+	Duel.Hint(HINT_CARD,0,240100007)
 	Duel.NegateAttack()
 end

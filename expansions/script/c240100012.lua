@@ -1,5 +1,5 @@
---created & coded by Lyris
---機夜行襲雷 エーブニング
+--created & coded by Lyris, art by Takayama Toshiaki
+--機夜行襲雷－エーブニング
 function c240100012.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
@@ -12,7 +12,7 @@ function c240100012.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_DESTROYED)
-	e3:SetCountLimit(1,240100031)
+	e3:SetCountLimit(1,240100012)
 	e3:SetOperation(c240100012.regop)
 	c:RegisterEffect(e3)
 end

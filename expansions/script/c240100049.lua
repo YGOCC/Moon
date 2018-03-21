@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by Ali Rauf
 --襲雷渦動
 function c240100049.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

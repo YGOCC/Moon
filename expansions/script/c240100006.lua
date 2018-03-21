@@ -1,4 +1,5 @@
---Blitzkrieg Dragon - Dark
+--created & coded by Lyris, art by emryswolf of DeviantArt
+--襲雷竜－闇
 function c240100006.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY)

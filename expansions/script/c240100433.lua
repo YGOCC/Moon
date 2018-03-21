@@ -1,6 +1,6 @@
 --created & coded by Lyris
 --S－VINEの騎士クライッシャ
-c240100433.spt_another_space=240100436
+c240100433.spt_other_space=240100436
 function c240100433.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)

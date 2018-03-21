@@ -1,5 +1,5 @@
 --created & coded by Lyris, art by Akira-san on MiniTokyo.net
---剣主翼九ナコ
+--天剣主九ナコ
 function c240100350.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xbb2),4,2)
@@ -15,7 +15,7 @@ function c240100350.initial_effect(c)
 	e1:SetValue(c240100350.val)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(240100350,0))
+	e2:SetDescription(aux.Stringid(122518919,0))
 	e2:SetCategory(CATEGORY_POSITION+CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)

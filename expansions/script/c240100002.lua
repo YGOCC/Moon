@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Just Dance 2017's Titanium by David Guetta ft. Sia
---TG V－LAN・ハイペリオン
+--ＴＧ V－LAN・ハイペリオン
 function c240100002.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,nil,2)

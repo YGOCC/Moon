@@ -1,5 +1,5 @@
---created & coded by Lyris
---機光襲雷 アーフタヌーン
+--created & coded by Lyris, art by Takayama Toshiaki
+--機光襲雷－アーフタヌーン
 function c240100011.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
@@ -12,7 +12,7 @@ function c240100011.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_DESTROYED)
-	e3:SetCountLimit(1,240100030)
+	e3:SetCountLimit(1,240100011)
 	e3:SetOperation(c240100011.regop)
 	c:RegisterEffect(e3)
 end
@@ -47,7 +47,7 @@ function c240100011.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c240100011.filter,1,nil)
 end
 function c240100011.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,240100030)
+	Duel.Hint(HINT_CARD,0,240100011)
 	local atk=0
 	local tatk=0
 	local tc=eg:GetFirst()

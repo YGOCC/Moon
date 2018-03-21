@@ -1,6 +1,6 @@
 --created & coded by Lyris, art by Chahine Sfar
 --S・VINEの女王クライッシャ
-c240100180.spt_origin_space=240100187
+c240100180.spt_other_space=240100180
 function c240100180.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)

@@ -51,7 +51,7 @@ function c240100294.eop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c240100294.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetCounter(0x1088)>0 end
-	return Duel.SelectYesNo(tp,aux.Stringid(240100294,0))
+	return Duel.SelectYesNo(tp,aux.Stringid(122518919,0))
 end
 function c240100294.repop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RemoveCounter(tp,0x1088,1,REASON_EFFECT)

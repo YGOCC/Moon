@@ -1,5 +1,5 @@
---created & coded by Lyris
---襲雷属性－インフェルnil
+--created & coded by Lyris, art by Takayama Toshiaki
+--襲雷属性－インフェルｎｉｌ
 function c240100018.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY)
@@ -14,7 +14,7 @@ function c240100018.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_DESTROYED)
-	e2:SetCountLimit(1,240100195)
+	e2:SetCountLimit(1,240100018)
 	e2:SetTarget(c240100018.rettg)
 	e2:SetOperation(c240100018.retop)
 	c:RegisterEffect(e2)

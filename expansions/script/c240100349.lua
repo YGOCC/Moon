@@ -1,5 +1,5 @@
 --created & coded by Lyris, art by Yu Cheng Hong
---剣主翼タ七ラ
+--天剣主タ七ラ
 function c240100349.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)

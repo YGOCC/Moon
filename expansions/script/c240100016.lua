@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by Shinydragonlord of DeviantArt
 --襲雷竜－月
 function c240100016.initial_effect(c)
 aux.EnablePendulumAttribute(c)
@@ -85,7 +85,7 @@ function c240100016.spcon(e)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c240100016.filter(c,e,tp)
-	return c:IsSetCard(0x7c4) and c:GetCode()~=240100153
+	return c:IsSetCard(0x7c4) and c:GetCode()~=240100016
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c240100016.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

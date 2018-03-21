@@ -1,5 +1,5 @@
---created by LionHeartKIng, coded by Lyris
---襲雷竜－銀
+--created by LionHeartKIng, coded by Lyris, art from Yu-Gi-Oh! BAM's "Mirror" Power-up & "Cyber Dragon"
+--襲雷竜－鋼
 function c240100022.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
@@ -14,7 +14,7 @@ function c240100022.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e3:SetCountLimit(1,240200051)
+	e3:SetCountLimit(1,240100022)
 	e3:SetTarget(c240100022.tg)
 	e3:SetOperation(c240100022.op)
 	c:RegisterEffect(e3)

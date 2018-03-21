@@ -1,4 +1,4 @@
---created by LionHeartKIng, coded by Lyris
+--created by LionHeartKIng, coded by Lyris, art from Yu-Gi-Oh! BAM's "Mirror" Power-up & "Cyber Dragon"
 --襲雷竜－金
 function c240100023.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
@@ -13,7 +13,7 @@ function c240100023.initial_effect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)
-	e3:SetCountLimit(1,240200052)
+	e3:SetCountLimit(1,240100023)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetTarget(c240100023.target)
 	e3:SetOperation(c240100023.operation)
@@ -30,7 +30,7 @@ function c240100023.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100023.filter(c,e,tp)
-	return c:IsSetCard(0x7c4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=240200052
+	return c:IsSetCard(0x7c4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=240100023
 end
 function c240100023.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

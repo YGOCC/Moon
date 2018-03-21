@@ -1,5 +1,5 @@
 --created & coded by Lyris, art by Animekidky of DeviantArt
---復剣主ティベリウス
+--復剣主ティべリウス
 function c240100192.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)

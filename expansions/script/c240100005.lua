@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by emryswolf of DeviantArt
 --襲雷竜－光
 function c240100005.initial_effect(c)
 	local e3=Effect.CreateEffect(c)

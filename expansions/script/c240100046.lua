@@ -1,6 +1,6 @@
---Rank-Up-Magic Lyris Force II
+--created by NovaTsukimori, coded by Lyris
+--RUM－ライリス・フォース・セカンド
 function c240100046.initial_effect(c)
-	--Target 1 "Blitzkrieg" Xyz Monster in your GY; Special Summon it, then Special Summon 1 LIGHT Dragon or Machine Xyz Monster from your Extra Deck with 2 Ranks higher using it as the Xyz Material. (This is treated as an Xyz Summon.)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)

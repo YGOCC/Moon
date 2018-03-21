@@ -1,4 +1,4 @@
---Art by Outlaw1994
+--created & coded by Lyris, art by Outlaw1994
 --オーバーレイ・フュージョン
 function c240100194.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

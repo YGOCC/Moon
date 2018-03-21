@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://www.uppicweb.com/x/i/it/136369.jpg
 --襲雷の空
 function c240100036.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -44,7 +44,7 @@ end
 function c240100036.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(c240100036.filter,tp,LOCATION_DECK,0,nil)
-	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(240100124,0)) then
+	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(122518919,0)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local tc=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)

@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://www.zerochan.net/613024
 --襲雷属性－水
 function c240100014.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
@@ -21,7 +21,7 @@ function c240100014.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_DESTROYED)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e1:SetCountLimit(1,240100103)
+	e1:SetCountLimit(1,240100014)
 	e1:SetTarget(c240100014.target)
 	e1:SetOperation(c240100014.operation)
 	c:RegisterEffect(e1)

@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from Final Fantasy VII's "Bahamut"
 --機夜行襲雷－ダスク
 function c240100008.initial_effect(c)
 	local e2=Effect.CreateEffect(c)

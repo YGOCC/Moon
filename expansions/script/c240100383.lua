@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from "Raidraptor - Call"
---剣主翼翔
+--天剣主翔
 function c240100383.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)

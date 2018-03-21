@@ -1,7 +1,6 @@
---created & coded by Lyris
+--created & coded by Lyris, art at https://images.homedepot-static.com/productImages/ea33e713-a782-4db2-9bb5-dfd662f36d47/svn/black-hdx-general-purpose-aw64003-64_1000.jpg and from "Degenerate Circuit"
 --サイバーダーク・エクステンション・コード
 function c240100058.initial_effect(c)
-	--Activate this card by targeting 1 "Cyberdark" Machine monster in your GY and 1 Dragon monster in the GY, plus an additional Level 3 or lower card unless you targeted a "Cyberdark" Fusion Monster; Special Summon the first target, then equip the last target in the GY (this is treated as equipping by the Summoned monster's effect) and this card to the first target. (HOPT1)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -11,7 +10,6 @@ function c240100058.initial_effect(c)
 	e1:SetCost(c240100058.cost)
 	e1:SetOperation(c240100058.activate)
 	c:RegisterEffect(e1)
-	--If exactly 1 "Cyberdark" Machine monster is Summoned: You can target 1 Dragon monster in the GY, plus another Level 3 or lower Dragon monster unless you Summoned a Fusion Monster; unless the Summoned monster activated an effect that targets a card, equip the last target to it (this is treated as equipping that target by the Summoned monster's effect). Otherwise, that effect now targets the newest target. (HOPT1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -72,7 +70,6 @@ function c240100058.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetLabelObject()
 	if c:IsLocation(LOCATION_GRAVE) and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		Duel.Equip(tp,e:GetHandler(),c)
-		--Add Equip limit
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EQUIP_LIMIT)

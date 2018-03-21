@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Assassin's Creed: Memories' Genghis Khan
---CXyz 復剣主王テムジン
+--ＣＸ復剣主王テムジン
 function c240100257.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,5,3)

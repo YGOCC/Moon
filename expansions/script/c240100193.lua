@@ -1,11 +1,11 @@
---Art from Yu-Gi-Oh! Duel Monsters Episode 86
+--created & coded by Lyris, art from Yu-Gi-Oh! Duel Monsters Episode 86
 --早すぎた決断
 function c240100193.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,240100245+EFFECT_COUNT_CODE_OATH)
+	e1:SetCountLimit(1,240100193+EFFECT_COUNT_CODE_OATH)
 	e1:SetCost(c240100193.cost)
 	e1:SetTarget(c240100193.target)
 	e1:SetOperation(c240100193.activate)
@@ -46,7 +46,6 @@ function c240100193.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local tg=Duel.SelectMatchingCard(tp,c240100193.filter3,tp,LOCATION_DECK,0,1,1,nil,code)
 	if tg:GetCount()>0 then
-		--until your 2nd Standby Phase after this card's activation, you cannot activate cards with the same name as that monster
 		Duel.SendtoHand(tg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 		local tc=g:GetFirst()

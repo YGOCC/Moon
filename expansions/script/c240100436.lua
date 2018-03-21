@@ -1,6 +1,6 @@
 --created & coded by Lyris
 --S－VINEの騎士クライッシャ(アナザー宙)
-c240100436.spt_origin_space=240100433
+c240100436.spt_other_space=240100433
 function c240100436.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
@@ -54,6 +54,6 @@ end
 function c240100436.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	local g=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_HAND+LOCATION_EXTRA,LOCATION_HAND+LOCATION_EXTRA,nil,tc:GetPreviousCodeOnField())
-	Duel.Hint(HINT_CARD,0,240100433)
+	Duel.Hint(HINT_CARD,0,240100436)
 	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 end

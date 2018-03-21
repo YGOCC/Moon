@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at https://data.desustorage.org/m/image/1447/59/1447591425399.jpg
 --襲雷ストアイク
 function c240100038.initial_effect(c)
 	local e0=Effect.CreateEffect(c)

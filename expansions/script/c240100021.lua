@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by xTheDragonRebornx of DeviantArt
 --襲雷竜－銀河
 function c240100021.initial_effect(c)
 	c:EnableCounterPermit(0x4b)

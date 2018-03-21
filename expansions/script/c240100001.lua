@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Yu-Gi-Oh! 5D's Episode 74
---TG マリス・ウィッチ
+--ＴＧ マリス・ウィッチ
 function c240100001.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,nil,2,2,c240100001.lcheck)
@@ -39,7 +39,7 @@ function c240100001.linkfilter(c,lc)
 end
 function c240100001.alcon(e,c)
 	if c==nil then return true end
-	if (c:IsType(TYPE_PENDULUM) or not Card.IsTypeCustom or c:IsTypeCustom("Pandemonium") or c:IsTypeCustom("Relay")) and c:IsFaceup() then return false end
+	if c:IsType(TYPE_PENDULUM+TYPE_PANDEMONIUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
 	return Duel.IsExistingMatchingCard(c240100001.linkfilter,tp,LOCATION_MZONE,0,1,nil,c)
 end

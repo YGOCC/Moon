@@ -1,6 +1,6 @@
 --created & coded by Lyris
---S・VINEの零嬢天使ラグナクライッシャ(アナザー宙)
-c240100218.spt_origin_space=240100217
+--S・VINEの零天使ラグナクライッシャ(アナザー宙)
+c240100218.spt_other_space=240100218
 function c240100218.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)

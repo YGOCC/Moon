@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from "Ignister Prominence, the Blasting Dracoslayer"
 --機光襲雷竜－イグニスター
 function c240100034.initial_effect(c)
 	c:EnableReviveLimit()
@@ -19,7 +19,7 @@ function c240100034.initial_effect(c)
 	e0:SetCode(EVENT_DESTROYED)
 	e0:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e0:SetCategory(CATEGORY_DAMAGE)
-	e0:SetCountLimit(1,240100386)
+	e0:SetCountLimit(1,240100034)
 	e0:SetLabelObject(e2)
 	e0:SetTarget(c240100034.tg)
 	e0:SetOperation(c240100034.op)

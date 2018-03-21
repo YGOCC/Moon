@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Naruto Episode 33
---RUM－呪わしい剣主
+--ＲＵＭ呪わらし剣主
 function c240100258.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)

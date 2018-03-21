@@ -1,5 +1,5 @@
 --created & coded by Lyris, art at https://innocentmin.files.wordpress.com/2012/05/chinaprince.jpg
---S・VINE王子ザフィル
+--S・VINEの王子ザフィル
 function c240100247.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_REMOVE)

@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by Idouyouichi on Pixiv
 --機夜行襲雷竜－ミッドナイト
 function c240100028.initial_effect(c)
 	c:EnableReviveLimit()
@@ -25,7 +25,7 @@ function c240100028.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e4:SetCountLimit(1,240100039)
+	e4:SetCountLimit(1,240100028)
 	e4:SetTarget(c240100028.sptg)
 	e4:SetOperation(c240100028.spop)
 	c:RegisterEffect(e4)
@@ -67,7 +67,7 @@ function c240100028.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100028.spfilter(c,e,tp)
-	return c:IsSetCard(0x7c4) and c:GetCode()~=240100039 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x7c4) and c:GetCode()~=240100028 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c240100028.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

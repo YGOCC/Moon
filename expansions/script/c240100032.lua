@@ -1,6 +1,7 @@
---created & coded by Lyris
+--created & coded by Lyris, art by 
+The-SixthLeafClover of DeviantArt
 --機光襲雷竜－ホウロウ
-function c240100032.initial_effect(c)
+The-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtThe-SixthLeafClover of DeviantArtfunction c240100032.initial_effect(c)
 aux.AddXyzProcedure(c,nil,4,2)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY)

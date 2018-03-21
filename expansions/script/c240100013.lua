@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by windfalcon of DeviantArt
 --襲雷属性－フレイム
 function c240100013.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
@@ -20,7 +20,7 @@ function c240100013.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_DESTROYED)
-	e1:SetCountLimit(1,240100151)
+	e1:SetCountLimit(1,240100013)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetTarget(c240100013.target)
 	e1:SetOperation(c240100013.operation)

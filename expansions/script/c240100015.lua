@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by TwilightSaint of DeviantArt
 --襲雷竜－太陽
 function c240100015.initial_effect(c)
 	aux.EnablePendulumAttribute(c)

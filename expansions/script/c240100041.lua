@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://cris-deepsquare.cocolog-nifty.com/top/images/2007/10/17/024.jpg
 --襲雷降雨
 function c240100041.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -21,7 +21,7 @@ function c240100041.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_PHASE+PHASE_END)
 	e5:SetRange(LOCATION_SZONE)
-	e5:SetCountLimit(1,240100171)
+	e5:SetCountLimit(1,240100041)
 	e5:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return Duel.GetTurnPlayer()~=tp end)
 	e5:SetTarget(c240100041.tg1)
 	e5:SetOperation(c240100041.op1)
@@ -32,7 +32,7 @@ function c240100041.initial_effect(c)
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e6:SetCode(EVENT_PHASE+PHASE_END)
 	e6:SetRange(LOCATION_SZONE)
-	e6:SetCountLimit(1,240100171)
+	e6:SetCountLimit(1,240100041)
 	e6:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return Duel.GetTurnPlayer()~=tp end)
 	e6:SetTarget(c240100041.tg)
 	e6:SetOperation(c240100041.op)
@@ -44,7 +44,7 @@ end
 function c240100041.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(c240100041.filter,tp,LOCATION_DECK,0,nil)
-	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(240100171,0)) then
+	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(122518919,0)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)

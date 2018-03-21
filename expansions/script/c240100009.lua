@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://blog-imgs-65.fc2.com/m/a/t/matome2chmatome2ch/dbd0e7f2-s.jpg
 --襲雷属性－地球
 function c240100009.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
@@ -21,7 +21,7 @@ function c240100009.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_DESTROYED)
-	e1:SetCountLimit(1,240100101)
+	e1:SetCountLimit(1,240100009)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetTarget(c240100009.target)
 	e1:SetOperation(c240100009.operation)
@@ -38,7 +38,7 @@ function c240100009.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100009.filter(c,e,tp)
-	return c:IsSetCard(0x7c4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=240100101
+	return c:IsSetCard(0x7c4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=240100009
 end
 function c240100009.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

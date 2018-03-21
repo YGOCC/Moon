@@ -1,11 +1,11 @@
---created & coded by Lyris
+--created & coded by Lyris, art from Chaotic's "Oiponts Claws"
 --集いし襲雷
 function c240100040.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
-	e0:SetCountLimit(1,240100308+EFFECT_COUNT_CODE_OATH)
+	e0:SetCountLimit(1,240100040+EFFECT_COUNT_CODE_OATH)
 	e0:SetTarget(c240100040.target)
 	e0:SetOperation(c240100040.activate)
 	c:RegisterEffect(e0)
@@ -14,7 +14,7 @@ function c240100040.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCountLimit(1,240100308+EFFECT_COUNT_CODE_OATH)
+	e1:SetCountLimit(1,240100040+EFFECT_COUNT_CODE_OATH)
 	e1:SetCondition(c240100040.con)
 	e1:SetTarget(c240100040.tg)
 	e1:SetOperation(c240100040.operation)

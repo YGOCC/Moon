@@ -1,5 +1,5 @@
---created & coded by Lyris
---襲雷属性－PSYph
+--created & coded by Lyris, art by Takayama Toshiaki
+--襲雷属性－ＰＳＹｐｈ
 function c240100017.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY)

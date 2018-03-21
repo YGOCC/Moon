@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://www.pixiv.net/member_illust.php?mode=medium&illust_id=415589
 --襲雷台風
 function c240100037.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

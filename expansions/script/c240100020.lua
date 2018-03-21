@@ -1,5 +1,5 @@
 --created & coded by Lyris
---Sin機光襲雷竜－ビッグバン
+--機光襲雷竜－Ｓｉｎビッグバン
 function c240100020.initial_effect(c)
 c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -89,7 +89,7 @@ function c240100020.excon(e)
 	return Duel.IsExistingMatchingCard(c240100020.exfilter,0,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 function c240100020.spfilter(c)
-	return c:IsCode(240100267) and c:IsAbleToRemoveAsCost()
+	return c:IsCode(240100030) and c:IsAbleToRemoveAsCost()
 end
 function c240100020.spcon(e,c)
 	if c==nil then return true end
@@ -110,7 +110,7 @@ end
 function c240100020.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsLocation(LOCATION_MZONE) and c:GetDestination()==LOCATION_GRAVE end
-	if c:GetFlagEffect(201010263)==0 then
+	if c:GetFlagEffect(240100020)==0 then
 		local e9=Effect.CreateEffect(c)
 		e9:SetType(EFFECT_TYPE_SINGLE)
 		e9:SetCode(EFFECT_CHANGE_LEVEL)
@@ -120,7 +120,7 @@ function c240100020.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		e9:SetReset(RESET_EVENT+0x1fe0000)
 		e9:SetLabelObject(e)
 		c:RegisterEffect(e9)
-		c:RegisterFlagEffect(201010263,RESET_EVENT+0x1fe0000,0,1)
+		c:RegisterFlagEffect(240100020,RESET_EVENT+0x1fe0000,0,1)
 	end
 	e:SetLabel(e:GetLabel()-1)
 	return true

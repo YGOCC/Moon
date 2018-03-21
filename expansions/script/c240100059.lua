@@ -1,17 +1,19 @@
 --created & coded by Lyris
 --サイバー・ドラゴン・ティマイオス
 function c240100059.initial_effect(c)
-	local f1,f2,f3=Card.CheckFusionMaterial,Duel.SelectFusionMaterial,Card.IsCanBeFusionMaterial
+	local f1,f2,f3=Card.IsCanBeFusionMaterial,Duel.GetMatchingGroup,Duel.GetFusionMaterial
 	Card.IsCanBeFusionMaterial=function(tc,fc)
-		return f3(tc,fc) or tc:GetOriginalCode()==240100059
+		return f1(tc,fc) or (not tc:IsHasEffect(EFFECT_CANNOT_BE_FUSION_MATERIAL) and tc:GetOriginalCode()==240100059)
 	end
-	Card.CheckFusionMaterial=function(fc,mg,gc,chkf)
-		mg:AddCard(c)
-		return f1(fc,mg,gc,chkf)
+	Duel.GetMatchingGroup=function(f,p,sloc,oloc,exc,...)
+		local g=f2(f,p,sloc,oloc,exc,table.unpack{...})
+		if not f or f(c,table.unpack{...}) then g:AddCard(c) end
+		return g:Filter(function(c) return (c:IsControler(p) and c:IsLocation(sloc)) or (c:IsControler(1-p) and c:IsLocation(oloc)) end,nil)
 	end
-	Duel.SelectFusionMaterial=function(tp,fc,mg,gc,chkf)
-		mg:AddCard(c)
-		return f2(tp,fc,mg,gc,chkf)
+	Duel.GetFusionMaterial=function(p)
+		local mg,loc=f3(p),c:GetLocation()
+		if loc&(LOCATION_HAND+LOCATION_ONFIELD)==loc and f1(c) then mg:AddCard(c) end
+		return mg
 	end
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -29,6 +31,7 @@ function c240100059.initial_effect(c)
 	e1:SetOperation(c240100059.activate)
 	c:RegisterEffect(e1)
 end
+c240100059.filterf={}
 function c240100059.tgfilter(c,e,tp,n)
 	return c:IsFaceup() and c:IsCode(70095154) and c:IsCanBeFusionMaterial()
 		and Duel.IsExistingMatchingCard(c240100059.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,n)
@@ -82,7 +85,7 @@ function c240100059.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 			if Duel.SpecialSummon(sc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)~=0 then
 				sc:CompleteProcedure()
-				if ct>3 or not Duel.SelectYesNo(tp,aux.Stringid(240100059,0)) then return end
+				if ct>3 or not Duel.SelectYesNo(tp,1113) then return end
 				if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 					local e2=Effect.CreateEffect(e:GetHandler())
 					e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)

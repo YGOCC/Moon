@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://www.uppicweb.com/x/i/it/136369.jpg
 --襲雷大降り
 function c240100039.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -6,13 +6,13 @@ function c240100039.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(240100064,0))
+	e2:SetDescription(aux.Stringid(122518919,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1,240100064)
+	e2:SetCountLimit(1,240100039)
 	e2:SetCondition(c240100039.spcon2)
 	e2:SetCost(c240100039.spcost)
 	e2:SetTarget(c240100039.sptg2)
@@ -42,8 +42,8 @@ function c240100039.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c240100039.cfilter,1,nil,tp)
 end
 function c240100039.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,240100064)==0 end
-	Duel.RegisterFlagEffect(tp,240100064,RESET_PHASE+PHASE_END,0,1)
+	if chk==0 then return Duel.GetFlagEffect(tp,240100039)==0 end
+	Duel.RegisterFlagEffect(tp,240100039,RESET_PHASE+PHASE_END,0,1)
 end
 function c240100039.filter(c,e,tp)
 	return c:IsSetCard(0x7c4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -55,7 +55,7 @@ function c240100039.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c240100039.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,240100064)==0 then return end
+	if Duel.GetFlagEffect(tp,240100039)==0 then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c240100039.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)

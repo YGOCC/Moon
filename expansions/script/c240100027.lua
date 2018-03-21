@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by pamansazz of DeviantArt
 --機光襲雷竜－ニューン
 function c240100027.initial_effect(c)
 	c:EnableReviveLimit()
@@ -16,7 +16,7 @@ function c240100027.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e4:SetCountLimit(1,240100038)
+	e4:SetCountLimit(1,240100027)
 	e4:SetTarget(c240100027.sptg)
 	e4:SetOperation(c240100027.spop)
 	c:RegisterEffect(e4)

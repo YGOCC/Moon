@@ -1,6 +1,6 @@
 --created & coded by Lyris
 --S・VINEの姫オサ
-c240100431.spt_another_space=240100434
+c240100431.spt_other_space=240100431
 function c240100431.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
@@ -36,7 +36,7 @@ function c240100431.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectMatchingCard(tp,c240100431.cfilter,tp,LOCATION_REMOVED,0,1,1,nil,tp)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 	Duel.ShuffleDeck(tp)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(240100238,0))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(122518919,4))
 	local g=Duel.SelectTarget(tp,c240100431.filter,tp,LOCATION_REMOVED,0,3,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,g:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)

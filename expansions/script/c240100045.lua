@@ -1,6 +1,6 @@
---Rank-Up-Magic Lyris Force
+--created by NovaTsukimori, coded by Lyris
+--RUM－ライリス・フォース
 function c240100045.initial_effect(c)
-	--Target 1 Xyz Monster you control; Special Summon from your Extra Deck, 1 "Blitzkrieg" Xyz Monster with the same Type as that monster but 1 Rank higher by using that target as the material. (This Special Summon is treated as an Xyz Summon. Transfer its materials to the Summoned monster.)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -9,15 +9,15 @@ function c240100045.initial_effect(c)
 	e1:SetTarget(c240100045.target)
 	e1:SetOperation(c240100045.activate)
 	c:RegisterEffect(e1)
-	--If a monster that was Summoned by this card's effect is destroyed and sent to the GY: You can add this card from your GY to your hand. You can only use this effect of "Rank-Up-Magic Lyris Force" once per Duel.
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_CUSTOM+240100045)
+	e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,240100045+EFFECT_COUNT_CODE_DUEL)
 	e2:SetCategory(CATEGORY_TOHAND)
-	e2:SetTarget()
-	e2:SetOperation()
+	e2:SetTarget(c240100045.thtg)
+	e2:SetOperation(c240100045.thop)
 	c:RegisterEffect(e2)
 end
 function c240100045.filter1(c,e,tp)
@@ -66,8 +66,16 @@ function c240100045.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY)
 end
 function c240100045.desop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(240100045,RESET_EVENT+0x1fe0000,0,1)
+	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+240100045,e,0,0,0,0)
 end
 function c240100045.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	return eg:IsExists
+	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+end
+function c240100045.thop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SendtoHand(c,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,c)
+	end
 end

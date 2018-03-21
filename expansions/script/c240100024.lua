@@ -1,5 +1,5 @@
---created by NovaTsukimori, coded by Lyris
---襲雷機竜二
+--created by NovaTsukimori, coded by Lyris, art by Meerin of DeviantArt
+--襲雷メカドラゴン･ニ
 function c240100024.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -27,7 +27,7 @@ function c240100024.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e0:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e0:SetCode(EVENT_TO_GRAVE)
-	e0:SetCountLimit(1,240200118)
+	e0:SetCountLimit(1,240100024)
 	e0:SetCondition(c240100024.condition)
 	e0:SetTarget(c240100024.target)
 	e0:SetOperation(c240100024.operation)

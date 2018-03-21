@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from "Light and Darkness Dragon" & http://images.clipartlogo.com/files/images/33/339044/zebra-print-vector-pattern_f.jpg
 --機夜行襲雷竜－エクリプス
 function c240100031.initial_effect(c)
 	c:EnableReviveLimit()
@@ -87,7 +87,7 @@ function c240100031.dsop(e,tp,eg,ep,ev,re,r,rp)
 				g:Remove(Card.IsCode,nil,tc:GetCode())
 			end
 			ct=ct-1
-			if ct==0 or not Duel.SelectYesNo(tp,aux.Stringid(240100204,0)) then break end
+			if ct==0 or not Duel.SelectYesNo(tp,aux.Stringid(240100031,0)) then break end
 		end
 		Duel.Destroy(dg,REASON_EFFECT)
 	end
@@ -106,7 +106,7 @@ function c240100031.filter1(c,e)
 	return c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e)
 end
 function c240100031.filter2(c,e,tp,m,chkf)
-	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x7c4) and c:GetCode()~=240100204 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
+	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x7c4) and c:GetCode()~=240100031 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 		and c:CheckFusionMaterial(m,nil,chkf)
 end
 function c240100031.target(e,tp,eg,ep,ev,re,r,rp,chk)
