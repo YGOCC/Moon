@@ -18,7 +18,7 @@ function cm.IsMythos(c)
     return m and m.is_named_with_Mythos
 end
 function cm.filter1(c)
-    return c:IsCode(15747848) and c:IsAbleToHand()
+    return c:IsCode(15747846) and c:IsAbleToHand()
 end
 function cm.filter2(c)
     return cm.IsMythos(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
