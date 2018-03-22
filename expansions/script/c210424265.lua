@@ -85,7 +85,7 @@ function card.desfilter(c)
 end
 function card.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_ONFIELD and card.desfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(card.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(card.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.GetMatchingGroup(tp,card.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
@@ -94,9 +94,9 @@ function card.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,card.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	local tc=g:GetFirst()
-	if tc and tc:IsRelateToEffect(e) then
+	if g:GetCount()>0 then
 		Duel.HintSelection(g)
-		Duel.Destroy(tc,REASON_EFFECT)
+		Duel.Destroy(g,REASON_EFFECT)
 	end
 end
 function card.filter(c,tp)
