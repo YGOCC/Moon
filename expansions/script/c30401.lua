@@ -121,22 +121,17 @@ function scard.spop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.SendtoGrave(mat2,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			end
 			Duel.BreakEffect()
-			if Duel.GetFlagEffect(tp,s_id)>0 then
-				if Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP) then
-					local e3=Effect.CreateEffect(e:GetHandler())
-					e3:SetType(EFFECT_TYPE_SINGLE)
-					e3:SetCode(EFFECT_SET_BASE_ATTACK)
-					e3:SetValue(0)
-					e3:SetReset(RESET_EVENT+0x1fe0000)
-					tc:RegisterEffect(e3)
-					local e4=e3:Clone()
-					e4:SetCode(EFFECT_SET_BASE_DEFENSE)
-					tc:RegisterEffect(e4)
-					Duel.ResetFlagEffect(tp,s_id)
-					Duel.SpecialSummonComplete()
-				end
-			else
-				Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+			if Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP) and Duel.GetFlagEffect(tp,s_id)>0 then
+				local e3=Effect.CreateEffect(e:GetHandler())
+				e3:SetType(EFFECT_TYPE_SINGLE)
+				e3:SetCode(EFFECT_SET_BASE_ATTACK)
+				e3:SetValue(0)
+				e3:SetReset(RESET_EVENT+0x1fe0000)
+				tc:RegisterEffect(e3)
+				local e4=e3:Clone()
+				e4:SetCode(EFFECT_SET_BASE_DEFENSE)
+				tc:RegisterEffect(e4)
+				Duel.ResetFlagEffect(tp,s_id)
 			end
 		else
 			local mat=Duel.SelectFusionMaterial(tp,tc,mg3,nil,tp)
