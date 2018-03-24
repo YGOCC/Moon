@@ -46,6 +46,7 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
     if g:GetCount()>0 then
         Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
     end
+end
 function cm.thcon(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
