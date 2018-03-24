@@ -12,7 +12,7 @@ local scard,s_id=getID()
 
 function scard.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,Card.IsZHERO,2,2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),2,2)
 	--atk limit
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
