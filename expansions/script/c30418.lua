@@ -19,13 +19,13 @@ function scard.initial_effect(c)
 	e1:SetCondition(scard.condition)
 	e1:SetOperation(scard.activate)
 	c:RegisterEffect(e1)
-	--Activate
+	--GY
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetHintTiming(TIMING_DAMAGE_STEP)
+	e2:SetHintTiming(TIMING_DAMAGE_STEP+TIMING_BATTLE_START)
 	e2:SetCondition(scard.con)
 	e2:SetTarget(scard.tg)
 	e2:SetOperation(scard.op)
@@ -80,8 +80,12 @@ function scard.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 end
+function scard.cfilter(c)
+	return c:IsFaceup() and c:IsZHERO()
+end
 function scard.con(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
+		and Duel.IsExistingMatchingCard(scard.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function scard.filter(c)
 	return c:IsFaceup() and (c:GetAttack()>0 or c:GetDefense()>0)
