@@ -3,7 +3,7 @@
 --Script by nekrozar
 function c61665245.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,aux.NOT(aux.FilterBoolFunctionEx(Card.IsType,TYPE_TOKEN)),2,99,c61665245.lcheck)
+	aux.AddLinkProcedure(c,aux.NOT(aux.FilterBoolFunction(Card.IsType,TYPE_TOKEN)),2,99,c61665245.lcheck)
 	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)

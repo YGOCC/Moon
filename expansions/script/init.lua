@@ -102,8 +102,8 @@ end
 Card.IsType=function(c,tpe,scard,sumtype,p)
 	local custpe=tpe>>32
 	local otpe=tpe&0xffffffff
+	if custpe<=0 then return c:IsType(tpe) end
 	if (scard and c:GetType(scard,sumtype,p)&otpe>0) or (not scard and c:GetType()&otpe>0) then return true end
-	if custpe<=0 then return false end
 	return c:IsCustomType(custpe,scard,sumtype,p)
 end
 Card.GetOriginalType=function(c)
