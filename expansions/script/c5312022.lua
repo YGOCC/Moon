@@ -10,7 +10,7 @@ function c5312022.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c5312022.tgfilter(c)
-	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x223) and c:IsAbleToGrave()
+	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x226) and c:IsAbleToGrave()
 end
 function c5312022.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end

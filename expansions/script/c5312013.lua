@@ -22,7 +22,7 @@ function c5312013.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c5312013.repfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x223) and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
+	return c:IsFaceup() and c:IsSetCard(0x226) and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
 end
 function c5312013.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() and eg:IsExists(c5312013.repfilter,1,nil,tp) end
@@ -35,7 +35,7 @@ function c5312013.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoGrave(e:GetHandler(),REASON_EFFECT+REASON_DISCARD)
 end
 function c5312013.cfilter1(c)
-	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x223) and c:IsLocation(LOCATION_GRAVE)) 
+	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x226) and c:IsLocation(LOCATION_GRAVE)) 
 		   or (c:IsCode(5312022) and c:IsLocation(LOCATION_SZONE) and c:IsType(TYPE_CONTINUOUS))) and c:IsAbleToRemoveAsCost()
 end
 function c5312013.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)

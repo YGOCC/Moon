@@ -13,7 +13,7 @@ function c5312017.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c5312017.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x223)
+	return c:IsFaceup() and c:IsSetCard(0x226)
 end
 function c5312017.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c5312011.cfilter,tp,LOCATION_MZONE,0,1,nil)

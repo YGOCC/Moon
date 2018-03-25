@@ -26,7 +26,7 @@ function c5312011.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c5312011.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x223) and c:IsRace(RACE_SPELLCASTER)
+	return c:IsFaceup() and c:IsSetCard(0x226) and c:IsRace(RACE_SPELLCASTER)
 end
 function c5312011.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c5312011.cfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -36,7 +36,7 @@ function c5312011.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
 function c5312011.thfilter(c)
-	return c:IsSetCard(0x223) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
+	return c:IsSetCard(0x226) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
 function c5312011.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c5312011.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -51,7 +51,7 @@ function c5312011.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c5312011.cfilter1(c)
-	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x223) and c:IsLocation(LOCATION_GRAVE)) 
+	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x226) and c:IsLocation(LOCATION_GRAVE)) 
 		   or (c:IsCode(5312022) and c:IsLocation(LOCATION_SZONE) and c:IsType(TYPE_CONTINUOUS))) and c:IsAbleToRemoveAsCost()
 end
 function c5312011.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

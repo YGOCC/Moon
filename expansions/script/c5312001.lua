@@ -50,11 +50,11 @@ function c5312001.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c5312001.spfilter1(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x223) and c:IsRace(RACE_SPELLCASTER) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x226) and c:IsRace(RACE_SPELLCASTER) and c:IsAbleToGraveAsCost()
 		and Duel.IsExistingMatchingCard(c5312001.spfilter2,tp,LOCATION_MZONE,0,1,c)
 end
 function c5312001.spfilter2(c)
-	return c:IsFaceup() and c:IsSetCard(0x223) and c:IsRace(RACE_ZOMBIE) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x226) and c:IsRace(RACE_ZOMBIE) and c:IsAbleToGraveAsCost()
 end
 function c5312001.spcon(e,c)
 	if c==nil then return true end 
@@ -71,7 +71,7 @@ function c5312001.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(g1,REASON_COST)
 end
 function c5312001.copyfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_SPELL) and c:IsSetCard(0x223)
+	return c:IsFaceup() and c:IsType(TYPE_SPELL) and c:IsSetCard(0x226)
 end
 function c5312001.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_REMOVED) and c5312001.copyfilter(chkc) end
@@ -118,7 +118,7 @@ function c5312001.spcon1(e)
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c5312001.cfilter1(c)
-	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x223) and c:IsLocation(LOCATION_GRAVE)) 
+	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x226) and c:IsLocation(LOCATION_GRAVE)) 
 		   or (c:IsCode(5312022) and c:IsLocation(LOCATION_SZONE) and c:IsType(TYPE_CONTINUOUS))) and c:IsAbleToRemoveAsCost()
 end
 function c5312001.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)

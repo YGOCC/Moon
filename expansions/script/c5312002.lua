@@ -34,7 +34,7 @@ function c5312002.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c5312002.filter(c)
-	return c:IsSetCard(0x223) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x226) and c:IsAbleToGraveAsCost()
 end
 function c5312002.spcon(e,c)
 	if c==nil then return true end
@@ -48,7 +48,7 @@ function c5312002.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c5312002.tgfilter(c)
-	return c:IsSetCard(0x223) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return c:IsSetCard(0x226) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c5312002.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c5312002.tgfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -62,7 +62,7 @@ function c5312002.tgop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c5312002.cfilter1(c)
-	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x223) and c:IsLocation(LOCATION_GRAVE)) 
+	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x226) and c:IsLocation(LOCATION_GRAVE)) 
 		   or (c:IsCode(5312022) and c:IsLocation(LOCATION_SZONE) and c:IsType(TYPE_CONTINUOUS))) and c:IsAbleToRemoveAsCost()
 end
 function c5312002.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)

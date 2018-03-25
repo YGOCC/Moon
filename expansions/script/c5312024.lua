@@ -27,7 +27,7 @@ function c5312024.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c5312024.atktg(e,c)
-	return c:IsSetCard(0x223)
+	return c:IsSetCard(0x226)
 end
 function c5312024.atkfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_SPELL)
@@ -36,13 +36,13 @@ function c5312024.atkval(e,c)
 	return Duel.GetMatchingGroupCount(c5312024.atkfilter,e:GetHandlerPlayer(),LOCATION_REMOVED,0,nil)*100
 end
 function c5312024.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x223) and c:IsPreviousLocation(LOCATION_ONFIELD)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x226) and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c5312024.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c5312024.filter,1,nil)
 end
 function c5312024.tdfilter(c)
-	return c:IsSetCard(0x223) and c:IsType(TYPE_SPELL) and c:IsAbleToDeck()
+	return c:IsSetCard(0x226) and c:IsType(TYPE_SPELL) and c:IsAbleToDeck()
 end
 function c5312024.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c5312024.tdfilter(chkc) end

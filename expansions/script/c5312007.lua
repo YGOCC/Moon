@@ -34,7 +34,7 @@ function c5312007.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c5312007.filter(c)
-	return c:IsSetCard(0x223) and c:IsAbleToHand()
+	return c:IsSetCard(0x226) and c:IsAbleToHand()
 end
 function c5312007.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c5312007.filter(chkc) end
@@ -50,7 +50,7 @@ function c5312007.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c5312007.cfilter1(c)
-	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x223) and c:IsLocation(LOCATION_GRAVE)) 
+	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x226) and c:IsLocation(LOCATION_GRAVE)) 
 		   or (c:IsCode(5312022) and c:IsLocation(LOCATION_SZONE) and c:IsType(TYPE_CONTINUOUS))) and c:IsAbleToRemoveAsCost()
 end
 function c5312007.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

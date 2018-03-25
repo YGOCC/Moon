@@ -21,7 +21,7 @@ function c5312018.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c5312018.tgfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x223) and c:IsAbleToGrave()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x226) and c:IsAbleToGrave()
 end
 function c5312018.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -47,7 +47,7 @@ function c5312018.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c5312018.thfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x223) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x226) and c:IsAbleToHand()
 end
 function c5312018.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)

@@ -33,7 +33,7 @@ function c5312006.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c5312006.cfilter(c)
-	return c:IsFacedown() or not c:IsSetCard(0x223)
+	return c:IsFacedown() or not c:IsSetCard(0x226)
 end
 function c5312006.ntcon(e,c,minc)
 	if c==nil then return true end
@@ -58,7 +58,7 @@ function c5312006.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c5312006.cfilter1(c)
-	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x223) and c:IsLocation(LOCATION_GRAVE)) 
+	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x226) and c:IsLocation(LOCATION_GRAVE)) 
 		   or (c:IsCode(5312022) and c:IsLocation(LOCATION_SZONE) and c:IsType(TYPE_CONTINUOUS))) and c:IsAbleToRemoveAsCost()
 end
 function c5312006.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

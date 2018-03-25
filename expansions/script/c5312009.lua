@@ -24,7 +24,7 @@ function c5312009.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c5312009.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x223) and c:IsRace(RACE_ZOMBIE)
+	return c:IsFaceup() and c:IsSetCard(0x226) and c:IsRace(RACE_ZOMBIE)
 end
 function c5312009.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c5312009.cfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -35,7 +35,7 @@ function c5312009.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c5312009.spfilter(c,e,tp)
-	return c:IsSetCard(0x223) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x226) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c5312009.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -85,7 +85,7 @@ function c5312009.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c5312009.cfilter1(c)
-	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x223) and c:IsLocation(LOCATION_GRAVE)) 
+	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x226) and c:IsLocation(LOCATION_GRAVE)) 
 		   or (c:IsCode(5312022) and c:IsLocation(LOCATION_SZONE) and c:IsType(TYPE_CONTINUOUS))) and c:IsAbleToRemoveAsCost()
 end
 function c5312009.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
