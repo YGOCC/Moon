@@ -61,12 +61,13 @@ function c50031786.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 
-function c50031786.filter(c,e,tp)
-	return c:IsSetCard(0x85a) and c:IsLevelBelow(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c50031786.filter(c,e,tp,zone)
+	return c:IsSetCard(0x85a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function c50031786.operation(e,tp,eg,ep,ev,re,r,rp)
 local zone=e:GetHandler():GetLinkedZone()
 	  if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if zone==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c50031786.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp,zone)
 	local tc=g:GetFirst()
