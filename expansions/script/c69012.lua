@@ -9,7 +9,7 @@ function c69012.initial_effect(c)
 	e1:SetTarget(c69012.thtg)
 	e1:SetOperation(c69012.thop)
 	c:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
+	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
@@ -21,6 +21,9 @@ function c69012.initial_effect(c)
 end
 function c69012.revealed(c)
     return c:IsSetCard(0x6969) and c:IsPublic()
+end
+function c69012.thfilter(c)
+    return c:IsSetCard(0x6969) and c:IsAbleToHand()
 end
 function c69012.thop(e,tp,eg,ep,ev,re,r,rp)
     local rev=Duel.GetMatchingGroup(c69012.revealed,tp,LOCATION_HAND,0,nil)
