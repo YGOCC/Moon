@@ -21,7 +21,7 @@ function c69014.cfilter(c)
 	return Card.IsFaceup(c) and c:IsSetCard(0x6969)
 end
 function c69014.condition(e,tp,eg,ep,ev,re,r,rp)
-	if ep==tp or not Duel.IsExistingMatchingCard(c69014.cfilter,tp,LOCATION_MZONE,0,1,nil) then
+	if ep~=tp and Duel.IsExistingMatchingCard(c69014.cfilter,tp,LOCATION_MZONE,0,1,nil) then
 		return Duel.IsChainNegatable(ev) and (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE))
 	end
 end

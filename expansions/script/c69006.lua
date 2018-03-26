@@ -87,7 +87,7 @@ end
 function c69006.recop2(e,tp,eg,ep,ev,re,r,rp)
     local rev=Duel.GetMatchingGroup(c69011.revealed,tp,LOCATION_HAND,0,nil)
     local ct=rev:GetCount()
-    Duel.Recover(p,ct*300,REASON_EFFECT)
+    Duel.Recover(tp,ct*300,REASON_EFFECT)
 end
 function c69006.rectg2(e,tp,eg,ep,ev,re,r,rp,chk) 
     if chk==0 then return Duel.IsExistingMatchingCard(c69006.revealed,tp,LOCATION_HAND,0,1,nil) end
