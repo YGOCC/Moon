@@ -49,7 +49,7 @@ function c160007854.costfilter(c)
 end
 
 function c160009999.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0xc50)
+	return Duel.IsExistingMatchingCard(function(c) return  c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and c:IsFaceup() and (c:GetSequence()==0 or c:GetSequence()==4) end,tp,LOCATION_SZONE,0,1,e:GetHandler())
 end
 
 function c160009999.filter(c,e,tp)
