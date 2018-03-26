@@ -18,6 +18,7 @@ function c69011.initial_effect(c)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(c69011.thtg)
 	e2:SetOperation(c69011.thop)
+	e2:SetCountLimit(1,69011)
 	c:RegisterEffect(e2)
  end
 function c69011.filter1(c)

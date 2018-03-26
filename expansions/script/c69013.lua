@@ -6,6 +6,7 @@ local  e1=Effect.CreateEffect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c69013.sptg)
 	e1:SetOperation(c69013.spop)
+	e1:SetCountLimit(1,69013)
 	c:RegisterEffect(e1)
 end
 function c69013.spfilter(c,e,tp)
