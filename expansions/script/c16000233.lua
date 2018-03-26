@@ -97,7 +97,7 @@ function c16000233.filter2(c,e,tp,b2,setcode)
 		and (b2 or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function c16000233.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7)
+	   local b1=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	if chk==0 then return (b1 or b2)
 		and Duel.IsExistingMatchingCard(c16000233.filter,tp,LOCATION_DECK,0,1,nil,e,tp,b1,nil)
@@ -106,7 +106,7 @@ function c16000233.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c16000233.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
-	local b1=Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7)
+	local b1=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	if not b1 and not b2 then return end
 	local g1=Duel.GetMatchingGroup(c16000233.filter,tp,LOCATION_DECK,0,nil,e,tp,b1,nil)
