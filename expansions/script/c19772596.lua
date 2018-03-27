@@ -12,11 +12,11 @@ function c19772596.initial_effect(c)
 	--draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DRAW)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,19772596)
-	e2:SetCondition(c19772596.econ)
 	e2:SetCost(c19772596.ecost)
 	e2:SetTarget(c19772596.etg)
 	e2:SetOperation(c19772596.eop)
@@ -33,7 +33,7 @@ function c19772596.filter(c,e,tp,m1,m2,ft)
 	end
 	if mg:IsContains(c) then mg:RemoveCard(c) end
 	if ft>0 then
-		return mg:CheckWithSumEqual(Card.GetRitualLevel,c:GetLevel()+8,1,99,c)
+		return mg:CheckWithSumEqual(Card.GetRitualLevel,c:GetLevel()+4,1,99,c)
 	else
 		return mg:IsExists(c19772596.mfilterf,1,nil,tp,mg,c)
 	end
@@ -41,7 +41,7 @@ end
 function c19772596.mfilterf(c,tp,mg,rc)
 	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
 		Duel.SetSelectedCard(c)
-		return mg:CheckWithSumEqual(Card.GetRitualLevel,rc:GetLevel()+8,1,99,rc)
+		return mg:CheckWithSumEqual(Card.GetRitualLevel,rc:GetLevel()+4,1,99,rc)
 	else return false end
 end
 function c19772596.mfilter(c)
@@ -74,13 +74,13 @@ function c19772596.activate(e,tp,eg,ep,ev,re,r,rp)
 		local mat=nil
 		if ft>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			mat=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel()+8,1,99,tc)
+			mat=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel()+4,1,99,tc)
 		else
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 			mat=mg:FilterSelect(tp,c19772596.mfilterf,1,1,nil,tp,mg,tc)
 			Duel.SetSelectedCard(mat)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			local mat2=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel()+8,0,99,tc)
+			local mat2=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel()+4,0,99,tc)
 			mat:Merge(mat2)
 		end
 		tc:SetMaterial(mat)
@@ -91,9 +91,6 @@ function c19772596.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --draw
-function c19772596.econ(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.IsExistingMatchingCard(c19772596.efilter,tp,LOCATION_MZONE,0,1,nil)
-end
 function c19772596.ecost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeckAsCost() end
 	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_COST)

@@ -2,7 +2,7 @@
 --Script by XGlitchy30
 function c19772604.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedureLevelFree(c,c19772604.matfilter,c19772604.xyzcheck,2,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),4,4,c19772604.ovfilter,aux.Stringid(19772604,0))
 	c:EnableReviveLimit()
 	aux.EnablePendulumAttribute(c,false)
 	--PENDULUM EFFECTS
@@ -38,6 +38,7 @@ function c19772604.initial_effect(c)
 	e1:SetDescription(aux.Stringid(19772604,1))
 	e1:SetCategory(CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(c19772604.thcon)
 	e1:SetCost(c19772604.thcost)
@@ -47,7 +48,7 @@ function c19772604.initial_effect(c)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(19772604,2))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DAMAGE)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
@@ -58,7 +59,7 @@ function c19772604.initial_effect(c)
 	--pendulum zone
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(19772604,3))
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCountLimit(2,11772604+EFFECT_COUNT_CODE_DUEL)
@@ -70,15 +71,16 @@ function c19772604.initial_effect(c)
 end
 c19772604.pendulum_level=4
 --xyz procedure
-function c19772604.matfilter(c,xyzc)
-	return c:IsType(TYPE_XYZ) and c:IsRace(RACE_WARRIOR) and c:GetRank()==4
-end
-function c19772604.xyzcheck(g)
-	return g:GetClassCount(Card.GetRank)==1
+function c19772604.ovfilter(c)
+	local rk=c:GetRank()
+	return c:IsFaceup() and rk==4 and c:IsSetCard(0x197)
 end
 --filters
 function c19772604.slfilter(c)
-	return c:IsCode(19772602)
+	return c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_RITUAL+TYPE_FUSION+TYPE_SYNCHRO)
+end
+function c19772604.cfilter(c)
+	return c:IsRace(RACE_WARRIOR) and c:IsDiscardable() and c:IsAbleToGraveAsCost()
 end
 function c19772604.spsumfilter(c,e,tp)
 	return c:GetLevel()==4 and c:IsSetCard(0x197) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -110,10 +112,10 @@ function c19772604.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
 function c19772604.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil) end
-	local sg=Duel.SelectReleaseGroup(tp,nil,1,1,nil)
-	e:SetLabel(sg:GetFirst():GetTextDefense()/2)
-	Duel.Release(sg,REASON_COST)
+	if chk==0 then return Duel.IsExistingMatchingCard(c19772604.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,c19772604.cfilter,1,1,REASON_COST+REASON_DISCARD)
+	local op=Duel.GetOperatedGroup()
+	e:SetLabel(op:GetFirst():GetDefense()/2)
 end
 function c19772604.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -140,10 +142,20 @@ function c19772604.spsumop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c19772604.spsumfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		local lv=Duel.GetOperatedGroup():GetFirst():GetLevel()
-		Duel.BreakEffect()
-		Duel.Damage(1-tp,lv*200,REASON_EFFECT)
+		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 then
+			local lv=Duel.GetOperatedGroup():GetFirst():GetLevel()
+			local gp=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+			local tc=gp:GetFirst()
+			while tc do
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_UPDATE_ATTACK)
+				e1:SetValue(lv*-150)
+				e1:SetReset(RESET_EVENT+0x1fe0000)
+				tc:RegisterEffect(e1)
+				tc=gp:GetNext()
+			end
+		end
 	end
 end
 --pendulum zone

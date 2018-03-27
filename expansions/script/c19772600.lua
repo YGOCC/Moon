@@ -50,7 +50,7 @@ function c19772600.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(19772600,1))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetCondition(c19772600.spsumcon)
 	e3:SetTarget(c19772600.spsumtg)
@@ -102,7 +102,7 @@ function c19772600.initial_effect(c)
 end
 --filter
 function c19772600.slfilter(c)
-	return c:IsCode(19772591)
+	return c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_RITUAL+TYPE_SYNCHRO+TYPE_XYZ)
 end
 function c19772600.spsumfilter(c,e,tp)
 	return c:GetLevel()==4 and c:IsSetCard(0x197) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

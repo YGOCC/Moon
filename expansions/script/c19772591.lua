@@ -33,7 +33,7 @@ function c19772591.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(19772591,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(c19772591.spcon)
 	e1:SetTarget(c19772591.sptg)
@@ -69,7 +69,7 @@ function c19772591.initial_effect(c)
 end
 --filters
 function c19772591.slfilter(c)
-	return c:IsCode(19772600)
+	return c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
 end
 function c19772591.costfilter(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x197) and c:IsAbleToGraveAsCost()
