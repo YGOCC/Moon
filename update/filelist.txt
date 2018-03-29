@@ -1,8 +1,8 @@
-﻿expansions/Cards-non QCD.cdb	28b97088541642cac2355ab7e0511562
+﻿expansions/Cards-non QCD.cdb	ac770877d86b2df60357e7ce586c0ca9
 expansions/lflist.conf	dce503c439f653f7f333ede671390b22
 expansions/official.cdb	5cac6260f6f482d8f688a02c2bd383f9
 expansions/pre-release.cdb	3fb325e0613ed56b660457880401eeb2
-expansions/strings.conf	23b76ed7ab74dff4b17e9cd69a7d640d
+expansions/strings.conf	b58b4b8c6905fd54f944b785120a1f82
 expansions/pics/100000710.jpg	ca5783c253e95882505856d94b1e0aab
 expansions/pics/100000711.jpg	03986d48eee370853e6d09d41b765417
 expansions/pics/100000712.jpg	06966d92db29f28c9457224c07b92294
@@ -646,6 +646,7 @@ expansions/pics/101005076.jpg	bdbe94d0f47988e3d9e7b0325582f99b
 expansions/pics/101005079.jpg	6f00de2af944bee110ca845eca1fc37a
 expansions/pics/101010136.jpg	48760bb701affb4254e971e7e86a936c
 expansions/pics/101010389.jpg	8235638f115850bfbe908d9b0d86ec40
+expansions/pics/101300001.jpg	2386cbba13775e0d3c65dc6e2f9eb369
 expansions/pics/1013030.jpg	85bab9da23fe9efd02970033a88607ca
 expansions/pics/1013031.jpg	0af00e69d3c972baec4e1c273dec0656
 expansions/pics/1013032.jpg	265992a9402955d41b249ad5b70857f0
@@ -4764,6 +4765,7 @@ expansions/script/c101005076.lua	1d55934814360a55d53b66369be8ecb8
 expansions/script/c101005079.lua	a63f1b6a46b34612f1eff903e0321606
 expansions/script/c101010136.lua	63624e5d66c22ca4097748af1b53bbb2
 expansions/script/c101010389.lua	dfef026354b6b54cf670dd72ca62b79b
+expansions/script/c101300001.lua	2254351230db2d0566a15d7807f283ff
 expansions/script/c1013030.lua	5bc31f278709f648635216a11b04c6ea
 expansions/script/c1013031.lua	cee85d004c61845226724fa7757c13e3
 expansions/script/c1013032.lua	7dd90a8cd657372ca53c817000b62f13
@@ -5779,13 +5781,13 @@ expansions/script/c192051219.lua	380a375f6b78398ddcbab77fa0b3260d
 expansions/script/c192051220.lua	1d8f29bd03db36988034076b43ff9316
 expansions/script/c192051221.lua	fa8ae31e693b83d7b84e2156c9f221f4
 expansions/script/c192051222.lua	9b41b1eb3c75566d549c076e784d4e72
-expansions/script/c192051223.lua	5f5033491baed4ab76ee55843438e4cd
-expansions/script/c192051224.lua	4295dbc69ffe6c215006316ea2d5c542
-expansions/script/c192051225.lua	ffd4eb31b6e45bb2d14a663835e72329
+expansions/script/c192051223.lua	f53aca2d19210411b217c36ea3c54b67
+expansions/script/c192051224.lua	78c8a5c4215fbb7a602e669999599683
+expansions/script/c192051225.lua	d7d13f16e9f1ca7e6a08f28fcf8dee43
 expansions/script/c192051226.lua	b052a231f8529845225c667d3b3598b4
-expansions/script/c192051227.lua	8d7b616eb5ac18c4f5608bb67f2d7472
+expansions/script/c192051227.lua	4bf34994a016d55ec340101e3df25188
 expansions/script/c192051228.lua	6400dc91c6dff0d74c2968fb6d18498b
-expansions/script/c192051229.lua	58389cf452c54dce6d7f212919bf5b02
+expansions/script/c192051229.lua	bd3a65e57882fa35682c5363f28cadac
 expansions/script/c192147484.lua	dab3730c81c7ca93fb73fea2bcf2a229
 expansions/script/c192147486.lua	1997dd7dea8c0cbae8568d8cbd847caa
 expansions/script/c192147487.lua	fdbbc9ed25ed1918ba7f971ebdc7fe6e
@@ -8023,7 +8025,7 @@ expansions/script/c90210034.lua	567ff6cdcdf425eaaeb36c6e08f6e7a8
 expansions/script/c90210035.lua	0391c844a04973632736958978305d1e
 expansions/script/c90210036.lua	8a036c5ed2a425cd4365e625a8a75f25
 expansions/script/c90210038.lua	01701a61acb1ad615f7e2c52413a439c
-expansions/script/c90239650.lua	62425e0b0f9ab8b0c0dd31e0bcbc0221
+expansions/script/c90239650.lua	9e8000f2778d8de625e42ae7e8c3577d
 expansions/script/c90277800.lua	d533c29dcc1e87668a2b205d1fed3222
 expansions/script/c90288200.lua	0998b53ef9614f073089d63d354e0845
 expansions/script/c90304310.lua	a1195462d7138b9b5b2f85aadcea4807
@@ -8296,6 +8298,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	d76d322647a3e5d25d4643c89fc5b634
+update/filelist.txt	5d5af3fc3b4dceea4fc8eb6c0c6be7f2
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	f841ef01bffdaccfc772de84e54b7c8a
+update/version.txt	e053e591b785071a772efa30a5975bfe
