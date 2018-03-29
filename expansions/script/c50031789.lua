@@ -58,26 +58,25 @@ function c50031789.spop(e,tp,eg,ep,ev,re,r,rp)
 		c:CompleteProcedure()
 	end
 end
-function c50031789.filter(c)
-	return c:IsFaceup() and c:IsLevelAbove(1)
+function c50031789.filter(c,e)
+	return  c:IsFaceup() and c:GetLevel()>e:GetHandler():GetLevel()
 end
 function c50031789.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c50031789.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c50031789.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c50031789.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+   if chkc then return chkc:IsOnField() and c50031789.filter(chkc,e) end
+if chk==0 then return Duel.IsExistingTarget(c50031789.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,e) end
+Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+Duel.SelectTarget(tp,c50031789.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,e)
 end
 function c50031789.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		local lv=Duel.SelectOption(tp,aux.Stringid(50031789,2),aux.Stringid(50031789,3)
-		local e1=Effect.CreateEffect(c)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_LEVEL)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e1:SetValue(lv-1)
-		tc:RegisterEffect(e1)
-	end
+local tc=Duel.GetFirstTarget()
+local tb={1,2}
+if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+local lv=Duel.AnnounceNumber(tp,table.unpack(tb))
+local e1=Effect.CreateEffect(e:GetHandler())
+e1:SetType(EFFECT_TYPE_SINGLE)
+e1:SetCode(EFFECT_UPDATE_LEVEL)
+e1:SetValue(-lv)
+e1:SetReset(RESET_EVENT+0x1fe0000)
+tc:RegisterEffect(e1)
+end
 end
