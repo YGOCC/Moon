@@ -3,7 +3,7 @@
 function c240100059.initial_effect(c)
 	local f1,f2,f3=Card.IsCanBeFusionMaterial,Duel.GetMatchingGroup,Duel.GetFusionMaterial
 	Card.IsCanBeFusionMaterial=function(tc,fc)
-		return f1(tc,fc) or (not tc:IsHasEffect(EFFECT_CANNOT_BE_FUSION_MATERIAL) and tc:GetOriginalCode()==240100059)
+		return f1(tc,fc) or (not tc:IsHasEffect(EFFECT_CANNOT_BE_FUSION_MATERIAL) and tc:GetOriginalCode()==c:GetOriginalCode())
 	end
 	Duel.GetMatchingGroup=function(f,p,sloc,oloc,exc,...)
 		local g=f2(f,p,sloc,oloc,exc,table.unpack{...})
@@ -31,7 +31,6 @@ function c240100059.initial_effect(c)
 	e1:SetOperation(c240100059.activate)
 	c:RegisterEffect(e1)
 end
-c240100059.filterf={}
 function c240100059.tgfilter(c,e,tp,n)
 	return c:IsFaceup() and c:IsCode(70095154) and c:IsCanBeFusionMaterial()
 		and Duel.IsExistingMatchingCard(c240100059.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,n)

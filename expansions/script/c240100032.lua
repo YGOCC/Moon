@@ -1,5 +1,4 @@
---created & coded by Lyris, art by 
-The-SixthLeafClover of DeviantArt
+--created & coded by Lyris, art by The-SixthLeafClover of DeviantArt
 --機光襲雷竜－ホウロウ
 function c240100032.initial_effect(c)
 aux.AddXyzProcedure(c,nil,4,2)

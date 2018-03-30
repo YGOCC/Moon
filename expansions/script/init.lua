@@ -517,6 +517,7 @@ function Auxiliary.PandActTarget(xe)
 		local g=nil
 		if loc~=0 then
 			g=Duel.GetFieldGroup(tp,loc,0)
+			if c:IsLocation(LOCATION_HAND) then g=g-c end
 		end
 		local b1=c:IsReleasable() and Duel.GetTurnPlayer()~=tp and g and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale,SUMMON_TYPE_SPECIAL+726)
 		local te=xe
@@ -532,29 +533,20 @@ function Auxiliary.PandActTarget(xe)
 			and (not target or target(e,tep,eg,ep,ev,re,r,rp,0))
 		end
 		if chk==0 then return (not c:IsStatus(STATUS_SET_TURN) or c:IsHasEffect(EFFECT_TRAP_ACT_IN_SET_TURN)) and (c:GetLocation()~=LOCATION_HAND and c:IsFacedown() or (c:IsHasEffect(EFFECT_TRAP_ACT_IN_HAND) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)))) end
-		Duel.ChangePosition(c,POS_FACEUP)
 		local opt=nil
 		if b1 and b2 then opt=Duel.SelectOption(tp,1150,1074,1214)
 		elseif b2 then
 			opt=Duel.SelectOption(tp,1150,1214)
-			if opt==1 then
-				opt=2
-			end
-		elseif b1 then
-			opt=Duel.SelectOption(tp,1074,1214)+1
-		else
-			opt=Duel.SelectOption(tp,1214)+2
-		end
+			if opt==1 then opt=2 end
+		elseif b1 then opt=Duel.SelectOption(tp,1074,1214)+1
+		else opt=Duel.SelectOption(tp,1214)+2 end
 		e:SetLabel(opt)
+		if c:IsLocation(LOCATION_HAND) then Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) else Duel.ChangePosition(c,POS_FACEUP) end
 		if opt==0 then
 			e:SetCategory(te:GetCategory())
 			e:SetProperty(te:GetProperty())
-			if cost then
-				cost(e,tep,eg,ep,ev,re,r,rp,1)
-			end
-			if target then
-				target(e,tep,eg,ep,ev,re,r,rp,1)
-			end
+			if cost then cost(e,tep,eg,ep,ev,re,r,rp,1) end
+			if target then target(e,tep,eg,ep,ev,re,r,rp,1) end
 		elseif opt==1 then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 			e:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)

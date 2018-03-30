@@ -37,7 +37,7 @@ function c240100002.linkfilter(c,lc)
 end
 function c240100002.linkcon(e,c)
 	if c==nil then return true end
-	if (c:IsType(TYPE_PENDULUM) or not Card.IsTypeCustom or c:IsTypeCustom("Pandemonium") or c:IsTypeCustom("Relay")) and c:IsFaceup() then return false end
+	if c:IsType(TYPE_PENDULUM+TYPE_PANDEMONIUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
 	return Duel.IsExistingMatchingCard(c240100002.linkfilter,tp,LOCATION_MZONE,0,1,nil,c)
 end
