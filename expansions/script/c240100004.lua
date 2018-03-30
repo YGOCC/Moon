@@ -38,14 +38,14 @@ function c240100004.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100004.spfilter(c,e,tp)
-	return bit.band(c:GetOriginalType(),TYPE_MONSTER)==TYPE_MONSTER and c:GetOwner()==tp and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER and c:GetOwner()==tp and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
 end
 function c240100004.sttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and c240100004.spfilter(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_SZONE+LOCATION_PZONE) and c240100004.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c240100004.spfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) end
+		and Duel.IsExistingTarget(c240100004.spfilter,tp,LOCATION_SZONE+LOCATION_PZONE,LOCATION_SZONE+LOCATION_PZONE,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c240100004.spfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,c240100004.spfilter,tp,LOCATION_SZONE+LOCATION_PZONE,LOCATION_SZONE+LOCATION_PZONE,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c240100004.stop(e,tp,eg,ep,ev,re,r,rp)
