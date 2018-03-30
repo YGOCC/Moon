@@ -59,6 +59,7 @@ LINK_MARKER_BOTTOM}
 function cod.tcop(e,tp,eg,ep,ev,re,r,rp)
     local t=cod.turn
     local c=e:GetHandler()
+    local ct=1
     if Duel.CheckEvent(EVENT_SPSUMMON_SUCCESS) then
     	local _,eg=Duel.CheckEvent(EVENT_SPSUMMON_SUCCESS,true)
     	if eg:GetFirst()==c then
@@ -74,16 +75,19 @@ function cod.tcop(e,tp,eg,ep,ev,re,r,rp)
     	else return false end
     end
     if Duel.GetTurnCount()~=table.unpack(t) then
+        if Duel.GetTurnCount()-table.unpack(t)>1 then
+            ct=Duel.GetTurnCount()-table.unpack(t)
+        end
         t[1]=Duel.GetTurnCount()
         local off=1
         local val=0
         local link=cod.link_list
         for i=1,#link do
             if c:IsLinkMarker(link[i]) then
-                if link[i+1]==nil then
-                    val=val+link[i-(i-1)]
+                if link[i+ct]==nil then
+                    val=val+link[i-(i-ct)]
                 else
-                    val=val+link[i+1]
+                    val=val+link[i+ct]
                 end
             off=off+1
             end
