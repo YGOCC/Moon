@@ -20,7 +20,6 @@ function card.initial_effect(c)
 	c:RegisterEffect(e2)
 	--destroy&damage
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(210424265,0))
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
@@ -79,19 +78,16 @@ function card.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	e:GetHandler():RemoveCounter(tp,0xc,3,REASON_COST)
 end
-function card.desfilter(c)
-	return c:IsDestructable()
-end
 function card.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetLocation()==LOCATION_ONFIELD and card.desfilter(chkc) end
-	if chk==0 then return Duel.IsExistingMatchingCard(card.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
-	local g=Duel.GetMatchingGroup(card.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	if chkc then return chkc:GetLocation()==LOCATION_ONFIELD end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function card.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,card.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	local tc=g:GetFirst()
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
