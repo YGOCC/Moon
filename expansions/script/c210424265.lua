@@ -53,7 +53,7 @@ end
 function card.tg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tc=e:GetLabelObject()
 	if chkc then return chkc==tc end
-	if chk==0 then return tc:IsOnField() and tc:IsCanBeEffectTarget(e) and tc:IsSetCard(0x666) end
+	if chk==0 then return tc:IsOnField() and tc:IsCanBeEffectTarget(e) and tc:IsSetCard(0x666) and tc:IsFaceup() end
 	Duel.SetTargetCard(tc)
 end
 function card.op1(e,tp,eg,ep,ev,re,r,rp)
