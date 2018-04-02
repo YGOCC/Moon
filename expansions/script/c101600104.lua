@@ -7,9 +7,9 @@ function c101600104.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND+LOCATION_GRAVE)
 	e1:SetCondition(c101600104.spcon)
-	e1:SetCost(c101600104.spcost)
 	e1:SetTarget(c101600104.sptg)
 	e1:SetOperation(c101600104.spop)
+	e1:SetCountLimit(1,11600104)
 	c:RegisterEffect(e1)
 	--salvage
 	local e2=Effect.CreateEffect(c)
@@ -25,21 +25,19 @@ function c101600104.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--synchro custom
+	--"synchro custom"
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(EFFECT_SYNCHRO_MATERIAL_CUSTOM)
-	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e4:SetTarget(c101600104.syntg)
-	e4:SetValue(1)
-	e4:SetOperation(c101600104.synop)
+	e4:SetDescription(aux.Stringid(101600104,0))
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetTarget(c101600104.target)
+	e4:SetOperation(c101600104.operation)
+	e4:SetCountLimit(1,101610105)
 	c:RegisterEffect(e4)
 end
 function c101600104.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
-end
-function c101600104.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,101600104)<1 end
 end
 function c101600104.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -50,8 +48,14 @@ end
 function c101600104.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		Duel.RegisterFlagEffect(tp,101600104,RESET_PHASE+PHASE_END,0,1)
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x47e0000)
+		e1:SetValue(LOCATION_REMOVED)
+		c:RegisterEffect(e1,true)
 	end
 end
 function c101600104.filter(c)
@@ -72,63 +76,33 @@ function c101600104.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,tc)
 	end
 end
-function c101600104.synfilter1(c,syncard,tuner,f)
-    return c:IsFaceup() and c:IsCanBeSynchroMaterial(syncard,tuner) and (f==nil or f(c))
+function c101600104.synfilter(c,e,tp)
+	local lv=c:GetLevel()
+	local lv2=e:GetHandler():GetOriginalLevel()
+	return lv>0 and c:IsSetCard(0xcd01) and not c:IsType(TYPE_TUNER) and c:IsAbleToRemoveAsCost()
+		and Duel.IsExistingMatchingCard(c101600104.exfilter,tp,LOCATION_EXTRA,0,1,nil,lv+lv2,e,tp)
 end
-function c101600104.synfilter2(c,syncard,tuner,f)
-    return c:IsSetCard(0xcd01) and c:IsNotTuner() and c:IsCanBeSynchroMaterial(syncard,tuner) and (f==nil or f(c))
+function c101600104.exfilter(c,lv,e,tp)
+	return c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and c:IsRace(RACE_DRAGON) and c:IsType(TYPE_SYNCHRO)
 end
-function c101600104.syncheck(c,g,mg,tp,lv,syncard,minc,maxc)
-    g:AddCard(c)
-    local ct=g:GetCount()
-    local res=c101600104.syngoal(g,tp,lv,syncard,minc,ct)
-        or (ct<maxc and mg:IsExists(c101600104.syncheck,1,g,g,mg,tp,lv,syncard,minc,maxc))
-    g:RemoveCard(c)
-    return res
+function c101600104.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
+		and e:GetHandler():IsAbleToRemoveAsCost()
+		and Duel.IsExistingMatchingCard(c101600104.synfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c101600104.synfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	local rg=Group.FromCards(g:GetFirst(),e:GetHandler())
+	Duel.Remove(rg,POS_FACEUP,REASON_COST)
+	e:SetLabel(e:GetHandler():GetLevel()+g:GetFirst():GetLevel())
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function c101600104.syngoal(g,tp,lv,syncard,minc,ct)
-    return ct>=minc
-        and g:CheckWithSumEqual(Card.GetSynchroLevel,lv,ct,ct,syncard)
-        and Duel.GetLocationCountFromEx(tp,tp,g,syncard)>0
-end
-function c101600104.syntg(e,syncard,f,min,max)
-    local minc=min+1
-    local maxc=max+1
-    local c=e:GetHandler()
-    local tp=syncard:GetControler()
-    local lv=syncard:GetLevel()
-    if lv<=c:GetLevel() then return false end
-    local g=Group.FromCards(c)
-    local mg=Duel.GetMatchingGroup(c101600104.synfilter1,syncard:GetControler(),LOCATION_MZONE,LOCATION_MZONE,c,syncard,c,f)
-    if (syncard:GetLevel()==7 or syncard:GetLevel()==8) and syncard:IsRace(RACE_DRAGON) then
-        local exg=Duel.GetMatchingGroup(c101600104.synfilter2,syncard:GetControler(),LOCATION_HAND,0,c,syncard,c,f)
-        mg:Merge(exg)
-    end
-    return mg:IsExists(c101600104.syncheck,1,g,g,mg,tp,lv,syncard,minc,maxc)
-end
-function c101600104.synop(e,tp,eg,ep,ev,re,r,rp,syncard,f,min,max)
-    local minc=min+1
-    local maxc=max+1
-    local c=e:GetHandler()
-    local lv=syncard:GetLevel()
-    local g=Group.FromCards(c)
-    local mg=Duel.GetMatchingGroup(c101600104.synfilter1,syncard:GetControler(),LOCATION_MZONE,LOCATION_MZONE,c,syncard,c,f)
-    if (syncard:GetLevel()==7 or syncard:GetLevel()==8) and syncard:IsRace(RACE_DRAGON) then
-        local exg=Duel.GetMatchingGroup(c101600104.synfilter2,syncard:GetControler(),LOCATION_HAND,0,c,syncard,c,f)
-        mg:Merge(exg)
-    end
-    for i=1,maxc do
-        local cg=mg:Filter(c101600104.syncheck,g,g,mg,tp,lv,syncard,minc,maxc)
-        if cg:GetCount()==0 then break end
-        local minct=1
-        if c101600104.syngoal(g,tp,lv,syncard,minc,i) then
-            if not Duel.SelectYesNo(tp,210) then break end
-            minct=0
-        end
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-        local sg=cg:Select(tp,minct,1,nil)
-        if sg:GetCount()==0 then break end
-        g:Merge(sg)
-    end
-    Duel.SetSynchroMaterial(g)
+function c101600104.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local lv=e:GetLabel()
+	if Duel.GetLocationCountFromEx(tp)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=Duel.SelectMatchingCard(tp,c101600104.exfilter,tp,LOCATION_EXTRA,0,1,1,nil,lv,e,tp)
+		local sc=sg:GetFirst()
+		Duel.SpecialSummon(sg,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
+	end
 end

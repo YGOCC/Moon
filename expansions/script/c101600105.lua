@@ -9,6 +9,7 @@ function c101600105.initial_effect(c)
 	e1:SetCondition(c101600105.spcon)
 	e1:SetTarget(c101600105.sptg)
 	e1:SetOperation(c101600105.spop)
+	e1:SetCountLimit(1,11610105)
 	c:RegisterEffect(e1)
 	--"synchro custom"
 	local e4=Effect.CreateEffect(c)
@@ -48,7 +49,23 @@ end
 function c101600105.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		--redirect
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x47e0000)
+		e1:SetValue(LOCATION_REMOVED)
+		c:RegisterEffect(e1,true)
+		--level
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_CHANGE_LEVEL)
+		e2:SetValue(4)
+		e2:SetReset(RESET_EVENT+0xff0000)
+		c:RegisterEffect(e2)
+	end
 end
 function c101600105.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO

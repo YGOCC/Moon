@@ -101,6 +101,7 @@ end
 function c101600116.spco(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
+	if Duel.GetFieldGroup(tp,LOCATION_MZONE,0)>0 then return end
 	local str=Duel.GetMatchingGroup(c101600116.str,tp,LOCATION_EXTRA,0,nil)
 	local arc=Duel.GetMatchingGroup(c101600116.arc,tp,LOCATION_EXTRA,0,nil)
 	local bw=Duel.GetMatchingGroup(c101600116.bw,tp,LOCATION_EXTRA,0,nil)
