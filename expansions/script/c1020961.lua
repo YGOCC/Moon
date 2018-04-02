@@ -66,7 +66,9 @@ function c1020961.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c1020961.atkval(e,c)
-	return Duel.GetMatchingGroupCount(c1020961.atkcount,c:GetControler(),LOCATION_REMOVED,LOCATION_REMOVED,nil)-2
+	local g=Duel.GetMatchingGroup(c1020961.atkcount,c:GetControler(),LOCATION_REMOVED,LOCATION_REMOVED,nil)
+	local ct=g:GetClassCount(Card.GetCode)
+	return ct-3
 end
 --special summon rule
 function c1020961.fselect(c,tp,mg,sg)
