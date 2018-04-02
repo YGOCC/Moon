@@ -11,20 +11,6 @@ function c101600104.initial_effect(c)
 	e1:SetOperation(c101600104.spop)
 	e1:SetCountLimit(1,11600104)
 	c:RegisterEffect(e1)
-	--salvage
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(101600104,0))
-	e2:SetCategory(CATEGORY_TOHAND)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetTarget(c101600104.thtg)
-	e2:SetOperation(c101600104.thop)
-	e2:SetCountLimit(1,101600104)
-	c:RegisterEffect(e2)
-	local e3=e2:Clone()
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e3)
 	--"synchro custom"
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(101600104,0))
@@ -56,24 +42,6 @@ function c101600104.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x47e0000)
 		e1:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e1,true)
-	end
-end
-function c101600104.filter(c)
-	return ((c:GetLevel()==7 or c:GetLevel()==8) and c:IsRace(RACE_DRAGON) and c:IsType(TYPE_SYNCHRO) and c:IsAbleToExtra())
-		or (c:IsSetCard(0xcd01) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand())
-end
-function c101600104.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c101600104.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c101600104.filter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c101600104.filter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
-end
-function c101600104.thop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
 	end
 end
 function c101600104.synfilter(c,e,tp)
