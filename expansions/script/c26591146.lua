@@ -82,9 +82,9 @@ function c26591146.drytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c26591146.dryop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
+	local atk=tc:GetAttack()/2
+	if atk<0 then atk=0 end
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and Duel.Destroy(tc,REASON_EFFECT)~=0 then
-		local atk=tc:GetTextAttack()/2
-		if atk<0 then atk=0 end
 		Duel.Damage(tp,atk,REASON_EFFECT)
 		Duel.Damage(1-tp,atk,REASON_EFFECT)
 	end

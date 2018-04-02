@@ -38,24 +38,21 @@ function c11528670.initial_effect(c)
 	e4:SetCode(EFFECT_IMMUNE_EFFECT)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetValue(c11528670.efilter)
+	e4:SetValue(1)
 	c:RegisterEffect(e4)
-end
-function c11528670.efilter(e,te)
-	return te:GetOwner()~=e:GetOwner()
 end
 --Special Summon
 function c11528670.vfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x850) and c:IsType(TYPE_MONSTER)
 end
 function c11528670.spfilter(c)
-	return c:IsSetCard(0x850) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x850) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost() and not c:IsCode(11528670)
 end
 function c11528670.sprcon(e,c)
 	if c==nil then return true end 
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3
-		and Duel.IsExistingMatchingCard(c11528670.spfilter,tp,LOCATION_MZONE,0,3,nil)
+		and Duel.IsExistingMatchingCard(c11528670.spfilter,tp,LOCATION_MZONE,0,3,nil) 
 end
 function c11528670.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
