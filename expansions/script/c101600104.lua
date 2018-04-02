@@ -19,7 +19,7 @@ function c101600104.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTarget(c101600104.target)
 	e4:SetOperation(c101600104.operation)
-	e4:SetCountLimit(1,101610105)
+	e4:SetCountLimit(1,101610104)
 	c:RegisterEffect(e4)
 end
 function c101600104.spcon(e,tp,eg,ep,ev,re,r,rp)
