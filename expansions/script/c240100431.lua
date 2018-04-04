@@ -1,6 +1,5 @@
 --created & coded by Lyris
 --S・VINEの姫オサ
-c240100431.spt_other_space=240100431
 function c240100431.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)

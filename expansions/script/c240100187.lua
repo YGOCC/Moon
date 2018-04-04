@@ -1,6 +1,6 @@
 --created & coded by Lyris, art by Chahine Sfar
 --S・VINEの女王クライッシャ(アナザー宙)
-c240100187.spt_other_space=240100187
+c240100187.spt_other_space=240100180
 function c240100187.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)

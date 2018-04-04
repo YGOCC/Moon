@@ -1,6 +1,5 @@
 --created & coded by Lyris
 --S・VINEの零天使ラグナクライッシャ
-c240100217.spt_other_space=240100217
 function c240100217.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)

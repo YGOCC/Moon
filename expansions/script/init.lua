@@ -755,11 +755,11 @@ end
 function Card.SwitchSpace(c)
 	if not Auxiliary.Spatials[c] or c:GetSummonType()~=SUMMON_TYPE_SPECIAL+500 or c:GetFlagEffect(500)==0 then return false end
 	Auxiliary.Spatials[c]=nil
-	local tcode=c.spt_other_space or c.spt_another_space or c.spt_origin_space
-	c:SetEntityCode(tcode,true)
-	c:ReplaceEffect(tcode,0,0)
-	Duel.SetMetatable(c,_G["c"..tcode])
-	Auxiliary.AddOrigSpatialType(c)
+	local ospc=c.spt_other_space
+	if not ospc then return false end
+	c:SetEntityCode(ospc,true)
+	c:ReplaceEffect(ospc,0,0)
+	Duel.SetMetatable(c,_G["c"..ospc])
 	local ct=c:GetFlagEffectLabel(500)
 	if ct>1 then
 		c:SetFlagEffectLabel(500,ct-1)
@@ -786,6 +786,18 @@ function Card.IsCanBeSpaceMaterial(c,sptc)
 	return true
 end
 function Auxiliary.AddOrigSpatialType(c,isxyz)
+	local code,acode=c:GetOriginalCode(),Duel.ReadCard(c:GetOriginalCode(),CARDDATA_ALIAS)
+	local mt=_G["c" .. code]
+	local typ,rcode
+	for i=240100000,240100999 do
+		typ,rcode=Duel.ReadCard(i,CARDDATA_TYPE,CARDDATA_ALIAS)
+		if typ and typ&TYPE_XYZ==TYPE_XYZ then
+			if code==rcode or acode==i then
+				mt.spt_other_space=i
+				break
+			end
+		end
+	end
 	table.insert(Auxiliary.Spatials,c)
 	Auxiliary.Customs[c]=true
 	local isxyz=isxyz==nil and false or isxyz
@@ -795,7 +807,6 @@ function Auxiliary.AddSpatialProc(c,sptcheck,djn,adiff,ddiff,...)
 	--sptcheck - extra check after everything is settled, djn - Spatial "level", adiff - max material ATK difference, ddiff - max material DEF difference
 	--... format - any number of materials	use aux.TRUE for generic materials
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
-	local t={...}
 	local ge1=Effect.CreateEffect(c)
 	ge1:SetType(EFFECT_TYPE_SINGLE)
 	ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
