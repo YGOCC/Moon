@@ -34,6 +34,12 @@ function c100000964.activate(e,tp,eg,ep,ev,re,r,rp)
 		local e4=e3:Clone()
 		e4:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
 		tc:RegisterEffect(e4)
+			local e5=e3:Clone()
+		e5:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+		tc:RegisterEffect(e5)
+			local e6=e3:Clone()
+		e6:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
+		tc:RegisterEffect(e6)
 		Duel.SpecialSummonComplete()
 	end
 end

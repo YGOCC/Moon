@@ -49,7 +49,7 @@ c:EnableUnsummonable()
 	c:RegisterEffect(e11)
 	end
 function c100000763.splimit(e,c)
-	return not c:IsSetCard(0x75A)
+	return not (c:IsSetCard(0x75A) or c:IsCode(100001193))
 end
 function c100000763.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp

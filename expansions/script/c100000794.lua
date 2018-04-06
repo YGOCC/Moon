@@ -79,7 +79,7 @@ function c100000794.operatione(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000794.filter(c,e,tp)
-	return  c:IsCode(100000792) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) 
+	return  c:IsCode(100000792) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,true,false) 
 end
 function c100000794.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
@@ -92,5 +92,5 @@ function c100000794.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c100000794.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then end
-	Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
+	Duel.SpecialSummon(g,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)
 end

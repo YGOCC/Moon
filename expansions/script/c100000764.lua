@@ -49,7 +49,7 @@ function c100000764.spfilter(c,sp)
 	return c:GetSummonPlayer()==sp
 end
 function c100000764.splimit(e,c)
-	return not c:IsSetCard(0x75A)
+	return not (c:IsSetCard(0x75A) or c:IsCode(100001193))
 end
 function c100000764.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c100000764.spfilter,1,nil,1-tp)

@@ -48,7 +48,7 @@ function c100000757.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c100000757.filter,1,nil,tp)
 end
 function c100000757.splimit(e,c)
-	return not c:IsSetCard(0x75A)
+	return not (c:IsSetCard(0x75A) or c:IsCode(100001193))
 end
 function c100000757.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x75A) and c:IsType(TYPE_XYZ)

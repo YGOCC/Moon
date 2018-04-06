@@ -52,7 +52,7 @@ function c100000777.initial_effect(c)
 	c:RegisterEffect(e21)
 end
 function c100000777.cfilter(c)
-	return c:IsSetCard(0x75F) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
+	return c:IsSetCard(0x75F) and not c:IsPublic()
 end
 function c100000777.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000777.cfilter,tp,LOCATION_HAND,0,1,nil) end

@@ -45,6 +45,13 @@ c:SetUniqueOnField(1,0,100001172)
 		e10:SetTarget(c100001172.target)
 	e10:SetOperation(c100001172.operation)
 	c:RegisterEffect(e10)
+			--linklimit
+	local e13=Effect.CreateEffect(c)
+	e13:SetType(EFFECT_TYPE_SINGLE)
+	e13:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e13:SetValue(1)
+	c:RegisterEffect(e13)
 end
 function c100001172.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

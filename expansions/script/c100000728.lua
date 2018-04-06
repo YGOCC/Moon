@@ -58,6 +58,13 @@ function c100000728.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetValue(1)
 		e4:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e4,true)
+			local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetType(EFFECT_TYPE_SINGLE)
+		e5:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+		e5:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+		e5:SetValue(1)
+		e5:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e5,true)
 		Duel.SpecialSummonComplete()
 	end
 end

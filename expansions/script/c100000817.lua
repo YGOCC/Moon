@@ -62,6 +62,13 @@ function c100000817.initial_effect(c)
 	e9:SetTarget(c100000817.damtg)
 	e9:SetOperation(c100000817.damop)
 	c:RegisterEffect(e9)
+		--cannot link material
+	local e20=Effect.CreateEffect(c)
+	e20:SetType(EFFECT_TYPE_SINGLE)
+	e20:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e20:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e20:SetValue(c100000817.synlimit)
+	c:RegisterEffect(e20)
 end
 function c100000817.htg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

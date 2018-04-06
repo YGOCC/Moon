@@ -47,6 +47,13 @@ c:SetUniqueOnField(1,0,100000950)
 	e4:SetCondition(c100000950.dxcon)
 	e4:SetOperation(c100000950.dxop)
 	c:RegisterEffect(e4)
+		--linklimit
+	local e13=Effect.CreateEffect(c)
+	e13:SetType(EFFECT_TYPE_SINGLE)
+	e13:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e13:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e13:SetValue(1)
+	c:RegisterEffect(e13)
 end
 function c100000950.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,1,e:GetHandler()) end

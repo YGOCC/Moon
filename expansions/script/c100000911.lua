@@ -106,6 +106,13 @@ e17:SetCategory(CATEGORY_ATKCHANGE)
 	e18:SetRange(LOCATION_MZONE)
 	e18:SetCode(EFFECT_CANNOT_CHANGE_CONTROL)
 	c:RegisterEffect(e18)
+		--cannot link material
+	local e20=Effect.CreateEffect(c)
+	e20:SetType(EFFECT_TYPE_SINGLE)
+	e20:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e20:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e20:SetValue(1)
+	c:RegisterEffect(e20)
 end
 function c100000911.thophhatk(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

@@ -43,7 +43,7 @@ function c100001173.initial_effect(c)
 	c:RegisterEffect(e21)
 end
 function c100001173.splimit(e,c)
-	return not c:IsSetCard(0x75A)
+	return not (c:IsSetCard(0x75A) or c:IsCode(100001193))
 end
 function c100001173.filter(c,e)
 	return c:IsCanBeSpecialSummoned(e,0,tp,true,false) and c:IsType(TYPE_MONSTER)
