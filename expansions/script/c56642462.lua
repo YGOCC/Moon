@@ -46,10 +46,10 @@ end
 function c56642462.spop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-    local loc=LOCATION_MZONE+LOCATION_HAND
-    if ft<0 then loc=LOCATION_MZONE end
+    local loc=LOCATION_SZONE+LOCATION_HAND
+    if ft<0 then loc=LOCATION_SZONE end
     local loc2=0
-    if Duel.IsPlayerAffectedByEffect(tp,88581108) then loc2=LOCATION_MZONE end
+    if Duel.IsPlayerAffectedByEffect(tp,88581108) then loc2=LOCATION_SZONE end
     local g=Duel.GetMatchingGroup(c56642462.desfilter,tp,loc,loc2,c)
     if g:GetCount()<2 or not g:IsExists(Card.IsSetCard,1,nil,0x207a) then return end
     local g1=nil local g2=nil
