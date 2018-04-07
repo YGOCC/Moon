@@ -1,5 +1,5 @@
---Number C300: Alpha Galaxy-Eyes Exodiac Godly Dragon
-function c3.initial_effect(c)
+--Number c8888001200: Alpha Galaxy-Eyes Exodiac Godly Dragon
+function c88880012.initial_effect(c)
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xba),6,4)
 	c:EnableReviveLimit()
 	--(1) spsummon limit
@@ -7,7 +7,7 @@ function c3.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c3.splimit)
+	e1:SetValue(c88880012.splimit)
 	c:RegisterEffect(e1)
 	--(2) battle or Target effect
 	local e2=Effect.CreateEffect(c)
@@ -27,33 +27,33 @@ function c3.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e5:SetTarget(c3.atktg)
-	e5:SetCost(c3.atkcost)
-	e5:SetOperation(c3.atkop)
+	e5:SetTarget(c88880012.atktg)
+	e5:SetCost(c88880012.atkcost)
+	e5:SetOperation(c88880012.atkop)
 	c:RegisterEffect(e5)
 end
 --(1) spsummon limit
-function c3.splimit(e,se,sp,st)
+function c88880012.splimit(e,se,sp,st)
 	return se:GetHandler():IsSetCard(0x95)
 end
 --(3) negate attack
-function c3.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c88880012.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
-function c3.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c88880012.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
-function c3.atkop(e,tp,eg,ep,ev,re,r,rp)
+function c88880012.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateAttack()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c3.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) then
-		local g=Duel.SelectMatchingCard(tp,c3.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c88880012.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) then
+		local g=Duel.SelectMatchingCard(tp,c88880012.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
-function c3.spfilter(c,e,tp)
+function c88880012.spfilter(c,e,tp)
 	return c:IsSetCard(0x107b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end

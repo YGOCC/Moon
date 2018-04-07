@@ -1,7 +1,8 @@
---Number 300: Galaxy-Eyes Photonic Tachyon Dragon
---Scripted by Loli Dragon of Creativity
-function c88880010.initial_effect(c)
-  --Xyz Materials
+--Number 300: Galaxy-Eyes Photonic Tachyon Dragon (XyLeS)
+local m=47
+local cm=_G["c"..m]
+function cm.initial_effect(c)
+--Xyz Materials
   aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xba),4,2)
   c:EnableReviveLimit()
   --(1) Indes by battle

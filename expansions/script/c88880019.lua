@@ -1,5 +1,5 @@
 --Creation Soul Scale 13
-function c10.initial_effect(c)
+function c88880019.initial_effect(c)
 	--(1) Pendulum summon
 	aux.EnablePendulumAttribute(c)
 	--(2)special summon
@@ -9,7 +9,7 @@ function c10.initial_effect(c)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(c10.splimit)
+	e1:SetTarget(c88880019.splimit)
 	c:RegisterEffect(e1)
 	--atkdown
 	local e3=Effect.CreateEffect(c)
@@ -18,35 +18,35 @@ function c10.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetCode(EVENT_SUMMON_SUCCESS)
-	e3:SetCondition(c10.atkcon)
-	e3:SetTarget(c10.atktg)
-	e3:SetOperation(c10.atkop)
+	e3:SetCondition(c88880019.atkcon)
+	e3:SetTarget(c88880019.atktg)
+	e3:SetOperation(c88880019.atkop)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
 --Pemdulum Summon
-function c10.filter(c)
+function c88880019.filter(c)
 	return c:IsSetCard(0x888) or c:IsSetCard(0x107b)
 end
-function c10.splimit(e,c,tp,sumtp,sumpos)
+function c88880019.splimit(e,c,tp,sumtp,sumpos)
 	if not (bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM) then return end
-	return not c10.filter(c)
+	return not c88880019.filter(c)
 end
 --atkdown
-function c10.atkfilter(c,e,tp)
+function c88880019.atkfilter(c,e,tp)
 	return c:IsControler(tp) and c:IsPosition(POS_FACEUP_ATTACK) and (not e or c:IsRelateToEffect(e))
 end
-function c10.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c10.atkfilter,1,nil,nil,1-tp)
+function c88880019.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c88880019.atkfilter,1,nil,nil,1-tp)
 end
-function c10.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c88880019.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsRelateToEffect(e) end
 	Duel.SetTargetCard(eg)
 end
-function c10.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c10.atkfilter,nil,e,1-tp)
+function c88880019.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(c88880019.atkfilter,nil,e,1-tp)
 	local dg=Group.CreateGroup()
 	local c=e:GetHandler()
 	local tc=g:GetFirst()
