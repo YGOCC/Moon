@@ -46,6 +46,7 @@ function c88880019.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetCard(eg)
 end
 function c88880019.atkop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=eg:Filter(c88880019.atkfilter,nil,e,1-tp)
 	local dg=Group.CreateGroup()
 	local c=e:GetHandler()

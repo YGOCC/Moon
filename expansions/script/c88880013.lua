@@ -1,6 +1,6 @@
 --Number C300: Galaxy-Eyes Intergalactic Dragon
 function c88880013.initial_effect(c)
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x888),7,5)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x889),7,5)
 	c:EnableReviveLimit()
 	--(1) spsummon limit
 	local e1=Effect.CreateEffect(c)
@@ -15,17 +15,19 @@ function c88880013.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e2:SetValue(1)
+	e2:SetCondition(c88880014.tgcon)
+	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
-	local e3=e2:Clone()
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	c:RegisterEffect(e3)
-	local e4=e2:Clone()
+	local e4=e3:Clone()
 	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	c:RegisterEffect(e4)
 	--(3) stat change
 	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(4,0))
+	e5:SetDescription(aux.Stringid(88880013,0))
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e5:SetRange(LOCATION_MZONE)
@@ -46,6 +48,10 @@ c88880013.xyz_number=300
 --(1) spsummon limit
 function c3.splimit(e,se,sp,st)
 	return se:GetHandler():IsSetCard(0x95)
+end
+--(2) Target Effect
+function c88880014.tgcon(e)
+	return Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
 end
 --(3) Stat Change
 function c88880013.cost(e,tp,eg,ep,ev,re,r,rp,chk)

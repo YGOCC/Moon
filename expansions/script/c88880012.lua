@@ -1,6 +1,6 @@
 --Number c8888001200: Alpha Galaxy-Eyes Exodiac Godly Dragon
 function c88880012.initial_effect(c)
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xba),6,4)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x889),6,4)
 	c:EnableReviveLimit()
 	--(1) spsummon limit
 	local e1=Effect.CreateEffect(c)
@@ -15,10 +15,11 @@ function c88880012.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
-	local e3=e2:Clone()
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	c:RegisterEffect(e2)
-	local e4=e2:Clone()
+	local e4=e3:Clone()
 	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	c:RegisterEffect(e4)
 	--(3) Negate Attack once
@@ -35,6 +36,10 @@ end
 --(1) spsummon limit
 function c88880012.splimit(e,se,sp,st)
 	return se:GetHandler():IsSetCard(0x95)
+end
+--(2) Target Effect
+function c88880014.tgcon(e)
+	return Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
 end
 --(3) negate attack
 function c88880012.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
