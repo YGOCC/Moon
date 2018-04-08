@@ -36,7 +36,7 @@ function c27084912.spop(e,tp,eg,ep,ev,re,r,rp,c)
     Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c27084912.condition(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetCurrentPhase()==PHASE_MAIN1 and e:GetHandler():GetEffectCount(EFFECT_DIRECT_ATTACK)==0
+    return Duel.IsAbleToEnterBP() and Duel.GetCurrentPhase()==PHASE_MAIN1 and e:GetHandler():GetEffectCount(EFFECT_DIRECT_ATTACK)==0
 end
 function c27084912.cfilter(c)
     return c:IsFaceup() and c:IsSetCard(0xc1c) and c:IsAbleToDeckAsCost()
