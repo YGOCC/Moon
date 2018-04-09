@@ -42,13 +42,16 @@ function c88880014.tgcon(e)
 	return Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
 end
 --(3) negate attack
+function c88880012.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+end
 function c88880012.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
-function c88880012.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+function c88880012.spfilter(c,e,tp)
+	return c:IsSetCard(0x107b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c88880012.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateAttack()
@@ -58,7 +61,4 @@ function c88880012.atkop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
-end
-function c88880012.spfilter(c,e,tp)
-	return c:IsSetCard(0x107b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end

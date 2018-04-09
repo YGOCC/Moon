@@ -1,4 +1,4 @@
---Number C300: Galaxy-Eyes Intergalactic Dragon
+--Number c8888001300: Galaxy-Eyes Intergalactic Dragon
 function c88880013.initial_effect(c)
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x889),7,5)
 	c:EnableReviveLimit()
@@ -7,7 +7,7 @@ function c88880013.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c3.splimit)
+	e1:SetValue(c88880013.splimit)
 	c:RegisterEffect(e1)
 	--(2) battle or Target effect
 	local e2=Effect.CreateEffect(c)
@@ -46,7 +46,7 @@ function c88880013.initial_effect(c)
 end
 c88880013.xyz_number=300
 --(1) spsummon limit
-function c3.splimit(e,se,sp,st)
+function c88880013.splimit(e,se,sp,st)
 	return se:GetHandler():IsSetCard(0x95)
 end
 --(2) Target Effect
