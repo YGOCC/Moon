@@ -1,22 +1,29 @@
 --Oracle Tuning
 function c249000741.initial_effect(c)
 	--Synchro monster, 1 tuner + n or more monsters
-	function aux.AddSynchroProcedure(c,f1,f2,ct)
-		local code=c:GetOriginalCode()
-		local mt=_G["c" .. code]
-		if f1 then
-			mt.tuner_filter=function(mc) return mc and f1(mc) end
-		else
-			mt.tuner_filter=function(mc) return true end
+	if aux.AddSynchroProcedure then
+		if not c249000437_AddSynchroProcedure then
+			c249000437_AddSynchroProcedure=aux.AddSynchroProcedure
+			aux.AddSynchroProcedure = function (c,f1,f2,minc,maxc)
+				local code=c:GetOriginalCode()
+				local mt=_G["c" .. code]
+				if f1 then
+					mt.tuner_filter=function(mc) return mc and f1(mc) end
+				else
+					mt.tuner_filter=function(mc) return true end
+				end
+				if f2 then
+					mt.nontuner_filter=function(mc) return mc and f2(mc) end
+				else
+					mt.nontuner_filter=function(mc) return true end
+				end
+				mt.minntct=minc
+				if maxc==nil then mt.maxntct=99 else mt.maxntct=maxc end
+				mt.sync=true
+				c249000437_AddSynchroProcedure(c,f1,f2,minc,maxc)
+			end
 		end
-		if f2 then
-			mt.nontuner_filter=function(mc) return mc and f2(mc) end
-		else
-			mt.nontuner_filter=function(mc) return true end
-		end
-		mt.minntct=ct
-		mt.maxntct=99
-		mt.sync=true
+	end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_SPSUMMON_PROC)
