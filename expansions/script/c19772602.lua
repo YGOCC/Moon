@@ -138,27 +138,27 @@ end
 function c19772602.sprfilter(c)
 	return c:IsFaceup() and c:GetLevel()>0 and c:IsSetCard(0x197) and c:IsAbleToGraveAsCost()
 end
-function c19772602.sprfilter1(c,tp,g)
-	return g:IsExists(c19772602.sprfilter2,1,c,tp,c)
-end
 function c19772602.sprfilter2(c,tp,mc)
 	local sg=Group.FromCards(c,mc)
 	return Duel.GetLocationCountFromEx(tp,tp,sg)>0
+end
+function c19772602.sprfilter1(c,g,tp)
+	return g:IsExists(c19772602.sprfilter2,1,c,tp,c)
 end
 function c19772602.sprcon(e,c)
 	if c==nil then return true end
 	if c:IsFaceup() and c:IsLocation(LOCATION_EXTRA) then return end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(c19772602.sprfilter,tp,LOCATION_MZONE,0,nil)
-	return g:IsExists(c19772602.sprfilter1,1,nil,tp,g) and g:CheckWithSumGreater(Card.GetLevel,12,1,99)
+	return g:IsExists(c19772602.sprfilter1,1,nil,g,tp) and g:CheckWithSumGreater(Card.GetLevel,12,1,99)
 end
 function c19772602.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetMatchingGroup(c19772602.sprfilter,tp,LOCATION_MZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=g:Filter(c2129638.sprfilter1,1,1,nil,tp,g)
+	local g1=g:Filter(c19772602.sprfilter1,1,1,nil,g,tp)
 	local mc=g1:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g2=g:Filter(tp,c2129638.sprfilter2,1,1,mc,tp,mc)
+	local g2=g:Filter(c19772602.sprfilter2,1,1,mc,tp,mc)
 	g1:Merge(g2)
 	local mg=g1:SelectWithSumEqual(tp,Card.GetLevel,12,1,99)
 	c:SetMaterial(mg)
