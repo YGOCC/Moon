@@ -66,7 +66,7 @@ function card.betarget(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsContains(e:GetHandler())
 end
 function card.atkfilter(c)
-	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x666)
+	return c:IsSetCard(0x666) and not c:IsType(TYPE_LINK) and 
 end
 function card.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.atkfilter(chkc) end

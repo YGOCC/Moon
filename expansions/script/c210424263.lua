@@ -63,7 +63,7 @@ function card.battlecon(e,tp,eg,ep,ev,re,r,rp)
 	return ec:IsFaceup() and ec:IsControler(tp) and ec:IsSetCard(0x666)
 end
 function card.thfilter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
+	return c:IsFaceup() and c:IsSetCard(0x666) and not c:IsType(TYPE_LINK)
 end
 	function card.xswingtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.thfilter(chkc) end
