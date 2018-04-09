@@ -18,7 +18,7 @@ function c36541450.spfilter(c,e,tp,att,lv)
 end
 --trigger
 function c36541450.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetPreviousLocation()==LOCATION_HAND and bit.band(r,REASON_EFFECT)~=0
+	return e:GetHandler():GetPreviousLocation()==LOCATION_HAND and c:IsReason(REASON_EFFECT)
 		and re:IsActiveType(TYPE_MONSTER)
 end
 function c36541450.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)

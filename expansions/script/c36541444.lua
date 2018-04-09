@@ -32,7 +32,7 @@ function c36541444.cfilter(c,tp)
 	return not c:IsReason(REASON_DESTROY) and c:IsSetCard(0x8ea2) and c:IsLocation(LOCATION_GRAVE) and c:IsControler(tp)
 end
 function c36541444.addfilter(c)
-	return c:IsAbleToHand() and c:IsSetCard(0x824a)
+	return c:IsAbleToHand() and c:IsSetCard(0x8ea2)
 end
 --equip
 function c36541444.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -98,7 +98,7 @@ function c36541442.runicop(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetType(EFFECT_TYPE_EQUIP)
 		e0:SetCode(EFFECT_UPDATE_DEFENSE)
 		e0:SetValue(DEF)
-		e0:SetReset(RESET_EVENT+0x1fe0000)
+		e0:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		e:GetHandler():RegisterEffect(e0)
 		while opfirst do
 			local e1=Effect.CreateEffect(e:GetHandler())
