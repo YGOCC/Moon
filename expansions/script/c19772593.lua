@@ -169,7 +169,7 @@ function c19772593.atklockop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c19772593.btcon(e,c)
-	return Duel.GetFieldGroupCount(Duel.GetTurnPlayer(),LOCATION_MZONE)<=1
+	return Duel.GetFieldGroupCount(Duel.GetTurnPlayer(),LOCATION_MZONE,0)<=1
 end
 function c19772593.btat1(e,c)
 	return c:GetControler()==1-Duel.GetTurnPlayer()
