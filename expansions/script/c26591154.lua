@@ -23,7 +23,7 @@ function c26591154.initial_effect(c)
 	c:RegisterEffect(e2)
 	--chain attack
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCode(EVENT_BATTLE_DESTROYING)
 	e3:SetCondition(c26591154.atcon)
@@ -74,7 +74,7 @@ function c26591154.atcon(e,tp,eg,ep,ev,re,r,rp)
 	local bc=c:GetBattleTarget()
 	return bc:IsType(TYPE_MONSTER) and c:IsChainAttackable(2,true) and c:IsStatus(STATUS_OPPO_BATTLE)
 end
-function c21435914.atop(e,tp,eg,ep,ev,re,r,rp)
+function c26591154.atop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToBattle() then return end
 	Duel.ChainAttack()
