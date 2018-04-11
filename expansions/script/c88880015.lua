@@ -17,9 +17,10 @@ function c88880015.initial_effect(c)
 	c:RegisterEffect(e3)
 	--(2) Win
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_DELAY)
-	e4:SetRange(LOCATION_OVERLAY)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCondition(c88880015.con)
 	e4:SetOperation(c88880015.operation)
 	c:RegisterEffect(e4)
 end
@@ -42,21 +43,27 @@ function c88880015.check(g)
 	end
 	return a1 and a2 and a3 and a4 and a5
 end
+function c88880015.filter(c)
+	return c:GetOverlayTarget():IsCode(88880015)
+end
+function c88880015.con(e,tp,eg,ep,ev,re,r,rp)
+	local g1=Duel.GetMatchingGroup(c88880015.filter,tp,LOCATION_OVERLAY,0,nil)
+	local g2=Duel.GetMatchingGroup(c88880015.filter,tp,0,LOCATION_OVERLAY,nil)
+	local wtp=c88880015.check(g1)
+	local wntp=c88880015.check(g2)
+	return wtp or wntp
+end
 function c88880015.operation(e,tp,eg,ep,ev,re,r,rp)
 	local WIN_REASON_UNIVERSALEYES = 0x10
-	local g1=Duel.GetFieldGroup(tp,LOCATION_OVERLAY,0)
-	local g2=Duel.GetFieldGroup(tp,0,LOCATION_OVERLAY)
+	local g1=Duel.GetMatchingGroup(c88880015.filter,tp,LOCATION_OVERLAY,0,nil)
+	local g2=Duel.GetMatchingGroup(c88880015.filter,tp,0,LOCATION_OVERLAY,nil)
 	local wtp=c88880015.check(g1)
 	local wntp=c88880015.check(g2)
 	if wtp and not wntp then
-		Duel.ConfirmCards(1-tp,g1)
 		Duel.Win(tp,WIN_REASON_UNIVERSALEYES)
 	elseif not wtp and wntp then
-		Duel.ConfirmCards(tp,g2)
 		Duel.Win(1-tp,WIN_REASON_UNIVERSALEYES)
 	elseif wtp and wntp then
-		Duel.ConfirmCards(1-tp,g1)
-		Duel.ConfirmCards(tp,g2)
 		Duel.Win(PLAYER_NONE,WIN_REASON_UNIVERSALEYES)
 	end
 end

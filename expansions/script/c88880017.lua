@@ -14,6 +14,7 @@ function c88880017.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,88880017)
 	e2:SetTarget(c88880017.rettg)
 	e2:SetOperation(c88880017.retop)
 	c:RegisterEffect(e2)
@@ -87,11 +88,8 @@ function c88880017.retop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --(3)Return 2 add 1
-function c88880017.filter5(c)
-	return c:IsCode(8) and c:IsAbleToHand()
-end
 function c88880017.filter6(c)
-	return c:IsCode(8) and c:IsAbleToHand()
+	return c:IsCode(88880017) and c:IsAbleToHand()
 end
 function c88880017.efcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c88880017.filter5,tp,LOCATION_GRAVE,0,2,nil)
@@ -107,10 +105,10 @@ function c88880017.efop(e,tp,eg,ep,ev,re,r,rp)
 	if h:GetCount()>0 then
 		Duel.SendtoHand(h,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,h)
-	end
-	local g=Duel.SelectMatchingCard(tp,c88880017.filter6,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+		local g=Duel.SelectMatchingCard(tp,c88880017.filter6,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.SendtoHand(g,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,g)
+		end
 	end
 end
