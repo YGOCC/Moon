@@ -23,10 +23,9 @@ function c26591144.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 --filters
-function c26591144.costfilter(c)
+function c26591144.costfilter(c,tp)
 	return c:IsSetCard(0x23b9) and c:IsDiscardable()
-		and (Duel.IsExistingMatchingCard(c26591144.scfilter,tp,LOCATION_DECK,0,1,nil)
-			or Duel.IsExistingMatchingCard(c26591144.drawfilter,tp,LOCATION_REMOVED,0,1,nil))
+		and (Duel.IsExistingMatchingCard(c26591144.scfilter,tp,LOCATION_DECK,0,1,nil) or Duel.IsExistingMatchingCard(c26591144.drawfilter,tp,LOCATION_REMOVED,0,1,nil))
 end
 function c26591144.scfilter(c)
 	return c:IsSetCard(0x23b9) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_RITUAL) and c:IsAbleToHand()
@@ -44,14 +43,13 @@ function c26591144.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c26591144.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		return Duel.IsExistingMatchingCard(c26591144.costfilter,tp,LOCATION_HAND,0,1,nil)
-			and Duel.IsExistingMatchingCard(c26591144.scfilter,tp,LOCATION_DECK,0,1,nil)
-			or (Duel.IsExistingMatchingCard(c26591144.drawfilter,tp,LOCATION_REMOVED,0,1,nil) and Duel.IsPlayerCanDraw(tp,1))
+		return Duel.IsExistingMatchingCard(c26591144.costfilter,tp,LOCATION_HAND,0,1,e:GetHandler(),tp)
+			and (Duel.IsExistingMatchingCard(c26591144.scfilter,tp,LOCATION_DECK,0,1,nil) or (Duel.IsExistingMatchingCard(c26591144.drawfilter,tp,LOCATION_REMOVED,0,1,nil) and Duel.IsPlayerCanDraw(tp,1)))
 	end
 	if e:GetLabel()~=0 then
 		e:SetLabel(0)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-		local g=Duel.SelectMatchingCard(tp,c26591144.costfilter,tp,LOCATION_HAND,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,c26591144.costfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler(),tp)
 		if Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)~=0 then
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD)
