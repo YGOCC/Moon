@@ -1,8 +1,9 @@
 --Lana, Whiptail Girl of Magnificent VINE
 function c50031786.initial_effect(c)
 	 --link summon
-	aux.AddLinkProcedure(c,nil,2,2)
 	c:EnableReviveLimit()
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x85a),2,2)
+ 
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(50031786,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
