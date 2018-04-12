@@ -61,7 +61,7 @@ function c56642465.operation(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c56642465.filter(c,e,tp)
-    return c:IsSetCard(0x107a) and not c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+    return c:IsSetCard(0x107a) and not c:IsType(TYPE_LINK+TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function c56642465.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c56642465.filter(chkc,e,tp) end
