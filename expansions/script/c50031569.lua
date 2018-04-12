@@ -98,14 +98,14 @@ function c50031569.filter(c,e,tp)
 end
 function c50031569.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c50031569.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil) end
+		and Duel.IsExistingMatchingCard(c50031569.filter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,0,0)
 end
 function c50031569.sumop(e,tp,eg,ep,ev,re,r,rp) 
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	   Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
-	local g=Duel.SelectMatchingCard(tp,c50031569.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c50031569.filter,tp,LOCATION_HAND,0,1,1,nil)
 	local sg=g:GetFirst()
 	if sg then
 		Duel.Summon(tp,sg,true,nil) 
