@@ -21,10 +21,16 @@ function c249000820.initial_effect(c)
 	e2:SetTarget(c249000820.target)
 	e2:SetOperation(c249000820.operation)
 	c:RegisterEffect(e2)
+	--spsummon2
+	local e3=e1:Clone()
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e3)
+end
+function c249000820.cfilter(c)
+	return c;IsFaceup() and c:IsSetCard(0x1F3)
 end
 function c249000820.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ec=eg:GetFirst()
-	return ec:IsControler(tp) and ec:IsSetCard(0x1F3)
+	return eg:IsExists(c249000820.cfilter,1,nil)
 end
 function c249000820.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

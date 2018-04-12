@@ -12,6 +12,16 @@ function c249000685.initial_effect(c)
 	e1:SetTarget(c249000685.target)
 	e1:SetOperation(c249000685.operation)
 	c:RegisterEffect(e1)
+	--special summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(63528891,0))
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_SPSUMMON_PROC)
+	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCountLimit(1,249000685)
+	e2:SetCondition(c249000685.spcon)
+	c:RegisterEffect(e2)
 end
 function c249000685.cfilter(c)
 	return c:IsSetCard(0x1E4) and c:IsAbleToDeckAsCost()
@@ -34,4 +44,12 @@ function c249000685.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	if tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
+end
+function c249000685.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x1E4)
+end
+function c249000685.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c249000685.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end

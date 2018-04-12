@@ -16,7 +16,7 @@ function c249000819.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCode(EVENT_BATTLE_DESTROYED)
+	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCondition(c249000819.condition)
 	e2:SetTarget(c249000819.target2)
 	e2:SetOperation(c249000819.operation2)
@@ -33,7 +33,7 @@ function c249000819.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
 function c249000819.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and e:GetHandler():IsReason(REASON_BATTLE)
+	return e:GetHandler():IsLocation(LOCATION_GRAVE)
 end
 function c249000819.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chck:IsControler(1-tp) and chkc:IsDestructable() end
