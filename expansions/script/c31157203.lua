@@ -62,11 +62,11 @@ function c31157203.drcon(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():IsReason(REASON_EFFECT) and rc:IsSetCard(0xc70) and rc:IsType(TYPE_MONSTER)
 end
 function c31157203.drfilter(c)
-    return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc70) and c:IsAbleToDeck()
+    return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc70) and c:IsAbleToDeck()
 end
 function c31157203.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c31157203.drfilter,tp,LOCATION_REMOVED,0,1,nil) end
-    local g=Duel.GetMatchingGroup(scard.a_fil,tp,LOCATION_REMOVED,0,nil)
+    local g=Duel.GetMatchingGroup(c31157203.drfilter,tp,LOCATION_REMOVED,0,nil)
     Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
     if g:GetCount()>3 then Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1) end
 end
