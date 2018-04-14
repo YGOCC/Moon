@@ -51,7 +51,7 @@ function c500315806.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c500315806.spfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_PLANT) and c:GetLevel()==8 or c:GetRank()==8 
+	return c:IsFaceup() and c:IsRace(RACE_PLANT) and (c:GetLevel()==8 or c:GetRank()==8 c:GetStage()==8)
 end
 function c500315806.indcon(e)
 	return  Duel.IsExistingMatchingCard(c500315806.spfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)

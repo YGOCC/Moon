@@ -74,6 +74,7 @@ function c500312625.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function c500312625.activate(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local mg1=Duel.GetRitualMaterial(tp)
 	if Duel.IsExistingMatchingCard(c500312625.sumfilter,tp,0,LOCATION_MZONE,1,nil) then
 		local mg2=Duel.GetMatchingGroup(c500312625.mfilter,tp,LOCATION_EXTRA,0,nil)

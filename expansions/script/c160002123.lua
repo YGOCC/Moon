@@ -8,29 +8,7 @@ function c160002123.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
-	--splimit
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_FIELD)
-	e6:SetRange(LOCATION_PZONE)
-	e6:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e6:SetTargetRange(1,0)
-	e6:SetTarget(c160002123.splimit)
-	e6:SetCondition(c160002123.splimcon)
-	c:RegisterEffect(e6)
-
-		-- destroy & damage
-	--local e1=Effect.CreateEffect(c)
-	--e1:SetDescription(aux.Stringid(160002123,0))
-	--e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
-	--e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	--e1:SetType(EFFECT_TYPE_IGNITION)
-	--e1:SetRange(LOCATION_MZONE)
-	--e1:SetCountLimit(1)
-	--e1:SetCost(c160002123.cost)
-	--e1:SetTarget(c160002123.target)
-	--e1:SetOperation(c160002123.operation)
-	--c:RegisterEffect(e1)
+  
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160002123,0))
@@ -50,19 +28,16 @@ function c160002123.initial_effect(c)
 	e3:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e3:SetValue(aux.ritlimit)
 	c:RegisterEffect(e1)
-	--Negate
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(160002123,1))
-	e4:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_CHAINING)
-	e4:SetRange(LOCATION_PZONE)
-	e4:SetCountLimit(1)
-	e4:SetCondition(c160002123.condition)
-	e4:SetCost(c160002123.cost)
-	e4:SetTarget(c160002123.target)
-	e4:SetOperation(c160002123.operation)
-	c:RegisterEffect(e4)
+	   --destroy & summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(160002123,0))
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_PZONE)
+	e2:SetCountLimit(1,160002123)
+	e2:SetTarget(c160002123.sptg)
+	e2:SetOperation(c160002123.spop)
+	c:RegisterEffect(e2)
 end
 
 function c160002123.splimit(e,c,sump,sumtype,sumpos,targetp)
@@ -77,44 +52,44 @@ function c160002123.cfilter(c)
 end
 
 --function c160002123.cost(e,tp,eg,ep,ev,re,r,rp,chk)
---	local c=e:GetHandler()
---	if chk==0 then return c:GetAttackAnnouncedCount()==0 end
---	local e1=Effect.CreateEffect(c)
----	e1:SetType(EFFECT_TYPE_SINGLE)
---	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
---	e1:SetCode(EFFECT_CANNOT_ATTACK)
---	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
---	c:RegisterEffect(e1,true)
---	c:RegisterFlagEffect(160002123,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+--  local c=e:GetHandler()
+--  if chk==0 then return c:GetAttackAnnouncedCount()==0 end
+--  local e1=Effect.CreateEffect(c)
+--- e1:SetType(EFFECT_TYPE_SINGLE)
+--  e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
+--  e1:SetCode(EFFECT_CANNOT_ATTACK)
+--  e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+--  c:RegisterEffect(e1,true)
+--  c:RegisterFlagEffect(160002123,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 --end
 --function c160002123.filter(c)
---	return  c:IsDestructable()
+--  return  c:IsDestructable()
 --end
 --function c160002123.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
---	if chk==0 then return Duel.IsExistingMatchingCard(c160002123.filter,tp,0,LOCATION_MZONE,1,nil) end
---	local g=Duel.GetMatchingGroup(c160002123.filter,tp,0,LOCATION_MZONE,nil)
---	local tg=g:GetMaxGroup(Card.GetAttack)
---	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tg,1,0,0)
+--  if chk==0 then return Duel.IsExistingMatchingCard(c160002123.filter,tp,0,LOCATION_MZONE,1,nil) end
+--  local g=Duel.GetMatchingGroup(c160002123.filter,tp,0,LOCATION_MZONE,nil)
+--  local tg=g:GetMaxGroup(Card.GetAttack)
+--  Duel.SetOperationInfo(0,CATEGORY_DESTROY,tg,1,0,0)
 --end
 --function c160002123.operation(e,tp,eg,ep,ev,re,r,rp)
---	local g=Duel.GetMatchingGroup(c160002123.filter,tp,0,LOCATION_MZONE,nil)
---	if g:GetCount()>0 then
---	local tg=g:GetMaxGroup(Card.GetAttack)
---	local dam=tg:GetFirst():GetAttack()
---		if tg:GetCount()>1 then
---			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
---			local sg=tg:Select(tp,1,1,nil)
---			Duel.HintSelection(sg)
---			local dam1=sg:GetFirst():GetAttack()
---			if Duel.Destroy(sg,REASON_EFFECT)~=0 then
---				Duel.Damage(1-tp,dam1,REASON_EFFECT)
---			end
-	--	else
---			if Duel.Destroy(tg,REASON_EFFECT)~=0 then
---				Duel.Damage(1-tp,dam,REASON_EFFECT)
---			end
---		end
---	end
+--  local g=Duel.GetMatchingGroup(c160002123.filter,tp,0,LOCATION_MZONE,nil)
+--  if g:GetCount()>0 then
+--  local tg=g:GetMaxGroup(Card.GetAttack)
+--  local dam=tg:GetFirst():GetAttack()
+--	  if tg:GetCount()>1 then
+--		  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+--		  local sg=tg:Select(tp,1,1,nil)
+--		  Duel.HintSelection(sg)
+--		  local dam1=sg:GetFirst():GetAttack()
+--		  if Duel.Destroy(sg,REASON_EFFECT)~=0 then
+--			  Duel.Damage(1-tp,dam1,REASON_EFFECT)
+--		  end
+	--  else
+--		  if Duel.Destroy(tg,REASON_EFFECT)~=0 then
+--			  Duel.Damage(1-tp,dam,REASON_EFFECT)
+--		  end
+--	  end
+--  end
 --end
 function c160002123.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -176,31 +151,21 @@ function c160002123.eqop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 end
-function c160002123.condition(e,tp,eg,ep,ev,re,r,rp)
-	return  re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
+function c160002123.spfilter(c,e,tp)
+	return c:IsSetCard(0x185a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c160002123.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	   if chk==0 then return Duel.IsExistingMatchingCard(c160002123.cfilter,tp,LOCATION_GRAVE,0,1,nil) and  Duel.CheckLPCost(tp,1000) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local cg=Duel.SelectMatchingCard(tp,c160002123.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.Remove(cg,POS_FACEUP,REASON_COST)
-	Duel.PayLPCost(tp,1000)
+function c160002123.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsDestructable() 
+		and Duel.IsExistingMatchingCard(c160002123.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
-function c160002123.cfilter(c)
-	return  c:IsFaceup() and   c:IsRace(RACE_PLANT)  and c:IsAbleToRemoveAsCost()
-end
-function c160002123.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+function c160002123.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,c160002123.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+		if g:GetCount()>0 then
+			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c160002123.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetCurrentChain()~=ev+1 then return	end
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(eg,REASON_EFFECT)
-		Duel.BreakEffect()
-		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
-	end
-	end
