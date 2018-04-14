@@ -21,6 +21,7 @@ function c50031699.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetRange(LOCATION_GRAVE)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCountLimit(1,50031699)
 	e4:SetCondition(aux.exccon)
 	e4:SetCost(c500314225.cost2)
@@ -29,7 +30,7 @@ function c50031699.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c50031699.filter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) (c:IsSetCard(0x85a) or c:IsRace(RACE_PLANT))and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x85a) or c:IsRace(RACE_PLANT))and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c50031699.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
