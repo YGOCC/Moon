@@ -43,9 +43,9 @@ function c249000824.costfilter2(c)
 end
 function c249000824.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler() 
-	if chk==0 then return Duel.GetCustomActivityCount(249000824,tp,ACTIVITY_SPSUMMON)==0 and (Duel.IsExistingMatchingCard(c249000824.costfilter,tp,LOCATION_GRAVE,0,1,nil)
+	if chk==0 then return (Duel.IsExistingMatchingCard(c249000824.costfilter,tp,LOCATION_GRAVE,0,1,nil)
 	or Duel.IsExistingMatchingCard(c249000824.costfilter2,tp,LOCATION_HAND,0,1,c)) end
-	if Duel.GetLP(tp) < 2000 then
+	if Duel.GetLP(tp) < 4000 then
 		Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 	else
 		Duel.PayLPCost(tp,2000)
