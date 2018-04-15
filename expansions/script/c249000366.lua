@@ -39,7 +39,7 @@ end
 function c249000366.spcon(e,c)
 	if c==nil then return true end
 	if Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)<=0 then return false end
-	local g=Duel.GetMatchingGroup(Card.IsSetCard,c:GetControler(),LOCATION_GRAVE,0,nil,0x1B6)
+	local g=Duel.GetMatchingGroup(Card.IsSetCard,c:GetControler(),LOCATION_GRAVE+LOCATION_REMOVED,0,nil,0x1B6)
 	local ct=g:GetClassCount(Card.GetCode)
 	return ct>2
 end

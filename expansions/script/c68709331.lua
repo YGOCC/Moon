@@ -121,37 +121,40 @@ function c68709331.actcon(e)
 	return Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()
 end
 -- on leaving field SS 2 Arc. M
-function c68709331.spfilter4(c,e,tp)
+function c68709331.filter1(c,e,tp)
 	return c:IsSetCard(0xf08) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-	and Duel.IsExistingTarget(c68709331.spfilter3,tp,LOCATION_DECK,0,1,c,c:GetCode(),e,tp)
 end
-function c68709331.spfilter3(c,cd,e,tp)
-	return not c:IsCode(cd) and c:IsSetCard(0xf08) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c68709331.filter2(c,g)
+	return g:IsExists(c68709331.filter3,1,c,c:GetCode())
 end
-function c68709331.sp2tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return false end
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and Duel.IsExistingTarget(c68709331.spfilter4,tp,LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g1=Duel.SelectTarget(tp,c68709331.spfilter4,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	local tc1=g1:GetFirst()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g2=Duel.SelectTarget(tp,c68709331.spfilter3,tp,LOCATION_DECK,0,1,1,tc1,tc1:GetCode(),e,tp)
-	g1:Merge(g2)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g1,2,0,0)
+function c68709331.filter3(c,code)
+	return not c:IsCode(code)
+end
+function c68709331.sp2tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then return false end
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return false end
+		local g=Duel.GetMatchingGroup(c68709331.filter1,tp,LOCATION_DECK,0,nil,e,tp)
+		return g:IsExists(c68709331.filter2,1,nil,g)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
 end
 function c68709331.sp2op(e,tp,eg,ep,ev,re,r,rp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local g=tg:Filter(Card.IsRelateToEffect,nil,e)
-	if g:GetCount()==0 or ft<=0 or (g:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,59822133)) then return end
-	if ft<g:GetCount() then
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
+	local g=Duel.GetMatchingGroup(c68709331.filter1,tp,LOCATION_DECK,0,nil,e,tp)
+	local dg=g:Filter(c68709331.filter2,nil,g)
+	if dg:GetCount()>=1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		g=g:Select(tp,ft,ft,nil)
-	end
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		local sg=dg:Select(tp,1,1,nil)
+		local tc1=sg:GetFirst()
+		dg:Remove(Card.IsCode,nil,tc1:GetCode())
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc2=dg:Select(tp,1,1,nil):GetFirst()
+		Duel.SpecialSummonStep(tc1,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonStep(tc2,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonComplete()
+		local g=Group.FromCards(tc1,tc2)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
