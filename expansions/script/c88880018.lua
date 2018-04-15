@@ -42,12 +42,12 @@ function c88880018.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
   Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c88880018.spfilter(c,e,tp)
-  return c:IsSetCard(0x893) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true)
+  return c:IsSetCard(0x893) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,true)
 end
 function c88880018.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-  if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-  and Duel.IsExistingMatchingCard(c88880018.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
-  Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	and Duel.IsExistingMatchingCard(c88880018.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) or Duel.IsExistingMatchingCard(c88880018.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND) or Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c88880018.thop(e,tp,eg,ep,ev,re,r,rp)
   if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end

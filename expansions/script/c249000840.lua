@@ -45,7 +45,7 @@ function c249000840.splimitcost(e,c,tp,sumtp,sumpos)
 	return bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK
 end
 function c249000840.filter(c,e,tp)
-	return c:IsType(TYPE_XYZ) and c:GetRank()<=8
+	return c:IsType(TYPE_XYZ) and c:GetRank()>=4 and c:GetRank()<=8
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c249000840.target(e,tp,eg,ep,ev,re,r,rp,chk)

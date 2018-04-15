@@ -90,7 +90,7 @@ function c249000833.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_MZONE) and not c:IsLocation(LOCATION_DECK)
 end
 function c249000833.spfilter3(c,e,tp)
-	return c:IsType(TYPE_XYZ) and c:GetRank()<=8
+	return c:IsType(TYPE_XYZ) and c:GetRank()>=4 and c:GetRank()<=8
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 		and Duel.IsExistingMatchingCard(c249000833.spfilter4,tp,LOCATION_GRAVE,0,1,nil,c:GetRace(),c:GetAttribute())
 end

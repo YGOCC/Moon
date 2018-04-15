@@ -12,8 +12,11 @@ function c88880012.initial_effect(c)
 	--(2) battle or Target effect
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e2:SetValue(1)
+	e2:SetCondition(c88880012.tgcon)
+	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -38,7 +41,7 @@ function c88880012.splimit(e,se,sp,st)
 	return se:GetHandler():IsSetCard(0x95)
 end
 --(2) Target Effect
-function c88880014.tgcon(e)
+function c88880012.tgcon(e)
 	return Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
 end
 --(3) negate attack

@@ -1,5 +1,5 @@
 --Number 300: Galaxy-Eyes Photonic Tachyon Dragon (XyLeS)
-local m=47
+local m=88880055
 local cm=_G["c"..m]
 function cm.initial_effect(c)
 --Xyz Materials
@@ -19,10 +19,10 @@ function cm.initial_effect(c)
   e2:SetCode(EVENT_CHAINING)
   e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
   e2:SetRange(LOCATION_MZONE)
-  e2:SetCondition(c88880010.discon)
-  e2:SetCost(c88880010.discost)
-  e2:SetTarget(c88880010.distg)
-  e2:SetOperation(c88880010.disop)
+  e2:SetCondition(c88880055.discon)
+  e2:SetCost(c88880055.discost)
+  e2:SetTarget(c88880055.distg)
+  e2:SetOperation(c88880055.disop)
   c:RegisterEffect(e2)
   --(3) Draw
   local e3=Effect.CreateEffect(c)
@@ -31,10 +31,10 @@ function cm.initial_effect(c)
   e3:SetType(EFFECT_TYPE_QUICK_O)
   e3:SetCode(EVENT_FREE_CHAIN)
   e3:SetRange(LOCATION_MZONE)
-  e3:SetCondition(c88880010.drcon)
-  e3:SetCost(c88880010.drcost)
-  e3:SetTarget(c88880010.drtg)
-  e3:SetOperation(c88880010.drop)
+  e3:SetCondition(c88880055.drcon)
+  e3:SetCost(c88880055.drcost)
+  e3:SetTarget(c88880055.drtg)
+  e3:SetOperation(c88880055.drop)
   c:RegisterEffect(e3)
   --(4) Gain ATK
   local e4=Effect.CreateEffect(c)
@@ -42,49 +42,49 @@ function cm.initial_effect(c)
   e4:SetCategory(CATEGORY_TODECK)
   e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
   e4:SetCode(EVENT_BATTLE_CONFIRM)
-  e4:SetCondition(c88880010.atkcon)
-  e4:SetCost(c88880010.drcost)
-  e4:SetTarget(c88880010.atktg)
-  e4:SetOperation(c88880010.atkop)
+  e4:SetCondition(c88880055.atkcon)
+  e4:SetCost(c88880055.drcost)
+  e4:SetTarget(c88880055.atktg)
+  e4:SetOperation(c88880055.atkop)
   c:RegisterEffect(e4)
 end
-c88880010.xyz_number=300
+c88880055.xyz_number=300
 --(2) Negate Spell/Trap
-function c88880010.discon(e,tp,eg,ep,ev,re,r,rp)
+function c88880055.discon(e,tp,eg,ep,ev,re,r,rp)
   return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
   and ep~=tp and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
 end
-function c88880010.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c88880055.discost(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
   Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
-function c88880010.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c88880055.distg(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return true end
   Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
   if re:GetHandler():IsRelateToEffect(re) then
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
   end
 end
-function c88880010.disop(e,tp,eg,ep,ev,re,r,rp)
+function c88880055.disop(e,tp,eg,ep,ev,re,r,rp)
   if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 	Duel.Destroy(eg,REASON_EFFECT)
   end
 end
 --(3) Draw
-function c88880010.drcon(e,tp,eg,ep,ev,re,r,rp)
+function c88880055.drcon(e,tp,eg,ep,ev,re,r,rp)
   return Duel.GetLP(tp)<=2000
 end
-function c88880010.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c88880055.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
   e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
-function c88880010.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c88880055.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
   Duel.SetTargetPlayer(tp)
   Duel.SetTargetParam(1)
   Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c88880010.drop(e,tp,eg,ep,ev,re,r,rp,chk)
+function c88880055.drop(e,tp,eg,ep,ev,re,r,rp,chk)
   local c=e:GetHandler()
   local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
   if Duel.Draw(p,d,REASON_EFFECT)~=0 and c:IsFaceup() and c:IsRelateToEffect(e) then
@@ -97,19 +97,19 @@ function c88880010.drop(e,tp,eg,ep,ev,re,r,rp,chk)
   end
 end
 --(4) Gain ATK
-function c88880010.atkcon(e,tp,eg,ep,ev,re,r,rp)
+function c88880055.atkcon(e,tp,eg,ep,ev,re,r,rp)
   local c=e:GetHandler()
   local bc=c:GetBattleTarget()
   e:SetLabelObject(bc)
   return c:IsRelateToBattle() and bc and bc:IsFaceup() and bc:IsRelateToBattle()
 end
-function c88880010.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c88880055.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
   local tc=e:GetLabelObject()
   if chkc then return chkc==tc end
   if chk==0 then return tc:IsOnField() and tc:IsCanBeEffectTarget(e) end
   Duel.SetTargetCard(tc)
 end
-function c88880010.atkop(e,tp,eg,ep,ev,re,r,rp)
+function c88880055.atkop(e,tp,eg,ep,ev,re,r,rp)
   local c=e:GetHandler()
   local tc=Duel.GetFirstTarget()
   if tc and c:IsRelateToEffect(e) and c:IsFaceup() then

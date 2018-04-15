@@ -45,7 +45,7 @@ function c16000879.sprcon(e,c)
 		and not Duel.IsExistingMatchingCard(c16000879.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c16000879.baefilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xab5) and c:GetLevel()>0
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FAIRY) and c:GetLevel()>0
 end
 function c16000879.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c16000879.baefilter(chkc) end

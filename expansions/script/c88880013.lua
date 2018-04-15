@@ -15,7 +15,7 @@ function c88880013.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e2:SetCondition(c88880014.tgcon)
+	e2:SetCondition(c88880013.tgcon)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
@@ -50,7 +50,7 @@ function c88880013.splimit(e,se,sp,st)
 	return se:GetHandler():IsSetCard(0x95)
 end
 --(2) Target Effect
-function c88880014.tgcon(e)
+function c88880013.tgcon(e)
 	return Duel.GetTurnPlayer()~=e:GetHandlerPlayer()
 end
 --(3) Stat Change
