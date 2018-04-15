@@ -1,6 +1,6 @@
---Cyber Dragon Mach
+--created & coded by Lyris
+--サイバー・ドラゴン・マック
 function c240100057.initial_effect(c)
-	--This card's name becomes "Cyber Dragon" while on the field or in the GY.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_CHANGE_CODE)
@@ -8,13 +8,11 @@ function c240100057.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
 	e3:SetValue(70095154)
 	c:RegisterEffect(e3)
-	--During the turn this card was sent to the GY, all monsters on the field become Machine.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetOperation(c240100057.operation)
 	c:RegisterEffect(e1)
-	--If your "Cyber Dragon" leaves the field: You can banish this card from your GY; add 1 "Cyber Dragon" monster from your Deck to your hand. You can only use this effect of "Cyber Dragon Mach" once per turn.
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(2)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)

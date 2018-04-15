@@ -5,10 +5,10 @@ function c240100031.initial_effect(c)
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c4),2,2,function(g) return g:GetClassCount(Card.GetLinkAttribute)==g:GetCount() end)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY)
-	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e0:SetRange(LOCATION_MZONE)
-	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e0:SetCode(EVENT_BATTLE_START)
 	e0:SetCondition(c240100031.descon)
+	e0:SetTarget(c240100031.destg)
 	e0:SetOperation(c240100031.desop)
 	c:RegisterEffect(e0)
 	local e2=Effect.CreateEffect(c)
@@ -29,8 +29,11 @@ function c240100031.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c240100031.descon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return Duel.GetTurnPlayer()~=tp and c:IsFaceup() and Duel.GetAttackTarget()==c
+	return Duel.GetAttacker()~=e:GetHandler()
+end
+function c240100031.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c240100031.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

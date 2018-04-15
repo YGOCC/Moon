@@ -21,7 +21,7 @@ function c240100186.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c240100186.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and not c:IsCode(240100186) and c:IsAbleToGrave()
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and not c:IsCode(240100186) and c:IsAbleToGraveAsCost()
 end
 function c240100186.sptg(e,c)
 	if c==nil then return true end
