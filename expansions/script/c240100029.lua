@@ -7,8 +7,9 @@ function c240100029.initial_effect(c)
 	c:SetCounterLimit(0x4b,5)
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_BATTLE_START)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e3:SetCondition(c240100029.descon)
 	e3:SetTarget(c240100029.destg)
 	e3:SetOperation(c240100029.desop)
@@ -58,7 +59,8 @@ function c240100029.fcheck(c,atk)
 	return dif>0 and dif<=400
 end
 function c240100029.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttacker()~=e:GetHandler()
+	local c=e:GetHandler()
+	return Duel.GetTurnPlayer()~=tp and c:IsFaceup() and Duel.GetAttackTarget()==c
 end
 function c240100029.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

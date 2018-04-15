@@ -4,15 +4,17 @@ function c240100006.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY)
-	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e0:SetCode(EVENT_BATTLE_START)
+	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e0:SetCondition(c240100006.descon)
 	e0:SetTarget(c240100006.destg)
 	e0:SetOperation(c240100006.desop)
 	c:RegisterEffect(e0)
 end
 function c240100006.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttacker()~=e:GetHandler()
+	local c=e:GetHandler()
+	return Duel.GetTurnPlayer()~=tp and c:IsFaceup() and Duel.GetAttackTarget()==c
 end
 function c240100006.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
