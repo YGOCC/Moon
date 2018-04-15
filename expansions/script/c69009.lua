@@ -64,7 +64,7 @@ function c69009.initial_effect(c)
 	--Nuke
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(69009,1))
-	e7:SetCategory(CATEGORY_TOGRAVE)
+	e7:SetCategory(CATEGORY_DESTROY)
 	e7:SetType(EFFECT_TYPE_IGNITION)
 	e7:SetCountLimit(1)
 	e7:SetRange(LOCATION_MZONE)
@@ -72,7 +72,7 @@ function c69009.initial_effect(c)
 	e7:SetTarget(c69009.gytg)
 	e7:SetOperation(c69009.gyop)
 	e7:SetCost (c69009.gycost)
-	e7:SetLabel(5)
+	e7:SetLabel(6)
 	c:RegisterEffect(e7)
 end
 function c69009.reccon(e,tp,eg,ep,ev,re,r,rp)
@@ -118,16 +118,16 @@ end
 function c69009.gyop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,0,LOCATION_ONFIELD+LOCATION_EXTRA,nil)
-	Duel.SendtoGrave(g,REASON_EFFECT)
+	Duel.Destroy(g,REASON_EFFECT)
 end
 function c69009.gfilter(c)
     return c:IsFaceup() and c:IsCode(69010) 
 end
 function c69009.gycost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c69009.gfilter,tp,LOCATION_ONFIELD,0,1,nil) end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
     local g=Duel.SelectMatchingCard(tp,c69009.gfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
-    Duel.SendtoGrave(g,REASON_COST)
+    Duel.Destroy(g,REASON_COST)
 end
 --filter for EFFECT_CANNOT_BE_EFFECT_TARGET + opponent
 function Auxiliary.tgoval(e,re,rp)
