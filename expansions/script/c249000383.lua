@@ -69,7 +69,7 @@ end
 function c249000383.filter(c,e,tp)
 	local lvrk
 	if c:GetLevel() > c:GetRank() then lvrk = c:GetLevel() else lvrk = c:GetRank() end
-	return lvrk > 0 and c:IsFaceup() and c:IsType(TYPE_SYNCHRO+TYPE_XYZ) and Duel.IsExistingMatchingCard(c249000383.tfilter,tp,LOCATION_EXTRA,0,1,nil,c:GetRace(),e,tp,lvrk)
+	return lvrk > 0 and c:IsFaceup() and c:IsType(TYPE_SYNCHRO+TYPE_XYZ) and Duel.IsExistingMatchingCard(c249000383.tfilter,tp,LOCATION_EXTRA,0,1,nil,c:GetOriginalRace(),e,tp,lvrk)
 	and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function c249000383.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -83,7 +83,7 @@ function c249000383.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
 	if not tc:IsRelateToEffect(e) or tc:IsFacedown() then return end
-	local rc=tc:GetRace()
+	local rc=tc:GetOriginalRace()
 	local lvrk
 	if tc:GetLevel() > tc:GetRank() then lvrk = tc:GetLevel() else lvrk = tc:GetRank() end
 	if Duel.SendtoGrave(tc,REASON_EFFECT)==0 then return end
