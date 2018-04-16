@@ -2,7 +2,7 @@
 --BorrelSword Dragon
 function c101005034.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_EFFECT),3)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkType,TYPE_EFFECT),3)
 	c:EnableReviveLimit()
 	--battle indes
 	local e1=Effect.CreateEffect(c)
@@ -10,7 +10,7 @@ function c101005034.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e1:SetCountLimit(1)
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	--position
 	local e2=Effect.CreateEffect(c)
@@ -37,11 +37,14 @@ function c101005034.initial_effect(c)
 	e3:SetOperation(c101005034.atkop)
 	c:RegisterEffect(e3)
 end
+function c101005034.posfilter(c)
+	return c:IsAttackPos() and c:IsCanChangePosition()
+end
 function c101005034.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsAttackPos() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAttackPos,tp,0,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c101005034.posfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c101005034.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
-	local g=Duel.SelectTarget(tp,Card.IsAttackPos,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,c101005034.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 	Duel.SetChainLimit(c101005034.chlimit)
 end
@@ -51,7 +54,7 @@ end
 function c101005034.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc:IsAttackPos() and tc:IsRelateToEffect(e) then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
 	end
 	if c:IsRelateToEffect(e) then
@@ -64,9 +67,9 @@ function c101005034.posop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e2)
 	end
 end
-function c101005034.atcon(e,tp,eg,ep,ev,re,r,rp)
+function c101005034.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetBattleTarget()
-	return tc and tc:IsFaceup() 
+	return tc and tc:IsFaceup() and tc:GetAttack()>0
 end
 function c101005034.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return true end
@@ -82,14 +85,14 @@ function c101005034.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_UPDATE_ATTACK)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		e2:SetValue(math.ceil(atk/2))
-		c:RegisterEffect(e2)	
+		c:RegisterEffect(e2)
 		if tc:IsFaceup() and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
+			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 			e1:SetValue(math.ceil(atk/2))
 			tc:RegisterEffect(e1)
 		end
