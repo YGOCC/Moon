@@ -81,7 +81,8 @@ function c240100031.pop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetLabelObject(sg)
 	e2:SetCondition(c240100031.descon)
 	e2:SetOperation(c240100031.desop)
-	Duel.RegisterEffect(e2,tp)
+	Duel.RegisterEffect(e2,tp)]]
+	end
 end
 function c240100031.desfilter(c,fid)
 	return c:GetFlagEffectLabel(240100031)==fid

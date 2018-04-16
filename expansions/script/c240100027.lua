@@ -2,7 +2,7 @@
 --機夜行襲雷竜－モーニング
 function c240100027.initial_effect(c)
 	aux.EnablePendulumAttribute(c,false)
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c4,2,true))
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c4),2,true)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_DESTROYED)

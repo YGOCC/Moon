@@ -8,7 +8,7 @@ function c240100035.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_CHANGE_DAMAGE)
-	e2:SetRange(LOCATION_MZONE)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(1,0)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetValue(c240100035.hdval)
@@ -23,7 +23,7 @@ function c240100035.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c240100035.hdval(e,re,dam,r,rp,rc)
-	if Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0 and Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)>0 then
+	if Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)==0 and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_MZONE)>0 then
 		return dam/2
 	else return dam end
 end
