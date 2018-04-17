@@ -47,7 +47,7 @@ function c249000234.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCountLimit(1)
 			tc:RegisterEffect(e1)
 			local g2=Duel.GetMatchingGroup(c249000234.filter2,tp,LOCATION_HAND,0,nil,e,tp)
-			if g2:GetCount() > 0 and Duel.SelectYesNo(tp,2) then
+			if g2:GetCount() > 0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,2) then
 				local sg2=Duel.SelectMatchingCard(tp,c249000234.filter2,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 				local tc2=sg2:GetFirst()
 				if Duel.SpecialSummon(tc2,0,tp,tp,false,false,POS_FACEUP)~=0 then

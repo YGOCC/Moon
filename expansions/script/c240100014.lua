@@ -22,6 +22,15 @@ function c240100014.initial_effect(c)
 	e0:SetTarget(c240100014.destg)
 	e0:SetOperation(c240100014.desop)
 	c:RegisterEffect(e0)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCountLimit(1,240100014)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetTarget(c240100014.tg)
+	e2:SetOperation(c240100014.op)
+	c:RegisterEffect(e2)
 end
 function c240100014.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -48,7 +57,7 @@ function c240100014.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_EXTRA)
 end
 function c240100014.op(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c240100014.filter,tp,LOCATION_EXTRA,0,1,1,nil)
 	if g:GetCount()>0 then

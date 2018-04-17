@@ -22,6 +22,15 @@ function c240100015.initial_effect(c)
 	e0:SetTarget(c240100015.destg)
 	e0:SetOperation(c240100015.desop)
 	c:RegisterEffect(e0)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCountLimit(1,240100015)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
+	e2:SetTarget(c240100015.tg)
+	e2:SetOperation(c240100015.op)
+	c:RegisterEffect(e2)
 end
 function c240100015.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -50,10 +59,10 @@ function c240100015.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c240100015.op(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c240100015.filter),tp,LOCATION_EXTRA,0,nil)
+	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
+	local g=Duel.GetMatchingGroup(c240100015.filter,tp,LOCATION_EXTRA,0,nil)
 	if g:GetCount()<2 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local sg=g:Select(tp,2,2,nil)
 	local ct=Duel.Destroy(sg,nil,0,REASON_EFFECT)
 	if ct==2 then

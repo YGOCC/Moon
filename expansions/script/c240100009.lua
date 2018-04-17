@@ -22,6 +22,15 @@ function c240100009.initial_effect(c)
 	e0:SetTarget(c240100009.destg)
 	e0:SetOperation(c240100009.desop)
 	c:RegisterEffect(e0)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCountLimit(1,240100009)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetTarget(c240100009.tg)
+	e2:SetOperation(c240100009.op)
+	c:RegisterEffect(e2)
 end
 function c240100009.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -46,15 +55,20 @@ end
 function c240100009.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c240100009.filter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c240100009.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) and e:GetHandler():IsDestructable() end
+		and Duel.IsExistingTarget(c240100009.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) and (e:IsHasType(EFFECT_TYPE_SINGLE) or e:GetHandler():IsDestructable()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c240100009.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+	if e:IsHasType(EFFECT_TYPE_FIELD) then Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c240100009.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 or not tc:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	if e:IsHasType(EFFECT_TYPE_FIELD) then
+		if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 or not tc:IsRelateToEffect(e) then return end
+		Duel.BreakEffect()
+	end
+	if e:IsHasType(EFFECT_TYPE_FIELD) or tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

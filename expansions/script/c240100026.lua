@@ -31,6 +31,15 @@ function c240100026.initial_effect(c)
 	e0:SetTarget(c240100026.destg)
 	e0:SetOperation(c240100026.desop)
 	c:RegisterEffect(e0)
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCountLimit(1)
+	e3:SetTarget(c240100026.destg)
+	e3:SetOperation(c240100026.desop)
+	c:RegisterEffect(e3)
 end
 function c240100026.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -92,4 +101,24 @@ function c240100026.op(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2,true)
 	end
 	Duel.SpecialSummonComplete()
+end
+function c240100026.desfilter(c)
+	return c:IsFaceup() and c:IsRace(RACE_DRAGON)
+end
+function c240100026.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return false end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil)
+		and Duel.IsExistingTarget(c240100026.desfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g1=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g2=Duel.SelectTarget(tp,c240100026.desfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	local g=g1+g2
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function c240100026.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	if tc:GetCount()>0 then
+		Duel.Destroy(tc,REASON_EFFECT)
+	end
 end

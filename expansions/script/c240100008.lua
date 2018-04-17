@@ -22,6 +22,15 @@ function c240100008.initial_effect(c)
 	e0:SetTarget(c240100008.destg)
 	e0:SetOperation(c240100008.desop)
 	c:RegisterEffect(e0)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCountLimit(1,240100008)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetTarget(c240100008.tg)
+	e2:SetOperation(c240100008.op)
+	c:RegisterEffect(e2)
 end
 function c240100008.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -52,7 +61,7 @@ function c240100008.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c240100008.op(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)

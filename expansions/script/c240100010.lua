@@ -22,6 +22,15 @@ function c240100010.initial_effect(c)
 	e0:SetTarget(c240100010.destg)
 	e0:SetOperation(c240100010.desop)
 	c:RegisterEffect(e0)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCountLimit(1,240100010)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCategory(CATEGORY_DRAW+CATEGORY_DESTROY)
+	e2:SetTarget(c240100010.tg)
+	e2:SetOperation(c240100010.op)
+	c:RegisterEffect(e2)
 end
 function c240100010.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -53,7 +62,7 @@ function c240100010.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
 end
 function c240100010.op(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
 	if Duel.Destroy(tg,REASON_EFFECT)==0 then return end

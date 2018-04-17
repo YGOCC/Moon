@@ -22,6 +22,15 @@ function c240100013.initial_effect(c)
 	e0:SetTarget(c240100013.destg)
 	e0:SetOperation(c240100013.desop)
 	c:RegisterEffect(e0)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCountLimit(1,240100013)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
+	e2:SetTarget(c240100013.tg)
+	e2:SetOperation(c240100013.op)
+	c:RegisterEffect(e2)
 end
 function c240100013.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -46,15 +55,15 @@ function c240100013.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
 	local atk=0
-	if d:IsFaceup() then atk=g:GetFirst():GetAttack()
+	if g:GetFirst():IsFaceup() then atk=g:GetFirst():GetAttack() end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,atk)
 end
 function c240100013.op(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
 	local tc=Duel.GetFirstTarget()
 	local atk=0
-	if d:IsFaceup() then atk=tc:GetAttack()
+	if tc:IsFaceup() then atk=tc:GetAttack() end
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		Duel.BreakEffect()
 		Duel.Damage(1-tp,atk,REASON_EFFECT)
