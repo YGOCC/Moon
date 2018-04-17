@@ -1,4 +1,4 @@
---created & coded by Lyris, art at http://www.uppicweb.com/x/i/it/136369.jpg
+--created & coded by Lyris, art at http://www.uppicweb.com/x/i/it/240100035.jpg
 --襲雷の空
 function c240100035.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -21,6 +21,16 @@ function c240100035.initial_effect(c)
 	e3:SetTarget(c240100035.tg)
 	e3:SetOperation(c240100035.op)
 	c:RegisterEffect(e3)
+	--The first time a "Blitzkrieg" monster(s) would be destroyed each turn, destroy 1 "Blitzkrieg" monster in your Deck instead.
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_DESTROY_REPLACE)
+	e4:SetRange(LOCATION_FZONE)
+	e4:SetCountLimit(1)
+	e4:SetTarget(c240100035.desreptg)
+	e4:SetValue(c240100035.desrepval)
+	e4:SetOperation(c240100035.desrepop)
+	c:RegisterEffect(e4)
 end
 function c240100035.hdval(e,re,dam,r,rp,rc)
 	if Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)==0 and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_MZONE)>0 then
@@ -51,4 +61,22 @@ function c240100035.op(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
+end
+function c240100035.repfilter(c,e)
+	return c:IsFaceup() and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
+		and c:IsDestructable(e) and not c:IsReason(REASON_REPLACE)
+end
+function c240100035.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return eg:IsExists(c240100035.repfilter,1,nil,e) end
+	if Duel.IsExistingMatchingCard(aux.AND(c240100035.filter1,aux.FilterBoolFunction(Card.IsDestructable)),tp,LOCATION_DECK,0,1,nil) then
+		return true
+	else return false end
+end
+function c240100035.repval(e,c)
+	return c240100035.repfilter(c,e)
+end
+function c240100035.repop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectMatchingCard(tp,aux.AND(c240100035.filter1,aux.FilterBoolFunction(Card.IsDestructable)),tp,LOCATION_DECK,0,1,1,nil)
+	Duel.Destroy(g,REASON_EFFECT+REASON_REPLACE)
 end
