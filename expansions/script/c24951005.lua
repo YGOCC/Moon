@@ -18,7 +18,7 @@ end
 function c24951005.proxcon(e,tp,eg,ep,ev,re,r,rp)
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-		if te:IsActiveType(TYPE_SPELL)  and te:IsHasType(EFFECT_TYPE_ACTIVATE) 
+		if te:IsActiveType(TYPE_SPELL)
 			and Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil):GetCount()>0
 			and te:GetHandler():IsSetCard(0x5F453A)
 			and te:IsHasType(EFFECT_TYPE_ACTIVATE) then
