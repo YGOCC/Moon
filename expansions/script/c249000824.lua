@@ -109,9 +109,9 @@ function c249000824.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(sc,nil,2,REASON_RULE)
 	Duel.Hint(HINT_CARD,0,sc:GetOriginalCodeRule())
 	Duel.ConfirmCards(1-tp,g)
-	if Duel.GetLocationCountFromEx(tp)>0 and Duel.IsExistingMatchingCard(c249000824.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,1,nil,sc:GetLink()+2)
-		and Duel.SelectYesNo(tp,2) then
-		local g2=Duel.SelectMatchingCard(tp,c249000824.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,1,1,sc:GetLink()+2)
+	if Duel.GetLocationCountFromEx(tp)>0 and Duel.IsExistingMatchingCard(c249000824.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,1,nil,sc:GetLink())
+		and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false) and Duel.SelectYesNo(tp,2) then
+		local g2=Duel.SelectMatchingCard(tp,c249000824.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,sc:GetLink())
 		Duel.Remove(g2,POS_FACEUP,REASON_COST)
 		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
 		sc:SetMaterial(g2)

@@ -1,4 +1,4 @@
-﻿expansions/Cards-non QCD.cdb	4371e26c09fc0e6c36bd364e02169790
+﻿expansions/Cards-non QCD.cdb	f5c4be3cec516abf0f7ee7258614b684
 expansions/lflist.conf	dce503c439f653f7f333ede671390b22
 expansions/official.cdb	beedc6a925313dd43726896e21ebc178
 expansions/pre-release.cdb	dcd136c8498a50df09aabc1be3ce91b3
@@ -6831,13 +6831,13 @@ expansions/script/c249000820.lua	a4e66756cbcee618b33e43846bef1303
 expansions/script/c249000821.lua	08fdc4a1775fe8c03a652a6b2ce03e5d
 expansions/script/c249000822.lua	713ca066c262b6129410369a838bb16d
 expansions/script/c249000823.lua	8cbaea14a37b363783b8bbc3334f577e
-expansions/script/c249000824.lua	6a487d7e904a9f4ad1f10550847fbaaf
-expansions/script/c249000825.lua	a3b9944d96d820786cfca07835490faa
-expansions/script/c249000826.lua	7714904338f22cacf1fc1d034ef66410
+expansions/script/c249000824.lua	b273286ff2b790bc59cedf26d23d28d8
+expansions/script/c249000825.lua	28d84df34e1a0410d6a197c45ef21c8d
+expansions/script/c249000826.lua	c66ec0e47e72a4416c4779a22128a191
 expansions/script/c249000827.lua	a9e91cf08966619a2a277f53f9bcb9d0
 expansions/script/c249000828.lua	20d82c2f48ef83d92bea85cfee591101
 expansions/script/c249000829.lua	90995e08fa77e97cab574a20ba980dfa
-expansions/script/c249000830.lua	818a6ba6e818731d1978621aa7f7dec1
+expansions/script/c249000830.lua	8a9ed0f3bb7fcbea015e74a16c8aefcf
 expansions/script/c249000831.lua	d1e39f4d5c89162609c6e376bee97a09
 expansions/script/c249000832.lua	6d11172f3d43f9b989c838af1c16dee1
 expansions/script/c249000833.lua	67d86b6e5c850d2e8d6bc8797e819b9e
@@ -8790,6 +8790,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	f7ec9535195182c1c112f38a2bf4f358
+update/filelist.txt	870a8b5bd1be4a370b3112cbd26c1437
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	7daf7dad4319520a002439b4ee019340
+update/version.txt	0a9259803e23609632e0fc42aadab611

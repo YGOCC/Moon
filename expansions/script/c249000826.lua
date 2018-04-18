@@ -1,5 +1,6 @@
 --Cyber-Realm Knight
 function c249000826.initial_effect(c)
+	--ATK
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -8,14 +9,11 @@ function c249000826.initial_effect(c)
 	e1:SetCondition(c249000826.condtion)
 	e1:SetValue(c249000826.atkup)
 	c:RegisterEffect(e1)
-	--indes
+	--extra summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
-	e2:SetCountLimit(1)
-	e2:SetValue(c249000826.indescon)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetOperation(c249000826.sumop)
 	c:RegisterEffect(e2)
 	--change target
 	local e3=Effect.CreateEffect(c)
@@ -38,8 +36,16 @@ end
 function c249000826.atkup(e,c)
 	return Duel.GetMatchingGroupCount(c249000826.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_MZONE,0,nil)*300
 end
-function c249000826.indescon(e,re,r,rp)
-	return bit.band(r,REASON_BATTLE)~=0 or bit.band(r,REASON_EFFECT)~=0
+function c249000826.sumop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(tp,249000826)~=0 then return end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
+	e1:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x1F4))
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	Duel.RegisterFlagEffect(tp,249000826,RESET_PHASE+PHASE_END,0,1)
 end
 function c249000826.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
