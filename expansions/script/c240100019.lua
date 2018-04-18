@@ -50,7 +50,7 @@ function c240100019.cfilter(c)
 end
 function c240100019.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) or e:IsHasType(EFFECT_TYPE_SINGLE)) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) or e:IsHasType(EFFECT_TYPE_SINGLE)) and (e:IsHasType(EFFECT_TYPE_FIELD) or (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))) end
 	if e:IsHasType(EFFECT_TYPE_FIELD) then Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0) end
 end
 function c240100019.spfilter(c,e,tp)
