@@ -16,11 +16,19 @@ function c249000527.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCode(EVENT_BATTLE_DESTROYED)
+	e2:SetCode(EVENT_LEAVE_FIELD)
 	e2:SetCondition(c249000527.condition)
 	e2:SetTarget(c249000527.target)
 	e2:SetOperation(c249000527.operation2)
 	c:RegisterEffect(e2)
+	--special summon
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_SPSUMMON_PROC)
+	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetCondition(c249000527.spcon)
+	c:RegisterEffect(e3)
 end
 function c249000527.cfilter(c)
 	return c:IsSetCard(0x1C8) and c:IsDiscardable()
@@ -43,7 +51,7 @@ function c249000527.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000527.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and e:GetHandler():IsReason(REASON_BATTLE)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and e:GetHandler():IsReason(REASON_DESTROY)
 end
 function c249000527.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chck:IsControler(1-tp) and chkc:IsDestructable() end
@@ -57,4 +65,10 @@ function c249000527.operation2(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
+end
+function c249000527.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0
+		and	Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)>0
+		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end

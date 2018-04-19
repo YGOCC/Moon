@@ -37,10 +37,10 @@ function c249000825.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler() 
 	if chk==0 then return (Duel.IsExistingMatchingCard(c249000825.costfilter,tp,LOCATION_GRAVE,0,1,nil)
 	or Duel.IsExistingMatchingCard(c249000825.costfilter2,tp,LOCATION_HAND,0,1,c)) end
-	if Duel.GetLP(tp) < 4000 then
+	if Duel.GetLP(tp) < 2000 then
 		Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 	else
-		Duel.PayLPCost(tp,2000)
+		Duel.PayLPCost(tp,1000)
 	end
 	local option
 	if Duel.IsExistingMatchingCard(c249000825.costfilter2,tp,LOCATION_HAND,0,1,c)  then option=0 end

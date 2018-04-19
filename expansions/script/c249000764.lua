@@ -23,7 +23,7 @@ function c249000764.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c249000764.filter(c,e,tp)
-	return c:IsSetCard(0x1C8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x1C8) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c249000764.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c249000764.filter(chkc,e,tp) end
@@ -36,7 +36,7 @@ end
 function c249000764.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)
 	end
 end
 function c249000764.cost2(e,tp,eg,ep,ev,re,r,rp,chk)

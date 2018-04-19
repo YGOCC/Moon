@@ -38,7 +38,7 @@ function c249000830.spconfilter(c)
 	return c:IsSetCard(0x1F4) and c:IsType(TYPE_MONSTER) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
 end
 function c249000830.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c249000830.spconfilter,tp,LOCATION_GRAVE_LOCATION_REMOVED,0,nil)
+	local g=Duel.GetMatchingGroup(c249000830.spconfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	local ct=g:GetClassCount(Card.GetCode)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 and ct>2
 end
