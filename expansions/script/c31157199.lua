@@ -3,7 +3,7 @@ function c31157199.initial_effect(c)
     --deck check
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(31157199,0))
-    e1:SetCategory(CATEGORY_DECKDES+CATEGORY_TOGRAVE)
+    e1:SetCategory(CATEGORY_DECKDES)
     e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
     e1:SetCode(EVENT_FLIP)
@@ -42,6 +42,7 @@ function c31157199.operation(e,tp,eg,ep,ev,re,r,rp)
     local tc=g:GetFirst()
     while tc do
         if tc:IsSetCard(0xc70) then
+            Duel.DisableShuffleCheck()
             Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
         else
             Duel.SendtoGrave(tc,REASON_EFFECT+REASON_REVEAL)

@@ -19,7 +19,7 @@ function c31157200.initial_effect(c)
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(31157200,2))
     e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-    e2:SetCategory(CATEGORY_DECKDES+CATEGORY_TOGRAVE)
+    e2:SetCategory(CATEGORY_DECKDES)
     e2:SetRange(LOCATION_MZONE)
     e2:SetCode(EVENT_REMOVE)
     e2:SetCountLimit(1,31157200+100)
@@ -94,6 +94,7 @@ function c31157200.ddop(e,tp,eg,ep,ev,re,r,rp)
     local tc=g:GetFirst()
     while tc do
         if tc:IsSetCard(0xc70) then
+            Duel.DisableShuffleCheck()
             Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
         else
             Duel.SendtoGrave(tc,REASON_EFFECT+REASON_REVEAL)
