@@ -1,7 +1,6 @@
 --created by LionHeartKIng, coded by Lyris, art at http://nicolelbates.com/wp-content/uploads/2012/07/Lightning-Bolt-by-Todd-Secki.jpg
 --襲雷ラッシュ
 function c240100038.initial_effect(c)
-	--Destroy 3 face-up "Blitzkrieg" Pendulum cards with different names in your Pendulum Zones and/or Extra Deck, then draw 2 cards. You can only activate 1 "Blitzkrieg Rush" per turn.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

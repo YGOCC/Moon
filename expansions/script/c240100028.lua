@@ -1,9 +1,8 @@
---Blitzkrieg Meknight Dragon - Eclipse
+--created & coded by Lyris, art from "Light and Darkness Dragon" & http://images.clipartlogo.com/files/images/33/339044/zebra-print-vector-pattern_f.jpg
+--機夜行襲雷竜－エクリプス
 function c240100028.initial_effect(c)
 	c:EnableReviveLimit()
-	--Materials: 2+ Dragon monsters, including at least 1 LIGHT and 1 DARK monster
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkRace,RACE_DRAGON),2,99,c240100028.lcheck)
-	--If another "Blitzkrieg" monster(s) is destroyed: You can target Spells/Traps your opponent controls, up to the number of monsters this card points to; destroy monsters on the field equal to the number of Spells/Traps you targeted. You can only use this effect of "Blitzkrieg Meknight Dragon - Eclipse" once per turn.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e2:SetCode(EVENT_DESTROYED)

@@ -1,9 +1,8 @@
---Blitzkrieg Meklight Dragon - Planck
+--created by LionHeartKIng, coded by Lyris
+--機光襲雷竜－プランク
 function c240100032.initial_effect(c)
 	c:EnableReviveLimit()
-	--Materials: 2 "Blitzkrieg" monsters
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c4),2,2)
-	--If another "Blitzkrieg" monster(s) is destroyed: You can Special Summon 1 "Blitzkrieg" Pendulum monster from your GY or face-up from your Extra Deck in Defense Position to a zone this card points to, but it has its effect(s) negated, also destroy it at the end of this turn. You can only use this effect of "Blitzkrieg Meklight Dragon - Planck" once per turn.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e2:SetCode(EVENT_DESTROYED)
