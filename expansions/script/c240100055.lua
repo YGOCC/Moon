@@ -66,13 +66,14 @@ function c240100055.activate(e,tp,eg,ep,ev,re,r,rp)
 			fop(ce,e,tp,tc,mat2)
 		end
 		tc:CompleteProcedure()
-		local g1=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,sc)
-		g1:RemoveCard(c)
+		local g1=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,tc)
+		g1:RemoveCard(e:GetHandler())
 		if g1:GetCount()>0 then
 			Duel.BreakEffect()
 		end
 		for nc in aux.Next(g1) do
 			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetDescription(aux.Stringid(122518919,9))
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetRange(LOCATION_MZONE)
