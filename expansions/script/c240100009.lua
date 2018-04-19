@@ -68,7 +68,19 @@ function c240100009.op(e,tp,eg,ep,ev,re,r,rp)
 		if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 or not tc:IsRelateToEffect(e) then return end
 		Duel.BreakEffect()
 	end
-	if e:IsHasType(EFFECT_TYPE_FIELD) or tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	if (e:IsHasType(EFFECT_TYPE_FIELD) or tc:IsRelateToEffect(e)) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+		e2:SetCode(EVENT_PHASE+PHASE_END)
+		e2:SetReset(RESET_PHASE+PHASE_END)
+		e2:SetCountLimit(1)
+		e2:SetLabelObject(tc)
+		e2:SetOperation(c240100009.tdesop)
+		Duel.RegisterEffect(e2,tp)
 	end
+	Duel.SpecialSummonComplete()
+end
+function c240100009.tdesop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Destroy(e:GetLabelObject(),REASON_EFFECT)
 end
