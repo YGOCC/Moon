@@ -85,5 +85,5 @@ function c240100055.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c240100055.efilter(e,re)
-	return e:GetHandler()~=re:GetOwner()
+	return e:GetHandler()~=re:GetOwner() and e:GetHandler()~=re:GetHandler()
 end

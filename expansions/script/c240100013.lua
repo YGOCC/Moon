@@ -66,6 +66,6 @@ function c240100013.op(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsFaceup() then atk=tc:GetAttack() end
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		Duel.BreakEffect()
-		Duel.Damage(1-tp,atk,REASON_EFFECT)
+		Duel.Damage(1-tp,atk/2,REASON_EFFECT)
 	end
 end
