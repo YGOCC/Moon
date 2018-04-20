@@ -28,7 +28,7 @@ function c88880019.initial_effect(c)
 end
 --Pemdulum Summon
 function c88880019.filter(c)
-	return c:IsSetCard(0x888) or c:IsSetCard(0x107b)
+	return c:IsSetCard(0x889) or c:IsSetCard(0x107b)
 end
 function c88880019.splimit(e,c,tp,sumtp,sumpos)
 	if not (bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM) then return end

@@ -3,7 +3,7 @@ function c88880043.initial_effect(c)
 	--remove overlay replace
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(35,0))
-	e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e1:SetType(EFFECT_TYPE_CONTINUOUS)
 	e1:SetProperty(EFFECT_FLAG_BOTH_SIDE)
 	e1:SetCode(EFFECT_OVERLAY_REMOVE_REPLACE)
 	e1:SetRange(LOCATION_FZONE)

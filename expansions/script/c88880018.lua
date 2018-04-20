@@ -25,7 +25,7 @@ function c88880018.initial_effect(c)
 end
 	--Special Summon
 function c88880018.filter(c)
-	return c:IsSetCard(0x888) or c:IsSetCard(0x107b)
+	return c:IsSetCard(0x889) or c:IsSetCard(0x107b)
 end
 function c88880018.splimit(e,c,tp,sumtp,sumpos)
 	if not (bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM) then return end
@@ -46,8 +46,8 @@ function c88880018.spfilter(c,e,tp)
 end
 function c88880018.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and Duel.IsExistingMatchingCard(c88880018.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) or Duel.IsExistingMatchingCard(c88880018.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND) or Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+	and Duel.IsExistingMatchingCard(c88880018.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function c88880018.thop(e,tp,eg,ep,ev,re,r,rp)
   if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
