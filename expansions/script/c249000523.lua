@@ -65,11 +65,7 @@ function c249000523.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c249000523.filter2,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then
-		local g=Duel.SelectTarget(tp,c249000523.filter2,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	else
-		local g=Duel.SelectTarget(tp,c249000523.filter2,tp,LOCATION_GRAVE,0,1,2,nil,e,tp)
-	end
+	local g=Duel.SelectTarget(tp,c249000523.filter2,tp,LOCATION_GRAVE,0,1,2,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,2,0,0)
 end
 function c249000523.spop2(e,tp,eg,ep,ev,re,r,rp)
@@ -122,7 +118,7 @@ function c249000523.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=tg:GetFirst()
 	if tc then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local mat=mg:SelectWithSumGreater(tp,Card.GetLevel,math.ceil(tc:GetLevel()*1.5),tc)	
+		local mat=mg:SelectWithSumGreater(tp,Card.GetLevel,tc:GetLevel(),tc)	
 		Duel.Remove(mat,POS_FACEUP,REASON_EFFECT)
 		Duel.BreakEffect()
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)

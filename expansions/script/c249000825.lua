@@ -20,7 +20,6 @@ function c249000825.initial_effect(c)
 	e3:SetCost(c249000825.cost)
 	e3:SetOperation(c249000825.operation)
 	c:RegisterEffect(e3)
-	math.randomseed( os.time() )
 end
 function c249000825.ntcon(e,c,minc)
 	if c==nil then return true end

@@ -17,7 +17,6 @@ function c249000824.initial_effect(c)
 	e2:SetCost(c249000824.cost)
 	e2:SetOperation(c249000824.operation)
 	c:RegisterEffect(e2)
-	math.randomseed( os.time() )
 end
 function c249000824.filter(c,e,tp)
 	return c:IsSetCard(0x1F4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
