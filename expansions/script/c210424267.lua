@@ -38,7 +38,8 @@ function card.pencon(e,tp,eg,ep,ev,re,r,rp,chk)
 	and Duel.IsExistingMatchingCard(card.filter,tp,LOCATION_DECK,0,1,nil)
 end
 function card.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end
+	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
+	or not	Duel.IsExistingMatchingCard(card.filter,tp,LOCATION_DECK,0,1,nil) end
 end
 function card.penop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

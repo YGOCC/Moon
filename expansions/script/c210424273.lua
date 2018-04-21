@@ -15,7 +15,6 @@ function card.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,210424282)
@@ -30,11 +29,9 @@ end
 function card.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and card.tgfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(card.tgfilter,tp,LOCATION_MZONE,0,1,nil) 
+	if chk==0 then return Duel.IsExistingMatchingCard(card.tgfilter,tp,LOCATION_MZONE,0,1,nil) 
 	and c:GetFlagEffect(210424273)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	and Duel.IsPlayerCanSpecialSummonMonster(tp,210424273,0x666,0,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,card.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	c:RegisterFlagEffect(210424273,RESET_CHAIN,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
