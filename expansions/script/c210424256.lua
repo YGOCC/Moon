@@ -126,23 +126,19 @@ end
 function card.swaptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and card.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and Duel.IsExistingTarget(card.spfilter,tp,LOCATION_PZONE,0,1,nil,e,tp) 
-end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,card.spfilter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	and Duel.IsExistingTarget(card.spfilter,tp,LOCATION_PZONE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_PZONE)
 end
 function card.swapop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-end
-	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
+	local g=Duel.SelectMatchingCard(tp,card.spfilter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 and 
+	not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 	if not Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) then
 	Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+end
 end
 end
 end

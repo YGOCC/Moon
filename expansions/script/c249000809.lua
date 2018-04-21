@@ -39,6 +39,7 @@ function c249000809.operation(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:SelectWithSumGreater(tp,c249000809.getlevelorrank,math.ceil(lvrk*1.5),1,99,e:GetHandler())
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		Duel.SpecialSummon(sc,sumtype,tp,tp,false,false,POS_FACEUP)
+		sc:CompleteProcedure()
 		local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
 		if tc2 and sc:IsType(TYPE_XYZ) then
 			Duel.Overlay(sc,tc2)

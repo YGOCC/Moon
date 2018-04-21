@@ -23,6 +23,15 @@ function c249000812.initial_effect(c)
 	e2:SetTarget(c249000812.negtg)
 	e2:SetOperation(c249000812.negop)
 	c:RegisterEffect(e2)
+	--indes
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e3:SetCountLimit(1)
+	e3:SetValue(c249000812.valcon)
+	c:RegisterEffect(e3)
 end
 function c249000812.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
@@ -58,4 +67,7 @@ function c249000812.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c249000812.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
+end
+function c249000812.valcon(e,re,r,rp)
+	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsDefensePos()
 end

@@ -39,7 +39,7 @@ function c249000811.drfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1F1)
 end
 function c249000811.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsFaceup() and Duel.IsExistingMatchingCard(c249000811.drconfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return e:GetHandler():IsFaceup() and Duel.IsExistingMatchingCard(c249000811.drfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c249000811.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
