@@ -43,17 +43,17 @@ end
 function c160002124.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg=Duel.GetRitualMaterial(tp)
-		local sg=Duel.GetMatchingGroup(c160002124.filter,tp,LOCATION_SZONE+LOCATION_EXTRA,0,nil,e,tp,mg)
-		local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_SZONE,6),Duel.GetFieldCard(tp,LOCATION_SZONE,7)):Filter(c160002124.sfilter,nil,e,tp,mg)
+		local sg=Duel.GetMatchingGroup(c160002124.filter,tp,LOCATION_PZONE+LOCATION_EXTRA,0,nil,e,tp,mg)
+		local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_PZONE,0)):Filter(c160002124.sfilter,nil,e,tp,mg)
 		sg:Merge(pg)
 		return sg:GetCount()>0
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_SZONE+LOCATION_EXTRA)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_PZONE+LOCATION_EXTRA)
 end
 function c160002124.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetRitualMaterial(tp)
 	local sg=Duel.GetMatchingGroup(c160002124.filter,tp,LOCATION_SZONE+LOCATION_EXTRA,0,nil,e,tp,mg)
-	local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_SZONE,6),Duel.GetFieldCard(tp,LOCATION_SZONE,7)):Filter(c160002124.sfilter,nil,e,tp,mg)
+	local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_PZONE,0)):Filter(c160002124.sfilter,nil,e,tp,mg)
 	sg:Merge(pg)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=sg:Select(tp,1,1,nil)
@@ -96,7 +96,8 @@ function c160002124.thfilter(c,e,tp)
 	return c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER) and  c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c160002124.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	   if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c160002124.thfilter(chkc,e,tp) end
+		if chkc then return chkc:GetLocation()==LOCATION_GRAVE and chkc:GetControler()==tp
+		and chkc:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c160002124.thfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -104,8 +105,10 @@ function c160002124.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c160002124.thop(e,tp,eg,ep,ev,re,r,rp)
-  local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e)then
+Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
+
