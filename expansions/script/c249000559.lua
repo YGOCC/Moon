@@ -157,6 +157,7 @@ function c249000559.tgfilter(c,e)
 	local desc_t = {}
 	local i=1
 	local p=1
+	if not cardstruct.c249000559Effect_Count then return false end
 	for i=1,cardstruct.c249000559Effect_Count do
 		if cardstruct.c249000559Effect_Table2[i]==nil and cardstruct.c249000559Effect_Table[i]~=nil then
 			local etoclone=cardstruct.c249000559Effect_Table[i]

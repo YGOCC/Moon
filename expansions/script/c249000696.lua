@@ -34,7 +34,7 @@ end
 function c249000696.condition(e,tp,eg,ep,ev,re,r,rp,chk)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp
-		and loc==LOCATION_ONFIELD and Duel.IsChainDisablable(ev)
+		and (loc==LOCATION_MZONE or loc==LOCATION_SZONE) and Duel.IsChainDisablable(ev)
 end
 function c249000696.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
