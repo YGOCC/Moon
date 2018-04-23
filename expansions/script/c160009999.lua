@@ -39,12 +39,12 @@ function c160009999.tgtg(e,c)
 	return not c:IsType(TYPE_EFFECT)
 end
 function c160009999.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	  if chk==0 then return Duel.IsExistingMatchingCard(c160007854.costfilter,tp,LOCATION_SZONE,0,1,nil) end
-	local g=Duel.GetMatchingGroup(c160007854.costfilter,tp,LOCATION_SZONE,0,nil)
+	  if chk==0 then return Duel.IsExistingMatchingCard(c160009999.costfilter,tp,LOCATION_SZONE,0,1,nil) end
+	local g=Duel.GetMatchingGroup(c160009999.costfilter,tp,LOCATION_SZONE,0,nil)
 	Duel.Release(g,REASON_COST)
 end
 
-function c160007854.costfilter(c)
+function c160009999.costfilter(c)
 	return  c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
 end
 

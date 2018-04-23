@@ -33,7 +33,7 @@ function c500316456.filter(c,e,tp)
 	return c:IsType(TYPE_NORMAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c500316456.desfilter(c)
-	return c:IsFaceup() and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)~=0 and not c:IsType(TYPE_PENDULUM) 
+	return c:IsFaceup() and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)~=0 
 		and not c:IsType(TYPE_NORMAL) and c:IsDestructable()
 end
 function c500316456.costfilter(c)
@@ -76,3 +76,5 @@ Duel.BreakEffect()
 	end
 end
 end
+
+

@@ -61,12 +61,14 @@ function c16000535.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e)  then
 		Duel.GetControl(tc,tp)
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetCode(EFFECT_CHANGE_TYPE)
-		e3:SetValue(TYPE_MONSTER+TYPE_NORMAL)
-		e3:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e3)
+	tc:SetStatus(STATUS_NO_LEVEL,false)
+	  local e0=Effect.CreateEffect(c)
+		e0:SetType(EFFECT_TYPE_SINGLE)
+		e0:SetCode(EFFECT_REMOVE_TYPE)
+		e0:SetValue(TYPE_EFFECT)
+		e0:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e0)
+		
 			local e4=Effect.CreateEffect(c)
 		e4:SetType(EFFECT_TYPE_SINGLE)
 		e4:SetCode(EFFECT_DISABLE)
@@ -77,6 +79,16 @@ function c16000535.operation(e,tp,eg,ep,ev,re,r,rp)
 		e5:SetCode(EFFECT_DISABLE_EFFECT)
 		e5:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e5)
+ 
+if tc:GetLevel()>0 then
+		 local e6=Effect.CreateEffect(c)
+		e6:SetType(EFFECT_TYPE_SINGLE)
+		e6:SetCode(EFFECT_CHANGE_LEVEL)
+		e6:SetValue(4)
+		e6:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e6)
+	   end
+
 	 end
 end
 
