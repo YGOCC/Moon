@@ -2979,7 +2979,7 @@ expansions/pics/37200264.jpg	b253a2ea38a34f31b6e1929bc478090f
 expansions/pics/37200265.jpg	a7c21f88f47902622ac00aafe0d0171f
 expansions/pics/37200266.jpg	88f514aa6edf29aacea4b31f82187b99
 expansions/pics/37200267.jpg	d1e6d662f3ce08e3abca8575afb60b00
-expansions/pics/37200268.jpg	08d1dd36959263bd2598cbda720df2c1
+expansions/pics/37200268.jpg	c99eeb53793825079db88f9d1b312153
 expansions/pics/37200269.jpg	ad86cfac0389e4d58650855a29b736d2
 expansions/pics/37200270.jpg	db9d2752795693778ee1369a8154f067
 expansions/pics/37200271.jpg	6a55e3bface8ec6f8d448ec3d86534a2
@@ -8550,6 +8550,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	2e20b8e0c36dce3790152924978f99d2
+update/filelist.txt	b2b97f0984628813189fdf381d2365b5
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	550380a3622e1c912f4acc3f3e229d4b
+update/version.txt	60ac53a3d797667b01c9b810d06cc767
