@@ -78,7 +78,7 @@ Card.GetType=function(c,scard,sumtype,p)
 		if not ispen then
 			tpe=tpe&~TYPE_PENDULUM
 		end
-		if c:IsLocation(LOCATION_PZONE) then
+		if c:IsLocation(LOCATION_PZONE+LOCATION_SZONE) then
 			tpe=tpe|TYPE_TRAP
 			if not isspell then
 				tpe=tpe&~TYPE_SPELL
@@ -148,7 +148,7 @@ Card.GetPreviousTypeOnField=function(c)
 		if not ispen then
 			tpe=tpe&~TYPE_PENDULUM
 		end
-		if c:IsPreviousLocation(LOCATION_PZONE) then
+		if c:IsPreviousLocation(LOCATION_PZONE+LOCATION_SZONE) then
 			tpe=tpe|TYPE_TRAP
 			if not isspell then
 				tpe=tpe&~TYPE_SPELL
@@ -288,7 +288,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	e2:SetCondition(Auxiliary.EvoluteCondition(echeck,extramat,min,max,...))
 	e2:SetTarget(Auxiliary.EvoluteTarget(echeck,extramat,min,max,...))
 	e2:SetOperation(Auxiliary.EvoluteOperation)
-	e2:SetValue(SUMMON_TYPE_SPECIAL+388)
+	e2:SetValue(388)
 	c:RegisterEffect(e2)
 	if not Evochk then
 		Evochk=true
@@ -474,6 +474,14 @@ function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,reghand)
 		e1:SetTarget(Auxiliary.PandActTarget(xe))
 		e1:SetOperation(Auxiliary.PandOperation(xe))
 		c:RegisterEffect(e1)
+		--unredirect
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_CANNOT_TO_DECK)
+		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e2:SetRange(LOCATION_MZONE)
+		e2:SetCondition(function(e) return e:GetHandler():GetDestination()==LOCATION_GRAVE and not e:GetHandler():IsReason(REASON_DESTROY) end)
+		c:RegisterEffect(e2)
 		--set
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
@@ -519,18 +527,20 @@ function Auxiliary.PandActTarget(xe)
 			g=Duel.GetFieldGroup(tp,loc,0)
 			if c:IsLocation(LOCATION_HAND) then g=g-c end
 		end
-		local b1=c:IsReleasable() and Duel.GetTurnPlayer()~=tp and g and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale,SUMMON_TYPE_SPECIAL+726)
+		local b1=c:IsReleasable() and Duel.GetTurnPlayer()~=tp and g and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale,726)
 		local te=xe
 		local cost=nil
 		local target=nil
 		local b2=te~=nil
 		if b2 then
+			local code=te:GetCode()
 			local condition=te:GetCondition()
 			cost=te:GetCost()
 			target=te:GetTarget()
-			b2=b2 and (not condition or condition(e,tep,eg,ep,ev,re,r,rp))
-			and (not cost or cost(e,tep,eg,ep,ev,re,r,rp,0))
-			and (not target or target(e,tep,eg,ep,ev,re,r,rp,0))
+			b2=b2 and (code==EVENT_FREE_CHAIN or Duel.CheckTiming(code))
+				and (not condition or condition(e,tep,eg,ep,ev,re,r,rp))
+				and (not cost or cost(e,tep,eg,ep,ev,re,r,rp,0))
+				and (not target or target(e,tep,eg,ep,ev,re,r,rp,0))
 		end
 		if chk==0 then return (not c:IsStatus(STATUS_SET_TURN) or c:IsHasEffect(EFFECT_TRAP_ACT_IN_SET_TURN)) and (c:GetLocation()~=LOCATION_HAND and c:IsFacedown() or (c:IsHasEffect(EFFECT_TRAP_ACT_IN_HAND) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)))) end
 		local opt=nil
@@ -553,7 +563,7 @@ function Auxiliary.PandActTarget(xe)
 			Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_HAND+LOCATION_EXTRA)
 		else
 			e:SetCategory(0)
-			e:SetProperty(0)
+			e:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
 		end
 	end
 end
@@ -668,7 +678,7 @@ function Auxiliary.AddPolarityProc(c,stability,f1,f2)
 	e2:SetCondition(Auxiliary.PolarityCondition(f1,f2))
 	e2:SetTarget(Auxiliary.PolarityTarget(f1,f2))
 	e2:SetOperation(Auxiliary.PolarityOperation)
-	e2:SetValue(SUMMON_TYPE_SPECIAL+765)
+	e2:SetValue(765)
 	c:RegisterEffect(e2)
 end
 function Auxiliary.StabilityVal(stability)
