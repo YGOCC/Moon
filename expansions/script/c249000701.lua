@@ -47,6 +47,7 @@ end
 function c249000701.filter(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x1E6)
 		and Duel.IsExistingMatchingCard(c249000701.tfilter,tp,LOCATION_EXTRA,0,1,nil,c:GetOriginalAttribute(),c:GetOriginalRace(),e,tp)
+		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function c249000701.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c:IsFaceup() end
@@ -63,10 +64,12 @@ function c249000701.operation(e,tp,eg,ep,ev,re,r,rp)
 	local att=tc:GetOriginalAttribute()
 	local race=tc:GetOriginalRace()
 	if Duel.SendtoGrave(tc,REASON_EFFECT)==0 then return end
+	if Duel.GetLocationCountFromEx(tp)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sg=Duel.SelectMatchingCard(tp,c249000698.tfilter,tp,LOCATION_EXTRA,0,1,1,nil,att,race,e,tp)
 	if sg:GetCount()>0 then
 		Duel.BreakEffect()
 		Duel.SpecialSummon(sg,0,tp,tp,true,true,POS_FACEUP)
+		sg:GetFirst():CompleteProcedure()
 	end
 end

@@ -55,8 +55,8 @@ function cod.gfilter(c)
 end
 function cod.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetFlagEffect(tp,id)==0 then return true end
-	local ct=Duel.GetFlagEffect(tp,id)
+	if c:GetFlagEffect(id)==0 then return true end
+	local ct=c:GetFlagEffect(id)
 	local g=Duel.GetMatchingGroup(cod.gfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 	if ct==1 then
 		return g:IsExists(cod.lfilter,1,nil,c) or c:IsHasEffect(39507190)

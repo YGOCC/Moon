@@ -14,7 +14,7 @@ function c249000559.initial_effect(c)
 				cardstruct.c249000559Effect_Table2 = {}
 				cardstruct.c249000559Effect_Count = 1
 			end
-			if 	cardstruct.c249000559Effect_Table_Card==self then
+			if cardstruct.c249000559Effect_Table_Card==self then
 				cardstruct.c249000559Effect_Table[cardstruct.c249000559Effect_Count] = e
 				cardstruct.c249000559Effect_Table2[cardstruct.c249000559Effect_Count] = e:Clone()
 				cardstruct.c249000559Effect_Count=cardstruct.c249000559Effect_Count + 1
@@ -69,6 +69,13 @@ function c249000559.initial_effect(c)
 	e4:SetTarget(c249000559.sptg)
 	e4:SetOperation(c249000559.spop)
 	c:RegisterEffect(e4)
+	--init
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_ADJUST)
+	e5:SetRange(LOCATION_MZONE)	
+	e5:SetOperation(c249000559.tokenop)
+	c:RegisterEffect(e5)
 end
 function c249000559.discon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
@@ -133,6 +140,15 @@ function c249000559.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 		Duel.ConfirmCards(1-tp,cg)
 	end
 	Duel.Release(sg,REASON_COST)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0xFF,0xFF,nil)
+	local tc=g:GetFirst()
+	while tc do
+		local temp=Duel.CreateToken(tp,tc:GetOriginalCode())
+		local code=temp:GetOriginalCode()
+		local cardstruct=_G["c" .. code]
+		if cardstruct.initial_effect then cardstruct.initial_effect(temp) end
+		tc=g:GetNext()
+	end
 end
 function c249000559.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
@@ -149,8 +165,10 @@ function c249000559.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000559.tgfilter(c,e)
-	if not c:IsType(TYPE_EFFECT) or c:GetLevel() < 1 or c:GetLevel() > 10 or c:IsType(TYPE_FUSION) or (not c:IsType(TYPE_SYNCHRO) and not c:IsSummonableCard())
-	or not ((c:IsLocation(LOCATION_GRAVE) and c:IsAbleToRemove()) or (not c:IsLocation(LOCATION_GRAVE) and c:IsAbleToGrave()))	then return false end
+	if (not c:IsType(TYPE_EFFECT))	or (c:GetLevel() < 1) or (c:GetLevel() > 10) or c:IsType(TYPE_FUSION) then return false end
+	if (not c:IsType(TYPE_SYNCHRO) and (not c:IsSummonableCard())) then return false end
+	if (c:IsLocation(LOCATION_GRAVE) and (not c:IsAbleToRemove())) then return false end
+	if (not c:IsLocation(LOCATION_GRAVE) and (not c:IsAbleToGrave())) then return false end
 	local code=c:GetOriginalCode()
 	local cardstruct=_G["c" .. code]
 	local t={}
@@ -180,15 +198,14 @@ function c249000559.tgfilter(c,e)
 			end
 		end
 	end
-	local index=1
 	return p >=2
 end
 function c249000559.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000559.tgfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_DECK,0,1,nil,e) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000559.tgfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil,e) end
 end
 function c249000559.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.SelectMatchingCard(tp,c249000559.tgfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_DECK,0,1,1,nil,e):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,c249000559.tgfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e):GetFirst()
 	if not tc then return end
 	if tc:IsLocation(LOCATION_GRAVE) then Duel.Remove(tc,POS_FACEUP,REASON_EFFECT) else Duel.SendtoGrave(tc,REASON_EFFECT) end
 	local code=tc:GetOriginalCode()
@@ -245,4 +262,15 @@ function c249000559.resetop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsLocation(LOCATION_EXTRA) then return end
 	e:GetLabelObject():SetLabelObject(nil)
 	e:Reset()
+end
+function c249000559.tokenop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0xFF,0xFF,nil)
+	local tc=g:GetFirst()
+	while tc do
+		local temp=Duel.CreateToken(tp,tc:GetOriginalCode())
+		local code=temp:GetOriginalCode()
+		local cardstruct=_G["c" .. code]
+		if cardstruct.initial_effect then cardstruct.initial_effect(temp) end
+		tc=g:GetNext()
+	end
 end

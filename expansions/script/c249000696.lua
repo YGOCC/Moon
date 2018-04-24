@@ -32,9 +32,9 @@ function c249000696.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c249000696.condition(e,tp,eg,ep,ev,re,r,rp,chk)
-	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp
-		and (loc==LOCATION_MZONE or loc==LOCATION_SZONE) and Duel.IsChainDisablable(ev)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+		and re:GetHandler():IsOnField() and (re:IsActiveType(TYPE_MONSTER)
+		or (re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and not re:IsHasType(EFFECT_TYPE_ACTIVATE)))
 end
 function c249000696.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

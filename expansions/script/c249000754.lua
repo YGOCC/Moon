@@ -77,12 +77,17 @@ function c249000754.tgfilter(c,e,tp,lv,att)
 end
 function c249000754.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	local g=Duel.SelectMatchingCard(tp,c249000754.tgfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc:GetOriginalLevel(),tc:GetOriginalAttribute())
-	local sc=g:GetFirst()
-	if not sc then return end
-	if Duel.SendtoGrave(sc,REASON_EFFECT)~=0 and sc:IsLocation(LOCATION_GRAVE) and Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,nil)
-	and Duel.SelectYesNo(tp,2) then
+	if not tc then return end
+	if Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,nil) and Duel.IsExistingMatchingCard(c249000753.tgfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,tc:GetOriginalLevel(),tc:GetOriginalAttribute()) then
 		Duel.SendtoGrave(Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,1,nil),REASON_EFFECT)
+		local g=Duel.SelectMatchingCard(tp,c249000754.tgfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc:GetOriginalLevel(),tc:GetOriginalAttribute())
+		local sc=g:GetFirst()
+		if not sc then return end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EXTRA_TOMAIN_KOISHI)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		sc:RegisterEffect(e1)
 		if Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,true,true,POS_FACEUP)~=0 then
 			local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
 			if tc2 then
