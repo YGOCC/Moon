@@ -27,7 +27,7 @@ function c249000553.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c249000553.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+	return e:GetHandler():IsReason(REASON_DESTROY)
 end
 function c249000553.filter(c)
 	return c:IsSetCard(0x1CD) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
