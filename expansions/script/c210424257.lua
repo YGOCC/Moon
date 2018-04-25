@@ -85,6 +85,7 @@ function card.desop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
 	if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 then
 	local g=Duel.SelectMatchingCard(tp,card.desfilter2,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.HintSelection(g)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.Destroy(g,REASON_EFFECT)
 end
