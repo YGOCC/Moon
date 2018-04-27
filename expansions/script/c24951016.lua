@@ -101,43 +101,41 @@ function c24951016.operation(e,tp,eg,ep,ev,re,r,rp)
 		else
 			tc:SetStatus(STATUS_ACTIVATED,true)
 			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-			Debug.Message(tc:GetPosition())
-			Debug.Message(tc:GetLocation())
 			Duel.ConfirmCards(tp,tc)
-			if tc:IsType(TYPE_SPELL) then
-				local te=tc:GetActivateEffect()
-				local tep=tc:GetControler()				
-				local condition=te:GetCondition()
-				local cost=te:GetCost()
-				local target=te:GetTarget()
-				local operation=te:GetOperation()
-				if te:GetCode()==EVENT_FREE_CHAIN and te:IsActivatable(tep)
-					and (not condition or condition(te,tep,eg,ep,ev,re,r,rp))
-					and (not cost or cost(te,tep,eg,ep,ev,re,r,rp,0))
-					and (not target or target(te,tep,eg,ep,ev,re,r,rp,0)) then
-					e:SetProperty(te:GetProperty())
-					Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
-					tc:CancelToGrave(false)
-					tc:CreateEffectRelation(te)
-					if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-					if target then target(te,tep,eg,ep,ev,re,r,rp,1) end
-					local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-					if g then
-						local tg=g:GetFirst()
-						while tg do
-							tg:CreateEffectRelation(te)
-							tg=g:GetNext()
-						end
+
+			local te=tc:GetActivateEffect()
+			local tep=tc:GetControler()				
+			local condition=te:GetCondition()
+			local cost=te:GetCost()
+			local target=te:GetTarget()
+			local operation=te:GetOperation()
+			tc:CancelToGrave(false)
+			if true -- te:GetCode()==EVENT_FREE_CHAIN and te:IsActivatable(tep)
+				and (not condition or condition(te,tep,eg,ep,ev,re,r,rp))
+				and (not cost or cost(te,tep,eg,ep,ev,re,r,rp,0))
+				and (not target or target(te,tep,eg,ep,ev,re,r,rp,0)) then
+				e:SetProperty(te:GetProperty())
+				Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
+				
+				tc:CreateEffectRelation(te)
+				if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
+				if target then target(te,tep,eg,ep,ev,re,r,rp,1) end
+				local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+				if g then
+					local tg=g:GetFirst()
+					while tg do
+						tg:CreateEffectRelation(te)
+						tg=g:GetNext()
 					end
-					tc:SetStatus(STATUS_ACTIVATED,true)
-					if operation then operation(te,tep,eg,ep,ev,re,r,rp) end
-					tc:ReleaseEffectRelation(te)
-					if g then
-						tg=g:GetFirst()
-						while tg do
-							tg:ReleaseEffectRelation(te)
-							tg=g:GetNext()
-						end
+				end
+				tc:SetStatus(STATUS_ACTIVATED,true)
+				if operation then operation(te,tep,eg,ep,ev,re,r,rp) end
+				tc:ReleaseEffectRelation(te)
+				if g then
+					tg=g:GetFirst()
+					while tg do
+						tg:ReleaseEffectRelation(te)
+						tg=g:GetNext()
 					end
 				end
 			end

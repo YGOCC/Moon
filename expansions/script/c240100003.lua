@@ -12,15 +12,21 @@ function c240100003.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c240100003.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()>1 and re:IsHasCategory(CATEGORY_SPECIAL_SUMMON) and Duel.IsChainNegatable(ev)
+	if Duel.GetCurrentChain()<=1 or rp==tp then return false enf
+	for i=1,ev do
+		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
+		if te:IsHasCategory(CATEGORY_SPECIAL_SUMMON) and Duel.IsChainNegatable(i) then
+			return true
+		end
+	end
 end
 function c240100003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ng=Group.CreateGroup()
 	local dg=Group.CreateGroup()
 	for i=1,ev do
-		local te,tgp=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
-		if tgp~=tp and Duel.IsChainNegatable(i) then
+		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
+		if te:IsHasCategory(CATEGORY_SPECIAL_SUMMON) and Duel.IsChainNegatable(i) then
 			local tc=te:GetHandler()
 			ng:AddCard(tc)
 			if tc:IsOnField() and tc:IsRelateToEffect(te) and not tc:IsHasEffect(EFFECT_CANNOT_TO_DECK) and Duel.IsPlayerCanSendtoDeck(tp,tc) then
@@ -33,17 +39,10 @@ function c240100003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,dg,dg:GetCount(),0,0)
 end
 function c240100003.activate(e,tp,eg,ep,ev,re,r,rp)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetReset(RESET_PHASE+PHASE_END,2)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetTargetRange(1,0)
-	Duel.RegisterEffect(e2,tp)
 	local dg=Group.CreateGroup()
 	for i=1,ev do
-		local te,tgp=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
-		if tgp~=tp and Duel.NegateActivation(i) then
+		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
+		if te:IsHasCategory(CATEGORY_SPECIAL_SUMMON) and Duel.NegateActivation(i) then
 			local tc=te:GetHandler()
 			if tc:IsRelateToEffect(e) and tc:IsRelateToEffect(te) and not tc:IsHasEffect(EFFECT_CANNOT_TO_DECK) and Duel.IsPlayerCanSendtoDeck(tp,tc) then
 				tc:CancelToGrave()
