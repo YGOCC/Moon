@@ -45,7 +45,6 @@ function c24951005.proxop(e,tp,eg,ep,ev,re,r,rp)
 	local e4=e3:Clone()
 	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e:GetHandler():RegisterEffect(e4)
-	Duel.SpecialSummonComplete()
 end
 function c24951005.etarget(e,c)
 	return c:IsType(TYPE_TOKEN)

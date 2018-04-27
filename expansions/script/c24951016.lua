@@ -68,8 +68,8 @@ end
 function c24951016.etarget(e,c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x5F453A) and not c==e:GetHandler()
 end
-function c24951016.efilter(e,te)
-	return te:IsActiveType(TYPE_SPELL+TYPE_TRAP+TYPE_MONSTER) 
+function c24951016.efilter(e,te,re)
+	return not re==e
 end
 function c24951016.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c24951016.sendfilter,tp,LOCATION_HAND,0,1,nil) 
@@ -109,7 +109,9 @@ function c24951016.operation(e,tp,eg,ep,ev,re,r,rp)
 			local cost=te:GetCost()
 			local target=te:GetTarget()
 			local operation=te:GetOperation()
-			tc:CancelToGrave(false)
+			if not (tc:IsType(TYPE_FIELD) or tc:IsType(TYPE_CONTINUOUS)) then
+				tc:CancelToGrave(false)
+			end
 			if true -- te:GetCode()==EVENT_FREE_CHAIN and te:IsActivatable(tep)
 				and (not condition or condition(te,tep,eg,ep,ev,re,r,rp))
 				and (not cost or cost(te,tep,eg,ep,ev,re,r,rp,0))

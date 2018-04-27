@@ -66,6 +66,6 @@ end
 function c24951002.etarget(e,c)
 	return c:IsType(TYPE_TOKEN)
 end
-function c24951002.efilter(e,te)
-	return te:IsActiveType(TYPE_TRAP) and not te:GetHandler():GetControler() == tp 
+function c24951002.efilter(e,re,te)
+	return re:IsActiveType(TYPE_TRAP) and e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end

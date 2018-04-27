@@ -81,8 +81,8 @@ function c24951006.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonComplete()
 	end
 end
-function c24951006.immfilter(e,te,tp)
-	if te:IsActiveType(TYPE_SPELL) and not te:GetHandler():GetControler() == tp then 
+function c24951006.immfilter(e,re,te,tp)
+	if re:IsActiveType(TYPE_SPELL) and e:GetOwnerPlayer()~=re:GetOwnerPlayer() then 
 		return true 
 	end
 end
