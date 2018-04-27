@@ -6,18 +6,35 @@ function c24951009.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN+CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
 	e1:SetCost(c24951009.cost)
+	e1:SetTarget(c24951009.target)
 	e1:SetCondition(c24951009.condition)
 	e1:SetOperation(c24951009.operation)
 	c:RegisterEffect(e1)
 end
 function c24951009.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
-		return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) 
+		return Duel.IsExistingMatchingCard(c24951009.filter,tp,LOCATION_DECK,0,1,nil)
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c24951000.filter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+		c24951000[4]=g:GetFirst()
 	end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c24951009.condition(e,tp,eg,ep,ev,re,r,rp)
-	return ((Duel.IsPlayerCanSpecialSummonMonster(tp,24951013,0,0x5F453A,1000,1000,1,RACE_SPELLCASTER,ATTRIBUTE_LIGHT) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) or (Duel.IsExistingMatchingCard(c24951009.modfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)))
+	return ((Duel.IsPlayerCanSpecialSummonMonster(tp,24951013,0,0x5F453A,1500,1500,4,RACE_SPELLCASTER,ATTRIBUTE_LIGHT) 
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) 
+	or (Duel.IsExistingMatchingCard(c24951009.modfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)))
+end
+function c24951009.filter(c)
+	return c:IsSetCard(0x5F453A) and c:IsAbleToHand()
+end
+function c24951009.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c24951009.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c24951009.modfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsPosition(POS_FACEUP)
@@ -28,7 +45,7 @@ function c24951009.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsExistingMatchingCard(c24951009.modfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then
 		selectoption1 = 1
 	end	
-	if (Duel.IsPlayerCanSpecialSummonMonster(tp,24951013,0,0x5F453A,1000,1000,1,RACE_SPELLCASTER,ATTRIBUTE_LIGHT) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) then
+	if (Duel.IsPlayerCanSpecialSummonMonster(tp,24951013,0,0x5F453A,1500,1500,4,RACE_SPELLCASTER,ATTRIBUTE_LIGHT) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) then
 		selectoption2 = 1
 	end
 	if selectoption1 == 1 and selectoption2 == 1 then
@@ -78,30 +95,6 @@ function c24951009.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 		local tc2 = token
 		tc2:RegisterFlagEffect(24951009,RESET_EVENT+0x1fe0000,0,1)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_PHASE+PHASE_END)
-		e1:SetCountLimit(1)
-		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetLabel(Duel.GetTurnCount()+1)
-		e1:SetLabelObject(tc2)
-		e1:SetReset(RESET_PHASE+PHASE_END,2)
-		e1:SetCondition(c24951009.rmcon)
-		e1:SetOperation(c24951009.rmop)
-		Duel.RegisterEffect(e1,tp)
 		Duel.SpecialSummonComplete()
 	end
-end
-function c24951009.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	local tc2=e:GetLabelObject()
-	if tc2:GetFlagEffect(24951009)~=0 then
-		return Duel.GetTurnCount()==e:GetLabel()
-	else
-		e:Reset()
-		return false
-	end
-end
-function c24951009.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 end

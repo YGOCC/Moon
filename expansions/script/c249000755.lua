@@ -29,7 +29,7 @@ function c249000755.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c249000755.filter(c)
-	return c:IsSetCard(0x1EF) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x1EF) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(249000755)
 end
 function c249000755.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)

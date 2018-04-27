@@ -1,4 +1,4 @@
--- Magenic Vessel of Din-La
+-- Magenic Vessel of Tahir
 function c24951002.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -19,7 +19,7 @@ end
 function c24951002.proxcon(e,tp,eg,ep,ev,re,r,rp)
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-		if te:IsActiveType(TYPE_SPELL) and te:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		if te:GetHandler():IsType(TYPE_SPELL) and te:IsHasType(EFFECT_TYPE_ACTIVATE) then
 			return true
 		end
 	end
@@ -67,5 +67,5 @@ function c24951002.etarget(e,c)
 	return c:IsType(TYPE_TOKEN)
 end
 function c24951002.efilter(e,te)
-	return te:IsActiveType(TYPE_TRAP) and not te:GetHandler() == tp 
+	return te:IsActiveType(TYPE_TRAP) and not te:GetHandler():GetControler() == tp 
 end

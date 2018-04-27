@@ -19,7 +19,7 @@ end
 function c24951001.proxcon(e,tp,eg,ep,ev,re,r,rp)
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-		if te:IsActiveType(TYPE_SPELL) and te:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		if te:GetHandler():IsType(TYPE_SPELL) and te:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsPlayerCanDraw(tp,1)then 
 			return true
 		end
 	end
@@ -29,6 +29,7 @@ function c24951001.proxfilter(c)
 end
 function c24951001.proxcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c24951001.proxfilter,tp,LOCATION_HAND,0,1,e:GetHandler(),tp) end
+	Duel.Draw(tp,1,REASON_EFFECT)
 	local g=Duel.SelectMatchingCard(tp,c24951001.proxfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler(),tp)
 	local te=g:GetFirst():CheckActivateEffect(false,true,true)
 	c24951001[Duel.GetCurrentChain()]=te
@@ -67,5 +68,5 @@ function c24951001.etarget(e,c)
 	return c:IsType(TYPE_TOKEN)
 end
 function c24951001.efilter(e,te)
-	return te:IsActiveType(TYPE_SPELL) and not te:GetHandler() == tp 
+	return te:IsActiveType(TYPE_SPELL) and not te:GetHandler():GetControler() == tp 
 end

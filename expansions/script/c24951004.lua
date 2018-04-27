@@ -18,7 +18,7 @@ end
 function c24951004.proxcon(e,tp,eg,ep,ev,re,r,rp)
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-		if te:IsActiveType(TYPE_SPELL) 
+		if te:GetHandler():IsType(TYPE_SPELL) 
 			and te:GetHandler():IsSetCard(0x5F453A) 
 			and Duel.IsPlayerCanDraw(tp,1)then
 			return true

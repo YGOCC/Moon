@@ -103,7 +103,7 @@ function card.filter1(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsCanChangePosition()
 end
 function card.filter2(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanChangePosition()
+	return c:IsType(TYPE_MONSTER) and c:IsCanChangePosition()
 end
 function card.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

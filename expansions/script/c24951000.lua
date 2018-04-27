@@ -54,7 +54,6 @@ function c24951000.othercon(e,tp,eg,ep,ev,re,r,rp)
  			and not tc:IsReason(REASON_REDIRECT) 
 			and te:GetHandler():IsSetCard(0x5F453A)
 			and tc:IsSetCard(0x5F453A)
-			-- and te:IsActivated() 
  			then
 			costgroup:AddCard(tc)
 		end
