@@ -50,7 +50,7 @@ function c240100007.cfilter(c)
 	return (c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) or c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER) and c:IsSetCard(0x7c4)
 end
 function c240100007.filter(c)
-	return c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER and c:IsSetCard(0x7c4) and c:IsAbleToHand()
+	return c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER and c:IsSetCard(0x7c4) and c:IsAbleToHand() and not c:IsCode(240100007)
 end
 function c240100007.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c240100007.filter,tp,LOCATION_DECK,0,1,nil) end
