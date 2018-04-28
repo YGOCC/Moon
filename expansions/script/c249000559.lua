@@ -76,6 +76,13 @@ function c249000559.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE)	
 	e5:SetOperation(c249000559.tokenop)
 	c:RegisterEffect(e5)
+	--spsummon condition
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_SINGLE)
+	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e6:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e6:SetValue(c249000559.splimit)
+	c:RegisterEffect(e6)
 end
 function c249000559.discon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
@@ -273,4 +280,7 @@ function c249000559.tokenop(e,tp,eg,ep,ev,re,r,rp)
 		if cardstruct.initial_effect then cardstruct.initial_effect(temp) end
 		tc=g:GetNext()
 	end
+end
+function c249000559.splimit(e,se,sp,st)
+	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
