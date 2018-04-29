@@ -1,5 +1,6 @@
 --fenrir
 function c12345019.initial_effect(c)
+c:SetUniqueOnField(1,0,12345019)
 	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
