@@ -49,7 +49,8 @@ function c249000403.tgfilter(c,e,tp)
 	return c:IsSetCard(0x48) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,true,false)
 end
 function c249000403.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000403.tgfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000403.tgfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
+	and Duel.GetLocationCountFromEx(tp)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c249000403.numtablematch(num)
@@ -59,22 +60,16 @@ function c249000403.numtablematch(num)
 	return false
 end
 function c249000403.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0 then
-		local g=Duel.GetDecktopGroup(tp,1)
-		local tc=g:GetFirst()
-		math.randomseed( tc:getcode() )
-	end
 	local num=math.random(0,107)
 	while c249000403.numtablematch(num) do num=math.random(0,107) end
 	local a1=Duel.AnnounceNumber(tp,num)
-	local ac=Duel.AnnounceCard(tp)
+	local ac=Duel.AnnounceCardFilter(tp,0x48,OPCODE_ISSETCARD)
 	local token=Duel.CreateToken(tp,ac)
 	while not (token.xyz_number==a1)
 		do
 			ac=Duel.AnnounceCard(tp)
 			token=Duel.CreateToken(tp,ac)
 		end
---	Duel.Remove(token,POS_FACEDOWN,REASON_RULE)
 	Duel.SendtoDeck(token,nil,0,REASON_RULE)
 	num=math.random(0,107)
 	while c249000403.numtablematch(num) do num=math.random(0,107) end
@@ -83,15 +78,16 @@ function c249000403.operation(e,tp,eg,ep,ev,re,r,rp)
 	token=Duel.CreateToken(tp,ac)
 	while not (token.xyz_number==a1)
 		do
-			ac=Duel.AnnounceCard(tp)
+			ac=Duel.AnnounceCardFilter(tp,0x48,OPCODE_ISSETCARD)
 			token=Duel.CreateToken(tp,ac)
 		end
---	Duel.Remove(token,POS_FACEDOWN,REASON_RULE)
 	Duel.SendtoDeck(token,nil,0,REASON_RULE)
+	if Duel.GetLocationCountFromEx(tp)<=0 then return end
 	local xyzg=Duel.GetMatchingGroup(c249000403.tgfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if xyzg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local xyz=xyzg:RandomSelect(tp,1):GetFirst()	
+		local xyz=xyzg:RandomSelect(tp,1):GetFirst()
+		Duel.Hint(HINT_CARD,0,xyz:GetOriginalCode())	
 		if Duel.SpecialSummonStep(xyz,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP) then
 			local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
 			if tc2 then
@@ -107,5 +103,5 @@ function c249000403.operation(e,tp,eg,ep,ev,re,r,rp)
 	end			
 end
 c249000403.missing_number_table={
-1,2,3,4,24,26,27,28,29,41,45,51,59,60,68,70,71,75,76,78,89,90,97,98,100
+1,2,3,4,24,26,27,28,60,76,97
 }
