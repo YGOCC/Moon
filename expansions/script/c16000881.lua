@@ -5,7 +5,8 @@ function c16000881.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetRange(LOCATION_HAND)
+	e1:SetRange(LOCATION_HAND)  
+	e1:SetCountLimit(1,16000881)
 	e1:SetCountLimit(1,16000881)
 	e1:SetCondition(c16000881.sprcon)
 	c:RegisterEffect(e1) 
@@ -14,7 +15,7 @@ function c16000881.initial_effect(c)
 	e2:SetCategory(CATEGORY_HAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetCountLimit(1,16000881)
+  
 	e2:SetTarget(c16000881.thtg)
 	e2:SetOperation(c16000881.thop)
 	c:RegisterEffect(e2)
@@ -40,7 +41,6 @@ function c16000881.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0
 		and not Duel.IsExistingMatchingCard(c16000881.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 

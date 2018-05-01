@@ -14,7 +14,6 @@ function c16000880.initial_effect(c)
 	--e2:SetCategory(CATEGORY_HAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetCountLimit(1,16000880)
 	e2:SetTarget(c16000880.thtg)
 	e2:SetOperation(c16000880.thop)
 	c:RegisterEffect(e2)
@@ -40,7 +39,6 @@ function c16000880.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0
 		and not Duel.IsExistingMatchingCard(c16000880.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 

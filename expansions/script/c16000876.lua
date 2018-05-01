@@ -14,7 +14,7 @@ function c16000876.initial_effect(c)
 	e2:SetCategory(CATEGORY_HAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetCountLimit(1,160008793)
+	e2:SetCountLimit(1,16000876)
 	e2:SetTarget(c16000876.sptg)
 	e2:SetOperation(c16000876.spop)
 	c:RegisterEffect(e2)
@@ -40,8 +40,7 @@ function c16000876.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0
-		and not Duel.IsExistingMatchingCard(c16000876.cfilter,tp,LOCATION_MZONE,0,1,nil)
+		and  not Duel.IsExistingMatchingCard(c16000876.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c16000876.filter(c,e,tp)
 	return   c:IsSetCard(0xab5) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

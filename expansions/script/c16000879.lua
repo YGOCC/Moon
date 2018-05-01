@@ -41,7 +41,7 @@ function c16000879.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0
+	   
 		and not Duel.IsExistingMatchingCard(c16000879.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c16000879.baefilter(c)
