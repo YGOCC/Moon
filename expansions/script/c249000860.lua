@@ -13,17 +13,16 @@ function c249000860.initial_effect(c)
 			end
 		end
 	end
-	--link summon not yet implemented
 	if aux.AddLinkProcedure then
 		if not c249000860_AddLinkProcedure then
 			c249000860_AddLinkProcedure=aux.AddLinkProcedure
-			aux.AddLinkProcedure = function (c,f,min,max)
+			aux.AddLinkProcedure = function (c,f,min,max,gf)
 				local code=c:GetOriginalCode()
 				local mt=_G["c" .. code]
 				mt.link_minct=min
 				if max then mt.link_maxct=max else mt.xyz_maxct=99 end
 				if f then mt.link_filter=f end
-				c249000860_AddLinkProcedure(c,f,min,max)
+				c249000860_AddLinkProcedure(c,f,min,max,gf)
 			end
 		end
 	end

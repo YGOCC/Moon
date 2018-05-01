@@ -48,7 +48,7 @@ function c249000869.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c249000869.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
+	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
 function c249000869.cfilter(c)
 	return (c:IsFusionCode(249000868) or c:IsFusionSetCard(0x48) and c:IsType(TYPE_MONSTER))
