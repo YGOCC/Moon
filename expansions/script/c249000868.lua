@@ -1,12 +1,16 @@
 --Armored Numeral Hunter
 function c249000868.initial_effect(c)
-	--special summon
+	--speical summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetRange(LOCATION_HAND)
+	e1:SetDescription(aux.Stringid(98558751,1))
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCode(EVENT_LEAVE_FIELD)
 	e1:SetCondition(c249000868.spcon)
+	e1:SetCost(c249000868.spcost)
+	e1:SetTarget(c249000868.sptg)
+	e1:SetOperation(c249000868.spop)
 	c:RegisterEffect(e1)
 	--set code
 	local e2=Effect.CreateEffect(c)
@@ -38,10 +42,42 @@ function c249000868.initial_effect(c)
 	e4:SetOperation(c249000868.rop)
 	c:RegisterEffect(e4)
 end
-function c249000868.spcon(e,c)
-	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE,nil)-Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)>=2
+function c249000868.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsReason(REASON_DESTROY)
+end
+function c249000868.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
+function c249000868.spfilter(c,e,tp)
+	return c:IsSetCard(0x48) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+end
+function c249000868.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(c249000868.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
+	local ct=g:GetClassCount(Card.GetCode)
+	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0 and ct > 2 end
+end
+function c249000868.spop(e,tp,eg,ep,ev,re,r,rp)
+	local hg=Duel.GetMatchingGroup(c249000868.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
+	if Duel.GetLocationCountFromEx(tp)<=0 or hg:GetCount() < 3 then return end
+	local rg=Group.CreateGroup()
+	for i=1,3 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+		local g=hg:Select(tp,1,1,nil)
+		local tc=g:GetFirst()
+		rg:AddCard(tc)
+		hg:Remove(Card.IsCode,nil,tc:GetCode())
+	end
+	Duel.ConfirmCards(1-tp,rg)
+	local sc=hg:RandomSelect(tp,1):GetFirst()
+	if Duel.SpecialSummonStep(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP) then
+		local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
+		if tc2 then
+			Duel.Overlay(sc,tc2)
+		end
+		Duel.SpecialSummonComplete()
+		sc:CompleteProcedure()					
+	end
 end
 function c249000868.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -60,7 +96,7 @@ end
 function c249000868.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetMatchingGroupCount(c249000868.sumfilter,tp,0,LOCATION_MZONE,nil)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(c249000868.filter,tp,LOCATION_EXTRA,0,1,nil,ct+4) end
+		and Duel.IsExistingMatchingCard(c249000868.filter,tp,LOCATION_EXTRA,0,1,nil,ct+6) end
 end
 function c249000868.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -68,7 +104,7 @@ function c249000868.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	local ct=Duel.GetMatchingGroupCount(c249000868.sumfilter,tp,0,LOCATION_MZONE,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectMatchingCard(tp,c249000868.filter,tp,LOCATION_EXTRA,0,1,1,nil,ct+4)
+	local g=Duel.SelectMatchingCard(tp,c249000868.filter,tp,LOCATION_EXTRA,0,1,1,nil,ct+6)
 	local tc=g:GetFirst()
 	if tc then
 		if not Duel.Equip(tp,tc,c,true) then return end
