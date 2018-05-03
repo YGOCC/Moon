@@ -67,27 +67,7 @@ function c1020026.sprop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c1020026.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		if Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
-			local c=g:GetFirst()
-			local e3=Effect.CreateEffect(e:GetHandler())
-			e3:SetType(EFFECT_TYPE_SINGLE)
-			e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-			e3:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-			e3:SetValue(1)
-			c:RegisterEffect(e3)
-			local e4=e3:Clone()
-			e4:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
-			c:RegisterEffect(e4)
-			local e5=e3:Clone()
-			e5:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
-			c:RegisterEffect(e5)
-			local e5=e3:Clone()
-			e5:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-			c:RegisterEffect(e5)
-			Duel.SpecialSummonComplete()
-		end
-	end
+	if g:GetCount()>0 then Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) end
 end
 function c1020026.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
