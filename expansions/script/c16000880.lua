@@ -96,8 +96,8 @@ function c16000880.mtop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c16000880.cost(e,tp,eg,ep,ev,re,r,rp,chk)
- if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+ if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 
 
