@@ -29,7 +29,7 @@ function c16000877.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c16000877.cfilter(c)
-	return c:IsFacedown() or not c:IsSetCard(0xab5) or c:IsCode(16000877)
+	return c:IsFacedown() or not c:IsRace(RACE_FAIRY) or c:IsCode(16000877)
 end
 function c16000877.sprcon(e,c)
 	if c==nil then return true end
