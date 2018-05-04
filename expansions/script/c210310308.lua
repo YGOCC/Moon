@@ -8,12 +8,13 @@ function ref.initial_effect(c)
   e0:SetType(EFFECT_TYPE_ACTIVATE)
   e0:SetCode(EVENT_FREE_CHAIN)
   c:RegisterEffect(e0)
-  -- Cannot Target
+  -- Unaffected
   local e1=Effect.CreateEffect(c)
   e1:SetType(EFFECT_TYPE_FIELD)
-  e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+  e1:SetCode(EFFECT_IMMUNE_EFFECT)
   e1:SetRange(LOCATION_FZONE)
   e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+  e1:SetCondition(ref.immcon)
   e1:SetTargetRange(LOCATION_MZONE,0)
   e1:SetTarget(aux.TargetBoolFunction(ref.f))
   e1:SetValue(ref.tv)
@@ -39,7 +40,10 @@ function ref.initial_effect(c)
   c:RegisterEffect(e3)
 end
 
--- Cannot Target
+-- Unaffected
+function ref.immcon(e)
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,nil,0xe1)
+end
 function ref.tv(e,re,rp)
   
   return rp~=e:GetHandlerPlayer() and not re:IsHasCategory(CATEGORY_POSITION)
@@ -51,9 +55,8 @@ function ref.f(c)
 end
 function ref.c(e,tp,eg,ep,ev,re,r,rp)
   local hasCard=Duel.IsExistingMatchingCard(ref.f,tp,LOCATION_MZONE,0,1,nil)
-  local isAllFaceup=not Duel.IsExistingMatchingCard(Card.IsFacedown,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 
-  return hasCard and isAllFaceup
+  return hasCard 
 end
 
 function ref.t(e,c)

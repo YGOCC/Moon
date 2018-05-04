@@ -28,7 +28,7 @@ function card.filter1(c,tp)
 	return c:IsCode(82999629) and c:GetActivateEffect():IsActivatable(tp)
 end
 function card.filter2(c)
-	return c:IsType(TYPE_EQUIP) and c:IsCode(02370081) and Duel.IsExistingMatchingCard(card.eqcheck,tp,LOCATION_MZONE,0,1,nil,c)
+	return c:IsType(TYPE_EQUIP) and c:IsCode(2370081) and Duel.IsExistingMatchingCard(card.eqcheck,tp,LOCATION_MZONE,0,1,nil,c)
 end
 function card.eqcheck(c,ec)
 	return ec:CheckEquipTarget(c)
@@ -120,7 +120,7 @@ end
 end
 function card.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,card.filter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
@@ -128,12 +128,12 @@ function card.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 --banish to draw
 function card.tdfilter(c)
-	return c:IsCode(82999629,02370081) and c:IsAbleToRemoveAsCost()
+	return c:IsCode(82999629,2370081) and c:IsAbleToRemoveAsCost()
 end
 function card.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(card.tdfilter.filter,tp,LOCATION_GRAVE,0,1,c) end
+		and Duel.IsExistingMatchingCard(card.tdfilter,tp,LOCATION_GRAVE,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,card.tdfilter,tp,LOCATION_GRAVE,0,1,1,c)
 	g:AddCard(c)
