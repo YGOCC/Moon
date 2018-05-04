@@ -12,11 +12,22 @@ function c115000875.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_DRAW)
 	e2:SetCost(c115000875.spcost)
 	e2:SetTarget(c115000875.sptg)
 	e2:SetOperation(c115000875.spop)
 	c:RegisterEffect(e2)
+	--spsummon
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1)
+	e3:SetCost(aux.bfgcost)
+	e3:SetTarget(c115000875.sptg)
+	e3:SetOperation(c115000875.spop2)
+	c:RegisterEffect(e3)
 end
 function c115000875.filter(c)
 	return c:IsLevelBelow(4) and c:IsSetCard(0x11AB) and c:IsAbleToHand()
@@ -31,11 +42,11 @@ function c115000875.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,sg)
 	end
 end
-function c115000875.filter2(c)
-	return c:IsSetCard(0x1AB) and not c:IsPublic()
+function c115000875.filter2(c,e)
+	return c:IsSetCard(0x1AB) and not c:IsPublic() and c:IsRelateToEffect(e)
 end
 function c115000875.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return ep==tp and eg:IsExists(c115000875.filter2,1,nil) end
+	if chk==0 then return ep==tp and eg:IsExists(c115000875.filter2,1,nil,e) end
 	local g=eg:Filter(c115000875.filter2,nil)
 	if g:GetCount()==1 then
 		Duel.ConfirmCards(1-tp,g)
@@ -57,6 +68,14 @@ function c115000875.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c115000875.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 or not e:GetHandler():IsRelateToEffect(e) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c115000875.filter3,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
+function c115000875.spop2(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c115000875.filter3,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then

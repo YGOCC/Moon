@@ -31,6 +31,7 @@ function c249000861.initial_effect(c)
 	e3:SetCode(EVENT_BATTLE_CONFIRM)
 	e3:SetCountLimit(1)
 	e3:SetCondition(c249000861.condition2)
+	e3:SetCost(c249000861.cost2)
 	e3:SetTarget(c249000861.target2)
 	e3:SetOperation(c249000861.operation2)
 	c:RegisterEffect(e3)
@@ -75,6 +76,10 @@ end
 function c249000861.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return r~=REASON_REPLACE and Duel.GetAttackTarget()==e:GetHandler() and Duel.GetAttacker():IsControler(1-tp)
 end
+function c249000861.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
 function c249000861.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) end
 	if chk==0 then return true end
@@ -86,14 +91,6 @@ function c249000861.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	if tc and tc:IsRelateToEffect(e)
 		and a:IsAttackable() and not a:IsImmuneToEffect(e) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		e1:SetValue(1)
-		e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-		a:RegisterEffect(e1)
-		local e2=e1:Clone()
-		tc:RegisterEffect(e2)
 		Duel.CalculateDamage(a,tc)
 	end
 end

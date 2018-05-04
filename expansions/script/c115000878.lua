@@ -32,7 +32,7 @@ function c115000878.filter(c,e,tp)
 end
 function c115000878.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local i=5
+	local i=3
 	repeat
 		i=i-1
 		local tc=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_ONFIELD,1,1,nil):GetFirst()
@@ -45,18 +45,18 @@ function c115000878.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
-			e1:SetValue(-500)
+			e1:SetValue(-800)
 			tc:RegisterEffect(e1)
 			local e2=e1:Clone()
 			e2:SetCode(EFFECT_UPDATE_DEFENSE)
 			tc:RegisterEffect(e2)
 			Duel.BreakEffect()
-			if tc:GetAttack() <=0 or tc:GetDefense()<=0 then
+			if tc:GetAttack() <=0 or (tc:GetDefense()<=0 and not tc:IsType(TYPE_LINK)) then
 				Duel.BreakEffect()
 				Duel.Destroy(tc,REASON_EFFECT)
 			end
 		end
-		if Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_ONFIELD,nil) < 1 or not Duel.SelectYesNo(tp,502) then return end
+		if Duel.GetMatchingGroupCount(Card.IsFaceup,tp,0,LOCATION_ONFIELD,nil) < 1 or i < 1 or not Duel.SelectYesNo(tp,502) then return end
 	until i < 1
 end
 function c115000878.handfilter(c)

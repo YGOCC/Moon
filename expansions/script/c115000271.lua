@@ -6,10 +6,19 @@ function c115000271.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
+	e3:SetCondition(c115000271.condition)
 	e3:SetCost(c115000271.cost)
 	e3:SetTarget(c115000271.target)
 	e3:SetOperation(c115000271.operation)
 	c:RegisterEffect(e3)
+end
+function c115000271.filter2(c,e,tp)
+	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and (c:IsSetCard(0x11AB) or c:IsSetCard(0x21AB))
+end
+function c115000271.condition(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(c115000271.filter2,tp,LOCATION_EXTRA+LOCATION_DECK,0,nil,e,tp)
+	local ct=g:GetClassCount(Card.GetCode)
+	return ct > 4
 end
 function c115000271.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,800) and e:GetHandler():GetAttackAnnouncedCount()==0 end
@@ -20,9 +29,6 @@ function c115000271.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetCode(EFFECT_CANNOT_ATTACK)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	e:GetHandler():RegisterEffect(e1,true)
-end
-function c115000271.filter2(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and (c:IsSetCard(0x11AB) or c:IsSetCard(0x21AB))
 end
 function c115000271.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1

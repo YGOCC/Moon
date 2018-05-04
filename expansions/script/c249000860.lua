@@ -20,8 +20,9 @@ function c249000860.initial_effect(c)
 				local code=c:GetOriginalCode()
 				local mt=_G["c" .. code]
 				mt.link_minct=min
-				if max then mt.link_maxct=max else mt.xyz_maxct=99 end
+				if max then mt.link_maxct=max else mt.link_maxct=99 end
 				if f then mt.link_filter=f end
+				if gf then mt.link_filterg=gf end
 				c249000860_AddLinkProcedure(c,f,min,max,gf)
 			end
 		end
@@ -103,17 +104,15 @@ function c249000860.spfilter(c,e,tp)
 	local code=c:GetOriginalCode()
 	local mt=_G["c" .. code]
 	local linkf = mt.link_filter
+	local linkfg = mt.link_filterg
 	if c:GetLink()==2 then
-		return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false) and Duel.IsExistingMatchingCard(c249000860.linkspfilter,tp,LOCATION_MZONE,0,1,nil,c,linkf)
+		return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false) and Duel.IsExistingMatchingCard(c249000860.linkspfilter,tp,LOCATION_MZONE,0,1,nil,c,linkf,linkfg)
 	end
 	if c:GetLink()==3 or c:GetLink()==4 then
-		return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false) and c249000860.sprconL(c,linkf)
+		return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false) and c249000860.sprconL(c,linkf,linkfg)
 	end
-	if mt.xyz_minct and mt.xyz_minct==2 then
-		return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.IsExistingMatchingCard(c249000860.xyzspfilter,tp,LOCATION_MZONE,0,1,nil,c,c:GetRank())
-	end
-	if mt.xyz_minct and mt.xyz_minct > 2 then
-		return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c249000860.sprcon(c,c:GetRank())
+	if mt.xyz_minct and mt.xyz_minct > 1 and c:GetRank() % 2 == 0 then
+		return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c249000860.sprcon(c,c:GetRank()/2)
 	end
 	return false
 end
@@ -121,34 +120,53 @@ function c249000860.xyzspfilter(c,xyz,rk)
 	local code=xyz:GetOriginalCode()
 	local mt=_G["c" .. code]
 	if mt.xyz_filter and not mt.xyz_filter(c) then return false end
-	if mt.xyz_minct==2 then
-		return c:IsCanBeXyzMaterial(xyz) and c:GetLevel()==rk and Duel.GetLocationCountFromEx(tp,tp,c)>0
-	else
-		return c:IsCanBeXyzMaterial(xyz) and c:GetLevel()==rk
-	end
+	return c:IsCanBeXyzMaterial(xyz) and c:GetLevel()==rk
 end
-function c249000860.spfilter1(c,tp,g)
+function c249000860.spfilter1(c,tp,g,gf)
 	return g:IsExists(c249000860.spfilter2,1,c,tp,c)
 end
-function c249000860.spfilter2(c,tp,mc)
-	return Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,mc))>0
+function c249000860.spfilter2(c,tp,mc,gf)
+	return ((gf and gf(Group.FromCards(c,mc))) or (not gf)) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,mc))>0
+end
+function c249000860.xyzcheck(c,sg)
+	return sg:IsExists(c249000860.xyzcheck2,2,c)
+end
+function c249000860.xyzcheck2(c)
+	return true
+end
+function c249000860.xyzselect(c,tp,mg,sg)
+	sg:AddCard(c)
+	local res=false
+	if sg:GetCount()<3 then
+		res=mg:IsExists(c249000860.xyzselect,1,sg,tp,mg,sg)
+	elseif Duel.GetLocationCountFromEx(tp,tp,sg)>0 then
+		res=sg:IsExists(c249000860.xyzcheck,1,nil,sg)
+	end
+	sg:RemoveCard(c)
+	return res
 end
 function c249000860.sprcon(c,rk)
 	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(c249000860.xyzspfilter,tp,LOCATION_MZONE,0,nil,c,rk)
-	return g:IsExists(c249000860.spfilter1,1,nil,tp,g)
+	local g=Duel.GetMatchingGroup(c249000860.xyzspfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil,c,rk)
+	local code=c:GetOriginalCode()
+	local mt=_G["c" .. code]
+	if mt.xyz_minct==2 then
+		return g:IsExists(c249000860.spfilter1,1,nil,tp,g)
+	elseif mt.xyz_minct > 2 then
+		return g:IsExists(c249000860.xyzselect,1,nil,tp,g,Group.CreateGroup())
+	end
 end
-function c249000860.linkspfilter(c,mc,f)
+function c249000860.linkspfilter(c,mc,f,gf)
 	if mc:GetLink()==2 then
-		return c:IsCanBeLinkMaterial(mc) and ((f and f(c)) or (not f)) and Duel.GetLocationCountFromEx(tp,tp,c)>0
+		return c:IsCanBeLinkMaterial(mc) and ((f and f(c)) or (not f)) and ((gf and gf(Group.FromCards(c))) or (not gf)) and Duel.GetLocationCountFromEx(tp,tp,c)>0
 	else
 		return c:IsCanBeLinkMaterial(mc) and ((f and f(c)) or (not f))
 	end
 end
-function c249000860.sprconL(c,mc,f)
+function c249000860.sprconL(c,mc,f,gf)
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(c249000860.linkspfilter,tp,LOCATION_MZONE,0,nil,c,mc,f)
-	return g:IsExists(c249000860.spfilter1,1,nil,tp,g)
+	return g:IsExists(c249000860.spfilter1,1,nil,tp,g,gf)
 end
 function c249000860.spcon(e,c,og)
 	if c==nil then return true end
@@ -164,27 +182,35 @@ function c249000860.spop(e,tp,eg,ep,ev,re,r,rp,c,og)
 	local mt=_G["c" .. code]
 	local g1
 	if spg:GetFirst():IsType(TYPE_XYZ) then
+		e:SetValue(SUMMON_TYPE_XYZ)
 		if mt.xyz_minct==2 then
-			g1=Duel.SelectMatchingCard(tp,c249000860.xyzspfilter,tp,LOCATION_MZONE,0,1,1,nil,spg:GetFirst(),spg:GetFirst():GetRank())
-		else
-			local g=Duel.GetMatchingGroup(c249000860.xyzspfilter,tp,LOCATION_MZONE,0,nil,spg:GetFirst(),spg:GetFirst():GetRank())
+			local g=Duel.GetMatchingGroup(c249000860.xyzspfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil,spg:GetFirst(),spg:GetFirst():GetRank()/2)
 			g1=g:FilterSelect(tp,c249000860.spfilter1,1,1,nil,tp,g)
 			local mc=g1:GetFirst()
 			local g2=g:FilterSelect(tp,c249000860.spfilter2,1,1,mc,tp,mc)
 			g1:Merge(g2)
+		else
+			local g=Duel.GetMatchingGroup(c249000860.xyzspfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil,spg:GetFirst(),spg:GetFirst():GetRank()/2)
+			g1=Group.CreateGroup()
+			while g1:GetCount()<3 do
+				local g2=g:FilterSelect(tp,c249000860.xyzselect,1,1,g1,tp,g,g1)
+				g1:Merge(g2)
+			end
 		end
 		Duel.SendtoGrave(g1,REASON_RULE)
 		spg:GetFirst():SetMaterial(g1)
 		Duel.Overlay(spg:GetFirst(),g1)
 	else
+		e:SetValue(SUMMON_TYPE_LINK)
 		local linkf = mt.link_filter
+		local linkfg = mt.link_filterg
 		if spg:GetFirst():GetLink()==2 then
-			g1=Duel.SelectMatchingCard(tp,c249000860.linkspfilter,tp,LOCATION_MZONE,0,1,1,nil,spg:GetFirst(),linkf)
+			g1=Duel.SelectMatchingCard(tp,c249000860.linkspfilter,tp,LOCATION_MZONE,0,1,1,nil,spg:GetFirst(),linkf,linkfg)
 		else
-			local g=Duel.GetMatchingGroup(c249000860.linkspfilter,tp,LOCATION_MZONE,0,nil,spg:GetFirst(),linkf)
-			g1=g:FilterSelect(tp,c249000860.spfilter1,1,1,nil,tp,g)
+			local g=Duel.GetMatchingGroup(c249000860.linkspfilter,tp,LOCATION_MZONE,0,nil,spg:GetFirst(),linkf,linkfg)
+			g1=g:FilterSelect(tp,c249000860.spfilter1,1,1,nil,tp,g,linkfg)
 			local mc=g1:GetFirst()
-			local g2=g:FilterSelect(tp,c249000860.spfilter2,1,1,mc,tp,mc)
+			local g2=g:FilterSelect(tp,c249000860.spfilter2,1,1,mc,tp,mc,linkfg)
 			g1:Merge(g2)
 		end
 		spg:GetFirst():SetMaterial(g1)

@@ -54,7 +54,7 @@ function card.sop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function card.filter(c,e,tp)
-	return c:IsCode(210424268) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(210424268) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and (c:IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_MZONE) or Duel.GetLocationCountFromEx(tp)>0)
 end
 function card.spfilter(c)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGrave() and c:IsFaceup()
@@ -63,19 +63,17 @@ function card.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and e:GetHandler():GetPreviousControler()==tp
 end
 function card.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and Duel.IsExistingMatchingCard(card.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(card.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp)
 	and Duel.IsExistingMatchingCard(card.spfilter,tp,LOCATION_EXTRA,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_EXTRA)
 end
 function card.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local g=Duel.SelectMatchingCard(tp,card.spfilter,tp,LOCATION_EXTRA,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_Effect)
+	Duel.SendtoGrave(g,REASON_EFFECT)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,card.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-	Duel.SpecialSummon(g,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
-	g:GetFirst():CompleteProcedure()
-end
+		Duel.SpecialSummon(g,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
+		g:GetFirst():CompleteProcedure()
+	end
 end
