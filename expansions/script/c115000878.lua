@@ -32,20 +32,26 @@ function c115000878.filter(c,e,tp)
 end
 function c115000878.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local i=3
+	local i=5
 	repeat
 		i=i-1
-		local tc=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_ONFIELD,1,1,nil):GetFirst()
+		local tc=nil
+		if i > 1 then
+			tc=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_ONFIELD,1,1,nil):GetFirst()
+		else
+			tc=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
+		end
 		if not tc then return end
-		if tc:IsType(TYPE_SPELL+TYPE_TRAP) then
+		if tc:IsType(TYPE_SPELL+TYPE_TRAP) and i > 1 then
 			Duel.Destroy(tc,REASON_EFFECT)
 			Duel.BreakEffect()
+			i=i-1
 		else
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
-			e1:SetValue(-800)
+			e1:SetValue(-500)
 			tc:RegisterEffect(e1)
 			local e2=e1:Clone()
 			e2:SetCode(EFFECT_UPDATE_DEFENSE)

@@ -39,28 +39,29 @@ function c249000626.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c249000626.filter1(c,e,tp,att)
-	return c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsReason(REASON_DESTROY)
-		and Duel.IsExistingMatchingCard(c249000626.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+1,c:GetAttribute())
+	return c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(c249000626.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+1,c:GetAttribute(),c:GetCode())
 end
-function c249000626.filter2(c,e,tp,mc,rk,att)
-	return c:GetRank()==rk and c:IsAttribute(att) and mc:IsCanBeXyzMaterial(c)
+function c249000626.filter2(c,e,tp,mc,rk,att,code)
+	if c.rum_limit_code and code~=c.rum_limit_code then return false end
+	return (c:GetRank()==rk or c:GetRank()==rk+1) and c:IsAttribute(att) and mc:IsCanBeXyzMaterial(c)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c249000626.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c249000626.filter1(chkc,e,tp) end
 	if chk==0 then return Duel.IsPlayerCanSpecialSummonCount(tp,2)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c249000626.filter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+		and Duel.GetLocationCountFromEx(tp)>0
+		and Duel.IsExistingTarget(aux.NecroValleyFilter(c249000626.filter1),tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c249000626.filter1,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,aux.NecroValleyFilter(c249000626.filter1),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c249000626.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if Duel.GetLocationCountFromEx(tp)<=0 then return end
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
 	if tc:IsHasEffect(EFFECT_NECRO_VALLEY) then return end
+	if	Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c249000626.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,tc:GetRank()+1,tc:GetAttribute())
 	local sc=g:GetFirst()

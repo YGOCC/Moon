@@ -11,6 +11,18 @@ function c249000628.initial_effect(c)
 	e1:SetTarget(c249000628.target)
 	e1:SetOperation(c249000628.activate)
 	c:RegisterEffect(e1)
+	--negate
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(5818294,0))
+	e2:SetCategory(CATEGORY_DISABLE)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCondition(c249000628.negcon)
+	e2:SetCost(aux.bfgcost)
+	e2:SetTarget(c249000628.negtg)
+	e2:SetOperation(c249000628.negop)
+	c:RegisterEffect(e2)
 end
 function c249000628.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer()
@@ -45,27 +57,28 @@ end
 function c249000628.filter1(c,e,tp)
 	return c:IsType(TYPE_XYZ) and c:IsFaceup() 
 		and Duel.IsExistingMatchingCard(c249000628.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+1,c:GetCode(),c:GetAttribute())
+		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function c249000628.filter2(c,e,tp,mc,rk,code,att)
 	if c.rum_limit_code and code~=c.rum_limit_code then return false end
-	return c:GetRank()==rk and mc:IsCanBeXyzMaterial(c) and c:IsAttribute(att)
+	return (c:GetRank()==rk or c:GetRank()==rk+1) and mc:IsCanBeXyzMaterial(c) and c:IsAttribute(att)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c249000628.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c249000628.filter1(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingTarget(c249000628.filter1,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(c249000628.filter1,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,c249000628.filter1,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c249000628.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
 	local tc=Duel.GetFirstTarget()
+	local c=e:GetHandler()
 	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
+	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
 	Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c249000628.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,tc:GetRank()+1,tc:GetCode())
+	local g=Duel.SelectMatchingCard(tp,c249000628.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,tc:GetRank()+1,tc:GetCode(),tc:GetAttribute())
 	local sc=g:GetFirst()
 	if sc then
 		local mg=tc:GetOverlayGroup()
@@ -77,4 +90,19 @@ function c249000628.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP_ATTACK)
 		sc:CompleteProcedure()
 	end
+end
+function c249000628.tfilter(c,tp)
+	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and c:IsFaceup() and c:IsType(TYPE_XYZ)
+end
+function c249000628.negcon(e,tp,eg,ep,ev,re,r,rp)
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
+	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	return g and g:IsExists(c249000628.tfilter,1,nil,tp) and Duel.IsChainDisablable(ev)
+end
+function c249000628.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
+end
+function c249000628.negop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.NegateEffect(ev)
 end

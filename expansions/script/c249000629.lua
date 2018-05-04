@@ -42,6 +42,7 @@ function c249000629.filter1(c,e,tp)
 	local rk=c:GetRank()
 	return rk>0 and c:IsFaceup()
 		and Duel.IsExistingMatchingCard(c249000629.filter2,tp,LOCATION_EXTRA,0,1,nil,rk,c:GetAttribute(),c:GetCode(),e,tp)
+		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function c249000629.filter2(c,rk,att,code,e,tp)
 	if c.rum_limit_code and code~=c.rum_limit_code then return false end
@@ -49,17 +50,16 @@ function c249000629.filter2(c,rk,att,code,e,tp)
 end
 function c249000629.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c249000629.filter1(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingTarget(c249000629.filter1,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(c249000629.filter1,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c249000629.filter1,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c249000629.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
+	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c249000629.filter2,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetRank(),tc:GetAttribute(),tc:GetCode(),e,tp)
 	local sc=g:GetFirst()
@@ -76,5 +76,16 @@ function c249000629.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CHANGE_DAMAGE)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetTargetRange(0,1)
+		e1:SetValue(c249000629.damval)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
 	end
+end
+function c249000629.damval(e,re,val,r,rp,rc)
+	return val/2
 end

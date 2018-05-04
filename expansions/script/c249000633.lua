@@ -80,4 +80,5 @@ function c249000633.drop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Draw(p,d,REASON_EFFECT)==2 then
 		Duel.ShuffleHand(p)
 		Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+	end
 end
