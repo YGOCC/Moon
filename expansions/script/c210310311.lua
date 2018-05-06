@@ -1,4 +1,4 @@
---Life in the Clouds
+--Life in the Cloudians
 local card = c210310311
 function card.initial_effect(c)
 	--Activate
@@ -18,50 +18,23 @@ function card.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-		local e4=e2:Clone()
+	local e4=e2:Clone()
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
-		--sp summon
+	--Counter 2
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e5:SetCode(EVENT_LEAVE_FIELD)
-	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e5:SetCountLimit(1,210310311)
-	e5:SetRange(LOCATION_SZONE)
-	e5:SetCondition(card.spcon)
-	e5:SetTarget(card.sptg)
-	e5:SetOperation(card.spop)
-	c:RegisterEffect(e5)
+    e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e5:SetRange(LOCATION_SZONE)
+    e5:SetCode(EVENT_REMOVE_COUNTER+0x1019)
+	e5:SetTarget(card.cttg1)
+    e5:SetOperation(card.ctop1)
+    c:RegisterEffect(e5)
 end
 function card.filter(c)
 	return not c:IsReason(REASON_RULE)
 end
-function card.cfilter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x18) and c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
-end
-function card.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(card.cfilter,nil,tp)
-	return g:GetCount()==1
-end
-function card.spfilter(c,e,tp)
-	return c:IsSetCard(0x18) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
-end
-function card.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and Duel.IsExistingMatchingCard(card.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
-end
-function card.spop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,card.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_ATTACK)
-end
-end
 function card.ctfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x18)
+	return c:IsFaceup()
 end
 function card.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(card.ctfilter,1,nil,tp)
@@ -78,4 +51,15 @@ function card.ctop(e,tp,eg,ep,ev,re,r,rp)
 		tc:AddCounter(0x1019,1)
 		tc=g:GetNext()
 	end
+end
+--Counter 2
+function card.cttg1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
+end
+function card.ctop1(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+	if g:GetCount()==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(4005,0))
+	local tc=g:Select(tp,1,1,nil):GetFirst()
+	tc:AddCounter(0x1019,1)
 end
