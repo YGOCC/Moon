@@ -36,9 +36,9 @@ end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-get_prev_level_field, is_level, is_level_below, is_level_above, change_position = 
+get_prev_level_field, is_level, is_level_below, is_level_above, change_position , card_remcounter, duel_remcounter = 
 Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
-Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition
+Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, Duel.RemoveCounter
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -216,6 +216,31 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 	elseif cc:SwitchSpace() then return end
 	-- end
 	change_position(cc,au,ad,du,dd)
+end
+
+Card.RemoveCounter=function(c,p,typ,ct,r)
+	local n=c:GetCounter(typ)
+	card_remcounter(c,p,typ,ct,r)
+	if n-c:GetCounter(typ)==ct then return true else return false end
+end
+
+Duel.RemoveCounter=function(p,s,o,typ,ct,r,rp)
+	if rp==nil or rp==PLAYER_NONE --[[2]] then
+		duel_remcounter(p,s,o,typ,ct,r)
+		return nil
+	elseif rp==PLAYER_ALL --[[3]] then
+		local n=Duel.GetCounter(p,s,o,typ)
+		duel_remcounter(p,s,o,typ,ct,r)
+		return n-Duel.GetCounter(p,s,o,typ)==ct,ct
+	elseif rp==p then
+		local n=Duel.GetCounter(p,s,0,typ)
+		duel_remcounter(p,s,o,typ,ct,r)
+		return n-Duel.GetCounter(p,s,0,typ)
+	elseif rp==1-p then
+		local n=Duel.GetCounter(p,0,o,typ)
+		duel_remcounter(p,s,o,typ,ct,r)
+		return n-Duel.GetCounter(p,0,o,typ)
+	end
 end
 
 --Custom Functions
