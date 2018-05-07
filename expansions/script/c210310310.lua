@@ -26,7 +26,6 @@ function c210310310.initial_effect(c)
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCountLimit(1)
 	e4:SetCost(c210310310.thcost)
 	e4:SetTarget(c210310310.thtg1)
 	e4:SetOperation(c210310310.thop1)
@@ -51,8 +50,8 @@ function c210310310.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveCounter(tp,0x1019,2,REASON_COST)
 end
 function c210310310.thfilter1(c)
-	return (c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsType(TYPE_FIELD) and c:IsSetCard(0x18)) or (c:IsCode(210310305,19980975,63741331,90135989,210310309,23639291,90557975)) and c:IsAbleToHand()
-	end
+	return (c:IsType(TYPE_SPELL+TYPE_TRAP) (c:IsCode(210310311,210310305,19980975,63741331,90135989,210310309,23639291,90557975,210310313)) and c:IsAbleToHand())
+ end
 function c210310310.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c210310310.thfilter1,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
