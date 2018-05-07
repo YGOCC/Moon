@@ -53,8 +53,8 @@ function c100001176.actb(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 end
 function c100001176.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,100000979)==0 end
-	Duel.RegisterFlagEffect(tp,100000979,0,0,0)
+	if chk==0 then return Duel.GetFlagEffect(tp,100001176)==0 end
+	Duel.RegisterFlagEffect(tp,100001176,0,0,0)
 end
 function c100001176.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
