@@ -1,5 +1,4 @@
-﻿expansions/.KinTest(non-QCD).cdb	1e3034e617e98615dfaf44b9528e2fcc
-expansions/Cards-non QCD.cdb	d38bddf0fc2b2b87cbb7ed335e20777e
+﻿expansions/Cards-non QCD.cdb	d38bddf0fc2b2b87cbb7ed335e20777e
 expansions/lflist.conf	dce503c439f653f7f333ede671390b22
 expansions/official.cdb	beedc6a925313dd43726896e21ebc178
 expansions/pre-release.cdb	dcd136c8498a50df09aabc1be3ce91b3
@@ -8838,7 +8837,7 @@ expansions/sound/custom/Tosh_Summon.wav	9762d9f67c2bd0c50635a0ff2ab956d0
 expansions/sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 expansions/sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 expansions/sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
-update/delete.txt	91da5345fbacb1721df4e6e7af22836c
-update/filelist.txt	f8711cd456a5be007f531497a772cd3a
+update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
+update/filelist.txt	f5dba9adfc81535b3ad808ab857ca77a
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	df116c09082e7c2da1e86d729e016700
+update/version.txt	6888ee0fb7a0f48b67daa94aa5871b1b
