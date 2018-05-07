@@ -132,6 +132,7 @@ function scard.spop(e,tp,eg,ep,ev,re,r,rp)
 				e4:SetCode(EFFECT_SET_BASE_DEFENSE)
 				tc:RegisterEffect(e4)
 				Duel.ResetFlagEffect(tp,s_id)
+				Duel.SpecialSummonComplete()
 			end
 		else
 			local mat=Duel.SelectFusionMaterial(tp,tc,mg3,nil,tp)
