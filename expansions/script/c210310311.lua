@@ -39,7 +39,6 @@ function card.initial_effect(c)
 end
 function card.tg(e,tp)
 	local ct=e:GetLabelObject():GetLabel() or Duel.GetCounter(tp,0,LOCATION_ONFIELD,0x1019)
-	Debug.Message(Duel.GetCounter(tp,0,LOCATION_ONFIELD,0x1019)..ct)
 	if Duel.GetCounter(tp,0,LOCATION_ONFIELD,0x1019)<ct then
 		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+210310311,e,0,tp,tp,ct-Duel.GetCounter(tp,0,LOCATION_ONFIELD,0x1019))
 	end
