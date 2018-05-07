@@ -88,6 +88,7 @@ function scard.activate(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 				e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 				tc:RegisterEffect(e1,true)
+				Duel.SpecialSummonComplete()
 			end
 		else
 			local mat2=Duel.SelectFusionMaterial(tp,tc,mg3,nil,chkf)
