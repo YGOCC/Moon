@@ -13,6 +13,7 @@ function c500312121.initial_effect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	--e2:SetCondition(aux.exccon)
 	e2:SetCost(c500312121.thcost)
 	e2:SetTarget(c500312121.thtg)
@@ -39,7 +40,7 @@ function c500312121.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c500312121.filter(c)
-	return  c:IsSetCard(0xc52)  and c:IsAbleToDeck()
+	return c:IsFaceup() c:IsSetCard(0xc52)  and c:IsAbleToDeck()
 end
 
 function c500312121.thtg(e,tp,eg,ep,ev,re,r,rp,chk)

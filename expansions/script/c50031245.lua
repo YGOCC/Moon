@@ -77,12 +77,12 @@ function c50031245.op(e,tp,eg,ep,ev,re,r,rp)
 		end
 	if ct>=7 then
 		Duel.BreakEffect()
-	local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
 	Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
 	end
 	if ct>=9 then
 		Duel.BreakEffect()
-	local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,e:GetHandler())
+	local sg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,nil)
 	Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
 	end
 	if ct>=11 then
