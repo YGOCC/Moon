@@ -51,6 +51,7 @@ function scard.filter2(c)
 	return c:IsFaceup() and c:IsRace(RACE_MACHINE)
 end
 function scard.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	if chk==0 then return c:GetFlagEffect(s_id)==0 end
 	c:RegisterFlagEffect(s_id,RESET_CHAIN,0,1)
 	local tc=eg:GetFirst()
