@@ -35,7 +35,7 @@ function c101600105.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c101600105.cfilter(c)
-	return c:IsSetCard(0xcd01) and c:IsFaceup()
+	return c:IsSetCard(0xcd01) and c:IsFaceup() and c:IsType(TYPE_TUNER)
 end
 function c101600105.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroup(tp,LOCATION_MZONE,0):IsExists(c101600105.cfilter,1,nil)
