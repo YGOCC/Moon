@@ -31,7 +31,7 @@ function c1020059.initial_effect(c)
 end
 --filters
 function c1020059.spfilter(c,e,tp)
-	return c:IsSetCard(0x4b0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x4b0) and c:GetLevel()<=4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --values
 function c1020059.untargetable(e,re,rp)
