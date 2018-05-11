@@ -28,6 +28,7 @@ function c500310666.initial_effect(c)
 	e4:SetTarget(c500310666.sptg)
 	e4:SetOperation(c500310666.spop)
 	c:RegisterEffect(e4)
+	
 end
 
 
@@ -46,6 +47,15 @@ function c500310666.spcon(e,c)
 end
 function c500310666.filter(c)
 	return c:IsSetCard(0x85a) and c:IsAbleToHand()
+end
+function c500310666.indcon(e)
+	return Duel.IsExistingMatchingCard(c500310666.tkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil,nil)
+end
+function c500310666.tkfilter(c)
+	return c:IsSetCard(0x85a) and c:IsType(TYPE_TOKEN)
+end
+function c500310666.sumlimit(e,c,sump,sumtype,sumpos,targetp)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0x85a)
 end
 function c500310666.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -101,6 +111,17 @@ function c500310666.spop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetValue(1)
 		e4:SetReset(RESET_EVENT+0x1fe0000)
 		token:RegisterEffect(e4,true)
+	  --spsummon limit
+	local e5=Effect.CreateEffect(e:GetHandler())
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e5:SetTargetRange(1,0)
+	 e5:SetCondition(c500310666.indcon)
+	e5:SetTarget(c500310666.sumlimit)
+	e5:SetReset(RESET_EVENT+0x1fe0000)
+	token:RegisterEffect(e5,true)
 		end
 		Duel.SpecialSummonComplete()
 	end

@@ -28,6 +28,22 @@ function c16000034.initial_effect(c)
 	e3:SetTarget(c16000034.dgtg)
 	e3:SetOperation(c16000034.dgop)
 	c:RegisterEffect(e3)
+			   --Special SUmmon
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(16000034,1))
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCondition(c16000034.spcon)
+	e4:SetTarget(c16000034.sumtg)
+	e4:SetOperation(c16000034.spop)
+	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EVENT_REMOVE)
+	c:RegisterEffect(e5)
+	local e6=e4:Clone()
+	e6:SetCode(EVENT_TO_DECK)
+	c:RegisterEffect(e6)
 end
 function c16000034.matfilter(c,ec,tp)
    return c:IsAttribute(ATTRIBUTE_LIGHT) 
@@ -36,7 +52,7 @@ function c16000034.checku(sg,ec,tp)
 return sg:IsExists(Card.IsCode,1,nil,16000020)
 end
 function c16000034.filter2(c,ec,tp)
-	return c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE) 
+	return  return (c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE)) or c:IsRace(RACE_PSYCHO)
 end
 function c16000034.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -131,3 +147,27 @@ function c16000034.dgop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
+function c16000034.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+end
+function c16000034.mgfilter(c,e,tp,sync)
+return not c:IsControler(tp) or not c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED)
+		or  not  r==REASON_MATERIAL+0x10000000
+		or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsHasEffect(EFFECT_NECRO_VALLEY)
+end
+function c16000034.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local mg=e:GetHandler():GetMaterial()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if chk==0 then return mg:GetCount()>0 and ft>=mg:GetCount() 
+		and not mg:IsExists(c16000034.mgfilter,1,nil,e,tp,e:GetHandler()) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,mg,mg:GetCount(),tp,0)
+end
+function c16000034.spop(e,tp,eg,ep,ev,re,r,rp)
+	local mg=e:GetHandler():GetMaterial()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if mg:GetCount()>ft 
+		or mg:IsExists(c16000034.mgfilter,1,nil,e,tp,e:GetHandler()) then return end
+	Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
+	end
