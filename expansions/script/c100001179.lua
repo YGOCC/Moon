@@ -1,5 +1,5 @@
 function c100001179.initial_effect(c)
-aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x765),aux.NonTuner(Card.IsSetCard,0x765),1)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)

@@ -40,6 +40,38 @@ c:SetCounterLimit(0x99,15)
 	e4:SetValue(card.value)
 	e4:SetOperation(card.desop)
 	c:RegisterEffect(e4)
+	--Search
+	local e5=Effect.CreateEffect(c)
+	e5:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e5:SetCode(EVENT_BECOME_TARGET)
+	e5:SetRange(LOCATION_SZONE)
+	--e5:SetCountLimit(1,210424276)
+	e5:SetCountLimit(1)
+	e5:SetCondition(card.betarget)
+	e5:SetTarget(card.stg)
+	e5:SetOperation(card.sop)
+	c:RegisterEffect(e5)
+end
+function card.betarget(e,tp,eg,ep,ev,re,r,rp)
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
+	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	return g and g:IsExists(card.filter2,1,nil,tp)
+end
+function card.searchfilter(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
+function card.stg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(card.searchfilter,tp,LOCATION_DECK,0,1,nil)
+end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function card.sop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOEXTRA)
+	local g=Duel.SelectMatchingCard(tp,card.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+	Duel.SendtoExtraP(g,nil,REASON_EFFECT)
+end
 end
 function card.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsCanAddCounter(tp,0x99,3,e:GetHandler()) 

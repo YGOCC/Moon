@@ -14,6 +14,7 @@ function ref.initial_effect(c)
   e1:SetCode(EFFECT_IMMUNE_EFFECT)
   e1:SetRange(LOCATION_FZONE)
   e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+  e1:SetCondition(ref.immcon)
   e1:SetTargetRange(LOCATION_MZONE,0)
   e1:SetTarget(aux.TargetBoolFunction(ref.f))
   e1:SetValue(ref.tv)
@@ -40,6 +41,9 @@ function ref.initial_effect(c)
 end
 
 -- Unaffected
+function ref.immcon(e)
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,nil,0xe1)
+end
 function ref.tv(e,re,rp)
   
   return rp~=e:GetHandlerPlayer() and not re:IsHasCategory(CATEGORY_POSITION)

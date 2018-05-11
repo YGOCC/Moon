@@ -17,7 +17,7 @@ function card.initial_effect(c)
 	e2:SetOperation(card.spreg)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(65017789,1))
+	e3:SetDescription(aux.Stringid(210310400,1))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -34,17 +34,17 @@ function card.spreg(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	if c:IsReason(REASON_COST) and rc:IsSetCard(0x109) then
 		e:SetLabel(Duel.GetTurnCount()+1)
-		c:RegisterFlagEffect(65017789,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,2)
+		c:RegisterFlagEffect(210310400,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,2)
 	end
 end
 function card.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetLabelObject():GetLabel()==Duel.GetTurnCount() and e:GetHandler():GetFlagEffect(65017789)>0
+	return e:GetLabelObject():GetLabel()==Duel.GetTurnCount() and e:GetHandler():GetFlagEffect(210310400)>0
 end
 function card.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-	e:GetHandler():ResetFlagEffect(65017789)
+	e:GetHandler():ResetFlagEffect(210310400)
 end
 function card.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

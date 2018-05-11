@@ -6,20 +6,10 @@ function card.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,210424276)
+	e1:SetCountLimit(1,210424277)
 	e1:SetTarget(card.target)
 	e1:SetOperation(card.activate)
 	c:RegisterEffect(e1)
-	--cannot be target
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e2:SetRange(LOCATION_FZONE)
-	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e2:SetTargetRange(LOCATION_PZONE,0)
-	e2:SetTarget(card.tgtg)
-	e2:SetValue(aux.tgoval)
-	c:RegisterEffect(e2)
 	--Send 2 ponies from extra to grave, kill 1	
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
@@ -31,6 +21,9 @@ function card.initial_effect(c)
 	e3:SetTarget(card.destarget)
 	e3:SetOperation(card.desop)
 	c:RegisterEffect(e3)
+end
+function card.filter2(c,tp)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD) and c:IsSetCard(0x666)
 end
 function card.desfilter(c)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGraveAsCost() and c:IsFaceup()
@@ -53,9 +46,6 @@ function card.desop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 	Duel.Destroy(tc,REASON_EFFECT)
 end
-end
-function card.tgtg(e,c)
-	return c:IsSetCard(0x666)
 end
 function card.sfilter(c)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

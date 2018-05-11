@@ -32,9 +32,9 @@ function card.initial_effect(c)
 	--atkup
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_ATKCHANGE)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e4:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCondition(card.battlecon)
 	e4:SetTarget(card.tg1)
@@ -42,25 +42,26 @@ function card.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function card.battlecon(e,tp,eg,ep,ev,re,r,rp)
-	local a=Duel.GetAttacker()
-	local d=Duel.GetAttackTarget()
-	if d and a:GetControler()~=d:GetControler() then
-	if a:IsControler(tp) then e:SetLabelObject(a)
-	else e:SetLabelObject(d) end
-	return true
-	else return false end
+			local tc=Duel.GetAttacker()
+	local bc=Duel.GetAttackTarget()
+	if not bc then return false end
+	if bc:IsControler(1-tp) then bc=tc end
+	e:SetLabelObject(bc)
+	return bc:IsFaceup() and bc:IsSetCard(0x666)
 end
 function card.tg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local tc=e:GetLabelObject()
-	if chkc then return chkc==tc end
-	if chk==0 then return tc:IsOnField() and tc:IsCanBeEffectTarget(e) and tc:IsSetCard(0x666) and tc:IsFaceup() end
-	Duel.SetTargetCard(tc)
+		local tc=Duel.GetAttacker()
+	local bc=Duel.GetAttackTarget()
+	if not bc then return false end
+	if bc:IsControler(1-tp) then bc=tc end
+	e:SetLabelObject(bc)
+	return bc:IsFaceup() and bc:IsSetCard(0x666)
 end
 function card.op1(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(e:GetHandler())
+	local tc=e:GetLabelObject()
+	if tc:IsRelateToBattle() and tc:IsFaceup() and tc:IsControler(tp) then
+	local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)

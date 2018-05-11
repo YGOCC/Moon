@@ -1,15 +1,20 @@
 --Creation Xyz Override
 function c88880043.initial_effect(c)
-	--remove overlay replace
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(35,0))
-	e1:SetType(EFFECT_TYPE_CONTINUOUS)
-	e1:SetProperty(EFFECT_FLAG_BOTH_SIDE)
-	e1:SetCode(EFFECT_OVERLAY_REMOVE_REPLACE)
-	e1:SetRange(LOCATION_FZONE)
-	e1:SetCondition(c88880043.rcon)
-	e1:SetOperation(c88880043.rop)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
+	--remove overlay replace
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(35,0))
+	e2:SetType(EFFECT_TYPE_single)
+	e2:SetProperty(EFFECT_FLAG_BOTH_SIDE)
+	e2:SetCode(EFFECT_OVERLAY_REMOVE_REPLACE)
+	e2:SetRange(LOCATION_FZONE)
+	e2:SetCondition(c88880043.rcon)
+	e2:SetOperation(c88880043.rop)
+	c:RegisterEffect(e2)
 end
 function c88880043.rcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(35+ep)==0

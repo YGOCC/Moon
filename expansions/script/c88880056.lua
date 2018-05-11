@@ -9,6 +9,6 @@ function c88880056.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 --(1) spsummon limit
-function c6165656.splimit(e,se,sp,st)
+function c88880056.splimit(e,se,sp,st)
 	return se:GetHandler():IsCode(88880045) and se:GetHandler():IsType(TYPE_SPELL)
 end
