@@ -102,7 +102,7 @@ function c1020091.thcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c1020091.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c1020091.setfilter(chkc) end
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingTarget(c1020091.setfilter,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,c1020091.setfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if g:GetFirst():IsType(TYPE_MONSTER) then
