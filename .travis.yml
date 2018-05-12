@@ -10,7 +10,7 @@ addons:
     - libevent-dev
     - libsqlite3-dev
 env:
-- DATABASE_FILE="expansions/Cards-non QCD.cdb"
+- DATABASE_FILE=expansions/Cards-non\ QCD.cdb
 - DATABASE_FILE=expansions/official.cdb
 - DATABASE_FILE=expansions/pre-release.cdb
 
