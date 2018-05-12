@@ -33,4 +33,4 @@ script:
 - echo "select id from datas;" | sqlite3 "./expansions/Cards-non QCD.cdb" | xargs -I {} ./ygopro {} 2>&1 | tee ../redtext.txt
 - cd ..
 
-- exit $(cat ./redtext.txt | wc -l)
+- bash -c "exit $(cat ./redtext.txt | wc -l)"
