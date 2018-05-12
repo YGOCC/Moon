@@ -25,25 +25,24 @@ end
 function c88567316.mfilter(c)
     return c:IsRace(RACE_WARRIOR)
 end
-function c88567316.cfilter(c)
-    return c:IsLocation(LOCATION_HAND)
-end
 function c88567316.ovfilter(c)
     return c:IsFaceup() and c:IsSetCard(0x1bc2)
 end
 function c88567316.xyzop(e,tp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(c88567316.cfilter,tp,LOCATION_HAND,0,1,nil) end
+    if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_HAND,0,1,nil)
+    and Duel.GetFlagEffect(tp,88567316)==0 end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-    local g=Duel.SelectMatchingCard(tp,c88567316.cfilter,tp,LOCATION_HAND,0,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_HAND,0,1,1,nil)
     if g:GetCount()>=0 then
         Duel.Overlay(e:GetHandler(),g)
+        Duel.RegisterFlagEffect(tp,88567316,RESET_PHASE+PHASE_END,0,1)
     end
 end
 function c88567316.efilter(e,te)
     return te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
 function c88567316.spfilter(c,e,tp,mc)
-    return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsSetCard(0x1bc2) and mc:IsCanBeXyzMaterial(c)
+    return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsSetCard(0x1bc2) and c:IsType(TYPE_XYZ) and mc:IsCanBeXyzMaterial(c)
         and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c88567316.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
