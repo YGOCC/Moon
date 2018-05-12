@@ -11,6 +11,7 @@ function c88880017.initial_effect(c)
     c:RegisterEffect(e1)
     --(2)Return to hand
     local e2=Effect.CreateEffect(c)
+    e2:SetDescription(aux.Stringid(88880017,0))
     e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetCategory(CATEGORY_TOHAND)
     e2:SetRange(LOCATION_GRAVE)
@@ -20,10 +21,10 @@ function c88880017.initial_effect(c)
     c:RegisterEffect(e2)
     --(3)Return 2 add 1
     local e3=Effect.CreateEffect(c)
+    e3:SetDescription(aux.Stringid(88880017,1))
     e3:SetType(EFFECT_TYPE_IGNITION)
     e3:SetCategory(CATEGORY_TOHAND)
     e3:SetRange(LOCATION_GRAVE)
-    e3:SetCondition(c88880017.efcon)
     e3:SetTarget(c88880017.eftarg)
     e3:SetOperation(c88880017.efop)
     e3:SetCountLimit(1,88880017+EFFECT_COUNT_CODE_DUEL)
@@ -88,30 +89,28 @@ function c88880017.retop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 --(3)Return 2 add 1
-function c88880017.filter5(c)
+function c88880017.filter4(c)
     return c:IsCode(88880017) and c:IsAbleToHand()
-end
-function c88880017.filter6(c)
-    return c:IsCode(88880017) and c:IsAbleToHand()
-end
-function c88880017.efcon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsExistingMatchingCard(c88880017.filter5,tp,LOCATION_GRAVE,0,2,nil)
 end
 function c88880017.eftarg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(c88880017.filter6,tp,LOCATION_DECK,0,1,nil) and Duel.IsExistingMatchingCard(c88880017.filter5,tp,LOCATION_GRAVE,0,2,nil) end
+    if chk==0 then return Duel.IsExistingMatchingCard(c88880017.filter4,tp,LOCATION_GRAVE,0,1,e:GetHandler()) 
+    and Duel.IsExistingMatchingCard(c88880017.filter4,tp,LOCATION_DECK,0,1,nil) and e:GetHandler():IsAbleToHand() end
     Duel.SetOperationInfo(1,CATEGORY_TOHAND,nil,2,tp,LOCATION_GRAVE)
     Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c88880017.efop(e,tp,eg,ep,ev,re,r,rp)
+  if e:GetHandler():IsRelateToEffect(e) then
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local h=Duel.SelectMatchingCard(tp,c88880017.filter5,tp,LOCATION_GRAVE,0,2,2,nil)
-    if h:GetCount()>0 then
-        Duel.SendtoHand(h,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,h)
+    local g1=Duel.SelectMatchingCard(tp,c88880017.filter4,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+    g1:AddCard(e:GetHandler())
+    if Duel.SendtoHand(g1,nil,REASON_EFFECT)~=0 then
+      Duel.ConfirmCards(1-tp,g1)
+      Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+      local g2=Duel.SelectMatchingCard(tp,c88880017.filter4,tp,LOCATION_DECK,0,1,1,nil)
+      if g2:GetCount()>0 then
+        Duel.SendtoHand(g2,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,g2)
+      end
     end
-    local g=Duel.SelectMatchingCard(tp,c88880017.filter6,tp,LOCATION_DECK,0,1,1,nil)
-    if g:GetCount()>0 then
-        Duel.SendtoHand(g,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,g)
-    end
+  end
 end
