@@ -38,7 +38,7 @@ function c240100057.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c240100057.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(Card.IsCode,1,nil,70095154)
+	return eg:IsExists(Card.IsSetCard,1,nil,0x1093)
 end
 function c240100057.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1093) and c:IsAbleToHand()

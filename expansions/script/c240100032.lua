@@ -1,4 +1,4 @@
---created by LionHeartKIng, coded by Lyris
+--created by LionHeartKIng, coded by Lyris, art from Dragon Story
 --機光襲雷竜－プランク
 function c240100032.initial_effect(c)
 	c:EnableReviveLimit()

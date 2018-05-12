@@ -489,6 +489,17 @@ end
 function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,reghand)
 	--register by default
 	if regfield==nil or regfield then
+		local e0=Effect.CreateEffect(c)
+		e0:SetType(EFFECT_TYPE_FIELD)
+		e0:SetCode(EFFECT_ACTIVATE_COST)
+		e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e0:SetTargetRange(1,1)
+		e0:SetTarget(function(e,te,tp) return te:GetHandler()==e:GetOwner() end)
+		e0:SetCost(aux.TRUE)
+		e0:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+			if c:IsLocation(LOCATION_HAND) then Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) else Duel.ChangePosition(c,POS_FACEUP) end
+		end)
+		Duel.RegisterEffect(e0,tp)
 		--summon
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
@@ -504,8 +515,8 @@ function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,reghand)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_CANNOT_TO_DECK)
 		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-		e2:SetRange(LOCATION_MZONE)
-		e2:SetCondition(function(e) return e:GetHandler():GetDestination()==LOCATION_GRAVE and not e:GetHandler():IsReason(REASON_DESTROY) end)
+		e2:SetRange(LOCATION_ONFIELD)
+		e2:SetCondition(function(e) return e:GetHandler():GetDestination()==LOCATION_GRAVE and not e:GetHandler():IsReason(REASON_DESTROY+REASON_RELEASE) end)
 		c:RegisterEffect(e2)
 		--set
 		local e3=Effect.CreateEffect(c)
@@ -541,6 +552,14 @@ end
 function Auxiliary.PandActTarget(xe)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
+		if chk==0 then
+			if c:GetLocation()~=LOCATION_HAND and c:IsFacedown() then
+				return not c:IsStatus(STATUS_SET_TURN) or c:IsHasEffect(EFFECT_TRAP_ACT_IN_SET_TURN)
+			end
+			if c:IsLocation(LOCATION_HAND) then
+				return c:IsHasEffect(EFFECT_TRAP_ACT_IN_HAND) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
+			end
+		end
 		local lscale=c:GetLeftScale()
 		local rscale=c:GetRightScale()
 		if lscale>rscale then lscale,rscale=rscale,lscale end
@@ -552,7 +571,7 @@ function Auxiliary.PandActTarget(xe)
 			g=Duel.GetFieldGroup(tp,loc,0)
 			if c:IsLocation(LOCATION_HAND) then g=g-c end
 		end
-		local b1=c:IsReleasable() and Duel.GetTurnPlayer()~=tp and g and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale,726)
+		local b1=c:IsReleasable() and g and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale,726)
 		local te=xe
 		local cost=nil
 		local target=nil
@@ -567,7 +586,6 @@ function Auxiliary.PandActTarget(xe)
 				and (not cost or cost(e,tep,eg,ep,ev,re,r,rp,0))
 				and (not target or target(e,tep,eg,ep,ev,re,r,rp,0))
 		end
-		if chk==0 then return (not c:IsStatus(STATUS_SET_TURN) or c:IsHasEffect(EFFECT_TRAP_ACT_IN_SET_TURN)) and (c:GetLocation()~=LOCATION_HAND and c:IsFacedown() or (c:IsHasEffect(EFFECT_TRAP_ACT_IN_HAND) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)))) end
 		local opt=nil
 		if b1 and b2 then opt=Duel.SelectOption(tp,1150,1074,1214)
 		elseif b2 then
@@ -576,7 +594,6 @@ function Auxiliary.PandActTarget(xe)
 		elseif b1 then opt=Duel.SelectOption(tp,1074,1214)+1
 		else opt=Duel.SelectOption(tp,1214)+2 end
 		e:SetLabel(opt)
-		if c:IsLocation(LOCATION_HAND) then Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) else Duel.ChangePosition(c,POS_FACEUP) end
 		if opt==0 then
 			e:SetCategory(te:GetCategory())
 			e:SetProperty(te:GetProperty())
@@ -617,7 +634,7 @@ function Auxiliary.PandOperation(xe)
 		local loc=0
 		if ft1>0 then loc=loc+LOCATION_HAND end
 		if ft2>0 then loc=loc+LOCATION_EXTRA end
-		local tg=Duel.GetMatchingGroup(Auxiliary.PConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale)
+		local tg=Duel.GetMatchingGroup(Auxiliary.PaConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale,726)
 		ft1=math.min(ft1,tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND))
 		ft2=math.min(ft2,tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA))
 		local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
@@ -657,7 +674,7 @@ function Auxiliary.PandOperation(xe)
 			end
 		end
 		Duel.SpecialSummon(sg,726,tp,tp,false,false,POS_FACEUP)
-		Duel.Release(c,REASON_COST)
+		Duel.SendtoExtraP(c,nil,REASON_RULE)
 	end
 end
 
