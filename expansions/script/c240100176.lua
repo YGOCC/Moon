@@ -1,4 +1,5 @@
---ニュートリックス
+--created & coded by Lyris, art by JetBlackStare77 of DeviantArt
+--ニュートリックス・ベキー
 function c240100176.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -75,7 +76,7 @@ function c240100176.lmop(e,tp,eg,ep,ev,re,r,rp)
 		[LINK_MARKER_TOP]   =LINK_MARKER_TOP_LEFT,
 		[LINK_MARKER_TOP_LEFT]  =LINK_MARKER_LEFT,
 		[LINK_MARKER_LEFT]  =LINK_MARKER_BOTTOM_LEFT,
-	}}}
+	}}
 	local op=Duel.SelectOption(tp,aux.Stringid(122518919,5),aux.Stringid(122518919,6))
 	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(e:GetHandler())
