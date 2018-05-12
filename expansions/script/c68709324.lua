@@ -30,7 +30,7 @@ function c68709324.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
     local g2=cg:FilterSelect(tp,c68709324.cfilter2,1,1,tc,tc,tp)
     g1:Merge(g2)
-    Duel.SendToGrave(g1,REASON_EFFECT)
+    Duel.SendtoGrave(g1,REASON_EFFECT)
 end
 function c68709324.filter(c,e,tp)
     return c:IsSetCard(0xf09) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
