@@ -31,12 +31,12 @@ function c240100216.spcon(e,c)
 	local zone,seq=0,0
 	for tc in aux.Next(g) do
 		seq=tc:GetSequence()
-		if seq>0 and Duel.CheckLocation(tp,LOCATION_MZONE,seq-1) then zone=zone~(1<<seq-1) end
-		if seq<4 and Duel.CheckLocation(tp,LOCATION_MZONE,seq+1) then zone=zone~(1<<seq+1) end
-		if seq==5 then zone=zone~0x2 end
-		if seq==6 then zone=zone~0x8 end
+		if seq>0 and seq<4 and Duel.CheckLocation(tp,LOCATION_MZONE,seq-1) then zone=zone|(1<<seq-1) end
+		if seq<4 and Duel.CheckLocation(tp,LOCATION_MZONE,seq+1) then zone=zone|(1<<seq+1) end
+		if seq==5 and Duel.CheckLocation(tp,LOCATION_MZONE,1) then zone=zone|1<<1 end
+		if seq==6 and Duel.CheckLocation(tp,LOCATION_MZONE,3) then zone=zone|1<<3 end
 	end
-	zone=zone&0x7f
+	zone=zone&0x1f
 	e:SetLabel(zone)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,zone)>0
 end
