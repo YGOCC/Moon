@@ -1,4 +1,4 @@
---Red-Eyes B. Chick
+--Red-Eyes Chick
 function c2101907.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkAttribute,ATTRIBUTE_DARK),1,1)
@@ -13,6 +13,14 @@ function c2101907.initial_effect(c)
 	e1:SetTarget(c2101907.target)
 	e1:SetOperation(c2101907.operation)
 	c:RegisterEffect(e1)
+--code
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_CHANGE_CODE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetValue(74677422)
+	c:RegisterEffect(e3)
 end
 function c2101907.filter(c,e,tp,zone)
 	return c:IsLevelBelow(4) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
@@ -33,3 +41,4 @@ function c2101907.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
 end
+

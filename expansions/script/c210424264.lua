@@ -53,6 +53,9 @@ c:SetCounterLimit(0x99,15)
 	e5:SetOperation(card.sop)
 	c:RegisterEffect(e5)
 end
+function card.filter2(c,tp)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD) and c:IsSetCard(0x666)
+end
 function card.betarget(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)

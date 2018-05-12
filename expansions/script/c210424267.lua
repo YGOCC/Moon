@@ -27,11 +27,11 @@ end
 function card.disfilter(c)
 	return c:IsAbleToGraveAsCost()
 end
-function card.pencon(e,tp,eg,ep,ev,re,r,rp,chk)
+function card.scon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return Duel.GetTurnCount()~=e:GetHandler():GetTurnID() or e:GetHandler():IsReason(REASON_RETURN) 
 	and Duel.IsExistingMatchingCard(card.filter,tp,LOCATION_DECK,0,1,nil)
 end
-function card.pencost(e,tp,eg,ep,ev,re,r,rp,chk)
+function card.sc(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()  and Duel.IsExistingMatchingCard(card.disfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 	local g=Duel.SelectMatchingCard(tp,card.disfilter,tp,LOCATION_HAND,0,1,1,nil)
@@ -40,12 +40,12 @@ end
 function card.sfilter(c,tpe)
 	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
 end
-function card.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+function card.stg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tpe=e:GetLabel()
 	if chk==0 then return Duel.IsExistingMatchingCard(card.sfilter,tp,LOCATION_EXTRA,0,1,nil,tpe) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_EXTRA)
 end
-function card.penop(e,tp,eg,ep,ev,re,r,rp)
+function card.sop(e,tp,eg,ep,ev,re,r,rp)
 	local tpe=e:GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,card.sfilter,tp,LOCATION_EXTRA,0,1,1,nil,tpe)
