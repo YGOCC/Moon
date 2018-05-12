@@ -73,7 +73,7 @@ c19772604.pendulum_level=4
 --xyz procedure
 function c19772604.ovfilter(c)
 	local rk=c:GetRank()
-	return c:IsFaceup() and rk==4 and c:IsSetCard(0x197)
+	return c:IsFaceup() and rk==4 and c:IsSetCard(0x197) and c:GetCode()~=19772604
 end
 --filters
 function c19772604.slfilter(c)
