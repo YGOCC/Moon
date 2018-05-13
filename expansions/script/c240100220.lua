@@ -38,9 +38,9 @@ function c240100220.filter(c,tp)
 	return c:IsReleasable() or (c:IsType(TYPE_SPELL+TYPE_TRAP) and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_RELEASE))
 end
 function c240100220.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c240100220.filter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,e:GetHandler(),tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c240100220.filter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,e:GetHandler(),tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local rg=Duel.SelectMatchingCard(tp,c240100220.filter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,e:GetHandler(),tp)
+	local rg=Duel.SelectMatchingCard(tp,c240100220.filter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,e:GetHandler(),tp)
 	Duel.Release(rg,REASON_COST)
 end
 function c240100220.lmop(e,tp,eg,ep,ev,re,r,rp)
