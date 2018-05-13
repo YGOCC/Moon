@@ -2,7 +2,7 @@
 function c2101908.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
-		aux.AddLinkProcedure(c,nil,2,2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x3b),2,2)
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2101908,0))

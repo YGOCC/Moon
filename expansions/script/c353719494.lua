@@ -24,7 +24,7 @@ function c353719494.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c353719494.target(e,c)
-	return c:IsSetCard(0x21ca)
+	return c:IsSetCard(0x21ca)and c:IsAttackPos()
 end
 function c353719494.indct(e,re,r,rp)
 	if bit.band(r,REASON_EFFECT)~=0 then

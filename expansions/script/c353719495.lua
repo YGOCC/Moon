@@ -38,7 +38,7 @@ function c353719495.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c353719495.check(c,tp)
-	return c and c:IsControler(tp) and c:IsSetCard(0x21ca)
+	return c and c:IsControler(tp) and c:IsSetCard(0x21ca) and c:IsAttackPos()
 end
 function c353719495.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return c353719495.check(Duel.GetAttacker(),tp) or c353719495.check(Duel.GetAttackTarget(),tp)

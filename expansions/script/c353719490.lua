@@ -36,7 +36,7 @@ function c353719490.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c353719490.target(e,c)
-	return c:IsSetCard(0x21ca) 
+	return c:IsSetCard(0x21ca) and c:IsAttackPos()
 end
 function c353719490.indct(e,re,r,rp)
 	if bit.band(r,REASON_BATTLE)~=0 then

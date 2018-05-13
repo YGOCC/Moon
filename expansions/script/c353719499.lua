@@ -41,7 +41,7 @@ function c353719499.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
 	if a:IsControler(1-tp) then a,d=d,a end
 	e:SetLabelObject(d)
-	return a and d and a:IsFaceup() and a:IsSetCard(0x21ca) and a:IsRelateToBattle() and d:IsFaceup() and d:IsRelateToBattle()
+	return a and d and a:IsFaceup() and a:IsSetCard(0x21ca)and a:IsAttackPos() and a:IsRelateToBattle() and d:IsRelateToBattle()
 end
 function c353719499.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)

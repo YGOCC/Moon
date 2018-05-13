@@ -43,7 +43,7 @@ function c353719491.descon(e,tp,eg,ep,ev,re,r,rp)
 	if not bc then return false end
 	if tc:IsControler(1-tp) then bc,tc=tc,bc end
 	e:SetLabelObject(bc)
-	return bc:IsFaceup() and tc:IsFaceup() and tc:IsSetCard(0x21ca) and tc:GetBattleTarget()~=nil
+	return bc:IsFaceup() and tc:IsFaceup() and tc:IsSetCard(0x21ca) and tc:IsAttackPos() and tc:GetBattleTarget()~=nil
 end
 function c353719491.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()

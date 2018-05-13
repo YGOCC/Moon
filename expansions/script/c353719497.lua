@@ -35,5 +35,5 @@ function c353719497.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c353719497.atlimit(e,c)
-	return c:IsFaceup() and c:GetCode()~=353719497 and c:IsSetCard(0x21ca)
+	return c:IsFaceup() and c:GetCode()~=353719497 and c:IsSetCard(0x21ca) and c:IsAttackPos()
 end

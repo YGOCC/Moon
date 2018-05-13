@@ -50,7 +50,7 @@ function c210310310.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveCounter(tp,0x1019,2,REASON_COST)
 end
 function c210310310.thfilter1(c)
-	return (c:IsType(TYPE_SPELL+TYPE_TRAP) (c:IsCode(210310311,210310305,19980975,63741331,90135989,210310309,23639291,90557975,210310313)) and c:IsAbleToHand())
+	return (c:IsType(TYPE_SPELL+TYPE_TRAP) and (c:IsCode(210310311,210310305,19980975,63741331,90135989,210310309,23639291,90557975,210310313)) and c:IsAbleToHand())
  end
 function c210310310.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c210310310.thfilter1,tp,LOCATION_DECK,0,1,nil) end
