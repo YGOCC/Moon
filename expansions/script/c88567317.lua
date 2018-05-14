@@ -15,19 +15,23 @@ function c88567317.initial_effect(c)
     e1:SetTarget(c88567317.target)
     e1:SetOperation(c88567317.operation)
     c:RegisterEffect(e1)
-    --cannot be target
-    local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_FIELD)
-    e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-    e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-    e2:SetRange(LOCATION_MZONE)
-    e2:SetTargetRange(LOCATION_MZONE,0)
-    e2:SetTarget(c88567317.tgtg)
-    e2:SetValue(aux.tgoval)
-    c:RegisterEffect(e2)
+    --indes
+    local e4=Effect.CreateEffect(c)
+    e4:SetType(EFFECT_TYPE_FIELD)
+    e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+    e4:SetRange(LOCATION_MZONE)
+    e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+    e4:SetTarget(c88567317.indtg)
+    e4:SetValue(c88567317.indct)
+    c:RegisterEffect(e4)
 end
-function c88567317.tgtg(e,c)
+function c88567317.indtg(e,c)
     return c:IsSetCard(0x1bc2)
+end
+function c88567317.indct(e,re,r,rp)
+    if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
+        return 1
+    else return 0 end
 end
 function c88567317.mfilter(c)
     return c:IsRace(RACE_WARRIOR) and c:IsAttribute(ATTRIBUTE_LIGHT)

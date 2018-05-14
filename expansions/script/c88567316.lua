@@ -3,14 +3,6 @@ function c88567316.initial_effect(c)
     --xyz summon
     aux.AddXyzProcedure(c,c88567316.mfilter,4,2,c88567316.ovfilter,aux.Stringid(88567316,0),99,c88567316.xyzop)
     c:EnableReviveLimit()
-    --immune
-    local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_SINGLE)
-    e1:SetCode(EFFECT_IMMUNE_EFFECT)
-    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-    e1:SetRange(LOCATION_MZONE)
-    e1:SetValue(c88567316.efilter)
-    c:RegisterEffect(e1)
     --spsummon
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(88567316,1))
@@ -21,25 +13,41 @@ function c88567316.initial_effect(c)
     e1:SetTarget(c88567316.sptg)
     e1:SetOperation(c88567316.spop)
     c:RegisterEffect(e1)
+    --cannot target
+    local e2=Effect.CreateEffect(c)
+    e2:SetType(EFFECT_TYPE_SINGLE)
+    e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+    e2:SetRange(LOCATION_MZONE)
+    e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+    e2:SetValue(aux.tgoval)
+    c:RegisterEffect(e2)
+    --indes
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_SINGLE)
+    e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+    e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+    e3:SetRange(LOCATION_MZONE)
+    e3:SetValue(aux.indoval)
+    c:RegisterEffect(e3)
 end
 function c88567316.mfilter(c)
     return c:IsRace(RACE_WARRIOR)
+end
+function c88567316.cfilter(c)
+    return c:IsType(TYPE_MONSTER)
 end
 function c88567316.ovfilter(c)
     return c:IsFaceup() and c:IsSetCard(0x1bc2)
 end
 function c88567316.xyzop(e,tp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_HAND,0,1,nil)
+    if chk==0 then return Duel.IsExistingMatchingCard(c88567316.cfilter,tp,LOCATION_HAND,0,1,nil)
     and Duel.GetFlagEffect(tp,88567316)==0 end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-    local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_HAND,0,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,c88567316.cfilter,tp,LOCATION_HAND,0,1,1,nil)
     if g:GetCount()>=0 then
         Duel.Overlay(e:GetHandler(),g)
         Duel.RegisterFlagEffect(tp,88567316,RESET_PHASE+PHASE_END,0,1)
     end
-end
-function c88567316.efilter(e,te)
-    return te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
 function c88567316.spfilter(c,e,tp,mc)
     return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsSetCard(0x1bc2) and c:IsType(TYPE_XYZ) and mc:IsCanBeXyzMaterial(c)
