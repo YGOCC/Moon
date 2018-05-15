@@ -51,8 +51,8 @@ end
 function c63553452.ctfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x4554)
 end
-function c63553452.cttarget(c,ct)
-	return not (c:IsCode(63552462) and c:IsType(TYPE_SPELL)) and c:IsCanAddCounter(0x4554,ct)
+function c63553452.cttarget(c)
+	return not (c:IsCode(63552462) and c:IsType(TYPE_SPELL))
 end
 --special summon
 function c63553452.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -81,10 +81,10 @@ end
 --place counters
 function c63553452.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=Duel.GetMatchingGroupCount(c63553452.ctfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
-	if chkc then return chkc:IsCanAddCounter(0x4554,1) end
-	if chk==0 then return ct>0 and Duel.IsExistingTarget(c63553452.cttarget,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler(),ct) end
+	if chkc then return chkc:IsOnField() and c63553452.cttarget(chkc) end
+	if chk==0 then return ct>0 and Duel.IsExistingTarget(c63553452.cttarget,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c63553452.cttarget,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,e:GetHandler(),ct)
+	Duel.SelectTarget(tp,c63553452.cttarget,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,ct,0,0)
 end
 function c63553452.ctop(e,tp,eg,ep,ev,re,r,rp)

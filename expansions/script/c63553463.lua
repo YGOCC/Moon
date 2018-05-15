@@ -139,7 +139,7 @@ function c63553463.tgfilter(c)
 	return not (c:IsCode(63552462) and c:IsType(TYPE_SPELL))
 end
 function c63553463.spsumfilter(c,e,tp)
-	return c:GetLevel()<=5 and c:IsSetCard(0x4554) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetLevel()<=5 and c:IsSetCard(0x4554) and not c:IsCode(63553463) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --Activate as Trap Card
 function c63553463.p_act_cond(e,tp,eg,ep,ev,re,r,rp)

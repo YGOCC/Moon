@@ -64,7 +64,7 @@ end
 --switch position
 function c63553460.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c63553460.ctfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	local ft=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE)
+	local ft=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)
 	local sum=0
 	for tc in aux.Next(g) do
 		local ctct=tc:GetCounter(0x4554)
@@ -79,7 +79,7 @@ function c63553460.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c63553460.posop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c63553460.ctfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	local ft=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE)
+	local ft=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)
 	local sum=0
 	for tc in aux.Next(g) do
 		local ctct=tc:GetCounter(0x4554)
