@@ -213,7 +213,6 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 			if c:SwitchSpace() then cc=cc-c end
 		end
 	elseif cc:SwitchSpace() then return end
-	-- end
 	change_position(cc,au,ad,du,dd)
 end
 
@@ -531,8 +530,9 @@ function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,desc)
 	e4:SetCode(EFFECT_ACTIVATE_COST)
 	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e4:SetTargetRange(1,1)
+	e4:SetLabelObject(e0)
 	e4:SetTarget(function(e,te,tp)
-		return te:GetHandler()==e:GetOwner()
+		return te==e:GetLabelObject()
 	end)
 	e4:SetCost(function(e,te_or_c,tp)
 		--check for other Pandemonium cards
@@ -540,13 +540,15 @@ function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,desc)
 	end)
 	e4:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
 		if c:IsLocation(LOCATION_HAND) then
-			Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) else Duel.ChangePosition(c,POS_FACEUP)
+			Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		elseif c:IsFacedown() then
+			Duel.ChangePosition(c,POS_FACEUP)
 		end
 	end)
 	Duel.RegisterEffect(e4,0)
 end
 function Auxiliary.PaCheckFilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_TRAP) and c:GetEquipTarget()==nil
+	return c:IsFaceup() and c:IsType(TYPE_TRAP)
 end
 function Auxiliary.PandActTarget(xe)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
