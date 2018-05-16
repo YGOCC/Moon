@@ -1,18 +1,7 @@
 --Protector Statue of the Torrent
 local ref=_G['c'..18917030]
 function ref.initial_effect(c)
-	if not ref.global_check then
-		ref.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1,326)
-		--ge2:SetLabel(326)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(ref.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
-	
+	aux.AddOrigPandemoniumType(c)
 	--Shuffle
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(18917030,0))
@@ -25,6 +14,7 @@ function ref.initial_effect(c)
 	e1:SetTarget(ref.acttg)
 	e1:SetOperation(ref.actop)
 	c:RegisterEffect(e1)
+	aux.EnablePandemoniumAttribute(c,e1)
 	--On Normal
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY)

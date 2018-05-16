@@ -1,18 +1,7 @@
 --Protector Statue of Infernoes
 local ref=_G['c'..18917028]
 function ref.initial_effect(c)
-	if not ref.global_check then
-		ref.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1,326)
-		ge2:SetLabel(326)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(ref.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
-	
+	aux.AddOrigPandemoniumType(c)
 	--Destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(18917028,0))
@@ -25,6 +14,7 @@ function ref.initial_effect(c)
 	e1:SetTarget(ref.acttg)
 	e1:SetOperation(ref.actop)
 	c:RegisterEffect(e1)
+	aux.EnablePandemoniumAttribute(c,e1)
 	--On Normal
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
@@ -45,14 +35,6 @@ function ref.initial_effect(c)
 	e3:SetTarget(ref.settg)
 	e3:SetOperation(ref.setop)
 	c:RegisterEffect(e3)
-end
-
-ref.pandemonium=true
-ref.pandemonium_lscale=6
-ref.pandemonium_rscale=2
-function ref.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,326)
-	Duel.CreateToken(1-tp,326)
 end
 
 --Pandemonium effect
