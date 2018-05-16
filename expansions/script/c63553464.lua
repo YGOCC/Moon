@@ -1,6 +1,7 @@
 --Inferioringranaggio - BLaDe
 --Script by XGlitchy30
 function c63553464.initial_effect(c)
+	c:EnableCounterPermit(0x1554)
 	--Set as Continuous Trap
 	local set=Effect.CreateEffect(c)
 	set:SetDescription(aux.Stringid(63553464,0))
@@ -121,7 +122,7 @@ c63553464.pscale1=4   --Left Pandemonium Scale
 c63553464.pscale2=9   --Right Pandemonium Scale
 --filters
 function c63553464.tpcostfilter(c)
-	return c:GetCounter(0x4554)>0
+	return c:GetCounter(0x1554)>0
 end
 function c63553464.posfilter(c)
 	return c:IsFaceup() and c:IsCanTurnSet()
@@ -268,7 +269,7 @@ function c63553464.splimit(e,c,tp,sumtp,sumpos)
 end
 --Redirect to Extra Deck (STILL NOT COMPLETE)
 function c63553464.toextra(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsReason(REASON_DESTROY) then
+	if e:GetHandler():IsReason(REASON_DESTROY+REASON_MATERIAL+REASON_RELEASE) then
 		Card.SetCardData(e:GetHandler(),CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_PENDULUM)
 	end
 end
@@ -284,11 +285,11 @@ function c63553464.p_act_tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return true end
 	if c63553464.tpcost(e,tp,eg,ep,ev,re,r,rp,0)
+		and e:GetHandler():GetFlagEffect(63553464)<=0
 		and Duel.IsExistingMatchingCard(c63553464.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and Duel.SelectYesNo(tp,94) then
 		c63553464.tpcost(e,tp,eg,ep,ev,re,r,rp,1)
 		e:SetCategory(CATEGORY_POSITION)
-		c:RegisterFlagEffect(63553464,RESET_PHASE+PHASE_END,0,1)
 		c:RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,65)
 	else
 		e:SetCategory(0)
@@ -297,22 +298,22 @@ end
 function c63553464.tpcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,c63553464.tpcostfilter,1,nil) end
 	local cg=Duel.SelectReleaseGroup(tp,c63553464.tpcostfilter,1,1,nil)
-	e:SetLabel(cg:GetFirst():GetCounter(0x4554))
+	e:SetLabel(cg:GetFirst():GetCounter(0x1554))
 	Duel.Release(cg,REASON_COST)
 end
 function c63553464.tptarget(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ft=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)
+	local ft=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	local sum=e:GetLabel()
 	if sum>ft then
 		sum=ft
 	end
-	if chk==0 then return Duel.IsExistingMatchingCard(c63553464.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return e:GetHandler():GetFlagEffect(63553464)<=0 and Duel.IsExistingMatchingCard(c63553464.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,nil,1,tp,LOCATION_MZONE)
-	e:GetHandler():RegisterFlagEffect(63553464,RESET_PHASE+PHASE_END,0,1)
 end
 function c63553464.operation(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():GetFlagEffect(63553464)~=0 or not e:GetHandler():IsRelateToEffect(e) then return end
-	local ft=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)
+	if e:GetHandler():GetFlagEffect(63553464)>0 then return end
+	e:GetHandler():RegisterFlagEffect(63553464,RESET_PHASE+PHASE_END,0,1)
+	local ft=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	local sum=e:GetLabel()
 	if sum<=0 then return end
 	if sum>ft then
@@ -347,7 +348,7 @@ function c63553464.ctrcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c63553464.ctrop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(c63553464.scfilter2,tp,LOCATION_DECK,0,1,nil) then return end
-	e:GetHandler():AddCounter(0x4554,1)
+	e:GetHandler():AddCounter(0x1554,1)
 	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c63553464.scfilter2,tp,LOCATION_DECK,0,1,1,nil)

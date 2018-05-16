@@ -1,7 +1,7 @@
 --Unità Inferioringranaggio
 --Script by XGlitchy30
 function c63553459.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	c:SetUniqueOnField(1,0,63553459)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -51,7 +51,7 @@ function c63553459.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetRange(LOCATION_SZONE)
-	e5:SetCode(EVENT_REMOVE_COUNTER+0x4554)
+	e5:SetCode(EVENT_REMOVE_COUNTER+0x1554)
 	e5:SetCondition(c63553459.rmcon)
 	e5:SetOperation(c63553459.rmop)
 	c:RegisterEffect(e5)
@@ -103,18 +103,18 @@ end
 function c63553459.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
-	if chk==0 then return Duel.IsCanAddCounter(tp,0x4554,g,c) end
+	if chk==0 then return Duel.IsCanAddCounter(tp,0x1554,g,c) end
 end
 function c63553459.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
-	c:AddCounter(0x4554,g)
-	e:SetLabel(c:GetCounter(0x4554))
+	c:AddCounter(0x1554,g)
+	e:SetLabel(c:GetCounter(0x1554))
 end
 --counter limit
 function c63553459.ctlimit(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetCounter(0x4554)>e:GetLabelObject():GetLabel()
+	return e:GetHandler():GetCounter(0x1554)>e:GetLabelObject():GetLabel()
 end
 --place counters
 function c63553459.ctcon(e,tp,eg,ep,ev,re,r,rp)
@@ -134,31 +134,31 @@ function c63553459.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c63553459.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	c:AddCounter(0x4554,e:GetLabel())
+	c:AddCounter(0x1554,e:GetLabel())
 end
 --remove counters
 function c63553459.rcttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:GetCounter(0x4554)>0 end
+	if chk==0 then return c:GetCounter(0x1554)>0 end
 end
 function c63553459.rctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetCounter(0x4554)<=0 then return end
-	if c:GetCounter(0x4554)>=2 then
-		c:RemoveCounter(tp,0x4554,2,REASON_EFFECT)
-		if c:GetCounter(0x4554)<=0 then
+	if c:GetCounter(0x1554)<=0 then return end
+	if c:GetCounter(0x1554)>=2 then
+		c:RemoveCounter(tp,0x1554,2,REASON_EFFECT)
+		if c:GetCounter(0x1554)<=0 then
 			Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
 		end
 	else
-		c:RemoveCounter(tp,0x4554,1,REASON_EFFECT)
-		if c:GetCounter(0x4554)<=0 then
+		c:RemoveCounter(tp,0x1554,1,REASON_EFFECT)
+		if c:GetCounter(0x1554)<=0 then
 			Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
 		end
 	end
 end
 --self removal
 function c63553459.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetCounter(0x4554)<=0
+	return e:GetHandler():GetCounter(0x1554)<=0
 end
 function c63553459.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
@@ -170,8 +170,8 @@ function c63553459.negcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c63553459.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:GetCounter(0x4554)>=3 end
-	c:RemoveCounter(tp,0x4554,3,REASON_COST)
+	if chk==0 then return c:GetCounter(0x1554)>=3 end
+	c:RemoveCounter(tp,0x1554,3,REASON_COST)
 end
 function c63553459.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c63553459.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end

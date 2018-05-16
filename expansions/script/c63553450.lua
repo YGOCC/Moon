@@ -1,7 +1,7 @@
 --Supporto Inferioringranaggio - Nave da Guerra
 --Script by XGlitchy30
 function c63553450.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	--spsummon procedure
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -55,13 +55,13 @@ function c63553450.spcon(e,c)
 end
 --change pos
 function c63553450.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x4554,1,REASON_EFFECT) end
-	if Duel.IsCanRemoveCounter(tp,1,1,0x4554,1,REASON_COST) then
-		Duel.RemoveCounter(tp,1,1,0x4554,1,REASON_COST)
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x1554,1,REASON_EFFECT) end
+	if Duel.IsCanRemoveCounter(tp,1,1,0x1554,1,REASON_COST) then
+		Duel.RemoveCounter(tp,1,1,0x1554,1,REASON_COST)
 	end
 end
 function c63553450.postg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x4554,1,REASON_EFFECT)
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x1554,1,REASON_EFFECT)
 		and Duel.IsExistingMatchingCard(c63553450.posfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,nil,1,tp,LOCATION_MZONE)
 end
@@ -89,5 +89,5 @@ function c63553450.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return rc==e:GetHandler()
 end
 function c63553450.ctop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(0x4554,1)
+	e:GetHandler():AddCounter(0x1554,1)
 end

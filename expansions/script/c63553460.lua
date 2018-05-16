@@ -32,7 +32,7 @@ function c63553460.costfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x4554) and c:GetLevel()>0 and c:IsDiscardable()
 end
 function c63553460.ctfilter(c)
-	return c:GetCounter(0x4554)>0
+	return c:GetCounter(0x1554)>0
 end
 function c63553460.posfilter(c)
 	return c:IsCanChangePosition()
@@ -55,8 +55,8 @@ function c63553460.activate(e,tp,eg,ep,ev,re,r,rp)
 			if Duel.DiscardHand(tp,c63553459.costfilter,1,1,REASON_COST+REASON_DISCARD) then
 				local op=Duel.GetOperatedGroup():GetFirst()
 				e:SetLabel(op:GetLevel())
-				if not Duel.IsCanAddCounter(tp,0x4554,e:GetLabel(),tc) then return end
-				tc:AddCounter(0x4554,e:GetLabel())
+				if not Duel.IsCanAddCounter(tp,0x1554,e:GetLabel(),tc) then return end
+				tc:AddCounter(0x1554,e:GetLabel())
 			end
 		end
 	end
@@ -64,10 +64,10 @@ end
 --switch position
 function c63553460.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c63553460.ctfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	local ft=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)
+	local ft=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	local sum=0
 	for tc in aux.Next(g) do
-		local ctct=tc:GetCounter(0x4554)
+		local ctct=tc:GetCounter(0x1554)
 		sum=sum+ctct
 	end
 	if sum>ft then
@@ -79,10 +79,10 @@ function c63553460.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c63553460.posop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c63553460.ctfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	local ft=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)
+	local ft=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	local sum=0
 	for tc in aux.Next(g) do
-		local ctct=tc:GetCounter(0x4554)
+		local ctct=tc:GetCounter(0x1554)
 		sum=sum+ctct
 	end
 	if sum<=0 then return end

@@ -1,7 +1,7 @@
 --Supporto Inferioringranaggio - Blitzatione
 --Script by XGlitchy30
 function c63553451.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	--token
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(63553451,0))
@@ -80,5 +80,5 @@ function c63553451.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return rc==e:GetHandler()
 end
 function c63553451.ctop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(0x4554,1)
+	e:GetHandler():AddCounter(0x1554,1)
 end

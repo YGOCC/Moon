@@ -1,7 +1,7 @@
 --Inferioringranaggio - Trisrax
 --Script by XGlitchy30
 function c63553452.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(63553452,0))
@@ -52,13 +52,13 @@ function c63553452.ctfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x4554)
 end
 function c63553452.cttarget(c)
-	return not (c:IsCode(63552462) and c:IsType(TYPE_SPELL))
+	return not (c:IsCode(63553462) and c:IsType(TYPE_SPELL+TYPE_TRAP))
 end
 --special summon
 function c63553452.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x4554,1,REASON_EFFECT) end
-	if Duel.IsCanRemoveCounter(tp,1,1,0x4554,1,REASON_COST) then
-		Duel.RemoveCounter(tp,1,1,0x4554,1,REASON_COST)
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x1554,1,REASON_EFFECT) end
+	if Duel.IsCanRemoveCounter(tp,1,1,0x1554,1,REASON_COST) then
+		Duel.RemoveCounter(tp,1,1,0x1554,1,REASON_COST)
 	end
 end
 function c63553452.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -81,20 +81,20 @@ end
 --place counters
 function c63553452.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=Duel.GetMatchingGroupCount(c63553452.ctfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
-	if chkc then return chkc:IsOnField() and c63553452.cttarget(chkc) end
+	if chkc then return chkc:IsFaceup() and c63553452.cttarget(chkc) end
 	if chk==0 then return ct>0 and Duel.IsExistingTarget(c63553452.cttarget,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c63553452.cttarget,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,ct,0,0)
+	local g=Duel.SelectTarget(tp,c63553452.cttarget,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,e:GetHandler())
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0x1554,ct)
 end
 function c63553452.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(c63553452.ctfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	if ct<=0 then return end
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	for tc in aux.Next(g) do
-		if tc and tc:IsCanAddCounter(0x4554,ct) then
-			tc:AddCounter(0x4554,ct)
-		end
+	local gtc=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local tc=gtc:GetFirst()
+	while tc do
+		tc:AddCounter(0x1554,ct)
+		tc=gtc:GetNext()
 	end
 end
 --clear strike
@@ -113,5 +113,5 @@ function c63553452.ctrcon(e,tp,eg,ep,ev,re,r,rp)
 	return rc==e:GetHandler()
 end
 function c63553452.ctrop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(0x4554,1)
+	e:GetHandler():AddCounter(0x1554,1)
 end

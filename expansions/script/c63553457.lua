@@ -1,7 +1,7 @@
 --Avanzata Inferioringranaggio
 --Script by XGlitchy30
 function c63553457.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	c:SetUniqueOnField(1,0,63553457)
 	--activate
 	local e1=Effect.CreateEffect(c)
@@ -79,13 +79,13 @@ function c63553457.initial_effect(c)
 end
 --global check: track counters
 function c63553457.ctcop(e,tp,eg,ep,ev,re,r,rp)
-	local count=e:GetLabel()-e:GetHandler():GetCounter(0x4554)
-	if e:GetLabel()<e:GetHandler():GetCounter(0x4554) and count<=-4 then
+	local count=e:GetLabel()-e:GetHandler():GetCounter(0x1554)
+	if e:GetLabel()<e:GetHandler():GetCounter(0x1554) and count<=-4 then
 		e:GetLabelObject():SetLabel(100)
 	end
 end
 function c63553457.trackop(e,tp)
-	local ct=e:GetHandler():GetCounter(0x4554)
+	local ct=e:GetHandler():GetCounter(0x1554)
 	e:GetLabelObject():SetLabel(ct)
 end
 function c63553457.trackreset(e,tp)
@@ -94,7 +94,7 @@ function c63553457.trackreset(e,tp)
 end
 --filters
 function c63553457.ctfilter(c)
-	return c:GetCounter(0x4554)>0
+	return c:GetCounter(0x1554)>0
 end
 function c63553457.posfilter(c)
 	return c:IsCanChangePosition()
@@ -106,14 +106,14 @@ end
 function c63553457.ctop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetTurnPlayer()~=tp then return end
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	if e:GetHandler():GetCounter(0x4554)>=12 then return end
+	if e:GetHandler():GetCounter(0x1554)>=12 then return end
 	local g=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
-	if g>12-e:GetHandler():GetCounter(0x4554) then g=12-e:GetHandler():GetCounter(0x4554) end
-	e:GetHandler():AddCounter(0x4554,g)
+	if g>12-e:GetHandler():GetCounter(0x1554) then g=12-e:GetHandler():GetCounter(0x1554) end
+	e:GetHandler():AddCounter(0x1554,g)
 end
 --direct attack
 function c63553457.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetCounter(0x4554)>=10
+	return e:GetHandler():GetCounter(0x1554)>=10
 end
 function c63553457.atktg(e,c)
 	return c:IsFaceup()
@@ -126,8 +126,8 @@ function c63553457.nukecon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c63553457.nukecost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:GetCounter(0x4554)>=10 end
-	c:RemoveCounter(tp,0x4554,10,REASON_COST)
+	if chk==0 then return c:GetCounter(0x1554)>=10 end
+	c:RemoveCounter(tp,0x1554,10,REASON_COST)
 end
 function c63553457.nuketg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -157,7 +157,7 @@ function c63553457.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	local sum=0
 	for tc in aux.Next(g) do
-		local ctct=tc:GetCounter(0x4554)
+		local ctct=tc:GetCounter(0x1554)
 		sum=sum+ctct
 	end
 	if sum>ft then
@@ -172,7 +172,7 @@ function c63553457.posop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	local sum=0
 	for tc in aux.Next(g) do
-		local ctct=tc:GetCounter(0x4554)
+		local ctct=tc:GetCounter(0x1554)
 		sum=sum+ctct
 	end
 	if sum<=0 then return end

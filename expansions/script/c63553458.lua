@@ -13,7 +13,7 @@ function c63553458.initial_effect(c)
 end
 --filters
 function c63553458.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4554) and c:GetCounter(0x4554)>=2
+	return c:IsFaceup() and c:IsSetCard(0x4554) and c:GetCounter(0x1554)>=2
 end
 --Activate
 function c63553458.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -25,14 +25,14 @@ end
 function c63553458.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if not tc or not tc:IsRelateToEffect(e) or tc:GetCounter(0x4554)<2 then return end
+	if not tc or not tc:IsRelateToEffect(e) or tc:GetCounter(0x1554)<2 then return end
 	local op=0
 	Duel.Hint(HINT_SELECTMSG,tp,0)
 	--option combinations
-	if tc:GetCounter(0x4554)>=2 and tc:GetCounter(0x4554)>=3 and tc:GetCounter(0x4554)>=4 and tc:GetCounter(0x4554)>=5 then op=Duel.SelectOption(tp,aux.Stringid(63553458,0),aux.Stringid(63553458,1),aux.Stringid(63553458,2),aux.Stringid(63553458,3))
-	elseif tc:GetCounter(0x4554)>=2 and tc:GetCounter(0x4554)>=3 and tc:GetCounter(0x4554)>=4 then op=Duel.SelectOption(tp,aux.Stringid(63553458,0),aux.Stringid(63553458,1),aux.Stringid(63553458,2))
-	elseif tc:GetCounter(0x4554)>=2 and tc:GetCounter(0x4554)>=3 then op=Duel.SelectOption(tp,aux.Stringid(63553458,0),aux.Stringid(63553458,1))
-	elseif tc:GetCounter(0x4554)>=2 then op=Duel.SelectOption(tp,aux.Stringid(63553458,0))
+	if tc:GetCounter(0x1554)>=2 and tc:GetCounter(0x1554)>=3 and tc:GetCounter(0x1554)>=4 and tc:GetCounter(0x1554)>=5 then op=Duel.SelectOption(tp,aux.Stringid(63553458,0),aux.Stringid(63553458,1),aux.Stringid(63553458,2),aux.Stringid(63553458,3))
+	elseif tc:GetCounter(0x1554)>=2 and tc:GetCounter(0x1554)>=3 and tc:GetCounter(0x1554)>=4 then op=Duel.SelectOption(tp,aux.Stringid(63553458,0),aux.Stringid(63553458,1),aux.Stringid(63553458,2))
+	elseif tc:GetCounter(0x1554)>=2 and tc:GetCounter(0x1554)>=3 then op=Duel.SelectOption(tp,aux.Stringid(63553458,0),aux.Stringid(63553458,1))
+	elseif tc:GetCounter(0x1554)>=2 then op=Duel.SelectOption(tp,aux.Stringid(63553458,0))
 	else return end
 	-------------
 	if op==0 then

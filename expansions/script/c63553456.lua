@@ -1,7 +1,7 @@
 --Signore Inferioringranaggio - Strax
 --Script by XGlitchy30
 function c63553456.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	--spsummon proc
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -42,7 +42,7 @@ function c63553456.scfilter(c)
 	return c:IsSetCard(0x4554) and c:IsAbleToHand()
 end
 function c63553456.ctfilter(c)
-	return c:GetCounter(0x4554)>0
+	return c:GetCounter(0x1554)>0
 end
 function c63553456.posfilter(c)
 	return c:IsFaceup() and c:IsCanTurnSet()
@@ -53,7 +53,7 @@ function c63553456.spcon(e,c)
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsCanRemoveCounter(c:GetControler(),1,1,0x4554,3,REASON_COST)
 end
 function c63553456.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.RemoveCounter(tp,1,1,0x4554,3,REASON_RULE)
+	Duel.RemoveCounter(tp,1,1,0x1554,3,REASON_RULE)
 end
 --change position
 function c63553456.postg(e,tp,eg,ep,ev,re,r,rp,chk)

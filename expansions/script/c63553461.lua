@@ -1,7 +1,7 @@
 --Centrale Inferioringranaggio
 --Script by XGlitchy30
 function c63553461.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_COUNTER)
@@ -49,13 +49,14 @@ function c63553461.initial_effect(c)
 	e5:SetRange(LOCATION_SZONE)
 	e5:SetCountLimit(1)
 	e5:SetCondition(c63553461.negcon)
+	e5:SetCost(c63553461.negcost)
 	e5:SetTarget(c63553461.negtg)
 	e5:SetOperation(c63553461.negop)
 	c:RegisterEffect(e5)
 end
 --filters
 function c63553461.filter(c)
-	return c:IsFaceup() and c:GetCounter(0x4554)>0
+	return c:IsFaceup() and c:GetCounter(0x1554)>0
 end
 function c63553461.setfilter(c,ct)
 	return ((not c:IsType(TYPE_XYZ) and c:GetLevel()>ct) or (c:IsType(TYPE_XYZ) and c:GetRank()>ct))
@@ -74,9 +75,9 @@ function c63553461.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
-		local ct=tc:GetCounter(0x4554)
+		local ct=tc:GetCounter(0x1554)
 		if ct<=0 then return end
-		c:AddCounter(0x4554,ct)
+		c:AddCounter(0x1554,ct)
 		e:SetLabel(ct)
 	end
 end
@@ -86,11 +87,11 @@ function c63553461.ctlimit(e,tp,eg,ep,ev,re,r,rp)
 end
 --spsummon limit
 function c63553461.spsumlimit(e,c,sump,sumtype,sumpos,targetp)
-	return ((not c:IsType(TYPE_XYZ) and c:GetLevel()==e:GetHandler():GetCounter(0x4554)) or (c:IsType(TYPE_XYZ) and c:GetRank()==e:GetHandler():GetCounter(0x4554)))
+	return ((not c:IsType(TYPE_XYZ) and c:GetLevel()==e:GetHandler():GetCounter(0x1554)) or (c:IsType(TYPE_XYZ) and c:GetRank()==e:GetHandler():GetCounter(0x1554)))
 end
 --set
 function c63553461.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c63553461.setfilter,1,nil,e:GetHandler():GetCounter(0x4554))
+	return eg:IsExists(c63553461.setfilter,1,nil,e:GetHandler():GetCounter(0x1554))
 end
 function c63553461.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -101,6 +102,11 @@ end
 function c63553461.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return not c:IsStatus(STATUS_CHAINING) and Duel.IsChainNegatable(ev)
+end
+function c63553461.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:GetCounter(0x1554)>=3 end
+	c:RemoveCounter(tp,0x1554,3,REASON_COST)
 end
 function c63553461.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c63553461.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end

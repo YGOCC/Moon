@@ -1,6 +1,7 @@
 --Inferioringranaggio - ReID
 --Script by XGlitchy30
 function c63553463.initial_effect(c)
+	c:EnableCounterPermit(0x1554)
 	--Set as Continuous Trap
 	local set=Effect.CreateEffect(c)
 	set:SetDescription(aux.Stringid(63553463,0))
@@ -127,7 +128,7 @@ c63553463.pscale1=1   --Left Pandemonium Scale
 c63553463.pscale2=5   --Right Pandemonium Scale
 --filters
 function c63553463.tpcostfilter(c)
-	return c:GetCounter(0x4554)>0
+	return c:GetCounter(0x1554)>0
 end
 function c63553463.scfilter(c)
 	return c:IsSetCard(0x4554) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -136,7 +137,7 @@ function c63553463.scfilter2(c)
 	return c:IsSetCard(0x4554) and c:IsAbleToHand()
 end
 function c63553463.tgfilter(c)
-	return not (c:IsCode(63552462) and c:IsType(TYPE_SPELL))
+	return c:GetCode()~=635533462
 end
 function c63553463.spsumfilter(c,e,tp)
 	return c:GetLevel()<=5 and c:IsSetCard(0x4554) and not c:IsCode(63553463) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -277,7 +278,7 @@ function c63553463.splimit(e,c,tp,sumtp,sumpos)
 end
 --Redirect to Extra Deck (STILL NOT COMPLETE)
 function c63553463.toextra(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsReason(REASON_DESTROY) then
+	if e:GetHandler():IsReason(REASON_DESTROY+REASON_MATERIAL+REASON_RELEASE) then
 		Card.SetCardData(e:GetHandler(),CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_PENDULUM)
 	end
 end
@@ -293,22 +294,22 @@ function c63553463.p_act_tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return true end
 	if c63553463.tpcost(e,tp,eg,ep,ev,re,r,rp,0)
+		and e:GetHandler():GetFlagEffect(63553463)<=0
 		and Duel.IsExistingMatchingCard(c63553463.scfilter,tp,LOCATION_DECK,0,1,nil)
 		and Duel.SelectYesNo(tp,94) then
 		c63553463.tpcost(e,tp,eg,ep,ev,re,r,rp,1)
 		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-		c:RegisterFlagEffect(63553463,RESET_PHASE+PHASE_END,0,1)
 		c:RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,65)
 	else
 		e:SetCategory(0)
 	end
 end
 function c63553463.tpcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c63553463.tpcostfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c63553463.tpcostfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,c63553463.tpcostfilter,tp,LOCATION_ONFIELD,0,1,1,nil):GetFirst()
+	local g=Duel.SelectMatchingCard(tp,c63553463.tpcostfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil):GetFirst()
 	if g then
-		e:SetLabel(g:GetCounter(0x4554))
+		e:SetLabel(g:GetCounter(0x1554))
 		Duel.Destroy(g,REASON_COST)
 	end
 end
@@ -317,12 +318,12 @@ function c63553463.tptarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	if sum>3 then
 		sum=3
 	end
-	if chk==0 then return Duel.IsExistingMatchingCard(c63553463.scfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return e:GetHandler():GetFlagEffect(63553463)<=0 and Duel.IsExistingMatchingCard(c63553463.scfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	e:GetHandler():RegisterFlagEffect(63553463,RESET_PHASE+PHASE_END,0,1)
 end
 function c63553463.operation(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():GetFlagEffect(63553463)~=0 or not e:GetHandler():IsRelateToEffect(e) then return end
+	if e:GetHandler():GetFlagEffect(63553463)>0 then return end
+	e:GetHandler():RegisterFlagEffect(63553463,RESET_PHASE+PHASE_END,0,1)
 	local sum=e:GetLabel()
 	if sum<=0 then return end
 	if sum>3 then
@@ -352,7 +353,7 @@ function c63553463.lfop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local g=Duel.SelectTarget(tp,c63553463.tgfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil):GetFirst()
 		if g and g:IsRelateToEffect(e) then
-			g:AddCounter(0x4554,2)
+			g:AddCounter(0x1554,2)
 		end
 	end
 end
@@ -363,7 +364,7 @@ function c63553463.lfop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local g=Duel.SelectTarget(tp,c63553463.tgfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil):GetFirst()
 		if g and g:IsRelateToEffect(e) then
-			g:AddCounter(0x4554,2)
+			g:AddCounter(0x1554,2)
 		end
 	end
 end
@@ -375,7 +376,7 @@ function c63553463.ctrcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c63553463.ctrop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(c63553463.scfilter2,tp,LOCATION_DECK,0,1,nil) then return end
-	e:GetHandler():AddCounter(0x4554,1)
+	e:GetHandler():AddCounter(0x1554,1)
 	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c63553463.scfilter2,tp,LOCATION_DECK,0,1,1,nil)

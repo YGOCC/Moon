@@ -1,7 +1,7 @@
 --Inferioringranaggio - MaX
 --Script by XGlitchy30
 function c63553453.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	--spsummon proc
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -77,7 +77,7 @@ end
 --spsummon counters
 function c63553453.spctop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():GetSummonType()~=SUMMON_TYPE_SPECIAL+1 then return end
-	e:GetHandler():AddCounter(0x4554,e:GetLabelObject():GetLabel())
+	e:GetHandler():AddCounter(0x1554,e:GetLabelObject():GetLabel())
 end
 --negate
 function c63553453.negcon1(e,tp,eg,ep,ev,re,r,rp)
@@ -90,9 +90,9 @@ function c63553453.negcon2(e,tp,eg,ep,ev,re,r,rp)
 	return g and g:IsExists(c63553453.tgcheck,1,nil,tp) and Duel.IsChainDisablable(ev)
 end
 function c63553453.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x4554,3,REASON_EFFECT) end
-	if Duel.IsCanRemoveCounter(tp,1,1,0x4554,3,REASON_COST) then
-		Duel.RemoveCounter(tp,1,1,0x4554,3,REASON_COST)
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x1554,3,REASON_EFFECT) end
+	if Duel.IsCanRemoveCounter(tp,1,1,0x1554,3,REASON_COST) then
+		Duel.RemoveCounter(tp,1,1,0x1554,3,REASON_COST)
 	end
 end
 function c63553453.negop1(e,tp,eg,ep,ev,re,r,rp)
@@ -138,5 +138,5 @@ function c63553453.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return rc==e:GetHandler()
 end
 function c63553453.ctop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(0x4554,1)
+	e:GetHandler():AddCounter(0x1554,1)
 end

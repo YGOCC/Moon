@@ -1,7 +1,7 @@
 --Inferioringranaggio - Portale
 --Script by XGlitchy30
 function c63553454.initial_effect(c)
-	c:EnableCounterPermit(0x4554)
+	c:EnableCounterPermit(0x1554)
 	--spsummon proc
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -48,13 +48,13 @@ function c63553454.initial_effect(c)
 end
 --filters
 function c63553454.cfilter(c)
-	return c:IsFacedown() or c:GetCounter(0x4554)<2
+	return c:IsFacedown() or c:GetCounter(0x1554)<2
 end
 function c63553454.ctfilter(c)
-	return c:GetCounter(0x4554)>0
+	return c:GetCounter(0x1554)>0
 end
 function c63553454.atkfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x4554)
+	return c:IsFaceup() and c:IsSetCard(0x1554)
 end
 --spsummon proc
 function c63553454.spcon(e,c)
@@ -65,13 +65,13 @@ function c63553454.spcon(e,c)
 end
 --atk boost
 function c63553454.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x4554,2,REASON_EFFECT) end
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x1554,2,REASON_EFFECT) end
 	local g=Duel.GetMatchingGroup(c63553454.ctfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	local sum=0
 	local ct=0
 	local val=0
 	for tc in aux.Next(g) do
-		local ctct=tc:GetCounter(0x4554)
+		local ctct=tc:GetCounter(0x1554)
 		sum=sum+ctct
 	end
 	if math.fmod(sum,2)==0 then
@@ -79,13 +79,13 @@ function c63553454.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	elseif math.fmod(sum,2)>0 then
 		ct=sum-1
 	end
-	if Duel.IsCanRemoveCounter(tp,1,1,0x4554,2,REASON_COST) then
-		Duel.RemoveCounter(tp,1,1,0x4554,2,REASON_COST)
+	if Duel.IsCanRemoveCounter(tp,1,1,0x1554,2,REASON_COST) then
+		Duel.RemoveCounter(tp,1,1,0x1554,2,REASON_COST)
 		ct=ct-2
 		val=val+2
 		for i=1,ct/2 do
 			if Duel.SelectYesNo(tp,aux.Stringid(63553453,1)) then
-				Duel.RemoveCounter(tp,1,1,0x4554,2,REASON_COST)
+				Duel.RemoveCounter(tp,1,1,0x1554,2,REASON_COST)
 				val=val+2
 			end
 		end
@@ -132,5 +132,5 @@ function c63553454.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return rc==e:GetHandler()
 end
 function c63553454.ctop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(0x4554,2)
+	e:GetHandler():AddCounter(0x1554,2)
 end
