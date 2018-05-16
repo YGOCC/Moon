@@ -621,7 +621,7 @@ function Auxiliary.PandActCon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(Auxiliary.PaCheckFilter,tp,LOCATION_SZONE,0,1,e:GetHandler())
 end
 function Auxiliary.PandEnableFUInED(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsReason(REASON_DESTROY+REASON_RELEASE) then
+	if e:GetHandler():IsReason(REASON_DESTROY+REASON_RELEASE+REASON_MATERIAL) then
 		Card.SetCardData(e:GetHandler(),CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_PENDULUM)
 	end
 end
