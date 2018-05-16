@@ -24,6 +24,20 @@ function c240100220.initial_effect(c)
 	o1:SetLabelObject(k1)
 	o1:SetCondition(c240100220.ocon(c240100220.drcon))
 	c:RegisterEffect(o1)
+	--While there there are 2 or more Link Monsters on the field with Link Arrows pointing in the same direction, all your opponent's monsters lose ATK/DEF equal to half their original ATK/DEF.
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_UPDATE_ATTACK)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetTargetRange(0,LOCATION_MZONE)
+	e2:SetCondition(c240100220.con)
+	e2:SetValue(function(e,c) return -c:GetBaseAttack()/2 end)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCode(EFFECT_UPDATE_DEFENSE)
+	e3:SetValue(function(e,c) return -c:GetBaseDefense()/2 end)
+	c:RegisterEffect(e3)
 	--Once per turn (Quick Effect): You can Tribute 1 other card from your hand or field; flip the Link Arrows of all monsters currently on the field horizontally or vertically.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_QUICK_O)
@@ -117,4 +131,28 @@ function c240100220.drop(e,tp,eg,ep,ev,re,r,rp)
 	if gc>0 then
 		Duel.Draw(p,gc,REASON_EFFECT)
 	end
+end
+function c240100220.cfilter1(c,tp)
+	return c:IsType(TYPE_LINK) and Duel.IsExistingMatchingCard(c240100220.cfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetLinkMarker())
+end
+function c240100220.cfilter2(c,blm)
+	local curMark=c:GetLinkMarker()
+	local t={
+		[LINK_MARKER_BOTTOM_LEFT]   =LINK_MARKER_TOP_RIGHT,
+		[LINK_MARKER_BOTTOM]		=LINK_MARKER_TOP,
+		[LINK_MARKER_BOTTOM_RIGHT]  =LINK_MARKER_TOP_LEFT,
+		[LINK_MARKER_RIGHT]   =LINK_MARKER_LEFT,
+		[LINK_MARKER_TOP_RIGHT]  =LINK_MARKER_BOTTOM_LEFT,
+		[LINK_MARKER_TOP]   =LINK_MARKER_BOTTOM,
+		[LINK_MARKER_TOP_LEFT]  =LINK_MARKER_BOTTOM_RIGHT,
+		[LINK_MARKER_LEFT]  =LINK_MARKER_RIGHT,
+	}
+	local chgMark=0
+	for mark=0,8 do
+		if 1<<mark&curMark==1<<mark then chgMark=chgMark|t[1<<mark] end
+	end
+	return chgMark&blm~=0
+end
+function c240100220.con(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c240100220.cfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp)
 end

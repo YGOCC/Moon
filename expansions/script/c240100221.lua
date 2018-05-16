@@ -25,15 +25,19 @@ function c240100221.initial_effect(c)
 	o1:SetCondition(c240100221.ocon(c240100221.drcon))
 	c:RegisterEffect(o1)
 	--Your linked monsters cannot be destroyed by card effects.
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetTarget(aux.TargetBoolFunction(Card.IsLinkState))
-	e4:SetValue(1)
-	c:RegisterEffect(e4)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetTargetRange(LOCATION_MZONE,0)
+	e2:SetCondition(c240100221.con)
+	e2:SetTarget(function(e,c) return c~=e:GetHandler() end)
+	e2:SetValue(1)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	c:RegisterEffect(e3)
 	--Once per turn (Quick Effect): You can Tribute 1 other card from your hand or field; reverse the directions of the Link Arrows of all monsters currently on the field.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_QUICK_O)
@@ -116,4 +120,28 @@ function c240100221.drop(e,tp,eg,ep,ev,re,r,rp)
 	if gc>0 then
 		Duel.Draw(p,gc,REASON_EFFECT)
 	end
+end
+function c240100221.cfilter1(c,tp)
+	return c:IsType(TYPE_LINK) and Duel.IsExistingMatchingCard(c240100221.cfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetLinkMarker())
+end
+function c240100221.cfilter2(c,blm)
+	local curMark=c:GetLinkMarker()
+	local t={
+		[LINK_MARKER_BOTTOM_LEFT]   =LINK_MARKER_TOP_RIGHT,
+		[LINK_MARKER_BOTTOM]		=LINK_MARKER_TOP,
+		[LINK_MARKER_BOTTOM_RIGHT]  =LINK_MARKER_TOP_LEFT,
+		[LINK_MARKER_RIGHT]   =LINK_MARKER_LEFT,
+		[LINK_MARKER_TOP_RIGHT]  =LINK_MARKER_BOTTOM_LEFT,
+		[LINK_MARKER_TOP]   =LINK_MARKER_BOTTOM,
+		[LINK_MARKER_TOP_LEFT]  =LINK_MARKER_BOTTOM_RIGHT,
+		[LINK_MARKER_LEFT]  =LINK_MARKER_RIGHT,
+	}
+	local chgMark=0
+	for mark=0,8 do
+		if 1<<mark&curMark==1<<mark then chgMark=chgMark|t[1<<mark] end
+	end
+	return chgMark&blm~=0
+end
+function c240100221.con(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c240100221.cfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp)
 end
