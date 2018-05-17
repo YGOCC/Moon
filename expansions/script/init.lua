@@ -72,7 +72,7 @@ Card.GetType=function(c,scard,sumtype,p)
 			tpe=tpe&~TYPE_XYZ
 		end
 	end
-	if Auxiliary.Pandemoniums[c]() then
+	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
 	end
 	if Auxiliary.Polarities[c] then
@@ -104,7 +104,7 @@ Card.GetOriginalType=function(c)
 			tpe=tpe&~TYPE_XYZ
 		end
 	end
-	if Auxiliary.Pandemoniums[c]() then
+	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
 	end
 	if Auxiliary.Polarities[c] then
@@ -129,7 +129,7 @@ Card.GetPreviousTypeOnField=function(c)
 			tpe=tpe&~TYPE_XYZ
 		end
 	end
-	if Auxiliary.Pandemoniums[c]() then
+	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
 	end
 	if Auxiliary.Polarities[c] then
