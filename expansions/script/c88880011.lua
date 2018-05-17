@@ -1,7 +1,7 @@
 --Number C300: Omega Galaxy-Eyes Ultra Photonic Tachyon Dragon
 function c88880011.initial_effect(c)
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x888),5,3)
-	c:EnableReviveLimit()
+    aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x888),5,3)
+    c:EnableReviveLimit()
 --(1) Indes by battle and card effect
   local e1=Effect.CreateEffect(c)
   e1:SetType(EFFECT_TYPE_SINGLE)
@@ -13,7 +13,7 @@ function c88880011.initial_effect(c)
   c:RegisterEffect(e2)
   --(2) Negate Spell/Trap/Monster
   local e3=Effect.CreateEffect(c)
-  e3:SetDescription(aux.Stringid(1,0))
+  e3:SetDescription(aux.Stringid(88880011,0))
   e3:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
   e3:SetType(EFFECT_TYPE_QUICK_O)
   e3:SetCode(EVENT_CHAINING)
@@ -26,7 +26,7 @@ function c88880011.initial_effect(c)
   c:RegisterEffect(e3)
   --(3) Draw
   local e4=Effect.CreateEffect(c)
-  e4:SetDescription(aux.Stringid(1,1))
+  e4:SetDescription(aux.Stringid(88880011,1))
   e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
   e4:SetType(EFFECT_TYPE_QUICK_O)
   e4:SetCode(EVENT_FREE_CHAIN)
@@ -38,7 +38,7 @@ function c88880011.initial_effect(c)
   c:RegisterEffect(e4)
   --(4) Gain ATK
   local e5=Effect.CreateEffect(c)
-  e5:SetDescription(aux.Stringid(1,2))
+  e5:SetDescription(aux.Stringid(88880011,2))
   e5:SetCategory(CATEGORY_TODECK)
   e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
   e5:SetCode(EVENT_BATTLE_CONFIRM)
@@ -69,12 +69,12 @@ function c88880011.distg(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return true end
   Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
   if re:GetHandler():IsRelateToEffect(re) then
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
   end
 end
 function c88880011.disop(e,tp,eg,ep,ev,re,r,rp)
   if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-	Duel.Destroy(eg,REASON_EFFECT)
+    Duel.Destroy(eg,REASON_EFFECT)
   end
 end
 --(3) Draw
@@ -95,12 +95,12 @@ function c88880011.drop(e,tp,eg,ep,ev,re,r,rp,chk)
   local c=e:GetHandler()
   local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
   if Duel.Draw(p,d,REASON_EFFECT)~=0 and c:IsFaceup() and c:IsRelateToEffect(e) then
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	e1:SetValue(1500)
-	c:RegisterEffect(e1)
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_UPDATE_ATTACK)
+    e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+    e1:SetValue(1500)
+    c:RegisterEffect(e1)
   end
 end
 --(4) Gain ATK
@@ -120,16 +120,16 @@ function c88880011.atkop(e,tp,eg,ep,ev,re,r,rp)
   local c=e:GetHandler()
   local tc=Duel.GetFirstTarget()
   if tc and c:IsRelateToEffect(e) and c:IsFaceup() then
-	local atk=tc:GetAttack()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetValue(atk+1000)
-	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	c:RegisterEffect(e1)
+    local atk=tc:GetAttack()
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_UPDATE_ATTACK)
+    e1:SetValue(atk+1000)
+    e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+    c:RegisterEffect(e1)
   end
 end
 --(5) spsummon limit
 function c88880011.splimit(e,se,sp,st)
-	return se:GetHandler():IsSetCard(0x95)
+    return se:GetHandler():IsSetCard(0x95)
 end

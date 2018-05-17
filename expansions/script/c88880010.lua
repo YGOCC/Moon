@@ -12,7 +12,7 @@ function c88880010.initial_effect(c)
   c:RegisterEffect(e1)
   --(2) Negate Spell/Trap
   local e2=Effect.CreateEffect(c)
-  e2:SetDescription(aux.Stringid(1,0))
+  e2:SetDescription(aux.Stringid(88880010,0))
   e2:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
   e2:SetType(EFFECT_TYPE_QUICK_O)
   e2:SetCode(EVENT_CHAINING)
@@ -25,7 +25,7 @@ function c88880010.initial_effect(c)
   c:RegisterEffect(e2)
   --(3) Draw
   local e3=Effect.CreateEffect(c)
-  e3:SetDescription(aux.Stringid(1,1))
+  e3:SetDescription(aux.Stringid(88880010,1))
   e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
   e3:SetType(EFFECT_TYPE_QUICK_O)
   e3:SetCode(EVENT_FREE_CHAIN)
@@ -37,7 +37,7 @@ function c88880010.initial_effect(c)
   c:RegisterEffect(e3)
   --(4) Gain ATK
   local e4=Effect.CreateEffect(c)
-  e4:SetDescription(aux.Stringid(1,2))
+  e4:SetDescription(aux.Stringid(88880010,2))
   e4:SetCategory(CATEGORY_TODECK)
   e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
   e4:SetCode(EVENT_BATTLE_CONFIRM)
@@ -61,12 +61,12 @@ function c88880010.distg(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return true end
   Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
   if re:GetHandler():IsRelateToEffect(re) then
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
   end
 end
 function c88880010.disop(e,tp,eg,ep,ev,re,r,rp)
   if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-	Duel.Destroy(eg,REASON_EFFECT)
+    Duel.Destroy(eg,REASON_EFFECT)
   end
 end
 --(3) Draw
@@ -87,12 +87,12 @@ function c88880010.drop(e,tp,eg,ep,ev,re,r,rp,chk)
   local c=e:GetHandler()
   local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
   if Duel.Draw(p,d,REASON_EFFECT)~=0 and c:IsFaceup() and c:IsRelateToEffect(e) then
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	e1:SetValue(1000)
-	c:RegisterEffect(e1)
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_UPDATE_ATTACK)
+    e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+    e1:SetValue(1000)
+    c:RegisterEffect(e1)
   end
 end
 --(4) Gain ATK
@@ -112,12 +112,12 @@ function c88880010.atkop(e,tp,eg,ep,ev,re,r,rp)
   local c=e:GetHandler()
   local tc=Duel.GetFirstTarget()
   if tc and c:IsRelateToEffect(e) and c:IsFaceup() then
-	local atk=tc:GetAttack()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetValue(atk)
-	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	c:RegisterEffect(e1)
+    local atk=tc:GetAttack()
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_UPDATE_ATTACK)
+    e1:SetValue(atk)
+    e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+    c:RegisterEffect(e1)
   end
 end

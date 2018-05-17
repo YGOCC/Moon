@@ -1,5 +1,5 @@
 --Number 300: Galaxy-Eyes Photonic Tachyon Dragon (XyLeS)
-local m=88880055
+local m=88880010
 local cm=_G["c"..m]
 function cm.initial_effect(c)
 --Xyz Materials
@@ -62,12 +62,12 @@ function c88880055.distg(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return true end
   Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
   if re:GetHandler():IsRelateToEffect(re) then
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
   end
 end
 function c88880055.disop(e,tp,eg,ep,ev,re,r,rp)
   if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-	Duel.Destroy(eg,REASON_EFFECT)
+    Duel.Destroy(eg,REASON_EFFECT)
   end
 end
 --(3) Draw
@@ -88,12 +88,12 @@ function c88880055.drop(e,tp,eg,ep,ev,re,r,rp,chk)
   local c=e:GetHandler()
   local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
   if Duel.Draw(p,d,REASON_EFFECT)~=0 and c:IsFaceup() and c:IsRelateToEffect(e) then
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	e1:SetValue(1000)
-	c:RegisterEffect(e1)
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_UPDATE_ATTACK)
+    e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+    e1:SetValue(1000)
+    c:RegisterEffect(e1)
   end
 end
 --(4) Gain ATK
@@ -113,12 +113,12 @@ function c88880055.atkop(e,tp,eg,ep,ev,re,r,rp)
   local c=e:GetHandler()
   local tc=Duel.GetFirstTarget()
   if tc and c:IsRelateToEffect(e) and c:IsFaceup() then
-	local atk=tc:GetAttack()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetValue(atk)
-	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	c:RegisterEffect(e1)
+    local atk=tc:GetAttack()
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetCode(EFFECT_UPDATE_ATTACK)
+    e1:SetValue(atk)
+    e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+    c:RegisterEffect(e1)
   end
 end
