@@ -41,6 +41,7 @@ function cod.initial_effect(c)
     e4:SetCode(EVENT_FREE_CHAIN)
     e4:SetRange(LOCATION_MZONE)
     e4:SetCountLimit(1,id)
+    e4:SetCost(cod.spcost)
     e4:SetTarget(cod.sptg)
     e4:SetOperation(cod.spop)
     c:RegisterEffect(e4)
@@ -51,28 +52,31 @@ end
 function cod.efftg(e,c)
 	return e:GetHandler():GetLinkedGroup():IsContains(c)
 end
-function cod.cfilter(c)
+function cod.cfilter(c,e,tp)
 	return c:IsSetCard(0x63d0) and c:IsType(TYPE_EQUIP) and c:IsAbleToGrave()
+		and Duel.IsExistingMatchingCard(cod.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetCode())
 end
-function cod.spfilter(c,e,tp)
-	return c:IsSetCard(0x63d0) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+function cod.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cod.cfilter,tp,LOCATION_SZONE,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,cod.cfilter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
+	Duel.SendtoGrave(g,REASON_EFFECT)
+	e:SetLabel(g:GetFirst():GetCode())
+end
+function cod.spfilter(c,e,tp,code)
+	return c:GetCode()~=code and c:IsSetCard(0x63d0) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function cod.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(cod.cfilter,tp,LOCATION_SZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(cod.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(cod.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,e:GetLabel()) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function cod.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,cod.cfilter,tp,LOCATION_SZONE,0,1,1,nil)
-	if #g>0 and Duel.SendtoGrave(g,REASON_EFFECT) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,cod.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-		if #sg>0 then
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
-		end
+	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local sg=Duel.SelectMatchingCard(tp,cod.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,e:GetLabel())
+	if #sg>0 then
+		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
