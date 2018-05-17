@@ -93,7 +93,7 @@ function c63553452.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local gtc=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	local tc=gtc:GetFirst()
 	while tc do
-		tc:AddCounter(0x1554,ct)
+		tc:AddCounter(0x1554,ct,true)
 		tc=gtc:GetNext()
 	end
 end

@@ -12,17 +12,6 @@ function c63553459.initial_effect(c)
 	e1:SetTarget(c63553459.target)
 	e1:SetOperation(c63553459.activate)
 	c:RegisterEffect(e1)
-	--counter limit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetCode(EFFECT_ADD_CODE)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetLabelObject(e1)
-	e2:SetCondition(c63553459.ctlimit)
-	e2:SetValue(63553462)
-	c:RegisterEffect(e2)
 	--place counters
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(63553459,1))
@@ -116,6 +105,14 @@ function c63553459.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	c:AddCounter(0x1554,g)
 	e:SetLabel(c:GetCounter(0x1554))
+	--counter limit
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetCode(EFFECT_COUNTER_LIMIT+0x1554)
+	e2:SetValue(e:GetLabel())
+	e2:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e2)
 end
 --counter limit
 function c63553459.ctlimit(e,tp,eg,ep,ev,re,r,rp)
@@ -139,7 +136,7 @@ function c63553459.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c63553459.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	c:AddCounter(0x1554,e:GetLabel())
+	c:AddCounter(0x1554,e:GetLabel(),true)
 end
 --remove counters
 function c63553459.rcttg(e,tp,eg,ep,ev,re,r,rp,chk)

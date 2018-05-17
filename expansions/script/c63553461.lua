@@ -12,16 +12,6 @@ function c63553461.initial_effect(c)
 	e1:SetTarget(c63553461.target)
 	e1:SetOperation(c63553461.activate)
 	c:RegisterEffect(e1)
-	--counter limit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetCode(EFFECT_ADD_CODE)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetLabelObject(e1)
-	e2:SetCondition(c63553461.ctlimit)
-	e2:SetValue(63553462)
-	c:RegisterEffect(e2)
 	--spsummon limit
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
@@ -78,7 +68,15 @@ function c63553461.activate(e,tp,eg,ep,ev,re,r,rp)
 		local ct=tc:GetCounter(0x1554)
 		if ct<=0 then return end
 		c:AddCounter(0x1554,ct)
-		e:SetLabel(ct)
+		e:SetLabel(c:GetCounter(0x1554))
+		--counter limit
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e2:SetCode(EFFECT_COUNTER_LIMIT+0x1554)
+		e2:SetValue(e:GetLabel())
+		e2:SetReset(RESET_EVENT+0x1fe0000)
+		c:RegisterEffect(e2)
 	end
 end
 --counter limit

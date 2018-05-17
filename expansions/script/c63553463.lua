@@ -353,7 +353,7 @@ function c63553463.lfop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local g=Duel.SelectTarget(tp,c63553463.tgfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil):GetFirst()
 		if g and g:IsRelateToEffect(e) then
-			g:AddCounter(0x1554,2)
+			g:AddCounter(0x1554,2,true)
 		end
 	end
 end
@@ -364,7 +364,7 @@ function c63553463.lfop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local g=Duel.SelectTarget(tp,c63553463.tgfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil):GetFirst()
 		if g and g:IsRelateToEffect(e) then
-			g:AddCounter(0x1554,2)
+			g:AddCounter(0x1554,2,true)
 		end
 	end
 end
