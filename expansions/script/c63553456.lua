@@ -50,7 +50,7 @@ end
 --spsummon proc
 function c63553456.spcon(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsCanRemoveCounter(c:GetControler(),1,1,0x4554,3,REASON_COST)
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsCanRemoveCounter(c:GetControler(),1,1,0x1554,3,REASON_COST)
 end
 function c63553456.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.RemoveCounter(tp,1,1,0x1554,3,REASON_RULE)
