@@ -52,7 +52,7 @@ function c16000034.checku(sg,ec,tp)
 return sg:IsExists(Card.IsCode,1,nil,16000020)
 end
 function c16000034.filter2(c,ec,tp)
-	return  return (c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE)) or c:IsRace(RACE_PSYCHO)
+	return   (c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE)) or c:IsRace(RACE_PSYCHO)
 end
 function c16000034.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
