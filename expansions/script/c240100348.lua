@@ -1,5 +1,5 @@
 --created & coded by Lyris, art by kreegan of DeviantArt
---天剣主シ六ミ
+--天剣主シロ六
 function c240100348.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)

@@ -74,6 +74,9 @@ Card.GetType=function(c,scard,sumtype,p)
 	end
 	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
+		if not Auxiliary.Pandemoniums[c]() and c:IsLocation(LOCATION_EXTRA) then
+			tpe=tpe&~TYPE_PENDULUM
+		end
 	end
 	if Auxiliary.Polarities[c] then
 		tpe=tpe|TYPE_POLARITY
@@ -106,6 +109,9 @@ Card.GetOriginalType=function(c)
 	end
 	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
+		if not Auxiliary.Pandemoniums[c]() and c:IsLocation(LOCATION_EXTRA) then
+			tpe=tpe&~TYPE_PENDULUM
+		end
 	end
 	if Auxiliary.Polarities[c] then
 		tpe=tpe|TYPE_POLARITY
@@ -131,6 +137,9 @@ Card.GetPreviousTypeOnField=function(c)
 	end
 	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
+		if not Auxiliary.Pandemoniums[c]() and c:IsLocation(LOCATION_EXTRA) then
+			tpe=tpe&~TYPE_PENDULUM
+		end
 	end
 	if Auxiliary.Polarities[c] then
 		tpe=tpe|TYPE_POLARITY
@@ -427,10 +436,11 @@ function Auxiliary.EvoluteCounter(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 end
 
 --Pandemoniums
-function Auxiliary.AddOrigPandemoniumType(c)
+function Auxiliary.AddOrigPandemoniumType(c,ispendulum)
 	table.insert(Auxiliary.Pandemoniums,c)
 	Auxiliary.Customs[c]=true
-	Auxiliary.Pandemoniums[c]=aux.TRUE
+	local ispendulum=ispendulum==nil and false or ispendulum
+	Auxiliary.Pandemoniums[c]=function() return ispendulum end
 end
 function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,desc)
 	--summon
@@ -644,6 +654,7 @@ function Auxiliary.PandSSet(tc,reason)
 							Duel.ChangePosition(cc,POS_FACEDOWN_ATTACK)
 						else
 							Duel.MoveToField(cc,cc:GetControler(),cc:GetControler(),LOCATION_SZONE,POS_FACEDOWN_ATTACK,nil)
+							Duel.Hint(HINT_SOUND,0,1153)
 						end
 						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 						Duel.RaiseEvent(cc,EVENT_SSET,e,reason,cc:GetControler(),cc:GetControler(),0)
@@ -658,6 +669,7 @@ function Auxiliary.PandSSet(tc,reason)
 						Duel.ChangePosition(tc,POS_FACEDOWN_ATTACK)
 					else
 						Duel.MoveToField(tc,tc:GetControler(),tc:GetControler(),LOCATION_SZONE,POS_FACEDOWN_ATTACK,nil)
+						Duel.Hint(HINT_SOUND,0,1153)
 					end
 					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 					Duel.RaiseEvent(tc,EVENT_SSET,e,REASON_RULE,tc:GetControler(),tc:GetControler(),0)

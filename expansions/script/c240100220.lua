@@ -1,7 +1,7 @@
---Reneutrix Cadence
+--created & coded by Lyris, art by florainbloom of DeviantArt
+--ニュートリックス・ダルスィー
 function c240100220.initial_effect(c)
 	c:EnableReviveLimit()
-	--Materials: 2 Cyberse monsters
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERSE),2,2)
 	local k1=Effect.CreateEffect(c)
 	k1:SetType(EFFECT_TYPE_SINGLE)
@@ -24,7 +24,6 @@ function c240100220.initial_effect(c)
 	o1:SetLabelObject(k1)
 	o1:SetCondition(c240100220.ocon(c240100220.drcon))
 	c:RegisterEffect(o1)
-	--While there there are 2 or more Link Monsters on the field with Link Arrows pointing in the same direction, all your opponent's monsters lose ATK/DEF equal to half their original ATK/DEF.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
@@ -38,7 +37,6 @@ function c240100220.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	e3:SetValue(function(e,c) return -c:GetBaseDefense()/2 end)
 	c:RegisterEffect(e3)
-	--Once per turn (Quick Effect): You can Tribute 1 other card from your hand or field; flip the Link Arrows of all monsters currently on the field horizontally or vertically.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_QUICK_O)
 	e0:SetCode(EVENT_FREE_CHAIN)

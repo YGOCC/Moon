@@ -1,7 +1,7 @@
---Reneutrix Darcy
+--created & coded by Lyris, art by wawa3761 of DeviantArt
+--ニュートリックス・ギャブリー
 function c240100221.initial_effect(c)
 	c:EnableReviveLimit()
-	--Materials: 2 "Newtrix" monsters
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xd10),2,2)
 	local k1=Effect.CreateEffect(c)
 	k1:SetType(EFFECT_TYPE_SINGLE)
@@ -24,7 +24,6 @@ function c240100221.initial_effect(c)
 	o1:SetLabelObject(k1)
 	o1:SetCondition(c240100221.ocon(c240100221.drcon))
 	c:RegisterEffect(o1)
-	--Your linked monsters cannot be destroyed by card effects.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -38,7 +37,6 @@ function c240100221.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	c:RegisterEffect(e3)
-	--Once per turn (Quick Effect): You can Tribute 1 other card from your hand or field; reverse the directions of the Link Arrows of all monsters currently on the field.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_QUICK_O)
 	e0:SetCode(EVENT_FREE_CHAIN)

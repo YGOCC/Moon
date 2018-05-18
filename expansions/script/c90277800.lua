@@ -2,6 +2,7 @@
 local card = c90277800
 function card.initial_effect(c)
     aux.AddOrigPandemoniumType(c)
+    aux.EnablePandemoniumAttribute(c,e1)
     --Search
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(90277800,0))
@@ -13,7 +14,6 @@ function card.initial_effect(c)
     e1:SetTarget(card.thtg)
     e1:SetOperation(card.thop)
     c:RegisterEffect(e1)
-    aux.EnablePandemoniumAttribute(c,e1)
     --Activate
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(90277800,1))

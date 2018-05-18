@@ -1,20 +1,18 @@
---Reneutrix Night Club
+--created & coded by Lyris, art by dsorokin755 of DeviantArt
+--ニュートリックス・ナイトクラッブ
 function c240100231.initial_effect(c)
-	--When this card is activated while you control no monsters: You can Special Summon 1 "Newtrix" monster from your Deck.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetOperation(c240100231.activate)
 	c:RegisterEffect(e1)
-	--"Newtrix" monsters do not have to activate their effects.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(240100231)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(0xff,0xff)
 	c:RegisterEffect(e3)
-	--When a "Newtrix" monster effect is activated (Quick Effect): You can target 1 Link Monster on the field; that target is unaffected by that effect.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)

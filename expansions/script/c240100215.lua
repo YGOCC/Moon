@@ -1,6 +1,6 @@
---Reneutrix Amy
+--created & coded by Lyris, art at https://static.zerochan.net/Sendou.Emi.full.490053.jpg
+--ニュートリックス・エミー
 function c240100215.initial_effect(c)
-	--If this card and/or another monster(s) is Special Summoned while a Link Monster is on the field: Rotate the Link Arrows of all monsters currently on the field by 90 degrees clockwise.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)

@@ -1,4 +1,5 @@
---Newtrix Night Veil
+--created & coded by Lyris, art at https://images-na.ssl-images-amazon.com/images/I/615xevWUOuL._UY741_.jpg
+--ニュートリックス・ナイトヴェール
 function c240100232.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_EQUIP)
@@ -8,19 +9,16 @@ function c240100232.initial_effect(c)
 	e1:SetTarget(c240100232.target)
 	e1:SetOperation(c240100232.operation)
 	c:RegisterEffect(e1)
-	--Equip only to a "Newtrix" monster.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_EQUIP_LIMIT)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetValue(c240100232.eqlimit)
 	c:RegisterEffect(e2)
-	--It does not have to activate its effects.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_EQUIP)
 	e3:SetCode(240100231)
 	c:RegisterEffect(e3)
-	--If this card is destroyed and the equipped monster (if any) is not on the field: You can target 1 "Newtrix" monster in your GY; Special Summon it.
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(122518919,0))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
