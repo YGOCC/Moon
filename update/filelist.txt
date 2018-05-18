@@ -5280,6 +5280,7 @@ expansions/script/c10505097.lua	abc7c978229ae730f9cc7c19cda0a5e4
 expansions/script/c10505098.lua	3d797db59d12da417e06fcee688c12d0
 expansions/script/c10505099.lua	7fd6bfad2b89bcc05b342062df55162d
 expansions/script/c10705656.lua	bfb33e416ada00db89e85e56201d4770
+expansions/script/c10755153.lua	2c8b2b1bf6e90dd8c20b96a9261ac9ca
 expansions/script/c10904000.lua	29ade1765c66fd3adb681482337172fc
 expansions/script/c10904001.lua	23ed67e1081bde5f5d93acb34c29dfd6
 expansions/script/c10904002.lua	116f1ff37b6f4bb13ff0bb6b1f14e6ca
@@ -6107,6 +6108,7 @@ expansions/script/c171000128.lua	97430f1c49857b99638d4a0b6cb22c9e
 expansions/script/c17112603.lua	f410809844e28e68138da810b9280dad
 expansions/script/c1751.lua	32a8cf92b737d86a052db14985d824e4
 expansions/script/c1787.lua	6a9710ca70241e4d3e72b8564826021a
+expansions/script/c18175965.lua	c79f1ce1f0c14ca109a0ba250938bc86
 expansions/script/c18917000.lua	f550c2b8fac9f1c910b6a32aade80bf9
 expansions/script/c18917001.lua	e78036810034bc4b6bdfe82b8cf40ffd
 expansions/script/c18917002.lua	1afd80ef3662ca296ed154b69ce6004a
@@ -7845,6 +7847,7 @@ expansions/script/c444426.lua	41748ffb371aa9f420294a776c916e68
 expansions/script/c444444.lua	caa9d19769ea7e7a9d3694df0cad390c
 expansions/script/c45145001.lua	4d7274542abb5e7ca833f9fc7075cbc5
 expansions/script/c45215225.lua	83e1ceb01122995a780a79436f805039
+expansions/script/c46037213.lua	50fc06ccc6cdd73b8b959f285f4efefb
 expansions/script/c46104361.lua	96df258046204a144a8dc07ca40af160
 expansions/script/c46947713.lua	daf28c7261f009d83e811f22cf305a07
 expansions/script/c47000000.lua	a48d35ae31ee7fc6fa4d9e46908d5b36
@@ -8008,6 +8011,7 @@ expansions/script/c47000162.lua	a6f8bac98f91fe33665c64235700f247
 expansions/script/c47000163.lua	322d8eaada3c0d93998fd1b94fd78767
 expansions/script/c47000164.lua	1d1b285b7e93b816e9e3c5358e822377
 expansions/script/c47000165.lua	3992740431e502e24d547acf478ece8e
+expansions/script/c47150851.lua	2cf9eb404ad1db091621a3806b45b481
 expansions/script/c47880400.lua	d32f0b7ea7baff253f2e28610073b839
 expansions/script/c500310183.lua	99bf2cb67a0114cdd9e8a4403c8d4b56
 expansions/script/c500310666.lua	1dc0ae6fa15ab624a9cbcbf8a09ca15f
@@ -8296,9 +8300,11 @@ expansions/script/c71473124.lua	3258e6f581979dcf2d7e16dd3ed71a18
 expansions/script/c71473125.lua	72285c4ed127cd2f1650ae9a820f07db
 expansions/script/c72336818.lua	f324682d24095e35af5a4ac7470bc28c
 expansions/script/c73228161.lua	b802e4a5fd1ae610910caeedde26e7c5
+expansions/script/c73544866.lua	f7d6461a6024dbdfe57a86f83e9964f5
 expansions/script/c73558460.lua	404ddfb266e4ff4acfa5dcd34fca99a9
 expansions/script/c73659078.lua	4ad263606f22ee3c78fbf755e0a75631
 expansions/script/c74210057.lua	3be513f58aa083c8960c3a370e84e587
+expansions/script/c74367458.lua	ceb6b293a2b15ba67d93f140041ba705
 expansions/script/c75745190.lua	152c47f510cb39e3c07f4946e9cb9125
 expansions/script/c76253941.lua	f0a72fa384556ce35d8f0888ac4b048a
 expansions/script/c76253942.lua	8de5dba20a44cdba396ec97214f7238f
@@ -8737,6 +8743,7 @@ expansions/script/c938926102.lua	f44e653162550c08b71eb0f0d4c94cc8
 expansions/script/c952398012.lua	0906897c5b0e18344b9cdb28c7502ddd
 expansions/script/c95825679.lua	552bf51910ebf63f0088431ed6ed69da
 expansions/script/c961398231.lua	f5ebfae3143970aa9423100ad096f466
+expansions/script/c9633505.lua	11cf3f40486c7cde5bb51a9ce3e11685
 expansions/script/c96770211.lua	4a5780a717800dfceea5b7be884f4c30
 expansions/script/c96770212.lua	74380d188026dd8dd763e6d72ccba09f
 expansions/script/c96770213.lua	0e585a7e938085fb8fad21a5a092657b
@@ -8962,6 +8969,6 @@ expansions/sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 expansions/sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 expansions/sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	fb2c3742a3f4173531eeac6bcf570183
+update/filelist.txt	3f359b440a95f404ce225ba7821b2cf0
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	ff0307106a76764c24015ac7c109efb7
+update/version.txt	68b64914fe46b10770b30a59d3c01392
