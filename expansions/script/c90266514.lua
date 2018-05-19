@@ -85,7 +85,7 @@ function c90266514.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c90266514.bcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=Duel.GetAttackTarget()
-	return Duel.GetTurnPlayer()~=tp and c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+	return Duel.GetTurnPlayer()~=tp and c and c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
 end
 function c90266514.efilter(c,tp)
 	return c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
