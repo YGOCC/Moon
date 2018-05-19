@@ -686,9 +686,11 @@ function Auxiliary.PandActTarget(xe)
 				local c=e:GetHandler()
 				if chk==0 then return true end
 				if xe==nil then return end
-				local tchk=(xe:GetCode()==EVENT_FREE_CHAIN or Duel.CheckEvent(xe:GetCode()))
+				local code=xe:GetCode()
 				local cost=xe:GetCost()
 				local target=xe:GetTarget()
+				local tchk=(code==EVENT_FREE_CHAIN or Duel.CheckEvent(code))
+				if code==EVENT_CHAINING then tchk=(tchk or Duel.GetCurrentChain()>0) end
 				if tchk and (not cost or cost(e,tp,eg,ep,ev,re,r,rp,0))
 					and (not target or target(e,tp,eg,ep,ev,re,r,rp,0))
 					and Duel.SelectYesNo(tp,94) then
