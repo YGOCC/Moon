@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	8292d6c9bcd1da82d55a59f802594d3d
+﻿expansions/Cards-non-QCD.cdb	7ef55f2974c62f464577a04a39c2f824
 expansions/lflist.conf	e4599c5fd5b000043d47a68a84b271d6
 expansions/official.cdb	78af5ceef8c088dee98ac4e954c418ba
 expansions/pre-release.cdb	accf055b3ac04cfde808748c61cf7a13
@@ -3712,6 +3712,7 @@ expansions/pics/53274131.jpg	bfb00d82b65a73ffbe19ba509b9c6ebd
 expansions/pics/53274133.jpg	de88794107485e02f5c9a54655bfed0e
 expansions/pics/53274134.jpg	c2779a21c8417824160258eac97a8ebb
 expansions/pics/53303460.jpg	969c0271d28217b9edd899966329a1a5
+expansions/pics/53313900.jpg	114bd810347be044ea5e244032d8df50
 expansions/pics/539193.jpg	6b6a1b6723ce26d72739c22e26d4beef
 expansions/pics/54199839.jpg	1a49a379c6ede00d19808cbe31cabf21
 expansions/pics/543516051.jpg	8e6f47620cb3d70722da32e3b21437af
@@ -8252,6 +8253,7 @@ expansions/script/c53274131.lua	8196c4c2b38b67d7e2110f8654cac2c4
 expansions/script/c53274133.lua	e6c666ea6f5ed2cb3a82ff49491a72ba
 expansions/script/c53274134.lua	5574fb00714b49ec9eefc559ccae2ee5
 expansions/script/c53303460.lua	6771edb66df3650295e1b757ccbd1143
+expansions/script/c53313900.lua	af133571981e9644377ccbeaa8c1e232
 expansions/script/c539193.lua	32aba09dbefa82b8a15f6662eef30370
 expansions/script/c54199839.lua	17f7206f746506eb0e65f9c018ed419f
 expansions/script/c543516051.lua	9d4096136eb3e817f75b929a5b5e0098
@@ -9141,7 +9143,6 @@ expansions/sound/custom/seiryu_battle.wav	1e8f3d8a95f4d3e64997cc9259bee741
 expansions/sound/custom/seiryu_effect.wav	b68dd0215d38c7bbe92e3ccfc75a2b22
 expansions/sound/custom/seiryu_fspell.wav	4de8cdf4ccaa01e8660198c366bed336
 expansions/sound/custom/seiryu_summon.wav	9965c55da5c23d27b72aaf40bbadbba3
-expansions/sound/custom/set.wav	710db4b9c8c2ee8177dd83e3e2701aab
 expansions/sound/custom/SiegeTank_Attack.wav	a595c6fd10443bd78461d495bf74ba50
 expansions/sound/custom/SiegeTank_Summon.wav	b0c2d0a8c5c03eea76280bdaba52ac5c
 expansions/sound/custom/suzaku_battle.wav	4ed12d51084c2d48ad376f60fbdebc03
@@ -9154,6 +9155,6 @@ expansions/sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 expansions/sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 expansions/sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	4caff5ca6976773619c713fa7f74ca52
+update/filelist.txt	abc3d1132c6b535cae1d21988a2bebf5
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	08b8922cc0912352a164360cf8e52aef
+update/version.txt	aac748b15b3b9279bbeba4f3167aae1f
