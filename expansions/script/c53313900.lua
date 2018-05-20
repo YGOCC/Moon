@@ -1,12 +1,12 @@
 --Rescue Hare
 function c53313900.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	--P: You can activate this effect; banish this card from your Spell & Trap Zone, then add 2 Pandemonium Monster Cards with the same name from your Main Deck to your hand. You can only use this effect of "Rescue Hare" once per Duel.
+	--P: You can activate this effect; banish this card from your Spell & Trap Zone, then add 2 Pandemonium Monster Cards with the same name from your Main Deck to your hand. You can only use this effect of "Rescue Hare" once per turn.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetCountLimit(1,53313900+EFFECT_COUNT_CODE_DUEL)
+	e1:SetCountLimit(1,53313900)
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetTarget(c53313900.thtg)
 	e1:SetOperation(c53313900.thop)
