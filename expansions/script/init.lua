@@ -465,7 +465,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,desc)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
 	e0:SetCode(EVENT_LEAVE_FIELD_P)
-	e0:SetOperation(Auxiliary.PandEnableFUInED)
+	e0:SetOperation(Auxiliary.PandEnConFUInED)
 	c:RegisterEffect(e0)
 	--reset Pendulum-like redirect property
 	local sp=Effect.CreateEffect(c)
@@ -631,10 +631,28 @@ end
 function Auxiliary.PandActCon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(Auxiliary.PaCheckFilter,tp,LOCATION_SZONE,0,1,e:GetHandler())
 end
-function Auxiliary.PandEnableFUInED(e,tp,eg,ep,ev,re,r,rp)
+function Auxiliary.PandEnConFUInED(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():GetDestination()==LOCATION_GRAVE then
-		Card.SetCardData(e:GetHandler(),CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_PENDULUM)
+		Auxiliary.PandEnableFUInED(e:GetHandler(),e:GetHandler():GetReason())(e,tp,eg,ep,ev,re,r,rp)
 	end
+end
+function Auxiliary.PandEnableFUInED(tc,reason)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				if pcall(Group.GetFirst,tc) then
+					local tg=tc:Clone()
+					for cc in aux.Next(tg) do
+						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_PENDULUM)
+						if not cc:IsOnField() then
+							Duel.SendtoExtraP(cc,nil,reason)
+						end
+					end
+				else
+					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_PENDULUM)
+					if not tc:IsOnField() then
+						Duel.SendtoExtraP(tc,nil,reason)
+					end
+				end
+			end
 end
 function Auxiliary.PandDisConFUInED(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_EXTRA)
@@ -650,34 +668,18 @@ function Auxiliary.PandSSet(tc,reason)
 				if pcall(Group.GetFirst,tc) then
 					local tg=tc:Clone()
 					for cc in aux.Next(tg) do
+						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 						if cc:IsLocation(LOCATION_SZONE) then
 							Duel.ChangePosition(cc,POS_FACEDOWN_ATTACK)
-						else
-							Duel.MoveToField(cc,cc:GetControler(),cc:GetControler(),LOCATION_SZONE,POS_FACEDOWN_ATTACK,nil)
-							Duel.Hint(HINT_SOUND,0,1153)
-						end
-						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
-						Duel.RaiseEvent(cc,EVENT_SSET,e,reason,cc:GetControler(),cc:GetControler(),0)
-						local e1=Effect.CreateEffect(cc)
-						e1:SetType(EFFECT_TYPE_SINGLE)
-						e1:SetCode(EFFECT_CANNOT_TRIGGER)
-						e1:SetReset(RESET_EVENT+0x17a0000+RESET_PHASE+PHASE_END)
-						cc:RegisterEffect(e1)
+							Duel.RaiseEvent(cc,EVENT_SSET,e,reason,cc:GetControler(),cc:GetControler(),0)
+						else Duel.SSet(cc:GetControler(),cc) end
 					end
 				else
+					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 					if tc:IsLocation(LOCATION_SZONE) then
 						Duel.ChangePosition(tc,POS_FACEDOWN_ATTACK)
-					else
-						Duel.MoveToField(tc,tc:GetControler(),tc:GetControler(),LOCATION_SZONE,POS_FACEDOWN_ATTACK,nil)
-						Duel.Hint(HINT_SOUND,0,1153)
-					end
-					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
-					Duel.RaiseEvent(tc,EVENT_SSET,e,REASON_RULE,tc:GetControler(),tc:GetControler(),0)
-					local e1=Effect.CreateEffect(tc)
-					e1:SetType(EFFECT_TYPE_SINGLE)
-					e1:SetCode(EFFECT_CANNOT_TRIGGER)
-					e1:SetReset(RESET_EVENT+0x17a0000+RESET_PHASE+PHASE_END)
-					tc:RegisterEffect(e1)
+						Duel.RaiseEvent(tc,EVENT_SSET,e,reason,tc:GetControler(),tc:GetControler(),0)
+					else Duel.SSet(tc:GetControler(),tc) end
 				end
 			end
 end
