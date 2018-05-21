@@ -36,7 +36,7 @@ function card.setop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g=Duel.SelectMatchingCard(tp,card.setfilter,tp,LOCATION_DECK,0,1,1,nil,tp)
 	if g:GetCount()>0 then
-		aux.PandSSet(tc,REASON_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
+		aux.PandSSet(g,REASON_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
