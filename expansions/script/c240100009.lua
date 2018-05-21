@@ -69,18 +69,30 @@ function c240100009.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 	end
 	if (e:IsHasType(EFFECT_TYPE_FIELD) or tc:IsRelateToEffect(e)) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+		local fid=c:GetFieldID()
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 		e2:SetCode(EVENT_PHASE+PHASE_END)
 		e2:SetReset(RESET_PHASE+PHASE_END)
 		e2:SetCountLimit(1)
+		e2:SetLabel(fid)
 		e2:SetLabelObject(tc)
+		e2:SetCondition(c240100009.tdescon)
 		e2:SetOperation(c240100009.tdesop)
 		Duel.RegisterEffect(e2,tp)
+		tc:RegisterFlagEffect(240100009,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1,fid)
 	end
 	Duel.SpecialSummonComplete()
 end
+function c240100009.tdescon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if tc:GetFlagEffectLabel(240100009)==e:GetLabel() then
+		return true
+	else
+		e:Reset()
+		return false
+	end
 function c240100009.tdesop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetLabelObject(),REASON_EFFECT)
 end

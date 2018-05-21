@@ -442,7 +442,18 @@ function Auxiliary.AddOrigPandemoniumType(c,ispendulum)
 	local ispendulum=ispendulum==nil and false or ispendulum
 	Auxiliary.Pandemoniums[c]=function() return ispendulum end
 end
-function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,desc)
+function Auxiliary.EnablePandemoniumAttribute(c,...)
+	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
+	local t={...}
+	local regfield,desc=nil,nil
+	if type(t[#t])=='number' then
+		desc=t[#t]
+		table.remove(t)
+	end
+	if type(t[#t])=='boolean' then
+		regfield=t[#t]
+		table.remove(t)
+	end
 	--summon
 	local ge6=Effect.CreateEffect(c)
 	ge6:SetType(EFFECT_TYPE_FIELD)
@@ -488,6 +499,27 @@ function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,desc)
 	local rem=th:Clone()
 	rem:SetCode(EVENT_REMOVE)
 	c:RegisterEffect(rem)
+	--keep on field
+	local kp=Effect.CreateEffect(c)
+	kp:SetType(EFFECT_TYPE_SINGLE)
+	kp:SetCode(EFFECT_REMAIN_FIELD)
+	c:RegisterEffect(kp)
+	--activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCondition(Auxiliary.PandActCon)
+	if ... then
+		local flags=0
+		for _,xe in ipairs({...}) do
+			if xe:GetProperty() then flags=flags|xe:GetProperty() end
+		end
+		e1:SetProperty(flags)
+		e1:SetHintTiming(TIMING_DAMAGE_STEP)
+		e1:SetTarget(Auxiliary.PandActTarget(...))
+		e1:SetOperation(Auxiliary.PandAct(...))
+	end
+	c:RegisterEffect(e1)
 	--register by default
 	if regfield==nil or regfield then
 		--set
@@ -500,24 +532,6 @@ function Auxiliary.EnablePandemoniumAttribute(c,xe,regfield,desc)
 		set:SetCondition(Auxiliary.PandSSetCon)
 		set:SetOperation(Auxiliary.PandSSet(c,REASON_RULE))
 		c:RegisterEffect(set)
-		--keep on field
-		local kp=Effect.CreateEffect(c)
-		kp:SetType(EFFECT_TYPE_SINGLE)
-		kp:SetCode(EFFECT_REMAIN_FIELD)
-		c:RegisterEffect(kp)
-		--activate
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_ACTIVATE)
-		e1:SetCode(EVENT_FREE_CHAIN)
-		e1:SetCondition(Auxiliary.PandActCon)
-		if xe~=nil then
-			local flags=xe:GetProperty()
-			e1:SetProperty(flags)
-			e1:SetHintTiming(TIMING_DAMAGE_STEP)
-			e1:SetTarget(Auxiliary.PandActTarget(xe))
-			e1:SetOperation(Auxiliary.PandAct(xe))
-		end
-		c:RegisterEffect(e1)
 	end
 	Duel.AddCustomActivityCounter(c:GetOriginalCode(),ACTIVITY_SPSUMMON,Auxiliary.PaCheck)
 end
@@ -539,7 +553,12 @@ function Auxiliary.PandePendSwitch(e,c,tp,sumtp,sumpos)
 	return bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function Auxiliary.PaConditionFilter(c,e,tp,lscale,rscale)
-	local lv=c:GetLevel()
+	local lv=0
+	if c.pandemonium_level then
+		lv=c.pandemonium_level
+	else
+		lv=c:GetLevel()
+	end
 	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM))
 		and (lv>lscale and lv<rscale) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SPECIAL+726,tp,false,false)
 		and not c:IsForbidden()
@@ -683,36 +702,61 @@ function Auxiliary.PandSSet(tc,reason)
 				end
 			end
 end
-function Auxiliary.PandActTarget(xe)
+function Auxiliary.PandActTarget(...)
+	local fx={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				local c=e:GetHandler()
 				if chk==0 then return true end
-				if xe==nil then return end
-				local code=xe:GetCode()
-				local cost=xe:GetCost()
-				local target=xe:GetTarget()
-				local tchk=(code==EVENT_FREE_CHAIN or Duel.CheckEvent(code))
-				if code==EVENT_CHAINING then tchk=(tchk or Duel.GetCurrentChain()>0) end
-				if tchk and (not cost or cost(e,tp,eg,ep,ev,re,r,rp,0))
-					and (not target or target(e,tp,eg,ep,ev,re,r,rp,0))
-					and Duel.SelectYesNo(tp,94) then
+				if #fx==0 then
+					e:SetCategory(0)
+					e:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+					e:SetLabel(0)
+					return
+				end
+				local ops={}
+				local t={}
+				local cost=nil
+				local tg=nil
+				for i,xe in ipairs(fx) do
+					local code=xe:GetCode()
+					cost=xe:GetCost()
+					tg=xe:GetTarget()
+					local tchk=(code==EVENT_FREE_CHAIN or Duel.CheckEvent(code))
+					if code==EVENT_CHAINING then tchk=(tchk or Duel.GetCurrentChain()>0) end
+					if tchk and (not cost or cost(e,tp,eg,ep,ev,re,r,rp,0))
+						and (not tg or tg(e,tp,eg,ep,ev,re,r,rp,0)) then
+						table.insert(ops,xe:GetDescription())
+					else table.insert(ops,1214) end
+					table.insert(t,xe)
+				end
+				local op=0
+				if #ops>1 then
+					op=Duel.SelectOption(tp,1214,table.unpack(ops))
+					if ops[op]==1214 then op=0 end
+				elseif Duel.SelectYesNo(tp,94) then op=1 end
+				e:SetLabel(op)
+				if op>0 then
+					local xe=t[op]
 					e:SetProperty(xe:GetProperty())
 					e:SetCategory(xe:GetCategory())
+					cost=xe:GetCost()
 					if cost then cost(e,tp,eg,ep,ev,re,r,rp,1) end
-					if target then target(e,tp,eg,ep,ev,re,r,rp,1) end
-					e:SetLabel(1)
+					tg=xe:GetTarget()
+					if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
+					e:SetLabelObject(xe)
 					c:RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,65)
 				else
 					e:SetCategory(0)
-					e:SetProperty(xe:GetProperty()&EFFECT_FLAG_DAMAGE_STEP)
+					e:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 					e:SetLabel(0)
 				end
 			end
 end
-function Auxiliary.PandAct(xe)
+function Auxiliary.PandAct(...)
+	local xe={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp)
 				if e:GetLabel()==0 then return end
-				local op=xe:GetOperation()
+				local op=xe[e:GetLabel()]:GetOperation()
 				if op then op(e,tp,eg,ep,ev,re,r,rp) end
 			end
 end
