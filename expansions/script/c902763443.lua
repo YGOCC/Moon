@@ -44,7 +44,7 @@ function c902763443.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c902763443.cfilter(c,tp)
-	return c:IsSetCard(0xcf80) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsPreviousLocation(LOCATION_SZONE)
+	return c:IsSetCard(0xcf80) and c:GetPreviousTypeOnField()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsPreviousLocation(LOCATION_SZONE)
 		and c:GetPreviousControler()==tp and c:IsPreviousPosition(POS_FACEUP)
 end
 function c902763443.spcon(e,tp,eg,ep,ev,re,r,rp)

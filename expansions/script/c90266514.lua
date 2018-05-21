@@ -97,7 +97,7 @@ function c90266514.econ(e,tp,eg,ep,ev,re,r,rp)
 	return g and g:IsExists(c90266514.efilter,1,nil,tp)
 end
 function c90266514.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetAttacker():IsDestructable() or Duel.IsChainNegatable(ev) end
+	if chk==0 then return (Duel.GetAttacker() and Duel.GetAttacker():IsDestructable()) or Duel.IsChainNegatable(ev) end
 	local g=Group.FromCards(e:GetHandler())
 	if re then
 		-- e:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)

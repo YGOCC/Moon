@@ -32,7 +32,7 @@ function c90204439.evalue(e,re,rp)
 	return re:IsActiveType(TYPE_SPELL) and rp~=e:GetHandlerPlayer()
 end
 function c90204439.cfilter(c,tp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+	return c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousTypeOnField()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
 		and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetSequence()<5
 end
 function c90204439.condition(e,tp,eg,ep,ev,re,r,rp)
