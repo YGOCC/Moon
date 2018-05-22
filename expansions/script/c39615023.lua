@@ -143,12 +143,12 @@ function c39615023.spop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetMatchingGroup(c39615023.thfilter2,tp,LOCATION_DECK,0,nil)
 		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 			and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET)
+			and not Duel.IsExistingMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,1,nil)
 			and Duel.SelectYesNo(tp,1159) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 			local sg=g:Select(tp,1,1,nil)
-			aux.PandSSet(sg,REASON_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
-			Duel.ConfirmCards(1-tp,sg)
+			Duel.MoveToField(sg:GetFirst(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		end
 	end
 end
