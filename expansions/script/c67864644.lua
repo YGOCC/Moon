@@ -22,7 +22,7 @@ function c67864644.initial_effect(c)
 	c:RegisterEffect(e2)
 	--send to grave
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_TOGRAVEY)
+	e3:SetCategory(CATEGORY_TOGRAVE)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_BATTLED)
 	e3:SetRange(LOCATION_MZONE)
@@ -35,8 +35,10 @@ end
 function c67864644.hspfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)
 end
-function c67864644.hspcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c67864644.hspfilter,tp,LOCATION_MZONE,0,1,nil)
+function c67864644.hspcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c67864644.hspfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function c67864644.atcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)

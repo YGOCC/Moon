@@ -25,7 +25,7 @@ function c67864657.initial_effect(c)
     e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
     e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
     e4:SetRange(LOCATION_FZONE)
-    e4:SetProperty(EFFECT_FLAG_DELAY)
+    e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
     e4:SetCode(EVENT_DESTROYED)
     e4:SetCountLimit(1,67864657)
     e4:SetCondition(c67864657.spcon)
@@ -48,9 +48,38 @@ function c67864657.activate(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c67864657.cfilter(c,tp)
-    return c:IsRace(RACE_WARRIOR) and c:IsReason(REASON_DESTROY)
+    return c:IsRace(RACE_WARRIOR) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
         and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp
 end
 function c67864657.spcon(e,tp,eg,ep,ev,re,r,rp)
-    return not eg:IsContains(e:GetHandler()) and eg:IsExists(c67864657.cfilter,1,nil,tp)
+    return eg:IsExists(c67864657.cfilter,1,nil,tp)
+end
+function c67864657.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return eg:IsExists(Card.IsAbleToRemove,1,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+    local g=eg:FilterSelect(tp,Card.IsAbleToRemove,1,1,nil)
+    Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
+function c67864657.spfilter(c,e,tp)
+    return c:IsSetCard(0x2a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c67864657.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+        and Duel.IsExistingMatchingCard(c67864657.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
+end
+function c67864657.desfilter(c,atk)
+    return c:IsDestructable() and c:GetAttack()<atk
+end
+function c67864657.spop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+    local g=Duel.SelectMatchingCard(tp,c67864657.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp)
+    if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+        local dg=Duel.SelectMatchingCard(tp,c67864657.desfilter,tp,0,LOCATION_MZONE,1,1,nil,g:GetFirst():GetAttack())
+        Duel.BreakEffect()
+        Duel.Destroy(dg,REASON_EFFECT)
+    end
 end
