@@ -10,6 +10,7 @@ function c63553470.initial_effect(c)
 	e0:SetCode(EFFECT_SPSUMMON_PROC)
 	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e0:SetRange(LOCATION_EXTRA)
+	e0:SetCountLimit(1,63553470)
 	e0:SetCondition(c63553470.sprcon)
 	e0:SetOperation(c63553470.sprop)
 	e0:SetValue(SUMMON_TYPE_LINK)
@@ -77,7 +78,7 @@ function c63553470.drcfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_PZONE) and c:GetPreviousControler()==tp
 end
 function c63553470.drcfilter2(c,tp)
-	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsPreviousLocation(LOCATION_SZONE) and c:GetPreviousControler()==tp
+	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsPreviousLocation(LOCATION_SZONE) and c:GetPreviousControler()==tp and c:IsPreviousPosition(POS_FACEUP_ATTACK)
 end
 function c63553470.excfilter(c)
 	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsFaceup()
