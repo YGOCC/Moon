@@ -23,16 +23,7 @@ function c39615023.initial_effect(c)
 	e1:SetLabelObject(ps)
 	e1:SetValue(c39615023.splimit)
 	c:RegisterEffect(e1)
-	--M: You can Tribute 1 monster you control (Quick Effect): Set this card in your Spell/Trap card zone.
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetCost(c39615023.sstcost)
-	e4:SetTarget(c39615023.ssttg)
-	e4:SetOperation(c39615023.sstop)
-	c:RegisterEffect(e4)
-	--M: When a monster(s) is destroyed: You can Special Summon this card (from your hand), then You can set 1 Pandemonium monster directly from your Deck in your Spell/Trap zone.
+	--M: When your monster(s) is destroyed: You can Special Summon this card (from your hand), then You can set 1 Pandemonium monster directly from your Deck in your Spell/Trap zone.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
@@ -107,25 +98,11 @@ end
 function c39615023.splimit(e,se,sp,st)
 	return st~=SUMMON_TYPE_SPECIAL+726 or se==e:GetLabelObject()
 end
-function c39615023.sstcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsControler,1,e:GetHandler(),tp) end
-	local g=Duel.SelectReleaseGroup(tp,Card.IsControler,1,1,e:GetHandler(),tp)
-	Duel.Release(g,REASON_COST)
-end
-function c39615023.ssttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
-end
-function c39615023.sstop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
-		aux.PandSSet(c,REASON_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
-	end
-end
-function c39615023.spcfilter(c)
-	return c:IsType(TYPE_MONSTER) or c:IsPreviousLocation(LOCATION_MZONE)
+function c39615023.spcfilter(c,tp)
+	return c:GetPreviousControler()==tp
 end
 function c39615023.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c39615023.spcfilter,1,nil)
+	return eg:IsExists(c39615023.spcfilter,1,nil,tp)
 end
 function c39615023.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
