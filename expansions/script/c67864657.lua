@@ -55,10 +55,11 @@ function c67864657.spcon(e,tp,eg,ep,ev,re,r,rp)
     return eg:IsExists(c67864657.cfilter,1,nil,tp)
 end
 function c67864657.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return eg:IsExists(Card.IsAbleToRemove,1,nil) end
+    local g=eg:Filter(c67864657.cfilter,nil,tp)
+    if chk==0 then return g:IsExists(Card.IsAbleToRemove,1,nil) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-    local g=eg:FilterSelect(tp,Card.IsAbleToRemove,1,1,nil)
-    Duel.Remove(g,POS_FACEUP,REASON_COST)
+    local rg=g:FilterSelect(tp,Card.IsAbleToRemove,1,1,nil)
+    Duel.Remove(rg,POS_FACEUP,REASON_COST)
 end
 function c67864657.spfilter(c,e,tp)
     return c:IsSetCard(0x2a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

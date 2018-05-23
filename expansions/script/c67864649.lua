@@ -12,8 +12,8 @@ local id,cod=ID()
 function cod.initial_effect(c)
 	--Link Summon
 	aux.AddLinkProcedure(c,cod.lmfilter,2,2)
-    c:EnableReviveLimit()
-    --SPLimit
+	c:EnableReviveLimit()
+	--SPLimit
 	--[[local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_MUST_USE_MZONE)
@@ -24,12 +24,12 @@ function cod.initial_effect(c)
 	c:RegisterEffect(e1)]]--
 	--Name
 	local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_SINGLE)
-    e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-    e2:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
-    e2:SetCode(EFFECT_CHANGE_CODE)
-    e2:SetValue(67864641)
-    c:RegisterEffect(e2)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
+	e2:SetCode(EFFECT_CHANGE_CODE)
+	e2:SetValue(67864641)
+	c:RegisterEffect(e2)
 	--Special Summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,0))
@@ -51,11 +51,11 @@ function cod.frcval(e,c,fp,rp,r)
 	return e:GetHandler():GetLinkedZone()
 end
 function cod.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
-    Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function cod.spfilter(c,e,tp)
-	return c:IsLevelAbove(6) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelAbove(6) and c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cod.sfilter(c,g)
 	return g:IsContains(c) and c:IsAbleToGrave()

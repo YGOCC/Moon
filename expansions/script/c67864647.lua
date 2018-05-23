@@ -76,7 +76,7 @@ function c67864647.spop1(e,tp,eg,ep,ev,re,r,rp)
 end
 function c67864647.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousPosition(POS_FACEUP+POS_FACEDOWN) and not c:IsLocation(LOCATION_DECK)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown()
 end
 function c67864647.spfilter(c,e,tp)
 	return c:IsCode(67864641) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

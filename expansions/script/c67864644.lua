@@ -77,7 +77,7 @@ function c67864644.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return a:IsAbleToGrave() and d:IsAbleToGrave() end
 	local g=Group.FromCards(a,d)
 	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,2,tp,LOCATION_MZONE)
 end
 function c67864644.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)

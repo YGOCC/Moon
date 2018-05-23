@@ -163,15 +163,11 @@ function cod.synop(e,tp,eg,ep,ev,re,r,rp,c,tuner,mg)
 end
 
 --Gain LP
-function cod.lpfilter(c,seq)
-	return c:IsDestructable() and c:GetSequence()==seq
-end
 function cod.lpcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local seq=13-e:GetHandler():GetSequence()
 	if chk==0 then return e:GetHandler():IsDestructable()
-		and Duel.IsExistingMatchingCard(cod.lpfilter,tp,LOCATION_SZONE,0,1,nil,seq) end
+		and Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_PZONE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local tc=Duel.GetFirstMatchingCard(cod.lpfilter,tp,LOCATION_SZONE,0,nil,seq)
+	local tc=Duel.GetFirstMatchingCard(Card.IsDestructable,tp,LOCATION_PZONE,0,e:GetHandler())
 	local g=Group.FromCards(e:GetHandler(),tc)
 	Duel.Destroy(g,REASON_COST)
 	e:SetLabel(g:GetSum(Card.GetAttack)/2)
@@ -235,13 +231,13 @@ end
 --Place
 function cod.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
+	return r|REASON_EFFECT+REASON_BATTLE~=0 and c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
 end
 function cod.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7) end
+	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end
 end
 function cod.penop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.CheckLocation(tp,LOCATION_SZONE,6) and not Duel.CheckLocation(tp,LOCATION_SZONE,7) then return false end
+	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
