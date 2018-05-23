@@ -89,7 +89,7 @@ function c67864648.tgop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c67864648.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown() end
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown()
 end
 function c67864648.spfilter(c,e,tp)
 	return c:IsRace(RACE_MACHINE) and not c:IsCode(67864648) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

@@ -64,8 +64,8 @@ function cod.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(cod.sfilter,tp,LOCATION_ONFIELD,0,1,nil,e:GetHandler():GetLinkedGroup())
 		and Duel.IsExistingMatchingCard(cod.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperation(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_ONFIELD)
-	Duel.SetOperation(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_ONFIELD)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
 end
 function cod.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
