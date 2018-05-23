@@ -27,7 +27,7 @@ function c96212381.initial_effect(c)
     c:RegisterEffect(e3)
 end
 function c96212381.handcon(e)
-    return Duel.GetLP(tp)<=1000
+    return Duel.GetLP(e:GetHandlerPlayer())<=1000
 end
 function c96212381.condition(e,tp,eg,ep,ev,re,r,rp)
     return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()

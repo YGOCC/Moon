@@ -26,7 +26,7 @@ function c96212372.initial_effect(c)
     c:RegisterEffect(e2)
 end
 function c96212372.cfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0x205) and not c:IsCode(596212372)
+    return c:IsFaceup() and c:IsSetCard(0x205) and not c:IsCode(96212372)
 end
 function c96212372.spcon(e,tp,eg,ep,ev,re,r,rp)
     return Duel.IsExistingMatchingCard(c96212372.cfilter,tp,LOCATION_MZONE,0,1,nil)
