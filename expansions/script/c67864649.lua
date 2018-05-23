@@ -69,7 +69,7 @@ function cod.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cod.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or not Duel.GetLocationCount(tp,LOCATION_MZONE)>=0 then return end
+	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)>=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,cod.sfilter,tp,LOCATION_ONFIELD,0,1,1,nil,e:GetHandler():GetLinkedGroup())
 	if #g>0 and Duel.SendtoGrave(g,REASON_EFFECT)>0 then
