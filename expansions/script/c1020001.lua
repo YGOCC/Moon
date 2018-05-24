@@ -28,12 +28,19 @@ function scard.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--summon success
+	--act limit
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
-	e4:SetOperation(scard.sumsuc)
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4:SetOperation(scard.limop)
 	c:RegisterEffect(e4)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetCode(EVENT_CHAIN_END)
+	e0:SetOperation(scard.limop2)
+	c:RegisterEffect(e0)
 end
 function scard.condition(e,tp,eg,ep,ev,re,r,rp)
 	if tp==ep or eg:GetCount()~=1 or eg:GetFirst():GetSummonPlayer()==tp then return false end
@@ -53,7 +60,6 @@ end
 function scard.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:GetFlagEffect(s_id)==0 end
-	c:RegisterFlagEffect(s_id,RESET_CHAIN,0,1)
 	local tc=eg:GetFirst()
 	e:SetLabel(tc:GetAttack())
 	local g=Duel.GetMatchingGroup(scard.filter2,tp,LOCATION_MZONE,0,nil)
@@ -89,10 +95,24 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(chg)
 			e1:SetReset(RESET_EVENT+0x1ff0000)
 			c:RegisterEffect(e1)
+			c:RegisterFlagEffect(s_id,RESET_PHASE+PHASE_END,0,1)
 		end
 	end
 end
-function scard.sumsuc(e,tp,eg,ep,ev,re,r,rp)
---	if e:GetHandler():GetSummonType()~=SUMMON_TYPE_SPECIAL then return end
-	Duel.SetChainLimitTillChainEnd(aux.FALSE)
+function scard.limop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetCurrentChain()==0 then
+		Duel.SetChainLimitTillChainEnd(scard.chlimit)
+	elseif Duel.GetCurrentChain()==1 then
+		e:GetHandler():RegisterFlagEffect(s_id+100,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+	end
+end
+function scard.chlimit(e,rp,tp)
+	if e:GetHandler():GetFlagEffect(s_id)==0 then return end
+	return rp==tp
+end
+function scard.limop2(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():GetFlagEffect(s_id+100)~=0 then
+		Duel.SetChainLimitTillChainEnd(scard.chlimit)
+	end
+	e:GetHandler():ResetFlagEffect(s_id+100)
 end
