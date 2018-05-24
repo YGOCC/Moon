@@ -67,14 +67,14 @@ function c71473113.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:RegisterEffect(e1)
 end
 function c71473113.filter1(c,e,tp)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsSetCard(0x1C1D) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x1C1D) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c71473113.sptg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and c71473113.filter1(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and c71473113.filter1(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c71473113.filter1,tp,LOCATION_SZONE,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(c71473113.filter1,tp,LOCATION_PZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c71473113.filter1,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c71473113.filter1,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c71473113.spop1(e,tp,eg,ep,ev,re,r,rp)
@@ -89,10 +89,10 @@ function c71473113.filter2(c)
 end
 function c71473113.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c71473113.filter2,tp,LOCATION_MZONE,0,1,nil) 
-		and not Duel.IsExistingMatchingCard(Card.GetSequence,tp,LOCATION_SZONE,0,1,nil,6+7) end
+		and (Duel.GetFieldCard(tp,LOCATION_PZONE,0)==nil or Duel.GetFieldCard(tp,LOCATION_PZONE,1)==nil) end
 end
 function c71473113.setop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFieldCard(tp,LOCATION_SZONE,6)==nil or Duel.GetFieldCard(tp,LOCATION_SZONE,7)==nil then
+	if Duel.GetFieldCard(tp,LOCATION_PZONE,0)==nil or Duel.GetFieldCard(tp,LOCATION_PZONE,1)==nil then
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(71473113,2))
 	local g=Duel.SelectMatchingCard(tp,c71473113.filter2,tp,LOCATION_MZONE,0,1,1,nil)
 	if g:GetCount()>0 then

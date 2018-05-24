@@ -57,19 +57,18 @@ function c71473119.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0x1C1D) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
-function c71473119.spfilter(c,e,tp)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c71473119.filter1(c,e,tp)
+	return c:IsSetCard(0x1C1D) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c71473119.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and c71473119.spfilter(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and c71473119.filter1(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c71473119.spfilter,tp,LOCATION_SZONE,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(c71473119.filter1,tp,LOCATION_PZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c71473119.spfilter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c71473119.filter1,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c71473119.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
@@ -101,7 +100,7 @@ function c71473119.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c71473119.actcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetPreviousLocation()==LOCATION_SZONE
+	return e:GetHandler():GetPreviousLocation()==LOCATION_PZONE
 end
 function c71473119.actop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -118,8 +117,8 @@ function c71473119.aclimit(e,re,tp)
 	return re:GetHandler():GetPosition()==POS_FACEDOWN
 end
 function c71473119.remcon(e,tp,eg,ep,ev,re,r,rp)
-	local tc1=Duel.GetFieldCard(tp,LOCATION_SZONE,6)
-	local tc2=Duel.GetFieldCard(tp,LOCATION_SZONE,7)
+	local tc1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)
+	local tc2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
 	return e:GetHandler():GetPreviousLocation()==LOCATION_EXTRA and (tc1 or tc2) and (tc1:IsSetCard(0x1C1D) or tc2:IsSetCard(0x1C1D)) 
 end
 function c71473119.remop(e,tp,eg,ep,ev,re,r,rp)

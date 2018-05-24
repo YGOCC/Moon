@@ -10,7 +10,7 @@ function c71473115.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c71473115.filter(c)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsDestructable()
+	return c:IsDestructable()
 end
 function c71473115.cfilter(c)
 	return c:IsType(TYPE_PENDULUM) and c:IsFaceup()
@@ -20,8 +20,8 @@ function c71473115.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectTarget(tp,c71473115.cfilter,tp,LOCATION_EXTRA,0,1,2,nil)
 end
 function c71473115.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tc1=Duel.GetFieldCard(tp,LOCATION_SZONE,6)
-	local tc2=Duel.GetFieldCard(tp,LOCATION_SZONE,7)
+	local tc1=Duel.GetFieldCard(tp,LOCATION_PZONE,0)
+	local tc2=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
 	if tc1 then
 		Duel.Destroy(tc1,REASON_EFFECT)
 	end
