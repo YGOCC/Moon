@@ -709,7 +709,7 @@ function Auxiliary.PandActTarget(...)
 				if chk==0 then return true end
 				if #fx==0 then
 					e:SetCategory(0)
-					e:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+					e:SetProperty(0)
 					e:SetLabel(0)
 					return
 				end
@@ -722,7 +722,7 @@ function Auxiliary.PandActTarget(...)
 					cost=xe:GetCost()
 					tg=xe:GetTarget()
 					local tchk=(code==EVENT_FREE_CHAIN or Duel.CheckEvent(code))
-					if code==EVENT_CHAINING then tchk=(tchk or Duel.GetCurrentChain()>0) end
+					if code==EVENT_CHAINING then tchk=(tchk or Duel.GetCurrentChain()>1) end
 					if tchk and (not cost or cost(e,tp,eg,ep,ev,re,r,rp,0))
 						and (not tg or tg(e,tp,eg,ep,ev,re,r,rp,0)) then
 						table.insert(ops,xe:GetDescription())
@@ -733,7 +733,7 @@ function Auxiliary.PandActTarget(...)
 				if #ops>1 then
 					op=Duel.SelectOption(tp,1214,table.unpack(ops))
 					if ops[op]==1214 then op=0 end
-				elseif Duel.SelectYesNo(tp,94) then op=1 end
+				elseif ops[1]~=1214 and Duel.SelectYesNo(tp,94) then op=1 end
 				e:SetLabel(op)
 				if op>0 then
 					local xe=t[op]
@@ -926,11 +926,9 @@ function Auxiliary.AddOrigSpatialType(c,isxyz)
 	local typ,rcode
 	for i=240100000,240100999 do
 		typ,rcode=Duel.ReadCard(i,CARDDATA_TYPE,CARDDATA_ALIAS)
-		if typ and typ&TYPE_XYZ==TYPE_XYZ then
-			if code==rcode or acode==i then
-				mt.spt_other_space=i
-				break
-			end
+		if typ and typ&TYPE_XYZ==TYPE_XYZ and code==rcode or acode==i then
+			mt.spt_other_space=i
+			break
 		end
 	end
 	table.insert(Auxiliary.Spatials,c)

@@ -25,13 +25,13 @@ function c53313913.initial_effect(c)
 end
 function c53313913.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if not re then
-		ev=math.max(Duel.GetCurrentChain()-1,1)
+		ev=Duel.GetCurrentChain()-1
 		re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
 		eg=re:GetHandler()
 	end
 	if chk==0 then
 		if not Duel.IsChainNegatable(ev) then return false end
-		if re:IsHasCategory(CATEGORY_NEGATE) and ev~=1
+		if re:IsHasCategory(CATEGORY_NEGATE) and ev>1
 			and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
 		local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
 		return ex and tg~=nil and tc+tg:Filter(Card.IsOnField,nil):FilterCount(Card.IsControler,nil,tp)-tg:GetCount()>0

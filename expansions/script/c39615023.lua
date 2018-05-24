@@ -16,7 +16,6 @@ function c39615023.initial_effect(c)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
-	e2:SetCondition(c39615023.discon)
 	e2:SetCost(c39615023.discost)
 	e2:SetTarget(c39615023.distg)
 	e2:SetOperation(c39615023.disop)
@@ -52,17 +51,6 @@ end
 function c39615023.confilter(c,tp)
 	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
 end
-function c39615023.discon(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsChainNegatable(ev) then return false end
-	if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
-		local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-		if tg and tg:IsExists(c39615023.confilter,1,nil,tp) and Duel.IsChainNegatable(ev) then return true end
-	end
-	if re:IsHasCategory(CATEGORY_NEGATE)
-		and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
-	return ex and tg~=nil and tc+tg:FilterCount(c39615023.confilter,nil,tp)-tg:GetCount()>0
-end
 function c39615023.dcfilter(c)
 	return c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsAbleToDeckAsCost()
 end
@@ -74,13 +62,34 @@ function c39615023.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c39615023.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return re:GetHandler():IsStatus(STATUS_DISABLED) end
+	if not re then
+		ev=Duel.GetCurrentChain()-1
+		re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
+		eg=re:GetHandler()
+	end
+	if chk==0 then
+		if re:GetHandler():IsStatus(STATUS_DISABLED) or not Duel.IsChainNegatable(ev) then return false end
+		if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+			local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+			if tg and tg:IsExists(c39615023.confilter,1,nil,tp) then return true end
+		end
+		if re:IsHasCategory(CATEGORY_NEGATE) and ev>1
+			and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
+		local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
+		return ex and tg~=nil and tc+tg:FilterCount(c39615023.confilter,nil,tp)-tg:GetCount()>0
+	end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
 function c39615023.disop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not re then
+		ev=math.max(Duel.GetCurrentChain()-1,1)
+		re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
+		eg=re:GetHandler()
+	end
 	if not re:GetHandler():IsStatus(STATUS_DISABLED) and Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
