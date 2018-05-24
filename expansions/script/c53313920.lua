@@ -1,0 +1,100 @@
+--Mysterious Hyper Dragon
+function c53313920.initial_effect(c)
+	--Materials: 1 Tuner Synchro Monster + 1+ non-Tuner Synchro monsters
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(Card.IsType,TYPE_SYNCHRO),1)
+	c:EnableReviveLimit()
+	--Once per turn, you can banish up to 5 cards face-up in the extra deck or graveyard, this card gains ATK equal to their total level x100 until the end phase, also it can attack once for each LIGHT monster of them.
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1)
+	e1:SetCategory(CATEGORY_ATKCHANGE)
+	e1:SetDescription(1115)
+	e1:SetTarget(c53313920.atkcost)
+	e1:SetOperation(c53313920.atkop)
+	c:RegisterEffect(e1)
+	--Once per turn you can target 1 monster on the field, negate its effects and halve its ATK, this card gains that monster's effects until the end phase.
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_ATKCHANGE)
+	e2:SetDescription(1131)
+	e2:SetTarget(c53313920.target)
+	e2:SetOperation(c53313920.operation)
+	c:RegisterEffect(e2)
+	--This card cannot be banished from your Graveyard. 
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_CANNOT_REMOVE)
+	e3:SetRange(LOCATION_GRAVE)
+	c:RegisterEffect(e3)
+end
+function c53313920.filter(c)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:GetLevel()>0 and c:IsAbleToRemove()
+end
+function c53313920.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,1,nil) end
+end
+function c53313920.atkop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,1,5,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	local c=e:GetHandler()
+	local lv=g:GetSum(Card.GetLevel)
+	local ct=g:FilterCount(Card.IsAttribute,nil,ATTRIBUTE_LIGHT)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_UPDATE_ATTACK)
+	e5:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+	e5:SetValue(lv*100)
+	c:RegisterEffect(e5)
+	if ct>1 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EXTRA_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetValue(ct-1)
+		c:RegisterEffect(e1)
+	elseif ct==0 then
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_CANNOT_ATTACK)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e2)
+	end
+end
+function c53313920.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+end
+function c53313920.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetValue(RESET_TURN_SET)
+		tc:RegisterEffect(e2)
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_SET_ATTACK)
+		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e3:SetReset(RESET_EVENT+0x1fe0000)
+		e3:SetValue(tc:GetAttack()/2)
+		tc:RegisterEffect(e3)
+		c:CopyEffect(tc:GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+	end
+end
