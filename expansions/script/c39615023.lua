@@ -97,14 +97,11 @@ function c39615023.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
-function c39615023.thfilter2(c)
-	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
-end
 function c39615023.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		local g=Duel.GetMatchingGroup(c39615023.thfilter2,tp,LOCATION_EXTRA,0,nil)
+		local g=Duel.GetMatchingGroup(aux.PaCheckFilter,tp,LOCATION_EXTRA,0,nil)
 		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 			and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET)
 			and Duel.SelectYesNo(tp,1159) then
@@ -119,29 +116,46 @@ end
 function c39615023.cfilter(c)
 	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
 end
+function c39615023.hnfilter(c,e,tp,g)
+	local sg=Group.CreateGroup()
+	return c:IsCode(39605510) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and (c:IsLocation(LOCATION_EXTRA) or c:IsFaceup()) and (not g or g:IsExists(c39615023.check,1,c,tp,g,c,sg,0))
+end
+function c39615023.check(c,tp,mg,sg,sc,ct)
+	sg:AddCard(c)
+	ct=ct+1
+	local res=c39615023.goal(tp,sg,sc,ct)
+		or (ct<5 and mg:IsExists(c39615023.check,1,sg,tp,mg,sg,sc,ct))
+	sg:RemoveCard(c)
+	ct=ct-1
+	return res
+end
+function c39615023.goal(tp,sg,sc,ct)
+	return ct>=5 and sg:GetClassCount(Card.GetCode)>=5 and (sc:IsLocation(LOCATION_EXTRA)
+		and Duel.GetLocationCountFromEx(tp,tp,sg)>0 or Duel.GetLocationCount(tp,LOCATION_MZONE)>-sg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE))
+end
 function c39615023.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local mg=Duel.GetMatchingGroup(c39615023.cfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,c)
-	local sg=Group.FromCards(c)
 	if chk==0 then return c:IsAbleToRemoveAsCost()
-		and mg:GetClassCount(Card.GetCode)>=4 end
+		and Duel.IsExistingMatchingCard(c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp,mg) end
+	local sc=Duel.SelectMatchingCard(tp,c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp,mg):GetFirst()
+	local sg=Group.FromCards(c,sc)
+	local ct=0
 	while sg:GetCount()<5 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=mg:Select(tp,1,1,sg)
+		local g=mg:FilterSelect(tp,c39615023.check,1,1,sg,tp,mg,sg,sc,ct)
 		sg:Merge(g)
 		mg:Remove(Card.IsCode,nil,g:GetFirst():GetCode())
+		ct=ct+1
 	end
+	sg:RemoveCard(sc)
 	Duel.Remove(sg,POS_FACEUP,REASON_COST)
 end
-function c39615023.hnfilter(c,e,tp)
-	return c:IsCode(39605510) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and (not c:IsLocation(LOCATION_EXTRA) or c:IsFaceup())
-end
-function c39615023.hntg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp) end
+function c39615023.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA)
 end
-function c39615023.hnop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCountFromEx(tp)<=0 then return end
+function c39615023.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then

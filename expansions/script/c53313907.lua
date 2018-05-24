@@ -86,7 +86,7 @@ function c53313907.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c53313907.setfilter(c)
-	return c:IsSetCard(0xcf6) and c:IsType(TYPE_PANDEMONIUM)
+	return c:IsSetCard(0xcf6) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsType(TYPE_MONSTER)
 end
 function c53313907.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
