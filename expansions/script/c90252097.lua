@@ -16,44 +16,39 @@ function c90252097.initial_effect(c)
 	e2:SetTarget(function(e,c) return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM end)
 	e2:SetValue(c90252097.evalue)
 	c:RegisterEffect(e2)
-	--You can destroy 1 card in your Pandemonium Zone, then target 1 monster your opponent controls; banish that target. You can only use this effect of "Pandemoniumgraph of Armageddon" once per turn.
+	--Once per turn, you can target 1 card in your Pandemonium Zone and 1 monster your opponent controls; destroy them. You must control a face-up Pandemonium card in your Pandemonium zone to activate this effect.
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_REMOVE)
+	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetHintTiming(0,0x1e0)
-	e3:SetCountLimit(1,90252097)
-	e3:SetCost(c90252097.descost)
+	e3:SetCountLimit(1)
+	e3:SetCondition(aux.NOT(aux.PandActCon))
 	e3:SetTarget(c90252097.destg)
 	e3:SetOperation(c90252097.desop)
 	c:RegisterEffect(e3)
+	--You can only control 1 face-up "Pandemoniumgraph of Armageddon".
+	c:SetUniqueOnField(1,0,90252097)
 end
 function c90252097.evalue(e,re,rp)
 	return re:IsActiveType(TYPE_TRAP) and rp~=e:GetHandlerPlayer()
 end
-function c90252097.desfilter(c)
-	return c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
-end
-function c90252097.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90252097.desfilter,tp,LOCATION_SZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,c90252097.desfilter,tp,LOCATION_SZONE,0,1,1,nil)
-	Duel.HintSelection(g)
-	Duel.Destroy(g,REASON_COST)
-end
 function c90252097.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,CATEGORY_REMOVE)
+	if chkc then return false end
+	if chk==0 then return Duel.IsExistingTarget(aux.PaCheckFilter,tp,LOCATION_SZONE,0,1,nil) and Duel.IsExistingTarget(nil,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g1=Duel.SelectTarget(tp,aux.PaCheckFilter,tp,LOCATION_SZONE,0,1,1,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g2=Duel.SelectTarget(tp,nil,tp,0,LOCATION_MZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g2,1,0,0)
+	g2:Merge(g1)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g2,2,0,0)
 end
 function c90252097.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		Duel.Destroy(g,POS_FACEUP,REASON_EFFECT)
 	end
 end

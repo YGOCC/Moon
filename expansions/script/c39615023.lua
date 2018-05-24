@@ -1,105 +1,92 @@
 --Zextral Armageddon Sorcerer
 function c39615023.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	aux.EnablePandemoniumAttribute(c)
-	--P: To Pandemonium Summon using this card: You have to banish 5 Pandemonium monsters from your Extra Deck, Deck, GY, Field and/or Hand containing at least 1 from field, 1 from Hand and 1 from your Extra Deck or GY.
-	local ps=Effect.CreateEffect(c)
-	ps:SetType(EFFECT_TYPE_FIELD)
-	ps:SetDescription(1074)
-	ps:SetCode(EFFECT_SPSUMMON_PROC_G)
-	ps:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	ps:SetRange(LOCATION_SZONE)
-	ps:SetCountLimit(1,10000000)
-	ps:SetCondition(c39615023.paschk)
-	ps:SetOperation(c39615023.pascost)
-	ps:SetValue(726)
-	c:RegisterEffect(ps)
+	--P: You can only Pandemonium Summon "Zextra, The Pandemonium Dragon King". This effect cannot be negated.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetTargetRange(LOCATION_HAND+LOCATION_EXTRA,0)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetLabelObject(ps)
-	e1:SetValue(c39615023.splimit)
+	e1:SetTargetRange(1,0)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
+	e1:SetTarget(c39615023.splimit)
 	c:RegisterEffect(e1)
-	--M: When your monster(s) is destroyed: You can Special Summon this card (from your hand), then You can set 1 Pandemonium monster directly from your Deck in your Spell/Trap zone.
+	--P: Once per turn, when your opponent activates a card or effect that targets and/or would destroy a Pandemonium Monster(s) you control: You can shuffle 1 face-up Pandemonium Monster from your Extra Deck into the Deck; negate that card or effect, and destroy it.
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_DESTROYED)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetCondition(c39615023.spcon)
-	e2:SetTarget(c39615023.sptg)
-	e2:SetOperation(c39615023.spop)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+	e2:SetCondition(c39615023.discon)
+	e2:SetCost(c39615023.discost)
+	e2:SetTarget(c39615023.distg)
+	e2:SetOperation(c39615023.disop)
 	c:RegisterEffect(e2)
-	--M: When this card leaves the field, You can tribute 1 other monster you control: Set this card in your Spell/Trap zone instead.
+	aux.EnablePandemoniumAttribute(c,e2)
+	--M: If a card(s) you control is destroyed by battle or card effect: You can Special Summon this card from your hand, then you can Set 1 Pandemonium Monster directly from your Extra Deck in your Spell/Trap Zone. (HOPT1)
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EFFECT_SEND_REPLACE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetTarget(c39615023.reptg)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_DESTROYED)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetCountLimit(1,39615023)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetCondition(c39615023.spcon)
+	e3:SetTarget(c39615023.sptg)
+	e3:SetOperation(c39615023.spop)
 	c:RegisterEffect(e3)
+	--M: You can banish this card you control, plus 4 Pandemonium Monsters from your hand, field, and/or GY with different names; Special Summon 1 "Zextra, The Pandemonium Dragon King" from your hand, Deck, or face-up in your Extra Deck. (HOPT2)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1,39615024)
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e4:SetCost(c39615023.cost)
+	e4:SetTarget(c39615023.target)
+	e4:SetOperation(c39615023.operation)
+	c:RegisterEffect(e4)
 end
-function c39615023.cfilter(c)
-	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsAbleToRemoveAsCost()
+function c39615023.splimit(e,c,sump,sumtype,sumpos,targetp)
+	if c:GetCode()~=39605510 then return false end
+	return bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
 end
-function c39615023.ccheck(c,tp,sg,mg,ct,g)
-	sg:AddCard(c)
-	ct=ct+1
-	local res=c39615023.cgoal(tp,sg,ct,g)
-		or mg:IsExists(c39615023.ccheck,1,sg,tp,sg,mg,ct,g)
-	sg:RemoveCard(c)
-	ct=ct-1
-	return res
+function c39615023.confilter(c,tp)
+	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
 end
-function c39615023.cgoal(tp,sg,ct,mg)
-	local ct1=sg:FilterCount(Card.IsLocation,nil,LOCATION_ONFIELD)
-	local ct2=sg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
-	local ct3=sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA+LOCATION_GRAVE)
-	local rg=sg:Filter(Card.IsLocation,nil,LOCATION_MZONE)
-	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>-rg:GetCount() then loc=loc+LOCATION_HAND end
-	if Duel.GetLocationCountFromEx(tp,tp,rg)>0 then loc=loc+LOCATION_EXTRA end
-	return mg:FilterCount(Card.IsLocation,sg,loc)>0 and ct>=5 and ct1>0 and ct2>0 and ct3>0
+function c39615023.discon(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsChainNegatable(ev) then return false end
+	if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+		local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+		if tg and tg:IsExists(c39615023.confilter,1,nil,tp) and Duel.IsChainNegatable(ev) then return true end
+	end
+	if re:IsHasCategory(CATEGORY_NEGATE)
+		and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
+	return ex and tg~=nil and tc+tg:FilterCount(c39615023.confilter,nil,tp)-tg:GetCount()>0
 end
-function c39615023.paschk(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local lscale=c:GetLeftScale()
-	local rscale=c:GetRightScale()
-	if lscale>rscale then lscale,rscale=rscale,lscale end
-	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
-	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
-	if loc==0 then return false end
-	local g=Duel.GetFieldGroup(tp,LOCATION_HAND+LOCATION_EXTRA,0):Filter(aux.PaConditionFilter,nil,e,tp,lscale,rscale)
-	local mg=Duel.GetMatchingGroup(c39615023.cfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_HAND+LOCATION_ONFIELD,0,c)
-	local sg=Group.CreateGroup()
-	return mg:IsExists(c39615023.ccheck,1,sg,tp,sg,mg,0,g)
+function c39615023.dcfilter(c)
+	return c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsAbleToDeckAsCost()
 end
-function c39615023.pascost(e,tp,eg,ep,ev,re,r,rp,c,sg)
-	local g=Duel.GetMatchingGroup(c39615023.cfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_HAND+LOCATION_ONFIELD,0,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=g:FilterSelect(tp,Card.IsLocation,1,1,nil,LOCATION_ONFIELD)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=g:FilterSelect(tp,Card.IsLocation,1,1,nil,LOCATION_HAND)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g3=g:FilterSelect(tp,Card.IsLocation,1,1,nil,LOCATION_EXTRA+LOCATION_GRAVE)
-	g1:Merge(g2)
-	g1:Merge(g3)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g4=g:Select(tp,2,2,g1)
-	g1:Merge(g4)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
-	aux.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg)
+function c39615023.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c39615023.dcfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectMatchingCard(tp,c39615023.dcfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	Duel.HintSelection(g)
+	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
-function c39615023.splimit(e,se,sp,st)
-	return st~=SUMMON_TYPE_SPECIAL+726 or se==e:GetLabelObject()
+function c39615023.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return re:GetHandler():IsStatus(STATUS_DISABLED) end
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
+	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+	end
+end
+function c39615023.disop(e,tp,eg,ep,ev,re,r,rp)
+	if not re:GetHandler():IsStatus(STATUS_DISABLED) and Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+		Duel.Destroy(eg,REASON_EFFECT)
+	end
 end
 function c39615023.spcfilter(c,tp)
-	return c:GetPreviousControler()==tp
+	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetPreviousControler()==tp
 end
 function c39615023.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c39615023.spcfilter,1,nil,tp)
@@ -117,26 +104,47 @@ function c39615023.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		local g=Duel.GetMatchingGroup(c39615023.thfilter2,tp,LOCATION_DECK,0,nil)
+		local g=Duel.GetMatchingGroup(c39615023.thfilter2,tp,LOCATION_EXTRA,0,nil)
 		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 			and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET)
-			and not Duel.IsExistingMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,1,nil)
 			and Duel.SelectYesNo(tp,1159) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 			local sg=g:Select(tp,1,1,nil)
-			Duel.MoveToField(sg:GetFirst(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			aux.PandSSet(sg,REASON_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
+			Duel.ConfirmCards(1-tp,sg)
 		end
 	end
 end
-function c39615023.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c39615023.cfilter(c)
+	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
+end
+function c39615023.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsLocation(LOCATION_ONFIELD) and c:GetDestination()~=LOCATION_OVERLAY and not c:IsReason(REASON_REPLACE)
-		and Duel.CheckReleaseGroup(tp,Card.IsControler,1,c,tp) end
-	if Duel.SelectYesNo(tp,1159) then
-		local g=Duel.SelectReleaseGroup(tp,Card.IsControler,1,1,nil,tp)
-		Duel.Release(g,REASON_EFFECT+REASON_REPLACE)
-		aux.PandSSet(c,REASON_EFFECT+REASON_REPLACE)(e,tp,eg,ep,ev,re,r,rp)
-		return true
-	else return false end
+	local mg=Duel.GetMatchingGroup(c39615023.cfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,c)
+	local sg=Group.FromCards(c)
+	if chk==0 then return c:IsAbleToRemoveAsCost()
+		and mg:GetClassCount(Card.GetCode)>=4 end
+	while sg:GetCount()<5 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=mg:Select(tp,1,1,sg)
+		sg:Merge(g)
+		mg:Remove(Card.IsCode,nil,g:GetFirst():GetCode())
+	end
+	Duel.Remove(sg,POS_FACEUP,REASON_COST)
+end
+function c39615023.hnfilter(c,e,tp)
+	return c:IsCode(39605510) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and (not c:IsLocation(LOCATION_EXTRA) or c:IsFaceup())
+end
+function c39615023.hntg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA)
+end
+function c39615023.hnop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCountFromEx(tp)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

@@ -15,31 +15,34 @@ function c90204439.initial_effect(c)
 	e2:SetTarget(function(e,c) return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM end)
 	e2:SetValue(c90204439.evalue)
 	c:RegisterEffect(e2)
-	--If a face-up Pandemonium Monster in your Main Monster Zone or Spell & Trap Zone is destroyed: You can add 1 "Pandemoniumgraph" card from your Deck to your hand, except "Pandemoniumgraph of Destruction". You can only use this effect of "Pandemoniumgraph of Destruction" once per turn.
+	--Once per turn, if a face-up Pandemonium Monster(s) in your Main Monster Zone is destroyed by an opponent's card (either by battle or card effect) while you control a card in your Pandemonium zone: You can add 1 Level 4 or lower "Pandemoniumgraph" monster from your Deck to your hand.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1,90204439)
+	e3:SetCountLimit(1)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e3:SetCondition(c90204439.condition)
 	e3:SetTarget(c90204439.target)
 	e3:SetOperation(c90204439.operation)
 	c:RegisterEffect(e3)
+	--You can only control 1 face-up "Pandemoniumgraph of Destruction".
+	c:SetUniqueOnField(1,0,90204439)
 end
 function c90204439.evalue(e,re,rp)
 	return re:IsActiveType(TYPE_SPELL) and rp~=e:GetHandlerPlayer()
 end
 function c90204439.cfilter(c,tp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousTypeOnField()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
-		and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetSequence()<5
+	return c:GetPreviousTypeOnField()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+		and c:IsPreviousPosition(POS_FACEUP) and c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:GetPreviousControler()==tp
+		and c:IsPreviousLocation(LOCATION_MZONE) and c:GetSequence()<5
 end
 function c90204439.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c90204439.cfilter,1,nil,tp)
+	return eg:IsExists(c90204439.cfilter,1,nil,tp) and Duel.IsExistingMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,1,nil)
 end
 function c90204439.filter(c)
-	return c:IsSetCard(0xcf80) and c:IsAbleToHand() and not c:IsCode(90204439)
+	return c:IsLevelBelow(4) and c:IsSetCard(0xcf80) and c:IsAbleToHand() and not c:IsCode(90204439)
 end
 function c90204439.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90204439.filter,tp,LOCATION_DECK,0,1,nil) end
