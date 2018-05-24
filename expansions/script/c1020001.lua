@@ -95,7 +95,7 @@ function scard.operation(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(chg)
 			e1:SetReset(RESET_EVENT+0x1ff0000)
 			c:RegisterEffect(e1)
-			c:RegisterFlagEffect(s_id,RESET_PHASE+PHASE_END,0,1)
+			c:RegisterFlagEffect(s_id,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 		end
 	end
 end
