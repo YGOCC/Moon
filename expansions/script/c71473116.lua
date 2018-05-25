@@ -98,7 +98,7 @@ function c71473116.drop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Draw(p,d,REASON_EFFECT)
 end
 function c71473116.descon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetPreviousLocation()==LOCATION_PZONE
+    return e:GetHandler():GetPreviousLocation()==LOCATION_SZONE
 end
 function c71473116.destg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end

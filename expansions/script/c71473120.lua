@@ -92,7 +92,7 @@ function c71473120.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c71473120.tcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetPreviousLocation()==LOCATION_PZONE
+    return e:GetHandler():GetPreviousLocation()==LOCATION_SZONE
 end
 function c71473120.ttg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>1 and

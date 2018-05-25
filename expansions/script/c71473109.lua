@@ -32,15 +32,13 @@ function c71473109.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
     e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c71473109.filter1(c,e,tp)
-    return c:IsFaceup() or c:IsType(TYPE_MONSTER) and c:GetLevel()==4 and c:IsSetCard(0x1C1D) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return (c:IsFaceup() or c:IsType(TYPE_MONSTER)) and c:GetLevel()==4 and c:IsSetCard(0x1C1D) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c71473109.target1(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then 
-        local loc=0
-        if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_PZONE end
-        if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
-        return loc~=0 and Duel.IsExistingTarget(c71473109.filter1,tp,loc,0,1,nil,e,tp)
-    end
+    local loc=0
+    if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_PZONE end
+    if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
+    if chk==0 then return loc~=0 and Duel.IsExistingTarget(c71473109.filter1,tp,loc,0,1,nil,e,tp) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
     local g=Duel.SelectTarget(tp,c71473109.filter1,tp,loc,0,1,1,nil,e,tp)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,tp,loc)

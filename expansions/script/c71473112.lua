@@ -142,20 +142,27 @@ function c71473112.spop(e,tp,eg,ep,ev,re,r,rp)
     if ft>2 then ft=2 end
     if ect>=1 then
         if ect>2 then ect=2 end
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        sg=Duel.SelectMatchingCard(tp,c71473112.spfilter,tp,LOCATION_EXTRA,0,1,ect,nil,e,tp)
-        if #sg<=0 then return end
-        g:Merge(sg)
-        ft=ft-#g
+        if Duel.SelectYesNo(tp,aux.Stringid(71473112,5)) and ft>=1 then
+            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+            sg=Duel.SelectMatchingCard(tp,c71473112.spfilter,tp,LOCATION_EXTRA,0,1,ect,nil,e,tp)
+            if #sg<=0 then return end
+            g=g+sg
+            ft=ft-#g
+        end
     end
     if ft>0 then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         sg=Duel.SelectMatchingCard(tp,c71473112.spfilter,tp,LOCATION_PZONE,0,1,ft,nil,e,tp)
         if #sg<=0 then return end
-        g:Merge(sg)
+        g=g+sg
     end
     if #g==0 then return end
-    Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+    if g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)>0 then
+        local sg=g:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
+        g=g-sg
+        Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+    end
+    if #g>0 then Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) end
 end
 function c71473112.spfilter(c,e,tp)
     return c:IsFaceup() and c:IsSetCard(0x1C1D) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

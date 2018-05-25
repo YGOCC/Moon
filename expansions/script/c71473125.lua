@@ -100,7 +100,7 @@ function c71473125.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c71473125.descon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetPreviousLocation()==LOCATION_PZONE
+    return e:GetHandler():GetPreviousLocation()==LOCATION_SZONE
 end
 function c71473125.filter(c)
     return c:IsFaceup() and c:IsDestructable()

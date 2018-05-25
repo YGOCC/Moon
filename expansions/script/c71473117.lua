@@ -59,15 +59,16 @@ function c71473117.initial_effect(c)
     --Synchro Material Custom
     local e6=Effect.CreateEffect(c)
     e6:SetType(EFFECT_TYPE_SINGLE)
-    e6:SetCode(EFFECT_SYNCHRO_MATERIAL_CUSTOM)
+    e6:SetCode(EFFECT_TUNER_MATERIAL_LIMIT)
     e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-    e6:SetTarget(c71473117.syntg)
-    e6:SetValue(1)
-    e6:SetOperation(c71473117.synop)
+    e6:SetTarget(c71473117.synlimit)
     c:RegisterEffect(e6)
 end
 function c71473117.splimcon(e)
     return not e:GetHandler():IsForbidden()
+end
+function c71473117.synlimit(e,c)
+    return c:IsSetCard(0x1C1D)
 end
 function c71473117.splimit(e,c,sump,sumtype,sumpos,targetp)
     if c:IsSetCard(0x1C1D) then return false end
@@ -150,8 +151,9 @@ function c71473117.cfilter(c)
     return c:IsDestructable()
 end
 function c71473117.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsPlayerCanDraw(tp) and 
-        Duel.IsExistingMatchingCard(c71473117.cfilter,tp,LOCATION_PZONE,0,1,nil) end
+    if chk==0 then return Duel.IsPlayerCanDraw(tp)
+        and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
+        and Duel.IsExistingMatchingCard(c71473117.cfilter,tp,LOCATION_PZONE,0,1,nil) end
     local g=Duel.GetMatchingGroup(c71473117.cfilter,tp,LOCATION_PZONE,0,nil)
     Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
@@ -163,24 +165,4 @@ function c71473117.desop(e,tp,eg,ep,ev,re,r,rp)
         Duel.BreakEffect()
         Duel.Draw(tp,ct,REASON_EFFECT)
     end
-end
-c71473117.tuner_filter=aux.FilterBoolFunction(Card.IsSetCard,0x1C1D)
-function c71473117.synfilter(c,syncard,tuner,f)
-    return c:IsFaceup() and c:IsNotTuner() and c:IsCanBeSynchroMaterial(syncard,tuner) and c:IsSetCard(0x1C1D) and (f==nil or f(c))
-end
-function c71473117.syntg(e,syncard,f,minc,maxc)
-    local c=e:GetHandler()
-    local lv=syncard:GetLevel()-c:GetLevel()
-    if lv<=0 then return false end
-    local g=Duel.GetMatchingGroup(c71473117.synfilter,syncard:GetControler(),LOCATION_MZONE,LOCATION_MZONE,c,syncard,c,f)
-    local res=g:CheckWithSumEqual(Card.GetSynchroLevel,lv,minc,maxc,syncard)
-    return res
-end
-function c71473117.synop(e,tp,eg,ep,ev,re,r,rp,syncard,f,minc,maxc)
-    local c=e:GetHandler()
-    local lv=syncard:GetLevel()-c:GetLevel()
-    local g=Duel.GetMatchingGroup(c71473117.synfilter,syncard:GetControler(),LOCATION_MZONE,LOCATION_MZONE,c,syncard,c,f)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-    local sg=g:SelectWithSumEqual(tp,Card.GetSynchroLevel,lv,minc,maxc,syncard)
-    Duel.SetSynchroMaterial(sg)
 end

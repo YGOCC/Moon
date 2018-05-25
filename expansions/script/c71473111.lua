@@ -33,15 +33,13 @@ function c71473111.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c71473111.filter(c,e,tp)
-    return c:IsFaceup() or c:IsType(TYPE_MONSTER) and c:GetLevel()==3 and c:IsSetCard(0x1C1D) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return (c:IsFaceup() or c:IsType(TYPE_MONSTER)) and c:GetLevel()==3 and c:IsSetCard(0x1C1D) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c71473111.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then
-        local loc=0
-        if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_PZONE end
-        if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
-        return loc~=0 and Duel.IsExistingTarget(c71473111.filter,tp,loc,0,1,nil,e,tp) 
-    end
+    local loc=0
+    if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_PZONE end
+    if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
+    if chk==0 then return loc~=0 and Duel.IsExistingTarget(c71473111.filter,tp,loc,0,1,nil,e,tp) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
     local g=Duel.SelectTarget(tp,c71473111.filter,tp,loc,0,1,1,nil,e,tp)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,tp,loc)
@@ -60,17 +58,17 @@ function c71473111.desfilter(c)
     return c:IsFaceup() and c:IsSetCard(0x1C1D) and c:IsDestructable()
 end
 function c71473111.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(c71473111.desfilter,tp,LOCATION_HAND+LOCATION_PZONE+LOCATION_MZONE,0,1,nil) end
-    local g=Duel.GetMatchingGroup(c71473111.desfilter,tp,LOCATION_HAND+LOCATION_PZONE+LOCATION_MZONE,0,nil)
+    if chk==0 then return Duel.IsExistingMatchingCard(c71473111.desfilter,tp,LOCATION_HAND+LOCATION_PZONE+LOCATION_MZONE,0,1,e:GetHandler()) end
+    local g=Duel.GetMatchingGroup(c71473111.desfilter,tp,LOCATION_HAND+LOCATION_PZONE+LOCATION_MZONE,0,e:GetHandler())
     Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c71473111.desop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    local sg=Duel.GetMatchingGroup(c71473111.desfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_PZONE,0,nil):GetCount()
+    local g=Duel.GetMatchingGroup(c71473111.desfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_PZONE,0,c)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-    local g=Duel.SelectMatchingCard(tp,c71473111.desfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_PZONE,0,1,sg,nil)
-    if g:GetCount()>0 then
-        local ct=Duel.Destroy(g,REASON_EFFECT)
+    local dg=g:Select(tp,1,#g,nil)
+    if dg:GetCount()>0 then
+        local ct=Duel.Destroy(dg,REASON_EFFECT)
         local e1=Effect.CreateEffect(c)
         e1:SetType(EFFECT_TYPE_SINGLE)
         e1:SetCode(EFFECT_UPDATE_ATTACK)
