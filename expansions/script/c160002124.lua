@@ -96,19 +96,17 @@ function c160002124.thfilter(c,e,tp)
 	return c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER) and  c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c160002124.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chkc then return chkc:GetLocation()==LOCATION_GRAVE and chkc:GetControler()==tp
-		and chkc:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+		if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c160002124.thfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c160002124.thfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(c160002124.thfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c160002124.thfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c160002124.thfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c160002124.thop(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e)then
-Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
+  local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 
