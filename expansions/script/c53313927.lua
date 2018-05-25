@@ -75,15 +75,15 @@ function c53313927.activate(e,tp,eg,ep,ev,re,r,rp)
 	elseif g:GetCount()>0 then e:SetCountLimit(e:GetCountLimit()+1) end
 end
 function c53313927.filter(c)
-	local rc=c:GetReasonCard()
-	return c:IsType(TYPE_MONSTER) and c:IsReason(REASON_EFFECT) and rc and rc:IsSetCard(0xcf6)
+	local re=c:GetReasonEffect()
+	return c:IsType(TYPE_MONSTER) and c:IsReason(REASON_EFFECT) and re:GetHandler():IsSetCard(0xcf6) and re:IsActiveType(TYPE_MONSTER)
 end
 function c53313927.drcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c53313927.filter,1,nil)
 		and (not re:IsHasType(EFFECT_TYPE_ACTIONS) or re:IsHasType(EFFECT_TYPE_CONTINUOUS))
 end
 function c53313927.drop1(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
+	if not Duel.IsPlayerCanDraw(tp,1) or not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
 	Duel.Hint(HINT_CARD,0,53313927)
 	Duel.Draw(tp,1,REASON_EFFECT)
 end
@@ -100,7 +100,7 @@ end
 function c53313927.drop2(e,tp,eg,ep,ev,re,r,rp)
 	local n=Duel.GetFlagEffect(tp,53313927)
 	Duel.ResetFlagEffect(tp,53313927)
-	if not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
+	if not Duel.IsPlayerCanDraw(tp,1) or not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
 	Duel.Hint(HINT_CARD,0,53313927)
 	Duel.Draw(tp,n,REASON_EFFECT)
 end
@@ -120,19 +120,22 @@ function c53313927.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
-function c53313927.thfilter(c,tp)
-	return c:IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,c)
+function c53313927.thcfilter(c,tp)
+	return c:IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(c53313927.thfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,c)
+end
+function c53313927.thfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0xcf6) and c:IsAbleToHand()
 end
 function c53313927.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c53313927.thfilter,tp,LOCATION_GRAVE,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313927.thcfilter,tp,LOCATION_GRAVE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c53313927.thfilter,tp,LOCATION_GRAVE,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,c53313927.thcfilter,tp,LOCATION_GRAVE,0,1,1,nil,tp)
 	e:SetLabelObject(g:GetFirst())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c53313927.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,e:GetLabelObject())
+	local g=Duel.SelectMatchingCard(tp,c53313927.thfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,e:GetLabelObject())
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

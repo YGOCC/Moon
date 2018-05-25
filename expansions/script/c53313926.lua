@@ -10,7 +10,7 @@ function c53313926.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetCondition(c53313926.descon)
 	e1:SetTarget(c53313926.destg)
-	e1:Set(c53313926.desop)
+	e1:SetOperation(c53313926.desop)
 	c:RegisterEffect(e1)
 	aux.EnablePandemoniumAttribute(c,e1,false)
 	--Materials: 4 level 9 monsters
@@ -76,7 +76,7 @@ function c53313926.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c53313926.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,nil)
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,nil) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c53313926.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

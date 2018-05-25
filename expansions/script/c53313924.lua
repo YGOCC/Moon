@@ -68,7 +68,7 @@ function c53313924.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-		if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END) end
+		if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1) end
 	end
 end
 function c53313924.rfilter(c)

@@ -77,10 +77,12 @@ function c53313917.remop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsHasEffect(53313927) then ct=2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c53313917.rfilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE,0,1,ct,nil)
-	if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END) end
+	if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1) end
 	for tc in aux.Next(g) do
-		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		c:CopyEffect(tc:GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+	end
+	if g:GetCount()>0 then
+		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
 end
 function c53313917.aclimit(e,re,tp)

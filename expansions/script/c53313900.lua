@@ -15,7 +15,7 @@ function c53313900.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,53313900)
+	e2:SetCountLimit(1,53313900+EFFECT_COUNT_CODE_DUEL)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetCost(c53313900.cost)
 	e2:SetTarget(c53313900.target)
@@ -33,7 +33,7 @@ function c53313900.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local g=Duel.GetMatchingGroup(c53313900.filter,tp,LOCATION_DECK,0,nil)
 		return e:GetHandler():IsAbleToRemove() and g:IsExists(c53313900.filter2,1,nil,g) and Duel.GetFlagEffect(tp,53313900)==0
 	end
-	Duel.RegisterFlagEffect(tp,53313900,RESET_PHASE+PHASE_END,0,1)
+	Duel.RegisterFlagEffect(tp,53313900,0,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetHandler(),1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
 end

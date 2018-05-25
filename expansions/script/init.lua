@@ -512,7 +512,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 	if ... then
 		local flags=0
 		for _,xe in ipairs({...}) do
-			if aux.GetValueType(xe)=="Effect" and xe:GetProperty() then flags=flags|xe:GetProperty() end
+			if type(xe)=='userdata' and xe:GetProperty() then flags=flags|xe:GetProperty() end
 		end
 		e1:SetProperty(flags)
 		e1:SetHintTiming(TIMING_DAMAGE_STEP)

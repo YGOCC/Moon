@@ -14,7 +14,7 @@ function c53313901.initial_effect(c)
 	aux.EnablePandemoniumAttribute(c,e1)
 	--effect change
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(53313901,1))
+	e2:SetDescription(1102)
 	e2:SetCategory(CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
@@ -24,7 +24,7 @@ function c53313901.initial_effect(c)
 	c:RegisterEffect(e2)
 	--lv change
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(53313901,3))
+	e3:SetDescription(1370)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetCountLimit(1)
 	e3:SetRange(LOCATION_MZONE)
@@ -73,10 +73,12 @@ function c53313901.remop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsHasEffect(53313927) then ct=2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c53313901.rfilter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,ct,nil)
-	if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END) end
+	if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1) end
 	for tc in aux.Next(g) do
-		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		c:CopyEffect(tc:GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+	end
+	if g:GetCount()>0 then
+		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
 end
 function c53313901.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

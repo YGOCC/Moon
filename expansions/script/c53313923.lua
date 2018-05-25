@@ -12,9 +12,9 @@ function c53313923.initial_effect(c)
 	e1:SetOperation(c53313923.operation)
 	c:RegisterEffect(e1)
 	aux.EnablePandemoniumAttribute(c,e1,false)
-	--Materials: 1 "Mysterious" monster + 1 LIGHT Dragon monster
+	--Materials: 1 "Mysterious" Dragon monster + 1 LIGHT monster
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsSetCard,0xcf6),c53313923.ffilter,true)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),c53313923.ffilter,true)
 	--You can also summon this card by banishing the above monsters from your hand, Extra Deck or field (You do not use "Polymerization").
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -70,27 +70,26 @@ function c53313923.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c53313923.ffilter(c)
-	return c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsRace(RACE_DRAGON) and c:IsSetCard(0xcf6)
 end
 function c53313923.sprfilter1(c,fc,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf6) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc) and (c:IsFaceup() or not c:IsLocation(LOCATION_MZONE))
-		and Duel.IsExistingMatchingCard(c53313923.sprfilter2,tp,0x46,0,1,c,fc,c)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_HAND)) and c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc)
+		and Duel.IsExistingMatchingCard(c53313923.sprfilter2,tp,0x46,0,1,Group.FromCards(c,fc),fc,c)
 end
 function c53313923.sprfilter2(c,fc,tc)
-	return c53313923.ffilter(c) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,tc))>0
-		and (c:IsFaceup() or not c:IsLocation(LOCATION_MZONE))
+	return (c:IsFaceup() or c:IsLocation(LOCATION_HAND)) and c:IsRace(RACE_DRAGON) and c:IsSetCard(0xcf6) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,tc))>0
 end
 function c53313923.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(c53313923.sprfilter1,tp,0x46,0,1,nil,c,tp)
+	return c:IsFacedown() and Duel.IsExistingMatchingCard(c53313923.sprfilter1,tp,0x46,0,1,c,c,tp)
 end
 function c53313923.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c53313923.sprfilter1,tp,0x46,0,1,1,nil,c,tp)
+	local g1=Duel.SelectMatchingCard(tp,c53313923.sprfilter1,tp,0x46,0,1,1,c,c,tp)
 	local tc=g1:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c53313923.spfilter2,tp,0x46,0,1,1,tc,c,tc)
+	local g2=Duel.SelectMatchingCard(tp,c53313923.sprfilter2,tp,0x46,0,1,1,Group.FromCards(c,tc),c,tc)
 	g1:Merge(g2)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST+REASON_MATERIAL+REASON_FUSION)
 end
@@ -98,8 +97,8 @@ function c53313923.filter2(c,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 		and Duel.IsExistingMatchingCard(c53313923.filter3,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil,c:GetCode())
 end
-function c53313923.filter3(c,code)
-	return not code[c:GetCode()] and c:IsAbleToHand()
+function c53313923.filter3(c,code1,code2)
+	return not c:IsCode(code1) and (not code2 or not c:IsCode(code2)) and c:IsAbleToHand()
 end
 function c53313923.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c53313923.filter2,tp,LOCATION_GRAVE,0,1,nil,tp) end
@@ -122,7 +121,7 @@ function c53313923.thop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)>0 then
 		if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg=Duel.SelectMatchingCard(tp,c53313923.filter3,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,code)
+		local sg=Duel.SelectMatchingCard(tp,c53313923.filter3,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,table.unpack(t))
 		if sg:GetCount()>0 then
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)
@@ -137,8 +136,6 @@ function c53313923.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c:IsLocation(LOCATION_MZONE) and c:GetDestination()~=LOCATION_OVERLAY and not c:IsReason(REASON_REPLACE)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
 	if Duel.SelectYesNo(tp,1159) then
-		local g=Duel.SelectReleaseGroup(tp,Card.IsControler,1,1,nil,tp)
-		Duel.Release(g,REASON_EFFECT+REASON_REPLACE)
 		aux.PandSSet(c,REASON_EFFECT+REASON_REPLACE)(e,tp,eg,ep,ev,re,r,rp)
 		return true
 	else return false end
