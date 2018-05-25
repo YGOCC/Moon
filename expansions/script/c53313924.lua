@@ -55,16 +55,19 @@ function c53313924.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sg=Duel.SelectReleaseGroup(tp,Card.IsControler,1,1,nil,tp)
 	Duel.Release(sg,REASON_COST)
 end
+function c53313924.rmfilter(c,e)
+	return not c:IsImmuneToEffect(e)
+end
 function c53313924.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313924.rmfilter,tp,0,LOCATION_MZONE,1,nil,e) end
+	local g=Duel.GetMatchingGroup(c53313924.rmfilter,tp,0,LOCATION_MZONE,nil,e)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c53313924.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=1
 	if e:GetHandler():IsHasEffect(53313927) then ct=2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,ct,nil)
+	local g=Duel.SelectMatchingCard(tp,c53313924.rmfilter,tp,0,LOCATION_MZONE,1,ct,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
