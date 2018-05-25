@@ -67,7 +67,7 @@ function c53313924.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=1
 	if e:GetHandler():IsHasEffect(53313927) then ct=2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c53313924.rmfilter,tp,0,LOCATION_MZONE,1,ct,nil)
+	local g=Duel.SelectMatchingCard(tp,c53313924.rmfilter,tp,0,LOCATION_MZONE,1,ct,nil,e)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)

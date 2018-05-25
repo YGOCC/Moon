@@ -113,12 +113,12 @@ function c53313914.rmfilter(c,e)
 	return c:IsAbleToRemove() and not c:IsImmuneToEffect(e)
 end
 function c53313914.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c53313924.rmfilter,tp,0,LOCATION_ONFIELD,1,nil) end
-	local g=Duel.GetMatchingGroup(c53313924.rmfilter,tp,0,LOCATION_ONFIELD,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313924.rmfilter,tp,0,LOCATION_ONFIELD,1,nil,e) end
+	local g=Duel.GetMatchingGroup(c53313924.rmfilter,tp,0,LOCATION_ONFIELD,nil,e)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c53313914.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c53313924.rmfilter,tp,0,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(c53313924.rmfilter,tp,0,LOCATION_ONFIELD,nil,e)
 	if g:GetCount()>0 then
 		local tc=g:Select(tp,1,1,nil)
 		local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
