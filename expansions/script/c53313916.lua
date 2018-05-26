@@ -15,7 +15,6 @@ function c53313916.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetCountLimit(1,53313916)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
 	e1:SetCost(c53313916.pspcost)
 	e1:SetTarget(c53313916.psptg)
@@ -36,7 +35,7 @@ function c53313916.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetRange(LOCATION_HAND+LOCATION_EXTRA)
-	e3:SetCountLimit(1,53313917)
+	e3:SetCountLimit(1,53313916)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetCondition(c53313916.spcon)
@@ -47,7 +46,7 @@ function c53313916.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCountLimit(1,53313917)
+	e4:SetCountLimit(1,53313916)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCategory(CATEGORY_ATKCHANGE)
 	e4:SetTarget(c53313916.target)
@@ -65,6 +64,46 @@ end
 function c53313916.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if not c:IsRace(RACE_DRAGON) or not c:IsAttribute(ATTRIBUTE_LIGHT) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
+end
+function c53313916.pspcfilter(c,e,tp)
+	local loc=0
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if c:GetSequence()<5 then ft=ft+1 end
+	if ft>0 then loc=loc+LOCATION_HAND+LOCATION_DECK end
+	if Duel.GetLocationCountFromEx(tp,tp,c)>0 then loc=loc+LOCATION_EXTRA end
+	return loc~=0 and Duel.IsExistingMatchingCard(c53313916.pspfilter,tp,loc,0,1,nil,e,tp)
+end
+function c53313916.pspfilter(c,e,tp)
+	return c:IsLevelAbove(5) and c:IsLevelBelow(7) and c:IsSetCard(0xcf6)
+		and (c:IsFaceup() or not c:IsLocation(LOCATION_EXTRA))
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c53313916.pspcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,c53313916.pspcfilter,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+	local g=Duel.SelectReleaseGroup(tp,c53313916.pspcfilter,1,1,nil,e,tp)
+	e:SetLabel(g:GetFirst():GetSequence())
+	Duel.Release(g,REASON_COST)
+end
+function c53313916.psptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsDestructable() and Duel.GetFlagEffect(tp,53313916)==0 end
+	local loc=0
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_DECK end
+	if Duel.GetLocationCountFromEx(tp,tp,c)>0 then loc=loc+LOCATION_EXTRA end
+	Duel.RegisterFlagEffect(tp,53313916,RESET_PHASE+PHASE_END,0,1)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,loc)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+end
+function c53313916.pspop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local loc=0
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_DECK end
+	if Duel.GetLocationCountFromEx(tp,tp,c)>0 then loc=loc+LOCATION_EXTRA end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c53313916.pspfilter,tp,loc,0,1,1,nil,e,tp)
+	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
+		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+	end
 end
 function c53313916.ttcon(e,c,minc)
 	if c==nil then return true end
@@ -101,7 +140,7 @@ end
 function c53313916.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(0x34) and chkc~=e:GetHandler() end
 	if chk==0 then return Duel.IsExistingTarget(nil,tp,0x34,0x34,1,e:GetHandler()) end
-	Duel.SelectTarget(nil,tp,0x34,0x34,1,1,e:GetHandler())
+	Duel.SelectTarget(tp,nil,tp,0x34,0x34,1,1,e:GetHandler())
 end
 function c53313916.copy(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
