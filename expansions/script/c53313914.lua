@@ -3,11 +3,10 @@ function c53313914.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
 	--Once per turn: You can target 1 "Mysterious" monster you control, it can attack your opponent directly, but it is destroyed during the end phase.
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1)
-	e2:SetCondition(c53313914.atcon)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetTarget(c53313914.attg)
 	e2:SetOperation(c53313914.atop)
 	c:RegisterEffect(e2)
@@ -41,17 +40,15 @@ function c53313914.initial_effect(c)
 	e3:SetOperation(c53313914.rmop)
 	c:RegisterEffect(e3)
 end
-function c53313914.atcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsAbleToEnterBP()
-end
 function c53313914.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0xcf6) and c:IsAttackable() and not c:IsHasEffect(EFFECT_DIRECT_ATTACK)
 end
 function c53313914.attg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c53313914.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c53313914.filter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c53313914.filter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsAbleToEnterBP() and e:GetHandler():GetFlagEffect(53313914)==0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c53313914.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	e:GetHandler():RegisterFlagEffect(53313914,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c53313914.atop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

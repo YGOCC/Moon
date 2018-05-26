@@ -82,37 +82,37 @@ function c53313916.pspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,c53313916.pspcfilter,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local g=Duel.SelectReleaseGroup(tp,c53313916.pspcfilter,1,1,nil,e,tp)
-	e:SetLabel(g:GetFirst():GetSequence())
 	Duel.Release(g,REASON_COST)
 end
 function c53313916.psptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDestructable() and Duel.GetFlagEffect(tp,53313916)==0 end
 	local loc=0
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_DECK end
-	if Duel.GetLocationCountFromEx(tp,tp,c)>0 then loc=loc+LOCATION_EXTRA end
+	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
 	Duel.RegisterFlagEffect(tp,53313916,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,loc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c53313916.pspop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
 	local loc=0
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_DECK end
-	if Duel.GetLocationCountFromEx(tp,tp,c)>0 then loc=loc+LOCATION_EXTRA end
+	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c53313916.pspfilter,tp,loc,0,1,1,nil,e,tp)
 	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
-		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+		Duel.Destroy(c,REASON_EFFECT)
 	end
 end
 function c53313916.ttcon(e,c,minc)
 	if c==nil then return true end
 	local pc=Duel.GetFirstMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,nil)
-	return minc<=2 and pc and Duel.GetTributeGroup(c):IsExists(Card.IsType,1,nil,TYPE_PANDEMONIUM) and pc:IsReleasable()
+	return minc<=3 and pc and Duel.GetTributeGroup(c):IsExists(Card.IsType,2,nil,TYPE_PANDEMONIUM) and pc:IsReleasable()
 end
 function c53313916.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,HINTMSG_TRIBUTE)
-	local g=Duel.GetTributeGroup(c):FilterSelect(tp,Card.IsType,1,1,nil,TYPE_PANDEMONIUM)
+	local g=Duel.GetTributeGroup(c):FilterSelect(tp,Card.IsType,2,2,nil,TYPE_PANDEMONIUM)
 	g=g+Duel.GetFirstMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,nil)
 	c:SetMaterial(g)
 	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
