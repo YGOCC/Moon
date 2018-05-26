@@ -38,7 +38,7 @@ function c53313921.spcon(e,c)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c53313921.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c53313921.atkfilter(c)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsType(TYPE_PANDEMONIUM)
 end
 function c53313921.atkval(e,c)
 	return Duel.GetMatchingGroupCount(c53313921.atkfilter,c:GetControler(),0x70,0,nil)*400

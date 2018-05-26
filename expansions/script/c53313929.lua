@@ -22,7 +22,7 @@ function c53313929.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c53313929.filter(c,e,tp)
 	return c:IsLevelBelow(6) and c:IsSetCard(0xcf6)
-		and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and c:IsType(TYPE_PANDEMONIUM) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c53313929.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

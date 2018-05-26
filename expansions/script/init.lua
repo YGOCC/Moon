@@ -31,7 +31,7 @@ TYPE_EXTRA=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK+TYPE_EVOLUTE+TYPE_POLARIT
 
 --Custom Functions
 function Card.IsCustomType(c,tpe,scard,sumtype,p)
-	return c:GetType(scard,sumtype,p)&tpe>0
+	return (c:GetType(scard,sumtype,p)>>32)&tpe>0
 end
 
 --overwrite functions
@@ -559,7 +559,7 @@ function Auxiliary.PaConditionFilter(c,e,tp,lscale,rscale)
 	else
 		lv=c:GetLevel()
 	end
-	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM))
+	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)))
 		and (lv>lscale and lv<rscale) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SPECIAL+726,tp,false,false)
 		and not c:IsForbidden()
 end
@@ -645,7 +645,7 @@ function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	end
 end
 function Auxiliary.PaCheckFilter(c)
-	return c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
 end
 function Auxiliary.PandActCon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(Auxiliary.PaCheckFilter,tp,LOCATION_SZONE,0,1,e:GetHandler())

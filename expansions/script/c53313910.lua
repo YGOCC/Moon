@@ -29,7 +29,7 @@ function c53313910.spcon(e,c)
 		and Duel.IsExistingMatchingCard(c53313910.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function c53313910.thfilter(c)
-	return c:IsSetCard(0xcf6) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsAbleToHand()
+	return c:IsSetCard(0xcf6) and c:IsType(TYPE_PANDEMONIUM) and c:IsAbleToHand()
 end
 function c53313910.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c53313910.thfilter,tp,LOCATION_DECK,0,1,nil) end

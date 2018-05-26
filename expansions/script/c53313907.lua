@@ -1,7 +1,7 @@
 --Mysterious Starquid
 function c53313907.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	--P-When an effect is activated: You can destroy this card, and change that effect to "Both players can add 1 level 7 or lower Pandemonium monster from their Decks to their hands.".
+	--P-When an effect is activated: You can destroy this card, and change that effect to "Both players can add 1 Level 6 or lower Pandemonium monster from their Decks to their hands.". (HOPT1)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
@@ -36,7 +36,7 @@ function c53313907.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c53313907.filter(c)
-	return c:IsLevelBelow(7) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+	return c:IsLevelBelow(6) and c:IsType(TYPE_PANDEMONIUM)
 end
 function c53313907.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if not re then
@@ -44,7 +44,8 @@ function c53313907.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
 	end
 	if chk==0 then return ev>0 and e:GetHandler():IsDestructable()
-		and Duel.IsExistingMatchingCard(c53313907.filter,tp,LOCATION_DECK,0,1,nil) end
+		and Duel.IsExistingMatchingCard(c53313907.filter,tp,LOCATION_DECK,0,1,nil) and Duel.GetFlagEffect(tp,53313907)==0 end
+	Duel.RegisterFlagEffect(tp,53313907,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c53313907.chop(e,tp,eg,ep,ev,re,r,rp)
@@ -86,7 +87,7 @@ function c53313907.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c53313907.setfilter(c)
-	return c:IsSetCard(0xcf6) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xcf6) and c:IsType(TYPE_PANDEMONIUM) and c:IsType(TYPE_MONSTER)
 end
 function c53313907.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0

@@ -60,7 +60,7 @@ function c53313901.valcon(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
 end
 function c53313901.rfilter(c)
-	return (not c:IsLocation(LOCATION_EXTRA) or c:IsFaceup()) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+	return (not c:IsLocation(LOCATION_EXTRA) or c:IsFaceup()) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove() and c:IsLevelAbove(2) and c:IsLevelBelow(8)
 end
 function c53313901.remtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(0x50) and chkc:IsType(TYPE_MONSTER) and chkc:IsAbleToRemove() end
@@ -69,11 +69,8 @@ function c53313901.remtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c53313901.remop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=1
-	if c:IsHasEffect(53313927) then ct=2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c53313901.rfilter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,ct,nil)
-	if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1) end
+	local g=Duel.SelectMatchingCard(tp,c53313901.rfilter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil)
 	for tc in aux.Next(g) do
 		c:CopyEffect(tc:GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	end

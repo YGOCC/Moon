@@ -27,7 +27,7 @@ function c53313925.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c53313925.dfilter(c)
-	return c:GetType()&TYPE_PANDEMONIUM~=TYPE_PANDEMONIUM or c:IsLocation(LOCATION_SZONE)
+	return not c:IsType(TYPE_PANDEMONIUM) or c:IsLocation(LOCATION_SZONE)
 end
 function c53313925.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

@@ -97,8 +97,8 @@ function c53313923.filter2(c,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 		and Duel.IsExistingMatchingCard(c53313923.filter3,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil,c:GetCode())
 end
-function c53313923.filter3(c,code1,code2)
-	return not c:IsCode(code1) and (not code2 or not c:IsCode(code2)) and c:IsAbleToHand()
+function c53313923.filter3(c,code)
+	return not c:IsCode(code) and c:IsAbleToHand()
 end
 function c53313923.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c53313923.filter2,tp,LOCATION_GRAVE,0,1,nil,tp) end
@@ -106,22 +106,13 @@ function c53313923.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
 end
 function c53313923.thop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=1
-	if e:GetHandler():IsHasEffect(53313927) then ct=2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c53313923.filter2,tp,LOCATION_GRAVE,0,1,ct,nil,tp)
-	local t={}
-	local code=0
-	for tc in aux.Next(g) do
-		code=tc:GetCode()
-		t[code]=true
-		--This card gains the effects of every card banished by its effect.
-		e:GetHandler():CopyEffect(code,RESET_EVENT+0x1fe0000)
-	end
+	local g=Duel.SelectMatchingCard(tp,c53313923.filter2,tp,LOCATION_GRAVE,0,1,1,nil,tp)
+	local code=g:GetFirst():GetCode()
+	e:GetHandler():CopyEffect(code,RESET_EVENT+0x1fe0000)
 	if Duel.Remove(g,POS_FACEUP,REASON_EFFECT)>0 then
-		if g:GetCount()>1 then Duel.GetFieldCard(tp,LOCATION_SZONE,5):RegisterFlagEffect(53313927,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg=Duel.SelectMatchingCard(tp,c53313923.filter3,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,table.unpack(t))
+		local sg=Duel.SelectMatchingCard(tp,c53313923.filter3,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,code)
 		if sg:GetCount()>0 then
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)

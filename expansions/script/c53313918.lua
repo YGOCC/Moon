@@ -84,7 +84,7 @@ function c53313918.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c53313918.filter(c,e,tp)
 	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
-	return c:IsLevelBelow(4) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(4) and c:IsType(TYPE_PANDEMONIUM) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and (not ect or ect>0 or c:IsLocation(LOCATION_GRAVE+LOCATION_DECK))
 end
 function c53313918.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

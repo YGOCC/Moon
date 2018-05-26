@@ -8,37 +8,6 @@ function c53313927.initial_effect(c)
 	e1:SetCountLimit(1,53313927)
 	e1:SetOperation(c53313927.activate)
 	c:RegisterEffect(e1)
-	--Every time a monster is banished by the effect of a "Mysterious" monster, you can draw 1 card.
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_REMOVE)
-	e2:SetCondition(c53313927.drcon1)
-	e2:SetOperation(c53313927.drop1)
-	e2:SetRange(LOCATION_FZONE)
-	c:RegisterEffect(e2)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e3:SetCode(EVENT_REMOVE)
-	e3:SetCondition(c53313927.regcon)
-	e3:SetOperation(c53313927.regop)
-	e3:SetRange(LOCATION_FZONE)
-	c:RegisterEffect(e3)
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e4:SetCode(EVENT_CHAIN_SOLVED)
-	e4:SetCondition(c53313927.drcon2)
-	e4:SetOperation(c53313927.drop2)
-	e4:SetRange(LOCATION_FZONE)
-	c:RegisterEffect(e4)
-	--Once per turn, if the activated effect of a "Mysterious" monster you control would banish 1 monster, you can make that effect banish 1 other, appropriate monster in addition.
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_FIELD)
-	e7:SetCode(53313927)
-	e7:SetRange(LOCATION_FZONE)
-	e7:SetTargetRange(LOCATION_MZONE,0)
-	e7:SetTarget(function(e,c) return c:IsFaceup() and c:IsSetCard(0xcf6) and e:GetHandler():GetFlagEffect(53313927)==0 end)
-	c:RegisterEffect(e7)
 	--When you Special Summon a "Mysterious" monster from the Extra Deck (except during the Damage Step): You can draw 1 card. (HOPT2)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -74,36 +43,6 @@ function c53313927.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,sg)
 	elseif g:GetCount()>0 then e:SetCountLimit(e:GetCountLimit()+1) end
 end
-function c53313927.filter(c)
-	local re=c:GetReasonEffect()
-	return c:IsType(TYPE_MONSTER) and c:IsReason(REASON_EFFECT) and re:GetHandler():IsSetCard(0xcf6) and re:IsActiveType(TYPE_MONSTER)
-end
-function c53313927.drcon1(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c53313927.filter,1,nil)
-		and (not re:IsHasType(EFFECT_TYPE_ACTIONS) or re:IsHasType(EFFECT_TYPE_CONTINUOUS))
-end
-function c53313927.drop1(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsPlayerCanDraw(tp,1) or not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
-	Duel.Hint(HINT_CARD,0,53313927)
-	Duel.Draw(tp,1,REASON_EFFECT)
-end
-function c53313927.regcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c53313927.filter,1,nil)
-		and re:IsHasType(EFFECT_TYPE_ACTIONS) and not re:IsHasType(EFFECT_TYPE_CONTINUOUS)
-end
-function c53313927.regop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp,53313927,RESET_CHAIN,0,1)
-end
-function c53313927.drcon2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,53313927)>0
-end
-function c53313927.drop2(e,tp,eg,ep,ev,re,r,rp)
-	local n=Duel.GetFlagEffect(tp,53313927)
-	Duel.ResetFlagEffect(tp,53313927)
-	if not Duel.IsPlayerCanDraw(tp,1) or not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
-	Duel.Hint(HINT_CARD,0,53313927)
-	Duel.Draw(tp,n,REASON_EFFECT)
-end
 function c53313927.cfilter(c,tp)
 	return c:GetSummonPlayer()==tp and c:IsFaceup() and c:IsSetCard(0xcf6) and c:GetSummonLocation()==LOCATION_EXTRA
 end
@@ -137,7 +76,7 @@ function c53313927.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c53313927.thfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,e:GetLabelObject())
 	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.SendtoHand(g,tp,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
