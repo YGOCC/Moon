@@ -1,17 +1,17 @@
 --Mysterious Starquid
 function c53313907.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	--P-When an effect is activated: You can destroy this card, and change that effect to "Both players can add 1 Level 6 or lower Pandemonium monster from their Decks to their hands.". (HOPT1)
+	--P-When an effect is activated: You can destroy this card, and change that effect to "Both players can add 1 Level 6 or lower Pandemonium monster from their Decks to their hands, except "Mysterious Starquid".". (HOPT1)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetTarget(c53313907.chtg)
 	e1:SetOperation(c53313907.chop)
 	c:RegisterEffect(e1)
 	aux.EnablePandemoniumAttribute(c,e1)
-	--M-When this card is Summoned: You can add 1 "Mysterious" monster from your Deck, Extra Deck or GY to your Hand.
+	--M-When this card is Summoned: You can add 1 "Mysterious" monster from your Deck, Extra Deck or GY to your Hand, except "Mysterious Starquid".
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
@@ -36,7 +36,7 @@ function c53313907.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c53313907.filter(c)
-	return c:IsLevelBelow(6) and c:IsType(TYPE_PANDEMONIUM)
+	return c:IsLevelBelow(6) and c:IsType(TYPE_PANDEMONIUM) and not c:IsCode(53313907)
 end
 function c53313907.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if not re then
@@ -72,7 +72,7 @@ function c53313907.repop(e,tp,eg,ep,ev,re,r,rp)
 	if tc2 then Duel.ConfirmCards(tp,tc2) end
 end
 function c53313907.thfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf6) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf6) and c:IsAbleToHand() and not c:IsCode(53313907)
 end
 function c53313907.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c53313907.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil) end
@@ -87,7 +87,7 @@ function c53313907.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c53313907.setfilter(c)
-	return c:IsSetCard(0xcf6) and c:IsType(TYPE_PANDEMONIUM) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xcf6) and c:IsType(TYPE_PANDEMONIUM) and not c:IsCode(53313907)
 end
 function c53313907.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
