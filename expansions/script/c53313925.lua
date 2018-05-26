@@ -3,7 +3,7 @@ function c53313925.initial_effect(c)
 	c:EnableReviveLimit()
 	--Materials: 2+ level 8 monsters
 	aux.AddXyzProcedure(c,nil,8,2,nil,nil,99)
-	--When this card is Summoned: Destroy all non-Pandemonium monsters on the field.
+	--When this card is Summoned: Destroy all other monsters on the field, except Pandemonium monsters.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -26,16 +26,13 @@ function c53313925.initial_effect(c)
 	e3:SetOperation(c53313925.activate)
 	c:RegisterEffect(e3)
 end
-function c53313925.dfilter(c)
-	return not c:IsType(TYPE_PANDEMONIUM) or c:IsLocation(LOCATION_SZONE)
-end
 function c53313925.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=Duel.GetMatchingGroup(c53313925.dfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+	local g=Duel.GetMatchingGroup(aux.NOT(Card.IsType),tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler(),TYPE_PANDEMONIUM)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c53313925.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c53313925.dfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+	local g=Duel.GetMatchingGroup(aux.NOT(Card.IsType),tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler(),TYPE_PANDEMONIUM)
 	if g:GetCount()>0 then
 		Duel.Destroy(g,REASON_EFFECT)
 	end
