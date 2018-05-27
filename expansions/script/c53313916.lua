@@ -44,7 +44,7 @@ function c53313916.initial_effect(c)
 	e3:SetTarget(c53313916.sptg)
 	e3:SetOperation(c53313916.spop)
 	c:RegisterEffect(e3)
-	--M-You can target 1 other monster on the field, in the GY, or that is banished; until the end of this turn, this card gains that target's ATK, DEF, and effects (if any). (HOPT2)
+	--M-Once per turn: You can have this card gain the ATK, DEF, and effects (if any) of 1 face-up monster on the field, GY, Extra Deck, or that is banished until the end of this turn, except "Mysterious Samsara Dragon". (HOPT2)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
@@ -145,15 +145,20 @@ function c53313916.spop(e,tp,eg,ep,ev,re,r,rp)
 		c:CopyEffect(e:GetLabelObject():GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	end
 end
+function c53313916.copytg(c)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and not c:IsCode(53313916)
+end
 function c53313916.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(0x34) and chkc~=e:GetHandler() end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0x34,0x34,1,e:GetHandler()) end
-	Duel.SelectTarget(tp,nil,tp,0x34,0x34,1,1,e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313916.copytg,tp,0x74,0x74,1,nil) end
 end
 function c53313916.copy(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or not c:IsRelateToEffect(e) or c:IsFacedown() then return end
+	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectMatchingCard(tp,c53313916.copytg,tp,0x74,0x74,1,1,nil)
+	local tc=g:GetFirst()
+	if not tc then return end
+	Duel.HintSelection(g)
 	c:CopyEffect(tc:GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
