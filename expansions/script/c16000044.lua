@@ -35,6 +35,19 @@ function c16000044.initial_effect(c)
 	e3:SetCode(EFFECT_DESTROY_SUBSTITUTE)
 	e3:SetValue(c16000044.repval)
 	c:RegisterEffect(e3) 
+	--special summon
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(16000043,3))
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	--e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetCountLimit(1,16000043)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCondition(c16000043.spcon2)
+	e4:SetCost(c16000043.spcost2)
+	e4:SetTarget(c16000043.sptg2)
+	e4:SetOperation(c16000043.spop2)
+	c:RegisterEffect(e4)
 end
 function c16000044.filter(c)
 local ct1,ct2=c:GetUnionCount()
@@ -110,4 +123,46 @@ function c16000044.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c16000044.repval(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE)~=0 or bit.band(r,REASON_EFFECT)~=0
+end
+function c16000044.spfilter(c,e,tp)
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c16000044.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
+end
+function c16000044.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
+	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
+end
+function c16000044.spop2(e,tp,eg,ep,ev,re,r,rp)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local tg=Duel.GetMatchingGroup(c16000044.spfilter,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if ft<=0 or tg:GetCount()==0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=tg:Select(tp,ft,ft,nil)
+	local tc=g:GetFirst()
+	while tc do
+		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CANNOT_ATTACK)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e1)
+	   local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE)
+		e2:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e2)
+		   local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e2)
+	
+		tc=g:GetNext()
+	end
+	Duel.SpecialSummonComplete()
+	
 end

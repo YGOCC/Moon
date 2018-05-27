@@ -99,13 +99,15 @@ function c16000880.cost(e,tp,eg,ep,ev,re,r,rp,chk)
  if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
-
+function c16000880.xxfilter(c)
+	return c:IsType(TYPE_MONSTER)
+end
 
 function c16000880.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetControler()~=tp  and chkc:IsAbleToRemove() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c16000880.xxfilter,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,c16000880.xxfilter,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c16000880.operation(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -72,14 +72,30 @@ end
 
 function c16000022.eqop(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	if c:IsLocation(LOCATION_MZONE) and c:IsFacedown() then return end
 	local tc=Duel.GetFirstTarget()
-	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
-	if not tc:IsRelateToEffect(e) or not c16000022.filter(tc) then
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or tc:GetControler()~=tp or tc:IsFacedown() or not tc:IsRelateToEffect(e) or not c:CheckUniqueOnField(tp) then
 		Duel.SendtoGrave(c,REASON_EFFECT)
 		return
 	end
-	if not Duel.Equip(tp,c,tc,false) then return end
-	aux.SetUnionState(c)
+	Duel.Equip(tp,c,tc,true)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_EQUIP_LIMIT)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetValue(c16000021.eqlimit)
+	e1:SetLabelObject(tc)
+	c:RegisterEffect(e1)
+	   --Atk up
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_EQUIP)
+	e2:SetCode(EFFECT_UPDATE_ATTACK)
+	e2:SetValue(200)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCode(EFFECT_UPDATE_DEFENSE)
+	c:RegisterEffect(e3)
 end
 
 function c16000022.eqtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
