@@ -2,7 +2,6 @@
 local card = c90288200
 function card.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	aux.EnablePandemoniumAttribute(c,e1)
 	--Negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(90288200,1))
@@ -15,6 +14,7 @@ function card.initial_effect(c)
 	e1:SetTarget(card.target)
 	e1:SetOperation(card.operation)
 	c:RegisterEffect(e1)
+	aux.EnablePandemoniumAttribute(c,e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(90288200,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -46,7 +46,7 @@ end
 function card.condition(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	return g and g:IsExists(card.filter,1,nil,tp)
+	return aux.PandActCheck(e) and g and g:IsExists(card.filter,1,nil,tp)
 		and Duel.IsChainNegatable(ev)
 end
 function card.target(e,tp,eg,ep,ev,re,r,rp,chk)

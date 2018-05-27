@@ -53,7 +53,7 @@ function c53313912.filter(c,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsControler(tp) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsSetCard(0xcf6) and ((c:GetReasonPlayer()~=tp and c:IsReason(REASON_EFFECT)) or c:IsReason(REASON_BATTLE))
 end
 function c53313912.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c53313912.filter,1,nil,tp)
+	return aux.PandActCheck(e) and eg:IsExists(c53313912.filter,1,nil,tp)
 end
 function c53313912.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) end

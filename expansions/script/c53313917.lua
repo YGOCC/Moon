@@ -1,7 +1,6 @@
 --Mysterious Cosmic Dragon
 function c53313917.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	aux.EnablePandemoniumAttribute(c,false)
 	--Once per turn when a monster you control would be destroyed either by battle or by card effect: You can destroy this card instead, then you can add 1 "Mysterious" or Pandemonium monster from your Deck to your Hand.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -12,6 +11,7 @@ function c53313917.initial_effect(c)
 	e1:SetValue(c53313917.repval)
 	e1:SetOperation(c53313917.repop)
 	c:RegisterEffect(e1)
+	aux.EnablePandemoniumAttribute(c,false,TYPE_SYNCHRO)
 	--spsummon
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xCF6),aux.NonTuner(nil),1)
 	--actlimit
@@ -48,7 +48,7 @@ function c53313917.filter(c,tp)
 end
 function c53313917.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return eg:IsExists(c53313917.filter,1,nil,tp)
+	if chk==0 then return aux.PandActCheck(e) and eg:IsExists(c53313917.filter,1,nil,tp)
 		and c:IsDestructable(e) and not c:IsStatus(STATUS_DESTROY_CONFIRMED) end
 	return Duel.SelectEffectYesNo(tp,c,96)
 end

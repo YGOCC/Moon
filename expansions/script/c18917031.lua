@@ -37,14 +37,6 @@ function ref.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 
-ref.pandemonium=true
-ref.pandemonium_lscale=6
-ref.pandemonium_rscale=2
-function ref.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,326)
-	Duel.CreateToken(1-tp,326)
-end
-
 --Pandemonium effect
 function ref.actcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsFacedown() and eg:GetFirst():IsControler(1-tp)

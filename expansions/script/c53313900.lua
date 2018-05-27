@@ -7,6 +7,7 @@ function c53313900.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCondition(aux.PandActCheck)
 	e1:SetTarget(c53313900.thtg)
 	e1:SetOperation(c53313900.thop)
 	c:RegisterEffect(e1)
@@ -23,7 +24,7 @@ function c53313900.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c53313900.filter(c)
-	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsAbleToHand()
+	return c:IsType(TYPE_PANDEMONIUM) and c:IsAbleToHand()
 end
 function c53313900.filter2(c,g)
 	return g:IsExists(Card.IsCode,1,c,c:GetCode())
@@ -62,7 +63,7 @@ function c53313900.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_COST)
 end
 function c53313900.filter1(c,e,tp)
-	return c:IsLevelBelow(4) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(4) and c:IsType(TYPE_PANDEMONIUM) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c53313900.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

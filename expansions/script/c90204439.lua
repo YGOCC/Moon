@@ -12,7 +12,7 @@ function c90204439.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(function(e,c) return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM end)
+	e2:SetTarget(function(e,c) return c:IsType(TYPE_PANDEMONIUM) end)
 	e2:SetValue(c90204439.evalue)
 	c:RegisterEffect(e2)
 	--Once per turn, if a face-up Pandemonium Monster(s) in your Main Monster Zone is destroyed by an opponent's card (either by battle or card effect) while you control a card in your Pandemonium zone: You can add 1 Level 4 or lower "Pandemoniumgraph" monster from your Deck to your hand.

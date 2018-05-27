@@ -7,6 +7,7 @@ function c53313907.initial_effect(c)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetCondition(aux.PandActCheck)
 	e1:SetTarget(c53313907.chtg)
 	e1:SetOperation(c53313907.chop)
 	c:RegisterEffect(e1)
@@ -39,27 +40,22 @@ function c53313907.filter(c)
 	return c:IsLevelBelow(6) and c:IsType(TYPE_PANDEMONIUM) and not c:IsCode(53313907)
 end
 function c53313907.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if not re then
-		ev=Duel.GetCurrentChain()-1
-		re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
-	end
-	if chk==0 then return ev>0 and e:GetHandler():IsDestructable()
+	if chk==0 then return e:GetHandler():IsDestructable()
 		and Duel.IsExistingMatchingCard(c53313907.filter,tp,LOCATION_DECK,0,1,nil) and Duel.GetFlagEffect(tp,53313907)==0 end
 	Duel.RegisterFlagEffect(tp,53313907,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c53313907.chop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.Destroy(e:GetHandler(),REASON_EFFECT)==0 then return end
-	if not re then
-		ev=math.max(Duel.GetCurrentChain()-1,1)
-		re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
-	end
 	local g=Group.CreateGroup()
 	Duel.ChangeTargetCard(ev,g)
 	Duel.ChangeChainOperation(ev,c53313907.repop)
 end
 function c53313907.repop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():CancelToGrave(false)
+	local c=e:GetHandler()
+	if c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsType(TYPE_EQUIP) then
+		c:CancelToGrave(false)
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g1=Duel.SelectMatchingCard(tp,c53313907.filter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc1=g1:GetFirst()

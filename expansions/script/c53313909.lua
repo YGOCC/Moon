@@ -1,4 +1,4 @@
---Mysterious Ferret
+	--Mysterious Ferret
 function c53313909.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
 	--You can destroy this card, then Special Summon 1 level 6 or lower "Mysterious" monster from your Deck, except "Mysterious Ferret". You can only use this effect of "Mysterious Ferret" once per turn.
@@ -7,6 +7,7 @@ function c53313909.initial_effect(c)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	e0:SetRange(LOCATION_SZONE)
 	e0:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	e0:SetCondition(aux.PandActCheck)
 	e0:SetTarget(c53313909.rptg)
 	e0:SetOperation(c53313909.rpop)
 	c:RegisterEffect(e0)

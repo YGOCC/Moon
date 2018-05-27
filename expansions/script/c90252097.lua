@@ -13,7 +13,7 @@ function c90252097.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(function(e,c) return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM end)
+	e2:SetTarget(function(e,c) return c:IsType(TYPE_PANDEMONIUM) end)
 	e2:SetValue(c90252097.evalue)
 	c:RegisterEffect(e2)
 	--Once per turn, you can target 1 card in your Pandemonium Zone and 1 monster your opponent controls; destroy them. You must control a face-up Pandemonium card in your Pandemonium zone to activate this effect.

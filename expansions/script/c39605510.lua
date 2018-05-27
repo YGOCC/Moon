@@ -31,7 +31,7 @@ function c39605510.initial_effect(c)
 	e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e1:SetTarget(function(e,c) return c:IsSummonType(SUMMON_TYPE_SPECIAL+726) and c:IsStatus(STATUS_SPSUMMON_TURN) end)
+	e1:SetTarget(function(e,c) return aux.PandActCheck(e) and c:IsSummonType(SUMMON_TYPE_SPECIAL+726) and c:IsStatus(STATUS_SPSUMMON_TURN) end)
 	e1:SetValue(2)
 	c:RegisterEffect(e1)
 	--Cannot be Normal Summoned/Set, or Pendulum Summoned from the hand.
@@ -88,8 +88,8 @@ function c39605510.actcost(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Release(rg,REASON_COST)
 end
 function c39605510.splimit(e,c,sump,sumtype,sumpos,targetp)
-	if c:GetType()&TYPE_PANDEMONIUM~=TYPE_PANDEMONIUM then return false end
-	return bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
+	if c:IsType(TYPE_PANDEMONIUM) then return false end
+	return aux.PandActCheck(e) and bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
 end
 function c39605510.spcon(e,se,sp,st)
 	return (Duel.IsExistingMatchingCard(function(c) return c:IsCode(39615023) and c:IsFaceup() end,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
@@ -116,7 +116,7 @@ function c39605510.negcon(e,tp,eg,ep,ev,re,r,rp)
 		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 end
 function c39605510.filter(c)
-	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsFaceup()
+	return c:IsType(TYPE_PANDEMONIUM) and c:IsFaceup()
 end
 function c39605510.cfilter(c)
 	return c39605510.filter(c) and c:IsAbleToDeckAsCost()

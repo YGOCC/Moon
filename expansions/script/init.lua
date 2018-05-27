@@ -36,7 +36,7 @@ end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-	get_prev_level_field, is_level, is_level_below, is_level_above, change_position , card_remcounter, duel_remcounter = 
+	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter = 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
 	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, Duel.RemoveCounter
 
@@ -445,9 +445,9 @@ end
 function Auxiliary.EnablePandemoniumAttribute(c,...)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local t={...}
-	local regfield,desc=nil,nil
+	local regfield,typ=nil,nil
 	if type(t[#t])=='number' then
-		desc=t[#t]
+		typ=t[#t]
 		table.remove(t)
 	end
 	if type(t[#t])=='boolean' then
@@ -457,11 +457,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 	--summon
 	local ge6=Effect.CreateEffect(c)
 	ge6:SetType(EFFECT_TYPE_FIELD)
-	if desc then
-		ge6:SetDescription(desc)
-	else
-		ge6:SetDescription(1074)
-	end
+	ge6:SetDescription(1074)
 	ge6:SetCode(EFFECT_SPSUMMON_PROC_G)
 	ge6:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	ge6:SetRange(LOCATION_SZONE)
@@ -476,7 +472,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
 	e0:SetCode(EVENT_LEAVE_FIELD_P)
-	e0:SetOperation(Auxiliary.PandEnConFUInED)
+	e0:SetOperation(Auxiliary.PandEnConFUInED(typ))
 	c:RegisterEffect(e0)
 	--reset Pendulum-like redirect property
 	local sp=Effect.CreateEffect(c)
@@ -484,14 +480,14 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 	sp:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
 	sp:SetCode(EVENT_SPSUMMON_SUCCESS)
 	sp:SetCondition(Auxiliary.PandDisConFUInED)
-	sp:SetOperation(Auxiliary.PandDisableFUInED)
+	sp:SetOperation(Auxiliary.PandDisableFUInED(c,typ))
 	c:RegisterEffect(sp)
 	local th=Effect.CreateEffect(c)
 	th:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	th:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
 	th:SetCode(EVENT_TO_HAND)
 	th:SetCondition(Auxiliary.PandDisConFUInED)
-	th:SetOperation(Auxiliary.PandDisableFUInED)
+	th:SetOperation(Auxiliary.PandDisableFUInED(c,typ))
 	c:RegisterEffect(th)
 	local td=th:Clone()
 	td:SetCode(EVENT_TO_DECK)
@@ -515,9 +511,9 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 			if type(xe)=='userdata' and xe:GetProperty() then flags=flags|xe:GetProperty() end
 		end
 		e1:SetProperty(flags)
-		e1:SetHintTiming(TIMING_DAMAGE_STEP)
+		e1:SetHintTiming(TIMING_DAMAGE_CAL+TIMING_DAMAGE_STEP)
 		e1:SetTarget(Auxiliary.PandActTarget(...))
-		e1:SetOperation(Auxiliary.PandAct(...))
+		e1:SetOperation(Auxiliary.PandActOperation(...))
 	end
 	c:RegisterEffect(e1)
 	--register by default
@@ -579,7 +575,7 @@ function Auxiliary.PandCondition(e,c,og)
 	else
 		g=Duel.GetFieldGroup(tp,loc,0)
 	end
-	return g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale)
+	return aux.PandActCheck(e) and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale)
 end
 function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	local lscale=c:GetLeftScale()
@@ -645,28 +641,31 @@ function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	end
 end
 function Auxiliary.PaCheckFilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
+	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM) and c:GetFlagEffect(726)>0
 end
 function Auxiliary.PandActCon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(Auxiliary.PaCheckFilter,tp,LOCATION_SZONE,0,1,e:GetHandler())
 end
-function Auxiliary.PandEnConFUInED(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():GetDestination()==LOCATION_GRAVE then
-		Auxiliary.PandEnableFUInED(e:GetHandler(),e:GetHandler():GetReason())(e,tp,eg,ep,ev,re,r,rp)
+function Auxiliary.PandEnConFUInED(tpe)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				if e:GetHandler():GetDestination()==LOCATION_GRAVE then
+					Auxiliary.PandEnableFUInED(e:GetHandler(),e:GetHandler():GetReason(),tpe)(e,tp,eg,ep,ev,re,r,rp)
+				end
 	end
 end
-function Auxiliary.PandEnableFUInED(tc,reason)
+function Auxiliary.PandEnableFUInED(tc,reason,tpe)
+	if not tpe then tpe=0 end
 	return	function(e,tp,eg,ep,ev,re,r,rp)
 				if pcall(Group.GetFirst,tc) then
 					local tg=tc:Clone()
 					for cc in aux.Next(tg) do
-						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_PENDULUM)
+						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+tpe+TYPE_PENDULUM)
 						if not cc:IsOnField() then
 							Duel.SendtoExtraP(cc,nil,reason)
 						end
 					end
 				else
-					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_PENDULUM)
+					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+tpe+TYPE_PENDULUM)
 					if not tc:IsOnField() then
 						Duel.SendtoExtraP(tc,nil,reason)
 					end
@@ -676,8 +675,11 @@ end
 function Auxiliary.PandDisConFUInED(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_EXTRA)
 end
-function Auxiliary.PandDisableFUInED(e,tp,eg,ep,ev,re,r,rp)
-	Card.SetCardData(e:GetHandler(),CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
+function Auxiliary.PandDisableFUInED(tc,tpe)
+	if not tpe then tpe=0 end
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+tpe)
+			end
 end
 function Auxiliary.PandSSetCon(c,e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
@@ -687,26 +689,49 @@ function Auxiliary.PandSSet(tc,reason)
 				if pcall(Group.GetFirst,tc) then
 					local tg=tc:Clone()
 					for cc in aux.Next(tg) do
-						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
+						cc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 						if cc:IsLocation(LOCATION_SZONE) then
-							Duel.ChangePosition(cc,POS_FACEDOWN_ATTACK)
-							Duel.RaiseEvent(cc,EVENT_SSET,e,reason,cc:GetControler(),cc:GetControler(),0)
+							if cc:IsCanTurnSet() then
+								Duel.ChangePosition(cc,POS_FACEDOWN_ATTACK)
+								Duel.RaiseEvent(cc,EVENT_SSET,e,reason,cc:GetControler(),cc:GetControler(),0)
+							end
 						else Duel.SSet(cc:GetControler(),cc) end
+						if not cc:IsLocation(LOCATION_SZONE) then
+							if cc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
+								cc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
+							elseif cc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or cc:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
+								cc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
+							end
+						end
 					end
 				else
-					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
+					tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 					if tc:IsLocation(LOCATION_SZONE) then
-						Duel.ChangePosition(tc,POS_FACEDOWN_ATTACK)
-						Duel.RaiseEvent(tc,EVENT_SSET,e,reason,tc:GetControler(),tc:GetControler(),0)
+						if tc:IsCanTurnSet() then
+							Duel.ChangePosition(tc,POS_FACEDOWN_ATTACK)
+							Duel.RaiseEvent(tc,EVENT_SSET,e,reason,tc:GetControler(),tc:GetControler(),0)
+						end
 					else Duel.SSet(tc:GetControler(),tc) end
+					if not tc:IsLocation(LOCATION_SZONE) then
+						if tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
+							tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
+						elseif tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or tc:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
+							tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
+						end
+					end
 				end
 			end
+end
+function Auxiliary.PandActCheck(e)
+	local c=e:GetHandler()
+	return e:IsHasType(EFFECT_TYPE_ACTIVATE) or c:GetFlagEffect(726)>0
 end
 function Auxiliary.PandActTarget(...)
 	local fx={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
 				local c=e:GetHandler()
 				if chk==0 then return true end
+				e:GetHandler():RegisterFlagEffect(726,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CANNOT_DISABLE,1)
 				if #fx==0 then
 					e:SetCategory(0)
 					e:SetProperty(0)
@@ -718,12 +743,19 @@ function Auxiliary.PandActTarget(...)
 				local cost=nil
 				local tg=nil
 				for i,xe in ipairs(fx) do
+					local condition=xe:GetCondition()
 					local code=xe:GetCode()
 					cost=xe:GetCost()
 					tg=xe:GetTarget()
 					local tchk=(code==EVENT_FREE_CHAIN or Duel.CheckEvent(code))
-					if code==EVENT_CHAINING then tchk=(tchk or Duel.GetCurrentChain()>1) end
-					if tchk and (not cost or cost(e,tp,eg,ep,ev,re,r,rp,0))
+					if code==EVENT_CHAINING then
+						tchk=(tchk or Duel.GetCurrentChain()>1)
+						ev=Duel.GetCurrentChain()-1
+						re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
+						eg=re:GetHandler()
+					end
+					if tchk and (not condition or condition(e,tp,eg,ep,ev,re,r,rp))
+						and (not cost or cost(e,tp,eg,ep,ev,re,r,rp,0))
 						and (not tg or tg(e,tp,eg,ep,ev,re,r,rp,0)) then
 						table.insert(ops,xe:GetDescription())
 					else table.insert(ops,1214) end
@@ -737,7 +769,6 @@ function Auxiliary.PandActTarget(...)
 				e:SetLabel(op)
 				if op>0 then
 					local xe=t[op]
-					e:SetProperty(xe:GetProperty())
 					e:SetCategory(xe:GetCategory())
 					cost=xe:GetCost()
 					if cost then cost(e,tp,eg,ep,ev,re,r,rp,1) end
@@ -747,17 +778,31 @@ function Auxiliary.PandActTarget(...)
 					c:RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,65)
 				else
 					e:SetCategory(0)
-					e:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 					e:SetLabel(0)
 				end
 			end
 end
-function Auxiliary.PandAct(...)
-	local xe={...}
+function Auxiliary.PandActOperation(...)
+	local fx={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp)
 				if e:GetLabel()==0 then return end
-				local op=xe[e:GetLabel()]:GetOperation()
+				local xe=fx[e:GetLabel()]
+				if xe:GetCode()==EVENT_CHAINING then
+					ev=Duel.GetCurrentChain()-1
+					re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
+					eg=re:GetHandler()
+				end
+				local op=xe:GetOperation()
 				if op then op(e,tp,eg,ep,ev,re,r,rp) end
+			end
+end
+function Auxiliary.PandAct(tc)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+				tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
+				if not tc:IsOnField() then
+					Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+				end
+				tc:RegisterFlagEffect(726,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CANNOT_DISABLE,1)
 			end
 end
 

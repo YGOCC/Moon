@@ -12,7 +12,7 @@ function c53313926.initial_effect(c)
 	e1:SetTarget(c53313926.destg)
 	e1:SetOperation(c53313926.desop)
 	c:RegisterEffect(e1)
-	aux.EnablePandemoniumAttribute(c,e1,false)
+	aux.EnablePandemoniumAttribute(c,e1,false,TYPE_XYZ)
 	--Materials: 4 level 9 monsters
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,9,4)
@@ -57,7 +57,7 @@ function c53313926.spcfilter(c,tp)
 		and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetReasonPlayer()~=tp
 end
 function c53313926.descon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c53313926.spcfilter,1,nil,tp)
+	return aux.PandActCheck(e) and eg:IsExists(c53313926.spcfilter,1,nil,tp)
 end
 function c53313926.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

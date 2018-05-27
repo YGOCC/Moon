@@ -56,7 +56,7 @@ function c90266514.mtop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c90266514.filter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and c:GetType()&TYPE_PANDEMONIUM~=TYPE_PANDEMONIUM and not c:IsDisabled()
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsType(TYPE_PANDEMONIUM) and not c:IsDisabled()
 end
 function c90266514.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90266514.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
@@ -85,10 +85,10 @@ function c90266514.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c90266514.bcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=Duel.GetAttackTarget()
-	return Duel.GetTurnPlayer()~=tp and c and c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+	return Duel.GetTurnPlayer()~=tp and c and c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
 end
 function c90266514.efilter(c,tp)
-	return c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
 		and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp)
 end
 function c90266514.econ(e,tp,eg,ep,ev,re,r,rp)

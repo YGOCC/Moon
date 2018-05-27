@@ -8,6 +8,7 @@ function c53313913.initial_effect(c)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetRange(LOCATION_SZONE)
+	e1:SetCondition(aux.PandActCheck)
 	e1:SetTarget(c53313913.target)
 	e1:SetOperation(c53313913.operation)
 	c:RegisterEffect(e1)
@@ -24,11 +25,6 @@ function c53313913.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c53313913.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if not re then
-		ev=Duel.GetCurrentChain()-1
-		re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
-		eg=re:GetHandler()
-	end
 	if chk==0 then
 		if not Duel.IsChainNegatable(ev) then return false end
 		if re:IsHasCategory(CATEGORY_NEGATE) and ev>1
@@ -44,11 +40,6 @@ end
 function c53313913.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
-	if not re then
-		ev=math.max(Duel.GetCurrentChain()-1,1)
-		re=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_EFFECT)
-		eg=re:GetHandler()
-	end
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end

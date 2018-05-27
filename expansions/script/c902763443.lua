@@ -80,7 +80,7 @@ function c902763443.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and eg:IsExists(c902763443.cfilter,1,nil,tp)
 end
 function c902763443.filter(c)
-	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsAbleToHand()
+	return c:IsType(TYPE_PANDEMONIUM) and c:IsAbleToHand()
 end
 function c902763443.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c902763443.filter,tp,LOCATION_DECK,0,1,nil) end

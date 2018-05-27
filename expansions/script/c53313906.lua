@@ -6,8 +6,10 @@ function c53313906.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_CAL)
+	e1:SetHintTiming(TIMING_DAMAGE_CAL)
 	e1:SetRange(LOCATION_SZONE)
+	e1:SetCondition(aux.PandActCheck)
 	e1:SetTarget(c53313906.atkcost)
 	e1:SetOperation(c53313906.atkop)
 	c:RegisterEffect(e1)
@@ -33,7 +35,7 @@ function c53313906.initial_effect(c)
 end
 function c53313906.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetBattleDamage(tp)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c53313906.atkop(e,tp,eg,ep,ev,re,r,rp)
@@ -46,6 +48,7 @@ function c53313906.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 	if c:IsRelateToEffect(e) then
 		Duel.BreakEffect()
+		c:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

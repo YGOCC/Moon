@@ -1,6 +1,18 @@
 --Zextral Armageddon Sorcerer
 function c39615023.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
+	--P: Once per turn, when your opponent activates a card or effect that targets and/or would destroy a Pandemonium Monster(s) you control: You can shuffle 1 face-up Pandemonium Monster from your Extra Deck into the Deck; negate that card or effect, and destroy it.
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+	e2:SetCondition(aux.PandActCheck)
+	e2:SetCost(c39615023.discost)
+	e2:SetTarget(c39615023.distg)
+	e2:SetOperation(c39615023.disop)
+	c:RegisterEffect(e2)
+	aux.EnablePandemoniumAttribute(c,e2)
 	--P: You can only Pandemonium Summon "Zextra, The Pandemonium Dragon King". This effect cannot be negated.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -10,17 +22,6 @@ function c39615023.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e1:SetTarget(c39615023.splimit)
 	c:RegisterEffect(e1)
-	--P: Once per turn, when your opponent activates a card or effect that targets and/or would destroy a Pandemonium Monster(s) you control: You can shuffle 1 face-up Pandemonium Monster from your Extra Deck into the Deck; negate that card or effect, and destroy it.
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_CHAINING)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
-	e2:SetCost(c39615023.discost)
-	e2:SetTarget(c39615023.distg)
-	e2:SetOperation(c39615023.disop)
-	c:RegisterEffect(e2)
-	aux.EnablePandemoniumAttribute(c,e2)
 	--M: If a card(s) you control is destroyed by battle or card effect: You can Special Summon this card from your hand, then you can Set 1 Pandemonium Monster directly from your Extra Deck in your Spell/Trap Zone. (HOPT1)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -45,14 +46,14 @@ function c39615023.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c39615023.splimit(e,c,sump,sumtype,sumpos,targetp)
-	if c:GetCode()~=39605510 then return false end
-	return bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
+	if c:GetCode()==39605510 then return false end
+	return aux.PandActCheck(e) and bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
 end
 function c39615023.confilter(c,tp)
-	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
+	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
 end
 function c39615023.dcfilter(c)
-	return c:IsFaceup() and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsAbleToDeckAsCost()
+	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM) and c:IsAbleToDeckAsCost()
 end
 function c39615023.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c39615023.dcfilter,tp,LOCATION_EXTRA,0,1,nil) end
@@ -123,7 +124,7 @@ function c39615023.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c39615023.cfilter(c)
-	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
+	return c:IsType(TYPE_PANDEMONIUM) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
 end
 function c39615023.hnfilter(c,e,tp,g)
 	local sg=Group.CreateGroup()

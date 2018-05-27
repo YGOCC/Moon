@@ -58,7 +58,7 @@ function card.posop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function card.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
+	return aux.PandActCheck(e) and Duel.GetTurnPlayer()~=tp
 end
 function card.qtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
