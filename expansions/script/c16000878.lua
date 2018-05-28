@@ -84,9 +84,7 @@ end
 function c16000878.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+388)
 end
-function c16000878.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0xab5)
-end
+
 function c16000878.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if ep==tp or c:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
