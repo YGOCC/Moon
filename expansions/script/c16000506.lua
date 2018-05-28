@@ -1,6 +1,6 @@
 --Daddou, Final Mage of Magnificent VINE 
 function c16000506.initial_effect(c)
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x85a),3)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x85a),2)
 	c:EnableReviveLimit()
 
    --act limit
