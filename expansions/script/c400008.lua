@@ -28,6 +28,7 @@ function c400008.initial_effect(c)
 	e2:SetCost(c400008.cost)
 	e2:SetTarget(c400008.target)
 	e2:SetOperation(c400008.operation)
+	e2:SetCountLimit(1)
 	c:RegisterEffect(e2)
 	--search
 	local e4=Effect.CreateEffect(c)
@@ -51,7 +52,7 @@ function c400008.thcost(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Release(g,REASON_COST)
 end
 function c400008.thfilter(c)
-	return c:IsSetCard(0x146) and (c:GetType()&0x10002==0x10002)
+	return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY)
 		and c:IsAbleToHand()
 end
 function c400008.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
