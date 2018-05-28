@@ -25,7 +25,8 @@ function c85679527.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c85679527.sprfilter(c,tp)
-	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and not c:IsType(TYPE_EFFECT) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and Duel.GetMZoneCount(tp,c)>0
+	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and not c:IsType(TYPE_EFFECT) and c:IsType(TYPE_MONSTER)
+		and c:IsAbleToGraveAsCost() and Duel.GetMZoneCount(tp,c)>0
 end
 function c85679527.sprcon(e,c)
 	if c==nil then return true end
@@ -48,8 +49,8 @@ function c85679527.costfilter(c,tp)
 	return c:IsType(TYPE_EFFECT) and Duel.GetMZoneCount(tp,c,tp)>0
 end
 function c85679527.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupCost(tp,c85679527.costfilter,1,false,nil,nil,tp) end
-	local g=Duel.SelectReleaseGroupCost(tp,c85679527.costfilter,1,1,false,nil,nil,tp)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,c85679527.costfilter,1,nil,tp) end
+	local g=Duel.SelectReleaseGroup(tp,c85679527.costfilter,1,1,nil,tp)
 	Duel.Release(g,REASON_COST)
 end
 function c85679527.spfilter(c,e,tp)
@@ -67,4 +68,3 @@ function c85679527.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-
