@@ -106,6 +106,7 @@ function c16000879.mtop(e,tp,eg,ep,ev,re,r,rp)
 		rc:RegisterEffect(e2,true)
 	   rc:RegisterFlagEffect(16000879,RESET_EVENT+0x1fe0000,0,1)
 	end
+rc:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000879,0))
 end
 function c16000879.condition(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()

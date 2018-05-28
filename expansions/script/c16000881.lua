@@ -96,6 +96,7 @@ function c16000881.mtop(e,tp,eg,ep,ev,re,r,rp)
 		rc:RegisterEffect(e2,true)
 	   rc:RegisterFlagEffect(16000881,RESET_EVENT+0x1fe0000,0,1)
 	end
+rc:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000881,0))
 end
 function c16000881.cost(e,tp,eg,ep,ev,re,r,rp,chk)
  if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end

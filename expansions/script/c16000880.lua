@@ -77,7 +77,6 @@ function c16000880.mtop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetHintTiming(0,0x11e0)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCost(c16000880.cost)
@@ -92,8 +91,9 @@ function c16000880.mtop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(TYPE_EFFECT)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		rc:RegisterEffect(e2,true)
-	   rc:RegisterFlagEffect(160008792,RESET_EVENT+0x1fe0000,0,1)
+	   rc:RegisterFlagEffect(16000880,RESET_EVENT+0x1fe0000,0,1)
 	end
+rc:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000880,0))
 end
 function c16000880.cost(e,tp,eg,ep,ev,re,r,rp,chk)
  if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end

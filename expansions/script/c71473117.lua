@@ -127,7 +127,7 @@ function c71473117.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c71473117.thcon2(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetPreviousLocation()==LOCATION_PZONE
+    return e:GetHandler():GetPreviousLocation()==LOCATION_SZONE
 end
 function c71473117.thfilter(c)
     return c:IsSetCard(0x1C1D) and c:IsAbleToHand()

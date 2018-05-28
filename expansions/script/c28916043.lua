@@ -22,6 +22,7 @@ function ref.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
+	e2:SetCost(ref.thcost)
 	e2:SetTarget(ref.thtg)
 	e2:SetOperation(ref.thop)
 	c:RegisterEffect(e2)
@@ -29,7 +30,7 @@ end
 
 --Trade
 function ref.thcfilter(c)
-	return c:IsType(TYPE_SPELL) and c:IsAbleToGrave()
+	return c:IsAbleToGraveAsCost() --and c:IsType(TYPE_SPELL)
 end
 function ref.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(ref.thcfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) end
@@ -41,23 +42,23 @@ function ref.thfilter(c)
 	return (c:IsSetCard(1848+1) or c:IsCode(63851864)) and c:IsAbleToHand()
 end
 function ref.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(ref.thcfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) 
-		and Duel.IsExistingMatchingCard(ref.thfilter,tp,LOCATION_DECK,0,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(ref.thfilter,tp,LOCATION_DECK,0,1,nil) 
+		and Duel.IsExistingMatchingCard(ref.thcfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_HAND)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function ref.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local cg=Duel.SelectMatchingCard(tp,ref.thcfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
-	if cg:GetCount()>0 and Duel.SendtoGrave(cg,REASON_EFFECT) then
+	--Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	--local cg=Duel.SelectMatchingCard(tp,ref.thcfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
+	--if cg:GetCount()>0 and Duel.SendtoGrave(cg,REASON_EFFECT) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,ref.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
-	end
+	--end
 end
 
 --SS
