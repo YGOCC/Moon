@@ -74,8 +74,12 @@ Card.GetType=function(c,scard,sumtype,p)
 	end
 	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
-		if not Auxiliary.Pandemoniums[c]() and c:IsLocation(LOCATION_EXTRA) then
+		local ispen,isspell=Auxiliary.Pandemoniums[c]()
+		if not ispen then
 			tpe=tpe&~TYPE_PENDULUM
+		end
+		if c:IsLocation(LOCATION_PZONE) and not isspell then
+			tpe=tpe&~TYPE_SPELL
 		end
 	end
 	if Auxiliary.Polarities[c] then
@@ -109,7 +113,7 @@ Card.GetOriginalType=function(c)
 	end
 	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
-		if not Auxiliary.Pandemoniums[c]() and c:IsLocation(LOCATION_EXTRA) then
+		if not Auxiliary.Pandemoniums[c]() then
 			tpe=tpe&~TYPE_PENDULUM
 		end
 	end
@@ -137,8 +141,12 @@ Card.GetPreviousTypeOnField=function(c)
 	end
 	if Auxiliary.Pandemoniums[c] then
 		tpe=tpe|TYPE_PANDEMONIUM
-		if not Auxiliary.Pandemoniums[c]() and c:IsLocation(LOCATION_EXTRA) then
+		local ispen,isspell=Auxiliary.Pandemoniums[c]()
+		if not ispen then
 			tpe=tpe&~TYPE_PENDULUM
+		end
+		if c:IsPreviousLocation(LOCATION_PZONE) and not isspell then
+			tpe=tpe&~TYPE_SPELL
 		end
 	end
 	if Auxiliary.Polarities[c] then
@@ -436,11 +444,12 @@ function Auxiliary.EvoluteCounter(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 end
 
 --Pandemoniums
-function Auxiliary.AddOrigPandemoniumType(c,ispendulum)
+function Auxiliary.AddOrigPandemoniumType(c,ispendulum,is_spell)
 	table.insert(Auxiliary.Pandemoniums,c)
 	Auxiliary.Customs[c]=true
 	local ispendulum=ispendulum==nil and false or ispendulum
-	Auxiliary.Pandemoniums[c]=function() return ispendulum end
+	local is_spell=is_spell==nil and false or is_spell
+	Auxiliary.Pandemoniums[c]=function() return ispendulum, is_spell end
 end
 function Auxiliary.EnablePandemoniumAttribute(c,...)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
@@ -505,15 +514,15 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCondition(Auxiliary.PandActCon)
-	if ... then
+	if #t>0 then
 		local flags=0
-		for _,xe in ipairs({...}) do
+		for _,xe in ipairs(t) do
 			if type(xe)=='userdata' and xe:GetProperty() then flags=flags|xe:GetProperty() end
 		end
 		e1:SetProperty(flags)
 		e1:SetHintTiming(TIMING_DAMAGE_CAL+TIMING_DAMAGE_STEP)
-		e1:SetTarget(Auxiliary.PandActTarget(...))
-		e1:SetOperation(Auxiliary.PandActOperation(...))
+		e1:SetTarget(Auxiliary.PandActTarget(table.unpack(t)))
+		e1:SetOperation(Auxiliary.PandActOperation(table.unpack(t)))
 	end
 	c:RegisterEffect(e1)
 	--register by default
@@ -526,7 +535,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 		set:SetCode(EFFECT_SPSUMMON_PROC_G)
 		set:SetRange(LOCATION_HAND)
 		set:SetCondition(Auxiliary.PandSSetCon)
-		set:SetOperation(Auxiliary.PandSSet(c,REASON_RULE))
+		set:SetOperation(Auxiliary.PandSSet(c,REASON_RULE,typ))
 		c:RegisterEffect(set)
 	end
 	Duel.AddCustomActivityCounter(c:GetOriginalCode(),ACTIVITY_SPSUMMON,Auxiliary.PaCheck)
@@ -654,18 +663,18 @@ function Auxiliary.PandEnConFUInED(tpe)
 	end
 end
 function Auxiliary.PandEnableFUInED(tc,reason,tpe)
-	if not tpe then tpe=0 end
+	if not tpe then tpe=TYPE_EFFECT end
 	return	function(e,tp,eg,ep,ev,re,r,rp)
 				if pcall(Group.GetFirst,tc) then
 					local tg=tc:Clone()
 					for cc in aux.Next(tg) do
-						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+tpe+TYPE_PENDULUM)
+						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_MONSTER+tpe+TYPE_PENDULUM)
 						if not cc:IsOnField() then
 							Duel.SendtoExtraP(cc,nil,reason)
 						end
 					end
 				else
-					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+tpe+TYPE_PENDULUM)
+					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+tpe+TYPE_PENDULUM)
 					if not tc:IsOnField() then
 						Duel.SendtoExtraP(tc,nil,reason)
 					end
@@ -676,15 +685,16 @@ function Auxiliary.PandDisConFUInED(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_EXTRA)
 end
 function Auxiliary.PandDisableFUInED(tc,tpe)
-	if not tpe then tpe=0 end
+	if not tpe then tpe=TYPE_EFFECT end
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+tpe)
+				tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+tpe)
 			end
 end
 function Auxiliary.PandSSetCon(c,e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 end
-function Auxiliary.PandSSet(tc,reason)
+function Auxiliary.PandSSet(tc,reason,tpe)
+	if not tpe then tpe=TYPE_EFFECT end
 	return	function(e,tp,eg,ep,ev,re,r,rp,c)
 				if pcall(Group.GetFirst,tc) then
 					local tg=tc:Clone()
@@ -697,11 +707,7 @@ function Auxiliary.PandSSet(tc,reason)
 							end
 						else Duel.SSet(cc:GetControler(),cc) end
 						if not cc:IsLocation(LOCATION_SZONE) then
-							if cc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
-								cc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
-							elseif cc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or cc:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
-								cc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
-							end
+							cc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+tpe)
 						end
 					end
 				else
@@ -713,11 +719,7 @@ function Auxiliary.PandSSet(tc,reason)
 						end
 					else Duel.SSet(tc:GetControler(),tc) end
 					if not tc:IsLocation(LOCATION_SZONE) then
-						if tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
-							tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
-						elseif tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or tc:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
-							tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
-						end
+						tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+tpe)
 					end
 				end
 			end

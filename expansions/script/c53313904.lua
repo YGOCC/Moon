@@ -39,7 +39,7 @@ function c53313904.spfilter(c,e,tp)
 end
 function c53313904.aspfilter(c,e,tp)
 	return ((c:IsLocation(LOCATION_HAND) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
-		or (c:IsFaceup() and Duel.GetLocationCount(tp)>0))
+		or (c:IsFaceup() and Duel.GetLocationCount(tp,LOCATION_MZONE)>0))
 		and c:IsCode(53313901) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c53313904.natg(e,tp,eg,ep,ev,re,r,rp,chk)

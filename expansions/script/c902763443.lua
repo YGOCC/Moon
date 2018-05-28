@@ -27,7 +27,7 @@ function c902763443.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c902763443.thfilter(c)
-	return aux.PaCheckFilter(c) and c:IsSetCard(0xcf80)
+	return (c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)) and c:IsSetCard(0xcf80)
 end
 function c902763443.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c902763443.thfilter,tp,LOCATION_EXTRA,0,1,nil) end

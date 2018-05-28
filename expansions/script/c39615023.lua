@@ -111,7 +111,7 @@ function c39615023.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		local g=Duel.GetMatchingGroup(aux.PaCheckFilter,tp,LOCATION_EXTRA,0,nil)
+		local g=Duel.GetMatchingGroup(aux.AND(aux.FilterBoolFunction(Card.IsFaceup),aux.FilterBoolFunction(Card.IsType,TYPE_PANDEMONIUM)),tp,LOCATION_EXTRA,0,nil)
 		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 			and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET)
 			and Duel.SelectYesNo(tp,1159) then

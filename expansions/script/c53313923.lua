@@ -12,7 +12,7 @@ function c53313923.initial_effect(c)
 	e1:SetTarget(c53313923.target)
 	e1:SetOperation(c53313923.operation)
 	c:RegisterEffect(e1)
-	aux.EnablePandemoniumAttribute(c,e1,false,TYPE_FUSION)
+	aux.EnablePandemoniumAttribute(c,e1,false,TYPE_EFFECT+TYPE_FUSION)
 	--Materials: 1 "Mysterious" Dragon monster + 1 LIGHT monster
 	c:EnableReviveLimit()
 	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),c53313923.ffilter,true)
@@ -120,15 +120,18 @@ function c53313923.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function c53313923.sdreq(c)
+	return c:IsFaceup() and c:GetFlagEffect(726)>0
+end
 function c53313923.sdcon(e)
-	return not Duel.IsExistingMatchingCard(aux.PaCheckFilter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+	return not Duel.IsExistingMatchingCard(c53313923.sdreq,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
 end
 function c53313923.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsLocation(LOCATION_MZONE) and c:GetDestination()~=LOCATION_OVERLAY and not c:IsReason(REASON_REPLACE)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
 	if Duel.SelectYesNo(tp,1159) then
-		aux.PandSSet(c,REASON_EFFECT+REASON_REPLACE)(e,tp,eg,ep,ev,re,r,rp)
+		aux.PandSSet(c,REASON_EFFECT+REASON_REPLACE,TYPE_EFFECT+TYPE_FUSION)(e,tp,eg,ep,ev,re,r,rp)
 		return true
 	else return false end
 end

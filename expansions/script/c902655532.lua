@@ -61,7 +61,7 @@ function c902655532.indop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 function c902655532.pafilter(c)
-	return aux.PaCheckFilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
 		and c:GetTurnID()==Duel.GetTurnCount() and c:GetReason()==REASON_RULE+REASON_RELEASE
 end
 function c902655532.check(e,tp,eg,ep,ev,re,r,rp)

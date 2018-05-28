@@ -11,7 +11,7 @@ function c53313917.initial_effect(c)
 	e1:SetValue(c53313917.repval)
 	e1:SetOperation(c53313917.repop)
 	c:RegisterEffect(e1)
-	aux.EnablePandemoniumAttribute(c,false,TYPE_SYNCHRO)
+	aux.EnablePandemoniumAttribute(c,false)
 	--spsummon
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xCF6),aux.NonTuner(nil),1)
 	--actlimit

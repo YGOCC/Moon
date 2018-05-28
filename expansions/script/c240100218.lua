@@ -1,6 +1,5 @@
 --created & coded by Lyris
 --S・VINEの零天使ラグナクライッシャ(アナザー宙)
-c240100218.spt_other_space=240100218
 function c240100218.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
@@ -37,16 +36,16 @@ function c240100218.condition(e,tp,eg,ep,ev,re,r,rp)
 	return g:GetCount()==1 and c240100218.cfilter(tc)
 end
 function c240100218.filter2(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and c:IsAbleToRemove()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b)
 end
 function c240100218.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c240100218.filter2,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
+	if chk==0 then return Duel.IsExistingMatchingCard(c240100218.filter2,tp,LOCATION_REMOVED,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_REMOVED)
 end
 function c240100218.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c240100218.filter2,tp,LOCATION_DECK,0,1,e:GetLabel(),nil)
+	local g=Duel.SelectMatchingCard(tp,c240100218.filter2,tp,LOCATION_REMOVED,0,1,e:GetLabel(),nil)
 	if g:GetCount()>0 then
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		Duel.SendtoGrave(g,REASON_EFFECT+REASON_RETURN)
 	end
 end

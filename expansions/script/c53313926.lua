@@ -12,7 +12,7 @@ function c53313926.initial_effect(c)
 	e1:SetTarget(c53313926.destg)
 	e1:SetOperation(c53313926.desop)
 	c:RegisterEffect(e1)
-	aux.EnablePandemoniumAttribute(c,e1,false,TYPE_XYZ)
+	aux.EnablePandemoniumAttribute(c,e1,false,TYPE_EFFECT+TYPE_XYZ)
 	--Materials: 4 level 9 monsters
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,9,4)
