@@ -86,12 +86,15 @@ function c16000892.destg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c16000892.desop1(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+if  c:IsFaceup() then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local tg=Duel.SelectMatchingCard(tp,c16000892.xfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
 	if tg then
 		Duel.SendtoHand(tg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tg)
 	end
+end
 end
 function c16000892.filter(c,e,tp)
 	return c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

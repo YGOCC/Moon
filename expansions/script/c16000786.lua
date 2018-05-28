@@ -70,7 +70,7 @@ function c16000786.matcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c16000786.matfilter(c)
-	return c:IsSetCard(0x285a) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x285a) and c:IsType(TYPE_XYZ)
 end
 function c16000786.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x285a) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()

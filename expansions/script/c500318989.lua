@@ -78,7 +78,8 @@ function c500318989.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 	function c500318989.operation(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local c=e:GetHandler()
+	if not e:GetHandler():IsRelateToEffect(e) or not c:IsFaceup() then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
@@ -98,7 +99,7 @@ function c500318989.filter1(c,e,tp)
 	and not Duel.IsExistingMatchingCard(c500318989.filter3,tp,LOCATION_MZONE,0,1,nil,rk)
 end
 function c500318989.filter2(c,rk,e,tp,code)
-    if c:IsCode(6165656) and code~=48995978 then return false end
+	if c:IsCode(6165656) and code~=48995978 then return false end
 	return (c:GetRank()==rk or c:GetRank()==rk+1) and c:IsSetCard(0x285a) and c:IsType(TYPE_XYZ)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,true,true)
 end

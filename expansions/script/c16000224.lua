@@ -95,8 +95,9 @@ function c16000224.mattg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,c16000224.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c16000224.matop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
+	if tc:IsRelateToEffect(e) and c:IsFaceup() and not tc:IsImmuneToEffect(e) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 		local g=Duel.SelectMatchingCard(tp,c16000224.matfilter,tp,LOCATION_HAND,0,1,1,nil)
 		if g:GetCount()>0 then
