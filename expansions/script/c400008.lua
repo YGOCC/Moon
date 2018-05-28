@@ -46,7 +46,7 @@ end
 function c400008.lcheck(g,lc,tp)
 	return g:GetClassCount(Card.GetCode)==g:GetCount()
 end
-function c400008.thcost(e,tp,eg,ep,ev,re,r,rp)
+function c400008.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsAttribute,1,nil,ATTRIBUTE_WATER) end
 	local g=Duel.SelectReleaseGroup(tp,Card.IsAttribute,1,1,nil,ATTRIBUTE_WATER)
 	Duel.Release(g,REASON_COST)
