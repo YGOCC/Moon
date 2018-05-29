@@ -84,7 +84,7 @@ function c400005.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400005.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
 end
 function c400005.chfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x146)

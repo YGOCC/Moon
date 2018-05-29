@@ -13,7 +13,7 @@ function c400016.initial_effect(c)
 	Duel.AddCustomActivityCounter(400016,ACTIVITY_CHAIN,c400016.counterfilter)
 end
 function c400016.counterfilter(re,tp,cid)
-	return not (re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146))
+	return not (re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146))
 end
 function c400016.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x146)

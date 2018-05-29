@@ -63,7 +63,7 @@ function c400017.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400017.condition(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return rp~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
 end
 function c400017.filter1(c)
 	return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToGrave()

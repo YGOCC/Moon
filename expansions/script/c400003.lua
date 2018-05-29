@@ -41,7 +41,7 @@ function c400003.spfilter(c)
 end
 function c400003.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return Duel.GetTurnPlayer()~=tp and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
 end
 function c400003.target(e,tp,eg,ep,ev,re,r,rp)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and

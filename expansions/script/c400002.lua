@@ -37,7 +37,7 @@ function c400002.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c400002.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return Duel.GetTurnPlayer()~=tp and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
 end
 function c400002.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(tp,1,REASON_EFFECT)
@@ -46,4 +46,3 @@ function c400002.target(e,tp,eg,ep,ev,re,r,rp)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-	

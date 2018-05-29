@@ -77,7 +77,7 @@ function c400006.drop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400006.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
 end
 function c400006.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end

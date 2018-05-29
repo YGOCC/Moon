@@ -49,7 +49,7 @@ function c400007.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400007.con(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return rp~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
 end
 function c400007.spfilter(c,e,tp)
 	return c:IsSetCard(0x146) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
