@@ -47,7 +47,7 @@ function c400004.halfilter(c)
 	return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY)
 end
 function c400004.condition(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return Duel.GetTurnPlayer()~=tp and re:IsActiveType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
 end
 function c400004.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil) end
