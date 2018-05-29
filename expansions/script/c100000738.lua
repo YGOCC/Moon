@@ -27,7 +27,7 @@ function c100000738.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
 end
 function c100000738.filter(c,e,tp)
-	return c:IsSetCard(0x767) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not (c:IsCode(100000808) or c:IsCode(100000809))
+	return c:IsSetCard(0x767) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not (c:IsCode(100000808) or c:IsCode(100000809) or c:IsType(TYPE_SYNCHRO))
 end
 function c100000738.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
