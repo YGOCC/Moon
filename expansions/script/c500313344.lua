@@ -57,7 +57,7 @@ function c500313344.splimcon(e)
 end
 
 function c500313344.thfilter(c)
-	return c:IsSetCard(0x85a)  and c:IsAbleToHand()
+	return c:IsSetCard(0x85a) and c:IsFaceup() and c:IsAbleToHand()
 end
 function c500313344.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDestructable() and Duel.IsExistingMatchingCard(c500313344.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
