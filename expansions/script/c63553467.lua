@@ -2,7 +2,6 @@
 --Script by XGlitchy30
 function c63553467.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	aux.EnablePandemoniumAttribute(c,tuner)
 	--tuner fix
 	local tuner=Effect.CreateEffect(c)
 	tuner:SetType(EFFECT_TYPE_SINGLE)
@@ -11,6 +10,7 @@ function c63553467.initial_effect(c)
 	tuner:SetCondition(c63553467.tunerfix)
 	tuner:SetValue(TYPE_TUNER)
 	c:RegisterEffect(tuner)
+	aux.EnablePandemoniumAttribute(c,tuner)
 	--set
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(63553467,0))

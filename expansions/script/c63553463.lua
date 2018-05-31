@@ -2,7 +2,6 @@
 --Script by XGlitchy30
 function c63553463.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	aux.EnablePandemoniumAttribute(c,e2)
 	c:EnableCounterPermit(0x1554)
 	--TRAP EFFECT
 	local e2=Effect.CreateEffect(c)
@@ -17,6 +16,7 @@ function c63553463.initial_effect(c)
 	e2:SetTarget(c63553463.tptarget)
 	e2:SetOperation(c63553463.operation)
 	c:RegisterEffect(e2)
+	aux.EnablePandemoniumAttribute(c,e2)
 	--MONSTER EFFECTS
 	local e3x=Effect.CreateEffect(c)
 	e3x:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
