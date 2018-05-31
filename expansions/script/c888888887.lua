@@ -67,6 +67,6 @@ function card.indct(e,re,r,rp)
 		return 1
 	else return 0 end
 end
-function card.filter(c,e,tp)
+function card.filter(c,e)
 	return c:IsSetCard(0x888) and c:IsType(TYPE_LINK)
 end

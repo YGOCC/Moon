@@ -7,7 +7,7 @@ function card.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1,888888881)
+	e1:SetCountLimit(1,88888881)
 	e1:SetCondition(card.hspcon)
 	e1:SetOperation(card.hspop)
 	c:RegisterEffect(e1)
@@ -15,20 +15,21 @@ function card.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,888888882)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,88888882)
 	e2:SetCost(card.spcost)
 	e2:SetTarget(card.sptg)
 	e2:SetOperation(card.spop)
 	c:RegisterEffect(e2)
-end
+		end
 function card.spfilter(c)
 	return c:IsSetCard(0x888) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
-function card.hspcon(e,c,tp)
+function card.hspcon(e,c)
 	if c==nil then return true end
+	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(card.spfilter,tp,LOCATION_DECK,0,1,nil) 
+		and Duel.IsExistingMatchingCard(card.spfilter,tp,LOCATION_DECK,0,1,nil)
 end
 function card.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
@@ -40,12 +41,12 @@ function card.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c:IsAbleToDeckAsCost() end
 	Duel.SendtoDeck(c,nil,2,REASON_COST)
 end
-function card.spfilter2(c,e,tp)
+function card.spfilter2(c,e)
 	return  c:IsSetCard(0x888) and c:IsType(TYPE_MONSTER) and not c:IsCode(888888881)
 end
 function card.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return 
-	Duel.IsExistingMatchingCard(card.spfilter2,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.IsExistingMatchingCard(card.spfilter2,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function card.spop(e,tp,eg,ep,ev,re,r,rp)

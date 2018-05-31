@@ -7,7 +7,7 @@ function card.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1,888888883)
+	e1:SetCountLimit(1,88888884)
 	e1:SetTarget(card.target)
 	e1:SetOperation(card.operation)
 	c:RegisterEffect(e1)
@@ -15,19 +15,18 @@ function card.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,888888884)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,88888885)
 	e2:SetCost(card.spcost)
 	e2:SetTarget(card.sptg)
 	e2:SetOperation(card.spop)
 	c:RegisterEffect(e2)
-
-end
-function card.filter(c,e,tp)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
+		end
+function card.filter(c,e)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x888)
 end
 function card.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and card.filter(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and card.filter(chkc,e) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsExistingTarget(card.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)

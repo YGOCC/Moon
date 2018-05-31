@@ -7,7 +7,7 @@ function card.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetCountLimit(1,888888885)
+	e1:SetCountLimit(1,88888887)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetTarget(card.sptg)
 	e1:SetOperation(card.spop)
@@ -16,19 +16,19 @@ function card.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,888888886)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,88888888)
 	e2:SetCost(card.spcost)
 	e2:SetTarget(card.sptg1)
 	e2:SetOperation(card.spop1)
 	c:RegisterEffect(e2)
-end
+		end
 function card.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function card.filter(c,e,tp)
-	return c:IsSetCard(0x888) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return c:IsSetCard(0x888) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) 
 end
 function card.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and card.filter(chkc,e,tp) end
@@ -36,6 +36,7 @@ function card.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingTarget(card.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,card.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function card.spop(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -51,7 +52,7 @@ function card.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c:IsAbleToDeckAsCost() end
 	Duel.SendtoDeck(c,nil,2,REASON_COST)
 end
-function card.spfilter2(c,e,tp)
+function card.spfilter2(c,e)
 	return  c:IsSetCard(0x888) and c:IsType(TYPE_MONSTER) and not c:IsCode(888888883)
 end
 function card.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
