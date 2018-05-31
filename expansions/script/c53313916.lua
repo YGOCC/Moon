@@ -106,15 +106,18 @@ function c53313916.pspop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(c,REASON_EFFECT)
 	end
 end
+function c53313916.ttfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
+ end
 function c53313916.ttcon(e,c,minc)
 	if c==nil then return true end
-	local pc=Duel.GetFirstMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,nil)
-	return minc<=3 and pc and Duel.GetTributeGroup(c):IsExists(Card.IsType,2,nil,TYPE_PANDEMONIUM) and pc:IsReleasable()
+	local pc=Duel.GetFirstMatchingCard(c53313916.ttfilter,tp,LOCATION_SZONE,0,nil)
+	return minc<=3 and pc and Duel.GetTributeGroup(c):IsExists(Card.IsType,2,nil,TYPE_PANDEMONIUM)
 end
 function c53313916.ttop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,HINTMSG_TRIBUTE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TRIBUTE)
 	local g=Duel.GetTributeGroup(c):FilterSelect(tp,Card.IsType,2,2,nil,TYPE_PANDEMONIUM)
-	g=g+Duel.GetFirstMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,nil)
+	g=g+Duel.GetFirstMatchingCard(c53313916.ttfilter,tp,LOCATION_SZONE,0,nil)
 	c:SetMaterial(g)
 	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
