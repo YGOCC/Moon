@@ -22,7 +22,8 @@ function c400015.initial_effect(c)
 end
 function c400015.prop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=e:GetLabelObject():GetLabel()
-	if not (re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:GetHandler():IsType(TYPE_QUICKPLAY)) then
+	local rc=re:GetHandler()
+	if not (re:IsHasType(EFFECT_TYPE_ACTIVATE) and rc:IsType(TYPE_QUICKPLAY) and rc:IsSetCard(0x146)) then
 		e:SetLabel(ct)
 		return
 	end
