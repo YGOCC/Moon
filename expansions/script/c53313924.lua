@@ -3,7 +3,7 @@ function c53313924.initial_effect(c)
 	--fusion material: 1 "Mysterious" Dragon Monster + 1 WIND Winged Beast Monster.
 	c:EnableReviveLimit()
 	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(c53313924.matfilter1),aux.FilterBoolFunction(c53313924.matfilter2),true)
-	--When this card is Summoned: Return all Spell/Trap cards on the field to their owner's Hands.
+	--If this card is Fusion Summoned: Return all Spell/Traps on the field to the hand.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -14,21 +14,22 @@ function c53313924.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-	--Once per turn: You can Tribute 1 monster you control: Banish 1 monster your opponent controls.
+	--Once per turn: You can Tribute 1 other monster you control and target 1 monster your opponent controls; banish that target, and if you do, this card gains ATK and DEF equal to it's original Level x100, until the end of this turn.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
-	e3:SetCategory(CATEGORY_REMOVE)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCategory(CATEGORY_REMOVE+CATEGORY_ATKCHANGE)
 	e3:SetCost(c53313924.rmcost)
 	e3:SetTarget(c53313924.rmtg)
 	e3:SetOperation(c53313924.rmop)
 	c:RegisterEffect(e3)
-	--Once per turn: You can Banish 1 monster from your GY or Face-up in your Extra Deck; This card gains that monster's effects, also it gains ATK and DEF equal to its level/rank x100, these changes last until the end phase.
+	--You can target 1 monster from your GY or face-up in your Extra Deck; banish it, and if you do, this card gains that monster's original effects until the end of this turn. (HOPT)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCountLimit(1)
+	e4:SetCountLimit(1,53313924)
 	e4:SetCost(c53313924.cost)
 	e4:SetOperation(c53313924.copy)
 	c:RegisterEffect(e4)
@@ -51,24 +52,34 @@ function c53313924.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c53313924.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsControler,1,nil,tp) end
-	local sg=Duel.SelectReleaseGroup(tp,Card.IsControler,1,1,nil,tp)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsControler,1,e:GetHandler(),tp) end
+	local sg=Duel.SelectReleaseGroup(tp,Card.IsControler,1,1,e:GetHandler(),tp)
 	Duel.Release(sg,REASON_COST)
 end
-function c53313924.rmfilter(c,e)
-	return not c:IsImmuneToEffect(e)
-end
-function c53313924.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c53313924.rmfilter,tp,0,LOCATION_MZONE,1,nil,e) end
-	local g=Duel.GetMatchingGroup(c53313924.rmfilter,tp,0,LOCATION_MZONE,nil,e)
+function c53313924.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsLevelAbove(1) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsLevelAbove,tp,0,LOCATION_MZONE,1,nil,1) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectTarget(Card.IsLevelAbove,tp,0,LOCATION_MZONE,nil,e)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
+function c53313924.rmfilter(c,e)
+	return c:IsLevelAbove(1) and not c:IsImmuneToEffect(e)
+end
 function c53313924.rmop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c53313924.rmfilter,tp,0,LOCATION_MZONE,1,1,nil,e)
-	if g:GetCount()>0 then
-		Duel.HintSelection(g)
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	local g=Duel.GetFirstTarget()
+	if g:IsRelateToEffect(e) and Duel.Remove(g,POS_FACEUP,REASON_EFFECT)>0 then
+		local lv=g:GetOriginalLevel()
+		local c=e:GetHandler()
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(lv*100)
+		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		c:RegisterEffect(e2)
 	end
 end
 function c53313924.rfilter(c)
@@ -84,19 +95,6 @@ function c53313924.copy(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=e:GetLabelObject()
 	if tc and c:IsRelateToEffect(e) and c:IsFaceup() then
-		c:CopyEffect(tc:GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-		local lv=0
-		if tc:GetLevel()>0 then lv=tc:GetLevel() end
-		if tc:GetRank()>0 then lv=tc:GetRank() end
-		local e5=Effect.CreateEffect(c)
-		e5:SetType(EFFECT_TYPE_SINGLE)
-		e5:SetCode(EFFECT_UPDATE_ATTACK)
-		e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e5:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-		e5:SetValue(lv*100)
-		c:RegisterEffect(e5)
-		local e6=e5:Clone()
-		e6:SetCode(EFFECT_UPDATE_DEFENSE)
-		c:RegisterEffect(e6)
+		c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	end
 end

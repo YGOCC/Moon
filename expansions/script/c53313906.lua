@@ -66,7 +66,9 @@ function c53313906.thcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c53313906.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
+	if e:GetHandler():IsLocation(LOCATION_GRAVE) then
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
+	end
 end
 function c53313906.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler()

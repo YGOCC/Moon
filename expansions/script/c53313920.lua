@@ -1,9 +1,9 @@
 --Mysterious Hyper Dragon
 function c53313920.initial_effect(c)
-	--Materials: 1 Tuner Synchro Monster + 1+ non-Tuner Synchro monsters
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(Card.IsType,TYPE_SYNCHRO),1)
+	--Materials: 1 Tuner Synchro + 1+ non-Tuner "Mysterious" Pandemonium monsters
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(c53313920.sfilter),1)
 	c:EnableReviveLimit()
-	--Once per turn, you can banish up to 5 cards face-up in the extra deck or graveyard, this card gains ATK equal to their total level x100 until the end phase, also it can attack once for each LIGHT monster of them.
+	--Once per turn, during your Main Phase 1: You can banish up to 3 cards from your GY and/or face-up cards from your Extra Deck with different names; this card's maximum number of attacks this turn is equal to the number of "Mysterious" cards banished to activate this effect.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
@@ -13,23 +13,19 @@ function c53313920.initial_effect(c)
 	e1:SetTarget(c53313920.atkcost)
 	e1:SetOperation(c53313920.atkop)
 	c:RegisterEffect(e1)
-	--Once per turn you can target 1 monster on the field, negate its effects and halve its ATK, this card gains that monster's effects until the end phase.
+	--During your Main Phase: You can target 1 Level 7 or lower "Mysterious" monster you control, in your GY, or that is banished; until the end of this turn, this card gains that monster's original effects (if any). (HOPT)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1)
+	e2:SetCountLimit(1,53313920)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_ATKCHANGE)
-	e2:SetDescription(1131)
+	e2:SetDescription(1103)
 	e2:SetTarget(c53313920.target)
 	e2:SetOperation(c53313920.operation)
 	c:RegisterEffect(e2)
-	--This card cannot be banished from your Graveyard. 
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_CANNOT_REMOVE)
-	e3:SetRange(LOCATION_GRAVE)
-	c:RegisterEffect(e3)
+end
+function c53313920.sfilter(c)
+	return c:IsType(TYPE_PANDEMONIUM) and c:IsSetCard(0xcf6)
 end
 function c53313920.filter(c)
 	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:GetLevel()>0 and c:IsAbleToRemove()
@@ -67,34 +63,19 @@ function c53313920.atkop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e2)
 	end
 end
+function c53313920.copytg(c)
+	return (c:IsFaceup() or not c:IsLocation(LOCATION_REMOVED)) and c:IsLevelBelow(7) and c:IsSetCard(0xcf6)
+end
 function c53313920.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(0x34) and (chkc:IsControler(tp) or chkc:IsLocation(LOCATION_REMOVED)) and c53313920.copytg(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,0x34,LOCATION_REMOVED,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,Card.IsFaceup,tp,0x34,LOCATION_REMOVED,1,1,nil)
 end
 function c53313920.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_DISABLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetValue(RESET_TURN_SET)
-		tc:RegisterEffect(e2)
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetCode(EFFECT_SET_ATTACK)
-		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e3:SetReset(RESET_EVENT+0x1fe0000)
-		e3:SetValue(tc:GetAttack()/2)
-		tc:RegisterEffect(e3)
-		c:CopyEffect(tc:GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+	if tc:IsRelateToEffect(e) and c:IsRelateToEffect(e) and c:IsFaceup() then
+		c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	end
 end

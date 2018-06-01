@@ -1,22 +1,28 @@
 --Mysterious Supernova Dragon
 function c53313923.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	--You can target 1 monster you control: Destroy all monsters on the field with a different attribute than that monster, but for the rest of that turn, only that monster can attack.
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_SZONE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCategory(CATEGORY_DESTROY)
-	e1:SetCondition(aux.PandActCheck)
-	e1:SetTarget(c53313923.target)
-	e1:SetOperation(c53313923.operation)
-	c:RegisterEffect(e1)
-	aux.EnablePandemoniumAttribute(c,e1,false,TYPE_EFFECT+TYPE_FUSION)
+	--You can target 1 monster you control, except during the Battle Phase; destroy all monsters on the field with a different Attribute than that monster, then destroy this card, and if you do, neither player takes damage until the end of the opponent's next turn. (HOPT1)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_QUICK_O)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	e0:SetRange(LOCATION_SZONE)
+	e0:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e0:SetCategory(CATEGORY_DESTROY)
+	e0:SetCondition(aux.PandActCheck)
+	e0:SetTarget(c53313923.target)
+	e0:SetOperation(c53313923.operation)
+	c:RegisterEffect(e0)
+	aux.EnablePandemoniumAttribute(c,e0,false,TYPE_EFFECT+TYPE_FUSION)
 	--Materials: 1 "Mysterious" Dragon monster + 1 LIGHT monster
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),c53313923.ffilter,true)
-	--You can also summon this card by banishing the above monsters from your hand, Extra Deck or field (You do not use "Polymerization").
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),c53313923.ffilter,false)
+	--Must be Fusion Summoned by banishing the above monsters you control or face-up in your Extra Deck. (You do not use "Polymerization").
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e1:SetValue(aux.fuslimit)
+	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
@@ -26,37 +32,40 @@ function c53313923.initial_effect(c)
 	e2:SetOperation(c53313923.sprop)
 	e2:SetValue(SUMMON_TYPE_FUSION)
 	c:RegisterEffect(e2)
-	--Once per turn: You can banish 1 monster from your GY, add 1 banished card to your hand with a different name than the banished monster.
+	--This card gains the monster effects of cards in your Pandemonium Zone.
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_ADJUST)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
-	e3:SetCategory(CATEGORY_REMOVE+CATEGORY_TOHAND)
-	e3:SetTarget(c53313923.thtg)
-	e3:SetOperation(c53313923.thop)
+	e3:SetOperation(c53313923.copy)
 	c:RegisterEffect(e3)
-	--If you have no face-up Pandemonium monster in your Spell/Trap zone: Destroy this card.
+	--Gains 300 ATK for every other Pandemonium Monster on the field.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCode(EFFECT_SELF_DESTROY)
-	e4:SetCondition(c53313923.sdcon)
+	e4:SetCode(EFFECT_UPDATE_ATTACK)
+	e4:SetValue(c53313923.sdcon)
 	c:RegisterEffect(e4)
-	--If this card would leave the field, You can set it to your Spell/Trap zone instead.
+	--If this card in the Monster Zone is destroyed by battle or card effect: You can Set it into your Spell/Trap Zone.
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e5:SetCode(EFFECT_SEND_REPLACE)
-	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e5:SetCode(EVENT_DESTROYED)
+	e5:SetCondition(c53313923.repcon)
 	e5:SetTarget(c53313923.reptg)
+	e5:SetOperation(c53313923.repop)
 	c:RegisterEffect(e5)
+end
+function c53313923.splimit(e,se,sp,st)
+	return not se or aux.fuslimit(e,se,sp,st)
 end
 function c53313923.dfilter(c,at)
 	return c:IsFaceup() and c:GetAttribute()~=at
 end
 function c53313923.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+	local ph=Duel.GetCurrentPhase()
+	if chk==0 then return not (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE) and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
 	local dg=Duel.GetMatchingGroup(c53313923.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,g:GetFirst():GetAttribute())
@@ -66,31 +75,46 @@ function c53313923.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not e:GetHandler():IsRelateToEffect(e) or not tc:IsRelateToEffect(e) then return end
 	local dg=Duel.GetMatchingGroup(c53313923.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tc:GetAttribute())
-	if dg:GetCount()>0 then
-		Duel.Destroy(dg,REASON_EFFECT)
+	if dg:GetCount()>0 and Duel.Destroy(dg,REASON_EFFECT)>0 and e:GetHandler():IsDestructable() then
+		Duel.BreakEffect()
+		if Duel.Destroy(e:GetHandler(),REASON_EFFECT)==0 then return end
+		local ct=1
+		if Duel.GetTurnPlayer()~=tp then ct=2 end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CHANGE_DAMAGE)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetTargetRange(1,1)
+		e1:SetValue(0)
+		e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN,ct)
+		Duel.RegisterEffect(e1,tp)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_NO_EFFECT_DAMAGE)
+		e2:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN,ct)
+		Duel.RegisterEffect(e2,tp)
 	end
 end
 function c53313923.ffilter(c)
 	return c:IsRace(RACE_DRAGON) and c:IsSetCard(0xcf6)
 end
 function c53313923.sprfilter1(c,fc,tp)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_HAND)) and c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_MZONE)) and c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc)
 		and Duel.IsExistingMatchingCard(c53313923.sprfilter2,tp,0x46,0,1,Group.FromCards(c,fc),fc,c)
 end
 function c53313923.sprfilter2(c,fc,tc)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_HAND)) and c:IsRace(RACE_DRAGON) and c:IsSetCard(0xcf6) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,tc))>0
+	return (c:IsFaceup() or c:IsLocation(LOCATION_MZONE)) and c:IsRace(RACE_DRAGON) and c:IsSetCard(0xcf6) and c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,tc))>0
 end
 function c53313923.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return c:IsFacedown() and Duel.IsExistingMatchingCard(c53313923.sprfilter1,tp,0x46,0,1,c,c,tp)
+	return c:IsFacedown() and Duel.IsExistingMatchingCard(c53313923.sprfilter1,tp,LOCATION_MZONE+LOCATION_EXTRA,0,1,c,c,tp)
 end
 function c53313923.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c53313923.sprfilter1,tp,0x46,0,1,1,c,c,tp)
+	local g1=Duel.SelectMatchingCard(tp,c53313923.sprfilter1,tp,LOCATION_MZONE+LOCATION_EXTRA,0,1,1,c,c,tp)
 	local tc=g1:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c53313923.sprfilter2,tp,0x46,0,1,1,Group.FromCards(c,tc),c,tc)
+	local g2=Duel.SelectMatchingCard(tp,c53313923.sprfilter2,tp,LOCATION_MZONE+LOCATION_EXTRA,0,1,1,Group.FromCards(c,tc),c,tc)
 	g1:Merge(g2)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST+REASON_MATERIAL+REASON_FUSION)
 end
@@ -120,18 +144,30 @@ function c53313923.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c53313923.sdreq(c)
-	return c:IsFaceup() and c:GetFlagEffect(726)>0
+function c53313923.copy(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,nil)
+	if tc and tc:GetFlagEffect(53313923)==0 then
+		e:GetHandler():CopyEffect(tc:GetOriginalCode(),RESET_EVENT+0x1fe0000+RESET_EVENT+EVENT_ADJUST)
+		tc:RegisterFlagEffect(53313923,RESET_EVENT+0x1fe0000+RESET_EVENT+EVENT_ADJUST,EFFECT_FLAG_CANNOT_DISABLE,1)
+	end
 end
-function c53313923.sdcon(e)
-	return not Duel.IsExistingMatchingCard(c53313923.sdreq,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
+function c53313923.sdreq(c)
+	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
+end
+function c53313923.sdcon(e,c)
+	return Duel.GetFieldGroupCount(c53313923.sdreq,tp,LOCATION_MZONE,LOCATION_MZONE,c)*300
+end
+function c53313923.repcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
 end
 function c53313923.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
+end
+function c53313923.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsLocation(LOCATION_MZONE) and c:GetDestination()~=LOCATION_OVERLAY and not c:IsReason(REASON_REPLACE)
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
-	if Duel.SelectYesNo(tp,1159) then
-		aux.PandSSet(c,REASON_EFFECT+REASON_REPLACE,TYPE_EFFECT+TYPE_FUSION)(e,tp,eg,ep,ev,re,r,rp)
-		return true
-	else return false end
+	if c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
+		aux.PandSSet(c,REASON_EFFECT,TYPE_EFFECT+TYPE_FUSION)(e,tp,eg,ep,ev,re,r,rp)
+	end
 end

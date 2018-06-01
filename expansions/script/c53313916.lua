@@ -1,7 +1,6 @@
 --Mysterious Samsara Dragon
 function c53313916.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	aux.EnablePandemoniumAttribute(c,e1)
 	--P-You can Tribute 1 monster you control; Special Summon 1 Level 5-7 "Mysterious" monster from your hand, Deck, or face-up from your Extra Deck, and if you do, destroy this card. (HOPT1)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -13,6 +12,7 @@ function c53313916.initial_effect(c)
 	e1:SetTarget(c53313916.psptg)
 	e1:SetOperation(c53313916.pspop)
 	c:RegisterEffect(e1)
+	aux.EnablePandemoniumAttribute(c,e1)
 	--P-You cannot Pandemonium Summon monsters, except LIGHT Dragon monsters. This effect cannot be negated.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
