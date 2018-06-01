@@ -521,9 +521,9 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 		end
 		e1:SetProperty(flags)
 		e1:SetHintTiming(TIMING_DAMAGE_CAL+TIMING_DAMAGE_STEP)
-		e1:SetTarget(Auxiliary.PandActTarget(table.unpack(t)))
-		e1:SetOperation(Auxiliary.PandActOperation(table.unpack(t)))
 	end
+	e1:SetTarget(Auxiliary.PandActTarget(table.unpack(t)))
+	e1:SetOperation(Auxiliary.PandActOperation(table.unpack(t)))
 	c:RegisterEffect(e1)
 	--register by default
 	if regfield==nil or regfield then
@@ -731,7 +731,6 @@ end
 function Auxiliary.PandActTarget(...)
 	local fx={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
-				local c=e:GetHandler()
 				if chk==0 then return true end
 				e:GetHandler():RegisterFlagEffect(726,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CANNOT_DISABLE,1)
 				if #fx==0 then

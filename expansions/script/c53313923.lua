@@ -8,6 +8,7 @@ function c53313923.initial_effect(c)
 	e0:SetRange(LOCATION_SZONE)
 	e0:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e0:SetCategory(CATEGORY_DESTROY)
+	e0:SetCountLimit(1,53313923)
 	e0:SetCondition(aux.PandActCheck)
 	e0:SetTarget(c53313923.target)
 	e0:SetOperation(c53313923.operation)
@@ -42,9 +43,9 @@ function c53313923.initial_effect(c)
 	--Gains 300 ATK for every other Pandemonium Monster on the field.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e4:SetRange(LOCATION_MZONE)
 	e4:SetCode(EFFECT_UPDATE_ATTACK)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetValue(c53313923.sdcon)
 	c:RegisterEffect(e4)
 	--If this card in the Monster Zone is destroyed by battle or card effect: You can Set it into your Spell/Trap Zone.
@@ -154,8 +155,8 @@ end
 function c53313923.sdreq(c)
 	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
 end
-function c53313923.sdcon(e,c)
-	return Duel.GetFieldGroupCount(c53313923.sdreq,tp,LOCATION_MZONE,LOCATION_MZONE,c)*300
+function c53313923.sdcon(e)
+	return Duel.GetFieldGroupCount(c53313923.sdreq,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())*300
 end
 function c53313923.repcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

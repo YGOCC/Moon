@@ -2,7 +2,7 @@
 function c53313924.initial_effect(c)
 	--fusion material: 1 "Mysterious" Dragon Monster + 1 WIND Winged Beast Monster.
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(c53313924.matfilter1),aux.FilterBoolFunction(c53313924.matfilter2),true)
+	aux.AddFusionProcFun2(c,c53313924.matfilter1,c53313924.matfilter2,true)
 	--If this card is Fusion Summoned: Return all Spell/Traps on the field to the hand.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
