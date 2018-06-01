@@ -5,7 +5,6 @@ function c53313927.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,53313927)
 	e1:SetOperation(c53313927.activate)
 	c:RegisterEffect(e1)
 	--When you Special Summon a "Mysterious" monster from the Extra Deck (except during the Damage Step): You can draw 1 card. (HOPT2)
@@ -34,14 +33,15 @@ function c53313927.afilter(c)
 	return c:IsSetCard(0xcf6) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c53313927.activate(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetFlagEffect(tp,53313927)>0 then return end
 	local g=Duel.GetMatchingGroup(c53313927.afilter,tp,LOCATION_DECK,0,nil)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,1109) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
-	elseif g:GetCount()>0 then e:SetCountLimit(e:GetCountLimit()+1) end
+		Duel.RegisterFlagEffect(tp,53313927,RESET_PHASE+PHASE_END)
+	end
 end
 function c53313927.cfilter(c,tp)
 	return c:GetSummonPlayer()==tp and c:IsFaceup() and c:IsSetCard(0xcf6) and c:GetSummonLocation()==LOCATION_EXTRA

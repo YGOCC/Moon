@@ -42,6 +42,7 @@ function c53313917.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetTarget(c53313917.remtg)
 	e2:SetOperation(c53313917.remop)
 	c:RegisterEffect(e2)
@@ -109,6 +110,7 @@ function c53313917.remtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c53313917.remop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and c:IsRelateToEffect(e) and c:IsFaceup() then
 		c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	end
@@ -120,6 +122,6 @@ end
 function c53313917.stop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler()
 	if tc:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
-		aux.PandSSet(tc,REASON_EFFECT,TYPE_EFFECT+TYPE_SYNCHRO)
+		aux.PandSSet(tc,REASON_EFFECT,TYPE_EFFECT+TYPE_SYNCHRO)(e,tp,eg,ep,ev,re,r,rp)
 	end
 end

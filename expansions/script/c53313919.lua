@@ -70,9 +70,9 @@ end
 function c53313919.paop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not aux.PandActCon(e,tp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local g=Duel.SelectMatchingCard(Card.IsType,tp,LOCATION_HAND,0,1,nil,TYPE_PANDEMONIUM)
+	local g=Duel.SelectMatchingCard(tp,Card.IsType,tp,LOCATION_HAND,0,1,1,nil,TYPE_PANDEMONIUM)
 	local tc=g:GetFirst()
 	if tc then
-		aux.PandActPandAct(tc)(e,tp,eg,ep,ev,re,r,rp)
+		aux.PandAct(tc)(e,tp,eg,ep,ev,re,r,rp)
 	end
 end

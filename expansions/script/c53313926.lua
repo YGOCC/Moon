@@ -134,9 +134,8 @@ function c53313926.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
 end
 function c53313926.penop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsExistingMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,1,e:GetHandler()) then return false end
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	if c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
+		aux.PandSSet(c,REASON_EFFECT,TYPE_EFFECT+TYPE_XYZ)(e,tp,eg,ep,ev,re,r,rp)
 	end
 end

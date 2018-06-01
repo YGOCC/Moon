@@ -5,17 +5,15 @@ function c53313922.initial_effect(c)
 	c:EnableReviveLimit()
 	--If this card is Xyz Summoned: You can target cards on the field equal to the number of materials attached to this card, -1; destroy them.
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetCategory(CATEGORY_TOGRAVE)
+	e2:SetCondition(function(e) return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) end)
 	e2:SetTarget(c53313922.tgtg)
 	e2:SetOperation(c53313922.tgop)
 	c:RegisterEffect(e2)
-	local e1=e2:Clone()
-	e1:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
-	c:RegisterEffect(e1)
 	--You can detach 2 materials from this card, then target 1 face-up monster your opponent controls; its ATK becomes half its current ATK, and if it does, this card gains that lost ATK and negate that target's effects.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
@@ -30,9 +28,9 @@ end
 function c53313922.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=e:GetHandler():GetOverlayCount()-1
 	if chkc then return ct==1 and chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,0,ct,nil) end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,ct,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(53313922,2))
-	local g=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,0,ct,ct,nil)
+	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,ct,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,ct,0,0)
 end
 function c53313922.tgop(e,tp,eg,ep,ev,re,r,rp)

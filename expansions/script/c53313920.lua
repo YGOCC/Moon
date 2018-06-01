@@ -27,25 +27,27 @@ end
 function c53313920.sfilter(c)
 	return c:IsType(TYPE_PANDEMONIUM) and c:IsSetCard(0xcf6)
 end
-function c53313920.filter(c)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:GetLevel()>0 and c:IsAbleToRemove()
+function c53313920.filter(c,ct)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsAbleToRemoveAsCost() and (c:IsSetCard(0xcf6) or i>0)
 end
 function c53313920.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,1,nil) and Duel.GetCurrentPhase()==PHASE_MAIN1 end
+	local rg=Duel.GetMatchingGroup(c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,nil)
+	local g=Group.CreateGroup()
+	local i=0
+	repeat
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local tc=rg:FilterSelect(tp,c53313920.filter,1,1,nil,i):GetFirst()
+		g=g+tc
+		rg:Remove(Card.IsCode,nil,tc:GetCode())
+		if tc:IsSetCard(0xcf6) then i=i+1 end
+	until g:GetCount()>2 or rg:GetCount()==0 or not Duel.SelectYesNo(tp,aux.Stringid(30539496,3))
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	e:SetLabel(i)
 end
 function c53313920.atkop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,1,5,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	local c=e:GetHandler()
-	local lv=g:GetSum(Card.GetLevel)
-	local ct=g:FilterCount(Card.IsAttribute,nil,ATTRIBUTE_LIGHT)
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetCode(EFFECT_UPDATE_ATTACK)
-	e5:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	e5:SetValue(lv*100)
-	c:RegisterEffect(e5)
+	local ct=e:GetLabel()
 	if ct>1 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -54,13 +56,6 @@ function c53313920.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		e1:SetValue(ct-1)
 		c:RegisterEffect(e1)
-	elseif ct==0 then
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_CANNOT_ATTACK)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e2)
 	end
 end
 function c53313920.copytg(c)
