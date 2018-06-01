@@ -58,13 +58,13 @@ function c53313924.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c53313924.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsLevelAbove(1) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsLevelAbove,tp,0,LOCATION_MZONE,1,nil,1) end
+	if chk==0 then return Duel.IsExistingTarget(c53313924.rmfilter,tp,0,LOCATION_MZONE,1,nil,e) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(Card.IsLevelAbove,tp,0,LOCATION_MZONE,nil,e)
+	local g=Duel.SelectTarget(tp,c53313924.rmfilter,tp,0,LOCATION_MZONE,1,1,nil,e)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c53313924.rmfilter(c,e)
-	return c:IsLevelAbove(1) and not c:IsImmuneToEffect(e)
+	return c:IsLevelAbove(1) and not c:IsImmuneToEffect(e) and c:IsAbleToRemove()
 end
 function c53313924.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFirstTarget()
