@@ -39,7 +39,7 @@ function c160008801.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c160008801.cfilter(c,tp,rp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousControler()==tp and bit.band(c:GetPreviousTypeOnField(),CTYPE_EVOLUTE)~=0
+	return c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousControler()==tp and bit.band(c:GetPreviousTypeOnField(),TYPE_EVOLUTE)~=0
 		and c:IsPreviousSetCard(0xab5) and (c:IsReason(REASON_BATTLE) or (rp~=tp and c:IsReason(REASON_EFFECT)))
 end
 function c160008801.spcon2(e,tp,eg,ep,ev,re,r,rp)

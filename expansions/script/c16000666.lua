@@ -114,19 +114,20 @@ function c16000666.operation2(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_ADD_TYPE)
 		e2:SetValue(TYPE_EFFECT)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
+		e2:SetReset(RESET_EVENT+0x47e0000)
 		rc:RegisterEffect(e2,true)
-	rc:RegisterFlagEffect(16000666,RESET_EVENT+0x1fe0000,0,1)
+	rc:RegisterFlagEffect(16000666,RESET_EVENT+0x47e0000,0,1)
 	end
-	 rc:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000666,0))
+	 rc:RegisterFlagEffect(0,RESET_EVENT+0x47e0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000666,0))
+Duel.RegisterFlagEffect(tp,16000666,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000666.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c16000666.fukfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,0,0)
 end
 function c16000666.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 function c16000666.fukfilter(c)
 	return c:IsFaceup() and not c:IsDisabled() and c:IsType(TYPE_EFFECT)

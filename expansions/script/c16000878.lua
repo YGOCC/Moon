@@ -58,14 +58,15 @@ function c16000878.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 	e1:SetDescription(aux.Stringid(16000878,0))
-	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_CHAINING)
-	e1:SetCondition(c16000878.negcon)
+	e1:SetHintTiming(0,0x11e0)
+	e1:SetCountLimit(1,16001878)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(c16000878.negcost)
 	e1:SetTarget(c16000878.negtg)
 	e1:SetOperation(c16000878.negop)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
@@ -94,15 +95,25 @@ function c16000878.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
 end
+function c16000878.kasfilter(c)
+	return (c:IsAttribute(ATTRIBUTE_DARK) or c:IsRace(RACE_FAIRY)) and c:IsAbleToDeck()
+end
 function c16000878.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
-	end
+  if chkc then return false end
+	if chk==0 then return Duel.IsExistingTarget(c16000878.kasfilter,tp,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingTarget(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g1=Duel.SelectTarget(tp,c16000878.kasfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,1,0,0)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g2=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g2,1,0,0)
 end
 function c16000878.negop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(eg,REASON_EFFECT)
+   local ex,g1=Duel.GetOperationInfo(0,CATEGORY_TODECK)
+	local ex,g2=Duel.GetOperationInfo(0,CATEGORY_TOHAND)
+	if g1:GetFirst():IsRelateToEffect(e) and Duel.SendtoDeck(g1,nil,2,REASON_EFFECT)~=0 then
+		local hg=g2:Filter(Card.IsRelateToEffect,nil,e)
+		Duel.SendtoHand(hg,nil,REASON_EFFECT)
 	end
 end

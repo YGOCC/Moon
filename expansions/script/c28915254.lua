@@ -1,6 +1,7 @@
 --Shadowflame Seeker
 --Design and code by Kindrindra
 local ref=_G['c'..28915254]
+local id=28915254
 function ref.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
@@ -13,7 +14,7 @@ function ref.initial_effect(c)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCountLimit(1)
+	e1:SetCountLimit(1,id)
 	e1:SetTarget(ref.sstg)
 	e1:SetOperation(ref.ssop)
 	c:RegisterEffect(e1)
@@ -23,7 +24,7 @@ function ref.initial_effect(c)
 	e2:SetCode(EVENT_LEAVE_FIELD)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e2:SetCountLimit(1,28915254)
+	e2:SetCountLimit(1,id+1000)
 	e2:SetTarget(ref.grtg)
 	e2:SetOperation(ref.grop)
 	c:RegisterEffect(e2)

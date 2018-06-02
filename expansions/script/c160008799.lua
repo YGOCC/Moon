@@ -72,7 +72,7 @@ function c160008799.matfilter(c)
 	return c:IsLinkRace(RACE_FAIRY) or c:IsLinkAttribute(ATTRIBUTE_DARK)
 end
 function c160008799.hhfilter(c)
-	return c:IsFaceup() and c:IsType(CTYPE_EVOLUTE) and c:IsCanAddCounter(0x88,3)
+	return c:IsFaceup() and c:IsType(TYPE_EVOLUTE) and c:IsCanAddCounter(0x88,3)
 end
 function c160008799.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c160008799.filter(chkc) end

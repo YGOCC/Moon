@@ -85,6 +85,7 @@ function c16000876.operation2(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
 	rc:RegisterEffect(e2,true)
 			rc:RegisterFlagEffect(16000876,RESET_EVENT+0x1fe0000,0,1)
+Duel.RegisterFlagEffect(tp,16000876,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000876.con(e,tp,eg,ep,ev,re,r,rp)
 	return  e:GetHandler():GetCounter(0x88)>=4

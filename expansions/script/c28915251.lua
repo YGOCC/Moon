@@ -32,15 +32,15 @@ function ref.rettg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and chkc:IsControler(tp) and ref.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(ref.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,ref.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,99,e:GetHandler())
+	local g=Duel.SelectTarget(tp,ref.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,5,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,g:GetCount()*400)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,g:GetCount()*500)
 end
 function ref.retop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	local ct=Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	if ct>0 then
-		Duel.Recover(tp,ct*400,REASON_EFFECT)
+		Duel.Recover(tp,ct*500,REASON_EFFECT)
 	end
 end
 
