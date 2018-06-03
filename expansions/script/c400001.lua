@@ -61,7 +61,7 @@ function c400001.halfilter(c)
 return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY)
 end
 function c400001.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146) and rp==tp
 end
 function c400001.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then 

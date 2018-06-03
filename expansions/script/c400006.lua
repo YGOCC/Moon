@@ -53,6 +53,7 @@ function c400006.drfilter(c)
 	return c:IsSetCard(0x146) and c:IsAbleToDeck() and c:IsType(TYPE_QUICKPLAY)
 end
 function c400006.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local g=Duel.GetMatchingGroup(c400006.drfilter,tp,LOCATION_GRAVE,0,nil)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
 		and g:GetClassCount(Card.GetCode)>2 end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,3,0,0)
@@ -77,7 +78,7 @@ function c400006.drop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400006.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146) and rp==tp
 end
 function c400006.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end

@@ -50,7 +50,7 @@ function c400017.filter(c,e,tp)
 end
 function c400017.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(function(c)return c:IsFaceup() and c:IsSetCard(0x146) end,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(function(c)return c:IsType(TYPE_QUICKPLAY) and c:IsSetCard(0x146) end,tp,LOCATION_GRAVE,0,1,nil)
 		and Duel.IsExistingMatchingCard(c400017.filter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
 end
@@ -63,7 +63,7 @@ function c400017.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400017.condition(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146)
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146) and rp==tp
 end
 function c400017.filter1(c)
 	return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToGrave()
