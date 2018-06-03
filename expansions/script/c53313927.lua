@@ -40,7 +40,7 @@ function c53313927.activate(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
-		Duel.RegisterFlagEffect(tp,53313927,RESET_PHASE+PHASE_END)
+		Duel.RegisterFlagEffect(tp,53313927,RESET_PHASE+PHASE_END,0,1)
 	end
 end
 function c53313927.cfilter(c,tp)
