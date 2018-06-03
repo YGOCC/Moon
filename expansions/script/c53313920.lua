@@ -28,11 +28,11 @@ function c53313920.sfilter(c)
 	return c:IsType(TYPE_PANDEMONIUM) and c:IsSetCard(0xcf6)
 end
 function c53313920.filter(c,ct)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsAbleToRemoveAsCost() and (c:IsSetCard(0xcf6) or i>0)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsAbleToRemoveAsCost() and (c:IsSetCard(0xcf6) or ct>0)
 end
 function c53313920.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,1,nil) and Duel.GetCurrentPhase()==PHASE_MAIN1 end
-	local rg=Duel.GetMatchingGroup(c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313920.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,1,nil,0) and Duel.GetCurrentPhase()==PHASE_MAIN1 end
+	local rg=Duel.GetFieldGroup(tp,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE)
 	local g=Group.CreateGroup()
 	local i=0
 	repeat
