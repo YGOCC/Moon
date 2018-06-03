@@ -27,7 +27,7 @@ function c160002123.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e3:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e3:SetValue(aux.ritlimit)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e3)
 	   --destroy & summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(160002123,0))
@@ -76,19 +76,19 @@ end
 --  if g:GetCount()>0 then
 --  local tg=g:GetMaxGroup(Card.GetAttack)
 --  local dam=tg:GetFirst():GetAttack()
---	  if tg:GetCount()>1 then
---		  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
---		  local sg=tg:Select(tp,1,1,nil)
---		  Duel.HintSelection(sg)
---		  local dam1=sg:GetFirst():GetAttack()
---		  if Duel.Destroy(sg,REASON_EFFECT)~=0 then
---			  Duel.Damage(1-tp,dam1,REASON_EFFECT)
---		  end
+--	if tg:GetCount()>1 then
+--		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+--		local sg=tg:Select(tp,1,1,nil)
+--		Duel.HintSelection(sg)
+--		local dam1=sg:GetFirst():GetAttack()
+--		if Duel.Destroy(sg,REASON_EFFECT)~=0 then
+--			Duel.Damage(1-tp,dam1,REASON_EFFECT)
+--		end
 	--  else
---		  if Duel.Destroy(tg,REASON_EFFECT)~=0 then
---			  Duel.Damage(1-tp,dam,REASON_EFFECT)
---		  end
---	  end
+--		if Duel.Destroy(tg,REASON_EFFECT)~=0 then
+--			Duel.Damage(1-tp,dam,REASON_EFFECT)
+--		end
+--	end
 --  end
 --end
 function c160002123.eqcon(e,tp,eg,ep,ev,re,r,rp)

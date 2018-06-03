@@ -99,7 +99,7 @@ function c96770220.indtg(e,c)
 end
 function c96770220.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:GetPreviousLocation()==LOCATION_MZONE and  c:GetSummonType(SUMMON_TYPE_LINK)
+	return c:GetPreviousLocation()==LOCATION_MZONE and  c:IsSummonType(SUMMON_TYPE_LINK)
 end
 function c96770220.spfilter(c,e,tp)
 	return c:IsSetCard(0xff7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

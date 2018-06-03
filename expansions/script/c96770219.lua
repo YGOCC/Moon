@@ -108,7 +108,7 @@ function c96770219.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c96770219.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:GetPreviousLocation()==LOCATION_MZONE and  c:GetSummonType(SUMMON_TYPE_LINK)
+	return c:GetPreviousLocation()==LOCATION_MZONE and  c:IsSummonType(SUMMON_TYPE_LINK)
 end
 function c96770219.spfilter(c,e,tp)
 	return c:IsSetCard(0xff7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

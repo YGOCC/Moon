@@ -1,6 +1,5 @@
 --Number 9999: Shining Hope Dragon
 function c88880021.initial_effect(c)
-    aux.AddXyzProcedure(c,aux.FALSE,5,5,c88880021.ovfilter,aux.Stringid(88880021,1))
     c:EnableReviveLimit()
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
@@ -38,7 +37,7 @@ function c88880021.initial_effect(c)
 end
 c88880021.xyz_number=9999
 function c88880021.ovfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0x889) or c:IsSetCard(0xcf) or c:IsSetCard(0x890) and c:IsType(TYPE_XYZ) and c:IsSetCard(0x48) or c:IsSetCard(0x1048)-- change that to the code of your desired card.
+    return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x48) and c:IsSetCard(0x889) or c:IsSetCard(0xcf) or c:IsSetCard(0x890)
 end
 function c88880021.descost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
