@@ -12,7 +12,6 @@ local scard,s_id=getID()
 
 function scard.initial_effect(c)
 	--Xyz Summon
-	aux.AddXyzProcedure(c,scard.xyz,4,2)
 	c:EnableReviveLimit()
 	--Send
 	local e1=Effect.CreateEffect(c)
@@ -54,10 +53,8 @@ function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
 		Duel.CreateToken(tp,30000)
 		Duel.CreateToken(1-tp,30000)
 		Duel.RegisterFlagEffect(0,30000,0,0,0)
+		aux.AddXyzProcedure(c,Card.IsMantra,4,2)
 	end
-end
-function scard.xyz(c)
-	return c:IsMantra()
 end
 function scard.filter(c)
 	return c:IsMantra() and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()

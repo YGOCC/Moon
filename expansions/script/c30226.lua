@@ -12,7 +12,6 @@ local scard,s_id=getID()
 
 function scard.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,nil,scard.syn,1)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOGRAVE)
@@ -41,6 +40,7 @@ function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
 		Duel.CreateToken(1-tp,30000)
 		Duel.RegisterFlagEffect(0,30000,0,0,0)
 	end
+	aux.AddSynchroProcedure(e:GetHandler(),Card.IsMantra,aux.NonTuner(nil),1)
 end
 function scard.syn(c)
 	return aux.NonTuner(Card.IsMantra)
@@ -69,7 +69,7 @@ function scard.op(e,tp,eg,ep,ev,re,r,rp)
         tg:AddCard(tc)
         i=i-1
 		g=g+1
-		if Duel.SelectYesNo(tp,aux.Stringid(s_id,0)) then
+		if rg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(s_id,0)) then
 			repeat
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 			local tc=rg:Select(tp,1,1,nil):GetFirst()
