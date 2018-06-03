@@ -156,7 +156,7 @@ function c53313923.sdreq(c)
 	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)
 end
 function c53313923.sdcon(e)
-	return Duel.GetFieldGroupCount(c53313923.sdreq,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())*300
+	return Duel.GetMatchingGroupCount(c53313923.sdreq,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())*300
 end
 function c53313923.repcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
