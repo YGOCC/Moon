@@ -71,11 +71,10 @@ function scard.spfilter(c)
 end
 function scard.spcon(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-1
-		and Duel.CheckReleaseGroup(c:GetControler(),scard.spfilter,1,nil)
+	return Duel.CheckReleaseGroup(c:GetControler(),scard.spfilter,2,nil)
 end
 function scard.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.SelectReleaseGroup(c:GetControler(),scard.spfilter,1,1,nil)
+	local g=Duel.SelectReleaseGroup(c:GetControler(),scard.spfilter,2,2,nil)
 	Duel.Release(g,REASON_COST)
 end
 function scard.condition(e,tp,eg,ep,ev,re,r,rp)

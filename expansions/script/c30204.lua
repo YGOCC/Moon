@@ -56,9 +56,8 @@ end
 function scard.drawdrawop(e,tp)
 	if Duel.GetCurrentChain()==bit.rshift(e:GetLabel(),16) then
 		local n=bit.band(e:GetLabel(),0xffff)
-		local m=Duel.DiscardHand(1-tp,Card.IsDiscardable,n,n,REASON_EFFECT+REASON_DISCARD,nil,REASON_EFFECT)
-		if n>m then
-			Duel.Draw(tp,n-m,REASON_EFFECT)
+		if n>0 then
+			Duel.DiscardHand(1-tp,Card.IsDiscardable,n,n,REASON_EFFECT+REASON_DISCARD,nil,REASON_EFFECT)
 		end
 	end
 end
