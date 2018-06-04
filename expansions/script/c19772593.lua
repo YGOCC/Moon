@@ -96,84 +96,15 @@ function c19772593.eop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c19772593.atklockop(e,tp,eg,ep,ev,re,r,rp)
-	--prevent attack
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
-	e1:SetTargetRange(0,LOCATION_MZONE)
-	e1:SetCondition(c19772593.btcon)
-	e1:SetTarget(c19772593.btat2)
-	e1:SetValue(c19772593.btat1)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-	local e2=Effect.CreateEffect(e:GetHandler())
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
-	e2:SetTargetRange(0,LOCATION_MZONE)
-	e2:SetCondition(c19772593.btcon)
-	e2:SetTarget(c19772593.btat2)
-	e2:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e2,tp)
-	-----------
-	local tc=Duel.GetAttacker()
-	local g=Duel.GetMatchingGroup(c19772593.attackable,tp,0,LOCATION_MZONE,tc)
-	if g:GetCount()<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,1-tp,aux.Stringid(19772593,14))
-	local tg=g:Select(1-tp,1,1,tc):GetFirst()
-	if not tg then return end
-	Duel.CalculateDamage(tc,tg)
-	local atka,defa=tc:GetAttack(),tc:GetDefense()
-	local atkd,defd=tg:GetAttack(),tg:GetDefense()
-	local dg=0
-	local af=0
-	--position check
-	if tc:IsPosition(POS_FACEUP_ATTACK) and tg:IsPosition(POS_FACEUP_ATTACK) then
-		dg=math.abs(atka-atkd)
-		if atka>atkd then
-			af=1
-		elseif atka<atkd then
-			af=2
+	local ag=eg:GetFirst():GetAttackableTarget()
+	local at=Duel.GetAttackTarget()
+	local exc=ag:Filter(aux.TRUE,at)
+	if exc:GetCount()<=0 then return end
+	if Duel.SelectYesNo(tp,aux.Stringid(19772593,3)) then
+		local g=ag:FilterSelect(tp,aux.TRUE,1,1,at):GetFirst()
+		if g then
+			Duel.ChangeAttackTarget(g)
 		end
-	--
-	elseif tc:IsPosition(POS_FACEUP_ATTACK) and (tg:IsPosition(POS_FACEUP_DEFENSE) or tg:IsPosition(POS_FACEDOWN_DEFENSE)) then
-		if tg:IsFacedown() then
-			Duel.ChangePosition(tg,POS_FACEUP_DEFENSE)
-		end
-		dg=math.abs(atka-defd)
-		if atka>defd then
-			af=1
-		end
-	--
-	elseif tc:IsPosition(POS_FACEUP_DEFENSE) and tg:IsPosition(POS_FACEUP_ATTACK) then
-		dg=math.abs(defa-atkd)
-		if defa>atkd then
-			af=1
-		elseif defa<atkd then
-			af=2
-		end
-	--
-	elseif tc:IsPosition(POS_FACEUP_DEFENSE) and (tg:IsPosition(POS_FACEUP_DEFENSE) or tg:IsPosition(POS_FACEDOWN_DEFENSE)) then
-		if tg:IsFacedown() then
-			Duel.ChangePosition(tg,POS_FACEUP_DEFENSE)
-		end
-		dg=math.abs(defa-defd)
-		if defa>defd then
-			af=1
-		end
-	else return end
-	Duel.Damage(1-tp,dg,REASON_BATTLE)
-	if af==1 then
-		Duel.Destroy(tg,REASON_BATTLE)
-	elseif af==2 then
-		Duel.Destroy(tc,REASON_BATTLE)
 	end
 end
-function c19772593.btcon(e,c)
-	return Duel.GetFieldGroupCount(Duel.GetTurnPlayer(),LOCATION_MZONE,0)<=1
-end
-function c19772593.btat1(e,c)
-	return c:GetControler()==1-Duel.GetTurnPlayer()
-end
-function c19772593.btat2(e,c)
-	return c:GetControler()==Duel.GetTurnPlayer()
-end
+	
