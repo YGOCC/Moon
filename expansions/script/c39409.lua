@@ -27,7 +27,6 @@ function c39409.filter(c)
 	return c:IsSetCard(0x300) and c:IsAbleToDeckAsCost()
 end
 function c39409.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	Debug.Message("Cost: "..tostring(Duel.IsExistingMatchingCard(c39409.filter,tp,LOCATION_HAND,0,1,nil)))
 	if chk==0 then return Duel.IsExistingMatchingCard(c39409.filter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,c39409.filter,tp,LOCATION_HAND,0,1,1,nil)
@@ -35,7 +34,6 @@ function c39409.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c39409.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	Debug.Message("Target: "..tostring(Duel.IsPlayerCanDraw(tp,2)))
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(2)
