@@ -18,7 +18,7 @@ function scard.initial_effect(c)
 	e1:SetHintTiming(0,0x1c0)
 	e1:SetCountLimit(1,s_id+EFFECT_COUNT_CODE_OATH)
 	e1:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return Duel.GetCurrentPhase()<PHASE_MAIN2 end
+	if chk==0 then return Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0 end
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_CANNOT_BP)
