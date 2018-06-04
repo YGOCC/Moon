@@ -142,7 +142,7 @@ function c53313916.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c53313916.copytg(c)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and not c:IsCode(53313916)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsSetCard(0xcf6) and not c:IsCode(53313916)
 end
 function c53313916.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c53313916.copytg,tp,0x74,0x74,1,nil) end
