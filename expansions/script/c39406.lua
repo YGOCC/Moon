@@ -13,7 +13,7 @@ function c39406.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c39406.discon(e,tp,eg,ep,ev,re,r,rp)
-	return re:GetHandler()~=e:GetHandler() and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+	return re:GetHandler()~=e:GetHandler() and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and (re:GetHandlerPlayer()==1-tp)
 		and (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(ev)
 end
 function c39406.discost(e,tp,eg,ep,ev,re,r,rp,chk)

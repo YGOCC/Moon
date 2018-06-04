@@ -14,7 +14,7 @@ function c39404.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c39404.condition(e,tp,eg,ep,ev,r,re,rp)
-	return Duel.GetCurrentPhase()&(PHASE_MAIN1+PHASE_MAIN2)~=0
+	return bit.band(Duel.GetCurrentPhase(),PHASE_MAIN1+PHASE_MAIN2)~=0
 end
 function c39404.sfilter1(c,e,tp)
 	return c:IsSetCard(0x300) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(39404)
@@ -25,10 +25,13 @@ function c39404.sfilter2(c,e,tp,cc)
 	return c:IsSetCard(0x300) and (c:GetRace()&race==0) and (c:GetAttribute()&att==0) and not c:IsCode(39404)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function c39404.filter(c)
+	return c:IsSetCard(0x300) and c:IsType(TYPE_MONSTER)
+end
 function c39404.cost(e,tp,eg,ep,ev,r,re,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,nil,0x300) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c39404.filter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,Card.IsSetCard,tp,LOCATION_HAND,0,1,1,nil,0x300)
+	local g=Duel.SelectMatchingCard(tp,c39404.filter,tp,LOCATION_HAND,0,1,1,nil)
 	g:AddCard(e:GetHandler())
 	if g:FilterCount(function(c) return not c:IsPublic() end,nil)>0 then
 		Duel.ConfirmCards(1-tp,g:Filter(function(c) return not c:IsPublic() end,nil))

@@ -20,7 +20,8 @@ function c39415.mfilter(c,xyzc)
 	return c:GetLevel()==4 and c:IsSetCard(0x300)
 end
 function c39415.xyzcheck(g)
-	return g:GetClassCount(Card.GetRace)==2 or g:GetClassCount(Card.GetAttribute)==2
+	local sg=g:Filter(function(c) return c:GetLevel()==4 end,nil)
+	return sg:GetClassCount(Card.GetRace)>=2 or sg:GetClassCount(Card.GetAttribute)>=2
 end
 function c39415.alt(c)
 	return c:IsSetCard(0x300) and c:GetLevel()==6
@@ -33,25 +34,24 @@ function c39415.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(c39415.cfilter,tp,LOCATION_HAND,0,1,nil) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,c61807040.cfilter,tp,LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c39415.cfilter,tp,LOCATION_HAND,0,1,1,nil)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.ShuffleHand(tp)
 	g:KeepAlive()
 	e:SetLabelObject(g)
 end
-function c39415.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and Card.IsAbleToDeck(chkc) end
+function c39415.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	g:AddCard(e:GetLabelObject():GetFirst())
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,2,0,0)
-	g:KeepAlive()
-	e:SetLabelObject(g)
 end
 function c39415.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=e:GetLabelObject()
-	if tg:FilterCount(Card.IsRelateToEffect,nil,e)==2 then
+	local ct=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+	tg:AddCard(Duel.GetFirstTarget())
+	if tg:FilterCount(Card.IsRelateToEffect,nil,e)==1 and ct==1 then
 		Duel.SendtoDeck(tg,nil,2,REASON_EFFECT)
 	end
 end

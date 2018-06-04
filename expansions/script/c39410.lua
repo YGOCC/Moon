@@ -13,7 +13,7 @@ function c39410.cfilter(c,race)
 	if race then
 		return c:IsSetCard(0x300) and c:GetRace()&race~=0 and c:IsAbleToDeckOrExtraAsCost()
 	else
-		return c:IsSetCard(0x300) and c:IsAbleToDeckOrExtraAsCost()
+		return c:IsSetCard(0x300) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost()
 	end
 end
 function c39410.spfilter(c,e,tp)

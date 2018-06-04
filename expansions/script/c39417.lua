@@ -29,7 +29,8 @@ function c39417.mfilter(c,xyzc)
 	return c:GetLevel()==4 and c:IsSetCard(0x300)
 end
 function c39417.xyzcheck(g)
-	return g:GetClassCount(Card.GetRace)==2 or g:GetClassCount(Card.GetAttribute)==2
+	local sg=g:Filter(function(c) return c:GetLevel()==4 end,nil)
+	return sg:GetClassCount(Card.GetRace)>=2 or sg:GetClassCount(Card.GetAttribute)>=2
 end
 function c39417.alt(c)
 	return c:IsSetCard(0x300) and c:GetLevel()==6
