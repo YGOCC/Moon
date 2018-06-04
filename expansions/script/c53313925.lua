@@ -55,7 +55,7 @@ function c53313925.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function c53313925.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xcf6) and (c:IsLevelBelow(6) or c:IsRankBelow(6))
+	return c:IsFaceup() and c:IsSetCard(0xcf6)
 end
 function c53313925.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c53313925.cfilter(chkc) end
