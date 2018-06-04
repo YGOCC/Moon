@@ -28,6 +28,7 @@ function c63553467.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,63553417)
 	e2:SetCondition(c63553467.spcon)
+	e2:SetCost(c63553467.spcost)
 	e2:SetTarget(c63553467.sptg)
 	e2:SetOperation(c63553467.spop)
 	c:RegisterEffect(e2)
@@ -82,6 +83,12 @@ end
 function c63553467.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c63553467.spcheck,tp,LOCATION_MZONE,0,1,nil)
 end
+function c63553467.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeckAsCost,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeckAsCost,tp,LOCATION_HAND,0,1,1,nil)
+	Duel.SendtoDeck(g,nil,0,REASON_COST)
+end
 function c63553467.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
@@ -110,7 +117,11 @@ function c63553467.synchroop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_MZONE+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_HAND+LOCATION_SZONE+LOCATION_EXTRA)
 	e1:SetTargetRange(LOCATION_SZONE,0)
+	e1:SetTarget(c63553467.quickact)
 	e1:SetCountLimit(1,63553427)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e:GetHandler():RegisterEffect(e1)
+end
+function c63553467.quickact(e,c)
+	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
 end
