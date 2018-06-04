@@ -130,25 +130,18 @@ function c39419.repfilter(c,r,d)
 		return c:IsDestructable()
 	end
 	if r&REASON_EFFECT~=0 then
-		if d==LOCATION_DECK then
-			return c:IsAbleToDeck()
-		elseif d==LOCATION_HAND then
-			return c:IsAbleToHand()
-		elseif d==LOCATION_GRAVE then
-			return c:IsAbleToGrave()
-		elseif d==LOCATION_REMOVED then
-			c:IsAbleToRemove()
-		elseif d==LOCATION_EXTRA then
-			c:IsAbleToExtra()
+		if d==LOCATION_REMOVED then
+			return c:IsAbleToRemove()
+		else
+			return false
 		end
 	end
 end
 function c39419.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local lg=c:GetLinkedGroup()
-	if chk==0 then return bit.band(r,REASON_MATERIAL+REASON_BATTLE+REASON_RULE+REASON_COST+REASON_SPSUMMON+REASON_REPLACE)==0
-		and c:GetDestination()&LOCATION_ONFIELD==0 and lg and lg:GetCount()>0
-		and lg:IsExists(c39419.repfilter,1,nil,r,c:GetDestination()) end
+	if chk==0 then return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 and bit.band(r,REASON_REPLACE)==0
+		and lg and lg:GetCount()>0 and lg:IsExists(c39419.repfilter,1,nil,r,c:GetDestination()) end
 	return Duel.SelectEffectYesNo(tp,c,96)
 end
 function c39419.repop(e,tp,eg,ep,ev,re,r,rp)
@@ -160,16 +153,8 @@ function c39419.repop(e,tp,eg,ep,ev,re,r,rp)
 	if r&REASON_DESTROY~=0 then
 		Duel.Destroy(sg,REASON_DESTROY+REASON_EFFECT+REASON_REPLACE)
 	elseif r&REASON_EFFECT~=0 then
-		if d==LOCATION_DECK then
-			Duel.SendtoDeck(sg,nil,2,REASON_EFFECT+REASON_REPLACE)
-		elseif d==LOCATION_HAND then
-			Duel.SendtoHand(sg,nil,REASON_EFFECT+REASON_REPLACE)
-		elseif d==LOCATION_GRAVE then
-			Duel.SendtoGrave(sg,REASON_EFFECT+REASON_REPLACE)
-		elseif d==LOCATION_REMOVED then
+		if d==LOCATION_REMOVED then
 			Duel.Remove(sg,POS_FACEUP,REASON_EFFECT+REASON_REPLACE)
-		elseif d==LOCATION_EXTRA then
-			Duel.SendtoDeck(sg,nil,2,REASON_EFFECT+REASON_REPLACE)
 		end
 	end
 end
