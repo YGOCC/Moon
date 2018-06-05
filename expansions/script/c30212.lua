@@ -53,7 +53,7 @@ function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
 		Duel.CreateToken(tp,30000)
 		Duel.CreateToken(1-tp,30000)
 		Duel.RegisterFlagEffect(0,30000,0,0,0)
-		aux.AddXyzProcedure(c,Card.IsMantra,4,2)
+		aux.AddXyzProcedure(e:GetHandler(),Card.IsMantra,4,2)
 	end
 end
 function scard.filter(c)
