@@ -72,7 +72,8 @@ function c63553470.sprfilter1(c)
 end
 function c63553470.actfilter(c,tp)
 	return (c:IsType(TYPE_PENDULUM) and Duel.GetLocationCount(tp,LOCATION_PZONE)>0 and not c:IsForbidden())
-		or (c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not c:IsForbidden())
+		or (c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not c:IsForbidden()
+			and not Duel.IsExistingMatchingCard(c63553470.excfilter,tp,LOCATION_SZONE,0,1,c))
 end
 function c63553470.drcfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_PZONE) and c:GetPreviousControler()==tp
@@ -165,8 +166,7 @@ function c63553470.setcon(e,tp,eg,ep,ev,re,r,rp)
 	else return false end
 end
 function c63553470.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 
-		and not Duel.IsExistingMatchingCard(c63553470.excfilter,tp,LOCATION_SZONE,0,1,nil) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 end
 function c63553470.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
