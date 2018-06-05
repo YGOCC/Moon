@@ -29,7 +29,7 @@ function c39413.cfilter(c)
 	return c:IsSetCard(0x300) and c:IsAbleToDeckAsCost()
 end
 function c39413.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c39412.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c39413.cfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,c39413.cfilter,tp,LOCATION_HAND,0,1,1,nil)
 	if not g:GetFirst():IsPublic() then
