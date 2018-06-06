@@ -2,7 +2,7 @@
 function c39411.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
-	e0:SetType(EVENT_FREE_CHAIN)
+	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
