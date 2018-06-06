@@ -43,7 +43,7 @@ function c53313916.initial_effect(c)
 	e3:SetTarget(c53313916.sptg)
 	e3:SetOperation(c53313916.spop)
 	c:RegisterEffect(e3)
-	--M-Once per turn: You can have this card gain the ATK, DEF, and effects (if any) of 1 face-up monster on the field, GY, Extra Deck, or that is banished until the end of this turn, except "Mysterious Samsara Dragon". (HOPT2)
+	--M-Once per turn: You can have this card gain the ATK, DEF and effects (if any) of 1 face-up monster on the field, GY, Extra Deck, or that is banished until the end of this turn, except "Mysterious Samsara Dragon" or your non-"Mysterious" monster. (HOPT2)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
@@ -141,17 +141,18 @@ function c53313916.spop(e,tp,eg,ep,ev,re,r,rp)
 		c:CopyEffect(e:GetLabelObject():GetCode(),RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	end
 end
-function c53313916.copytg(c)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and not c:IsCode(53313916)
+function c53313916.copytg(c,tp)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
+		and (c:IsSetCard(0xcf6) or c:IsControler(1-tp)) and not c:IsCode(53313916)
 end
 function c53313916.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c53313916.copytg,tp,0x74,0x74,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313916.copytg,tp,0x74,0x74,1,nil,tp) end
 end
 function c53313916.copy(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectMatchingCard(tp,c53313916.copytg,tp,0x74,0x74,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c53313916.copytg,tp,0x74,0x74,1,1,nil,tp)
 	local tc=g:GetFirst()
 	if not tc then return end
 	Duel.HintSelection(g)
