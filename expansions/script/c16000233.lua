@@ -38,7 +38,7 @@ function c16000233.initial_effect(c)
 end
 function c16000233.rmfilter(c,e,tp)
 	return c:IsFaceup() and  c:IsSetCard(0xc50)  and c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingTarget(c16000233.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,c,e,tp)
+		and Duel.IsExistingTarget(c16000233.filterx,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,c,e,tp)
 end
 function c16000233.filterx(c)
 	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsAbleToHand()
@@ -65,6 +65,10 @@ function c16000233.thop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
 		c:RegisterFlagEffect(16000233,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 	end
+end
+function c16000233.filter(c,e,tp,b1,setcode)
+	return c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_NORMAL) and not c:IsForbidden()
+		and (b1 or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function c16000233.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(16000233)~=0
@@ -105,6 +109,7 @@ function c16000233.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	 Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c16000233.operation(e,tp,eg,ep,ev,re,r,rp)
+	 local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local b1=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
