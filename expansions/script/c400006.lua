@@ -61,7 +61,7 @@ function c400006.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c400006.drop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c400006.drfilter,tp,LOCATION_GRAVE,0,nil)
-	if not g:GetClassCount(Card.GetCode)>2 then return end
+	if not (g:GetClassCount(Card.GetCode)>2) then return end
 	local sg=Group.CreateGroup()
 	for i=1,3 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)

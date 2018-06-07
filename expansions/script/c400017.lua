@@ -79,7 +79,8 @@ end
 function c400017.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(c400017.filter1,tp,LOCATION_DECK,0,1,nil)
-	if Duel.SendtoGrave(g,REASON_EFFECT)==0 then return end Duel.BreakEffect()
+	if Duel.SendtoGrave(g,REASON_EFFECT)==0 then return end
+	Duel.BreakEffect()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g0=Duel.SelectMatchingCard(c400017.filter2,tp,LOCATION_DECK,0,1,nil,g:GetFirst():GetCode())
 	Duel.SendtoHand(g0,nil,REASON_EFFECT)
