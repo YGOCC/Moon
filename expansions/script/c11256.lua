@@ -4,7 +4,7 @@ function c11256.initial_effect(c)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(c11256.synfilter),aux.NonTuner(Card.IsType,TYPE_SYNCHRO),1)
 	c:EnableReviveLimit()
 	--Pendulum Set
-	aux.AddPendulumProcedure(c)
+	aux.EnablePendulumAttribute(c)
 	--Return
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(11256,0))
@@ -89,7 +89,7 @@ function c11256.retop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_EFFECT)	
+		Duel.Draw(tp,1,REASON_EFFECT)   
 	end
 end
 function c11256.splimfilter(c)

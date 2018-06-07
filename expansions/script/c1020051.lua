@@ -35,14 +35,14 @@ function c1020051.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 --function c1020051.ffilter(c)
---	return c:IsLevelAbove(4) and c:IsFusionSetCard(0x4b0)
+--  return c:IsLevelAbove(4) and c:IsFusionSetCard(0x4b0)
 --end
 function c1020051.unval(e,re)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsControler(1-e:GetHandlerPlayer()) and re:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)
 		and re:GetHandler():IsLocation(LOCATION_MZONE)
 end
 function c1020051.ffilter(c,fc,sumtype,tp)
--return c:IsLevelAbove(4) and c:IsFusionSetCard(0x4b0)
+	return c:IsLevelAbove(4) and c:IsFusionSetCard(0x4b0)
 end
 function c1020051.contactfil(tp)
 	return Duel.GetReleaseGroup(tp)

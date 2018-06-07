@@ -4,7 +4,7 @@ function c11254.initial_effect(c)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x2BF2),aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
 	--Pendulum Set
-	aux.AddPendulumProcedure(c)
+	aux.EnablePendulumAttribute(c)
 	--Level Up
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(11254,0))
@@ -154,7 +154,7 @@ function c11254.acop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if op then op(te,tp,eg,ep,ev,re,r,rp) end
 		tc:ReleaseEffectRelation(te)
-		if etc then	
+		if etc then 
 			etc=g:GetFirst()
 			while etc do
 				etc:ReleaseEffectRelation(te)
