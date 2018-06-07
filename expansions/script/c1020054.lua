@@ -2,7 +2,7 @@
 function c1020054.initial_effect(c)
 	--Synchro Summon
 	c:EnableReviveLimit()
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x4b0),aux.NonTunerEx(Card.IsRace,RACE_BEASTWARRIOR),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x4b0),aux.NonTuner(Card.IsRace,RACE_BEASTWARRIOR),1)
 
 	--cannot be target
 	local e1=Effect.CreateEffect(c)
