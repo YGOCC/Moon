@@ -21,7 +21,7 @@ function c500312121.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c500312121.filterx(c)
-	return c:IsSetCard(0xc50) or (c:IsType(TYPE_PENDULUM) and not c:IsType(TYPE_EFFECT) )and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc50) or (not c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_MONSTER) and  not c:IsType(TYPE_EFFECT) )and c:IsAbleToHand()
 end
 function c500312121.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c500312121.filterx,tp,LOCATION_DECK,0,1,nil) end
@@ -40,7 +40,7 @@ function c500312121.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c500312121.filter(c)
-	return c:IsFaceup() c:IsSetCard(0xc52)  and c:IsAbleToDeck()
+	return c:IsFaceup() and c:IsSetCard(0xc52)  and c:IsAbleToDeck()
 end
 
 function c500312121.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
