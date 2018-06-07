@@ -25,9 +25,8 @@ function c39414.condition(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
 	if not d then return false end
-	if d:IsControler(tp) then a,d=d,a end
-	return a:IsPosition(POS_FACEUP_ATTACK) and a:IsSetCard(0x300) and a:IsType(TYPE_NORMAL) and a:IsRelateToBattle()
-		and d:IsPosition(POS_FACEUP_ATTACK) and d:IsRelateToBattle()
+	return (a:IsPosition(POS_FACEUP_ATTACK) and a:IsSetCard(0x300) and d:IsPosition(POS_FACEUP_ATTACK)) or
+		(d:IsPosition(POS_FACEUP_ATTACK) and d:IsSetCard(0x300) and a:IsPosition(POS_FACEUP_ATTACK))
 end
 function c39414.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ac=Duel.GetAttacker()
@@ -37,7 +36,7 @@ function c39414.operation(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
 	e1:SetValue(bc:GetAttack())
 	ac:RegisterEffect(e1)
 end

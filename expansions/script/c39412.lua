@@ -40,7 +40,7 @@ function c39412.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c39412.spcfilter(c,tp,rp,e)
-	return c:GetPreviousControler()==tp and c:IsPreviousSetCard(0x300)
+	return c:GetPreviousControler()==tp and c:IsPreviousSetCard(0x300) and c:IsType(TYPE_MONSTER)
 		and (c:IsReason(REASON_BATTLE) or (rp~=tp and c:IsReason(REASON_EFFECT)))
 		and Duel.IsExistingMatchingCard(c39412.filter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetRace())
 end
