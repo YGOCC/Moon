@@ -1,5 +1,1 @@
 ﻿# Delete List (Codepage is UTF-8, please use TAB to seperate entries, Use Relative Address.)
-script/c1013045.lua
-script/c1013047.lua
-pics/1013045.jpg
-pics/1013047.jpg
