@@ -9481,7 +9481,14 @@ expansions/sound/custom/Tosh_Summon.wav	9762d9f67c2bd0c50635a0ff2ab956d0
 expansions/sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 expansions/sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 expansions/sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
+<<<<<<< HEAD
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
 update/filelist.txt	f0af4c0e7f2cf70a8b5fe2db93dd11fa
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
 update/version.txt	0e774d765c0bee93421419fc2bfe1190
+=======
+update/delete.txt	60c4989e36509b4f5cc0ba469c45d0cc
+update/filelist.txt	1b24dcf0e0aabcee2311888d99e41a5a
+update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
+update/version.txt	acf5a432c983b008c931ebf208dfef19
+>>>>>>> 3f264ddf28ce83a0f457e0c6b3672113e472ca09
