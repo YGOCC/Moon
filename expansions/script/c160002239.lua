@@ -1,7 +1,7 @@
 --Paintress EX - Da Vinca
 function c160002239.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,c160002239.checku,7,c160002239.filter1,c160002239.filter2)
+  aux.AddEvoluteProc(c,nil,7,c160002239.filter1,c160002239.filter2)
 	c:EnableReviveLimit()
 		--extra summon
 	local e1=Effect.CreateEffect(c)

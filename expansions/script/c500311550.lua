@@ -60,16 +60,16 @@ function c500311550.cost(e,tp,eg,ep,ev,re,r,rp,chk)
    -- Duel.RegisterEffect(e1,tp)
 end
 function c500311550.tgfilter(c)
-	 return c:IsLevelBelow(4) and c:IsRace(RACE_PLANT) and c:IsAbleToGrave()
+	 return c:IsLevelBelow(4) and c:IsSetCard(0x185a) and c:IsAbleToGrave()
 		and Duel.IsExistingMatchingCard(c500311550.thfilter,tp,LOCATION_DECK,0,1,c,c:GetCode())
 end
 function c500311550.thfilter(c,code)
-	return (c:IsRace(RACE_PLANT) or c:IsSetCard(0x185a)) and c:IsType(TYPE_MONSTER) and not c:IsCode(code) and not c:IsForbidden() and c:IsAbleToHand()
+	return  c:IsSetCard(0x185a) and c:IsType(TYPE_MONSTER) and not c:IsCode(code) and not c:IsForbidden() and c:IsAbleToHand()
 end
 function c500311550.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	 if chk==0 then return Duel.IsExistingMatchingCard(c500311550.tgfilter,tp,LOCATION_DECK,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c500311550.operation(e,tp,eg,ep,ev,re,r,rp)
    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
@@ -77,7 +77,7 @@ function c500311550.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_GRAVE) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg=Duel.SelectMatchingCard(tp,c500311550.thfilter,tp,LOCATION_DECK,0,2,2,nil,tc:GetCode())
+		local sg=Duel.SelectMatchingCard(tp,c500311550.thfilter,tp,LOCATION_DECK,0,1,1,nil,tc:GetCode())
 		if sg:GetCount()>0 then
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)

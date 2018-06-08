@@ -2,7 +2,7 @@
 function c50031666.initial_effect(c)
 aux.EnablePendulumAttribute(c)
 	 aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,c50031666.checku,5,c50031666.filter1,c50031666.filter2)
+	aux.AddEvoluteProc(c,nil,4,c50031666.filter1,c50031666.filter2)
 c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)

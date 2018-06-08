@@ -1,7 +1,7 @@
 --Lovely Paintress Goghi
 function c160002321.initial_effect(c)
  aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,c160002321.checku,5,c160002321.filter1,c160002321.filter2)
+  aux.AddEvoluteProc(c,nil,5,c160002321.filter1,c160002321.filter2)
 	c:EnableReviveLimit()
 		--atk
 	local e99=Effect.CreateEffect(c)

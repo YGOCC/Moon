@@ -1,5 +1,8 @@
 --Frex
 function c500316921.initial_effect(c)
+	aux.AddOrigEvoluteType(c)
+	c:EnableReviveLimit()
+   aux.AddEvoluteProc(c,nil,6,c500316921.filter1,c500316921.filter2)
 	--remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500316921,0))
@@ -13,30 +16,17 @@ function c500316921.initial_effect(c)
 	e1:SetTarget(c500316921.target)
 	e1:SetOperation(c500316921.operation)
 	c:RegisterEffect(e1)
-	if not c500316921.global_check then
-		c500316921.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c500316921.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
-c500316921.evolute=true
-c500316921.material1=function(mc) return mc:IsAttribute(ATTRIBUTE_EARTH) and (mc:GetLevel()==3 or mc:GetRank()==3) and mc:IsFaceup() end
-c500316921.material2=function(mc) return mc:IsRace(RACE_DINOSAUR) and (mc:GetLevel()==3 or mc:GetRank()==3) and mc:IsFaceup() end
-function c500316921.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,388)
-	Duel.CreateToken(1-tp,388)
-		c500316921.stage_o=6
-c500316921.stage=c500316921.stage_o
+function c500316921.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_EARTH)
 end
 
+function c500316921.filter2(c,ec,tp)
+	return c:IsRace(RACE_DINOSAUR)
+end
 function c500316921.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,3,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 function c500316921.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end

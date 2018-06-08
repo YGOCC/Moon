@@ -4,7 +4,7 @@
 function c500316456.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,c500316456.checku,6,c500316456.filter1,c500316456.filter2)
+  aux.AddEvoluteProc(c,nil,6,c500316456.filter1,c500316456.filter2)
 		--sp summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(500316456,1))

@@ -58,7 +58,7 @@ function c160007841.filter1(c)
 	return c:IsFaceup() and c:IsSetCard(0x285a) and c:GetLevel()>0 and c:IsType(TYPE_MONSTER)
 end
 function c160007841.filter2(c)
-	return c:IsFaceup() and c:GetLevel()>0
+	return c:IsFaceup() and c:IsSetCard(0x285a) and c:IsType(TYPE_MONSTER) and c:GetLevel()>0
 end
 function c160007841.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c160007841.filter1(chkc) end

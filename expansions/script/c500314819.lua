@@ -2,7 +2,7 @@
 function c500314819.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,c500314819.checku,8,c500314819.filter1,c500314819.filter2)
+ aux.AddEvoluteProc(c,nil,8,c500314819.filter1,c500314819.filter2)
 		--atk
   
 	local e1=Effect.CreateEffect(c)
@@ -46,7 +46,7 @@ function c500314819.initial_effect(c)
 --function c500314819.chk(e,tp,eg,ep,ev,re,r,rp)
   --  Duel.CreateToken(tp,388)
   --  Duel.CreateToken(1-tp,388)
-   --	   c500314819.stage_o=8
+   --	  c500314819.stage_o=8
 --c500314819.stage=c500314819.stage_o
 end
 function c500314819.checku(sg,ec,tp)
@@ -95,10 +95,7 @@ function c500314819.costfilter(c)
 	return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_NORMAL) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
 function c500314819.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST)and Duel.IsExistingMatchingCard(c500314819.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c500314819.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST)end
 	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end
 function c500314819.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

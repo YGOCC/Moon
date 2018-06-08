@@ -5,7 +5,7 @@ function c500314216.initial_effect(c)
 	--synchro summon
 	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-   aux.AddEvoluteProc(c,c500314216.checku,6,c500314216.filter1,c500314216.filter2)
+   aux.AddEvoluteProc(c,nil,6,c500314216.filter1,c500314216.filter2)
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500314216,0))
 	e1:SetCategory(CATEGORY_DRAW)
@@ -13,6 +13,7 @@ function c500314216.initial_effect(c)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,500314216)
 	e1:SetCondition(c500314216.drcon)
+	e1:SetCost(c500314216.drcost)
 	e1:SetTarget(c500314216.drtg)
 	e1:SetOperation(c500314216.drop)
 	c:RegisterEffect(e1)
@@ -33,6 +34,10 @@ return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function c500314216.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT)
+end
+function c500314216.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,6,REASON_COST) end
+	e:GetHandler():RemoveCounter(tp,0x88,6,REASON_COST)
 end
 function c500314216.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY)
