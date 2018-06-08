@@ -34,8 +34,7 @@ end
 function card.sc(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()  and Duel.IsExistingMatchingCard(card.disfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-	local g=Duel.SelectMatchingCard(tp,card.disfilter,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
+
 end
 function card.sfilter(c,tpe)
 	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
