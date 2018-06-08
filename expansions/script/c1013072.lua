@@ -6,24 +6,13 @@ function cod.initial_effect(c)
 	--Pendulum Summon
 	aux.EnablePendulumAttribute(c,false)
 	--Synchro Summon
+	aux.AddSynchroMixProcedure(c,cod.matfilter1,nil,nil,aux.NonTuner(Card.IsRace,RACE_ZOMBIE),1,99)
+	--No Tuner Check
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e1:SetRange(LOCATION_EXTRA)
-	e1:SetCondition(aux.SynCondition(aux.FilterBoolFunction(Card.IsRace,RACE_ZOMBIE),aux.NonTuner(Card.IsRace,RACE_ZOMBIE),1,99))
-	e1:SetTarget(aux.SynTarget(aux.FilterBoolFunction(Card.IsRace,RACE_ZOMBIE),aux.NonTuner(Card.IsRace,RACE_ZOMBIE),1,99))
-	e1:SetOperation(aux.SynOperation(aux.FilterBoolFunction(Card.IsRace,RACE_ZOMBIE),aux.NonTuner(Card.IsRace,RACE_ZOMBIE),1,99))
-	e1:SetValue(SUMMON_TYPE_SYNCHRO)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(80896940)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCondition(cod.syncon)
-	e2:SetTarget(cod.syntg)
-	e2:SetOperation(cod.synop)
-	e2:SetValue(SUMMON_TYPE_SYNCHRO)
-	c:RegisterEffect(e2)
 	--===Pendulum Effects===--
 	--Gain LP
 	local e3=Effect.CreateEffect(c)
@@ -66,100 +55,9 @@ function cod.initial_effect(c)
 end
 
 --Synchro Summon
-function cod.matfilter1(c,syncard)
-	return c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_NORMAL) and c:GetSummonType()==SUMMON_TYPE_PENDULUM 
-		and c:IsNotTuner() and c:IsFaceup() and c:IsCanBeSynchroMaterial(syncard)
-		and Duel.IsExistingMatchingCard(cod.matfilter2,0,LOCATION_MZONE,LOCATION_MZONE,1,c,syncard)
-end
-function cod.matfilter2(c,syncard)
-	return c:IsNotTuner() and c:IsFaceup() and c:IsRace(RACE_ZOMBIE) and c:IsCanBeSynchroMaterial(syncard)
-end
-function cod.synfilter(c,syncard,lv,g2,minc)
-	local tlv=c:GetSynchroLevel(syncard)
-	if lv-tlv<=0 then return false end
-	local g=g2:Clone()
-	g:RemoveCard(c)
-	return g:CheckWithSumEqual(Card.GetSynchroLevel,lv-tlv,minc-1,63,syncard)
-end
-function cod.syncon(e,c,tuner,mg)
-	if c==nil then return true end
-	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
-	local tp=c:GetControler()
-	local ct=-Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local minc=2
-	if minc<ct then minc=ct end
-	local g1=nil
-	local g2=nil
-	if mg then
-		g1=mg:Filter(cod.matfilter1,nil,c)
-		g2=mg:Filter(cod.matfilter2,nil,c)
-	else
-		g1=Duel.GetMatchingGroup(cod.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-		g2=Duel.GetMatchingGroup(cod.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-	end
-	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
-	local lv=c:GetLevel()
-	if tuner then
-		return cod.synfilter(tuner,c,lv,g2,minc)
-	end
-	if not pe then
-		return g1:IsExists(cod.synfilter,1,nil,c,lv,g2,minc)
-	else
-		return cod.synfilter(pe:GetOwner(),c,lv,g2,minc)
-	end
-end
-function cod.syntg(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
-	local g=Group.CreateGroup()
-	local g1=nil
-	local g2=nil
-	if mg then
-		g1=mg:Filter(cod.matfilter1,nil,c)
-		g2=mg:Filter(cod.matfilter2,nil,c)
-	else
-		g1=Duel.GetMatchingGroup(cod.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-		g2=Duel.GetMatchingGroup(cod.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-	end
-	local ct=-Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local minc=2
-	if minc<ct then minc=ct end
-	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
-	local lv=c:GetLevel()
-	if tuner then
-		g:AddCard(tuner)
-		g2:RemoveCard(tuner)
-		local lv1=tuner:GetSynchroLevel(c)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local m2=g2:SelectWithSumEqual(tp,Card.GetSynchroLevel,lv-lv1,minc-1,63,c)
-		g:Merge(m2)
-	else
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local tuner=nil
-		if not pe then
-			local t1=g1:FilterSelect(tp,cod.synfilter,1,1,nil,c,lv,g2,minc)
-			tuner=t1:GetFirst()
-		else
-			tuner=pe:GetOwner()
-			Group.FromCards(tuner):Select(tp,1,1,nil)
-		end
-		tuner:RegisterFlagEffect(id,RESET_EVENT+0x1fe0000,0,1)
-		g:AddCard(tuner)
-		g2:RemoveCard(tuner)
-		local lv1=tuner:GetSynchroLevel(c)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local m2=g2:SelectWithSumEqual(tp,Card.GetSynchroLevel,lv-lv1,minc-1,63,c)
-		g:Merge(m2)
-	end
-	if g then
-		g:KeepAlive()
-		e:SetLabelObject(g)
-		return true
-	else return false end
-end
-function cod.synop(e,tp,eg,ep,ev,re,r,rp,c,tuner,mg)
-	local g=e:GetLabelObject()
-	c:SetMaterial(g)
-	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_SYNCHRO)
-	g:DeleteGroup()
+function cod.matfilter1(c)
+	return (c:IsType(TYPE_TUNER) and c:IsRace(RACE_ZOMBIE))
+		or (c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_NORMAL) and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsNotTuner())
 end
 
 --Gain LP
