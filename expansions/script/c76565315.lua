@@ -58,6 +58,7 @@ function c76565315.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCountLimit(1)
+	e1:SetLabelObject(e0x)
 	e1:SetTarget(c76565315.rctg)
 	e1:SetOperation(c76565315.rcop)
 	c:RegisterEffect(e1)
@@ -165,6 +166,7 @@ function c76565315.rcop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		if c:GetCounter(0x1555)==0 then
 			Duel.Destroy(c,REASON_EFFECT)
+			e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()+1)
 		end
 	end
 end
