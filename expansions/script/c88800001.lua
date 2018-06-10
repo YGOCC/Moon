@@ -39,9 +39,6 @@ function card.initial_effect(c)
 end
     
     --no tribute
-function card.nonfilter(c)
-    return c:IsFacedown() or not c:IsRace(RACE_DRAGON)
-end
 function card.ntcon(e,c,minc)
     if c==nil then return true end
     local tp=c:GetControler()
@@ -54,14 +51,11 @@ end
 function card.sumcon(e,tp,eg,ep,ev,re,r,rp)
     return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
 end
-function card.cfilter(c)
-    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON)
-end
 function card.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
     if chk==0 then return Duel.IsExistingMatchingCard(card.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,nil)
         and c:GetFlagEffect(id)==0 end
-    local g=Duel.SelectMatchingCard(tp,card.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,e:GetHandler())
+    local g=Duel.SelectMatchingCard(tp,card.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil)
     Duel.Release(g,POS_FACEUP,REASON_COST)
     c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 end
@@ -103,6 +97,9 @@ function card.desop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 --add the filters down here
+function card.nonfilter(c)
+    return c:IsFacedown() or not c:IsRace(RACE_DRAGON)
+end
 function card.filter(c)
     return c:IsType(TYPE_MONSTER)
 end
@@ -113,7 +110,7 @@ function card.dfilter(c)
     return c:IsFaceup() and c:IsSetCard(0xfb0)
 end
 function card.cfilter(c)
-    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON)
+    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON) and not c:IsCode(id)
 end
 function card.checkfilter(c)
     return c:IsFaceup() and c:IsSetCard(0xfb0)

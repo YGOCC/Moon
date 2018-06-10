@@ -58,7 +58,7 @@ function card.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
     if chk==0 then return Duel.IsExistingMatchingCard(card.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,nil)
         and c:GetFlagEffect(id)==0 end
-    local g=Duel.SelectMatchingCard(tp,card.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,e:GetHandler())
+    local g=Duel.SelectMatchingCard(tp,card.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil)
     Duel.Release(g,POS_FACEUP,REASON_COST)
     c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 end
@@ -109,7 +109,7 @@ function card.dfilter(c)
     return c:IsSetCard(0xfb0) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function card.cfilter(c)
-    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON)
+    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON) and not c:IsCode(id)
 end
 function card.checkfilter(c)
     return c:IsFaceup() and c:IsSetCard(0xfb0)

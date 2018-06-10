@@ -1,6 +1,6 @@
 --Delivery
-local card = c88800002
-local id=88800002
+local card = c88800007
+local id=88800007
 function card.initial_effect(c)
     --Without Tribute
     local e1=Effect.CreateEffect(c)
@@ -26,14 +26,15 @@ function card.initial_effect(c)
     --Destroy S/T
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(id,0))
-    e3:SetCategory(CATEGORY_DESTROY)
+    e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
     e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
     e3:SetCode(EVENT_SUMMON_SUCCESS)
-    e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+    e3:SetProperty(EFFECT_FLAG_DELAY)
     e3:SetRange(LOCATION_MZONE)
+    e3:SetCountLimit(1,id)
     e3:SetCondition(card.cond)
     e3:SetTarget(card.target)
-    e3:SetOperation(card.destop)
+    e3:SetOperation(card.operation)
     c:RegisterEffect(e3)
 end
     
@@ -83,21 +84,20 @@ end
 function card.cond(e,tp,eg,ep,ev,re,r,rp)
     return eg:IsExists(card.checkfilter,1,nil)
 end
-
-function card.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chkc then return chkc:IsOnField() and card.filter(chkc) and chkc~=e:GetHandler() end
-    if chk==0 then return Duel.IsExistingTarget(card.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-    local g=Duel.SelectTarget(tp,card.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
-    Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+function card.target(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsExistingMatchingCard(card.dfilter,tp,LOCATION_GRAVE,0,1,nil) end
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 end
-
-function card.destop(e,tp,eg,ep,ev,re,r,rp)
-    local tc=Duel.GetFirstTarget()
-    if tc:IsRelateToEffect(e) then
-        Duel.Destroy(tc,REASON_EFFECT)
+function card.operation(e,tp,eg,ep,ev,re,r,rp)
+    if not e:GetHandler():IsRelateToEffect(e) then return end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local g=Duel.SelectMatchingCard(tp,card.dfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+    if g:GetCount()>0 then
+        Duel.SendtoHand(g,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,g)
     end
 end
+
 --filters
 function card.filter(c)
     return c:IsType(TYPE_SPELL+TYPE_TRAP)
@@ -106,7 +106,7 @@ function card.tfilter(c)
     return c:IsFaceup() and c:IsSetCard(0xfb0)
 end
 function card.dfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0xfb0)
+    return c:IsSetCard(0xfb0) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function card.cfilter(c)
     return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON) and not c:IsCode(id)
