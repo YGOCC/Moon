@@ -50,6 +50,7 @@ function c76565315.initial_effect(c)
 	x:SetCategory(CATEGORY_COUNTER)
 	x:SetType(EFFECT_TYPE_ACTIVATE)
 	x:SetCode(EVENT_FREE_CHAIN)
+	x:SetLabelObject(e0x)
 	x:SetOperation(c76565315.xop)
 	c:RegisterEffect(x)
 	--remove counter
@@ -110,6 +111,8 @@ end
 function c76565315.xop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	c:AddCounter(0x1555,2)
+	e:GetLabelObject():GetLabelObject():SetLabel(0)
+	e:GetLabelObject():SetLabel(0)
 end
 --counter tracker
 function c76565315.ctop0(e,tp,eg,ep,ev,re,r,rp)
@@ -124,6 +127,7 @@ function c76565315.ctop1(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetCounter(0x1555)<prev then
 		e:SetLabel(e:GetLabel()+prev-c:GetCounter(0x1555))
 		e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()-prev+c:GetCounter(0x1555))
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,0)
 	else
 		e:GetLabelObject():SetLabel(c:GetCounter(0x1555))
 	end

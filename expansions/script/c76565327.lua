@@ -40,7 +40,7 @@ function c76565327.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,76565327+EFFECT_COUNT_CODE_OATH)
-	e1:SetLabelObject(e0)
+	e1:SetLabelObject(e0x)
 	e1:SetTarget(c76565327.target)
 	e1:SetOperation(c76565327.activate)
 	c:RegisterEffect(e1)
@@ -87,6 +87,7 @@ function c76565327.ctop1(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetCounter(0x1555)<prev then
 		e:SetLabel(e:GetLabel()+prev-c:GetCounter(0x1555))
 		e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()-prev+c:GetCounter(0x1555))
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,0)
 	else
 		e:GetLabelObject():SetLabel(c:GetCounter(0x1555))
 	end
@@ -122,7 +123,8 @@ function c76565327.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		c:AddCounter(0x1555,3)
-		e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()+c:GetCounter(0x1555))
+		e:GetLabelObject():GetLabelObject():SetLabel(0)
+		e:GetLabelObject():SetLabel(0)
 	end
 end
 --spsummon

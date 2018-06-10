@@ -30,6 +30,7 @@ function c76565319.sprfilter(c)
 end
 function c76565319.cfilter(c,tp)
 	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousSetCard(0x7555) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_ONFIELD)
+		and not c:IsLocation(LOCATION_DECK+LOCATION_HAND)
 end
 function c76565319.thfilter(c)
 	return c:IsAbleToHand()
@@ -46,6 +47,7 @@ function c76565319.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectMatchingCard(tp,c76565319.sprfilter,tp,LOCATION_SZONE,0,1,1,nil)
 	Duel.ChangePosition(g,POS_FACEDOWN)
 	Duel.RaiseEvent(g,EVENT_SSET,e,REASON_EFFECT,tp,tp,0)
+	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565319,e,0,tp,tp,0)
 end
 --to hand
 function c76565319.thcon(e,tp,eg,ep,ev,re,r,rp)

@@ -2,36 +2,13 @@
 --Script by XGlitchy30
 function c76565317.initial_effect(c)
 	c:EnableCounterPermit(0x1555)
-	--COUNTER TRACKER
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e0:SetCode(EVENT_PHASE_START+PHASE_DRAW)
-	e0:SetRange(LOCATION_SZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_ONFIELD+LOCATION_DECK+LOCATION_REMOVED)
-	e0:SetOperation(c76565317.ctop0)
-	c:RegisterEffect(e0)
-	local e0x=Effect.CreateEffect(c)
-	e0x:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e0x:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e0x:SetRange(LOCATION_HAND)
-	e0x:SetCode(EVENT_CHAIN_SOLVED)
-	e0x:SetLabelObject(e0)
-	e0x:SetOperation(c76565317.ctop1)
-	c:RegisterEffect(e0x)
-	local e00=Effect.CreateEffect(c)
-	e00:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e00:SetRange(LOCATION_SZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_ONFIELD+LOCATION_DECK+LOCATION_REMOVED)
-	e00:SetCode(EVENT_CUSTOM+76165315)
-	e00:SetLabelObject(e0)
-	e00:SetOperation(c76565317.exc)
-	c:RegisterEffect(e00)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCode(EVENT_CUSTOM+76565317)
+	e1:SetCode(EVENT_CUSTOM+76565329)
 	e1:SetCountLimit(1,76565317)
 	e1:SetTarget(c76565317.sptg)
 	e1:SetOperation(c76565317.spop)
@@ -76,6 +53,7 @@ end
 function c76565317.ctop0(e,tp,eg,ep,ev,re,r,rp)
 	local count=0
 	local group=Duel.GetMatchingGroup(c76565317.counterf,tp,LOCATION_ONFIELD,0,nil)
+	local ct=group:GetCount()
 	for card in aux.Next(group) do
 		if card:GetCounter(0x1555)>0 then
 			count=count+card:GetCounter(0x1555)
@@ -101,6 +79,21 @@ function c76565317.ctop1(e,tp,eg,ep,ev,re,r,rp)
 end
 function c76565317.exc(e,tp,eg,ep,ev,re,r,rp)
 	e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()+2)
+end
+function c76565317.exc2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Damage(tp,1000,REASON_EFFECT)
+	local fcount=0
+	local group=Duel.GetMatchingGroup(c76565317.counterf,tp,LOCATION_ONFIELD,0,nil)
+	if group:GetCount()<=0 then
+		e:GetLabelObject();SetLabel(0)
+	else
+		for card in aux.Next(group) do
+			if card:GetCounter(0x1555)>0 then
+				fcount=fcount+card:GetCounter(0x1555)
+			end
+		end
+		e:GetLabelObject():SetLabel(fcount)
+	end
 end
 --spsummon
 function c76565317.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -136,7 +129,6 @@ function c76565317.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,tc)
 	end
 end
---destroy
 --draw
 function c76565317.lfcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_EFFECT)

@@ -40,7 +40,7 @@ function c76565324.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,76565324+EFFECT_COUNT_CODE_OATH)
-	e1:SetLabelObject(e0)
+	e1:SetLabelObject(e0x)
 	e1:SetTarget(c76565324.target)
 	e1:SetOperation(c76565324.activate)
 	c:RegisterEffect(e1)
@@ -56,7 +56,7 @@ function c76565324.initial_effect(c)
 	c:RegisterEffect(e2)
 	--spsummon
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetCode(EVENT_LEAVE_FIELD)
@@ -84,6 +84,7 @@ function c76565324.ctop1(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetCounter(0x1555)<prev then
 		e:SetLabel(e:GetLabel()+prev-c:GetCounter(0x1555))
 		e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()-prev+c:GetCounter(0x1555))
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,0)
 	else
 		e:GetLabelObject():SetLabel(c:GetCounter(0x1555))
 	end
@@ -119,7 +120,8 @@ function c76565324.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		c:AddCounter(0x1555,4)
-		e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()+c:GetCounter(0x1555))
+		e:GetLabelObject():GetLabelObject():SetLabel(0)
+		e:GetLabelObject():SetLabel(0)
 	end
 end
 --spsummon
@@ -157,7 +159,6 @@ function c76565324.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c76565324.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
 	e:SetLabel(alt)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_MZONE)
 end
 function c76565324.scop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=e:GetLabelObject():GetLabel()
@@ -172,10 +173,7 @@ function c76565324.scop(e,tp,eg,ep,ev,re,r,rp)
 	if ct>0 and sg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tg=sg:Select(tp,1,ct,nil)
-		if Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP)~=0 then
-			local op=Duel.GetOperatedGroup()
-			Duel.Destroy(op,REASON_EFFECT)
-		end
+		Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP)
 	end
 	e:GetLabelObject():SetLabel(0)
 end
