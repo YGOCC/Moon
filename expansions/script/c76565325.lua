@@ -70,12 +70,12 @@ function c76565325.spfilter(c,e,tp)
 	return c:IsSetCard(0x7555) and c:IsType(TYPE_MONSTER) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --counter tracker
-function c76565324.ctop0(e,tp,eg,ep,ev,re,r,rp)
+function c76565325.ctop0(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local count=c:GetCounter(0x1555)
 	e:SetLabel(count)
 end
-function c76565324.ctop1(e,tp,eg,ep,ev,re,r,rp)
+function c76565325.ctop1(e,tp,eg,ep,ev,re,r,rp)
 	local code=71565323
 	local c=e:GetHandler()
 	local prev=e:GetLabelObject():GetLabel()
@@ -100,13 +100,13 @@ function c76565324.ctop1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --reset counter tracker
-function c76565324.resetcon1(e,tp,eg,ep,ev,re,r,rp)
+function c76565325.resetcon1(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsReason(REASON_DESTROY)
 end
-function c76565324.reset1(e,tp,eg,ep,ev,re,r,rp)
+function c76565325.reset1(e,tp,eg,ep,ev,re,r,rp)
 	e:GetLabelObject():SetLabel(0)
 end
-function c76565324.reset0(e,tp,eg,ep,ev,re,r,rp)
+function c76565325.reset0(e,tp,eg,ep,ev,re,r,rp)
 	e:GetLabelObject():SetLabel(0)
 end
 --add counters
