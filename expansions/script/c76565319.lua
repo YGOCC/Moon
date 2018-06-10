@@ -33,7 +33,7 @@ function c76565319.cfilter(c,tp)
 		and not c:IsLocation(LOCATION_DECK+LOCATION_HAND)
 end
 function c76565319.thfilter(c)
-	return c:IsAbleToHand()
+	return c:IsAbleToHand() and c:IsLocation(LOCATION_GRAVE)
 end
 --spsummon proc
 function c76565319.sprcon(e,c)
