@@ -98,13 +98,13 @@ function c76565326.reset0(e,tp,eg,ep,ev,re,r,rp)
 end
 --add counters
 function c76565326.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanAddCounter(tp,0x1555,4,e:GetHandler()) end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,4,0,0x1555)
+	if chk==0 then return Duel.IsCanAddCounter(tp,0x1555,3,e:GetHandler()) end
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,3,0,0x1555)
 end
 function c76565326.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		c:AddCounter(0x1555,4)
+		c:AddCounter(0x1555,3)
 		e:GetLabelObject():GetLabelObject():SetLabel(0)
 		e:GetLabelObject():SetLabel(0)
 	end
