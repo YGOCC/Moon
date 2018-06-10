@@ -29,7 +29,7 @@ function c76565319.sprfilter(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x7555) and c:GetCounter(0x1555)<=3 and c:IsCanTurnSet()
 end
 function c76565319.cfilter(c,tp)
-	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousSetCard(0x7555) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_ONFIELD)
+	return c:IsPreviousSetCard(0x7555) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_ONFIELD)
 		and not c:IsLocation(LOCATION_DECK+LOCATION_HAND)
 end
 function c76565319.thfilter(c)

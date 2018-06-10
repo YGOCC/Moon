@@ -84,7 +84,7 @@ function c76565324.ctop1(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetCounter(0x1555)<prev then
 		e:SetLabel(e:GetLabel()+prev-c:GetCounter(0x1555))
 		e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()-prev+c:GetCounter(0x1555))
-		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,0)
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,prev-c:GetCounter(0x1555))
 	else
 		e:GetLabelObject():SetLabel(c:GetCounter(0x1555))
 	end
@@ -135,6 +135,7 @@ function c76565324.draw(e,tp,eg,ep,ev,re,r,rp)
 		c:RemoveCounter(tp,0x1555,1,REASON_EFFECT)
 		Duel.BreakEffect()
 		if c:GetCounter(0x1555)==0 then
+			Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,1)
 			if Duel.Destroy(c,REASON_EFFECT)~=0 then
 				e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()+1)
 				if Duel.IsPlayerCanDraw(tp,2) then

@@ -20,7 +20,7 @@ function c76565315.initial_effect(c)
 	c:RegisterEffect(e0x)
 	--RESET COUNTER_TRACKER
 	local e00=Effect.CreateEffect(c)
-	e00:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e00:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e00:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
 	e00:SetCode(EVENT_LEAVE_FIELD)
 	e00:SetLabelObject(e0)
@@ -127,7 +127,7 @@ function c76565315.ctop1(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetCounter(0x1555)<prev then
 		e:SetLabel(e:GetLabel()+prev-c:GetCounter(0x1555))
 		e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()-prev+c:GetCounter(0x1555))
-		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,0)
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,prev-c:GetCounter(0x1555))
 	else
 		e:GetLabelObject():SetLabel(c:GetCounter(0x1555))
 	end
@@ -169,6 +169,7 @@ function c76565315.rcop(e,tp,eg,ep,ev,re,r,rp)
 		c:RemoveCounter(tp,0x1555,1,REASON_EFFECT)
 		Duel.BreakEffect()
 		if c:GetCounter(0x1555)==0 then
+			Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,1)
 			Duel.Destroy(c,REASON_EFFECT)
 			e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()+1)
 		end
@@ -201,4 +202,5 @@ function c76565315.scop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+	e:GetLabelObject():SetLabel(0)
 end

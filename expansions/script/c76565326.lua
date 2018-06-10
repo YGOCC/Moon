@@ -81,7 +81,7 @@ function c76565326.ctop1(e,tp,eg,ep,ev,re,r,rp)
 	if not prev then prev=0 end
 	if c:GetCounter(0x1555)<prev then
 		Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+76565326,e,0,0,tp,0)
-		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,0)
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,prev-c:GetCounter(0x1555))
 		e:SetLabel(c:GetCounter(0x1555))
 		e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()-prev+c:GetCounter(0x1555))
 	else
@@ -120,6 +120,7 @@ function c76565326.negop(e,tp,eg,ep,ev,re,r,rp)
 		c:RemoveCounter(tp,0x1555,1,REASON_EFFECT)
 		Duel.BreakEffect()
 		if c:GetCounter(0x1555)==0 then
+			Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565329,e,REASON_EFFECT,tp,tp,1)
 			if Duel.Destroy(c,REASON_EFFECT)~=0 then
 				e:GetLabelObject():SetLabel(e:GetLabelObject():GetLabel()+1)
 				if Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_ONFIELD,1,nil) then

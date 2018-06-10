@@ -1,34 +1,17 @@
 --Ritmi Mistici - Quartetto Dirompente
 --Script by XGlitchy30
 function c76565322.initial_effect(c)
+	c:EnableReviveLimit()
 	c:EnableCounterPermit(0x1555)
-	--COUNTER TRACKER
+	--counter check
 	local e0=Effect.CreateEffect(c)
-	e0:SetDescription(aux.Stringid(76565322,14))
+	e0:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e0:SetCode(EVENT_PHASE+PHASE_DRAW)
-	e0:SetCountLimit(1)
-	e0:SetLabel(0)
-	e0:SetRange(LOCATION_SZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_ONFIELD+LOCATION_DECK+LOCATION_REMOVED)
-	e0:SetOperation(c76565322.ctop0)
+	e0:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+	e0:SetRange(LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_DECK+LOCATION_REMOVED)
+	e0:SetCode(EVENT_CUSTOM+76565329)
+	e0:SetOperation(c76565322.ctop)
 	c:RegisterEffect(e0)
-	local e0x=Effect.CreateEffect(c)
-	e0x:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e0x:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e0x:SetRange(LOCATION_SZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_ONFIELD+LOCATION_DECK+LOCATION_REMOVED)
-	e0x:SetCode(EVENT_CHAIN_SOLVED)
-	e0x:SetLabel(0)
-	e0x:SetLabelObject(e0)
-	e0x:SetOperation(c76565322.ctop1)
-	c:RegisterEffect(e0x)
-	local e00x=Effect.CreateEffect(c)
-	e00x:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e00x:SetRange(LOCATION_SZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_ONFIELD+LOCATION_DECK+LOCATION_REMOVED)
-	e00x:SetCode(EVENT_CUSTOM+76165315)
-	e00x:SetLabelObject(e0)
-	e00x:SetOperation(c76565322.exc)
-	c:RegisterEffect(e00x)
 	--RESET COUNTER_TRACKER
 	local e00=Effect.CreateEffect(c)
 	e00:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -36,7 +19,7 @@ function c76565322.initial_effect(c)
 	e00:SetRange(LOCATION_SZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_ONFIELD+LOCATION_DECK+LOCATION_REMOVED)
 	e00:SetCode(EVENT_TURN_END)
 	e00:SetCountLimit(1)
-	e00:SetLabelObject(e0x)
+	e00:SetLabelObject(e0)
 	e00:SetOperation(c76565322.reset1)
 	c:RegisterEffect(e00)
 	--spsummon proc
@@ -101,6 +84,12 @@ function c76565322.initial_effect(c)
 	ct4:SetTarget(c76565322.qetg)
 	ct4:SetOperation(c76565322.qeop)
 	c:RegisterEffect(ct4)
+	--cannot special summon
+	local efix=Effect.CreateEffect(c)
+	efix:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	efix:SetType(EFFECT_TYPE_SINGLE)
+	efix:SetCode(EFFECT_SPSUMMON_CONDITION)
+	c:RegisterEffect(efix)
 end
 --filters
 function c76565322.mzfilter(c,tp)
@@ -119,34 +108,10 @@ function c76565322.qefilter(c)
 	return c:IsSetCard(0x7555) and c:GetType()==0x20002
 end
 --counter tracker
-function c76565322.ctop0(e)
-	local tp=e:GetHandler():GetControler()
-	local count=0
-	local group=Duel.GetMatchingGroup(c76565322.counterf,tp,LOCATION_ONFIELD,0,nil)
-	for card in aux.Next(group) do
-		if card:GetCounter(0x1555)>0 then
-			count=count+card:GetCounter(0x1555)
-		end
-	end
-	e:SetLabel(count)
-end
-function c76565322.ctop1(e)
-	local tp=e:GetHandler():GetControler()
-	local count=e:GetLabelObject():GetLabel() -- +2 counters // 1 counter
-	local newcount=0
+function c76565322.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local total=e:GetLabel()
-	local group=Duel.GetMatchingGroup(c76565322.counterf,tp,LOCATION_ONFIELD,0,nil)
-	if group:GetCount()<=0 then 
-		newcount=0
-	else
-		for card in aux.Next(group) do
-			if card:GetCounter(0x1555)>0 then
-				newcount=newcount+card:GetCounter(0x1555) -- new = 1 // new = 0
-			end
-		end
-	end
-	if newcount<count then -- 1<2 // 0<1
-		total=total+count-newcount -- 0 + (2-1) = 1 // 1 + (1-0) = 2
+	if ev>0 then
+		total=total+ev 
 		--check multiple effects
 		if total>=2 then
 			if e:GetHandler():GetFlagEffect(71565322)<=0 then
@@ -176,10 +141,7 @@ function c76565322.ctop1(e)
 				e:GetHandler():RegisterFlagEffect(74465322,RESET_PHASE+PHASE_END,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT,2,0,aux.Stringid(76565322,3))
 			end
 		end
-		--
-		e:GetLabelObject():SetLabel(newcount)		-- count = 1 // count = 0
-	else
-		e:GetLabelObject():SetLabel(newcount) -- count = 1
+		---------
 	end
 	e:SetLabel(total)
 end
@@ -268,7 +230,7 @@ function c76565322.qeop(e,tp,eg,ep,ev,re,r,rp)
 		if tc:AddCounter(0x1555,1) then
 			if not tc:IsCanRemoveCounter(tp,0x1555,1,REASON_EFFECT) then return end
 			tc:RemoveCounter(tp,0x1555,1,REASON_EFFECT)
-			Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+76565322,e,0,tp,tp,0)
+			Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+76565322,e,0,tp,tp,0)
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
 	end
