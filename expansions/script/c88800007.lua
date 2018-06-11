@@ -109,7 +109,7 @@ function card.dfilter(c)
     return c:IsSetCard(0xfb0) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function card.cfilter(c)
-    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON) and not c:IsCode(id)
+    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DRAGON) and not c:IsCode(id) and c:IsReleasable()
 end
 function card.checkfilter(c)
     return c:IsFaceup() and c:IsSetCard(0xfb0)

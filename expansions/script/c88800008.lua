@@ -8,10 +8,15 @@ function card.initial_effect(c)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
     e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e1:SetCode(EVENT_FREE_CHAIN)
-    e1:SetCountLimit(id,1)
+    e1:SetCountLimit(1,id)
+    e1:SetCondition(card.condition)
     e1:SetTarget(card.target)
     e1:SetOperation(card.activate)
     c:RegisterEffect(e1)
+end
+
+function card.condition(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.IsExistingMatchingCard(card.isdragonlordfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 --Target 1 Dragonlord Monster you control
 function card.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -42,7 +47,7 @@ end
 
 --Filters
 --Is it a face-up Dragonlord Monster? 
-function card.isdragonlordfilter(c)
+function card.isdragonlordfilter(c,e,tp)
     return c:IsFaceup() and c:IsSetCard(0xfb0) and c:IsType(TYPE_MONSTER)
 end
 --Not really sure to be honest
