@@ -16,10 +16,6 @@ function c100409046.initial_effect(c)
 	e1:SetOperation(c100409046.ctop)
 	c:RegisterEffect(e1)
 	--avoid damage
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_NO_BATTLE_DAMAGE)
-	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
@@ -64,6 +60,7 @@ function c100409046.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c100409046.ctop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local a=g:GetFirst()
 	local b=g:GetNext()
