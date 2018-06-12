@@ -1,4 +1,4 @@
---[] Seisylphic Aurorae
+--Sensylphic Seris
 --[] ???
 function c11003756.initial_effect(c)
 	c:EnableReviveLimit()
@@ -88,7 +88,7 @@ function c11003756.nstg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c11003756.nsop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
-	local g=Duel.SelectMatchingCard(tp,c11003756.filter,tp,LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c11003756.nsfilter,tp,LOCATION_HAND,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.Summon(tp,tc,true,nil)
