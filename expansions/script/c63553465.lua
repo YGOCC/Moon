@@ -108,12 +108,9 @@ function c63553465.fdop(e,tp,eg,ep,ev,re,r,rp)
 		if (b1 and ft1>0) and (not b2 or ft2<=0 or Duel.SelectYesNo(tp,aux.Stringid(63553465,2)) or Duel.IsExistingMatchingCard(c63553465.excfilter,tp,LOCATION_SZONE,0,1,nil)) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		else
-			Card.SetCardData(tc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
+			tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-			local te=tc:GetActivateEffect()
-			local tep=tc:GetControler()
-			local cost=te:GetCost()
-			if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
+			tc:RegisterFlagEffect(726,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CANNOT_DISABLE,1)
 		end
 	end
 end
