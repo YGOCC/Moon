@@ -20,10 +20,10 @@ function c19772590.initial_effect(c)
 	--recover resource
 	local e3p=Effect.CreateEffect(c)
 	e3p:SetDescription(aux.Stringid(19772590,0))
-	e3p:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3p:SetType(EFFECT_TYPE_QUICK_O)
 	e3p:SetRange(LOCATION_PZONE)
-	e3p:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-	e3p:SetCode(EVENT_CHAIN_SOLVED)
+	e3p:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e3p:SetCode(EVENT_CHAINING)
 	e3p:SetCountLimit(1,19772590)
 	e3p:SetCondition(c19772590.setcon)
 	e3p:SetCost(c19772590.setcost)
@@ -65,7 +65,7 @@ function c19772590.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 --filters
-function c19772590.cfilter(c,tp,e)
+function c19772590.cfilter(c)
 	return c:IsSetCard(0x197) and c:IsType(TYPE_SPELL) and c:IsAbleToGraveAsCost()
 end
 function c19772590.setfilter(c)
@@ -84,7 +84,7 @@ function c19772590.stattg(e,c)
 end
 --recover resource
 function c19772590.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and (re:IsActiveType(TYPE_SPELL) or re:IsActiveType(TYPE_TRAP)) and re:IsHasType(EFFECT_TYPE_ACTIVATE)
+	return rp~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE)
 end
 function c19772590.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c19772590.cfilter,tp,LOCATION_DECK,0,2,nil) end
