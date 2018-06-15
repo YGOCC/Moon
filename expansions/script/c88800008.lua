@@ -48,7 +48,7 @@ end
 --Filters
 --Is it a face-up Dragonlord Monster? 
 function card.isdragonlordfilter(c,e,tp)
-    return c:IsFaceup() and c:IsSetCard(0xfb0) and c:IsType(TYPE_MONSTER)
+    return c:IsFaceup() and c:IsSetCard(0xfb0) and c:IsType(TYPE_MONSTER) and c:IsControler(tp)
 end
 --Not really sure to be honest
 function card.efilter(e,re)

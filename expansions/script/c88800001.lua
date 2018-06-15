@@ -56,7 +56,7 @@ function card.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(card.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,nil)
         and c:GetFlagEffect(id)==0 end
     local g=Duel.SelectMatchingCard(tp,card.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil)
-    Duel.Release(g,POS_FACEUP,REASON_COST)
+    Duel.Release(g,REASON_COST)
     c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 end
 function card.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
