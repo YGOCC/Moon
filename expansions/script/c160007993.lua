@@ -46,10 +46,10 @@ function c160007993.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c160007993.thop(e,tp,eg,ep,ev,re,r,rp)
 	 local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
+	if not c:IsRelateToEffect(e)  then return end
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
 	end
