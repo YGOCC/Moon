@@ -1,6 +1,6 @@
 --スワップリースト
 --Swap Cleric
---Script by dest
+--Fixed by Boos
 function c100334002.initial_effect(c)
 	--reduce atk and draw
 	local e1=Effect.CreateEffect(c)
@@ -16,24 +16,30 @@ function c100334002.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100334002.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_LINK
+	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r & REASON_LINK == REASON_LINK
 end
 function c100334002.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and e:GetHandler():GetReasonCard():IsAttackAbove(500) end
+	local sc=e:GetHandler():GetReasonCard()
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and sc:IsAttackAbove(500) and sc:IsType(TYPE_LINK) end
+	Duel.SetTargetCard(sc)
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,sc,1,LOCATION_MZONE,500)
 end
 function c100334002.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local rc=c:GetReasonCard()
-	if rc:GetAttack()<500 or rc:IsFacedown() or rc:IsImmuneToEffect(e) or not rc:IsRelateToEffect(e) then return end
+	local sc=Duel.GetFirstTarget()
+	if not sc:IsFaceup() or sc:GetAttack()<500 or not sc:IsRelateToEffect(e) or not sc:IsType(TYPE_LINK) then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(-500)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	rc:RegisterEffect(e1)
-	if not rc:IsImmuneToEffect(e1) and not rc:IsHasEffect(EFFECT_REVERSE_UPDATE) then
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	sc:RegisterEffect(e1)
+	if not sc:IsImmuneToEffect(e1) and not sc:IsHasEffect(EFFECT_REVERSE_UPDATE) then
 		Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_EFFECT)
+		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+		Duel.Draw(p,d,REASON_EFFECT)
 	end
 end
