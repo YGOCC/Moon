@@ -15,16 +15,6 @@ function c63553470.initial_effect(c)
 	e0:SetOperation(c63553470.sprop)
 	e0:SetValue(SUMMON_TYPE_LINK)
 	c:RegisterEffect(e0)
-	--limit
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetRange(LOCATION_MZONE+LOCATION_EXTRA+LOCATION_SZONE+LOCATION_GRAVE+LOCATION_REMOVED)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_NEGATE)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetTargetRange(1,0)
-	e1:SetCondition(c63553470.splimitcon)
-	e1:SetTarget(c63553470.splimit)
-	c:RegisterEffect(e1)
 	--activate from deck
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(63553470,0))
@@ -58,8 +48,12 @@ function c63553470.initial_effect(c)
 	e4:SetTarget(c63553470.settg)
 	e4:SetOperation(c63553470.setop)
 	c:RegisterEffect(e4)
+	Duel.AddCustomActivityCounter(63553470,ACTIVITY_SPSUMMON,c63553470.counterfilter)
 end
 --filters
+function c63553470.counterfilter(c)
+	return not c:IsSummonType(SUMMON_TYPE_PENDULUM) and not c:IsSummonType(SUMMON_TYPE_SPECIAL+726)
+end
 function c63553470.matfilter(c)
 	return c:IsType(TYPE_PENDULUM) or c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
 end
@@ -71,7 +65,7 @@ function c63553470.sprfilter1(c)
 	return c:IsType(TYPE_PENDULUM) and c:IsLocation(LOCATION_PZONE) and c:IsFaceup()
 end
 function c63553470.actfilter(c,tp)
-	return (c:IsType(TYPE_PENDULUM) and Duel.GetLocationCount(tp,LOCATION_PZONE)>0 and not c:IsForbidden())
+	return (c:IsType(TYPE_PENDULUM) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) and not c:IsForbidden())
 		or (c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not c:IsForbidden()
 			and not Duel.IsExistingMatchingCard(c63553470.excfilter,tp,LOCATION_SZONE,0,1,c))
 end
@@ -89,7 +83,7 @@ function c63553470.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(c63553470.sprfilter,tp,LOCATION_ONFIELD,0,nil)
-	return Duel.GetLocationCountFromEx(tp)>0 and g:GetCount()>0
+	return Duel.GetLocationCountFromEx(tp)>0 and g:GetCount()>0 and Duel.GetCustomActivityCount(63553470,tp,ACTIVITY_SPSUMMON)==0
 end
 function c63553470.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetMatchingGroup(c63553470.sprfilter,tp,LOCATION_ONFIELD,0,nil)
@@ -102,12 +96,16 @@ function c63553470.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 		g1:Merge(g2)
 	end
 	Duel.Destroy(g1,REASON_COST)
-	c:RegisterFlagEffect(63553470,RESET_PHASE+PHASE_END,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c63553470.splimit)
+	Duel.RegisterEffect(e1,tp)
 end
 --limit
-function c63553470.splimitcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(63553470)>0
-end
 function c63553470.splimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM or bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
 end

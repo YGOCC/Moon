@@ -55,16 +55,17 @@ function c63553468.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		return sel~=0
 	end
 	local sel=e:GetLabel()
+	local op=0
 	if sel==3 then
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(40044918,0))
-		sel=Duel.SelectOption(tp,aux.Stringid(63553468,0),aux.Stringid(63553468,1))
+		op=Duel.SelectOption(tp,aux.Stringid(63553468,0),aux.Stringid(63553468,1))
 	elseif sel==1 then
-		Duel.SelectOption(tp,aux.Stringid(63553468,0))
+		op=Duel.SelectOption(tp,aux.Stringid(63553468,0))
 	else
-		Duel.SelectOption(tp,aux.Stringid(63553468,1))
+		op=Duel.SelectOption(tp,aux.Stringid(63553468,1))
 	end
-	e:SetLabel(sel)
-	if sel==0 then
+	e:SetLabel(op)
+	if op==0 then
 		e:SetCategory(CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_EXTRA)
 	end
