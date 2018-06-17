@@ -1,33 +1,15 @@
 --Pendulum Zombie Dragon
 function c1013030.initial_effect(c)
 	 --Pendulum Set
+	aux.EnablePendulumAttribute(c,false)
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC_G)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetCountLimit(1,10000000)
-	e1:SetCondition(aux.PendCondition())
-	e1:SetOperation(aux.PendOperation())
-	e1:SetValue(SUMMON_TYPE_PENDULUM)
+	e1:SetDescription(1160)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetOperation(c1013030.activate)
 	c:RegisterEffect(e1)
-	--Can't be facedown in PZone
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetRange(LOCATION_PZONE)
-	e2:SetCode(EFFECT_CANNOT_TURN_SET)
-	c:RegisterEffect(e2)
-	--register by default
-	if reg==nil or reg then
-		local e3=Effect.CreateEffect(c)
-		e3:SetDescription(1160)
-		e3:SetType(EFFECT_TYPE_ACTIVATE)
-		e3:SetCode(EVENT_FREE_CHAIN)
-		e3:SetRange(LOCATION_HAND)
-		e3:SetOperation(c1013030.activate)
-		c:RegisterEffect(e3)
-	end
 	--Pend Effect
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(1013030,0))
