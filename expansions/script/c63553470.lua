@@ -49,10 +49,14 @@ function c63553470.initial_effect(c)
 	e4:SetOperation(c63553470.setop)
 	c:RegisterEffect(e4)
 	Duel.AddCustomActivityCounter(63553470,ACTIVITY_SPSUMMON,c63553470.counterfilter)
+	Duel.AddCustomActivityCounter(61553470,ACTIVITY_CHAIN,c63553470.chainfilter)
 end
 --filters
 function c63553470.counterfilter(c)
 	return not c:IsSummonType(SUMMON_TYPE_PENDULUM) and not c:IsSummonType(SUMMON_TYPE_SPECIAL+726)
+end
+function c63553470.chainfilter(re,tp,cid)
+	return not (re:IsHasType(EFFECT_TYPE_ACTIVATE) and (re:GetHandler():IsType(TYPE_PENDULUM) or re:GetHandler():GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM))
 end
 function c63553470.matfilter(c)
 	return c:IsType(TYPE_PENDULUM) or c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
@@ -84,6 +88,7 @@ function c63553470.sprcon(e,c)
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(c63553470.sprfilter,tp,LOCATION_ONFIELD,0,nil)
 	return Duel.GetLocationCountFromEx(tp)>0 and g:GetCount()>0 and Duel.GetCustomActivityCount(63553470,tp,ACTIVITY_SPSUMMON)==0
+		and Duel.GetCustomActivityCount(61553470,tp,ACTIVITY_CHAIN)==0
 end
 function c63553470.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetMatchingGroup(c63553470.sprfilter,tp,LOCATION_ONFIELD,0,nil)
@@ -104,10 +109,21 @@ function c63553470.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(c63553470.splimit)
 	Duel.RegisterEffect(e1,tp)
+	local e2=Effect.CreateEffect(e:GetHandler())
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e2:SetTargetRange(1,0)
+	e2:SetValue(c63553470.aclimit)
+	e2:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e2,tp)
 end
 --limit
 function c63553470.splimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM or bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
+end
+function c63553470.aclimit(e,re,tp)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and (re:GetHandler():IsType(TYPE_PENDULUM) or re:GetHandler():GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM)
 end
 --activate from deck
 function c63553470.actcon(e,tp,eg,ep,ev,re,r,rp)
