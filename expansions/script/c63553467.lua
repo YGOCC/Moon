@@ -70,6 +70,7 @@ function c63553467.setop(e,tp,eg,ep,ev,re,r,rp)
 	if g then
 		Card.SetCardData(g,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 		Duel.SSet(tp,g)
+		Duel.ConfirmCards(1-tp,g)
 		if not g:IsLocation(LOCATION_SZONE) then
 			if g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
 				Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
