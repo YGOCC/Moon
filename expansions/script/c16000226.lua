@@ -11,7 +11,7 @@ function c16000226.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c16000226.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x11a) and c:IsAbleToExtra()
+	return c:IsFaceup() and c:IsType(TYPE_EVOLUTE) and c:IsAbleToExtra()
 end
 function c16000226.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c16000226.filter(chkc) end
