@@ -39,7 +39,7 @@ function c160004532.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	else Duel.PayLPCost(tp,800) end
 end
 function c160004532.spfilter(c,e,tp)
-	return c:IsSetCard(0xc50) or not c:IsType(TYPE_EFFECT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsSetCard(0xc50) or not c:IsType(TYPE_EFFECT)) and c:IsFaceup() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c160004532.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c160004532.spfilter(chkc,e,tp) end

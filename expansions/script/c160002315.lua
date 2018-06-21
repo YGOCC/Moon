@@ -48,7 +48,7 @@ function c160002315.desrepop(e,tp,eg,ep,ev,re,r,rp)
 	  Duel.Remove(tc,POS_FACEUP,REASON_EFFECT+REASON_REPLACE)
 end
 function c160002315.filter(c)
-	return   c:IsSetCard(0xc52) or c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return   c:IsSetCard(0xc52) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function c160002315.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToExtra()  end

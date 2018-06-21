@@ -22,7 +22,7 @@ function c160008952.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c160008952.filter(c,e,tp)
-	return c:IsSetCard(0xc50) and c:IsType(TYPE_MONSTER) or (not c:IsType(TYPE_EFFECT)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xc50) and c:IsFaceup()  and c:IsType(TYPE_MONSTER) or (not c:IsType(TYPE_EFFECT)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c160008952.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c160008952.filter(chkc,e,tp) end

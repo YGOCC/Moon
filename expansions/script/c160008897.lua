@@ -22,7 +22,7 @@ function c160008897.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c160008897.filter(c)
-	return c:IsSetCard(0xc50)  and c:IsAbleToDeck()
+	return c:IsSetCard(0xc50) and c:IsFaceup()  and c:IsAbleToDeck()
 end
 
 function c160008897.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -53,7 +53,7 @@ function c160008897.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
-function c160008897.thtg(e,tp,eg,ep,ev,re,r,rp,chk)	
+function c160008897.thtg(e,tp,eg,ep,ev,re,r,rp,chk) 
 		if chk==0 then 
 		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return false end
 		local g=Duel.GetDecktopGroup(tp,3)
