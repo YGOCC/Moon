@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	14b641235b0bb5c3599b2b52e7ac3833
+﻿expansions/Cards-non-QCD.cdb	f8b3460cbeb06431fe468b8f6e74c670
 expansions/lflist.conf	1249b9b867e019f8cd73adbcbab8cf0c
 expansions/official.cdb	e8e6ce435275649475c369aa6fd41460
 expansions/pre-release.cdb	d0ad2c8889d484f08f2ce1917b9b24dc
@@ -9695,6 +9695,6 @@ expansions/sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 expansions/sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 expansions/sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	aea2c6747ad0bd93429ea545530022c6
+update/filelist.txt	00b01b1a3cba5cdb424de54e9850848d
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	8db31f834cdbb73d50a00ba426a32d15
+update/version.txt	c6d735cbcf0f54748a4a0f7786d23a56
