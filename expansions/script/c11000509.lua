@@ -19,7 +19,7 @@ function c11000509.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c11000509.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetOwner():IsSetCard(0x1FD) and re:GetOwner():IsType(TYPE_MONSTER)
+	return re and re:GetOwner():IsSetCard(0x1FD)
 end
 function c11000509.spfilter(c,e,tp)
 	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

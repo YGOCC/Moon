@@ -20,12 +20,15 @@ function c11000506.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c11000506.cfilter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1FD) and c:IsReason(REASON_EFFECT)
+	return c:IsFaceup() and c:IsControler(tp) and c:GetPreviousControler()==tp
+		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsSetCard(0x1FD)
+		and c:IsType(TYPE_MONSTER)
 end
 function c11000506.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c11000506.cfilter,nil,tp)
-	e:SetLabelObject(g:GetFirst())
-	return g:GetCount()>0
+--	local g=eg:Filter(c11000506.cfilter,nil,tp)
+--	e:SetLabelObject(g:GetFirst())
+--	return g:GetCount()>0
+	return eg:IsExists(c11000506.cfilter,1,nil,tp)
 end
 function c11000506.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

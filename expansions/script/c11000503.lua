@@ -29,16 +29,13 @@ function c11000503.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
 function c11000503.cfilter(c)
-	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckAsCost()
+	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function c11000503.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11000503.cfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,c11000503.cfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler())
-		if g:GetFirst():IsLocation(LOCATION_HAND) then
-		Duel.ConfirmCards(1-tp,g)
-	end
-	Duel.SendtoDeck(g,nil,2,REASON_COST)
+	Duel.SendtoGrave(g,REASON_COST)
 end
 function c11000503.spfilter(c,e,tp)
 	return c:IsSetCard(0x1FD) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

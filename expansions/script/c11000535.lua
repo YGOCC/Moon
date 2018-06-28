@@ -13,8 +13,13 @@ function c11000535.initial_effect(c)
 	e3:SetOperation(c11000535.operation)
 	c:RegisterEffect(e3)
 end
+function c11000535.cfilter(c)
+	return c:IsSetCard(0x1fd) and c:IsType(TYPE_MONSTER)
+		and not c:IsCode(11000535)
+end
 function c11000535.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp
+		and Duel.IsExistingMatchingCard(c11000535.cfilter,tp,LOCATION_GRAVE,0,1,nil)
 		and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
 end
 function c11000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)

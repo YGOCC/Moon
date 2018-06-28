@@ -18,7 +18,7 @@ function c11000510.initial_effect(c)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
-	--destroy
+	--self destroy
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -42,13 +42,13 @@ function c11000510.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1FD)
 end
 function c11000510.descon(e)
-	return not Duel.IsExistingMatchingCard(c11000510.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	return not Duel.IsExistingMatchingCard(c11000510.filter,0,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 function c11000510.tg(e,c)
-	return c:IsSetCard(0x1FD) and c:IsType(TYPE_SYNCHRO)
+	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER)
 end
 function c11000510.cfilter(c)
-	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsReason(REASON_EFFECT)
+	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
 end
 function c11000510.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c11000510.cfilter,1,nil)
