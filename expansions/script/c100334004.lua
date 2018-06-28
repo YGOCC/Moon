@@ -2,6 +2,10 @@
 --Micro Coder
 --Script by nekrozar
 function c100334004.initial_effect(c)
+	--Temporary
+	if EFFECT_EXTRA_LINK_MATERIAL==nil then
+		aux.AddHandLinkProc()
+	end
 	--hand link
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
