@@ -327,7 +327,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 		end
 		table.remove(t)
 	end
-	if not extramat then extramat,min,max=aux.FALSE,0,0 end
+	if not extramat then extramat,min,max=aux.FALSE,2,2 end
 	c:EnableCounterPermit(0x88)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
