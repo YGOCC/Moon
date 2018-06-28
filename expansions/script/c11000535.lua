@@ -1,5 +1,10 @@
 --Shya Twins
 function c11000535.initial_effect(c)
+	--atklimit
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
+	c:RegisterEffect(e1)
 	--Negate
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)

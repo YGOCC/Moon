@@ -10,6 +10,17 @@ function c11000529.initial_effect(c)
 	e1:SetTarget(c11000529.target)
 	e1:SetOperation(c11000529.activate)
 	c:RegisterEffect(e1)
+	--draw
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
+	e2:SetDescription(aux.Stringid(11000529,1))
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,11000529)
+	e2:SetCondition(aux.exccon)
+	e2:SetTarget(c11000529.tdtg)
+	e2:SetOperation(c11000529.tdop)
+	c:RegisterEffect(e2)
 end
 function c11000529.cfilter(c,tp)
 	return c:IsSetCard(0x1FD) and (c:IsControler(tp) or c:IsFaceup()) and c:IsType(TYPE_MONSTER)
@@ -32,4 +43,17 @@ function c11000529.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=2 then return end
 	Duel.SendtoHand(tg,nil,REASON_EFFECT)
+end
+function c11000529.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToDeck() and Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function c11000529.tdop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0 and c:IsLocation(LOCATION_DECK) then
+		Duel.ShuffleDeck(tp)
+		Duel.BreakEffect()
+		Duel.Draw(tp,1,REASON_EFFECT)
+	end
 end

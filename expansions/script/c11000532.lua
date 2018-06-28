@@ -29,10 +29,8 @@ function c11000532.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c11000532.condition(e,tp,eg,ep,ev,re,r,rp)
-	return (e:GetHandler():IsReason(REASON_COST) and re:IsHasType(0x1FD)) or
-		((re:IsActiveType(TYPE_MONSTER) or re:IsActiveType(TYPE_SPELL) or
-		re:IsActiveType(TYPE_TRAP)) and re:GetHandler():IsSetCard(0x1FD) 
-		and bit.band(r,REASON_EFFECT)~=0)
+	return (e:GetHandler():IsReason(REASON_COST) and re:GetHandler():IsSetCard(0x1FD)) or
+		(re:GetHandler():IsSetCard(0x1FD) and bit.band(r,REASON_EFFECT)~=0)
 end
 function c11000532.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
