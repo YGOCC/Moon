@@ -24,15 +24,12 @@ function c11000524.initial_effect(c)
 	e3:SetOperation(c11000524.disop)
 	c:RegisterEffect(e3)
 end
-function c11000524.filter1(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP+TYPE_MONSTER) and c:IsDestructable()
-end
 function c11000524.destg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and c11000524.filter1(chkc) and chkc~=e:GetHandler() end
+	if chkc then return chkc:IsOnField() and c57624336.filter1(chkc) and chkc~=e:GetHandler() end
 	if chk==0 then return e:GetHandler():IsDestructable()
-		and Duel.IsExistingTarget(c11000524.filter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+		and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c11000524.filter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 	g:AddCard(e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 end

@@ -31,7 +31,7 @@ function c11000529.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(sg,REASON_COST)
 end
 function c11000529.filter(c,e,tp)
-	return c:IsSetCard(0x1FD) and c:IsFaceup() and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x1FD) and c:IsFaceup()
 end
 function c11000529.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(c11000529.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,2,e:GetHandler()) end

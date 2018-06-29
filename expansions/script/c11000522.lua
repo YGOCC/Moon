@@ -8,9 +8,9 @@ function c11000522.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCountLimit(1)
-	e2:SetCondition(c11000522.thcon)
-	e2:SetTarget(c11000522.thtg)
-	e2:SetOperation(c11000522.thop)
+	e2:SetCondition(c11000522.descon)
+	e2:SetTarget(c11000522.destg)
+	e2:SetOperation(c11000522.desop)
 	c:RegisterEffect(e2)
 	--extra summon
 	local e3=Effect.CreateEffect(c)
@@ -19,30 +19,28 @@ function c11000522.initial_effect(c)
 	e3:SetOperation(c11000522.sumop)
 	c:RegisterEffect(e3)
 end
-function c11000522.thcon(e,tp,eg,ep,ev,re,r,rp)
-	local seq=e:GetHandler():GetSequence()
-	return Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
+function c11000522.descon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(nil,tp,LOCATION_PZONE,0,1,e:GetHandler())
 end
-function c11000522.thfilter(c,code)
+function c11000522.desfilter(c)
 	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
 end
-function c11000522.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local seq=e:GetHandler():GetSequence()
-	local sc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
+function c11000522.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local sc=Duel.GetFirstMatchingCard(nil,tp,LOCATION_PZONE,0,e:GetHandler())
 	if chk==0 then return sc:IsDestructable()
-		and Duel.IsExistingMatchingCard(c11000522.thfilter,tp,0,LOCATION_ONFIELD,1,nil,nil) end
+		and Duel.IsExistingMatchingCard(c11000522.desfilter,tp,0,LOCATION_ONFIELD,1,nil,nil) end
 	Duel.SetTargetCard(sc)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sc,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,1-tp,LOCATION_ONFIELD)
 end
-function c11000522.thop(e,tp,eg,ep,ev,re,r,rp)
+function c11000522.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,c11000522.thfilter,tp,0,LOCATION_ONFIELD,1,1,nil,nil)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local g=Duel.SelectMatchingCard(tp,c11000522.desfilter,tp,0,LOCATION_ONFIELD,1,1,nil,nil)
 		if g:GetCount()>0 then
-			Duel.Destroy(tc,REASON_EFFECT)
+			Duel.Destroy(g,REASON_EFFECT)
 		end
 	end
 end

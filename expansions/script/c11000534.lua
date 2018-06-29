@@ -52,6 +52,7 @@ function c11000534.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c11000534.rfilter(c)
 	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckAsCost()
+		and not c:IsCode(11000534)
 end
 function c11000534.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=e:GetLabel()

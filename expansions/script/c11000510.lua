@@ -28,6 +28,7 @@ function c11000510.initial_effect(c)
 	c:RegisterEffect(e4)
 	--sending
 	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(11000510,0))
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_TO_GRAVE)
 	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
