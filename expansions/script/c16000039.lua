@@ -1,7 +1,7 @@
 --ESPErgear Knight:Valkyrie
 function c16000039.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,c16000039.checku,9,c16000039.matfilter,c16000039.filter2,c16000039.filter2)
+  aux.AddEvoluteProc(c,nil,9,c16000039.matfilter,c16000039.filter2,c16000039.filter3)
 	c:EnableReviveLimit()
 	--negate
 	local e2=Effect.CreateEffect(c)
@@ -47,8 +47,8 @@ end
 function c16000039.matfilter(c,ec,tp)
    return c:IsAttribute(ATTRIBUTE_LIGHT) 
 end
-function c16000039.checku(sg,ec,tp)
-return sg:IsExists(Card.IsCode,1,nil,16000020)
+function c16000039.filter3(c,sg,ec,tp)
+return c:IsCode(16000020)
 end
 function c16000039.filter2(c,ec,tp)
 	return (c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE)) or c:IsRace(RACE_PSYCHO)
