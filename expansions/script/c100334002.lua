@@ -1,6 +1,6 @@
 --スワップリースト
 --Swap Cleric
---Fixed by Boos
+--Script by dest
 function c100334002.initial_effect(c)
 	--reduce atk and draw
 	local e1=Effect.CreateEffect(c)
@@ -14,32 +14,38 @@ function c100334002.initial_effect(c)
 	e1:SetTarget(c100334002.drtg)
 	e1:SetOperation(c100334002.drop)
 	c:RegisterEffect(e1)
+	--reg
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_BE_MATERIAL)
+	e2:SetCondition(c100334002.drcon)
+	e2:SetOperation(c100334002.regop)
+	c:RegisterEffect(e2)
 end
 function c100334002.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r & REASON_LINK == REASON_LINK
+	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_LINK
 end
 function c100334002.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local sc=e:GetHandler():GetReasonCard()
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and sc:IsAttackAbove(500) and sc:IsType(TYPE_LINK) end
-	Duel.SetTargetCard(sc)
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
+	local rc=e:GetHandler():GetReasonCard()
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and rc:IsAttackAbove(500) and rc:GetFlagEffect(100334002)~=0 end
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,sc,1,LOCATION_MZONE,500)
 end
 function c100334002.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local sc=Duel.GetFirstTarget()
-	if not sc:IsFaceup() or sc:GetAttack()<500 or not sc:IsRelateToEffect(e) or not sc:IsType(TYPE_LINK) then return end
+	local rc=c:GetReasonCard()
+	if not rc:IsAttackAbove(500) or rc:IsImmuneToEffect(e) or rc:GetFlagEffect(100334002)==0 then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(-500)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
-	sc:RegisterEffect(e1)
-	if not sc:IsImmuneToEffect(e1) and not sc:IsHasEffect(EFFECT_REVERSE_UPDATE) then
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	rc:RegisterEffect(e1)
+	if not rc:IsHasEffect(EFFECT_REVERSE_UPDATE) then
 		Duel.BreakEffect()
-		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-		Duel.Draw(p,d,REASON_EFFECT)
+		Duel.Draw(tp,1,REASON_EFFECT)
 	end
+end
+function c100334002.regop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=e:GetHandler():GetReasonCard()
+	rc:RegisterFlagEffect(100334002,RESET_EVENT+RESETS_STANDARD,0,1)
 end

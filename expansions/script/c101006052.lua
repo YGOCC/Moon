@@ -43,7 +43,7 @@ function c101006052.mfilter(c)
 	return c:GetLevel()>0 and c:IsSetCard(0x220) and c:IsAbleToDeck()
 end
 function c101006052.cfilter(c)
-	return c:IsType(TYPE_LINK) and c:IsAttribute(ATTRIBUTE_FIRE)
+	return c:IsFaceup() and c:IsType(TYPE_LINK) and c:IsAttribute(ATTRIBUTE_FIRE)
 end
 function c101006052.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

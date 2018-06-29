@@ -14,11 +14,10 @@ function c101006025.initial_effect(c)
 	e1:SetOperation(c101006025.spop)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	e1:SetLabelObject(e2)
 	--Destroy/Shuffle/Special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,101006025)
 	e2:SetLabel(0)
@@ -26,14 +25,15 @@ function c101006025.initial_effect(c)
 	e2:SetTarget(c101006025.destg)
 	e2:SetOperation(c101006025.desop)
 	c:RegisterEffect(e2)
+	e1:SetLabelObject(e2)
 end
 function c101006025.spcostfilter(c)
 	return c:IsAbleToRemoveAsCost() and c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK)
 end
 function c101006025.spcon(e,c)
 	if c==nil then return true end
-	if Duel.GetMZoneCount(tp)<=0 then return false end
 	local tp=c:GetControler()
+	if Duel.GetMZoneCount(tp)<=0 then return false end
 	return Duel.IsExistingMatchingCard(c101006025.spcostfilter,tp,LOCATION_GRAVE,0,3,nil)
 end
 function c101006025.spop(e,tp,eg,ep,ev,re,r,rp,c)
@@ -53,7 +53,7 @@ end
 function c101006025.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
-function c100204007.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c101006025.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()==1 then
 			return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -79,7 +79,7 @@ function c100204007.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	end
 end
-function c100204007.desop(e,tp,eg,ep,ev,re,r,rp)
+function c101006025.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -92,7 +92,7 @@ function c100204007.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g1=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c101006025.spfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 		if g1:GetCount()>0 then
-			Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
 	elseif e:GetLabel()==2 then
 		if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)<=0 then return end
@@ -103,7 +103,7 @@ function c100204007.desop(e,tp,eg,ep,ev,re,r,rp)
 		if g3:GetCount()>0 then
 			local ct=math.min(g3:GetCount(),2)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-			local sg=g:Select(tp,1,ct,nil)
+			local sg=g3:Select(tp,1,ct,nil)
 			Duel.HintSelection(sg)
 			Duel.Destroy(sg,REASON_EFFECT)
 		end
