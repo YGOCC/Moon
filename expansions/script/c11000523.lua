@@ -45,23 +45,22 @@ function c11000523.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c11000523.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsCanChangePosition() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsCanChangePosition,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,nil,tp,0,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,Card.IsCanChangePosition,tp,0,LOCATION_MZONE,1,1,nil)
 end
 function c11000523.cfilter(c)
-	return c:IsSetCard(0x1FD) and c:IsAbleToGrave()
+	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c11000523.posop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		if Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_STOGRAVE)
-			local g=Duel.SelectMatchingCard(tp,c11000523.cfilter,tp,LOCATION_DECK,0,1,1,nil)
-			if g:GetCount()>0 then
-			Duel.SendtoGrave(g,nil,REASON_EFFECT)
-			end
+	if tc:IsRelateToEffect(e) and Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_STOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,c11000523.cfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.SendtoGrave(g,REASON_EFFECT)
 		end
 	end
 end

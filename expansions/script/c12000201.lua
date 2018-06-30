@@ -7,7 +7,7 @@ function c12000201.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,12000201)
-	e1:SetCondition(c12000201.sumcon)
+	e1:SetCondition(c12000201.sumcon1)
 	e1:SetCost(c12000201.sumcost)
 	e1:SetTarget(c12000201.sumtg)
 	e1:SetOperation(c12000201.sumop)
@@ -36,6 +36,19 @@ function c12000201.initial_effect(c)
 	e3:SetTarget(c12000201.tgtg)
 	e3:SetOperation(c12000201.tgop)
 	c:RegisterEffect(e3)
+	--summon (quick)
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(12000201,0))
+	e4:SetCategory(CATEGORY_SUMMON)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetRange(LOCATION_HAND)
+	e4:SetCode(EVENT_FREE_CHAIN)
+	e4:SetCountLimit(1,12000201)
+	e4:SetCondition(c12000201.sumcon2)
+	e4:SetCost(c12000201.sumcost)
+	e4:SetTarget(c12000201.sumtg)
+	e4:SetOperation(c12000201.sumop)
+	c:RegisterEffect(e4)
 end
 function c12000201.cfilter1(c)
 	return c:IsFaceup() and c:IsCode(12000201)
@@ -43,22 +56,31 @@ end
 function c12000201.cfilter2(c)
 	return c:IsFaceup() and c:IsSetCard(0x855)
 end
-function c12000201.sumcon(e,tp,eg,ep,ev,re,r,rp)
-	return (not Duel.IsExistingMatchingCard(c12000201.cfilter1,tp,LOCATION_MZONE,0,1,nil)
+function c12000201.cfilter3(c)
+	return c:IsFaceup() and c:IsCode(12000210)
+end
+function c12000201.sumcon1(e,tp,eg,ep,ev,re,r,rp)
+	return ((not Duel.IsExistingMatchingCard(c12000201.cfilter1,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingMatchingCard(c12000201.cfilter2,tp,LOCATION_MZONE,0,1,nil))
-		or Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
+		or Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0)
+		and not Duel.IsExistingMatchingCard(c12000201.cfilter3,tp,LOCATION_ONFIELD,0,1,nil)
+end
+function c12000201.sumcon2(e,tp,eg,ep,ev,re,r,rp)
+	return ((not Duel.IsExistingMatchingCard(c12000201.cfilter1,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(c12000201.cfilter2,tp,LOCATION_MZONE,0,1,nil))
+		or Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0)
+		and Duel.IsExistingMatchingCard(c12000201.cfilter3,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c12000201.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
 function c12000201.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsPlayerCanSpecialSummonCount(tp,2)
-		and not Duel.IsPlayerAffectedByEffect(tp,59822133)
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
         and Duel.IsPlayerCanSpecialSummonMonster(tp,12000202,0,0x4011,0,0,1,RACE_DRAGON,ATTRIBUTE_WIND) 
         and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 end
-    Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function c12000201.excfilter(c)
 	return not c:IsCode(12000202)
@@ -66,7 +88,6 @@ end
 function c12000201.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	for i=1,2 do
 		local token=Duel.CreateToken(tp,12000202)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)

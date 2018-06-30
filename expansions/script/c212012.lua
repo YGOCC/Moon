@@ -93,3 +93,6 @@ function c212012.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
+function c212012.lvcon(e)
+	return e:GetHandler():GetCounter(0x1041)>0
+end

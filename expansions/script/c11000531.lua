@@ -44,9 +44,6 @@ function c11000531.drcon(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabelObject(g:GetFirst())
 	return g:GetCount()>0
 end
-function c11000531.cfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1FD) and c:IsAbleToGrave()
-end
 function c11000531.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetTargetPlayer(tp)
@@ -60,7 +57,7 @@ function c11000531.drop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c11000531.bfilter(c,tp)
 	return c:IsType(TYPE_MONSTER) and c:GetPreviousControler()==tp
-		and c:IsSetCard(0x11FD)
+		and (c:IsSetCard(0x11FD) or c:IsSetCard(0x1F3))
 end
 function c11000531.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(c11000531.bfilter,nil,tp)
