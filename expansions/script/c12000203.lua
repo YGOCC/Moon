@@ -87,7 +87,8 @@ function c12000203.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_ADVANCE)
 end
 function c12000203.thfilter1(c)
-	return c:IsSetCard(0x855) and not c:IsCode(12000203) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x855) and not c:IsCode(12000203)
+		and c:IsAbleToHand()
 end
 function c12000203.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c12000203.thfilter1,tp,LOCATION_GRAVE,0,1,nil) end
@@ -105,7 +106,7 @@ function c12000203.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c12000203.thfilter2(c)
-	return c:IsSetCard(0x855) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x855) and c:IsAbleToHand()
 end
 function c12000203.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c12000203.thfilter2,tp,LOCATION_DECK,0,1,nil) end

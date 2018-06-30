@@ -92,7 +92,8 @@ function c12000201.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_ADVANCE)
 end
 function c12000201.thfilter(c)
-	return c:IsSetCard(0x855) and not c:IsCode(12000201) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x855) and not c:IsCode(12000201)
+		and c:IsAbleToHand()
 end
 function c12000201.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c12000201.thfilter,tp,LOCATION_DECK,0,1,nil) end

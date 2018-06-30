@@ -15,8 +15,8 @@ function c12000212.initial_effect(c)
 	e2:SetHintTiming(0,TIMING_END_PHASE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,12000212)
-	e2:SetTarget(c12000212.tdtg)
-	e2:SetOperation(c12000212.tdop)
+	e2:SetTarget(c12000212.tdtg1)
+	e2:SetOperation(c12000212.tdop1)
 	c:RegisterEffect(e2)
 	--negate
 	local e3=Effect.CreateEffect(c)
@@ -40,22 +40,22 @@ function c12000212.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e4:SetCode(EVENT_TO_GRAVE)
 	e4:SetCountLimit(1,12000412)
-	e4:SetCondition(c12000212.tdcon)
-	e4:SetTarget(c12000212.tdtg)
-	e4:SetOperation(c12000212.tdop)
+	e4:SetCondition(c12000212.tdcon2)
+	e4:SetTarget(c12000212.tdtg2)
+	e4:SetOperation(c12000212.tdop2)
 	c:RegisterEffect(e4)
 end
-function c12000212.tdfilter(c)
+function c12000212.tdfilter1(c)
 	return c:IsSetCard(0x855) and c:IsAbleToDeck()
 end
-function c12000212.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c97616504.tdfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c12000212.tdfilter,tp,LOCATION_GRAVE,0,1,nil) end
+function c12000212.tdtg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c12000212.tdfilter1(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c12000212.tdfilter1,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,c12000212.tdfilter,tp,LOCATION_GRAVE,0,1,3,nil)
+	local g=Duel.SelectTarget(tp,c12000212.tdfilter1,tp,LOCATION_GRAVE,0,1,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
 end
-function c12000212.tdop(e,tp,eg,ep,ev,re,r,rp)
+function c12000212.tdop1(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
 		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
@@ -88,20 +88,20 @@ function c12000212.negop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
-function c12000212.tdcon(e,tp,eg,ep,ev,re,r,rp)
+function c12000212.tdcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
-function c12000212.tdfilter(c)
+function c12000212.tdfilter2(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeck()
 end
-function c12000212.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and c12000212.tdfilter(chkc) end
+function c12000212.tdtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and c12000212.tdfilter2(chkc) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,c12000212.tdfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,c12000212.tdfilter2,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
 end
-function c12000212.tdop(e,tp,eg,ep,ev,re,r,rp)
+function c12000212.tdop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsControler(1-tp) then
 		Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)
