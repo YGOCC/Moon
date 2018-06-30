@@ -291,9 +291,11 @@ function Card.IsCanBeEvoluteMaterial(c,ec)
 		local ValidSubstitute=false
 		for _,te1 in ipairs(tef1) do
 			local con=te1:GetCondition()
-			if con(c,ec) then ValidSubstitute=true end
+			if con(c,ec,1) then ValidSubstitute=true end
 		end
 		if not ValidSubstitute then return false end
+	else
+		if c:IsFacedown() then return false end
 	end
 	local tef2={c:IsHasEffect(EFFECT_CANNOT_BE_EVOLUTE_MATERIAL)}
 	for _,te2 in ipairs(tef2) do
@@ -387,7 +389,7 @@ function Card.GetValueForEvolute(c,ec)
 	return Auxiliary.EvoluteValue(c,ec)
 end
 function Auxiliary.EvoluteMatFilter(c,ec,tp,...)
-	if c:IsFacedown() or not c:IsCanBeEvoluteMaterial(ec) then return false end
+	if not c:IsCanBeEvoluteMaterial(ec) then return false end
 	return true
 end
 function Auxiliary.EvoluteValue(c,ec)
