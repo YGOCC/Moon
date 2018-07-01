@@ -1,7 +1,6 @@
--- 魔神儀-キャンドール
---Deviritual Candoll 
+--魔神儀－キャンドール
 function c53303460.initial_effect(c)
---spsummon
+	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(53303460,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)

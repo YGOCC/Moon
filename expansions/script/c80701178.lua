@@ -1,5 +1,4 @@
--- 魔神儀-タリスマンドラ
---Deviritual Talismandra
+--魔神儀－タリスマンドラ
 function c80701178.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
