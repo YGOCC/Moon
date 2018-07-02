@@ -268,6 +268,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	--... format - any number of materials + optional material - min, max (min can be 0, max can be nil which will set it to 99)	use aux.TRUE for generic materials
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local t={...}
+	local reqmats={}
 	local extramat,min,max
 	if type(t[#t])=='number' then
 		max=t[#t]
@@ -296,8 +297,8 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
 	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetRange(LOCATION_EXTRA)
-	e2:SetCondition(Auxiliary.EvoluteCondition(echeck,extramat,min,max,table.unpack(t)))
-	e2:SetTarget(Auxiliary.EvoluteTarget(echeck,extramat,min,max,table.unpack(t)))
+	e2:SetCondition(Auxiliary.EvoluteCondition(echeck,extramat,min,max,...))
+	e2:SetTarget(Auxiliary.EvoluteTarget(echeck,extramat,min,max,...))
 	e2:SetOperation(Auxiliary.EvoluteOperation)
 	e2:SetValue(SUMMON_TYPE_SPECIAL+388)
 	c:RegisterEffect(e2)
@@ -980,7 +981,7 @@ function Auxiliary.AddOrigSpatialType(c,isxyz)
 	local code,acode=c:GetOriginalCode(),Duel.ReadCard(c:GetOriginalCode(),CARDDATA_ALIAS)
 	local mt=_G["c" .. code]
 	local typ,rcode
-	for i=240100000,240109998 do
+	for i=240100000,240100999 do
 		typ,rcode=Duel.ReadCard(i,CARDDATA_TYPE,CARDDATA_ALIAS)
 		if typ and typ&TYPE_XYZ==TYPE_XYZ and code==rcode or acode==i then
 			mt.spt_other_space=i
