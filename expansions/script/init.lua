@@ -276,7 +276,7 @@ function Card.IsCanRemoveEC(c,p,ct,r)
 end
 function Card.RemoveEC(c,p,ct,r)
 	local ecounters=0
-	if Duel.SelectEffectYesNo(p,c,1551) then
+	if Auxiliary.GetECounter(p)>0 and Duel.SelectEffectYesNo(p,c,1551) then
 		local max=GLOBAL_E_COUNTER[p]
 		if max>ct then max=ct end
 		ecounters = Duel.AnnounceLevel(p,1,max,nil)
@@ -291,9 +291,11 @@ function Card.IsCanBeEvoluteMaterial(c,ec)
 		local ValidSubstitute=false
 		for _,te1 in ipairs(tef1) do
 			local con=te1:GetCondition()
-			if con(c,ec) then ValidSubstitute=true end
+			if con(c,ec,1) then ValidSubstitute=true end
 		end
 		if not ValidSubstitute then return false end
+	else
+		if c:IsFacedown() then return false end
 	end
 	local tef2={c:IsHasEffect(EFFECT_CANNOT_BE_EVOLUTE_MATERIAL)}
 	for _,te2 in ipairs(tef2) do
@@ -327,8 +329,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 		end
 		table.remove(t)
 	end
-	if not extramat then extramat,min,max=aux.FALSE,0,0 end
-	c:EnableCounterPermit(0x88)
+	if not extramat then extramat,min,max=aux.FALSE,#t,#t end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -353,6 +354,14 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 		ge1:SetCode(EVENT_SPSUMMON_SUCCESS)
 		ge1:SetOperation(Auxiliary.EvoluteCounter)
 		Duel.RegisterEffect(ge1,0)
+		local ge2=Effect.GlobalEffect()
+		ge2:SetType(EFFECT_TYPE_FIELD)
+		ge2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE+EFFECT_FLAG_IGNORE_IMMUNE)
+		ge2:SetCode(EFFECT_COUNTER_PERMIT+0x88)
+		ge2:SetTarget(function(e,c)return c:IsType(TYPE_EVOLUTE) end)
+		ge2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+		ge2:SetValue(LOCATION_MZONE)
+		Duel.RegisterEffect(ge2,0)
 		local ge3=Effect.CreateEffect(c)
 		ge3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 		ge3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
@@ -380,7 +389,7 @@ function Card.GetValueForEvolute(c,ec)
 	return Auxiliary.EvoluteValue(c,ec)
 end
 function Auxiliary.EvoluteMatFilter(c,ec,tp,...)
-	if c:IsFacedown() or not c:IsCanBeEvoluteMaterial(ec) then return false end
+	if not c:IsCanBeEvoluteMaterial(ec) then return false end
 	return true
 end
 function Auxiliary.EvoluteValue(c,ec)
@@ -416,13 +425,13 @@ function Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,...)
 end
 function Auxiliary.EvoluteCondition(outdate1,outdate2,min,max,...)
 	local funs={...}
-	return function(e,c)
-		if c==nil then return true end
-		if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
-		local tp=c:GetControler()
-		local mg=Auxiliary.GetEvoluteMaterials(c,tp)
-		return mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,nil,tp,Group.CreateGroup(),mg,c,0,min,max,table.unpack(funs))
-	end
+	return	function(e,c)
+				if c==nil then return true end
+				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
+				local tp=c:GetControler()
+				local mg=Auxiliary.GetEvoluteMaterials(c,tp)
+				return mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,nil,tp,Group.CreateGroup(),mg,c,0,min,max,table.unpack(funs))
+			end
 end
 function Auxiliary.GetEvoluteMaterials(ec,tp)
 	return Duel.GetMatchingGroup(Auxiliary.EvoluteMatFilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,0,nil,ec,tp)
@@ -476,7 +485,7 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 			local tef={tc:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL)}
 			for _,te in ipairs(tef) do
 				local op=te:GetOperation()
-				op(tc,tp)
+				op(tc,c,tp)
 			end
 		end
 		tc=g:GetNext()
@@ -690,26 +699,26 @@ function Auxiliary.PandOperation(tpe)
 						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 						local g=tg1:Select(tp,1,ct,nil)
 						sg:Merge(g)
-					end
-					if ft1==0 and ft2>0 and tg2:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
-						local ct=math.min(ft2,ft)
-						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-						local g=tg2:Select(tp,1,ct,nil)
-						sg:Merge(g)
-					end
-				end
-				if sg:GetCount()>0 then
-					Duel.HintSelection(Group.FromCards(c))
-					local e1=Effect.CreateEffect(c)
-					e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-					e1:SetCode(EVENT_SPSUMMON)
-					e1:SetRange(LOCATION_SZONE)
-					e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(Card.IsSummonType,1,nil,SUMMON_TYPE_SPECIAL+726) end)
-					e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) Auxiliary.PandEnableFUInED(e:GetHandler(),REASON_RULE,tpe)(e,tp,eg,ep,ev,re,r,rp) end)
-					e1:SetReset(RESET_EVENT+0x1fe0000)
-					c:RegisterEffect(e1)
-				end
 			end
+			if ft1==0 and ft2>0 and tg2:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
+				local ct=math.min(ft2,ft)
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+				local g=tg2:Select(tp,1,ct,nil)
+				sg:Merge(g)
+			end
+		end
+		if sg:GetCount()>0 then
+			Duel.HintSelection(Group.FromCards(c))
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+			e1:SetCode(EVENT_SPSUMMON)
+			e1:SetRange(LOCATION_SZONE)
+			e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(Card.IsSummonType,1,nil,SUMMON_TYPE_SPECIAL+726) end)
+			e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) Auxiliary.PandEnableFUInED(e:GetHandler(),REASON_RULE,tpe)(e,tp,eg,ep,ev,re,r,rp) end)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			c:RegisterEffect(e1)
+		end
+	end
 end
 function Auxiliary.PaCheckFilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM) and c:GetFlagEffect(726)>0
@@ -1049,7 +1058,6 @@ function Auxiliary.AddSpatialProc(c,sptcheck,djn,adiff,ddiff,...)
 	--sptcheck - extra check after everything is settled, djn - Spatial "level", adiff - max material ATK difference, ddiff - max material DEF difference
 	--... format - any number of materials	use aux.TRUE for generic materials
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
-			  
 	local ge1=Effect.CreateEffect(c)
 	ge1:SetType(EFFECT_TYPE_SINGLE)
 	ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -1280,100 +1288,100 @@ function Auxiliary.AddHandLinkProc()
 	--Constant
 	EFFECT_EXTRA_LINK_MATERIAL=358
 	--Proc by Merc
-function Auxiliary.LExtraFilter(c,f,lc)
-	if c:IsLocation(LOCATION_ONFIELD) and not c:IsFaceup() then return false end
-	return c:IsHasEffect(EFFECT_EXTRA_LINK_MATERIAL) and c:IsCanBeLinkMaterial(lc) and (not f or f(c))
-end
-function Auxiliary.GetLinkCount(c)
-	if c:IsType(TYPE_LINK) and c:GetLink()>1 then
-		return 1+0x10000*c:GetLink()
+	function Auxiliary.LExtraFilter(c,f,lc)
+		if c:IsLocation(LOCATION_ONFIELD) and not c:IsFaceup() then return false end
+		return c:IsHasEffect(EFFECT_EXTRA_LINK_MATERIAL) and c:IsCanBeLinkMaterial(lc) and (not f or f(c))
+	end
+	function Auxiliary.GetLinkCount(c)
+		if c:IsType(TYPE_LINK) and c:GetLink()>1 then
+			return 1+0x10000*c:GetLink()
 	else return 1 end
-end
-function Auxiliary.GetLinkMaterials(tp,f,lc)
-	local mg=Duel.GetMatchingGroup(Auxiliary.LConditionFilter,tp,LOCATION_MZONE,0,nil,f,lc)
-	local mg2=Duel.GetMatchingGroup(Auxiliary.LExtraFilter,tp,LOCATION_HAND+LOCATION_SZONE,LOCATION_ONFIELD,nil,f,lc)
-	if mg2:GetCount()>0 then mg:Merge(mg2) end
-	return mg
-end
-function Auxiliary.LCheckOtherMaterial(c,sg,lc)
-	local le={c:IsHasEffect(EFFECT_EXTRA_LINK_MATERIAL)}
-	for _,te in pairs(le) do
-		local f=te:GetValue()
-		if f and not f(te,lc,sg) then return false end
 	end
-	return true
-end
-function Auxiliary.LCheckMaterialCompatibility(sg,lc)
-	for tc in Auxiliary.Next(sg) do
-		local mg=sg:Filter(aux.TRUE,tc)
-		local res=Auxiliary.LCheckOtherMaterial(tc,mg,lc)
-		mg:DeleteGroup()
-		if not res then return false end
+	function Auxiliary.GetLinkMaterials(tp,f,lc)
+		local mg=Duel.GetMatchingGroup(Auxiliary.LConditionFilter,tp,LOCATION_MZONE,0,nil,f,lc)
+		local mg2=Duel.GetMatchingGroup(Auxiliary.LExtraFilter,tp,LOCATION_HAND+LOCATION_SZONE,LOCATION_ONFIELD,nil,f,lc)
+		if mg2:GetCount()>0 then mg:Merge(mg2) end
+		return mg
 	end
-	return true
-end
-function Auxiliary.LCheckRecursive(c,tp,sg,mg,lc,ct,minc,maxc,gf)
-	sg:AddCard(c)
-	ct=ct+1
-	local res=Auxiliary.LCheckMaterialCompatibility(sg,lc)
+	function Auxiliary.LCheckOtherMaterial(c,sg,lc)
+		local le={c:IsHasEffect(EFFECT_EXTRA_LINK_MATERIAL)}
+		for _,te in pairs(le) do
+			local f=te:GetValue()
+			if f and not f(te,lc,sg) then return false end
+		end
+		return true
+	end
+	function Auxiliary.LCheckMaterialCompatibility(sg,lc)
+		for tc in Auxiliary.Next(sg) do
+			local mg=sg:Filter(aux.TRUE,tc)
+			local res=Auxiliary.LCheckOtherMaterial(tc,mg,lc)
+			mg:DeleteGroup()
+			if not res then return false end
+		end
+		return true
+	end
+	function Auxiliary.LCheckRecursive(c,tp,sg,mg,lc,ct,minc,maxc,gf)
+		sg:AddCard(c)
+		ct=ct+1
+		local res=Auxiliary.LCheckMaterialCompatibility(sg,lc)
 		and (Auxiliary.LCheckGoal(tp,sg,lc,minc,ct,gf)
-			or ct<maxc and mg:IsExists(Auxiliary.LCheckRecursive,1,sg,tp,sg,mg,lc,ct,minc,maxc,gf))
-	sg:RemoveCard(c)
-	ct=ct-1
-	return res
-end
-function Auxiliary.LCheckGoal(tp,sg,lc,minc,ct,gf)
-	return ct>=minc and sg:CheckWithSumEqual(Auxiliary.GetLinkCount,lc:GetLink(),ct,ct) and Duel.GetLocationCountFromEx(tp,tp,sg,lc)>0 and (not gf or gf(sg))
-end
-function Auxiliary.LinkCondition(f,minc,maxc,gf)
-	return	function(e,c)
-				if c==nil then return true end
-				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
-				local tp=c:GetControler()
-				local mg=Auxiliary.GetLinkMaterials(tp,f,c)
-				local sg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_LMATERIAL)
-				if sg:IsExists(Auxiliary.MustMaterialCounterFilter,1,nil,mg) then return false end
-				local ct=sg:GetCount()
-				if ct>maxc then return false end
-				return Auxiliary.LCheckGoal(tp,sg,c,minc,ct,gf)
+		or ct<maxc and mg:IsExists(Auxiliary.LCheckRecursive,1,sg,tp,sg,mg,lc,ct,minc,maxc,gf))
+		sg:RemoveCard(c)
+		ct=ct-1
+		return res
+	end
+	function Auxiliary.LCheckGoal(tp,sg,lc,minc,ct,gf)
+		return ct>=minc and sg:CheckWithSumEqual(Auxiliary.GetLinkCount,lc:GetLink(),ct,ct) and Duel.GetLocationCountFromEx(tp,tp,sg,lc)>0 and (not gf or gf(sg))
+	end
+	function Auxiliary.LinkCondition(f,minc,maxc,gf)
+		return	function(e,c)
+					if c==nil then return true end
+					if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+					local tp=c:GetControler()
+					local mg=Auxiliary.GetLinkMaterials(tp,f,c)
+					local sg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_LMATERIAL)
+					if sg:IsExists(Auxiliary.MustMaterialCounterFilter,1,nil,mg) then return false end
+					local ct=sg:GetCount()
+					if ct>maxc then return false end
+					return Auxiliary.LCheckGoal(tp,sg,c,minc,ct,gf)
 					or mg:IsExists(Auxiliary.LCheckRecursive,1,sg,tp,sg,mg,c,ct,minc,maxc,gf)
-			end
-end
-function Auxiliary.LinkTarget(f,minc,maxc,gf)
-	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
-				local mg=Auxiliary.GetLinkMaterials(tp,f,c)
-				local bg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_LMATERIAL)
-				if #bg>0 then
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
-					bg:Select(tp,#bg,#bg,nil)
 				end
-				local sg=Group.CreateGroup()
-				sg:Merge(bg)
-				local finish=false
-				while #sg<maxc do
-					finish=Auxiliary.LCheckGoal(tp,sg,c,minc,#sg,gf)
-					local cg=mg:Filter(Auxiliary.LCheckRecursive,sg,tp,sg,mg,c,#sg,minc,maxc,gf)
-					if #cg==0 then break end
-					local cancel=not finish
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
-					local tc=cg:SelectUnselect(sg,tp,finish,cancel,minc,maxc)
-					if not tc then break end
-					if not bg:IsContains(tc) then
-						if not sg:IsContains(tc) then
-							sg:AddCard(tc)
-							if #sg==maxc then finish=true end
-						else
-							sg:RemoveCard(tc)
-						end
-					elseif #bg>0 and #sg<=#bg then
-						return false
+	end
+	function Auxiliary.LinkTarget(f,minc,maxc,gf)
+		return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
+					local mg=Auxiliary.GetLinkMaterials(tp,f,c)
+					local bg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_LMATERIAL)
+					if #bg>0 then
+						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
+						bg:Select(tp,#bg,#bg,nil)
 					end
+					local sg=Group.CreateGroup()
+					sg:Merge(bg)
+					local finish=false
+					while #sg<maxc do
+						finish=Auxiliary.LCheckGoal(tp,sg,c,minc,#sg,gf)
+						local cg=mg:Filter(Auxiliary.LCheckRecursive,sg,tp,sg,mg,c,#sg,minc,maxc,gf)
+						if #cg==0 then break end
+						local cancel=not finish
+						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
+						local tc=cg:SelectUnselect(sg,tp,finish,cancel,minc,maxc)
+						if not tc then break end
+						if not bg:IsContains(tc) then
+							if not sg:IsContains(tc) then
+								sg:AddCard(tc)
+								if #sg==maxc then finish=true end
+							else
+								sg:RemoveCard(tc)
+							end
+						elseif #bg>0 and #sg<=#bg then
+							return false
+						end
+					end
+					if finish then
+						sg:KeepAlive()
+						e:SetLabelObject(sg)
+						return true
+					else return false end
 				end
-				if finish then
-					sg:KeepAlive()
-					e:SetLabelObject(sg)
-					return true
-				else return false end
-			end
-end
+	end
 end
