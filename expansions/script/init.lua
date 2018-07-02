@@ -388,10 +388,6 @@ end
 function Card.GetValueForEvolute(c,ec)
 	return Auxiliary.EvoluteValue(c,ec)
 end
-function Auxiliary.EvoluteMatFilter(c,ec,tp,...)
-	if not c:IsCanBeEvoluteMaterial(ec) then return false end
-	return true
-end
 function Auxiliary.EvoluteValue(c,ec)
 	local lv=c:GetLevel()
 	local rk=c:GetRank()
@@ -434,13 +430,18 @@ function Auxiliary.EvoluteCondition(outdate1,outdate2,min,max,...)
 			end
 end
 function Auxiliary.GetEvoluteMaterials(ec,tp)
-	return Duel.GetMatchingGroup(Auxiliary.EvoluteMatFilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,0,nil,ec,tp)
+	return Duel.GetMatchingGroup(Card.IsCanBeEvoluteMaterial,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,0,nil,ec)
 end
 function Auxiliary.EvoluteTarget(outdate1,outdate2,minc,maxc,...)
 	local funs={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 				local mg=Auxiliary.GetEvoluteMaterials(c,tp)
-				local bg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_EVOLUTE_MATERIAL)
+				local bg=Group.CreateGroup()
+				local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_EVOLUTE_MATERIAL)}
+				for _,te in ipairs(ce) do
+					local tc=te:GetHandler()
+					if tc then bg:AddCard(tc) end
+				end
 				if #bg>0 then
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
 					bg:Select(tp,#bg,#bg,nil)
@@ -1339,7 +1340,12 @@ function Auxiliary.AddHandLinkProc()
 					if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 					local tp=c:GetControler()
 					local mg=Auxiliary.GetLinkMaterials(tp,f,c)
-					local sg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_LMATERIAL)
+					local sg=Group.CreateGroup()
+					local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_LMATERIAL)}
+					for _,te in ipairs(ce) do
+						local tc=te:GetHandler()
+						if tc then sg:AddCard(tc) end
+					end
 					if sg:IsExists(Auxiliary.MustMaterialCounterFilter,1,nil,mg) then return false end
 					local ct=sg:GetCount()
 					if ct>maxc then return false end
@@ -1350,7 +1356,12 @@ function Auxiliary.AddHandLinkProc()
 	function Auxiliary.LinkTarget(f,minc,maxc,gf)
 		return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 					local mg=Auxiliary.GetLinkMaterials(tp,f,c)
-					local bg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_LMATERIAL)
+					local bg=Group.CreateGroup()
+					local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_LMATERIAL)}
+					for _,te in ipairs(ce) do
+						local tc=te:GetHandler()
+						if tc then bg:AddCard(tc) end
+					end
 					if #bg>0 then
 						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
 						bg:Select(tp,#bg,#bg,nil)
