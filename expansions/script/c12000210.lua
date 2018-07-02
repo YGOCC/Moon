@@ -48,18 +48,19 @@ function c12000210.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c12000210.cfilter(c)
-	return c:IsSetCard(0x855) and c:IsDiscardable()
+	return (c:IsSetCard(0x855) and c:IsDiscardable() and c:IsLocation(LOCATION_HAND))
+		or Duel.IsExistingMatchingCard(c12000210.dfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c12000210.dfilter(c)
 	return c:IsSetCard(0x855) and c:IsFaceup() and c:IsAbleToGraveAsCost()
+		and not c:IsCode(12000210)
 end
 function c12000210.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c12000210.cfilter,tp,LOCATION_HAND,0,1,nil) or 
-		Duel.IsExistingMatchingCard(c12000210.dfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
-	if Duel.IsExistingMatchingCard(c12000210.cfilter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(12000210,2)) then
-		Duel.DiscardHand(tp,c12000210.cfilter,1,1,REASON_COST+REASON_DISCARD)
+	if chk==0 then return Duel.IsExistingMatchingCard(c12000210.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	local sg=Duel.SelectMatchingCard(tp,c12000210.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil,tp)
+	if sg:GetFirst():IsLocation(LOCATION_HAND) then
+		Duel.SendtoGrave(sg,REASON_COST+REASON_DISCARD)
 	else
-		local sg=Duel.SelectMatchingCard(tp,c12000210.dfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler(),tp)
 		Duel.SendtoGrave(sg,REASON_COST)
 	end
 end

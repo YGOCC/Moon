@@ -99,6 +99,7 @@ function c11000534.operation3(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 		Duel.BreakEffect()
 		Duel.Recover(tp,1500,REASON_EFFECT)
+		Duel.ShuffleDeck(tp)
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
