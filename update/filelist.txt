@@ -9786,7 +9786,7 @@ expansions/script/c99830044.lua	0220d95558e82891bffdd41771bd0687
 expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
-expansions/script/init.lua	881caa3cdcf8c7c7bf5415436323cf3b
+expansions/script/init.lua	6d80df9031021fe8a0f1ba33fe9de162
 expansions/sound/BGM/custom/Bad Apple.mp3	d311848fb68c40452d5a19b65b35f47d
 expansions/sound/BGM/custom/kyoshikyoku.mp3	332ffe2d5144e5d3848f3d43cbf39663
 expansions/sound/BGM/custom/My Friend.mp3	86774f3a02f7504aee3a5f543ffcef3c
@@ -9857,6 +9857,6 @@ expansions/sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 expansions/sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 expansions/sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	2529581484be92252d4eb3651ebccff0
+update/filelist.txt	6f472da5f4f5549fc4693ef53edd6446
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	dd68499aaa0234d1654f10c5f48a85cf
+update/version.txt	4e051782afeecc0ccc40dbbc99686da8

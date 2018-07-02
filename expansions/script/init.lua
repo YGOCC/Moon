@@ -389,14 +389,12 @@ function Auxiliary.EvoluteTarget(echeck,extramat,min,max,...)
 				local stage=c:GetStage()
 				local sg
 				local sg2
-				local sg3
 				local tempfun
 				::restart::
 				sg=Group.CreateGroup()
 				sg2=Group.CreateGroup()
-				sg3=Group.CreateGroup()
 				tempfun={table.unpack(funs)}
-				while sg3:GetCount()<ct+max do
+				while sg:GetCount()<ct+max do
 					local cg
 					if #tempfun>0 then
 						cg=mg:Filter(Auxiliary.EvolCheckRecursive,sg,tp,mg,sg,c,stage,echeck,extramat,min,max,table.unpack(tempfun))
@@ -414,15 +412,14 @@ function Auxiliary.EvoluteTarget(echeck,extramat,min,max,...)
 						if #tempfun<=0 then
 							sg2:AddCard(tc)
 						end
-						sg3:AddCard(tc)
 					end
 				end
-				if sg3:GetCount()>=ct+min and (sg3:CheckWithSumEqual(Auxiliary.EvoluteValue,stage,sg3:GetCount(),sg3:GetCount()) and (not echeck or echeck(sg3,c,tp)) and Duel.GetLocationCountFromEx(tp,tp,sg3,c)>0) then
-					sg3:KeepAlive()
-					e:SetLabelObject(sg3)
+				if sg:GetCount()>=ct+min then
+					sg:KeepAlive()
+					e:SetLabelObject(sg)
 					return true
 				else
-					if sg3:GetCount()>0 then goto restart end
+					if sg:GetCount()>0 then goto restart end
 					return false
 				end
 			end
