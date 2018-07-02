@@ -56,7 +56,7 @@ end
 function c11000523.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)>0 then
+	if tc:IsRelateToEffect(e) and Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_STOGRAVE)
 		local g=Duel.SelectMatchingCard(tp,c11000523.cfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then
