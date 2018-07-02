@@ -485,7 +485,7 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 			local tef={tc:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL)}
 			for _,te in ipairs(tef) do
 				local op=te:GetOperation()
-				op(tc,tp)
+				op(tc,c,tp)
 			end
 		end
 		tc=g:GetNext()

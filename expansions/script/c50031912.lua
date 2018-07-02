@@ -1,7 +1,7 @@
 --Shomesa, Sunflower  of Rose VINE
 function c50031912.initial_effect(c)
 		aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,c50031912.checku,9,c50031912.mfilter,c50031912.mfilter,1,99)
+ aux.AddEvoluteProc(c,nil,9,c50031912.mfilter1,c50031912.mfilter2,c50031912.mfilter3,1,99)
 	c:EnableReviveLimit()
   --spsummon condition
 	local e1=Effect.CreateEffect(c)
@@ -41,18 +41,14 @@ end
 function c50031912.splimit(e,se,sp,st)
 	return st==SUMMON_TYPE_SPECIAL+388
 end
-function c50031912.mfilter(c)
-	return c:IsRace(RACE_PLANT) or c:IsAttribute(ATTRIBUTE_FIRE)
-end
-function c50031912.checku(sg,ec,tp)
-	return sg:IsExists(c50031912.check1,1,nil,sg,tp)
-end
+function c50031912.mfilter1(c) return c:IsRace(RACE_PLANT) end
+function c50031912.mfilter2(c) return c:IsAttribute(ATTRIBUTE_FIRE) end
+function c50031912.mfilter3(c) 
+return c:IsType(TYPE_NORMAL) end
 function c50031912.check1(c,sg,tp)
 	return c:IsType(TYPE_NORMAL) and sg:IsExists(c50031912.check2,1,nil,sg)
 end
-function c50031912.check2(c,sg)
-	return c:IsRace(RACE_PLANT) and sg:IsExists(Card.IsAttribute,1,c,ATTRIBUTE_FIRE)
-end
+
 function c50031912.remcon(e,tp,eg,ep,ev,re,r,rp)
 		return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388 and e:GetHandler():IsLinkState()
 end
