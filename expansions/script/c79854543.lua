@@ -2,6 +2,8 @@
 Must first be Synchro Summoned. Once per turn: You can target 1 Synchro Monster in your GY; 
 Special Summon it and if you do, double this cards ATK until your opponents next End Phase. 
 You can only control 1 face-up "Woodland Sovereign".]]
+
+--Keddy was here~
 function c79854543.initial_effect(c)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(),1)
 	c:EnableReviveLimit()
@@ -40,17 +42,14 @@ function c79854543.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c79854543.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-	end
-	if tc:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(e:GetHandler())
+	local c=e:GetHandler()
+	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(c:GetAttack()*2)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
+		e1:SetValue(c:GetAttack())
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
+		c:RegisterEffect(e1)
 	end
 end
---atkdrop

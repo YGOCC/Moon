@@ -3,6 +3,7 @@
 --also, Special Summon the target and if you do, if it is a Synchro Monster, its effects are 
 --negated. This card can attack your opponent directly.
 
+--Keddy was here~
 function c79854534.initial_effect(c)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
@@ -43,16 +44,16 @@ function c79854534.spop1(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		if tc:IsType(TYPE_SYNCHRO) then
-			local e1=Effect.CreateEffect(c)
+			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_DISABLE)
-			e1:SetReset(0x1fe1000)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			tc:RegisterEffect(e1)
-			local e2=Effect.CreateEffect(c)
+			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetCode(EFFECT_DISABLE_EFFECT)
-			e2:SetReset(0x1fe1000)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			tc:RegisterEffect(e2)
 		end
@@ -69,7 +70,4 @@ function c79854534.spop1(e,tp,eg,ep,ev,re,r,rp)
 end
 function c79854534.splimit(e,c,tp,sumtp,sumpos)
 	return c:GetRace()~=RACE_PLANT
-end
-function c79854534.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetType()==TYPE_SYNCHRO
 end
