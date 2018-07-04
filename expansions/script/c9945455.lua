@@ -23,16 +23,17 @@ function c9945455.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c9945455.spfilter(c,e,tp)
-	return c:IsSetCard(0x12D7) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,tp,false,true) and c:IsType(TYPE_RITUAL)
+	return c:IsSetCard(0x12D7) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) and c:IsType(TYPE_RITUAL)
 end
 function c9945455.tfilter(c)
 	return c:IsSetCard(0x12D7) and c:IsType(TYPE_MONSTER)
 end
 function c9945455.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then 
-		local g=Duel.GetMatchingGroup(c9945455.tfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil)
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and g:GetClassCount(Card.GetCode)>=3 and Duel.IsExistingMatchingCard(c9945455.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
-	end
+    local g=Duel.GetMatchingGroup(c9945455.tfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil)
+    if chk==0 then 
+        return Duel.GetLocationCountFromEx(tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 
+            and g:GetClassCount(Card.GetCode)>=3 and Duel.IsExistingMatchingCard(c9945455.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
+    end
 end
 function c9945455.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<-3 then return end

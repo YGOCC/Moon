@@ -39,12 +39,12 @@ function c9945450.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c9945450.spfilter(c,e,tp)
-	return c:IsSetCard(0x12D7) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,tp,false,true)
+	return c:IsSetCard(0x12D7) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true)
 end
 function c9945450.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_MZONE,0,nil,0x12D7)
 	if chk==0 then 
-		local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_MZONE,0,nil,0x12D7)
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and g:GetClassCount(Card.GetCode)>=3 and Duel.IsExistingMatchingCard(c9945450.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
+		return Duel.GetLocationCountFromEx(tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and g:GetClassCount(Card.GetCode)>=3 and Duel.IsExistingMatchingCard(c9945450.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)
 	end
 end
 function c9945450.activate(e,tp,eg,ep,ev,re,r,rp)

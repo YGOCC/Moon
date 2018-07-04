@@ -61,37 +61,18 @@ function c9945500.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(9945500)==0 end
 	e:GetHandler():RegisterFlagEffect(9945500,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
 end
-function c9945500.filter(c,e,tp,eg,ep,ev,re,r,rp)
-	local te=c:GetActivateEffect()
-	if not (te:IsActivatable(c:GetControler()) or (c:IsHasEffect(EFFECT_CANNOT_TRIGGER) and not c:IsFaceup() and not (c:IsStatus(STATUS_SET_TURN) and c:IsType(TYPE_QUICKPLAY)))) or not c:IsSetCard(0x12D7) then return false end
-	local condition=te:GetCondition()
-	local cost=te:GetCost()
-	local target=te:GetTarget()
-	if te:GetCode()==EVENT_FREE_CHAIN then
-		return (not condition or condition(te,c:GetControler(),eg,ep,ev,re,r,rp)) 
-			and (not cost or cost(te,c:GetControler(),eg,ep,ev,re,r,rp,0))
-			and (not target or target(te,c:GetControler(),eg,ep,ev,re,r,rp,0))
-	elseif te:GetCode()==EVENT_CHAINING then
-		return (not condition or condition(te,c:GetControler(),Group.FromCards(e:GetHandler()),tp,0,e,r,tp)) 
-			and (not cost or cost(te,c:GetControler(),Group.FromCards(e:GetHandler()),tp,0,e,r,tp,0))
-			and (not target or target(te,c:GetControler(),Group.FromCards(e:GetHandler()),tp,0,e,r,tp,0))
-	else
-		local res,teg,tep,tev,tre,tr,trp=Duel.CheckEvent(te:GetCode(),true)
-		return res and (not condition or condition(te,c:GetControler(),teg,tep,tev,tre,tr,trp)) 
-			and (not cost or cost(te,c:GetControler(),teg,tep,tev,tre,tr,trp,0))
-			and (not target or target(te,c:GetControler(),teg,tep,tev,tre,tr,trp,0))
-	end
-	return c:IsSetCard(0x12D7) and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsFaceup()
-		and (c:IsLocation(LOCATION_HAND) or (c:IsLocation(LOCATION_SZONE) and c:IsFacedown())) 
+function c9945500.filter(c)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x12D7) and not c:IsStatus(STATUS_SET_TURN) and not c:IsFaceup()
+		and c:CheckActivateEffect(false,false,false)~=nil
 end
-
-
 function c9945500.actg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c9945500.filter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,nil) end
 end
 function c9945500.acop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=Duel.SelectMatchingCard(tp,c9945500.filter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,1,nil):GetFirst()
+	local sg=Duel.SelectMatchingCard(tp,c9945500.filter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,1,nil)
+	local tc=sg:GetFirst()
+	if tc then
+	Duel.HintSelection(sg)
 	local tpe=tc:GetType()
 	local te=tc:GetActivateEffect()
 	local tg=te:GetTarget()
@@ -136,6 +117,7 @@ function c9945500.acop(e,tp,eg,ep,ev,re,r,rp)
 		while etc do
 			etc:ReleaseEffectRelation(te)
 			etc=g:GetNext()
+			end
 		end
 	end
 end
