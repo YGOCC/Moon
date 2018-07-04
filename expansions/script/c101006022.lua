@@ -48,6 +48,7 @@ function c101006022.initial_effect(c)
 	e4:SetDescription(aux.Stringid(101006022,3))
 	e4:SetCategory(CATEGORY_TODECK)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetCountLimit(1)
@@ -75,8 +76,8 @@ function c101006022.spcost_selector(c,tp,g,sg,i)
 end
 function c101006022.spcon(e,c)
 	if c==nil then return true end
-	if Duel.GetMZoneCount(tp)<=0 then return false end
 	local tp=c:GetControler()
+	if Duel.GetMZoneCount(tp)<=0 then return false end
 	local g=Duel.GetMatchingGroup(c101006022.spcostfilter,tp,LOCATION_GRAVE,0,nil)
 	local sg=Group.CreateGroup()
 	return g:IsExists(c101006022.spcost_selector,1,nil,tp,g,sg,1)
