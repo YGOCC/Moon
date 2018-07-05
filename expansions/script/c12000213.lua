@@ -40,7 +40,7 @@ function c12000213.thcon1(e,tp,eg,ep,ev,re,r,rp)
 		and eg:IsExists(c12000213.cfilter,1,nil,tp)
 end
 function c12000213.thfilter1(c)
-	return c:IsSetCard(0x855) and c:IsAbleToHand()
+	return c:IsSetCard(0x855) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function c12000213.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c12000213.thfilter1,tp,LOCATION_DECK,0,1,nil) end
@@ -58,7 +58,7 @@ function c12000213.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c12000213.thfilter2(c)
-	return c:IsSetCard(0xfb0) and c:IsAbleToHand()
+	return c:IsSetCard(0xfb0) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c12000213.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c12000213.thfilter2,tp,LOCATION_GRAVE,0,1,nil) end
