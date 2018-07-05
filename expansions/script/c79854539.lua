@@ -31,6 +31,7 @@ function c79854539.initial_effect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e4:SetCondition(c79854539.srcon)
 	e4:SetTarget(c79854539.srtg)
 	e4:SetOperation(c79854539.srop)
@@ -66,8 +67,9 @@ function c79854539.indval(e,re,tp)
 end
 --sseffect
 function c79854539.srcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and e:GetHandler():GetReasonEffect():IsActiveType(TYPE_MONSTER) 
- end
+	return (re:IsActiveType(TYPE_MONSTER) and e:GetHandler():IsReason(REASON_COST)) or
+	(re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_EFFECT)~=0)
+end
 function c79854539.srtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c79854539.srfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

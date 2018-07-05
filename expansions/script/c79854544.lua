@@ -39,7 +39,7 @@ function c79854544.initial_effect(c)
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e5:SetCode(EVENT_TO_GRAVE)
-	e5:SetProperty(EFFECT_FLAG_DELAY)
+	e5:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e5:SetCondition(c79854544.spcon)
 	e5:SetTarget(c79854544.sptg)
 	e5:SetOperation(c79854544.spop)
@@ -107,7 +107,7 @@ function c79854544.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Special Summon a Plant tuner
 function c79854544.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return (re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_COST)~=0) or
+	return (re:IsActiveType(TYPE_MONSTER) and e:GetHandler():IsReason(REASON_COST)) or
 	(re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_EFFECT)~=0)
 end
 function c79854544.spfilter(c,e,tp)

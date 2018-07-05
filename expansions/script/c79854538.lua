@@ -35,6 +35,7 @@ function c79854538.initial_effect(c)
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCountLimit(1,79854638)
 	e4:SetCondition(c79854538.srcon)
 	e4:SetTarget(c79854538.srtg)
@@ -100,7 +101,7 @@ function c79854538.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c79854538.srcon(e,tp,eg,ep,ev,re,r,rp)
-	return (re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_COST)~=0) or
+	return (re:IsActiveType(TYPE_MONSTER) and e:GetHandler():IsReason(REASON_COST)) or
 	(re:IsActiveType(TYPE_MONSTER) and bit.band(r,REASON_EFFECT)~=0)
  end
 function c79854538.srtg(e,tp,eg,ep,ev,re,r,rp,chk)
