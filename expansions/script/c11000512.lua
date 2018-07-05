@@ -14,7 +14,8 @@ function c11000512.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c11000512.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:GetCount()==1 and eg:GetFirst():GetSummonType()==SUMMON_TYPE_SYNCHRO and eg:GetFirst():IsControler(tp)
+	local ec=eg:GetFirst()
+	return ec:IsSetCard(0x1FD) and ec:IsSummonType()==SUMMON_TYPE_SYNCHRO and ec:GetSummonPlayer()==tp
 end
 function c11000512.cfilter(c)
 	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
