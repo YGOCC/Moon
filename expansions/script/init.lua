@@ -5,6 +5,7 @@ EFFECT_CANNOT_BE_EVOLUTE_MATERIAL		=389		--
 EFFECT_EXTRA_EVOLUTE_MATERIAL			=390
 EFFECT_EVOLUTE_LEVEL					=391
 EFFECT_MUST_BE_EVOLUTE_MATERIAL			=392
+EFFECT_CONVERGENT_EVOLUTE				=393
 EFFECT_PANDEMONIUM						=726
 EFFECT_STABLE							=765
 EFFECT_CANNOT_BE_POLARITY_MATERIAL		=766
@@ -21,6 +22,8 @@ CTYPE_PANDEMONIUM						=0x2
 CTYPE_POLARITY							=0x4
 CTYPE_SPATIAL							=0x8
 CTYPE_CUSTOM							=CTYPE_EVOLUTE+CTYPE_PANDEMONIUM+CTYPE_POLARITY+CTYPE_SPATIAL
+
+SUMMON_TYPE_EVOLUTE						=SUMMON_TYPE_SPECIAL+388
 
 --Custom Type Tables
 Auxiliary.Customs={} --check if card uses custom type, indexing card
@@ -55,9 +58,14 @@ Card.GetPreviousRankOnField=function(c)
 	if (Auxiliary.Evolutes[c] and not Auxiliary.Evolutes[c]()) or (Auxiliary.Spatials[c] and not Auxiliary.Spatials[c]()) then return 0 end
 	return prev_rank_field(c)
 end
-Card.IsRank=function(c,rk)
+Card.IsRank=function(c,...)
 	if (Auxiliary.Evolutes[c] and not Auxiliary.Evolutes[c]()) or (Auxiliary.Spatials[c] and not Auxiliary.Spatials[c]()) then return false end
-	return is_rank(c,rk)
+	local funs={...}
+	for key,value in pairs(funs) do
+		if c:GetRank()==value then return true end
+	end
+	return false
+	--return is_rank(c,rk)
 end
 Card.IsRankBelow=function(c,rk)
 	if (Auxiliary.Evolutes[c] and not Auxiliary.Evolutes[c]()) or (Auxiliary.Spatials[c] and not Auxiliary.Spatials[c]()) then return false end
@@ -190,9 +198,14 @@ Card.GetPreviousLevelOnField=function(c)
 	if Auxiliary.Polarities[c] and not Auxiliary.Polarities[c]() then return 0 end
 	return get_prev_level_field(c)
 end
-Card.IsLevel=function(c,lv)
+Card.IsLevel=function(c,...)
 	if Auxiliary.Polarities[c] and not Auxiliary.Polarities[c]() then return false end
-	return is_level(c,lv)
+	local funs={...}
+	for key,value in pairs(funs) do
+		if c:GetLevel()==value then return true end
+	end
+	return false
+	--return is_level(c,lv)
 end
 Card.IsLevelBelow=function(c,lv)
 	if Auxiliary.Polarities[c] and not Auxiliary.Polarities[c]() then return false end
@@ -272,6 +285,7 @@ function Card.AddEC(c,ct)
 	c:AddCounter(0x88,ct)
 end
 function Card.IsCanRemoveEC(c,p,ct,r)
+	if GLOBAL_E_COUNTER[p]>=ct then return true end
 	return c:IsCanRemoveCounter(tp,0x1088,ct-GLOBAL_E_COUNTER[p],REASON_COST)
 end
 function Card.RemoveEC(c,p,ct,r)
@@ -314,6 +328,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	--... format - any number of materials + optional material - min, max (min can be 0, max can be nil which will set it to 99)	use aux.TRUE for generic materials
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local t={...}
+	if type(echeck)=='function' then table.add(t,echeck) end
 	local extramat,min,max
 	if type(t[#t])=='number' then
 		max=t[#t]
@@ -327,7 +342,6 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 			max=99
 			extramat=t[#t]
 		end
-		table.remove(t)
 	end
 	if not extramat then extramat,min,max=aux.FALSE,#t,#t end
 	local e1=Effect.CreateEffect(c)
@@ -344,8 +358,14 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	e2:SetCondition(Auxiliary.EvoluteCondition(echeck,extramat,min,max,table.unpack(t)))
 	e2:SetTarget(Auxiliary.EvoluteTarget(echeck,extramat,min,max,table.unpack(t)))
 	e2:SetOperation(Auxiliary.EvoluteOperation)
-	e2:SetValue(SUMMON_TYPE_SPECIAL+388)
+	e2:SetValue(SUMMON_TYPE_EVOLUTE)
 	c:RegisterEffect(e2)
+	if (type(echeck)=='string') and echeck=="Convergent" then
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_CONVERGENT_EVOLUTE)
+		c:RegisterEffect(e3)
+	end
 	if not Evochk then
 		Evochk=true
 		local ge1=Effect.CreateEffect(c)
@@ -414,10 +434,11 @@ function Auxiliary.EvoluteRecursiveFilter(c,tp,sg,mg,ec,ct,minc,maxc,...)
 	return res
 end
 function Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,...)
-	for _,f in ipairs({...}) do
+	local funs={...}
+	for _,f in pairs(funs) do
 		if not sg:IsExists(f,1,nil) then return false end
 	end
-	return ct>=minc and sg:CheckWithSumEqual(Auxiliary.EvoluteValue,ec:GetStage(),ct,ct,ec) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0
+	return ct>=minc and (ec:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) or sg:CheckWithSumEqual(Auxiliary.EvoluteValue,ec:GetStage(),ct,ct,ec)) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0
 end
 function Auxiliary.EvoluteCondition(outdate1,outdate2,min,max,...)
 	local funs={...}
@@ -449,8 +470,8 @@ function Auxiliary.EvoluteTarget(outdate1,outdate2,minc,maxc,...)
 				local sg=Group.CreateGroup()
 				sg:Merge(bg)
 				local finish=false
-				while not Auxiliary.EvoluteCheckGoal(tp,sg,c,minc,#sg,table.unpack(funs)) do
-					finish=Auxiliary.LCheckGoal(tp,sg,c,minc,#sg,gf)
+				while not (sg:GetCount()>=maxc) do
+					finish=Auxiliary.EvoluteCheckGoal(tp,sg,c,minc,#sg,table.unpack(funs))
 					local cg=mg:Filter(Auxiliary.EvoluteRecursiveFilter,sg,tp,sg,mg,c,#sg,minc,maxc,table.unpack(funs))
 					if #cg==0 then break end
 					local cancel=not finish
@@ -460,7 +481,7 @@ function Auxiliary.EvoluteTarget(outdate1,outdate2,minc,maxc,...)
 					if not bg:IsContains(tc) then
 						if not sg:IsContains(tc) then
 							sg:AddCard(tc)
-							if Auxiliary.EvoluteCheckGoal(tp,sg,c,minc,#sg,table.unpack(funs)) then finish=true end
+							if (sg:GetCount()>=maxc) then finish=true end
 						else
 							sg:RemoveCard(tc)
 						end
@@ -480,14 +501,14 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	c:SetMaterial(g)
 	local tc=g:GetFirst()
 	while tc do
-		if tc:IsLocation(LOCATION_MZONE) then
-			Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
-		else
+		if not tc:IsLocation(LOCATION_MZONE) then
 			local tef={tc:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL)}
 			for _,te in ipairs(tef) do
 				local op=te:GetOperation()
 				op(tc,tp)
 			end
+		else
+			Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
 		end
 		tc=g:GetNext()
 	end
@@ -500,7 +521,17 @@ function Auxiliary.EvoluteCounter(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=eg:Filter(Auxiliary.ECSumFilter,nil)
 	local tc=g:GetFirst()
 	while tc do
-		tc:AddEC(tc:GetStage())
+		if not tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) then tc:AddEC(tc:GetStage()) end
+		if tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) then 
+			local mg=tc:GetMaterial()
+			local mc=mg:GetFirst()
+			local val=0
+			while mc do
+				val = val+mc:GetValueForEvolute(tc)
+				mc=mg:GetNext()
+			end
+			tc:AddEC(val)
+		end
 		tc=g:GetNext()
 	end
 end
