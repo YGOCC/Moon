@@ -67,7 +67,7 @@ end
 function c16000876.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
-	 
+ if Duel.GetFlagEffect(tp,16000876)~=0 then return end	
 			  --pierce
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
@@ -75,17 +75,18 @@ function c16000876.operation2(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_PIERCE)
 	e1:SetCondition(c16000876.con)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	rc:RegisterEffect(e1,true)
 	local e2=Effect.CreateEffect(e:GetHandler())
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 	e2:SetCondition(c16000876.damcon)
 	e2:SetOperation(c16000876.damop)
-	e2:SetReset(RESET_EVENT+0x1fe0000)
+	e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 	rc:RegisterEffect(e2,true)
-			rc:RegisterFlagEffect(16000876,RESET_EVENT+0x1fe0000,0,1)
-Duel.RegisterFlagEffect(tp,16000876,RESET_PHASE+PHASE_END,0,1)
+	rc:RegisterFlagEffect(16000876,RESET_EVENT+RESETS_STANDARD+0x47e0000,0,1)
+	rc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000876,0))
+	Duel.RegisterFlagEffect(tp,16000876,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000876.con(e,tp,eg,ep,ev,re,r,rp)
 	return  e:GetHandler():GetCounter(0x88)>=4

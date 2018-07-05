@@ -70,6 +70,7 @@ function c16000877.mtcon(e,tp,eg,ep,ev,re,r,rp)
 	return  ec:GetMaterial():IsExists(c16000877.ffilter,1,nil) and r&(REASON_SUMMON+REASON_FUSION+REASON_SYNCHRO+REASON_RITUAL+REASON_XYZ+REASON_LINK)==0
 end
 function c16000877.mtop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(tp,16000877)~=0 then return end
 	Duel.Hint(HINT_CARD,0,16000877)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
@@ -83,18 +84,19 @@ function c16000877.mtop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCondition(c16000877.atkcon)
 	e1:SetTarget(c16000877.atktg)
 	e1:SetOperation(c16000877.atkop)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	rc:RegisterEffect(e1,true)
 	if not rc:IsType(TYPE_EFFECT) then
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_ADD_TYPE)
 		e2:SetValue(TYPE_EFFECT)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		rc:RegisterEffect(e2,true)
-	   rc:RegisterFlagEffect(16000877,RESET_EVENT+0x1fe0000,0,1)
+	   rc:RegisterFlagEffect(16000877,RESET_EVENT+RESETS_STANDARD+0x47e0000,0,1)
 	end
-	rc:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000877,0))
+	rc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000877,0))
+	Duel.RegisterFlagEffect(tp,16000877,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000877.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+388)

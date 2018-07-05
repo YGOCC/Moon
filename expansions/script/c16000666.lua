@@ -86,12 +86,13 @@ end
 function c16000666.splimit(e,c)
 	return c:GetRace()~=RACE_FAIRY or c:GetAttribute()~=ATTRIBUTE_DARK 
 end
-		function c16000666.condition2(e,tp,eg,ep,ev,re,r,rp)
+function c16000666.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetReasonCard()
-	return  ec:GetMaterial():IsExists(c16000666.ffilter,1,nil) and r&(REASON_SUMMON+REASON_FUSION+REASON_SYNCHRO+REASON_RITUAL+REASON_XYZ+REASON_LINK)==0
+	return ec:GetMaterial():IsExists(c16000666.ffilter,1,nil) and r&(REASON_SUMMON+REASON_FUSION+REASON_SYNCHRO+REASON_RITUAL+REASON_XYZ+REASON_LINK)==0
 end
 function c16000666.operation2(e,tp,eg,ep,ev,re,r,rp)
-	 Duel.Hint(HINT_CARD,0,16000666) 
+  if Duel.GetFlagEffect(tp,16000666)~=0 then return end
+	Duel.Hint(HINT_CARD,0,16000666) 
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -107,27 +108,27 @@ function c16000666.operation2(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCost(c16000666.cost)
 	e1:SetTarget(c16000666.target)
 	e1:SetOperation(c16000666.operation)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	rc:RegisterEffect(e1,true)
- if not rc:IsType(TYPE_EFFECT) then
+	if not rc:IsType(TYPE_EFFECT) then
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_ADD_TYPE)
 		e2:SetValue(TYPE_EFFECT)
-		e2:SetReset(RESET_EVENT+0x47e0000)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		rc:RegisterEffect(e2,true)
-	rc:RegisterFlagEffect(16000666,RESET_EVENT+0x47e0000,0,1)
+	rc:RegisterFlagEffect(16000666,RESET_EVENT+RESETS_STANDARD+0x47e0000,0,1)
 	end
-	 rc:RegisterFlagEffect(0,RESET_EVENT+0x47e0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000666,0))
-Duel.RegisterFlagEffect(tp,16000666,RESET_PHASE+PHASE_END,0,1)
-end
-function c16000666.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16000666.fukfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) end
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,0,0)
+	rc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000666,0))
+	Duel.RegisterFlagEffect(tp,16000666,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000666.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+end
+function c16000666.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.IsExistingMatchingCard(c16000666.fukfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) end
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,0,0)
 end
 function c16000666.fukfilter(c)
 	return c:IsFaceup() and not c:IsDisabled() and c:IsType(TYPE_EFFECT)
@@ -141,14 +142,14 @@ function c16000666.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetValue(RESET_TURN_SET)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e2)
 	end
 end
