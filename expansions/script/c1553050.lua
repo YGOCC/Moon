@@ -54,12 +54,11 @@ function c1553050.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(c1553050.filter,tp,LOCATION_DECK,0,nil)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(1553050,0)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 		local sg=g:Select(tp,1,1,nil)
 		local tc=g:GetFirst()
-		Duel.ShuffleDeck(tp)
 		Duel.MoveSequence(tc,0)
-		Duel.ConfirmDecktop(tp,1)
+		Duel.ConfirmDecktop(tp,tc)
 	end
 end
 function c1553050.cost(e,tp,eg,ep,ev,re,r,rp,chk)
