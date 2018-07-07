@@ -48,17 +48,18 @@ function scard.initial_effect(c)
 	end
 end
 function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,30000)==0 then 
+	if Duel.GetFlagEffect(0,30000)==0 then
 		Duel.CreateToken(tp,30000)
 		Duel.CreateToken(1-tp,30000)
 		Duel.RegisterFlagEffect(0,30000,0,0,0)
 	end
 end
 function scard.filter(c)
-	return c:IsZHERO() and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsZHERO() and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(s_id)
 end
 function scard.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(scard.filter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(scard.filter,tp,LOCATION_GRAVE,0,1,nil) and Duel.GetFlagEffect(tp,s_id+1)==0 end
+	Duel.RegisterFlagEffect(tp,s_id,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 end
 function scard.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -73,7 +74,8 @@ function scard.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function scard.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(scard.filter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(scard.filter,tp,LOCATION_DECK,0,1,nil) and Duel.GetFlagEffect(tp,s_id)==0 end
+	Duel.RegisterFlagEffect(tp,s_id+1,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function scard.thop(e,tp,eg,ep,ev,re,r,rp)
