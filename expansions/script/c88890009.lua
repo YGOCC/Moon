@@ -26,7 +26,6 @@ function c88890009.initial_effect(c)
     e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
     e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
     e3:SetRange(LOCATION_MZONE)
-    e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
     e3:SetCountLimit(1)
     e3:SetCondition(c88890009.paycon)
     e3:SetOperation(c88890009.payop)
@@ -57,7 +56,7 @@ function c88890009.initial_effect(c)
     e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e6:SetTargetRange(0,1)
     e6:SetCondition(c88890009.efcon)
-    e6:SetValue(c88890009.efval)
+    e6:SetTarget(c88890009.efval)
     c:RegisterEffect(e6)
     --(7) add
     local e7=Effect.CreateEffect(c)
@@ -144,10 +143,10 @@ function c88890009.stzop(e,tp,eg,ep,ev,re,r,rp)
 end
 --(6) can't normal summon
 function c88890009.efcon(e)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and e:GetHandler():IsFaceup() and not e:GetHandler():IsType(TYPE_EQUIP)
 end
 function c88890009.efval(e,c)
-    return c:IsAttribute(ATTRIBUTE_DARK)
+    return not c:IsAttribute(ATTRIBUTE_EARTH)
 end
 --(7) add
 function c88890009.thcon(e,tp,eg,ep,ev,re,r,rp)

@@ -25,6 +25,7 @@ end
 function c12389.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)~=0 then
+		Duel.ShuffleDeck(tp)
 		local ct=Duel.Draw(tp,1,REASON_EFFECT)
 		if ct==0 then return end
 		local dc=Duel.GetOperatedGroup():GetFirst()

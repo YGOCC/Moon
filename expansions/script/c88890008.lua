@@ -56,7 +56,7 @@ function c88890008.initial_effect(c)
     e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e6:SetTargetRange(0,1)
     e6:SetCondition(c88890008.efcon)
-    e6:SetValue(c88890008.efval)
+    e6:SetTarget(c88890008.efval)
     c:RegisterEffect(e6)
     --(7) add
     local e7=Effect.CreateEffect(c)
@@ -93,9 +93,9 @@ function c88890008.paycon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c88890008.payop(e,tp,eg,ep,ev,re,r,rp)
     Duel.HintSelection(Group.FromCards(e:GetHandler()))
-    if Duel.CheckLPCost(tp,300) and Duel.SelectYesNo(tp,aux.Stringid(88890008,1)) then
+    if Duel.CheckLPCost(tp,500) and Duel.SelectYesNo(tp,aux.Stringid(88890008,1)) then
         Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(88890008,5))
-        Duel.PayLPCost(tp,300)
+        Duel.PayLPCost(tp,500)
     else
         Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(88890008,6))
         Duel.Destroy(e:GetHandler(),REASON_COST)
@@ -141,10 +141,10 @@ function c88890008.stzop(e,tp,eg,ep,ev,re,r,rp)
 end
 --(6) can't normal summon
 function c88890008.efcon(e)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and e:GetHandler():IsFaceup() and not e:GetHandler():IsType(TYPE_EQUIP)
 end
 function c88890008.efval(e,c)
-    return c:IsAttribute(ATTRIBUTE_FIRE)
+    return not c:IsAttribute(ATTRIBUTE_FIRE)
 end
 --(7) add
 function c88890008.thcon(e,tp,eg,ep,ev,re,r,rp)

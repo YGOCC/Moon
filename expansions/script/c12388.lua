@@ -47,12 +47,12 @@ end
 function c12388.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
-function c12388.spfilter(c,tp)
+function c12388.spfilter(c,tp,sc)
 	return c:IsSetCard(0x3052) and c:IsType(TYPE_SYNCHRO) and c:IsAbleToDeckOrExtraAsCost() and c:IsCanBeFusionMaterial(nil,true) and c:IsFaceup()
 end
 function c12388.spcon(e,c)
 	if c==nil then return true end
-	if Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)<=0 then return false end
+	if Duel.GetLocationCountFromEx(tp,tp,sc,c)<=0 then return false end
 	local g=Duel.GetMatchingGroup(c12388.spfilter,c:GetControler(),LOCATION_REMOVED,0,nil)
 	local ct=g:GetClassCount(Card.GetCode)
 	return ct>=2

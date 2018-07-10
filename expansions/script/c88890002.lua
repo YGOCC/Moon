@@ -15,8 +15,8 @@ function c88890002.initial_effect(c)
     e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_MZONE)
     e2:SetCountLimit(1)
-    e2:SetTarget(c88890002.thtg1)
-    e2:SetOperation(c88890002.thop1)
+    e2:SetTarget(c88890002.thtg2)
+    e2:SetOperation(c88890002.thop2)
     c:RegisterEffect(e2)
     --(3) Pay or Destroy
     local e3=Effect.CreateEffect(c)
@@ -55,7 +55,7 @@ function c88890002.initial_effect(c)
     e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e6:SetTargetRange(0,1)
     e6:SetCondition(c88890002.efcon)
-    e6:SetValue(c88890002.efval)
+    e6:SetTarget(c88890002.efval)
     c:RegisterEffect(e6)
     --(7) add
     local e7=Effect.CreateEffect(c)
@@ -74,20 +74,31 @@ function c88890002.splimit(e,se,sp,st)
     return se:GetHandler():IsSetCard(0x902)
 end
 --(2) add to hand
-function c88890002.thfilter1(c)
-    return c:IsSetCard(0x902) and c:IsAbleToHand()
+function c88890002.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then 
+        if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return false end
+        local g=Duel.GetDecktopGroup(tp,3)
+        local result=g:FilterCount(Card.IsAbleToHand,nil)>0
+        return result
+    end
+    Duel.SetTargetPlayer(tp)
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,LOCATION_DECK)
 end
-function c88890002.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(c88890002.thfilter1,tp,LOCATION_DECK,0,1,nil) end
-    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function c88890002.thop1(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local g=Duel.SelectMatchingCard(tp,c88890002.thfilter1,tp,LOCATION_DECK,0,1,1,nil)
+function c88890002.thop2(e,tp,eg,ep,ev,re,r,rp)
+    local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+    Duel.ConfirmDecktop(p,3)
+    local g=Duel.GetDecktopGroup(p,3)
     if g:GetCount()>0 then
-        Duel.SendtoHand(g,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,g)
+        Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
+        local sg=g:RandomSelect(1-p,1,1,nil)
+        if sg:GetFirst():IsAbleToHand() then
+            Duel.SendtoHand(sg,nil,REASON_EFFECT)
+            Duel.ConfirmCards(1-p,sg)
+            Duel.ShuffleHand(p)
+        else
+            Duel.SendtoGrave(sg,REASON_RULE)
+        end
+        Duel.ShuffleDeck(p)
     end
 end
 --(3) Pay or Destroy
@@ -96,9 +107,9 @@ function c88890002.paycon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c88890002.payop(e,tp,eg,ep,ev,re,r,rp)
     Duel.HintSelection(Group.FromCards(e:GetHandler()))
-    if Duel.CheckLPCost(tp,300) and Duel.SelectYesNo(tp,aux.Stringid(88890002,1)) then
+    if Duel.CheckLPCost(tp,500) and Duel.SelectYesNo(tp,aux.Stringid(88890002,1)) then
         Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(88890002,5))
-        Duel.PayLPCost(tp,300)
+        Duel.PayLPCost(tp,500)
     else
         Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(88890002,6))
         Duel.Destroy(e:GetHandler(),REASON_COST)
@@ -144,12 +155,28 @@ function c88890002.stzop(e,tp,eg,ep,ev,re,r,rp)
 end
 --(6) can't normal summon
 function c88890002.efcon(e)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and e:GetHandler():IsFaceup() and not e:GetHandler():IsType(TYPE_EQUIP)
 end
 function c88890002.efval(e,c)
-    return c:IsAttribute(ATTRIBUTE_LIGHT)
+    return not c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 --(7) add
 function c88890002.thcon(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():IsReason(REASON_EFFECT) and e:GetHandler():GetPreviousLocation()==LOCATION_DECK
+end
+function c88890002.thfilter1(c)
+    return c:IsSetCard(0x902) and c:IsAbleToHand()
+end
+function c88890002.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsExistingMatchingCard(c88890002.thfilter1,tp,LOCATION_DECK,0,1,nil) end
+    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c88890002.thop1(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local g=Duel.SelectMatchingCard(tp,c88890002.thfilter1,tp,LOCATION_DECK,0,1,1,nil)
+    if g:GetCount()>0 then
+        Duel.SendtoHand(g,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,g)
+    end
 end

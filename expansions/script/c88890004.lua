@@ -155,10 +155,10 @@ function c88890004.stzop(e,tp,eg,ep,ev,re,r,rp)
 end
 --(6) can't normal summon
 function c88890004.efcon(e)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and e:GetHandler():IsFaceup() and not e:GetHandler():IsType(TYPE_EQUIP)
 end
 function c88890004.efval(e,c)
-    return c:IsAttribute(ATTRIBUTE_DARK)
+    return not c:IsAttribute(ATTRIBUTE_DARK)
 end
 --(7) add
 function c88890004.thcon(e,tp,eg,ep,ev,re,r,rp)

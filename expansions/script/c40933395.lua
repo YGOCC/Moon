@@ -1,7 +1,7 @@
 --Mecha Girl Kinzokurori
 function c40933395.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure2(c,aux.FilterBoolFunction(Card.IsSetCard,0x3052),aux.NonTuner,nil)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x3052),aux.NonTuner(nil),1,1)
 	c:EnableReviveLimit()
 	--damage
 	local e1=Effect.CreateEffect(c)

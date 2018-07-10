@@ -53,7 +53,7 @@ function c88890007.initial_effect(c)
     e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e6:SetTargetRange(0,1)
     e6:SetCondition(c88890007.efcon)
-    e6:SetValue(c88890007.efval)
+    e6:SetTarget(c88890007.efval)
     c:RegisterEffect(e6)
     --(7) add
     local e7=Effect.CreateEffect(c)
@@ -73,10 +73,10 @@ function c88890007.splimit(e,se,sp,st)
 end
 --(2) Effect for card
 function c88890007.atkfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0x902) and c:IsType(TYPE_MONSTER)
+    return c:IsFaceup() and c:IsSetCard(0x902) and c:IsType(TYPE_MONSTER) or c:IsType(TYPE_CONTINUOUS) and not c:IsType(TYPE_EQUIP)
 end
 function c88890007.atkval(e,c)
-    return Duel.GetMatchingGroupCount(c88890007.atkfilter,c:GetControler(),LOCATION_GRAVE,0,nil)*500
+    return Duel.GetMatchingGroupCount(c88890007.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_SZONE,0,nil)*200
 end
 --(3) Pay or Destroy
 function c88890007.paycon(e,tp,eg,ep,ev,re,r,rp)
@@ -132,10 +132,10 @@ function c88890007.stzop(e,tp,eg,ep,ev,re,r,rp)
 end
 --(6) can't normal summon
 function c88890007.efcon(e)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and e:GetHandler():IsFaceup() and not e:GetHandler():IsType(TYPE_EQUIP)
 end
 function c88890007.efval(e,c)
-    return c:IsAttribute(ATTRIBUTE_WATER)
+    return not c:IsAttribute(ATTRIBUTE_WATER)
 end
 --(7) add
 function c88890007.thcon(e,tp,eg,ep,ev,re,r,rp)

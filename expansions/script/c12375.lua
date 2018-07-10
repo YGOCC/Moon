@@ -59,7 +59,7 @@ function c12375.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c12375.filter(c)
-	return c:IsFaceup()
+	return c:IsFaceup() and not c:IsAttack(0)
 end
 function c12375.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c12375.filter(chkc) end

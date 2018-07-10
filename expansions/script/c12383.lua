@@ -33,7 +33,7 @@ end
 function c12383.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
-function c12383.spfilter1(c,tp)
+function c12383.spfilter1(c,tp,sc)
 	return c:IsFusionSetCard(0x3052) and c:IsType(TYPE_SYNCHRO) and c:IsAbleToDeckOrExtraAsCost() and c:IsFaceup() and c:IsCanBeFusionMaterial()
 		and Duel.IsExistingMatchingCard(c12383.spfilter2,tp,LOCATION_REMOVED,0,2,c)
 end
@@ -42,9 +42,9 @@ function c12383.spfilter2(c)
 end
 function c12383.sprcon(e,c)
 	if c==nil then return true end 
+	if Duel.GetLocationCountFromEx(tp,tp,sc,c)<=0 then return false end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c12383.spfilter1,tp,LOCATION_REMOVED,0,1,nil,tp)
+	return Duel.IsExistingMatchingCard(c12383.spfilter1,tp,LOCATION_REMOVED,0,1,nil,tp)
 end
 function c12383.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(12383,2))

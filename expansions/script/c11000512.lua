@@ -15,7 +15,7 @@ function c11000512.initial_effect(c)
 end
 function c11000512.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
-	return ec:IsSetCard(0x1FD) and ec:IsSummonType()==SUMMON_TYPE_SYNCHRO and ec:GetSummonPlayer()==tp
+	return ec:IsSetCard(0x1FD) and ec:IsSummonType(SUMMON_TYPE_SYNCHRO) and ec:GetSummonPlayer()==tp
 end
 function c11000512.cfilter(c)
 	return c:IsSetCard(0x1FD) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
