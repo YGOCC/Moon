@@ -40,12 +40,13 @@ function c19772603.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c19772603.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() and c:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil)
+		and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 end
 function c19772603.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(aux.TRUE,e:GetHandler():GetControler(),LOCATION_HAND,0,nil)
+	local g=Duel.GetFieldGroup(e:GetHandler():GetControler(),LOCATION_HAND,0)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
