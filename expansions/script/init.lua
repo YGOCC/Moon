@@ -328,7 +328,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	--... format - any number of materials + optional material - min, max (min can be 0, max can be nil which will set it to 99)	use aux.TRUE for generic materials
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local t={...}
-	if type(echeck)=='function' then table.add(t,echeck) end
+	if type(echeck)=='function' then table.insert(t,echeck) end
 	local extramat,min,max
 	if type(t[#t])=='number' then
 		max=t[#t]

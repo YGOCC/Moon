@@ -21,6 +21,9 @@ function c18591878.initial_effect(c)
     e5:SetOperation(c18591878.atkop)
     c:RegisterEffect(e5)
 end
+function c18591878.efilter(e,te)
+	return te:GetOwner()~=e:GetOwner()
+end
 function c18591878.atkcon(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():GetBattleTarget()
 end
