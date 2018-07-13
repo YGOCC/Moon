@@ -32,7 +32,7 @@ function c50031786.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_EFFECT) and not e:GetHandler():IsReason(REASON_RETURN)
 end
 function c50031786.kfilter(c)
-	return c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER) and c:GetSequence()>=5
+	return c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER) --and c:GetSequence()>=5
 end
 function c50031786.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c50031786.kfilter(chkc) end
