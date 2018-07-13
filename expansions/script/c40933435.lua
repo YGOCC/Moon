@@ -49,7 +49,7 @@ function c40933435.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c40933435.sfilter(c)
-	return c:IsSetCard(0x3052) and c:IsPreviousLocation(LOCATION_EXTRA) and not c:IsType(TYPE_TUNER)
+	return c:IsSetCard(0x3052) and c:GetSummonLocation()==LOCATION_EXTRA and not c:IsType(TYPE_TUNER)
 end
 function c40933435.atklimit(e,c)
 	return c:IsFaceup() and c:IsSetCard(0x3052) and c~=e:GetHandler()
