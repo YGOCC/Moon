@@ -1,7 +1,7 @@
 --ESPergear Knight: Knigtie
 function c16000033.initial_effect(c)
 	   aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,c16000033.checku,6,c16000033.matfilter,c16000033.filter2)
+  aux.AddEvoluteProc(c,nil,6,c16000033.matfilter,c16000033.filter2)
 	c:EnableReviveLimit() 
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(16000033,0))
@@ -36,9 +36,7 @@ end
 function c16000033.matfilter(c,ec,tp)
    return c:IsAttribute(ATTRIBUTE_LIGHT) 
 end
-function c16000033.checku(sg,ec,tp)
-return sg:IsExists(Card.IsCode,1,nil,16000020)
-end
+
 function c16000033.filter2(c,ec,tp)
 	   return (c:IsType(TYPE_UNION) and c:IsRace(RACE_MACHINE)) or c:IsRace(RACE_PSYCHO)
 end
