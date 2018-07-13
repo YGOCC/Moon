@@ -21,10 +21,11 @@ function c50031699.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetRange(LOCATION_GRAVE)
+	e4:SetHintTiming(0,0x11e0)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCountLimit(1,50031699)
 	e4:SetCondition(aux.exccon)
-	e4:SetCost(c50031699.cost2)
+	e4:SetCost(aux.bfgcost)
 	e4:SetTarget(c50031699.target2)
 	e4:SetOperation(c50031699.operation2)
 	c:RegisterEffect(e4)
@@ -81,12 +82,9 @@ end
 function c50031699.cfilter(c)
 	return not c:IsCode(50031699) and c:IsAbleToDeck()
 end
-function c50031699.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(c50031699.cfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
+
 function c50031699.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c50031699.cfilter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp)  end
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
 		and Duel.IsExistingTarget(c50031699.cfilter,tp,LOCATION_REMOVED,0,5,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
@@ -100,12 +98,12 @@ function c50031699.operation2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
 	local g=Duel.GetOperatedGroup()
 	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	local ct=g:FilterCount(c50031699.cfilter,nil)
+	local ct=g:FilterCount(c50031699.cfilterx,nil)
 	if ct==5 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
-function c50031699.cfilter(c)
+function c50031699.cfilterx(c)
 	return c:IsLocation(LOCATION_DECK+LOCATION_EXTRA) and c:IsSetCard(0x185a) and c:IsType(TYPE_MONSTER)
 end
