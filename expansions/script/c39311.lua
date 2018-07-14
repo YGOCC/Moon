@@ -33,7 +33,7 @@ function c39311.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function c39311.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,39312)>0 then return end
+	if Duel.GetFlagEffect(tp,39311)>0 then return end
 	local c=e:GetHandler()
 	if c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
