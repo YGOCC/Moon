@@ -105,11 +105,14 @@ end
 function c39312.filter(c)
 	return c:IsFaceup() and c:GetCode()>39300 and c:GetCode()<39319 and not c:IsCode(39311,39312)
 end
+function c39312.filter(c)
+	return c:IsFaceup()
+end
 function c39312.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c39312.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c39312.filter,tp,LOCATION_MZONE,0,1,e:GetHandler()) and Duel.GetFlagEffect(tp,39312)==0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,c39312.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,c39312.atkfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.RegisterFlagEffect(tp,39312,RESET_PHASE+PHASE_END,0,1)
 end
 function c39312.operation(e,tp,eg,ep,ev,re,r,rp)
