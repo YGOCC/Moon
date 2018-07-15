@@ -50,6 +50,7 @@ function c49181107.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_TO_GRAVE)
 	e5:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e5:SetCondition(c49181107.accon)
 	e5:SetOperation(c49181107.acop)
 	c:RegisterEffect(e5)
 end
@@ -109,6 +110,9 @@ end
 function c49181107.acfilter(c)
 	return c:IsCode(49181108) and c:GetActivateEffect() and c:GetActivateEffect():IsActivatable(tp,true,true)
 end
+function c49181107.accon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c49181107.acfilter,tp,LOCATION_DECK,0,1,nil)
+end
 function c49181107.acop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
@@ -120,11 +124,5 @@ function c49181107.acop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 		end
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-		local te=tc:GetActivateEffect()
-		te:UseCountLimit(tp,1,true)
-		local tep=tc:GetControler()
-		local cost=te:GetCost()
-		if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-		Duel.RaiseEvent(tc,4179255,te,0,tp,tp,Duel.GetCurrentChain())
 	end
 end

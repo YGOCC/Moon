@@ -3,7 +3,6 @@
 --archetype setcode: 5AA
 --known issues: 
 function c49181102.initial_effect(c)
-	aux.AddUnionProcedure(c,c49181102.unfilter)
 	--level
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_EQUIP)
@@ -41,6 +40,40 @@ function c49181102.initial_effect(c)
 	e4:SetTarget(c49181102.drtg)
 	e4:SetOperation(c49181102.drop)
 	c:RegisterEffect(e4)
+	--unionproc
+	--equip
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(49181102,0))
+	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e5:SetCategory(CATEGORY_EQUIP)
+	e5:SetType(EFFECT_TYPE_IGNITION)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetTarget(c49181102.eqtg)
+	e5:SetOperation(c49181102.eqop)
+	c:RegisterEffect(e5)
+	--unequip
+	local e6=Effect.CreateEffect(c)
+	e6:SetDescription(aux.Stringid(49181102,1))
+	e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetRange(LOCATION_SZONE)
+	e6:SetTarget(c49181102.sptg)
+	e6:SetOperation(c49181102.spop)
+	c:RegisterEffect(e6)
+	--eqlimit
+    local e7=Effect.CreateEffect(c)
+    e7:SetType(EFFECT_TYPE_SINGLE)
+    e7:SetCode(EFFECT_EQUIP_LIMIT)
+    e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+    e7:SetValue(c49181102.eqlimit)
+    c:RegisterEffect(e7)
+    --destroy sub
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_EQUIP)
+	e8:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e8:SetCode(EFFECT_DESTROY_SUBSTITUTE)
+	e8:SetValue(c49181102.repval)
+	c:RegisterEffect(e8)
 end
 function c49181102.unfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK)
@@ -90,4 +123,44 @@ end
 function c49181102.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
+end
+--unionproc
+function c49181102.eqlimit(e,c)
+    return c:IsAttribute(ATTRIBUTE_DARK) or e:GetHandler():GetEquipTarget()==c
+end
+function c49181102.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c49181102.unfilter(chkc) end
+	if chk==0 then return e:GetHandler():GetFlagEffect(49181102)==0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and Duel.IsExistingTarget(c49181102.unfilter,tp,LOCATION_MZONE,0,1,c) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+	local g=Duel.SelectTarget(tp,c49181102.unfilter,tp,LOCATION_MZONE,0,1,1,c)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
+	c:RegisterFlagEffect(49181102,RESET_EVENT+0x7e0000+RESET_PHASE+PHASE_END,0,1)
+end
+function c49181102.eqop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
+	if not tc:IsRelateToEffect(e) or not c49181102.unfilter(tc) then
+		Duel.SendtoGrave(c,REASON_EFFECT)
+		return
+	end
+	if not Duel.Equip(tp,c,tc,false) then return end
+	aux.SetUnionState(c)
+end
+function c49181102.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(49181102)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+	c:RegisterFlagEffect(49181102,RESET_EVENT+0x7e0000+RESET_PHASE+PHASE_END,0,1)
+end
+function c49181102.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
+end
+function c49181102.repval(e,re,r,rp)
+	return bit.band(r,REASON_BATTLE)~=0 or bit.band(r,REASON_EFFECT)~=0
 end

@@ -1,10 +1,10 @@
 --Bestial Amalgam
 --by Nix
 --archetype setcode: 5AA
---known issues:
+--known issues: indesfilter doesn't exist
 function c49181106.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),4,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),4,2)
 	c:EnableReviveLimit()
 	--equip
 	local e1=Effect.CreateEffect(c)
@@ -55,6 +55,9 @@ function c49181106.operation(e,tp,eg,ep,ev,re,r,rp)
 			aux.SetUnionState(c)
 		end
 	end
+end
+function c49181106.indesfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x5AA)
 end
 function c49181106.indescost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
