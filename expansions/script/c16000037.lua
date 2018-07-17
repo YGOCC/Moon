@@ -45,15 +45,15 @@ function c16000037.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c16000037.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c16000037.spfilter2,tp,LOCATION_DECK,0,nil)
-			local cg=Group.CreateGroup()
-		for i=1,3 do
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=g:Select(tp,1,1,nil)
-			g:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
-			cg:Merge(sg)
-		end
+	local cg=Group.CreateGroup()
+	for i=1,3 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=g:Select(tp,1,1,nil)
+		g:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
+		cg:Merge(sg)
+	end
+	if cg:GetCount()>=3 then
 		Duel.ConfirmCards(1-tp,cg)
-		Duel.ShuffleDeck(tp)
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SPSUMMON)
 		local tg=cg:Select(1-tp,1,1,nil)
 		local tc=tg:GetFirst()
@@ -61,14 +61,11 @@ function c16000037.thop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 			cg:RemoveCard(tc)
 		end
-			local tg=cg:GetFirst()
-			while tg do
-				Duel.MoveSequence(tg,0)
-				tg=cg:GetNext()
-			end
-			Duel.SortDecktop(tp,tp,4-cg:GetCount())
-			for i=1,4-cg:GetCount() do
+		local tg=cg:GetFirst()
+		Duel.SortDecktop(tp,tp,cg:GetCount())
+		for i=1,cg:GetCount() do
 			local mg=Duel.GetDecktopGroup(tp,1)
 			Duel.MoveSequence(mg:GetFirst(),1)
 		end
 	end
+end
