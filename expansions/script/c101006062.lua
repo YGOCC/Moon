@@ -15,6 +15,7 @@ function c101006062.initial_effect(c)
 	e2:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCountLimit(1,101006062)
+	e2:SetCondition(c101006062.dmcon)
 	e2:SetTarget(c101006062.dmtg)
 	e2:SetOperation(c101006062.dmop)
 	c:RegisterEffect(e2)
@@ -31,6 +32,9 @@ function c101006062.initial_effect(c)
 	e3:SetTarget(c101006062.sptg)
 	e3:SetOperation(c101006062.spop)
 	c:RegisterEffect(e3)
+end
+function c101006062.dmcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetBattleDamage(tp)>0 or Duel.GetBattleDamage(1-tp)>0
 end
 function c101006062.tgfilter(c)
 	return c:IsLevelBelow(4) and c:IsRace(RACE_INSECT) and c:IsAbleToGrave()
@@ -54,10 +58,14 @@ function c101006062.dmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local tc=Duel.SelectMatchingCard(tp,c101006062.tgfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
 	if tc and Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_GRAVE) and tc:IsType(TYPE_NORMAL) then
-		local g=Duel.GetMatchingGroup(c101006062.spfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp,tc:GetCode())
-		if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(101006062,1)) then
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c101006062.spfilter),tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp,tc:GetCode())
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+		if g:GetCount()>0 and ft>0 and Duel.SelectYesNo(tp,aux.Stringid(101006062,1)) then
 			Duel.BreakEffect()
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local sg=g:Select(tp,1,ft,nil)
+			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
@@ -66,7 +74,7 @@ function c101006062.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(1-tp,0)
 end
 function c101006062.cfilter(c,tp)
-	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp
+	return c:IsReason(REASON_EFFECT) and c:IsType(TYPE_MONSTER) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp
 end
 function c101006062.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and eg:IsExists(c101006062.cfilter,1,nil,tp)

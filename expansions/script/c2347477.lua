@@ -34,6 +34,9 @@ function c2347477.initial_effect(c)
 	e3:SetOperation(c2347477.thop)
 	c:RegisterEffect(e3)
 end
+c2347477.cynet_list={[19943114]=true;[34767865]=true;[36368606]=true;
+[42461852]=true;[43839002]=true;[61583217]=true;[73558460]=true}
+
 function c2347477.matcon(e)
 	return Duel.GetFlagEffect(e:GetHandlerPlayer(),2347477)==0
 end
@@ -56,7 +59,7 @@ function c2347477.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsLocation(LOCATION_GRAVE) and c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND) and r==REASON_LINK and c:GetReasonCard():IsSetCard(0x101)
 end
 function c2347477.thfilter(c,chk)
-	return ((c:IsSetCard(0x218) and c:IsType(TYPE_SPELL+TYPE_TRAP)) or (chk==1 and c:IsRace(RACE_CYBERSE) and c:IsLevel(4))) and c:IsAbleToHand()
+	return (((c:IsSetCard(0x118) or c2347477.cynet_list[c:GetCode()]) and c:IsType(TYPE_SPELL+TYPE_TRAP)) or (chk==1 and c:IsRace(RACE_CYBERSE) and c:IsLevel(4))) and c:IsAbleToHand()
 end
 function c2347477.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c2347477.thfilter,tp,LOCATION_DECK,0,1,nil,e:GetLabel()) end
