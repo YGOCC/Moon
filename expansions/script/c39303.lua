@@ -13,7 +13,7 @@ function c39303.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c39303.filter(c)
-	return c:GetCode()>39300 and c:GetCode()<39319 and c:IsAbleToHand() and not c:IsCode(39311,39312)
+	return c:GetCode()>39300 and c:GetCode()<39321 and c:IsAbleToHand() and not c:IsCode(39311,39312)
 end
 function c39303.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c39303.filter(chkc) end

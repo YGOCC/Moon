@@ -21,10 +21,10 @@ function c39310.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c39310.ffil(c)
-	return c:GetCode()>39300 and c:GetCode()<39319 and not c:IsCode(39311,39312)
+	return c:GetCode()>39300 and c:GetCode()<39321 and not c:IsCode(39311,39312)
 end
 function c39310.estg(e,c)
-	return c:GetCode()>39300 and c:GetCode()<39319 and not c:IsCode(39311,39312)
+	return c:GetCode()>39300 and c:GetCode()<39321 and not c:IsCode(39311,39312)
 end
 function c39310.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(1-tp) and chkc:IsAbleToDeck() end
