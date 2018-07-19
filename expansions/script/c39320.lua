@@ -21,7 +21,6 @@ function c39320.initial_effect(c)
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
 end
-	end
 	function c39320.cfilter(c,tp)
 	return c:IsReason(REASON_DESTROY) and c:IsType(TYPE_MONSTER) and c:GetPreviousControler()==tp
 end
@@ -39,5 +38,5 @@ function c39320.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c39320.tgtg(e,c)
-	return c~=e:GetHandler() and c:IsFaceup() c:GetCode()>39300 and c:GetCode()<39321 and not c:IsCode(39311,39312)
+	return c~=e:GetHandler() and c:IsFaceup() and c:GetCode()>39300 and c:GetCode()<39321 and not c:IsCode(39311,39312)
 end
