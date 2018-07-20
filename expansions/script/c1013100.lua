@@ -66,20 +66,25 @@ end
 function cod.lfitler(c)
 	return c:IsLevelBelow(3) and c:IsRace(RACE_ZOMBIE)
 end
+--Segundo filtro para Materiales Enlace
+function cod.lgfilter(c)
+	return c:IsRace(RACE_ZOMBIE)
+end
 
 --Invocación Enlace Secundario
-function cod.lkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsRace,tp,LOCATION_GRAVE,0,2,nil,RACE_ZOMBIE) 
-end
-function cod.lcg(tp,sg,lc)
-	return Duel.GetLocationCountFromEx(tp,tp,sg,lc)>0
+function cod.lkcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	local mg=Auxiliary.GetLinkMaterials(tp,cod.lgfilter,c)
+	return Duel.GetLocationCountFromEx(tp)>0
+		and Duel.IsExistingMatchingCard(Card.IsRace,tp,LOCATION_GRAVE,0,2,nil,RACE_ZOMBIE) 
 end
 function cod.lktg(e,tp,eg,ep,ev,re,r,rp,chk,c)
 	local g=Duel.GetMatchingGroup(aux.LConditionFilter,tp,LOCATION_GRAVE,0,nil,nil,c)
-	local lg=g:Filter(Card.IsRace,nil,RACE_ZOMBIE)
-	if #lg<2 then return end
+	local lg=g:Filter(cod.lgfilter,nil)
+	if #lg<2 or Duel.GetLocationCountFromEx(tp)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
-	local sg=g:FilterSelect(tp,cod.lcg,2,2,nil,lg,c)
+	local sg=g:Select(tp,2,2,nil)
 	if #sg==2 then
 		sg:KeepAlive()
 		e:SetLabelObject(sg)
