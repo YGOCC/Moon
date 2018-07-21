@@ -2,11 +2,11 @@
 --Scripted by Kedy
 --Concept by XStutzX
 local function ID()
-    local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-    str=string.sub(str,1,string.len(str)-4)
-    local cod=_G[str]
-    local id=tonumber(string.sub(str,2))
-    return id,cod
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
 end
 
 local id,cod=ID()
@@ -103,7 +103,7 @@ function cod.bpop(e,tp,eg,ep,ev,re,r,rp)
 		tc1=g:GetNext()
 	end
 	if tc1 and e:GetLabelObject() then
-		Duel.ChangePosition(tc1,POS_FACEDOWN)
+		Duel.ChangePosition(tc1,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
 	end
 	if tc2 then
 		Duel.Remove(tc2,POS_FACEUP,REASON_EFFECT)

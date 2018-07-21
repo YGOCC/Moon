@@ -2,11 +2,11 @@
 --Scripted by Kedy
 --Concept by XStutzX
 local function ID()
-    local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-    str=string.sub(str,1,string.len(str)-4)
-    local cod=_G[str]
-    local id=tonumber(string.sub(str,2))
-    return id,cod
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
 end
 
 local id,cod=ID()
@@ -69,7 +69,7 @@ function cod.fdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectMatchingCard(tp,cod.pfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	if #g<=0 then return end
-	Duel.ChangePosition(g,POS_FACEDOWN)
+	Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE,0,POS_FACEDOWN_DEFENSE,0)
 end
 
 --Destroy

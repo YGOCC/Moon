@@ -1,4 +1,5 @@
 function c39320.initial_effect(c)
+	c:EnableUnsummonable()
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -20,6 +21,14 @@ function c39320.initial_effect(c)
 	e4:SetTarget(c39320.tgtg)
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
+	--double damage
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCondition(c39320.damcon)
+	e3:SetOperation(c39320.damop)
+	c:RegisterEffect(e3)
 end
 	function c39320.cfilter(c,tp)
 	return c:IsReason(REASON_DESTROY) and c:IsType(TYPE_MONSTER) and c:GetPreviousControler()==tp
@@ -39,4 +48,11 @@ function c39320.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c39320.tgtg(e,c)
 	return c~=e:GetHandler() and c:IsFaceup() and c:GetCode()>39300 and c:GetCode()<39321 and not c:IsCode(39311,39312)
+end
+function c39320.damcon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=eg:GetFirst()
+	return ep~=tp and tc:GetCode()>39300 and tc:GetCode()<39321 and not tc:IsCode(39311,39312) and tc:GetBattleTarget()~=nil
+end
+function c39320.damop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(ep,ev*2)
 end

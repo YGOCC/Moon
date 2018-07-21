@@ -1,5 +1,5 @@
 function c39319.initial_effect(c)
-    c:EnableReviveLimit()
+    c:EnableUnsummonable()
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(82103466,0))

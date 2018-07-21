@@ -2,11 +2,11 @@
 --Scripted by Kedy
 --Concept by XStutzX
 local function ID()
-    local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-    str=string.sub(str,1,string.len(str)-4)
-    local cod=_G[str]
-    local id=tonumber(string.sub(str,2))
-    return id,cod
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
 end
 
 local id,cod=ID()
@@ -18,8 +18,9 @@ function cod.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_POSITION)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(cod.fdcon)
 	e1:SetTarget(cod.fdtg)
@@ -45,7 +46,7 @@ function cod.initial_effect(c)
 	end
 end
 function cod.fdcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetTurnID()==Duel.GetTurnCount()
+	return e:GetHandler():GetTurnID()==Duel.GetTurnCount() and not e:GetHandler():IsStatus(STATUS_CHAINING)
 end
 function cod.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
