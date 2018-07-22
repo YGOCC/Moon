@@ -14,6 +14,13 @@ function cod.initial_effect(c)
 	--Fusion Summon
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf05a),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_DARK),2,2,true)
+	--Sp Summon Con
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e0:SetValue(aux.fuslimit)
+	c:RegisterEffect(e0)
 	--Flip FD
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -22,6 +29,7 @@ function cod.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1)
 	e1:SetCondition(cod.fdcon)
 	e1:SetTarget(cod.fdtg)
 	e1:SetOperation(cod.fdop)
@@ -46,7 +54,7 @@ function cod.initial_effect(c)
 	end
 end
 function cod.fdcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetTurnID()==Duel.GetTurnCount() and not e:GetHandler():IsStatus(STATUS_CHAINING)
+	return e:GetHandler():GetTurnID()==Duel.GetTurnCount()
 end
 function cod.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -54,7 +62,7 @@ end
 function cod.fdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	if #g<=0 then return end
-	Duel.ChangePosition(g,POS_FACEDOWN)
+	Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 end
 function cod.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():GetFlagEffect(id)>0

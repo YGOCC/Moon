@@ -78,16 +78,16 @@ function cod.descon(e,tp,eg,ep,ev,re,r,rp,chk)
 	local d=a:GetBattleTarget()
 	if a:IsControler(1-tp) then 
 		e:SetLabelObject(a)
-		return d and d==e:GetHandler() and a:IsFaceup() 
+		return d and d==e:GetHandler() and a:IsFacedown() 
 	end
 	if a==e:GetHandler() then 
 		e:SetLabelObject(d)
-		return d and d:IsFaceup()
+		return d and d:IsFacedown()
 	end
 end
 function cod.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	if tc:IsRelateToBattle() and tc:IsFaceup() then
+	if tc:IsRelateToBattle() and tc:IsFacedown() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

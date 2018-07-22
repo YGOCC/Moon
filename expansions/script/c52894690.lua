@@ -8,9 +8,7 @@ local function ID()
     local id=tonumber(string.sub(str,2))
     return id,cod
 end
---[[The owner of this card cannot Special Summon non-"Onigami" monster from their Extra Deck the turn this card was face-up on the field. 
-If this card is in your GY: You can shuffle this card and 1 "Onigami" monster from your GY into the Extra Deck. 
-If this card was Link Summoned this turn: You can target the Link Material in your GY; either add it to your hand or Special Summon it.]]
+
 local id,cod=ID()
 function cod.initial_effect(c)
 	--Link Summon
@@ -42,6 +40,7 @@ function cod.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetCondition(function (e) return e:GetHandler():GetTurnID()==Duel.GetTurnCount() end)
 	e3:SetTarget(cod.grtg)
 	e3:SetOperation(cod.grop)
 	c:RegisterEffect(e3)
