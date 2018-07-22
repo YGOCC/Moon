@@ -1,4 +1,4 @@
---Subverted Reirrac
+--Subverted Girduloc
 function c210001108.initial_effect(c)
 	--norm
 	c:EnableReviveLimit()
@@ -43,6 +43,47 @@ function c210001108.initial_effect(c)
 	e5:SetTarget(c210001108.ectarget)
 	e5:SetOperation(c210001108.ecoperation)
 	c:RegisterEffect(e5)
+	--damage+reveal
+	local e6=Effect.CreateEffect(c)
+	e6:SetCountLimit(1,210001114)
+	e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e6:SetCategory(CATEGORY_DAMAGE)
+	e6:SetType(EFFECT_TYPE_QUICK_O)
+	e6:SetRange(LOCATION_HAND)
+	e6:SetCode(EVENT_FREE_CHAIN)
+	e6:SetCondition(c210001108.dmcondition)
+	e6:SetCost(c210001108.dmcost)
+	e6:SetTarget(c210001108.dmtarget)
+	e6:SetOperation(c210001108.dmoperation)
+	c:RegisterEffect(e6)
+	--global effect
+	if not c210001108.gchk then
+		c210001108.gchk=true
+		c210001108.rth=false
+		--count when a subverted is returned to hand
+		local ge1=Effect.GlobalEffect()
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_TO_HAND)
+		ge1:SetOperation(c210001108.chk1)
+		Duel.RegisterEffect(ge1,0)
+		--reset
+		local ge2=Effect.GlobalEffect()
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetCode(EVENT_PHASE_START+PHASE_DRAW)
+		ge2:SetOperation(c210001108.chk2)
+		Duel.RegisterEffect(ge2,0)
+	end
+end
+function c210001108.chkfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsCode(210001108)
+end
+function c210001108.chk1(e,tp,eg,ep,ev,re,r,rp)
+	if eg and eg:IsExists(c210001108.chkfilter,1,nil) then
+		c210001108.rth=true
+	end
+end
+function c210001108.chk2(e,tp,eg,ep,ev,re,r,rp)
+	c210001108.rth=false
 end
 function c210001108.sprfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xfed) and c:IsAbleToHandAsCost()
@@ -94,4 +135,26 @@ function c210001108.repop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
+end
+function c210001108.dmcondition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE and c210001108.rth
+end
+function c210001108.dmcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsPublic() end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_PUBLIC)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	c:RegisterEffect(e1)
+end
+function c210001108.dmtarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(1-tp)
+	Duel.SetTargetParam(2000)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,2000)
+end
+function c210001108.dmoperation(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Damage(p,d,REASON_EFFECT)
 end

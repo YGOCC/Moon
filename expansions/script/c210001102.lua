@@ -21,6 +21,14 @@ function c210001102.initial_effect(c)
 	e2:SetTarget(c210001102.sptarget2)
 	e2:SetOperation(c210001102.spoperation2)
 	c:RegisterEffect(e2)
+	--redirect
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_TO_GRAVE_REDIRECT)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetCondition(c210001102.recon)
+	e3:SetValue(LOCATION_REMOVED)
+	c:RegisterEffect(e3)
 end
 function c210001102.spfilter(c,e,tp)
 	--0xfed==4077=="subverted"
@@ -79,12 +87,11 @@ end
 function c210001102.spoperation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x47e0000)
-		e1:SetValue(LOCATION_REMOVED)
-		c:RegisterEffect(e1,true)
+		e:GetHandler():RegisterFlagEffect(210001102,RESET_EVENT+RESETS_STANDARD,0,1)
 	end
+end
+function c210001102.recon(e)
+	local c=e:GetHandler()
+	return c:IsLocation(LOCATION_MZONE) and (c:IsReason(REASON_BATTLE) 
+		or c:IsReason(REASON_EFFECT)) and e:GetHandler():GetFlagEffect(210001102)~=0
 end
