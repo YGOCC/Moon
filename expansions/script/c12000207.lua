@@ -42,20 +42,15 @@ function c12000207.cfilter1(c)
 	return c:IsFaceup() and c:IsCode(12000207)
 end
 function c12000207.cfilter2(c)
-	return c:IsFaceup() and c:IsSetCard(0x855)
-end
-function c12000207.cfilter3(c)
 	return c:IsFaceup() and c:IsCode(12000210)
 end
 function c12000207.sumcon1(e,tp,eg,ep,ev,re,r,rp)
-	return (not Duel.IsExistingMatchingCard(c12000207.cfilter1,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(c12000207.cfilter2,tp,LOCATION_MZONE,0,1,nil))
-		and not Duel.IsExistingMatchingCard(c12000207.cfilter3,tp,LOCATION_ONFIELD,0,1,nil)
+	return not Duel.IsExistingMatchingCard(c12000207.cfilter1,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
+		and not Duel.IsExistingMatchingCard(c12000207.cfilter2,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c12000207.sumcon2(e,tp,eg,ep,ev,re,r,rp)
-	return (not Duel.IsExistingMatchingCard(c12000207.cfilter1,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(c12000207.cfilter2,tp,LOCATION_MZONE,0,1,nil))
-		and Duel.IsExistingMatchingCard(c12000207.cfilter3,tp,LOCATION_ONFIELD,0,1,nil)
+	return not Duel.IsExistingMatchingCard(c12000207.cfilter1,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(c12000207.cfilter2,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c12000207.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
@@ -63,37 +58,20 @@ end
 function c12000207.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-        and Duel.IsPlayerCanSpecialSummonMonster(tp,12000208,0,0x4011,500,500,1,RACE_DRAGON,ATTRIBUTE_FIRE) 
-        and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 end
-    Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
-end
-function c12000207.excfilter(c)
-	return not c:IsCode(12000208)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,12000208,0,0x4011,500,500,1,RACE_DRAGON,ATTRIBUTE_FIRE) 
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 
+		and c:IsSummonable(true,nil,1) end
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SUMMON,c,1,0,0)
 end
 function c12000207.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	for i=1,2 do
-		local token=Duel.CreateToken(tp,12000208)
-		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
-	end
-	Duel.SpecialSummonComplete()
-	--all other monsters cannot be tributed for the tribute summon
-	local exclude=Duel.GetMatchingGroup(c12000207.excfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	local exc=exclude:GetFirst()
-	while exc do
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UNRELEASABLE_SUM)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(1)
-		e1:SetReset(RESET_CHAIN)
-		exc:RegisterEffect(e1)
-		exc=exclude:GetNext()
-	end
-	--------
-	Duel.Summon(tp,c,true,nil)
+	local token=Duel.CreateToken(tp,12000208)
+	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	Duel.Summon(tp,c,true,nil,1)
 end
 function c12000207.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_ADVANCE)
