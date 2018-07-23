@@ -57,7 +57,7 @@ function c600000024.initial_effect(c)
 	e8:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	e8:SetCode(EFFECT_DESTROY_REPLACE)
 	e8:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e8:SetRange(LOCATION_FZONE)
+	e8:SetRange(LOCATION_SZONE)
 	e8:SetTarget(c600000024.desreptg)
 	e8:SetOperation(c600000024.desrepop)
 	c:RegisterEffect(e8)
@@ -114,7 +114,7 @@ end
 function c600000024.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsReason(REASON_RULE)
 		and e:GetHandler():GetCounter(0x4a8)>1 end
-	return Duel.SelectEffectYesNo(tp,600000024,2)
+	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end
 function c600000024.desrepop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RemoveCounter(ep,0x4a8,2,REASON_EFFECT)

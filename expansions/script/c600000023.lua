@@ -72,7 +72,7 @@ function c600000023.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c600000023.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(600000023)~=0
-		and Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)
+		and Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD+LOCATION_HAND)>Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD+LOCATION_HAND,0)
 		and Duel.GetLP(tp)<Duel.GetLP(1-tp)
 end
 function c600000023.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -84,4 +84,5 @@ end
 function c600000023.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
+	e:GetHandler():ResetFlagEffect(600000023)
 end

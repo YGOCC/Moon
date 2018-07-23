@@ -1,10 +1,27 @@
 --Battlefield of the Army
 function c600000021.initial_effect(c)
 	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	local act=Effect.CreateEffect(c)
+	act:SetType(EFFECT_TYPE_ACTIVATE)
+	act:SetCode(EVENT_FREE_CHAIN)
+	act:SetOperation(c600000021.fixreset)
+	c:RegisterEffect(act)
+	--check ATK changes
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e0:SetCode(EVENT_CHAIN_ACTIVATING)
+	e0:SetRange(LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED)
+	e0:SetOperation(c600000021.start_reg)
+	c:RegisterEffect(e0)
+	local e0x=Effect.CreateEffect(c)
+	e0x:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e0x:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e0x:SetCode(EVENT_CHAIN_SOLVED)
+	e0x:SetRange(LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED)
+	e0x:SetLabelObject(e0)
+	e0x:SetOperation(c600000021.check_reg)
+	c:RegisterEffect(e0x)
 	--atk & def
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -46,25 +63,14 @@ function c600000021.initial_effect(c)
 	c:RegisterEffect(e7)
 	--destroy
 	local e8=Effect.CreateEffect(c)
-	e8:SetDescription(aux.Stringid(600000021,1))
 	e8:SetCategory(CATEGORY_DESTROY)
 	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e8:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e8:SetCode(EVENT_ADJUST)
+	e8:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e8:SetRange(LOCATION_FZONE)
-	e8:SetCondition(c600000021.descon)
-	e8:SetTarget(c600000021.destg)
-	e8:SetOperation(c600000021.desop)
+	e8:SetCode(EVENT_CUSTOM+600000021)
+	e8:SetTarget(c600000021.tg)
+	e8:SetOperation(c600000021.op)
 	c:RegisterEffect(e8)
---	if not c600000021.global_check then
---		c600000021.global_check=true
---		local ge9=Effect.CreateEffect(c)
---		ge9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
---		ge9:SetCode(EVENT_ADJUST)
---		ge9:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
---		ge9:SetOperation(c600000021.atkchk)
---		Duel.RegisterEffect(ge9,0)
---	end
 end
 function c600000021.sumlimit(e,c)
 	return not c:IsSetCard(0x24a8)
@@ -118,5 +124,67 @@ function c600000021.desop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
 		tc=eg:GetNext()
+	end
+end
+function c600000021.preset(c)
+	return c:IsType(TYPE_MONSTER) and c:GetAttack()>0
+end
+function c600000021.trigger(c)
+	return c:GetFlagEffect(12345676)>0
+end
+--Activate
+function c600000021.fixreset(e,tp,eg,ep,ev,re,r,rp)
+	local reset=Duel.GetMatchingGroup(c600000021.trigger,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if reset:GetCount()<=0 then return end
+	for i in aux.Next(reset) do
+		if i:GetFlagEffect(12345676)>0 then
+			i:ResetFlagEffect(12345676)
+		end
+	end
+end
+--check ATK changes
+function c600000021.start_reg(e,tp,eg,ep,ev,re,r,rp)
+	local g1=Duel.GetMatchingGroup(c600000021.preset,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_MZONE+LOCATION_SZONE+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_HAND+LOCATION_DECK+LOCATION_MZONE+LOCATION_SZONE+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,nil)
+	local c1=g1:Clone()
+	c1:KeepAlive()
+	e:SetLabelObject(c1)
+	if not e:GetLabelObject() then
+		return
+	end
+end
+function c600000021.check_reg(e,tp,eg,ep,ev,re,r,rp)
+	local group=Group.CreateGroup()
+	local c1=e:GetLabelObject():GetLabelObject()
+	if not c1 then
+		return
+	end
+	---register monsters
+	for t0 in aux.Next(c1) do
+		if t0:GetAttack()<=0 then
+			t0:RegisterFlagEffect(12345676,RESET_PHASE+PHASE_END,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,0)
+			group:AddCard(t0)
+		end
+	end
+	---trigger event
+	if Duel.IsExistingMatchingCard(c600000021.trigger,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) then
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+600000021,e,0,0,tp,0)
+	end
+end
+--destroy
+function c600000021.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c600000021.trigger,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(c600000021.trigger,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function c600000021.op(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c600000021.trigger,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local reset=g:Clone()
+	if g:GetCount()>0 then
+		Duel.Destroy(g,REASON_EFFECT)
+	end
+	for i in aux.Next(reset) do
+		if i:GetFlagEffect(12345676)>0 then
+			i:ResetFlagEffect(12345676)
+		end
 	end
 end

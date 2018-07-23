@@ -63,7 +63,7 @@ function c600000026.initial_effect(c)
 	c:RegisterEffect(e8)
 end
 function c600000026.atkval(e,c)
-	return Duel.GetCounter(tp,1,0,0x4a8)*100
+	return Duel.GetCounter(e:GetOwnerPlayer(),1,0,0x4a8)*100
 end
 function c600000026.sumlimit(e,c)
 	return not c:IsSetCard(0x24a8)

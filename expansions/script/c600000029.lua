@@ -65,7 +65,7 @@ function c600000029.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsCode(600000029) and bit.band(sumtype,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK
 end
 function c600000029.atkval(e,c)
-	return Duel.GetCounter(tp,1,0,0x4a8)*100
+	return Duel.GetCounter(e:GetOwnerPlayer(),1,0,0x4a8)*100
 end
 function c600000029.sumlimit(e,c)
 	return not c:IsSetCard(0x24a8)
