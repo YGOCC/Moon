@@ -28,7 +28,7 @@ function c100410022.initial_effect(c)
 	e2:SetDescription(aux.Stringid(100410022,1))
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetCountLimit(1,100410022)
 	e2:SetCondition(c100410022.thcon)
@@ -54,7 +54,7 @@ function c100410022.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100410022.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return rp~=tp and c:GetPreviousControler()==tp
+	return rp==1-tp and c:GetPreviousControler()==tp
 end
 function c100410022.thfilter(c)
 	return not c:IsType(TYPE_LINK) and c:IsAbleToHand()

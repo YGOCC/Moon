@@ -1,4 +1,4 @@
--- 魔妖変生
+--魔妖変生
 --Return of the Mayakashi
 function c100410039.initial_effect(c)
 	--activate
@@ -50,7 +50,7 @@ function c100410039.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 		e2:SetValue(aux.tgoval)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e2)
 	end
 end

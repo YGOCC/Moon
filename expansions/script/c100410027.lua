@@ -1,4 +1,4 @@
--- 麗の魔妖(まやかし)-妲姫
+--麗の魔妖-妲姫
 --Beautiful Mayakashi – Dakki
 function c100410027.initial_effect(c)
 	c:SetUniqueOnField(1,0,100410027)
@@ -44,7 +44,7 @@ end
 function c100410027.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function c100410027.splimit(e,c,sump,sumtype,sumpos,targetp)
