@@ -1,14 +1,14 @@
 --Medivatale Cactusat
 function c16000880.initial_effect(c)
-	   --special summon
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1,16000880)
-	e1:SetCondition(c16000880.sprcon)
-	c:RegisterEffect(e1) 
+   --	--special summon
+  --  local e1=Effect.CreateEffect(c)
+  --  e1:SetType(EFFECT_TYPE_FIELD)
+  --  e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+ --   e1:SetCode(EFFECT_SPSUMMON_PROC)
+ --   e1:SetRange(LOCATION_HAND)
+ --   e1:SetCountLimit(1,16000880)
+ --   e1:SetCondition(c16000880.sprcon)
+ --   c:RegisterEffect(e1) 
 --summon success
 	local e2=Effect.CreateEffect(c)
 	--e2:SetCategory(CATEGORY_HAND)

@@ -1,14 +1,14 @@
 --Medivatale Scorpionboi
 function c16000876.initial_effect(c)
    --special summon
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1,16000876)
-	e1:SetCondition(c16000876.sprcon)
-	c:RegisterEffect(e1) 
+   -- local e1=Effect.CreateEffect(c)
+   -- e1:SetType(EFFECT_TYPE_FIELD)
+   -- e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+   -- e1:SetCode(EFFECT_SPSUMMON_PROC)
+   -- e1:SetRange(LOCATION_HAND)
+  --  e1:SetCountLimit(1,16000876)
+  --  e1:SetCondition(c16000876.sprcon)
+  --  c:RegisterEffect(e1) 
 --summon success
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_HAND)
@@ -67,7 +67,7 @@ end
 function c16000876.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
- if Duel.GetFlagEffect(tp,16000876)~=0 then return end	
+ if Duel.GetFlagEffect(tp,16000876)~=0 then return end  
 			  --pierce
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)

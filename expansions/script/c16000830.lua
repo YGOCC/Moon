@@ -1,18 +1,20 @@
 --Medivatale Bunny
+local ref=_G['c'..16000830]
+local id=16000830
 function c16000830.initial_effect(c)
   --special summon
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_FIELD)
-	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e0:SetCode(EFFECT_SPSUMMON_PROC)
-	e0:SetRange(LOCATION_HAND)
-	e0:SetCountLimit(1,16000830)
-	e0:SetCondition(c16000830.sprcon)
-	c:RegisterEffect(e0) 
-	   local e1=e0:Clone()
-	e1:SetCondition(c16000830.sprcon2)
-	c:RegisterEffect(e1)
---summon success
+--	local e0=Effect.CreateEffect(c)
+--	e0:SetType(EFFECT_TYPE_FIELD)
+--	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+--	e0:SetCode(EFFECT_SPSUMMON_PROC)
+--	e0:SetRange(LOCATION_HAND)
+--	e0:SetCountLimit(1,16000830)
+--	e0:SetCondition(c16000830.sprcon)
+--	c:RegisterEffect(e0) 
+--	local e1=e0:Clone()
+---	e1:SetCondition(c16000830.sprcon2)
+--	c:RegisterEffect(e1)
+	--summon success
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -46,13 +48,16 @@ function c16000830.sprcon(e,c)
 		and  not Duel.IsExistingMatchingCard(c16000830.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c16000830.cfilter2(c)
-	return c:IsFaceup() and c:GetSummonLocation()==LOCATION_EXTRA and  c:IsSetCard(0xab5)
+	return c:IsFaceup() and c:GetSummonLocation()==LOCATION_EXTRA and c:IsSetCard(0xab5)
 end
 function c16000830.sprcon2(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and  Duel.IsExistingMatchingCard(c16000830.cfilter2,tp,LOCATION_MZONE,0,1,nil)
+end
+function ref.IsPande(c)
+	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
 end
 function c16000830.setfilter(c)
 	return (c:IsSetCard(0xab5) and c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM )or (c:IsSetCard(0xab5) and c:IsType(TYPE_SPELL+TYPE_TRAP))
@@ -72,26 +77,31 @@ function c16000830.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c16000830.spop(e,tp,eg,ep,ev,re,r,rp)
-	  if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g=Duel.SelectMatchingCard(tp,c16000830.setfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
 	if g then
-		Card.SetCardData(g,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
+		if ref.IsPande(g) then
+			Card.SetCardData(g,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
+		end
 		Duel.SSet(tp,g)
 		Duel.ConfirmCards(1-tp,g)
-		if not g:IsLocation(LOCATION_SZONE) then
-			if g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
-				Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
-			elseif g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or g:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
-				Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
-			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			g:RegisterEffect(e1)
+		if ref.IsPande(g) then
+			if not g:IsLocation(LOCATION_SZONE) then
+				if g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
+					Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
+				elseif g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or g:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
+						Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
+					
+				end
 			end
 		end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+		e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		g:RegisterEffect(e1)
 	end
 end
 
@@ -156,19 +166,19 @@ function c16000830.operation2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,16000830,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000830.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c16000830.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16000830.fukfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c16000830.fukfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,c) end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,0,0)
 end
 function c16000830.fukfilter(c)
-	return c:IsFaceup() and not c:IsDisabled() and c:IsType(TYPE_EFFECT)
+	return c:IsFaceup() and not c:IsDisabled()
 end
 function c16000830.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectMatchingCard(tp,c16000830.fukfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,c16000830.fukfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,e:GetHandler())
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		local e1=Effect.CreateEffect(e:GetHandler())

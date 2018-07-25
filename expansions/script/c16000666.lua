@@ -1,14 +1,14 @@
 --Medivatale Angel
 function c16000666.initial_effect(c)
    --special summon
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1,16000666)
-	e1:SetCondition(c16000666.sprcon)
-	c:RegisterEffect(e1) 
+   -- local e1=Effect.CreateEffect(c)
+  --  e1:SetType(EFFECT_TYPE_FIELD)
+  --  e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+  --  e1:SetCode(EFFECT_SPSUMMON_PROC)
+  --  e1:SetRange(LOCATION_HAND)
+  --  e1:SetCountLimit(1,16000666)
+  --  e1:SetCondition(c16000666.sprcon)
+  --  c:RegisterEffect(e1) 
 --summon success
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)

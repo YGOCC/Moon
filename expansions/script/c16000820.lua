@@ -9,7 +9,7 @@ c:EnableCounterPermit(0x88)
 	e1:SetDescription(aux.Stringid(16000820,0))
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_SZONE)
+	--e1:SetRange(LOCATION_SZONE)
 	e1:SetCountLimit(1,16000820)
 	e1:SetCondition(aux.PandActCheck)
 	e1:SetTarget(c16000820.target)
@@ -28,18 +28,18 @@ c:EnableCounterPermit(0x88)
 	e2:SetOperation(c16000820.thop)
 	c:RegisterEffect(e2)
 --special summon
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(16000820,2))
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e3:SetCode(EFFECT_SPSUMMON_PROC)
-	e3:SetRange(LOCATION_HAND)
-	e3:SetCountLimit(1,16000822)
-	e3:SetCondition(c16000820.sprcon)
-	c:RegisterEffect(e3) 
-	  local e4=e3:Clone()
-	e4:SetCondition(c16000820.sprcon2)
-	c:RegisterEffect(e4)
+--	local e3=Effect.CreateEffect(c)
+--	e3:SetDescription(aux.Stringid(16000820,2))
+--	e3:SetType(EFFECT_TYPE_FIELD)
+--	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+--	e3:SetCode(EFFECT_SPSUMMON_PROC)
+--	e3:SetRange(LOCATION_HAND)
+--	e3:SetCountLimit(1,16000822)
+--	e3:SetCondition(c16000820.sprcon)
+--	c:RegisterEffect(e3) 
+	--  local e4=e3:Clone()
+--	e4:SetCondition(c16000820.sprcon2)
+	--c:RegisterEffect(e4)
 	 --hand 
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
@@ -77,11 +77,11 @@ function c16000820.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c16000820.xfilter(c)
-	return   c:IsType(TYPE_EVOLUTE) and c:IsFaceup() 
+	return c:IsType(TYPE_EVOLUTE) and c:IsFaceup() 
 end
 
 function c16000820.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return e:GetHandler():IsDestructable()end
+	if chk==0 then return e:GetHandler():IsDestructable() and Duel.IsExistingMatchingCard(ref.cfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 
@@ -193,6 +193,6 @@ function c16000820.spop(e,tp,eg,ep,ev,re,r,rp)
 		sg:AddCard(sg2:GetFirst())
 	end
 	if Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)~=0 and c:IsRelateToEffect(e) then
-c:RemoveCounter(tp,0x88,2,REASON_EFFECT)
-end
+		c:RemoveEC(tp,2,REASON_EFFECT)
+	end
 end

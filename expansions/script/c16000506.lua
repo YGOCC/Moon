@@ -71,7 +71,7 @@ function c16000506.matcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c16000506.matfilter(c)
-	return c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_TOKEN)
+	return c:IsType(TYPE_MONSTER) and c:IsSummonType(SUMMON_TYPE_SPECIAL) and not c:IsType(TYPE_TOKEN)
 end
 function c16000506.mattg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c16000506.tgfilter(chkc) end
