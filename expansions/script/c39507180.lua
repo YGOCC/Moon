@@ -7,6 +7,7 @@ local function ID()
 	local id=tonumber(string.sub(str,2))
 	return id,cod
 end
+xpcall(function() require("expansions/script/c39507090") end,function() require("script/c39507090") end)
 
 local id,cod=ID()
 function cod.initial_effect(c)
@@ -43,17 +44,6 @@ end
 --Turn Check
 cod.turn={1}
 
---Link List
-cod.link_list={
-LINK_MARKER_BOTTOM_LEFT,
-LINK_MARKER_LEFT,
-LINK_MARKER_TOP_LEFT,
-LINK_MARKER_TOP,
-LINK_MARKER_TOP_RIGHT,
-LINK_MARKER_RIGHT,
-LINK_MARKER_BOTTOM_RIGHT,
-LINK_MARKER_BOTTOM}
-
 --Link Check
 function cod.tcop(e,tp,eg,ep,ev,re,r,rp)
     local t=cod.turn
@@ -78,20 +68,7 @@ function cod.tcop(e,tp,eg,ep,ev,re,r,rp)
             ct=Duel.GetTurnCount()-table.unpack(t)
         end
         t[1]=Duel.GetTurnCount()
-        local off=1
-        local val=0
-        local link=cod.link_list
-        for i=1,#link do
-            if c:IsLinkMarker(link[i]) then
-                if link[i+ct]==nil then
-                    val=val+link[i-(i-ct)]
-                else
-                    val=val+link[i+ct]
-                end
-            off=off+1
-            end
-        end
-        if off==1 then return false end
+        local val=Card.RLinkVal(c,ct)
         return Duel.RaiseEvent(c,EVENT_CUSTOM+id,e,0,tp,tp,val)
     end
 end

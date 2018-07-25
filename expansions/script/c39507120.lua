@@ -7,6 +7,7 @@ local function ID()
 	local id=tonumber(string.sub(str,2))
 	return id,cod
 end
+xpcall(function() require("expansions/script/c39507090") end,function() require("script/c39507090") end)
 
 local id,cod=ID()
 function cod.initial_effect(c)
@@ -97,54 +98,6 @@ function cod.lklimit(e,c)
 	return not c:IsSetCard(0x593)
 end
 
---Link Lists
-cod.link_list={
-LINK_MARKER_BOTTOM_LEFT,
-LINK_MARKER_BOTTOM,
-LINK_MARKER_BOTTOM_RIGHT,
-LINK_MARKER_LEFT,
-LINK_MARKER_RIGHT,
-LINK_MARKER_TOP_LEFT,
-LINK_MARKER_TOP,
-LINK_MARKER_TOP_RIGHT}
-
-cod.msg_list={
-aux.Stringid(39507090,0),
-aux.Stringid(39507090,1),
-aux.Stringid(39507090,2),
-aux.Stringid(39507090,3),
-aux.Stringid(39507090,4),
-aux.Stringid(39507090,5),
-aux.Stringid(39507090,6),
-aux.Stringid(39507090,7)}
-
---Link Check
-function cod.lchk(c,...)
-	local off=1
-	local arg={...}
-	local lk={}
-	local ops={}
-	local link,msg=cod.link_list,cod.msg_list
-	for i=1,#link do
-		if #arg==0 then
-			if c:IsLinkMarker(link[i]) then
-				ops[off]=msg[i]
-				lk[off-1]=link[i]
-				off=off+1
-			end
-		else
-			if not c:IsLinkMarker(link[i]) then
-				ops[off]=msg[i]
-				lk[off-1]=link[i]
-				off=off+1
-			end
-		end
-	end
-	if off==1 then return false end
-	return lk,ops
-end
-
-
 --Deactivate
 function cod.dfilter(c)
 	return c:IsType(TYPE_LINK) and c:GetLinkMarker()~=0
@@ -162,7 +115,7 @@ function cod.dop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	while tc do
 		if not tc:IsRelateToEffect(e) then return end
-		local lk,ops=cod.lchk(tc)
+		local lk,ops=Card.LinkCheck(tc)
 		Duel.HintSelection(Group.FromCards(tc))
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(39507090,8))
 		local op=Duel.SelectOption(tp,table.unpack(ops))
@@ -206,7 +159,7 @@ function cod.aop(e,tp,eg,ep,ev,re,r,rp)
 	else ac=g:GetFirst() end
 	if not tc:IsRelateToEffect(e) 
 		or not g:IsExists(function(c,tc) return c==tc end,1,nil,tc) then return end
-	local lk,ops=cod.lchk(tc)
+	local lk,ops=Card.LinkCheck(tc)
 	--First Card
 	Duel.HintSelection(Group.FromCards(tc))
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(39507090,8))
@@ -222,7 +175,7 @@ function cod.aop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	--Second Card
 	if not ac:IsRelateToEffect(e) or ac==tc then return end
-	lk,ops=cod.lchk(ac,1)
+	lk,ops=Card.LinkCheck(ac,1)
 	Duel.HintSelection(Group.FromCards(ac))
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(39507090,9))
 	local op=Duel.SelectOption(tp,table.unpack(ops))
