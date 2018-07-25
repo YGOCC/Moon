@@ -127,17 +127,16 @@ function c40933398.sumop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c40933398.filter2(c,tp,code)
-	return c:IsSetCard(0x19) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,120,tp,false,false)
-		 and not c:IsCode(code)
-end
 function c40933398.filter(c)
 	return c:IsSetCard(0x19) and c:IsType(TYPE_MONSTER)and c:IsAbleToGrave()
-	and Duel.IsExistingMatchingCard(c40933398.filter2,tp,LOCATION_GRAVE,0,1,nil,c:GetCode())
+		and Duel.IsExistingMatchingCard(c40933398.filter2,tp,LOCATION_GRAVE,0,1,nil,e,tp,c:GetCode())
+end
+function c40933398.filter2(c,tp,code)
+	return c:IsSetCard(0x19) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,130,tp,false,false)
+		 and not c:IsCode(code)
 end
 function c40933398.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c40933398.filter,tp,LOCATION_DECK,0,1,nil,tp) and
-	Duel.IsExistingMatchingCard(c40933398.filter2,tp,LOCATION_DECK,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c40933398.filter,tp,LOCATION_DECK,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
@@ -151,9 +150,8 @@ function c40933398.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg2=g2:Select(tp,1,1,nil)
 		Duel.SendtoGrave(sg1,nil,REASON_EFFECT)
-		Duel.SpecialSummon(sg2,120,tp,tp,true,false,POS_FACEUP)
-		sg2:RegisterFlagEffect(sg2:GetOriginalCode(),RESET_EVENT+0x1ff0000,0,0)
-		Duel.ConfirmCards(1-tp,sg2)
+		Duel.SpecialSummon(sg2,130,tp,tp,true,false,POS_FACEUP)
+		sg2:RegisterFlagEffect(sg2:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD+RESET_DISABLE,0,0)
 	end
 end
 function c40933398.spcon2(e,tp,eg,ep,ev,re,r,rp)
