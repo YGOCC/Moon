@@ -14,6 +14,25 @@ function c100000888.initial_effect(c)
 	e1:SetTarget(c100000888.eqtg)
 	e1:SetOperation(c100000888.eqop)
 	c:RegisterEffect(e1)
+			--atk/def
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EFFECT_SET_ATTACK)
+	e2:SetCondition(c100000888.adcon)
+	e2:SetValue(c100000888.atkval)
+	e2:SetLabelObject(e1)
+	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EFFECT_SET_DEFENSE)
+	e3:SetCondition(c100000888.adcon)
+	e3:SetValue(c100000888.defval)
+	e3:SetLabelObject(e1)
+	c:RegisterEffect(e3)
 end
 function c100000888.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -37,39 +56,41 @@ end
 function c100000888.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then end
-		if c:IsFaceup() and c:IsRelateToEffect(e) then end
-			local atk=tc:GetTextAttack()
-			local def=tc:GetTextDefense()
-			if tc:IsFacedown() or atk<0 then atk=0 end
-			if tc:IsFacedown() or def<0 then def=0 end
+	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and tc:IsControler(1-tp) then
+		if c:IsFaceup() and c:IsRelateToEffect(e) then
 			if not Duel.Equip(tp,tc,c,false) then return end
 			--Add Equip limit
 			tc:RegisterFlagEffect(100000888,RESET_EVENT+0x1fe0000,0,0)
 			e:SetLabelObject(tc)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetProperty(EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_OWNER_RELATE)
+			e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
 			e1:SetCode(EFFECT_EQUIP_LIMIT)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
 			e1:SetValue(c100000888.eqlimit)
 			tc:RegisterEffect(e1)
-			if atk>0 then
-				local e2=Effect.CreateEffect(c)
-				e2:SetType(EFFECT_TYPE_EQUIP)
-				e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
-				e2:SetCode(EFFECT_SET_ATTACK)
-				e2:SetReset(RESET_EVENT+0x1fe0000)
-				e2:SetValue(atk)
-				tc:RegisterEffect(e2)
-			end
-			if def>0 then
-				local e3=Effect.CreateEffect(c)
-				e3:SetType(EFFECT_TYPE_EQUIP)
-				e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
-				e3:SetCode(EFFECT_SET_DEFENSE)
-				e3:SetReset(RESET_EVENT+0x1fe0000)
-				e3:SetValue(def)
-				tc:RegisterEffect(e3)
 			end
 	end
+	end
+	function c100000888.adcon(e,tp,eg,ep,ev,re,r,rp)
+	local ec=e:GetLabelObject():GetLabelObject()
+	return ec and ec:GetFlagEffect(100000888)~=0
+end
+function c100000888.atkval(e,c)
+	local ec=e:GetLabelObject():GetLabelObject()
+	local atk=ec:GetTextAttack()
+	if ec:IsFacedown() or bit.band(ec:GetOriginalType(),TYPE_MONSTER)==0 or atk<0 then
+		return 0
+	else
+		return atk
+	end
+end
+function c100000888.defval(e,c)
+	local ec=e:GetLabelObject():GetLabelObject()
+	local def=ec:GetTextDefense()
+	if ec:IsFacedown() or bit.band(ec:GetOriginalType(),TYPE_MONSTER)==0 or def<0 then
+		return 0
+	else
+		return def
+	end
+end
