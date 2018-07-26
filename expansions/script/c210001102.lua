@@ -92,7 +92,6 @@ function c210001102.spoperation2(e,tp,eg,ep,ev,re,r,rp)
 end
 function c210001102.recon(e)
 	local c=e:GetHandler()
-	return c:IsLocation(LOCATION_MZONE) and (c:IsReason(REASON_BATTLE) 
-		or c:IsReason(REASON_EFFECT)) and e:GetHandler():GetFlagEffect(210001102)~=0
+	return c:IsLocation(LOCATION_MZONE) and e:GetHandler():GetFlagEffect(210001102)~=0
 		and c:GetDestination()==LOCATION_GRAVE
 end
