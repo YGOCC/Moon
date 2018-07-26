@@ -71,10 +71,10 @@ function c12000203.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,12000204,0,0x4011,1000,1000,1,RACE_DRAGON,ATTRIBUTE_LIGHT) 
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and c:IsSummonable(true,nil,1) end
-	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
     Duel.SetOperationInfo(0,CATEGORY_SUMMON,c,1,0,0)
 end
 function c12000203.sumop(e,tp,eg,ep,ev,re,r,rp)
