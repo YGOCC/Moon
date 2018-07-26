@@ -55,7 +55,6 @@ function c40933355.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(p,c40933355.filter,p,LOCATION_GRAVE,0,1,2,nil)
 	if g:GetCount()>0 then
-		Duel.ConfirmCards(1-p,g)
 		local ct=Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 		Duel.ShuffleDeck(p)
 		Duel.BreakEffect()
