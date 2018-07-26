@@ -96,10 +96,10 @@ end
 function c40933402.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToDeckAsCost() end
-	Duel.SendtoDeck(c,nil,0,REASON_COST)
+	Duel.SendtoDeck(c,nil,2,REASON_COST)
 end
 function c40933402.sfilter(c,e,tp)
-	return not c:IsCode(40933402) and c:IsSetCard(0x19) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,120,tp,false,false)
+	return not c:IsCode(40933402) and c:IsSetCard(0x19) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,104,tp,false,false)
 end
 function c40933402.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
@@ -109,10 +109,10 @@ end
 function c40933402.spop2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c409334028.sfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c40933402.sfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc then
-		Duel.SpecialSummon(tc,120,tp,tp,false,false,POS_FACEUP)
-		tc:RegisterFlagEffect(tc:GetOriginalCode(),RESET_EVENT+0x1ff0000,0,0)
+		Duel.SpecialSummon(tc,104,tp,tp,false,false,POS_FACEUP)		
+		tc:RegisterFlagEffect(tc:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD+RESET_DISABLE,0,0)
 	end
 end
