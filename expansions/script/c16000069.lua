@@ -75,7 +75,7 @@ function c16000069.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if not tc then return end
 	tc:SetMaterial(nil)
-	if Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)~=0 then
+	if Duel.SpecialSummon(tc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)~=0 then
 	  c:CancelToGrave()
 			Duel.Overlay(tc,Group.FromCards(c))   
 	end
