@@ -34,13 +34,13 @@ end
 function scard.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) then
-			return Duel.CheckLPCost(tp,Duel.GetLP(tp)-1000)
+			return Duel.CheckLPCost(tp,math.ceil(Duel.GetLP(tp)/2))
 		else
 			return Duel.CheckLPCost(tp,3000)
 		end
 	end
 	if e:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) then 
-		Duel.PayLPCost(tp,Duel.GetLP(tp)-1000)
+		Duel.PayLPCost(tp,math.ceil(Duel.GetLP(tp)/2))
 	else
 		Duel.PayLPCost(tp,3000)
 	end
