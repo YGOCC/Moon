@@ -46,7 +46,7 @@ function c212020.spcon(e,c)
 		and Duel.IsExistingMatchingCard(c212020.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function c212020.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+    if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
