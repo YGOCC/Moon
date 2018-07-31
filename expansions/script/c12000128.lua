@@ -64,7 +64,8 @@ function c12000128.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Special Summon From GY
 function c12000128.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x857) or re:GetHandler():IsSetCard(0x858) and not re:GetHandler():IsCode(12000128)
+	return re and (re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x857)) 
+		or (re:GetHandler():IsSetCard(0x858)) and not re:GetHandler():IsCode(12000128)
 end
 function c12000128.filter(c,e,tp)
 	return c:IsSetCard(0x857) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
