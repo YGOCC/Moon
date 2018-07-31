@@ -9,10 +9,10 @@ function c39311.initial_effect(c)
 	e1:SetCondition(c39311.condition)
 	e1:SetTarget(c39311.target)
 	e1:SetOperation(c39311.operation)
+	e1:SetCountLimit(1,39311)
 	c:RegisterEffect(e1)
 	--destroy
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(39311,0))
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -33,12 +33,9 @@ function c39311.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function c39311.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,39311)>0 then return end
 	local c=e:GetHandler()
-	if c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
-		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
-			Duel.RegisterEffect(tp,39311,RESET_PHASE+PHASE_END,0,1)
-		end
+	if c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function c39311.cfilter(c)
