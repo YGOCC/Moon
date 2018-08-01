@@ -39,7 +39,7 @@ function c9945450.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c9945450.spfilter(c,e,tp)
-	return c:IsSetCard(0x12D7) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true)
+	return c:IsSetCard(0x12D7) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) and c:IsType(TYPE_RITUAL)
 end
 function c9945450.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_MZONE,0,nil,0x12D7)
@@ -81,6 +81,7 @@ function c9945450.ntg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,0,0)
 end
 function c9945450.nop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
 	local g=Duel.SelectMatchingCard(tp,c9945450.nfilter,tp,LOCATION_HAND,0,1,1,nil)
 	local tc=g:GetFirst()
@@ -89,7 +90,7 @@ function c9945450.nop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c9945450.repfilter(c,tp,e)
-	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsType(TYPE_SPIRIT) and c:GetDestination()==LOCATION_HAND or c:GetDestination()==LOCATION_DECK
+	return c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD) and c:IsType(TYPE_SPIRIT) and (c:GetDestination()==LOCATION_HAND or c:GetDestination()==LOCATION_DECK)
 end
 function c9945450.desfilter(c,tp)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD) and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED)
@@ -97,7 +98,7 @@ end
 function c9945450.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c9945450.desfilter,tp,LOCATION_ONFIELD,0,1,nil,tp)
 		and eg:IsExists(c9945450.repfilter,1,nil,tp,e) end
-	if Duel.SelectYesNo(tp,aux.Stringid(9945450,1)) then
+	if Duel.SelectYesNo(tp,aux.Stringid(9945450,2)) then
 		local g=eg:Filter(c9945450.repfilter,nil,tp,e)
 		if g:GetCount()==1 then
 			e:SetLabelObject(g:GetFirst())

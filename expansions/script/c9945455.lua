@@ -85,10 +85,7 @@ function c9945455.inop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_IMMUNE_EFFECT)
 		e1:SetReset(RESET_PHASE+(ph)+RESET_EVENT+0x1fc0000)
-		e1:SetValue(c9945455.efilter)
+		e1:SetValue(1)
 		tc:RegisterEffect(e1)
 	end
-end
-function c9945455.efilter(e,te)
-	return te:GetOwner()~=e:GetOwner()
 end

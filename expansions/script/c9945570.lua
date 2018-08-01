@@ -55,7 +55,9 @@ function c9945570.initial_effect(c)
 	e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e6:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e6:SetRange(LOCATION_EXTRA)
+	e6:SetLabelObject(e4)
 	e6:SetCountLimit(1)
+	e6:SetCondition(c9945570.spcon)
 	e6:SetTarget(c9945570.sumtg)
 	e6:SetOperation(c9945570.sumop)
 	c:RegisterEffect(e6)
@@ -157,25 +159,35 @@ function c9945570.retop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() and Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 then
 	Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
-	if c:IsLocation(LOCATION_EXTRA) and c:IsPreviousLocation(LOCATION_MZONE) then 
-		c:RegisterFlagEffect(9945570,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0) end
+		if c:IsLocation(LOCATION_EXTRA) and c:IsPreviousLocation(LOCATION_MZONE) then 
+		if Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_STANDBY then
+		e:SetLabel(Duel.GetTurnCount())
+		c:RegisterFlagEffect(9945570,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,2)
+	else
+		e:SetLabel(0)
+		c:RegisterFlagEffect(9945570,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,1)
+		end 
+	end
 		local g=Duel.SelectMatchingCard(tp,c9945570.retfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
+function c9945570.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return e:GetLabelObject():GetLabel()~=Duel.GetTurnCount() and tp==Duel.GetTurnPlayer() and c:GetFlagEffect(9945570)>0
+end
 function c9945570.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:GetFlagEffect(9945570)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,true,true) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,true,true) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	c:ResetFlagEffect(9945570)
 end
 function c9945570.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		and c:IsCanBeSpecialSummoned(e,0,tp,true,true) then
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then
 		Duel.SendtoGrave(c,REASON_RULE)
 	end
 end

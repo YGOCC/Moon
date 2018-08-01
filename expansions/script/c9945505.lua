@@ -66,7 +66,7 @@ function c9945505.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RegisterFlagEffect(9945505,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
 end
 function c9945505.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x12D7) and not c:IsStatus(STATUS_SET_TURN) and not c:IsFaceup()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x12D7) and not (c:IsStatus(STATUS_SET_TURN) and c:IsType(TYPE_QUICKPLAY+TYPE_TRAP)) and not c:IsFaceup()
 		and c:CheckActivateEffect(false,false,false)~=nil
 end
 function c9945505.actg(e,tp,eg,ep,ev,re,r,rp,chk)
