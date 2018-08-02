@@ -40,7 +40,7 @@ function c12000134.cfilter(c)
 	return c:IsSummonType(SUMMON_TYPE_SPECIAL) and c:IsFaceup() and c:IsSetCard(0x857)
 end
 function c12000134.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c12000134.cfilter,tp,LOCATION_SZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(c12000134.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and rp~=tp and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainDisablable(ev) 
 end
 function c12000134.negop(e,tp,eg,ep,ev,re,r,rp)
