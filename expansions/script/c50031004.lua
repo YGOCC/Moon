@@ -11,6 +11,7 @@ function c50031004.initial_effect(c)
 	e0:SetCode(EFFECT_SPSUMMON_PROC)
 	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e0:SetRange(LOCATION_EXTRA)
+	e0:SetCountLimit(1,50031004)
 	e0:SetCondition(c50031004.hspcon)
 	e0:SetOperation(c50031004.hspop)
 	e0:SetValue(SUMMON_TYPE_SPECIAL+388)
@@ -44,22 +45,20 @@ end
 function c50031004.filter2(c,ec,tp)
 	return c:IsRace(RACE_BEASTWARRIOR)
 end
-function c50031004.spfilter(c,ft)
-	return c:IsFaceup() and c:IsCode(500310040) 
-		and (ft>0 or c:GetSequence()<5)
+function c50031004.spfilter(c)
+	return c:IsFaceup() and c:IsCode(500310040) and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function c50031004.hspcon(e,c)
-	if c==nil then return true end
+  if c==nil then return true end
+	if chk==0 then return Duel.GetFlagEffect(tp,50031004)==0 end
 	local tp=c:GetControler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	return ft>-1 and Duel.IsExistingMatchingCard(c50031004.spfilter,tp,LOCATION_MZONE,0,1,nil,ft)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c50031004.spfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c50031004.hspop(e,tp,eg,ep,ev,re,r,rp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_MATERIAL)
-	local g=Duel.SelectMatchingCard(tp,c50031004.spfilter,tp,LOCATION_MZONE,0,1,1,nil,ft)
-	Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
-	 if chk==0 then return Duel.GetFlagEffect(tp,50031004)==0 end
+	   Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_MATERIAL)
+	local g=Duel.SelectMatchingCard(tp,c50031004.spfilter,tp,LOCATION_MZONE,0,1,1,nil)
+   Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
 	Duel.RegisterFlagEffect(tp,50031004,RESET_PHASE+PHASE_END,0,1)
 end
 function c50031004.cost(e,tp,eg,ep,ev,re,r,rp,chk)
