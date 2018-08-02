@@ -63,8 +63,8 @@ function c50031003.hspop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,50031003,RESET_PHASE+PHASE_END,0,1)
 end
 function c50031003.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
-	e:GetHandler():RemoveEC(tp,5,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,2,REASON_COST)
 end
 function c50031003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetDecktopGroup(tp,3):GetCount()==3 end

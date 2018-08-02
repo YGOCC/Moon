@@ -63,8 +63,8 @@ function c50031004.hspop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,50031004,RESET_PHASE+PHASE_END,0,1)
 end
 function c50031004.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
-	e:GetHandler():RemoveEC(tp,4,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c50031004.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsPlayerCanDraw(tp,1)
