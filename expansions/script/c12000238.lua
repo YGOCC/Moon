@@ -19,11 +19,11 @@ function c12000238.initial_effect(c)
 	e2:SetTarget(c12000238.lvtg)
 	e2:SetOperation(c12000238.lvop)
 	c:RegisterEffect(e2)
-	--draw
+	--to hand
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(12000238,2))
-	e3:SetCategory(CATEGORY_DRAW)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_BE_MATERIAL)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e3:SetCountLimit(1,12000238)
@@ -114,17 +114,13 @@ function c12000238.coinop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,c12000238.tdfilter1,tp,LOCATION_DECK,0,1,1,nil)
 		local tc=g:GetFirst()
 		if tc then
-			Duel.ShuffleDeck(tp)
-			Duel.MoveSequence(tc,0)
-			Duel.ConfirmDecktop(tp,1)
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		end
 	else 
 		local g=Duel.SelectMatchingCard(tp,c12000238.tdfilter2,tp,LOCATION_DECK,0,1,1,nil)
 		local tc=g:GetFirst()
 		if tc then
-			Duel.ShuffleDeck(tp)
-			Duel.MoveSequence(tc,0)
-			Duel.ConfirmDecktop(tp,1)
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		end
 	end
 end

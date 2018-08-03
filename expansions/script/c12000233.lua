@@ -28,6 +28,7 @@ function c12000233.repfilter(c,tp)
 		and c:IsReason(REASON_EFFECT+REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
 end
 function c12000233.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local tp=e:GetHandler():GetControler()
 	if chk==0 then return e:GetHandler():IsDiscardable() and eg:IsExists(c12000233.repfilter,1,nil,tp) end
 	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end

@@ -41,32 +41,31 @@ function c12000240.cfilter2(c,lg,lv)
 	return c:IsType(TYPE_MONSTER) and lg:IsContains(c)
 		and (c:IsLevelBelow(lv) or c:IsRankBelow(lv))
 end
-function c12000240.cfilter1(c,lg)
+function c12000240.cfilter1(c,lg,tp)
 	return lg:IsContains(c) and c:IsType(TYPE_MONSTER)
 		and Duel.IsExistingMatchingCard(c12000240.cfilter2,tp,0,LOCATION_MZONE,1,nil,lg,c:GetLevel())
 end
 function c12000240.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local lg=e:GetHandler():GetLinkedGroup()
-	if chk==0 then return Duel.IsExistingMatchingCard(c12000240.cfilter1,tp,LOCATION_MZONE,0,1,nil,lg) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c12000240.cfilter1,tp,LOCATION_MZONE,0,1,nil,lg,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,0,0)
 end
 function c12000240.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local lg=e:GetHandler():GetLinkedGroup()
 	local lv=0
-	local g1=Duel.SelectReleaseGroup(tp,c12000240.cfilter1,1,1,nil,lg)
+	local g1=Duel.SelectReleaseGroup(tp,c12000240.cfilter1,1,1,nil,lg,tp)
 	local tc=g1:GetFirst()
 	local lv=tc:GetLevel()
 	if Duel.Release(tc,REASON_EFFECT)~=0 then
 		local g2=Duel.SelectMatchingCard(tp,c12000240.cfilter2,tp,0,LOCATION_MZONE,1,1,nil,lg,lv)
 		if g2:GetCount()>0 then
-			Duel.GetControl(g2,tp,PHASE_END,1)
+			Duel.GetControl(g2,tp)
 		end
 	end
 end
-function c12000240.negcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
+function c12000240.negcon(e,tp,eg,ep,ev,re,r,rp)
+	local tp=e:GetHandler():GetControler()
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 		and ep~=tp and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end

@@ -10,7 +10,7 @@ function c12000244.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(12000244,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1)
 	e2:SetCondition(c12000244.spcon)
@@ -22,7 +22,7 @@ function c12000244.spfilter1(c)
 	return c:IsFaceup() and c:IsSetCard(0x856) and c:IsType(TYPE_LINK)
 end
 function c12000244.spcon(e,c)
-	local tp=c:GetControler()
+	local tp=e:GetHandler():GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c12000244.spfilter1,tp,LOCATION_MZONE,0,1,nil)
 end
@@ -31,7 +31,7 @@ function c12000244.spfilter2(c,e,tp,zone)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function c12000244.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local zone=Duel.GetLinkedZone(tp)
+	local zone=Duel.GetLinkedZone(tp)	
 	if chkc then return chkc:IsLocation(LOCATION_HAND) and chkc:IsControler(tp) and c12000244.spfilter2(chkc,e,tp,zone) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c12000244.spfilter2,tp,LOCATION_HAND,0,1,nil,e,tp,zone) end
@@ -43,8 +43,7 @@ function c12000244.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c12000244.spfilter2,tp,LOCATION_HAND,0,1,1,nil,e,tp,zone)
-	local tc=g:GetFirst()
-	if tc:IsRelateToEffect(e) and zone~=0 then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
+	if g:GetCount()>0 and zone~=0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
 end
