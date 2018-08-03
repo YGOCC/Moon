@@ -29,7 +29,7 @@ function c88880014.initial_effect(c)
 	e3:SetOperation(c88880014.operation)
 	c:RegisterEffect(e3)
 end
-c88880013.xyz_number=300
+c88880014.xyz_number=300
 --(1) spsummon limit
 function c88880014.splimit(e,se,sp,st)
 	return se:GetHandler():IsSetCard(0x95)
