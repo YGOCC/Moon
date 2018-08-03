@@ -45,27 +45,17 @@ function c88890007.initial_effect(c)
     e5:SetCondition(c88890007.stzcon)
     e5:SetOperation(c88890007.stzop)
     c:RegisterEffect(e5)
-    --(6) can't normal summon
-    local e6=Effect.CreateEffect(c)
-    e6:SetType(EFFECT_TYPE_FIELD)
-    e6:SetCode(EFFECT_CANNOT_SUMMON)
-    e6:SetRange(LOCATION_SZONE)
-    e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    e6:SetTargetRange(0,1)
-    e6:SetCondition(c88890007.efcon)
-    e6:SetTarget(c88890007.efval)
-    c:RegisterEffect(e6)
     --(7) add
-    local e7=Effect.CreateEffect(c)
-    e7:SetDescription(aux.Stringid(88890007,4))
-    e7:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-    e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-    e7:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-    e7:SetCode(EVENT_TO_GRAVE)
-    e7:SetCondition(c88890007.thcon)
-    e7:SetTarget(c88890007.thtg1)
-    e7:SetOperation(c88890007.thop1)
-    c:RegisterEffect(e7)
+    local e6=Effect.CreateEffect(c)
+    e6:SetDescription(aux.Stringid(88890007,4))
+    e6:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+    e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+    e6:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+    e6:SetCode(EVENT_TO_GRAVE)
+    e6:SetCondition(c88890007.thcon)
+    e6:SetTarget(c88890007.thtg1)
+    e6:SetOperation(c88890007.thop1)
+    c:RegisterEffect(e6)
 end
 --(1) Special Summon condition
 function c88890007.splimit(e,se,sp,st)
@@ -73,10 +63,10 @@ function c88890007.splimit(e,se,sp,st)
 end
 --(2) Effect for card
 function c88890007.atkfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0x902) and c:IsType(TYPE_MONSTER) or c:IsType(TYPE_CONTINUOUS) and not c:IsType(TYPE_EQUIP)
+    return c:IsFaceup() and c:IsSetCard(0x902) and c:IsType(TYPE_MONSTER) or c:IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not c:IsType(TYPE_EQUIP)
 end
 function c88890007.atkval(e,c)
-    return Duel.GetMatchingGroupCount(c88890007.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_SZONE,0,nil)*200
+    return Duel.GetMatchingGroupCount(c88890007.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_SZONE,0,nil)*300
 end
 --(3) Pay or Destroy
 function c88890007.paycon(e,tp,eg,ep,ev,re,r,rp)
@@ -129,13 +119,6 @@ function c88890007.stzop(e,tp,eg,ep,ev,re,r,rp)
     e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
     c:RegisterEffect(e1)
     Duel.RaiseEvent(c,EVENT_CUSTOM+88890010,e,0,tp,0,0)
-end
---(6) can't normal summon
-function c88890007.efcon(e)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and e:GetHandler():IsFaceup() and not e:GetHandler():IsType(TYPE_EQUIP)
-end
-function c88890007.efval(e,c)
-    return not c:IsAttribute(ATTRIBUTE_WATER)
 end
 --(7) add
 function c88890007.thcon(e,tp,eg,ep,ev,re,r,rp)

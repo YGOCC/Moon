@@ -8,17 +8,17 @@ function c88890009.initial_effect(c)
     e1:SetCode(EFFECT_SPSUMMON_CONDITION)
     e1:SetValue(c88890009.splimit)
     c:RegisterEffect(e1)
-    --(2) Excavate
-    --local e2=Effect.CreateEffect(c)
-    --e2:SetDescription(aux.Stringid(88890009,0))
-    --e2:SetCategory(CATEGORY_REMOVE)
-    --e2:SetType(EFFECT_TYPE_SINGLE)
-    --e2:SetCode(EVENT_FREE_CHAIN)
-    --e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-    --e2:SetRange(LOCATION_MZONE)
-    --e2:SetTarget(c88890009.rmtg)
-    --e2:SetOperation(c88890009.rmop)
-    --c:RegisterEffect(e2)
+    --(2) Banish
+    local e2=Effect.CreateEffect(c)
+    e2:SetDescription(aux.Stringid(88890009,0))
+    e2:SetCategory(CATEGORY_REMOVE)
+    e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    e2:SetType(EFFECT_TYPE_IGNITION)
+    e2:SetCountLimit(1)
+    e2:SetRange(LOCATION_MZONE)
+    e2:SetTarget(c88890009.rmtg)
+    e2:SetOperation(c88890009.rmop)
+    c:RegisterEffect(e2)
     --(3) Pay or Destroy
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(88890009,1))
@@ -48,47 +48,46 @@ function c88890009.initial_effect(c)
     e5:SetCondition(c88890009.stzcon)
     e5:SetOperation(c88890009.stzop)
     c:RegisterEffect(e5)
-    --(6) can't normal summon
-    local e6=Effect.CreateEffect(c)
-    e6:SetType(EFFECT_TYPE_FIELD)
-    e6:SetCode(EFFECT_CANNOT_SUMMON)
-    e6:SetRange(LOCATION_SZONE)
-    e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    e6:SetTargetRange(0,1)
-    e6:SetCondition(c88890009.efcon)
-    e6:SetTarget(c88890009.efval)
-    c:RegisterEffect(e6)
     --(7) add
-    local e7=Effect.CreateEffect(c)
-    e7:SetDescription(aux.Stringid(88890009,4))
-    e7:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-    e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-    e7:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-    e7:SetCode(EVENT_TO_GRAVE)
-    e7:SetCondition(c88890009.thcon)
-    e7:SetTarget(c88890009.thtg1)
-    e7:SetOperation(c88890009.thop1)
-    c:RegisterEffect(e7)
+    local e6=Effect.CreateEffect(c)
+    e6:SetDescription(aux.Stringid(88890009,4))
+    e6:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+    e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+    e6:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+    e6:SetCode(EVENT_TO_GRAVE)
+    e6:SetCondition(c88890009.thcon)
+    e6:SetTarget(c88890009.thtg1)
+    e6:SetOperation(c88890009.thop1)
+    c:RegisterEffect(e6)
 end
 --(1) Special Summon condition
 function c88890009.splimit(e,se,sp,st)
     return se:GetHandler():IsSetCard(0x902)
 end
---(3) Excavate
---function c88890009.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    --if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
-    --if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_MZONE,1,nil) end
-    --Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-    --Duel.SelectTarget(tp,nil,tp,0,LOCATION_MZONE,1,1,nil)
---end
---function c88890009.rmop(e,tp,eg,ep,ev,re,r,rp)
-    --Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-    --local g=Duel.SelectMatchingCard(tp,c7445307.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,e:GetHandler():GetAttack())
-    --if g:GetCount()>0 then
-        --Duel.HintSelection(g)
-        --Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-    --end
---end    
+--(2) Banish
+function c88890009.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsAbleToRemove() end
+    if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+    local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,1,nil)
+    Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
+end
+function c88890009.rmop(e,tp,eg,ep,ev,re,r,rp)
+    local tc=Duel.GetFirstTarget()
+    if tc:IsRelateToEffect(e) and Duel.Remove(tc,tc:GetPosition(),REASON_EFFECT+REASON_TEMPORARY)~=0 then
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+        e1:SetCode(EVENT_PHASE+PHASE_END)
+        e1:SetReset(RESET_PHASE+PHASE_END)
+        e1:SetCountLimit(1)
+        e1:SetLabelObject(tc)
+        e1:SetOperation(c88890009.retop)
+        Duel.RegisterEffect(e1,tp)
+    end
+end
+function c88890009.retop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.ReturnToField(e:GetLabelObject())
+end
 --(3) Pay or Destroy
 function c88890009.paycon(e,tp,eg,ep,ev,re,r,rp)
     return Duel.GetTurnPlayer()==tp
@@ -140,13 +139,6 @@ function c88890009.stzop(e,tp,eg,ep,ev,re,r,rp)
     e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
     c:RegisterEffect(e1)
     Duel.RaiseEvent(c,EVENT_CUSTOM+88890010,e,0,tp,0,0)
-end
---(6) can't normal summon
-function c88890009.efcon(e)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and e:GetHandler():IsFaceup() and not e:GetHandler():IsType(TYPE_EQUIP)
-end
-function c88890009.efval(e,c)
-    return not c:IsAttribute(ATTRIBUTE_EARTH)
 end
 --(7) add
 function c88890009.thcon(e,tp,eg,ep,ev,re,r,rp)

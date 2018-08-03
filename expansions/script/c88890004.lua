@@ -47,16 +47,6 @@ function c88890004.initial_effect(c)
     e5:SetCondition(c88890004.stzcon)
     e5:SetOperation(c88890004.stzop)
     c:RegisterEffect(e5)
-    --(6) can't normal summon
-    local e6=Effect.CreateEffect(c)
-    e6:SetType(EFFECT_TYPE_FIELD)
-    e6:SetCode(EFFECT_CANNOT_SUMMON)
-    e6:SetRange(LOCATION_SZONE)
-    e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    e6:SetTargetRange(0,1)
-    e6:SetCondition(c88890004.efcon)
-    e6:SetValue(c88890004.efval)
-    c:RegisterEffect(e6)
     --(7) add
     local e7=Effect.CreateEffect(c)
     e7:SetDescription(aux.Stringid(88890004,4))
@@ -152,13 +142,6 @@ function c88890004.stzop(e,tp,eg,ep,ev,re,r,rp)
     e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
     c:RegisterEffect(e1)
     Duel.RaiseEvent(c,EVENT_CUSTOM+88890010,e,0,tp,0,0)
-end
---(6) can't normal summon
-function c88890004.efcon(e)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and e:GetHandler():IsFaceup() and not e:GetHandler():IsType(TYPE_EQUIP)
-end
-function c88890004.efval(e,c)
-    return not c:IsAttribute(ATTRIBUTE_DARK)
 end
 --(7) add
 function c88890004.thcon(e,tp,eg,ep,ev,re,r,rp)

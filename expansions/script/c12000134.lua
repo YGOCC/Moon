@@ -51,7 +51,7 @@ function c12000134.negop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Shuffle Back and Draw
 function c12000134.tdfilter(c)
-     return c:IsSetCard(0x857) and c:IsAbleToDeck() or c:IsAbleToExtra()
+     return c:IsSetCard(0x857) and (c:IsAbleToDeck() or c:IsAbleToExtra())
 end
 function c12000134.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c12000134.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
