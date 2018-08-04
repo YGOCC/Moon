@@ -63,7 +63,7 @@ function c88890007.splimit(e,se,sp,st)
 end
 --(2) Effect for card
 function c88890007.atkfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0x902) and c:IsType(TYPE_MONSTER) or c:IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not c:IsType(TYPE_EQUIP)
+    return c:IsFaceup() and c:IsSetCard(0x902) and c:IsType(TYPE_MONSTER+TYPE_RITUAL) or c:IsType(TYPE_CONTINUOUS) and not c:IsType(TYPE_EQUIP)
 end
 function c88890007.atkval(e,c)
     return Duel.GetMatchingGroupCount(c88890007.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_SZONE,0,nil)*300
