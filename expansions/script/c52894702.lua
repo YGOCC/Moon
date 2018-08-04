@@ -56,16 +56,16 @@ function cod.fdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RegisterFlagEffect(id+100,RESET_CHAIN,0,1)
 end
 function cod.fdcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION
+	return e:GetHandler():GetTurnID()==Duel.GetTurnCount() and e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION
 end
 function cod.pfilter(c)
 	return c:IsFaceup() and c:IsCanTurnSet()
 end
 function cod.fdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(cod.pfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(cod.pfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,cod.pfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,2,nil)
+	local g=Duel.SelectTarget(tp,cod.pfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,#g,0,0)
 end
 function cod.fdop(e,tp,eg,ep,ev,re,r,rp)

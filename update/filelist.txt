@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	969ae08bdee4fd80f5e2c7e90010634a
+﻿expansions/Cards-non-QCD.cdb	87a32482c70ee6c4cbf7fba1f1090648
 expansions/lflist.conf	79a06548ade45740f0074ed70a85ac3d
 expansions/official.cdb	01f3a3ccbf100dd5e125b9288cd2c511
 expansions/pre-release.cdb	3cdae4ea6560ce5b0699e25f2d7d9ac9
@@ -9424,7 +9424,7 @@ expansions/script/c52894681.lua	0dd33e6c7263244ee4044cb215d47b22
 expansions/script/c52894682.lua	4c2430e32d01abc7828a253687993583
 expansions/script/c52894683.lua	7af71c86aed50fc893444c705e47156f
 expansions/script/c52894684.lua	05c465cc0c1cb08438e045bfc7f81c27
-expansions/script/c52894685.lua	f115823c755cd4519a2bf0851583d5ba
+expansions/script/c52894685.lua	622a71bba66a28c0d9ac44c1ab263187
 expansions/script/c52894686.lua	84fbc95474bd65456e996462ba14672b
 expansions/script/c52894687.lua	ae60c08be29c175bfe5f31dff637cb9d
 expansions/script/c52894688.lua	aed91b399a924afbd12b7c685d6a8ed0
@@ -9441,7 +9441,7 @@ expansions/script/c52894698.lua	7342b84d63e28af95b5dfdc99057f576
 expansions/script/c52894699.lua	fe3c2a09a3404f15ce7c026d342c5904
 expansions/script/c52894700.lua	10322fe1bd9282c701256a3d63661ed9
 expansions/script/c52894701.lua	61a20f5fcca4224a63914283ca6e97ca
-expansions/script/c52894702.lua	1906dbbebb905c6f0170646803b0a3ee
+expansions/script/c52894702.lua	8139f6043535f9d8ec5e6093e5682c72
 expansions/script/c53077251.lua	e00fb0fedc60321baaf880cb43a3d0cc
 expansions/script/c5312001.lua	8f38fff6db652cb0796ffd67f38374ad
 expansions/script/c5312002.lua	45bc5ead538ef138925a564ee025cb7e
@@ -10614,6 +10614,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	e7fba427de42745cfaf0e38bf27712a2
+update/filelist.txt	a797bbf8e3669216bf1b5585716d35a5
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	832e1fca0827e8409c5948563433549b
+update/version.txt	9f8e5b6233a4c36f8ffd4b48f40dcb25
