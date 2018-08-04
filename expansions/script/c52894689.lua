@@ -43,7 +43,7 @@ end
 --Negate
 function cod.disop(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	if loc~=LOCATION_MZONE then return end
+	if loc~=LOCATION_MZONE or not re:IsHasType(EFFECT_TYPE_SINGLE) then return end
 	if re:GetCode()==EVENT_SUMMON_SUCCESS or re:GetCode()==EVENT_SPSUMMON_SUCCESS or re:GetCode()==EVENT_FLIP_SUMMON_SUCCESS then
 		Duel.NegateEffect(ev)
 	end
