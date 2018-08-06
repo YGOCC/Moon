@@ -25,7 +25,7 @@ function c16000040.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c16000040.filter(c)
-	return c:IsSetCard(0x667f) and c:IsAbleToHand()
+	return c:IsSetCard(0x667f) and not c:IsCode(16000040) and c:IsAbleToHand()
 end
 function c16000040.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c16000040.filter,tp,LOCATION_DECK,0,1,nil) end
