@@ -14,12 +14,7 @@ function c160002020.initial_effect(c)
 	e2:SetValue(c160002020.synlimit)
 	c:RegisterEffect(e2)
 	--
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_SCRAP_CHIMERA)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e3:SetValue(c160002020.synlimit2)
-	c:RegisterEffect(e3)
+
 	
 		--search
 	local e4=Effect.CreateEffect(c)
