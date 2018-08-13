@@ -55,25 +55,34 @@ function c160002496.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c160002496.xcostfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
+function c160002496.dissfilter(c)
+	return c:IsRace(RACE_FIEND)
+end
 function c160002496.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(c160002496.dissfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+	if re:GetHandler():IsAbleToRemove() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,eg,1,0,0)
 	end
 end
 function c160002496.operation(e,tp,eg,ep,ev,re,r,rp)
-Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)
+  if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) and Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local g=Duel.SelectMatchingCard(tp,c160002496.dissfilter,tp,LOCATION_HAND,0,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.BreakEffect()
+			Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
+		end
 	end
 end
+
+
 function c160002496.descon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
 function c160002496.filter(c,atk)
 return (c:GetSummonLocation()==LOCATION_HAND or c:GetSummonLocation()==LOCATION_GRAVE)
-and c:IsDestructable()
+and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)~=0  and c:IsDestructable() 
 end
 function c160002496.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return Duel.IsExistingMatchingCard(c160002496.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c) end

@@ -17,8 +17,6 @@ function c500319350.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCondition(c500319350.spcon)
 	--e2:SetCost(c500319350.spcost)
 	e2:SetTarget(c500319350.sptg)
 	e2:SetOperation(c500319350.spop)
@@ -64,12 +62,7 @@ function c500319350.sumcon(e)
 	return not Duel.IsExistingMatchingCard(c500319350.sfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 
-function c500319350.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	if Duel.GetTurnPlayer()==tp then
-		return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
-	end
-end
+
 function c500319350.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(500319350,tp,ACTIVITY_SPSUMMON)==0 end
 	local e1=Effect.CreateEffect(e:GetHandler())
