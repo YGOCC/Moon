@@ -60,9 +60,9 @@ end
 function c210171112.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=Duel.GetMatchingGroupCount(c210171112.atkfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE) and c210171112.atkfilter2(chkc) end
-	if chk==0 then return ct>0 and Duel.IsExistingTarget(c210171112.atkfilter2,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,e:GetHandler()) end
+	if chk==0 then return ct>0 and Duel.IsExistingTarget(c210171112.atkfilter2,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,0) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,c210171112.atkfilter2,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,ct,e:GetHandler())
+	local g=Duel.SelectTarget(tp,c210171112.atkfilter2,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,ct,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 end
 function c210171112.atkop(e,tp,eg,ep,ev,re,r,rp)
