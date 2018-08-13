@@ -68,9 +68,16 @@ end
 function c210171115.drfilter(c)
 	return c:IsSetCard(0xb4) and c:IsType(TYPE_SPELL) and c:IsAbleToDeck() and not c:IsPublic()
 end
+function c210171115.cfilter(c)
+	return c:IsSetCard(0xb4) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_RITUAL) and c:IsAbleToRemoveAsCost()
+end
 function c210171115.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
+		and Duel.IsExistingMatchingCard(c210171115.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c210171115.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	g:AddCard(e:GetHandler())
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c210171115.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp)
