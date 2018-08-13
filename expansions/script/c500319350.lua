@@ -83,15 +83,15 @@ end
 function c500319350.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp)end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c500319350.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+		and Duel.IsExistingMatchingCard(c500319350.spfilter,tp,LOCATION_GRAVE+LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_DECK)
 end
 function c500319350.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	if not e:GetHandler():IsRelateToEffect(e) or e:GetHandler():IsFacedown() then return end
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c500319350.spfilter,tp,LOCATION_GRAVE,0,1,2,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c500319350.spfilter,tp,LOCATION_GRAVE+LOCATION_DECK,0,1,2,nil,e,tp)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		while tc do
