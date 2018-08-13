@@ -59,7 +59,7 @@ function c210171116.operation(e,tp,eg,ep,ev,re,r,rp)
     if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
 function c210171116.confilter(c)
-    return c:IsSetCard(0xb4) and c:IsType(TYPE_SPELL+TYPE_TRAP)
+    return c:IsSetCard(0xb4) and c:IsType(TYPE_SPELL) and c:IsType(TYPE_RITUAL)
 end
 function c210171116.actcon(e)
     return not Duel.IsExistingMatchingCard(c210171116.confilter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,1,nil)
