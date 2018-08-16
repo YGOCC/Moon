@@ -85,8 +85,6 @@ function cod.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 function cod.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cod.th_filter,tp,LOCATION_DECK,0,1,1,nil)
 	if #g<=0 then return end
