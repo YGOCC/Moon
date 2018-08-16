@@ -16,7 +16,6 @@ function cod.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(cod.target)
 	e1:SetOperation(cod.activate)
 	c:RegisterEffect(e1)
@@ -26,6 +25,7 @@ function cod.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCountLimit(1,id)
 	e2:SetCondition(cod.tdcon)
 	e2:SetTarget(cod.tdtg)
 	e2:SetOperation(cod.tdop)
@@ -57,20 +57,14 @@ function cod.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		local mg1=Duel.GetRitualMaterial(tp)
 		local mg2=Duel.GetMatchingGroup(cod.mfilter,tp,LOCATION_GRAVE,0,nil)
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		return ft>-1 and Duel.IsExistingMatchingCard(cod.filter,tp,LOCATION_REMOVED,0,1,nil,e,tp,mg1,mg2,ft)
+		return ft>-1 and Duel.GetFlagEffect(tp,id)==0 and Duel.IsExistingMatchingCard(cod.filter,tp,LOCATION_REMOVED,0,1,nil,e,tp,mg1,mg2,ft)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,0,tp,LOCATION_GRAVE)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+0x17b0000+RESET_PHASE+PHASE_END,0,1,1)
 end
 function cod.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetFlagEffectLabel(id) then
-		local label=0
-		label=c:GetFlagEffectLabel(id)
-		c:ResetFlagEffect(id)
-		c:RegisterFlagEffect(id,RESET_EVENT+0x17b0000+RESET_PHASE+PHASE_END,0,1,label+1)
-	end
+	if Duel.GetFlagEffect(tp,id)>0 then return false end
 	local mg1=Duel.GetRitualMaterial(tp)
 	local mg2=Duel.GetMatchingGroup(cod.mfilter,tp,LOCATION_GRAVE,0,nil)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -98,15 +92,12 @@ function cod.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 		tc:CompleteProcedure()
 	end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 
 --Search
 function cod.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:GetFlagEffectLabel(id) then return false end
-	local label=c:GetFlagEffectLabel(id)
-	c:ResetFlagEffect(id)
-	return label==1
+	return Duel.GetFlagEffect(tp,id)==0
 end
 function cod.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsAbleToHand,aux.FilterBoolFunction(Card.IsSetCard,0xf06a)),tp,LOCATION_DECK,0,1,nil) end
@@ -114,9 +105,10 @@ function cod.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cod.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) or Duel.GetFlagEffect(tp,id)>0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,aux.AND(Card.IsAbleToHand,aux.FilterBoolFunction(Card.IsSetCard,0xf06a)),tp,LOCATION_DECK,0,1,1,nil)
 	if #g<=0 then return end
 	Duel.SendtoHand(g,nil,REASON_EFFECT)
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end

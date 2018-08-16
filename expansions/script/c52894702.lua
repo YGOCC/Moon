@@ -8,9 +8,7 @@ local function ID()
 	local id=tonumber(string.sub(str,2))
 	return id,cod
 end
---[[Must be Fusion Summoned. You can only resolve each effect of "Onigami Hippokelpie" once per turn. 
-If this card was Fusion Summoned this turn (Quick Effect): You can target up to 2 face-up cards; flip them face-down, then, shuffle 1 face-down card into the Deck. 
-When a card is flipped face-down: You can return 1 Link Monster from the field to the Extra Deck.]]
+
 local id,cod=ID()
 function cod.initial_effect(c)
 	--Fusion Summon
