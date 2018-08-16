@@ -78,6 +78,5 @@ function card.protop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function card.efilter(e,te)
-	return not te:IsHasProperty(EFFECT_FLAG_CARD_TARGET)
-	and te:GetOwnerPlayer()~=e:GetOwnerPlayer()
+	return te:GetOwnerPlayer()~=e:GetOwnerPlayer()
 end

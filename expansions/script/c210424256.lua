@@ -39,7 +39,7 @@ function card.initial_effect(c)
 	--return 2 to deck, draw 1
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(4066,1))
-	e5:SetCategory(CATEGORY_DRAW)
+	e5:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e5:SetType(EFFECT_TYPE_QUICK_O)
 	e5:SetCode(EVENT_BECOME_TARGET)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -91,7 +91,7 @@ function card.valcon(e,re,r,rp)
 end
 --return 2 to deck, draw 1
 function card.filter(c)
-	return c:IsSetCard(0x666) and c:IsAbleToDeck() and c:IsType(TYPE_PENDULUM)
+	return c:IsSetCard(0x666) and c:IsAbleToDeck() and c:IsFaceup()
 end
 function card.drawtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_EXTRA) and chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and card.filter(chkc) end
@@ -110,7 +110,7 @@ function card.drawop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
 	local g=Duel.GetOperatedGroup()
 	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
+	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
 	if ct==2 then
 	Duel.BreakEffect()
 	Duel.Draw(tp,1,REASON_EFFECT)
@@ -132,7 +132,7 @@ end
 function card.swapop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,card.spfilter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 and 
+	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 and
 	not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then

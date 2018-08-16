@@ -20,10 +20,9 @@ function c249000658.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,249000658)
-	e3:SetCondition(c249000739.drcon)
-	e3:SetCost(c249000739.drcost)
-	e3:SetTarget(c249000739.drtg)
-	e3:SetOperation(c249000739.drop)
+	e3:SetCondition(c249000658.drcon)
+	e3:SetCost(c249000658.drcost)
+	e3:SetOperation(c249000658.drop)
 	c:RegisterEffect(e3)
 end
 
@@ -49,7 +48,7 @@ end
 function c249000658.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
 end
-function c249000738.cfilter(c)
+function c249000658.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2052) and c:IsType(TYPE_MONSTER) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and not c:IsCode(249000658)
 end
 function c249000658.drcon(e,tp,eg,ep,ev,re,r,rp)
