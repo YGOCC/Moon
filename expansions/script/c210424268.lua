@@ -42,7 +42,7 @@ function card.negfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
 end
 function card.negfilter2(c)
-	return c:IsFaceup() 
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
 end
 function card.colink(e,tp,eg,ep,ev,re,r,rp)
 	local lg=e:GetHandler():GetMutualLinkedGroup()
