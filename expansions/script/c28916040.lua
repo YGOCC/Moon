@@ -4,31 +4,43 @@ local ref=_G['c'..28916040]
 local id=28916040
 function ref.initial_effect(c)
 	--SS Proc
-	local e0=Effect.CreateEffect(c)
+	--[[local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetCode(EFFECT_SPSUMMON_PROC)
 	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e0:SetRange(LOCATION_HAND)
 	e0:SetCondition(ref.spcon)
 	--e0:SetOperation(ref.spop)
-	c:RegisterEffect(e0)
+	c:RegisterEffect(e0)]]
 	--Search
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_MZONE)
+	--e1:SetCode(EVENT_SUMMON_SUCCESS)
+	--e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(ref.thtg)
 	e1:SetOperation(ref.thop)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
+	--[[local e2=e1:Clone()
 	e2:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e2)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e3)
+	c:RegisterEffect(e3)]]
+	--Summon Self
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e2:SetCountLimit(1,id+100000000)
+	e2:SetTarget(ref.destg)
+	e2:SetOperation(ref.desop)
+	c:RegisterEffect(e2)
 end
 
 --SS Proc
@@ -75,5 +87,30 @@ function ref.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function ref.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not ((c:GetAttack()>=2100) and c:IsRace(RACE_MACHINE)) and c:IsLocation(LOCATION_EXTRA)
+	return not ((c:GetAttack()>=2100) and (c:IsRace(RACE_MACHINE) or c:IsType(TYPE_TUNER))) and c:IsLocation(LOCATION_EXTRA)
+end
+
+--Summon Self
+function ref.descheck(c)
+	return c:IsDestructable() and c:IsType(TYPE_EQUIP) and c:IsFaceup()
+		and (c:IsLocation(LOCATION_MZONE) or Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0)
+end
+function ref.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local c=e:GetHandler()
+	if chkc then return ref.descheck(chkc) and chkc:GetControler()==tp end
+	if chk==0 then return Duel.IsExistingTarget(ref.descheck,tp,LOCATION_ONFIELD,0,1,nil)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,ref.descheck,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,LOCATION_GRAVE)
+end
+function ref.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	end
 end

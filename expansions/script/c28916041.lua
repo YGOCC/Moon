@@ -57,8 +57,7 @@ function ref.tgfilter(c)
 	return c:IsSetCard(1848) and c:IsAbleToGrave()
 end
 function ref.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(ref.tgfilter,tp,LOCATION_DECK,0,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(ref.tgfilter,tp,LOCATION_DECK,0,1,nil)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end

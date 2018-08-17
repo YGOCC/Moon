@@ -89,16 +89,16 @@ function ref.eqfilter(c,tc,tp)
 		 and c:CheckEquipTarget(tc) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
 end
 function ref.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and ref.tgfilter(chkc,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and ref.tgfilter(chkc,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingTarget(ref.tgfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
+		and Duel.IsExistingTarget(ref.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,ref.tgfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	Duel.SelectTarget(tp,ref.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,tp)
 end
 function ref.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsControler(tp) then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 		local g=Duel.SelectMatchingCard(tp,ref.eqfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,tc,tp)
 		if g:GetCount()>0 then

@@ -36,7 +36,7 @@ function c249000809.operation(e,tp,eg,ep,ev,re,r,rp)
 	if sc:IsType(TYPE_XYZ) then lvrk=sc:GetRank() else lvrk=sc:GetLevel() end
 	if g:CheckWithSumGreater(c249000809.getlevelorrank,lvrk*2,1,99,e:GetHandler()) and lvrk >=4 and lvrk <=9
 		and sc:IsCanBeSpecialSummoned(e,sumtype,tp,true,false) and Duel.GetLocationCountFromEx(tp)>0 and Duel.SelectYesNo(tp,2) then
-		local sg=g:SelectWithSumGreater(tp,c249000809.getlevelorrank,math.ceil(lvrk*1.5),1,99,e:GetHandler())
+		local sg=g:SelectWithSumGreater(tp,c249000809.getlevelorrank,lvrk*2,1,99,e:GetHandler())
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		Duel.SpecialSummon(sc,sumtype,tp,tp,true,false,POS_FACEUP)
 		sc:CompleteProcedure()

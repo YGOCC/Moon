@@ -1242,7 +1242,7 @@ function Auxiliary.SpatialOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 end
 
 --add procedure to equip spells equipping by rule
-function Auxiliary.AddEquipProcedure(c,p,f,eqlimit,cost,tg,op,con)
+function Auxiliary.AddEquipProcedure(c,p,f,eqlimit,cost,tg,op,con,ctlimit)
 	--Note: p==0 is check equip spell controler, p==1 for opponent's, PLAYER_ALL for both player's monsters
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -1251,6 +1251,9 @@ function Auxiliary.AddEquipProcedure(c,p,f,eqlimit,cost,tg,op,con)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	if ctlimit~=nil then
+		e1:SetCountLimit(1,c:GetCode()+EFFECT_COUNT_CODE_OATH)
+	end
 	if con then
 		e1:SetCondition(con)
 	end

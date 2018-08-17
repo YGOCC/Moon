@@ -41,6 +41,7 @@ function ref.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_TO_GRAVE)
 	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e5:SetCountLimit(1,id)
 	e5:SetCondition(ref.tgcon)
 	e5:SetTarget(ref.tgtg)
 	e5:SetOperation(ref.tgop)
@@ -52,7 +53,7 @@ end
 
 --Special Summon
 function ref.ssfilter(c,e,tp)
-	return c:IsType(TYPE_TUNER) and c:IsLevelBelow(3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return c:IsSetCard(1848) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) -- c:IsType(TYPE_TUNER) and c:IsLevelBelow(3)
 end
 function ref.cfilter(c)
 	return c:GetSequence()<5

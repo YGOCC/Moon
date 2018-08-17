@@ -50,12 +50,12 @@ function card.colink(e,tp,eg,ep,ev,re,r,rp)
 end
 function card.negtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(aux.negfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler())
-		and Duel.IsExistingTarget(aux.negfilter2,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(card.negfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler())
+		and Duel.IsExistingTarget(card.negfilter2,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELF)
-	Duel.SelectTarget(tp,aux.negfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
+	Duel.SelectTarget(tp,carc.negfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
-	Duel.SelectTarget(tp,aux.negfilter2,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SelectTarget(tp,card.negfilter2,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
 function card.negop(e,tp,eg,ep,ev,re,r,rp)

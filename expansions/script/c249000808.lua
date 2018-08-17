@@ -4,7 +4,6 @@ function c249000808.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
 	e1:SetCondition(c249000808.condition)
 	e1:SetCost(c249000808.cost)
 	e1:SetOperation(c249000808.operation)
@@ -40,7 +39,7 @@ function c249000808.operation(e,tp,eg,ep,ev,re,r,rp)
 	if sc:IsType(TYPE_XYZ) then lvrk=sc:GetRank() else lvrk=sc:GetLevel() end
 	if g:CheckWithSumGreater(c249000808.getlevelorrank,lvrk*2,1,99,e:GetHandler()) and lvrk >=4 and lvrk <=9
 		and sc:IsCanBeSpecialSummoned(e,sumtype,tp,true,false) and Duel.GetLocationCountFromEx(tp)>0 and Duel.SelectYesNo(tp,2) then
-		local sg=g:SelectWithSumGreater(tp,c249000808.getlevelorrank,math.ceil(lvrk*1.5),1,99,e:GetHandler())
+		local sg=g:SelectWithSumGreater(tp,c249000808.getlevelorrank,lvrk*2,1,99,e:GetHandler())
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		Duel.SpecialSummon(sc,sumtype,tp,tp,true,false,POS_FACEUP)
 		sc:CompleteProcedure()

@@ -33,7 +33,7 @@ function ref.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(ref.nonfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function ref.thfilter(c)
-	return c:IsSetCard(1848) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(1848) and c:IsAbleToHand() and not c:IsCode(id)
 end
 function ref.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(ref.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -75,12 +75,12 @@ function ref.seqop(e,tp,eg,ep,ev,re,r,rp)
 	local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
 	local nseq=math.log(s,2)
 	Duel.MoveSequence(tc,nseq)
-	local e1=Effect.CreateEffect(e:GetHandler())
+	--[[local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(700)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	tc:RegisterEffect(e1)
+	tc:RegisterEffect(e1)]]
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsLocation(LOCATION_GRAVE) then Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT) end
 end

@@ -67,10 +67,10 @@ function ref.confilter(c,tp)
 		and not c:IsPublic()
 end
 function ref.sscon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(ref.confilter,1,nil,tp)
+	return eg:IsExists(ref.confilter,1,nil,tp) and not (re and re:GetHandler():GetCode()~=id)
 end
 function ref.sscfilter(c,e,tp)
-	return c:IsSetCard(1848) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(1848) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 		and Duel.IsExistingMatchingCard(ref.ssfilter,tp,LOCATION_GRAVE,0,1,c,e,tp)
 end
 function ref.ssfilter(c,e,tp)
