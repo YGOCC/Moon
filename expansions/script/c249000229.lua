@@ -134,7 +134,7 @@ function c249000229.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000229.filter2(c,e,tp)
-	return c:IsLevel(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x1A8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c249000229.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
