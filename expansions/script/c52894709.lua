@@ -76,7 +76,7 @@ function cod.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
 function cod.th_filter(c)
-	return c:IsAbleToHand() and c:IsCode(52894708) 
+	return c:IsAbleToHand() and (c:IsCode(52894708) or c:IsCode(52894710))
 end
 function cod.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_DECK) and cod.th_filter(chkc) end

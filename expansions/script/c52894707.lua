@@ -81,9 +81,13 @@ function cod.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cod.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler(),e) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_ONFIELD)
 end
---Row Filter
-function cod.rfilter(c,e)
+--Row Filter Extra
+function cod.rafilter(c,e)
 	return c:IsAbleToGrave() and c:GetSequence()>=5
+end
+--Row Filter Main
+function cod.rlfilter(c,e)
+	return c:IsAbleToGrave() and c:GetSequence()<5
 end
 
 --Column Filter
@@ -93,18 +97,33 @@ end
 function cod.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	if Duel.SelectYesNo(c:GetOwner(),aux.Stringid(id,2)) then
+	local b1=Duel.IsExistingMatchingCard(aux.AND(Card.IsAbleToGrave,aux.FilterBoolFunction(cod.cfilter,e)),tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
+	local b2=(c:GetSequence()<5 and Duel.IsExistingMatchingCard(cod.rlfilter,tp,LOCATION_MZONE,0,1,c))
+				or (c:GetSequence()>=5 and Duel.IsExistingMatchingCard(cod.rafilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c))
+	local op=0
+	if b1 and b2 then
+		op=Duel.SelectOption(c:GetOwner(),aux.Stringid(id,2),aux.Stringid(id,3))
+	elseif b1 then
+		op=Duel.SelectOption(c:GetOwner(),aux.Stringid(id,2))
+	else
+		op=Duel.SelectOption(c:GetOwner(),aux.Stringid(id,3))+1
+	end
+	if op==0 then
+		--Column
 		local g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,c)
 		local cg=g:Filter(cod.cfilter,nil,e)
 		if #cg>0 then
 			Duel.SendtoGrave(cg,REASON_EFFECT)
 		end
 	else
+		--Row
 		local g=nil
 		if c:GetSequence()<5 then
-			g=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_MZONE,0,c)
+			--MMZ
+			g=Duel.GetMatchingGroup(cod.rlfilter,tp,LOCATION_MZONE,0,c)
 		else
-			g=Duel.GetMatchingGroup(cod.rfilter,tp,LOCATION_MZONE,LOCATION_MZONE,c)
+			--EMZ
+			g=Duel.GetMatchingGroup(cod.rafilter,tp,LOCATION_MZONE,LOCATION_MZONE,c)
 		end
 		if g and #g>0 then
 			Duel.SendtoGrave(g,REASON_EFFECT)
@@ -118,11 +137,17 @@ function cod.opcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:GetControler()~=c:GetOwner() and c:IsLocation(LOCATION_MZONE) and c:GetFlagEffect(id)==1
 end
 function cod.opop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local con=cod.tgtg(e,tp,eg,ep,ev,re,r,rp,0)
+	if not con then return end
 	local res,feg=Duel.CheckEvent(EVENT_FLIP_SUMMON_SUCCESS,true)
-	if not res or #feg<=0 then return end
-	if res and feg:GetFirst()==e:GetHandler() and Duel.SelectYesNo(e:GetHandler():GetOwner(),aux.Stringid(id,1)) then
-		Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+id,e,0,tp,tp,0)
-		e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+	if not res or #feg<=0 then
+		res,feg=Duel.CheckEvent(EVENT_FLIP,true)
+		if not res or #feg<=0 then return end
+	end
+	if res and feg:GetFirst()==c and Duel.SelectYesNo(c:GetOwner(),aux.Stringid(id,1)) then
+		Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,e,0,tp,tp,0)
+		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
 	end
 end
 
@@ -138,7 +163,7 @@ function cod.mvop(e,tp,eg,ep,ev,er,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
 	local seq=math.log(Duel.SelectDisableField(tp,1,LOCATION_MZONE,LOCATION_MZONE,0),2)
-	if seq>=16 then Duel.GetControl(c,1-tp,0,1) seq=seq-16 end
+	if seq>=16 then Duel.GetControl(c,1-tp) seq=seq-16 end
 	Duel.MoveSequence(c,seq)
 	Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE,0,POS_FACEDOWN_DEFENSE,0)
 end
