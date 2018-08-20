@@ -8,6 +8,7 @@ function c249000880.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
 	e1:SetCondition(c249000880.condition)
+	e1:SetTarget(c249000880.target)
 	e1:SetCost(c249000880.cost)
 	e1:SetOperation(c249000880.operation)
 	c:RegisterEffect(e1)
@@ -42,6 +43,10 @@ function c249000880.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000880.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil) end
 	local g=Duel.SelectMatchingCard(tp,c249000880.spfilter,tp,LOCATION_GRAVELOCATION_HAND,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
+function c249000880.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
 end
 function c249000880.releasefilter(c)
 	return (c:IsLevelAbove(1) or c:GetRank() > 0) and c:IsReleasable()
