@@ -62,7 +62,7 @@ function card.betarget(e,tp,eg,ep,ev,re,r,rp)
 	return g and g:IsExists(card.filter2,1,nil,tp)
 end
 function card.searchfilter(c)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
 end
 function card.stg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(card.searchfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
