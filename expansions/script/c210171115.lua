@@ -48,15 +48,17 @@ function c210171115.activate(e,tp,eg,ep,ev,re,r,rp)
 		sg1:Merge(sg3)
 		Duel.ConfirmCards(1-tp,sg1)
 		Duel.ShuffleDeck(tp)
-		if sg1:GetCount()==3 and Duel.SelectYesNo(tp,aux.Stringid(210420002,0)) then
-			local g=Duel.SelectReleaseGroupEx(tp,c210171115.filter2,1,2,nil)
-			if g:GetCount()>0 then
-				Duel.HintSelection(g)
-				local rct=Duel.Release(g,REASON_EFFECT)
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-				local cg=sg1:Select(tp,rct,rct,nil)
-				Duel.SendtoGrave(cg,nil,REASON_EFFECT)
-				sg1:Sub(cg)
+		if sg1:GetCount()==3 and Duel.GetReleaseGroupCount(tp,true)>0 then
+			if Duel.SelectYesNo(tp,aux.Stringid(210171115,0)) then
+				local g=Duel.SelectReleaseGroupEx(tp,c210171115.filter2,1,2,nil)
+				if g:GetCount()>0 then
+					Duel.HintSelection(g)
+					local rct=Duel.Release(g,REASON_EFFECT)
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+					local cg=sg1:Select(tp,rct,rct,nil)
+					Duel.SendtoGrave(cg,nil,REASON_EFFECT)
+					sg1:Sub(cg)
+				end
 			end
 		end
 		Duel.ConfirmCards(1-tp,sg1)
