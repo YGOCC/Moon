@@ -73,7 +73,7 @@ function c249000880.operation(e,tp,eg,ep,ev,re,r,rp)
 		g=Duel.GetMatchingGroup(c249000880.releasefilter,tp,LOCATION_HAND+LOCATION_MZONE,0,c)
 		if sc:IsType(TYPE_RITUAL) then sumtype=SUMMON_TYPE_RITUAL elseif sc:IsType(TYPE_SYNCHRO) then sumtype=SUMMON_TYPE_SYNCHRO else sumtype=SUMMON_TYPE_XYZ end
 		if sc:IsType(TYPE_XYZ) then lvrk=sc:GetRank() else lvrk=sc:GetLevel() end
-	until g:CheckWithSumGreater(c249000880.getlevelorrank,lvrk,1,99,e:GetHandler()) and lvrk >=4 and lvrk <=10
+	until g:CheckWithSumGreater(c249000880.getlevelorrank,lvrk,1,99,e:GetHandler()) and lvrk >=4 and lvrk <=9
 		and sc:IsCanBeSpecialSummoned(e,sumtype,tp,true,false)
 	local sg=g:SelectWithSumGreater(tp,c249000880.getlevelorrank,lvrk,1,99,nil)
 	Duel.Release(sg,REASON_EFFECT)

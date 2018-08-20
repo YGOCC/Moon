@@ -1,5 +1,13 @@
 --Cosmic-Summoner Gemini
 function c249000230.initial_effect(c)
+	--special summon self
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(c249000230.spcon2)
+	c:RegisterEffect(e1)
 	--atkdown
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(97170107,0))
@@ -35,14 +43,6 @@ function c249000230.initial_effect(c)
 	e5:SetCountLimit(2)
 	e5:SetValue(c249000230.indescon)
 	c:RegisterEffect(e5)
-	--special summon self
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(c249000230.spcon2)
-	c:RegisterEffect(e1)
 end
 function c249000230.filter(c,e,tp)
 	return c:IsFaceup() and c:IsControler(1-tp) and c:GetAttack()>0 and (not e or c:IsRelateToEffect(e))
@@ -84,19 +84,23 @@ function c249000230.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)	
 	local g=Duel.SelectMatchingCard(tp,c249000230.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		if Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_DISABLE)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			g:GetFirst():RegisterEffect(e1)
-			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetCode(EFFECT_DISABLE_EFFECT)
-			e2:SetReset(RESET_EVENT+0x1fe0000)
-			g:GetFirst():RegisterEffect(e2)
-		end
-		Duel.SpecialSummonComplete()
+			if g:GetFirst():IsSetCard(0x1A8) then
+				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			else
+				if Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
+					local e1=Effect.CreateEffect(c)
+					e1:SetType(EFFECT_TYPE_SINGLE)
+					e1:SetCode(EFFECT_DISABLE)
+					e1:SetReset(RESET_EVENT+0x1fe0000)
+					g:GetFirst():RegisterEffect(e1)
+					local e2=Effect.CreateEffect(c)
+					e2:SetType(EFFECT_TYPE_SINGLE)
+					e2:SetCode(EFFECT_DISABLE_EFFECT)
+					e2:SetReset(RESET_EVENT+0x1fe0000)
+					g:GetFirst():RegisterEffect(e2)
+				end
+				Duel.SpecialSummonComplete()
+			end
 		if Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingMatchingCard(c249000229.revealfilter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(69584564,0)) then
 			local g2=Duel.SelectMatchingCard(tp,c249000229.revealfilter,tp,LOCATION_HAND,0,1,1,nil)
 			Duel.ConfirmCards(1-tp,g2)

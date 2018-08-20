@@ -9,7 +9,6 @@ function c88890008.initial_effect(c)
     e1:SetValue(c88890008.splimit)
     c:RegisterEffect(e1)
     --(2) Effect for card
-    --Destroy replace
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
     e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -17,6 +16,7 @@ function c88890008.initial_effect(c)
     e2:SetCode(EFFECT_DESTROY_REPLACE)
     e2:SetCountLimit(1)
     e2:SetTarget(c88890008.desreptg)
+    e2:SetOperation(c88890008.desrepop)
     c:RegisterEffect(e2)
     --(3) Pay or Destroy
     local e3=Effect.CreateEffect(c)
@@ -77,6 +77,16 @@ function c88890008.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
         Duel.Remove(g,POS_FACEUP,REASON_COST)
         return true
     else return false end
+end
+function c88890008.desrepop(e,tp,eg,ep,ev,re,r,rp)
+    local tc=Duel.GetFirstTarget()
+    local atk=tc:GetAttack()/2
+    if tc and tc:IsRelateToEffect(e) then
+        Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+        if tc:IsLocation(LOCATION_REMOVED) and tc:IsType(TYPE_MONSTER+TYPE_RITUAL) and tc:IsSetCard(0x902) then
+            Duel.Recover(1,atk,REASON_EFFECT)
+        end
+    end
 end
 --(3) Pay or Destroy
 function c88890008.paycon(e,tp,eg,ep,ev,re,r,rp)

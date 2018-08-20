@@ -224,4 +224,5 @@ function c249000860.spop(e,tp,eg,ep,ev,re,r,rp,c,og)
 	e1:SetValue(1)
 	e1:SetReset(RESET_EVENT+0xfe0000+RESET_PHASE+PHASE_END)
 	spg:GetFirst():RegisterEffect(e1)
+	e:Reset()
 end

@@ -63,10 +63,54 @@ function c249000886.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function c249000886.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c249000886.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+		if Duel.SendtoHand(g,nil,REASON_EFFECT) then
+			Duel.ConfirmCards(1-tp,g)
+			--revive
+			local e1=Effect.CreateEffect(c)
+			e1:SetDescription(aux.Stringid(25259669,0))
+			e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+			e1:SetType(EFFECT_TYPE_IGNITION)
+			e1:SetCountLimit(1)
+			e1:SetRange(LOCATION_REMOVED)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			e1:SetTarget(c249000886.sptg)
+			e1:SetOperation(c249000886.spop)
+			c:RegisterEffect(e1)
+		end
+	end
+end
+function c249000886.spfilter(c,e,tp)
+	return (c:IsLevelBelow(4) or ((c:GetRank() >0) and (c:GetRank() <=4))) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c249000886.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c249000886.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
+end
+function c249000886.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,c249000886.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+		if g:GetCount()>0 then
+			local tc=g:GetFirst()
+			if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+				local e1=Effect.CreateEffect(c)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_DISABLE)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				tc:RegisterEffect(e1)
+				local e2=Effect.CreateEffect(c)
+				e2:SetType(EFFECT_TYPE_SINGLE)
+				e2:SetCode(EFFECT_DISABLE_EFFECT)
+				e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+				tc:RegisterEffect(e2)
+			end
+			Duel.SpecialSummonComplete()
+		end
 	end
 end

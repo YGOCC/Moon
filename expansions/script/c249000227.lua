@@ -55,19 +55,23 @@ function c249000227.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)	
 		local g=Duel.SelectMatchingCard(tp,c249000227.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
-			if Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
-				local e1=Effect.CreateEffect(c)
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetCode(EFFECT_DISABLE)
-				e1:SetReset(RESET_EVENT+0x1fe0000)
-				g:GetFirst():RegisterEffect(e1)
-				local e2=Effect.CreateEffect(c)
-				e2:SetType(EFFECT_TYPE_SINGLE)
-				e2:SetCode(EFFECT_DISABLE_EFFECT)
-				e2:SetReset(RESET_EVENT+0x1fe0000)
-				g:GetFirst():RegisterEffect(e2)
+			if g:GetFirst():IsSetCard(0x1A8) then
+				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			else
+				if Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
+					local e1=Effect.CreateEffect(c)
+					e1:SetType(EFFECT_TYPE_SINGLE)
+					e1:SetCode(EFFECT_DISABLE)
+					e1:SetReset(RESET_EVENT+0x1fe0000)
+					g:GetFirst():RegisterEffect(e1)
+					local e2=Effect.CreateEffect(c)
+					e2:SetType(EFFECT_TYPE_SINGLE)
+					e2:SetCode(EFFECT_DISABLE_EFFECT)
+					e2:SetReset(RESET_EVENT+0x1fe0000)
+					g:GetFirst():RegisterEffect(e2)
+				end
+				Duel.SpecialSummonComplete()
 			end
-			Duel.SpecialSummonComplete()
 			if Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingMatchingCard(c249000227.revealfilter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(69584564,0)) then
 				local g2=Duel.SelectMatchingCard(tp,c249000227.revealfilter,tp,LOCATION_HAND,0,1,1,nil)
 				Duel.ConfirmCards(1-tp,g2)

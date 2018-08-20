@@ -22,19 +22,17 @@ function c249000864.initial_effect(c)
 	e2:SetTarget(c249000864.target)
 	e2:SetOperation(c249000864.operation)
 	c:RegisterEffect(e2)
-	--atkup
+	--draw
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(55461064,0))
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCategory(CATEGORY_ATKCHANGE)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetHintTiming(0,TIMING_DAMAGE_STEP)
-	e3:SetRange(LOCATION_HAND)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e3:SetCondition(c249000864.atkcon)
-	e3:SetCost(c249000864.atkcost)
-	e3:SetTarget(c249000864.atktg2)
-	e3:SetOperation(c249000864.atkop2)
+	e3:SetDescription(aux.Stringid(18036057,0))
+	e3:SetCategory(CATEGORY_DRAW)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EVENT_BATTLE_DAMAGE)
+	e3:SetCondition(c249000864.condition2)
+	e3:SetTarget(c249000864.target2)
+	e3:SetOperation(c249000864.operation2)
 	c:RegisterEffect(e3)
 end
 function c249000864.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -67,7 +65,7 @@ function c249000864.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c249000864.costfilter(c)
-	return c:IsSetCard(0x1F9) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost()
+	return c:IsSetCard(0x1F9) and c:IsAbleToDeckOrExtraAsCost()
 end
 function c249000864.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -85,28 +83,16 @@ function c249000864.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
 	end
 end
-function c249000864.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and (ph~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
+function c249000864.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp and eg:GetFirst():GetControler()==tp
 end
-function c249000864.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsDiscardable() end
-	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
+function c249000864.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c249000864.atktg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
-end
-function c249000864.atkop2(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
-	local tc=g:GetFirst()
-	while tc do
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetOwnerPlayer(tp)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e1:SetValue(500)
-		tc:RegisterEffect(e1)
-		tc=g:GetNext()
-	end
+function c249000864.operation2(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end

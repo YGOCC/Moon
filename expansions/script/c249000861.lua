@@ -40,7 +40,7 @@ function c249000861.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c249000861.costfilter(c)
-	return c:IsSetCard(0x1F9) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x1F9) and c:IsAbleToRemoveAsCost()
 end
 function c249000861.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
