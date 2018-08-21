@@ -28,20 +28,13 @@ function c100307001.initial_effect(c)
 end
 function c100307001.disrmcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=re:GetHandler()
-	local race=c:GetRace()
-	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	if loc==LOCATION_HAND then race=c:GetOriginalRace() end
-	if loc==LOCATION_MZONE and not c:IsLocation(LOCATION_MZONE) then race=c:GetPreviousRaceOnField() end
-	return race==RACE_ZOMBIE and not c:IsCode(100307001)
+	return c:IsRace(RACE_ZOMBIE) and not c:IsCode(100307001)
 end
 function c100307001.disrmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsChainDisablable(ev) and Duel.GetFlagEffect(tp,100307001)==0
 	local b2=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil)
 		and Duel.GetFlagEffect(tp,100307001+100)==0
 	if chk==0 then return b1 or b2 end
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c100307001.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
