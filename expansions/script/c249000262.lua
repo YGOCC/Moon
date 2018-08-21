@@ -1,36 +1,30 @@
---SC2 Unit - Melee - Marine
+--Spell-Form Charge
 function c249000262.initial_effect(c)
-	--spsummon
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(249000262,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e1:SetCondition(c249000262.spcon)
-	e1:SetTarget(c249000262.sptg)
-	e1:SetOperation(c249000262.spop)
+	e1:SetCategory(CATEGORY_COUNTER)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,249000262+EFFECT_COUNT_CODE_OATH)
+	e1:SetTarget(c249000262.target)
+	e1:SetOperation(c249000262.activate)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e2)
 end
-function c249000262.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
+function c249000262.filter(c)
+	return c:IsFaceup() and c:IsCanAddCounter(0x48,1)
 end
-function c249000262.filter(c,e,tp)
-	return c:GetLevel()<=6 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x1AB)
+function c249000262.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and c249000262.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c249000262.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	Duel.SelectTarget(tp,c249000262.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,2,0,0x48)
 end
-function c249000262.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c249000262.filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
-end
-function c249000262.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c249000262.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+function c249000262.activate(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:AddCounter(0x48,2) then
+		if Duel.SelectYesNo(tp,1108) then
+			Duel.Draw(tp,1,REASON_EFFECT)
+		end
 	end
 end
