@@ -1,63 +1,69 @@
---Mecha Blade: Cosmic Shift
+--Mecha Blade Base Defender
 local m=88990012
 local cm=_G["c"..m]
 function cm.initial_effect(c)
-    --link summon
+--xyz summon
+    aux.AddXyzProcedure(c,cm.mfilter,4,2,cm.ovfilter,aux.Stringid(m,0),2,cm.xyzop)
     c:EnableReviveLimit()
-    aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE),2,2)
-    local e2=Effect.CreateEffect(c)
-    e2:SetDescription(aux.Stringid(88990012,1))
-    e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-    e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-    e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1)
-    e2:SetType(EFFECT_TYPE_QUICK_O)
-    e2:SetCode(EVENT_FREE_CHAIN)
-    e2:SetTarget(cm.xyztg)
-    e2:SetOperation(cm.xyzop)
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_SINGLE)
+    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+    e1:SetRange(LOCATION_MZONE)
+    e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+    e1:SetCondition(cm.damcon)
+    e1:SetValue(1)
+    c:RegisterEffect(e1)
+    local e2=e1:Clone()
+    e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
     c:RegisterEffect(e2)
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_FIELD)
+    e3:SetCode(EFFECT_CHANGE_DAMAGE)
+    e3:SetRange(LOCATION_MZONE)
+    e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e3:SetTargetRange(1,0)
+    e3:SetValue(cm.damval)
+    c:RegisterEffect(e3)
+    local e4=Effect.CreateEffect(c)
+    e4:SetType(EFFECT_TYPE_SINGLE)
+    e4:SetCode(EFFECT_UPDATE_DEFENSE)
+    e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+    e4:SetRange(LOCATION_MZONE)
+    e4:SetValue(cm.atkval)
+    c:RegisterEffect(e4)
+    local e5=Effect.CreateEffect(c)
+    e5:SetDescription(aux.Stringid(m,1))
+    e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+    e5:SetCode(EVENT_PHASE+PHASE_END)
+    e5:SetRange(LOCATION_MZONE)
+    e5:SetCountLimit(1)
+    e5:SetTarget(cm.rmtg)
+    e5:SetOperation(cm.rmop)
+    c:RegisterEffect(e5)
 end
-function cm.cfilter(c,e)
-    return c:IsFaceup() and c:IsSetCard(0xffd)
+function cm.atkval(e,c)
+    return c:GetOverlayCount()*500
 end
-function cm.xyzfilter(c,e,tp)
-    return c:IsRankAbove(3) and c:IsRankBelow(5)
+function cm.damval(e,re,val,r,rp,rc)
+    local def=e:GetHandler():GetDefense()
+    if val<=def then return 0 else return val end
 end
---and c:IsRankBelow(c,5)
-function cm.mfilter1(c,mg,exg)
-    return mg:IsExists(cm.mfilter2,1,c,c,exg,tp)
+function cm.damcon(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    return c:GetOverlayCount()>0
 end
-function cm.mfilter2(c,mc,exg)
-    local g=Group.FromCards(c,mc)
-    return exg:IsExists(Card.IsXyzSummonable,1,nil,g) and Duel.GetLocationCountFromEx(tp,tp,g)>0
+function cm.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return true end
+    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
-function cm.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chkc then return false end
-    local mg=Duel.GetMatchingGroup(cm.cfilter,tp,LOCATION_MZONE,0,nil)
-    local exg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
-    if chk==0 then return mg:IsExists(cm.mfilter1,1,nil,mg,exg,tp) end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-    local sg1=mg:FilterSelect(tp,cm.mfilter1,1,1,nil,mg,exg,tp)
-    local tc1=sg1:GetFirst()
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-    local sg2=mg:FilterSelect(tp,cm.mfilter2,1,1,tc1,tc1,exg,tp)
-    sg1:Merge(sg2)
-    Duel.SetTargetCard(sg1)
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+function cm.rmop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 end
-function cm.filter2(c,e)
-    return c:IsRelateToEffect(e) and c:IsFaceup()
+function cm.ovfilter(c)
+    return c:IsFaceup() and c:IsCode(88990006)
 end
-function cm.xyzop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(cm.filter2,nil,e)
-    if g:GetCount()<2 then return end
-    if Duel.GetLocationCountFromEx(tp,tp,g)<=0 then return end
-    local xyzg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_EXTRA,0,nil,g,e,tp)
-    if xyzg:GetCount()>0 then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-        Duel.SpecialSummonStep(xyz,SUMMON_TYPE_XYZ,tp,tp,true,false,POS_FACEUP)
-        Duel.Overlay(xyz,g)
-        Duel.SpecialSummonComplete()
-    end
+function cm.xyzop(e,tp,chk,mc)
+    if chk==0 then return mc:CheckRemoveOverlayCard(tp,1,REASON_COST) end
+    mc:RemoveOverlayCard(tp,1,1,REASON_COST)
 end

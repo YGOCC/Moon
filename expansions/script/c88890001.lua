@@ -54,6 +54,19 @@ function c88890001.initial_effect(c)
     e6:SetTarget(c88890001.stztg)
     e6:SetOperation(c88890001.stzop)
     c:RegisterEffect(e6)
+    --(8) Special Summon
+    local e7=Effect.CreateEffect(c)
+    e7:SetDescription(aux.Stringid(88890001,4))
+    e7:SetType(EFFECT_TYPE_QUICK_O)
+    e7:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    e7:SetRange(LOCATION_SZONE)
+    e7:SetCode(EVENT_FREE_CHAIN)
+    e7:SetCountLimit(1)
+    e7:SetCondition(c88890001.spcon)
+    e7:SetTarget(c88890001.sptg)
+    e7:SetOperation(c88890001.spop)
+    c:RegisterEffect(e7)
 end
 --Ritual Condition
 function c88890001.filter(c,tp)
@@ -175,4 +188,24 @@ function c88890001.stzop(e,tp,eg,ep,ev,re,r,rp)
     e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
     c:RegisterEffect(e1)
     Duel.RaiseEvent(c,EVENT_CUSTOM+99020150,e,0,tp,0,0)
+end
+--(8) Special Summon
+function c88890001.spfilter(c,e,tp)
+    return c:IsSetCard(0x902) and c:GetType()==TYPE_MONSTER+TYPE_RITUAL and c:IsAbleToHand()
+end
+function c88890001.spcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP) 
+end
+function c88890001.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chk==0 then return Duel.IsExistingMatchingCard(c88890001.spfilter,tp,LOCATION_DECK,0,1,nil) end
+    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c88890001.spop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local g=Duel.SelectMatchingCard(tp,c88890001.spfilter,tp,LOCATION_DECK,0,1,1,nil)
+    if g:GetCount()>0 then
+        Duel.SendtoHand(g,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,g)
+    end
 end
