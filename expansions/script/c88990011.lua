@@ -41,6 +41,9 @@ function cm.initial_effect(c)
     e4:SetOperation(cm.spop)
     c:RegisterEffect(e4)
 end
+function cm.mfilter(c)
+    return c:IsSetCard(0xffd)
+end
 function cm.filter(c,sp)
     return c:GetSummonPlayer()==sp
 end
@@ -73,6 +76,7 @@ end
 function cm.damop2(e,tp,eg,ep,ev,re,r,rp)
     local n=Duel.GetFlagEffect(tp,m)
     Duel.ResetFlagEffect(tp,m)
+    Duel.Hint(HINT_CARD,0,m)
     Duel.Recover(tp,500,REASON_EFFECT)
 end
 function cm.spcon(e,tp,eg,ep,ev,re,r,rp)

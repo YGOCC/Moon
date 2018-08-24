@@ -24,7 +24,7 @@ function c88990009.initial_effect(c)
     c:RegisterEffect(e2)
 end
 function c88990009.atkval(e,c)
-    return c:GetOverlayCount()*200
+    return c:GetOverlayCount()*100
 end
 function c88990009.mfilter(c)
     return c:IsSetCard(0xffd)
@@ -43,8 +43,8 @@ end
 function c88990009.target(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
     Duel.SetTargetPlayer(1-tp)
-    Duel.SetTargetParam(750)
-    Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,750)
+    Duel.SetTargetParam(800)
+    Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,800)
 end
 function c88990009.operation(e,tp,eg,ep,ev,re,r,rp)
     local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
