@@ -43,10 +43,10 @@ function c115000875.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c115000875.filter2(c,e)
-	return c:IsSetCard(0x1AB) and not c:IsPublic() and c:IsRelateToEffect(e)
+	return c:IsSetCard(0x1AB) and not c:IsPublic()
 end
 function c115000875.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return ep==tp and eg:IsExists(c115000875.filter2,1,nil,e) end
+	if chk==0 then return ep==tp and eg:IsExists(c115000875.filter2,1,nil) end
 	local g=eg:Filter(c115000875.filter2,nil)
 	if g:GetCount()==1 then
 		Duel.ConfirmCards(1-tp,g)

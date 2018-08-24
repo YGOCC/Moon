@@ -151,7 +151,7 @@ function c249000473.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	lvt[pc]=nil
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(249000473,1))
 	local lv=Duel.AnnounceNumber(tp,table.unpack(lvt))
-	e:GetHandler():RemoveCounter(tp,1,0,0x48,lv,REASON_COST)
+	Duel.RemoveCounter(tp,1,0,0x48,lv,REASON_COST)
 	e:SetLabel(lv)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end

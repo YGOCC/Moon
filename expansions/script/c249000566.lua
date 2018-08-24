@@ -12,6 +12,23 @@ function c249000566.initial_effect(c)
 	e1:SetTarget(c249000566.target)
 	e1:SetOperation(c249000566.activate)
 	c:RegisterEffect(e1)
+	--tohand
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(75878039,0))
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetCountLimit(1,249000566)
+	e2:SetTarget(c249000566.target2)
+	e2:SetOperation(c249000566.operation2)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e2:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+	c:RegisterEffect(e2)
+	local e4=e2:Clone()
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e3)
 end
 function c249000566.confilter(c,e)
 	return c:IsSetCard(0x1D0) and not c:IsCode(e:GetHandler():GetCode())
@@ -46,5 +63,20 @@ function c249000566.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,tc,e)
 	if g:GetCount()>0 then
 		Duel.Overlay(tc,g)
+	end
+end
+function c249000566.filter(c)
+	return c:IsSetCard(0x1D0) and c:IsAbleToHand()
+end
+function c249000566.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000566.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c249000566.operation2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c249000566.filter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
 end

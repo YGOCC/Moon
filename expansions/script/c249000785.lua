@@ -7,7 +7,6 @@ function c249000785.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_GRAVE)
-	e1:SetCountLimit(1,249000785)
 	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(c249000785.target)
 	e1:SetOperation(c249000785.operation)
@@ -22,6 +21,17 @@ function c249000785.initial_effect(c)
 	e2:SetTarget(c249000785.sptg)
 	e2:SetOperation(c249000785.spop)
 	c:RegisterEffect(e2)
+	--draw
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_DRAW)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e3:SetCode(EVENT_REMOVE)
+	e3:SetCountLimit(1,249000785)
+	e3:SetCondition(c249000785.drcon)
+	e3:SetTarget(c249000785.drtg)
+	e3:SetOperation(c249000785.drop)
+	c:RegisterEffect(e3)
 end
 function c249000785.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x103F)
@@ -51,7 +61,7 @@ function c249000785.valcon(e,re,r,rp)
 end
 function c249000785.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	return at:GetControler()~=tp and Duel.GetAttackTarget()==nil
+	return at:GetControler()~=tp
 end
 function c249000785.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -64,4 +74,20 @@ function c249000785.spop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) then
 		Duel.NegateAttack()
 	end
+end
+function c249000785.drfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x3F)
+end
+function c249000785.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsFaceup() and Duel.IsExistingMatchingCard(c249000785.drfilter,tp,LOCATION_ONFIELD,0,1,nil)
+end
+function c249000785.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function c249000785.drop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end

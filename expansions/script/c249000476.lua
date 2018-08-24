@@ -10,7 +10,7 @@ function c249000476.initial_effect(c)
 	c:RegisterEffect(e1)
 	--normal summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(5133471,1))
+	e2:SetDescription(1)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetOperation(c249000476.nsop)

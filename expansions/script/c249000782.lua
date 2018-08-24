@@ -27,6 +27,14 @@ function c249000782.initial_effect(c)
 	e4:SetTarget(c249000782.drtg)
 	e4:SetOperation(c249000782.drop)
 	c:RegisterEffect(e4)
+	--special summon
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_SPSUMMON_PROC)
+	e5:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e5:SetRange(LOCATION_HAND)
+	e5:SetCondition(c249000782.spcon)
+	c:RegisterEffect(e5)
 end
 function c249000782.filter(c)
 	return c:IsSetCard(0x103F) and c:IsAbleToHand() and not c:IsCode(249000782)
@@ -57,4 +65,9 @@ end
 function c249000782.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
+end
+function c249000782.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE,nil)-Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)>=2
 end

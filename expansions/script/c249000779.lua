@@ -93,17 +93,14 @@ function c249000779.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c249000779.cfilter(c)
-	return c:GetSequence()>=5
-end
 function c249000779.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		local g2=Duel.GetMatchingGroup(c249000779.cfilter,tp,LOCATION_MZONE,0,nil)
-		if g2:GetCount() > 0 then
-			c:SetMaterial(g2)
-			Duel.SendtoGrave(g2,REASON_MATERIAL+REASON_LINK)
-		end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EXTRA_TOMAIN_KOISHI)
+		e1:SetReset(RESET_CHAIN)
+		c:RegisterEffect(e1)
 		Duel.SpecialSummon(c,SUMMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
 		c:CompleteProcedure()
 		c:AddCounter(0x1,Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD+LOCATION_HAND,nil)+1)
@@ -120,11 +117,11 @@ function c249000779.spop2(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetFlagEffect(tp,249000779)==0 and Duel.SelectYesNo(tp,aux.Stringid(9287078,0)) then
 		local g=Duel.SelectMatchingCard(tp,c249000779.spcostfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,3,3,nil)
 		Duel.SendtoDeck(g,nil,2,REASON_COST)
-		local g2=Duel.GetMatchingGroup(c249000779.cfilter,tp,LOCATION_MZONE,0,nil)
-		if g2:GetCount() > 0 then
-			c:SetMaterial(g2)
-			Duel.SendtoGrave(g2,REASON_MATERIAL+REASON_LINK)
-		end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EXTRA_TOMAIN_KOISHI)
+		e1:SetReset(RESET_CHAIN)
+		c:RegisterEffect(e1)
 		Duel.SpecialSummon(c,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
 		c:CompleteProcedure()
 		c:AddCounter(0x1,Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD+LOCATION_HAND,nil)+1)

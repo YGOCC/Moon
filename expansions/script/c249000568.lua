@@ -11,6 +11,17 @@ function c249000568.initial_effect(c)
 	e1:SetTarget(c249000568.target)
 	e1:SetOperation(c249000568.operation)
 	c:RegisterEffect(e1)
+	--to hand
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(54359696,0))
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCountLimit(1,249000568)
+	e2:SetTarget(c249000568.target2)
+	e2:SetOperation(c249000568.operation2)
+	c:RegisterEffect(e2)
 end
 function c249000568.cfilter(c)
 	return c:IsRace(RACE_FAIRY) and c:IsDiscardable()
@@ -35,5 +46,20 @@ function c249000568.operation(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(c249000568.drawfilter,tp,LOCATION_GRAVE,0,1,nil,e) and Duel.IsPlayerCanDraw(tp,1)
 		and Duel.SelectYesNo(tp,1108) then
 		Duel.Draw(tp,1,REASON_EFFECT)
+	end
+end
+function c249000568.filter(c)
+	return c:IsRace(RACE_FAIRY) and c:GetTextAttack()==0 and c:GetTextDefense()==0 and c:IsAbleToHand()
+end
+function c249000568.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000568.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c249000568.operation2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c249000568.filter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
 end

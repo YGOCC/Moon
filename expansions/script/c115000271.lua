@@ -45,10 +45,10 @@ function c115000271.operation(e,tp,eg,ep,ev,re,r,rp)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_EXTRA_TOMAIN_KOISHI)
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			e1:SetReset(RESET_CHAIN)
 			sc:RegisterEffect(e1)
+			Duel.SpecialSummon(sc,0,tp,tp,true,false,POS_FACEUP)
 			sc=sg:GetNext()
 		end
-		Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
 	end
 end

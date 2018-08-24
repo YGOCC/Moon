@@ -26,51 +26,29 @@ function card.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
+
 function card.gtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_PZONE,LOCATION_PZONE)>0 end
-	local g=Duel.GetFieldGroup(tp,LOCATION_PZONE,LOCATION_PZONE)
+	local ct=Duel.GetFieldGroupCount(tp,LOCATION_PZONE,LOCATION_PZONE)
+	if chk==0 then return Duel.IsExistingMatchingCard(card.thfilter1,tp,LOCATION_DECK,0,ct,nil) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_PZONE,LOCATION_PZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,g:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,ct,tp,LOCATION_DECK)
 end
 function card.thfilter1(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsAbleToHand()
 end
 function card.gop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(tp,LOCATION_PZONE,LOCATION_PZONE)
-	local ct=Duel.SendtoExtraP(g,2,REASON_EFFECT)
-		local hg1=Duel.GetMatchingGroup(card.thfilter1,tp,LOCATION_DECK,0,nil)
-	if ct>=1 and hg1:GetCount()>0  then
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_PZONE,LOCATION_PZONE,nil)
+	local ct=Duel.SendtoExtraP(g,REASON_EFFECT,nil)
+	local sg=Duel.GetMatchingGroup(card.thfilter1,tp,LOCATION_DECK,0,nil,e,tp)
+	if sg:GetCount()~=0  then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local shg1=hg1:Select(tp,1,1,nil)
-		Duel.SendtoHand(shg1,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,shg1)
-			local hg1=Duel.GetMatchingGroup(card.thfilter1,tp,LOCATION_DECK,0,nil)
-	if ct>=2 and hg1:GetCount()>0  then
-		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local shg1=hg1:Select(tp,1,1,nil)
-		Duel.SendtoHand(shg1,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,shg1)
-			local hg1=Duel.GetMatchingGroup(card.thfilter1,tp,LOCATION_DECK,0,nil)
-	if ct>=3 and hg1:GetCount()>0  then
-		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local shg1=hg1:Select(tp,1,1,nil)
-		Duel.SendtoHand(shg1,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,shg1)
-			local hg1=Duel.GetMatchingGroup(card.thfilter1,tp,LOCATION_DECK,0,nil)
-	if ct>=4 and hg1:GetCount()>0  then
-		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local shg1=hg1:Select(tp,1,1,nil)
-		Duel.SendtoHand(shg1,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,shg1)
+		local spg=sg:Select(tp,ct,ct,nil)
+		Duel.SendtoHand(spg,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,spg)
 	end
-	end
-	end
-	end
-	end
-
+end
 function card.cfilter2(c)
 	return c:IsSetCard(0x666) and c:IsDiscardable()
 end
