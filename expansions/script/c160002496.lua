@@ -103,7 +103,7 @@ function c160002496.descon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
 function c160002496.filter(c,atk)
-return	return  not c:IsAbleToHandAsCost()
+return	  not c:IsAbleToHandAsCost()
 	and not c:IsType(TYPE_SYNCHRO)
 	and c:IsAbleToRemove()
 	and not c:IsType(TYPE_TOKEN)
