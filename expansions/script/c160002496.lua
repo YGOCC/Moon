@@ -2,6 +2,13 @@
 function c160002496.initial_effect(c)
 	c:EnableReviveLimit()
 c:EnableReviveLimit()
+		--spsummon condition
+	local e69=Effect.CreateEffect(c)
+	e69:SetType(EFFECT_TYPE_SINGLE)
+	e69:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e69:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e69:SetValue(c160002496.splimit)
+	c:RegisterEffect(e69)
 --negate
 local e1=Effect.CreateEffect(c)
 e1:SetDescription(aux.Stringid(160002496,0))
@@ -26,14 +33,19 @@ e2:SetTarget(c160002496.destg)
 e2:SetOperation(c160002496.desop)
 c:RegisterEffect(e2)
 
-	 local e4=Effect.CreateEffect(c)
-  e4:SetType(EFFECT_TYPE_FIELD)
-  e4:SetRange(LOCATION_MZONE)
-   e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
- e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+
+
+		--spsummon count limit
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SPSUMMON_COUNT_LIMIT)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e4:SetTargetRange(0,1)
- e4:SetTarget(c160002496.sumlimit)
- c:RegisterEffect(e4)
+	e4:SetValue(1)
+	e4:SetTarget(c160002496.sumlimit)
+	c:RegisterEffect(e4)
+
 		local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetCode(EFFECT_SPSUMMON_PROC)
@@ -43,6 +55,16 @@ c:RegisterEffect(e2)
 	e0:SetOperation(c160002496.synop)
 	e0:SetValue(SUMMON_TYPE_SYNCHRO)
 	c:RegisterEffect(e0)
+		 local e34=Effect.CreateEffect(c)
+	e34:SetType(EFFECT_TYPE_SINGLE)
+	e34:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e34:SetRange(LOCATION_MZONE)
+	e34:SetCode(EFFECT_IMMUNE_EFFECT)
+	e34:SetValue(c160002496.efilter)
+	c:RegisterEffect(e34)
+end
+function c160002496.splimit(e,se,sp,st)
+	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or bit.band(st,SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO
 end
 function c160002496.condition(e,tp,eg,ep,ev,re,r,rp)
 return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
@@ -81,13 +103,15 @@ function c160002496.descon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
 function c160002496.filter(c,atk)
-return (c:GetSummonLocation()==LOCATION_HAND or c:GetSummonLocation()==LOCATION_GRAVE)
-and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)~=0  and c:IsDestructable() 
+return	return  not c:IsAbleToHandAsCost()
+	and not c:IsType(TYPE_SYNCHRO)
+	and c:IsAbleToRemove()
+	and not c:IsType(TYPE_TOKEN)
 end
 function c160002496.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return Duel.IsExistingMatchingCard(c160002496.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c) end
 local sg=Duel.GetMatchingGroup(c160002496.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,c)
-Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+Duel.SetOperationInfo(0,CATEGORY_REMOVE,sg,sg:GetCount(),0,0)
 
 end
 
@@ -95,8 +119,8 @@ function c160002496.filter1(c)
 return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_WATER+ATTRIBUTE_EARTH) and c:IsLocation(LOCATION_GRAVE)
 end
 function c160002496.desop(e,tp,eg,ep,ev,re,r,rp)
-local sg=Duel.GetMatchingGroup(c160002496.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
-Duel.Destroy(sg,REASON_EFFECT)
+local sg=Duel.GetMatchingGroup(c160002496.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler()))
+	  Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 --local og=Duel.GetOperatedGroup()
 --local dc=og:FilterCount(c160002496.filter1,nil)
 --if dc>0 then
@@ -104,7 +128,9 @@ Duel.Destroy(sg,REASON_EFFECT)
 --Duel.Damage(1-tp,dc*500,REASON_EFFECT)
 end
 function c160002496.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:IsLocation(LOCATION_HAND) or c:IsLocation(LOCATION_GRAVE)
+	return  not c:IsAbleToHandAsCost()
+	and not c:IsType(TYPE_SYNCHRO)
+	and not c:IsType(TYPE_TOKEN)
 end
 function c160002496.matfilter1(c,syncard)
 	return c:IsType(TYPE_TUNER) and c:IsSetCard(0x485a) and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsCanBeSynchroMaterial(syncard)
@@ -258,4 +284,7 @@ function c160002496.synop(e,tp,eg,ep,ev,re,r,rp,c,tuner,mg)
 	end
 	c:SetMaterial(g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_SYNCHRO)
+end
+function c160002496.efilter(e,te)
+	return te:IsActiveType(TYPE_TRAP+TYPE_SPELL) and te:GetOwner()~=e:GetOwner()
 end

@@ -18,6 +18,7 @@ function c500319350.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	--e2:SetCost(c500319350.spcost)
+	e2:SetCountLimit(1,500319350)
 	e2:SetTarget(c500319350.sptg)
 	e2:SetOperation(c500319350.spop)
 	c:RegisterEffect(e2)
@@ -34,6 +35,15 @@ function c500319350.initial_effect(c)
 	e6:SetCode(EFFECT_CANNOT_MSET)
 	e6:SetCondition(c500319350.sumcon)
 	c:RegisterEffect(e6)
+	   --spsummon limit
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e4:SetTargetRange(1,0)
+	e4:SetTarget(c500319350.sumlimit)
+	c:RegisterEffect(e4)
 
 end
 function c500319350.con(e,tp,eg,ep,ev,re,r,rp)
@@ -114,4 +124,7 @@ function c500319350.spop(e,tp,eg,ep,ev,re,r,rp)
 			tc=g:GetNext()
 		end
 	end
+end
+function c500319350.sumlimit(e,c,sump,sumtype,sumpos,targetp)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0x85a)
 end
