@@ -119,7 +119,7 @@ function c160002496.filter1(c)
 return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_WATER+ATTRIBUTE_EARTH) and c:IsLocation(LOCATION_GRAVE)
 end
 function c160002496.desop(e,tp,eg,ep,ev,re,r,rp)
-local sg=Duel.GetMatchingGroup(c160002496.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler()))
+local sg=Duel.GetMatchingGroup(c160002496.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	  Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 --local og=Duel.GetOperatedGroup()
 --local dc=og:FilterCount(c160002496.filter1,nil)
