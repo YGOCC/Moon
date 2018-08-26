@@ -13,7 +13,7 @@ local id,cod=ID()
 function cod.initial_effect(c)
 	--Fusion Summon
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf05a),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_DARK),2,2,true)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf05a),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_DARK),true)
 	--Sp Summon Con
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -51,6 +51,9 @@ function cod.initial_effect(c)
 		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		ge1:SetOperation(cod.sumreg)
 		Duel.RegisterEffect(ge1,0)
+		local ge2=ge1:Clone()
+		ge2:SetCode(EVENT_FLIP)
+		Duel.RegisterEffect(ge2,0)
 	end
 end
 function cod.fdcon(e,tp,eg,ep,ev,re,r,rp)
@@ -70,8 +73,8 @@ end
 function cod.sumreg(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	while tc do
-		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
-		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
+		tc:RegisterFlagEffect(id,RESET_EVENT+0x17a0000+RESET_PHASE+PHASE_END,0,1)
+		tc:RegisterFlagEffect(0,RESET_EVENT+0x17a0000+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
 		tc=eg:GetNext()
 	end
 end

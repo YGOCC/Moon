@@ -31,17 +31,17 @@ function cod.initial_effect(c)
 	c:RegisterEffect(e2)
 	if not cod.global_check then
 		cod.global_check=true
+		cod[1]=0
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetCode(EVENT_SPSUMMON_SUCCESS)
-		ge1:SetLabelObject(e2)
 		ge1:SetOperation(cod.regop)
 		Duel.RegisterEffect(ge1,0)
 		local ge2=Effect.CreateEffect(c)
 		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge2:SetCode(EVENT_PHASE_START+PHASE_DRAW)
-		ge2:SetLabelObject(e2)
-		ge2:SetOperation(function (e,tp,eg,ep,ev,re,r,rp) return e:GetLabelObject():SetLabel(0) end)
+		ge2:SetLabelObject(ge1)
+		ge2:SetOperation(function (e,tp,eg,ep,ev,re,r,rp) cod[1]=0 end)
 		Duel.RegisterEffect(ge2,0)
 	end
 end
@@ -65,9 +65,8 @@ function cod.sfilter(c,tp)
 	return c:IsType(TYPE_LINK) and c:GetSummonType(SUMMON_TYPE_LINK) and c:IsControler(1-tp)
 end
 function cod.regop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	if eg:IsExists(cod.sfilter,1,nil,tp) then
-		e:GetLabelObject():SetLabel(1)
+		cod[1]=1
 	end
 end
 function cod.mfilter(c)
@@ -83,7 +82,7 @@ function cod.rscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function cod.rscon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetLabel()==1
+	return cod[1]==1
 end
 function cod.rsop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -95,7 +94,6 @@ function cod.rsop(e,tp,eg,ep,ev,re,r,rp)
     e1:SetTarget(cod.splimit)
     e1:SetReset(RESET_PHASE+PHASE_END)
     Duel.RegisterEffect(e1,tp)
-	Duel.ResetFlagEffect(tp,id)
 end
 function cod.splimit(e,c,sump,sumtype,sumpos,targetp,se)
     return c:IsLocation(LOCATION_EXTRA)
