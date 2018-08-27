@@ -9,10 +9,10 @@ function c249000486.initial_effect(c)
 	e1:SetTarget(c249000486.target)
 	e1:SetOperation(c249000486.activate)
 	c:RegisterEffect(e1)
-	--to hand 
+	--special summon 
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(92826944,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE+CATEGORY_TODECK)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TODECK)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,249000486)
@@ -26,7 +26,7 @@ function c249000486.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)~=0
 end
 function c249000486.spfilter(c,e,tp)
-	return c:IsLevelBelow(6) and c:IsSetCard(0x7b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(6) and (c:IsSetCard(0x7b) or c:IsSetCard(0x55)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c249000486.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -42,7 +42,7 @@ function c249000486.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000486.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x7b)
+	return c:IsFaceup() and (c:IsSetCard(0x7b) or c:IsSetCard(0x55))
 end
 function c249000486.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c249000486.cfilter,tp,LOCATION_MZONE,0,1,nil)

@@ -49,7 +49,7 @@ function c249000900.filter1(c,e)
 	return not c:IsImmuneToEffect(e)
 end
 function c249000900.filter2(c,e,tp,m,f,chkf)
-	return c:IsType(TYPE_FUSION) and (not f or f(c))
+	return c:IsType(TYPE_FUSION) and c:GetTextAttack() < 3500 and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,true,true) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function c249000900.target(e,tp,eg,ep,ev,re,r,rp,chk)
