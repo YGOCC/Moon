@@ -15,7 +15,7 @@ function card.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCountLimit(1,210424285)
+	e2:SetCountLimit(1,210424282)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCost(card.thcost)
 	e2:SetTarget(card.gtg)
@@ -28,9 +28,9 @@ function card.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function card.gtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ct=Duel.GetFieldGroupCount(tp,LOCATION_PZONE,LOCATION_PZONE)
+	local ct=Duel.GetFieldGroupCount(tp,LOCATION_PZONE,0)
 	if chk==0 then return Duel.IsExistingMatchingCard(card.thfilter1,tp,LOCATION_DECK,0,ct,nil) end
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_PZONE,LOCATION_PZONE,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_PZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,g:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,ct,tp,LOCATION_DECK)
 end
@@ -38,7 +38,7 @@ function card.thfilter1(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsAbleToHand()
 end
 function card.gop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_PZONE,LOCATION_PZONE,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_PZONE,0,nil)
 	local ct=Duel.SendtoExtraP(g,REASON_EFFECT,nil)
 	local sg=Duel.GetMatchingGroup(card.thfilter1,tp,LOCATION_DECK,0,nil,e,tp)
 	if sg:GetCount()~=0  then
