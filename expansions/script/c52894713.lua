@@ -36,20 +36,13 @@ function cod.initial_effect(c)
 	--Target
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(0,LOCATION_MZONE)
-	e2:SetValue(cod.atlimit)
+	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e2:SetTarget(cod.imtg)
+	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e3:SetTarget(cod.imtg)
-	e3:SetValue(aux.tgoval)
-	c:RegisterEffect(e3)
 end
 
 --Destroy
@@ -60,8 +53,8 @@ function cod.sfilter(c)
 	return c:IsFacedown() and c:IsDestructable()
 end
 function cod.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cod.sfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_SZONE)
+	if chk==0 then return Duel.IsExistingMatchingCard(cod.sfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_ONFIELD)
 	Duel.SetChainLimit(cod.chlimit)
 end
 function cod.chlimit(e,ep,tp)
@@ -70,7 +63,7 @@ end
 function cod.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(cod.sfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
+	local g=Duel.GetMatchingGroup(cod.sfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	if #g<=0 then return end
 	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(c)
@@ -85,12 +78,6 @@ function cod.desop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 	Duel.Destroy(g,REASON_EFFECT)
-end
-
-
---Attack Target
-function cod.atlimit(e,c)
-	return not c:IsFacedown()
 end
 
 --Effect Target
