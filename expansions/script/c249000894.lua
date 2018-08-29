@@ -14,7 +14,7 @@ function c249000894.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCountLimit(1,249000894)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_MZONE)
+	e1:SetRange(LOCATION_MZONE+LOCATION_HAND)
 	e1:SetCondition(c249000894.condition)
 	e1:SetCost(c249000894.cost)
 	e1:SetTarget(c249000894.target)
@@ -32,8 +32,7 @@ function c249000894.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c249000894.condition(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
+	return Duel.GetTurnPlayer()==tp
 end
 function c249000894.costfilter(c)
 	return c:IsSetCard(0x2098) and c:IsAbleToRemoveAsCost()
@@ -54,6 +53,11 @@ function c249000894.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	if option==0 then
 		g=Duel.SelectMatchingCard(tp,c249000894.costfilter2,tp,LOCATION_HAND,0,1,1,c)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_PUBLIC)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		g:GetFirst():RegisterEffect(e1)
 		Duel.ConfirmCards(1-tp,g)
 		Duel.ShuffleHand(tp)
 	end
@@ -67,7 +71,7 @@ function c249000894.targetfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove() and Duel.IsExistingMatchingCard(c249000894.targetfilter2,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_MZONE,0,1,c)
 end
 function c249000894.targetfilter2(c)
-	return c:GetFlagEffect(2490000894)==0
+	return c:GetFlagEffect(2490000894)==0 and c:IsType(TYPE_MONSTER)
 end
 function c249000894.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000894.targetfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil) end
@@ -86,11 +90,11 @@ function c249000894.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ac
 	local cc
 	repeat
-		ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,OPCODE_AND,TYPE_EFFECT,OPCODE_ISTYPE,OPCODE_AND,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK+TYPE_RITUAL,OPCODE_ISTYPE,OPCODE_NOT,OPCODE_AND,3027001,OPCODE_ISCODE,OPCODE_OR)
+		ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,TYPE_EFFECT,OPCODE_ISTYPE,OPCODE_AND,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK+TYPE_RITUAL,OPCODE_ISTYPE,OPCODE_NOT,OPCODE_AND,3027001,OPCODE_ISCODE,OPCODE_OR)
 		cc=Duel.CreateToken(tp,ac)
 		if ac==3027001 then return end
 	until (cc:IsSummonableCard()
-		and (cc:GetLevel()==tc:GetLevel() or cc:GetLevel()+1==tc:GetLevel() or cc:GetLevel()-1==tc:GetLevel()))
+		and (cc:GetLevel()==tc:GetLevel() or cc:GetLevel()+1==tc:GetLevel()))
 	Duel.ConfirmCards(1-tp,Group.FromCards(cc))
 	tc2:CopyEffect(ac,RESET_EVENT+0x00400000+RESET_PHASE+PHASE_END,1)
 	--add code
@@ -104,6 +108,12 @@ function c249000894.operation(e,tp,eg,ep,ev,re,r,rp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_PUBLIC)
 	tc2:RegisterEffect(e2)
+	if not tc2:IsType(TYPE_EFFECT) then
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_ADD_TYPE)
+		e3:SetValue(TYPE_EFFECT)
+		tc2:RegisterEffect(e2)
+	end
 end
 function c249000894.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

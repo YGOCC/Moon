@@ -14,29 +14,25 @@ function c249000896.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCountLimit(1,249000896)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_MZONE)
+	e1:SetRange(LOCATION_MZONE+LOCATION_HAND)
 	e1:SetCondition(c249000896.condition)
 	e1:SetCost(c249000896.cost)
 	e1:SetTarget(c249000896.target)
 	e1:SetOperation(c249000896.operation)
 	c:RegisterEffect(e1)
-	--spsummon proc
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_SPSUMMON_PROC)
-	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCondition(c249000896.spcon)
-	c:RegisterEffect(e2)
-end
-function c249000896.spcon(e,c)
-	if c==nil then return true end
-	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
-		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+	--special summon
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCode(EVENT_BATTLE_DAMAGE)
+	e3:SetCondition(c249000896.condition2)
+	e3:SetTarget(c249000896.target2)
+	e3:SetOperation(c249000896.operation2)
+	c:RegisterEffect(e3)
 end
 function c249000896.condition(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
+	return Duel.GetTurnPlayer()==tp
 end
 function c249000896.costfilter(c)
 	return c:IsSetCard(0x2098) and c:IsAbleToRemoveAsCost()
@@ -57,6 +53,11 @@ function c249000896.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	if option==0 then
 		g=Duel.SelectMatchingCard(tp,c249000896.costfilter2,tp,LOCATION_HAND,0,1,1,c)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_PUBLIC)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		g:GetFirst():RegisterEffect(e1)
 		Duel.ConfirmCards(1-tp,g)
 		Duel.ShuffleHand(tp)
 	end
@@ -70,7 +71,7 @@ function c249000896.targetfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove() and Duel.IsExistingMatchingCard(c249000896.targetfilter2,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_MZONE,0,1,c)
 end
 function c249000896.targetfilter2(c)
-	return c:GetFlagEffect(2490000894)==0
+	return c:GetFlagEffect(2490000894)==0 and c:IsType(TYPE_MONSTER)
 end
 function c249000896.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000896.targetfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil) end
@@ -89,11 +90,11 @@ function c249000896.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ac
 	local cc
 	repeat
-		ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,OPCODE_AND,TYPE_EFFECT,OPCODE_ISTYPE,OPCODE_AND,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK+TYPE_RITUAL,OPCODE_ISTYPE,OPCODE_NOT,OPCODE_AND,3027001,OPCODE_ISCODE,OPCODE_OR)
+		ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,OPCODE_AND,TYPE_EFFECT,OPCODE_ISTYPE,OPCODE_AND,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK+TYPE_RITUAL,OPCODE_ISTYPE,OPCODE_NOT,OPCODE_AND,3027001,OPCODE_ISCODE,OPCODE_OR)Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,TYPE_EFFECT,OPCODE_ISTYPE,OPCODE_AND,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK+TYPE_RITUAL,OPCODE_ISTYPE,OPCODE_NOT,OPCODE_AND,3027001,OPCODE_ISCODE,OPCODE_OR)
 		cc=Duel.CreateToken(tp,ac)
 		if ac==3027001 then return end
 	until (cc:IsSummonableCard()
-		and (cc:GetLevel()==tc:GetLevel() or cc:GetLevel()+1==tc:GetLevel() or cc:GetLevel()-1==tc:GetLevel()))
+		and (cc:GetLevel()==tc:GetLevel() or cc:GetLevel()+1==tc:GetLevel()))
 	Duel.ConfirmCards(1-tp,Group.FromCards(cc))
 	tc2:CopyEffect(ac,RESET_EVENT+0x00400000+RESET_PHASE+PHASE_END,1)
 	--add code
@@ -107,5 +108,41 @@ function c249000896.operation(e,tp,eg,ep,ev,re,r,rp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_PUBLIC)
 	tc2:RegisterEffect(e2)
+	if not tc2:IsType(TYPE_EFFECT) then
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_ADD_TYPE)
+		e3:SetValue(TYPE_EFFECT)
+		tc2:RegisterEffect(e2)
+	end
 end
-
+function c249000896.condition2(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp
+end
+function c249000896.filter(c,e,tp)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c249000896.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c249000896.filter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(c249000896.filter,tp,LOCATION_REMOVED,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,c249000896.filter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function c249000896.operation2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e2)
+	end
+	Duel.SpecialSummonComplete()
+end

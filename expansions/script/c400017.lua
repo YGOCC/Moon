@@ -67,7 +67,7 @@ function c400017.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c400017.filter1(c)
 	return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToGrave()
-		and Duel.IsExistingTarget(c400017.filter2,c:GetControler(),LOCATION_DECK,0,1,c,c:GetCode())
+		and Duel.IsExistingMatchingCard(c400017.filter2,c:GetControler(),LOCATION_DECK,0,1,c,c:GetCode())
 end
 function c400017.filter2(c,code)
 	return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToHand()

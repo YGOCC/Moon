@@ -145,6 +145,9 @@ function card.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 end
+function card.spfilter2(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
+end
 function card.swaptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return (chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and card.spfilter1(chkc,e,tp))
 	and (chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.spfilter2(chkc,e,tp)) end

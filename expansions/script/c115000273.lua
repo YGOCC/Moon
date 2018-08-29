@@ -11,13 +11,13 @@ function c115000273.initial_effect(c)
 	e2:SetOperation(c115000273.operation)
 	c:RegisterEffect(e2)
 end
-function c115000273.tfilter(c,race,e,tp,lv)
+function c115000273.tfilter(c,race,e,tp,lv,tc)
 	return (c:IsSetCard(0x11AB) or c:IsSetCard(0x21AB)) and c:IsRace(race) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
-	and (c:GetLevel()==lv+1 or c:GetLevel()==lv+2) and Duel.GetLocationCountFromEx(tp,tp,c)>0
+	and (c:GetLevel()==lv+1 or c:GetLevel()==lv+2) and (Duel.GetLocationCountFromEx(tp,tp,tc)>0 or not tc:IsLocation(LOCATION_EXTRA))
 end
 function c115000273.filter(c,e,tp)
 	return c:IsFaceup() and c:GetLevel() >= 0 and not c:IsSetCard(0x41AB)
-		and Duel.IsExistingMatchingCard(c115000273.tfilter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,nil,c:GetRace(),e,tp,c:GetLevel())
+		and Duel.IsExistingMatchingCard(c115000273.tfilter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,nil,c:GetRace(),e,tp,c:GetLevel(),tc)
 end
 function c115000273.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c115000273.filter(chkc,e,tp) end
@@ -30,7 +30,6 @@ function c115000273.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) then return end
-	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
 	local race=tc:GetRace()
 	local lv=tc:GetLevel()
 	if Duel.SendtoGrave(tc,REASON_EFFECT)==0 then return end
