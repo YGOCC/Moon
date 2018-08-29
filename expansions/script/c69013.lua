@@ -10,11 +10,11 @@ local  e1=Effect.CreateEffect(c)
 	c:RegisterEffect(e1)
 end
 function c69013.spfilter(c,e,tp)
-return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x6969) and c:IsPublic() and Card.IsCanBeSpecialSummoned(c,e,0,tp,false,false)
+    return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x6969) and c:IsPublic() and Card.IsCanBeSpecialSummoned(c,e,0,tp,false,false)
 end
 function c69013.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     local rev=Duel.GetMatchingGroupCount(c69013.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
-    if chk==0 then return rev>0 end
+    if chk==0 then return rev>2 end
     Duel.SetTargetPlayer(tp)
     Duel.SetTargetParam(rev*500)
     Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,rev*500)

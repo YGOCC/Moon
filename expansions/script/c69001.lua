@@ -6,6 +6,7 @@ function c69001.initial_effect(c)
     e1:SetCategory(CATEGORY_RECOVER)
     e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e1:SetCode(EVENT_PHASE+PHASE_MAIN1)
+    e1:SetCountLimit(1,69001)
     e1:SetRange(LOCATION_HAND)
     e1:SetCondition(c69001.reccon)
     e1:SetCost(c69001.reccost)
@@ -17,7 +18,7 @@ function c69001.initial_effect(c)
     e2:SetType(EFFECT_TYPE_FIELD)
     e2:SetCode(EFFECT_SPSUMMON_PROC)
     e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e2:SetCountLimit(1,69001)
+    e2:SetCountLimit(1,69001+100)
     e2:SetRange(LOCATION_HAND)
     e2:SetCondition(c69001.spcon)
     c:RegisterEffect(e2)
@@ -27,33 +28,29 @@ function c69001.initial_effect(c)
     e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e3:SetProperty(EFFECT_FLAG_DELAY)
     e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetCountLimit(1,690001)
+	e3:SetCountLimit(1,69001+200)
     e3:SetTarget(c69001.rectg2)
     e3:SetOperation(c69001.recop2)
     c:RegisterEffect(e3)
 end
-function
-c69001.reccon(e,tp,eg,ep,ev,re,r,rp)
-return Duel.GetTurnPlayer()==tp
+function c69001.reccon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.GetTurnPlayer()==tp
 end
-function
-c69001.reccost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c69001.reccost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return not e:GetHandler():IsPublic() end
     local e1=Effect.CreateEffect(e:GetHandler())
     e1:SetType(EFFECT_TYPE_SINGLE)
     e1:SetCode(EFFECT_PUBLIC)
     e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
     e:GetHandler():RegisterEffect(e1)
-    end
-    function
-    c69001.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
+end
+function c69001.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
     Duel.SetTargetPlayer(tp)
     Duel.SetTargetParam(500)
     Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,500)
-    end
-    function
-    c69001.recop(e,tp,eg,ep,ev,re,r,rp)
+end
+function c69001.recop(e,tp,eg,ep,ev,re,r,rp)
     local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
     Duel.Recover(p,d,REASON_EFFECT)
 end
@@ -88,4 +85,4 @@ function c69001.recop2(e,tp,eg,ep,ev,re,r,rp)
         Duel.SendtoHand(g,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g)
     end    
-	end
+end

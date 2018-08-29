@@ -33,6 +33,7 @@ function c400002.setop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=g:GetFirst()
 		local fid=c:GetFieldID()
 		Duel.SSet(tp,tc)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end
 function c400002.condition(e,tp,eg,ep,ev,re,r,rp)

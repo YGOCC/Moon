@@ -20,31 +20,21 @@ function c69011.initial_effect(c)
 	e2:SetOperation(c69011.thop)
 	c:RegisterEffect(e2)
  end
-function c69011.filter1(c)
+function c69011.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x6969) and c:IsAbleToHand()
-		and Duel.IsExistingMatchingCard(c69011.filter2,tp,LOCATION_GRAVE,0,1,nil,c)
 end
-function c69011.filter2(c,cc)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x6969) and c:IsAbleToHand() and c:GetCode()~=cc:GetCode()
-		and Duel.IsExistingMatchingCard(c69011.filter3,tp,LOCATION_GRAVE,0,1,nil,Group.FromCards(c,cc))
-end
-function c69011.filter3(c,g)
-	local tc1=g:GetFirst()
-	local tc2=g:GetNext()
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x6969) and c:IsAbleToHand() and c:GetCode()~=tc1:GetCode() and c:GetCode()~=tc2:GetCode()
-end
-function c69011.gytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetControler()==tp and chkc:GetLocation()==LOCATION_GRAVE and c69011.filter1(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c69011.filter1,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g1=Duel.SelectTarget(tp,c69011.filter1,tp,LOCATION_GRAVE,0,1,1,nil):GetFirst()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g2=Duel.SelectTarget(tp,c69011.filter2,tp,LOCATION_GRAVE,0,1,1,nil,g1):GetFirst()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g3=Duel.SelectTarget(tp,c69011.filter3,tp,LOCATION_GRAVE,0,1,1,nil,Group.FromCards(g1,g2)):GetFirst()
-	local g=Group.FromCards(g1,g2,g3)
-	Duel.SetTargetCard(g)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,3,0,0)
+function c69011.gytg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(c69011.filter,tp,LOCATION_GRAVE,0,nil)
+	if chk==0 then return g:GetClassCount(Card.GetCode)>2 end
+	local sg=Group.CreateGroup()
+	for i=1,3 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local g1=g:Select(tp,1,1,nil)
+		g:Remove(Card.IsCode,nil,g1:GetFirst():GetCode())
+		sg:Merge(g1)
+	end
+	Duel.SetTargetCard(sg)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,tp,LOCATION_GRAVE)
 end
 function c69011.gyop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)

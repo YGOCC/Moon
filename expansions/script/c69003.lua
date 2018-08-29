@@ -7,6 +7,7 @@ function c69003.initial_effect(c)
     e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e1:SetCode(EVENT_PHASE+PHASE_MAIN1)
     e1:SetRange(LOCATION_HAND)
+    e1:SetCountLimit(1,69003)
     e1:SetCondition(c69003.reccon)
     e1:SetCost(c69003.reccost)
     e1:SetTarget(c69003.rectg)
@@ -19,7 +20,7 @@ function c69003.initial_effect(c)
     e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
     e2:SetRange(LOCATION_HAND)
 	e2:SetValue(1)
-    e2:SetCountLimit(1,69003)
+    e2:SetCountLimit(1,69003+100)
     e2:SetCondition(c69003.spcon)
     c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
@@ -33,29 +34,25 @@ function c69003.initial_effect(c)
 	e3:SetTarget(c69003.waetg)
 	e3:SetOperation(c69003.waeop)
 	c:RegisterEffect(e3)
-	end
-	function
-c69003.reccon(e,tp,eg,ep,ev,re,r,rp)
-return Duel.GetTurnPlayer()==tp
 end
-function
-c69003.reccost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c69003.reccon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.GetTurnPlayer()==tp
+end
+function c69003.reccost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return not e:GetHandler():IsPublic() end
     local e1=Effect.CreateEffect(e:GetHandler())
     e1:SetType(EFFECT_TYPE_SINGLE)
     e1:SetCode(EFFECT_PUBLIC)
     e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
     e:GetHandler():RegisterEffect(e1)
-    end
-    function
-    c69003.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
+end
+function c69003.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
     Duel.SetTargetPlayer(tp)
     Duel.SetTargetParam(500)
     Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,500)
-    end
-    function
-    c69003.recop(e,tp,eg,ep,ev,re,r,rp)
+end
+function c69003.recop(e,tp,eg,ep,ev,re,r,rp)
     local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
     Duel.Recover(p,d,REASON_EFFECT)
 end

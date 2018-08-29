@@ -48,15 +48,16 @@ function c400001.setop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=g:GetFirst()
 		local fid=c:GetFieldID()
 		Duel.SSet(tp,tc)
+		Duel.ConfirmCards(1-tp,tc)
 		tc:RegisterFlagEffect(400001,RESET_EVENT+0x1fe0000,0,1,fid)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
-		 e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-		  e1:SetReset(RESET_EVENT+0x1fe0000)
-		  tc:RegisterEffect(e1)
-		  end
-		  end
+		e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e1)
+	end
+end
 function c400001.halfilter(c)
 return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY)
 end
