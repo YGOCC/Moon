@@ -16,6 +16,12 @@ function card.initial_effect(c)
 	e2:SetTarget(card.target)
 	e2:SetOperation(card.operation)
 	c:RegisterEffect(e2)
+	--battle indestructable
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
 end
 --link summon
 function card.matfilter(c)
@@ -24,6 +30,12 @@ end
 --counter
 function card.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
+end
+function card.operation(e,tp,eg,ep,ev,re,r,rp)
+    local tc=Duel.GetFirstTarget()
+    if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+        tc:AddCounter(0x1019,1)
+    end
 end
 function card.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end 

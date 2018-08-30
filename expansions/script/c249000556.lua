@@ -15,16 +15,18 @@ function c249000556.initial_effect(c)
 	e2:SetCondition(c249000556.drcon)
 	e2:SetTarget(c249000556.drtg)
 	e2:SetOperation(c249000556.drop)
-	c:RegisterEffect(e2)	
-	--change target
+	c:RegisterEffect(e2)
+	--spsummon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(1498130,0))
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_CHAINING)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(c249000556.tgcon)
-	e3:SetOperation(c249000556.tgop)
-	c:RegisterEffect(e3)
+	e3:SetDescription(aux.Stringid(293542,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCondition(c249000556.spcon)
+	e3:SetTarget(c249000556.sptg)
+	e3:SetOperation(c249000556.spop)
+	c:RegisterEffect(e3)	
 end
 function c249000556.caop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -46,22 +48,19 @@ function c249000556.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
-function c249000556.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
-	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if not g or g:GetCount()~=1 then return false end
-	local tc=g:GetFirst()
-	local c=e:GetHandler()
-	if tc==c or tc:GetControler()~=tp or tc:IsFacedown() or not tc:IsLocation(LOCATION_MZONE) then return false end
-	local tf=re:GetTarget()
-	local res,ceg,cep,cev,cre,cr,crp=Duel.CheckEvent(re:GetCode(),true)
-	return tf(re,rp,ceg,cep,cev,cre,cr,crp,0,c)
+function c249000556.cfilter(c)
+	return c:IsFaceup() and c:IsLevelBelow(4)
 end
-function c249000556.tgop(e,tp,eg,ep,ev,re,r,rp)
+function c249000556.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c249000556.cfilter,1,nil)
+end
+function c249000556.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c249000556.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		local g=Group.CreateGroup()
-		g:AddCard(c)
-		Duel.ChangeTargetCard(ev,g)
-	end
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
