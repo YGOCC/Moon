@@ -86,6 +86,7 @@ end
 function ref.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local ct=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ct>2 then ct=2 end
 	if chk==0 then return (ct>0)
 		and Duel.IsExistingTarget(ref.ssfilter,tp,LOCATION_GRAVE,0,1,c,tp)
 	end

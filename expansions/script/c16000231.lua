@@ -1,5 +1,17 @@
 --Girl of Fiber Vine
 function c16000231.initial_effect(c)
+		--tohand
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(16000231,0))
+	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCountLimit(1,16000232)
+	e1:SetCost(c16000231.thcost)
+	e1:SetTarget(c16000231.thtg)
+	e1:SetOperation(c16000231.thop)
+	c:RegisterEffect(e1)
 		--cannot be target
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -20,6 +32,27 @@ function c16000231.initial_effect(c)
 	e3:SetTarget(c16000231.target)
 	e3:SetOperation(c16000231.operation)
 	c:RegisterEffect(e3)
+end
+function c16000231.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	   if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
+function c16000231.thfilter(c)
+	return c:IsAbleToHand()
+end
+function c16000231.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+  if chkc then return chkc:IsLocation(LOCATION_REMOVED) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,LOCATION_REMOVED,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(74586817,2))
+	local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,LOCATION_REMOVED,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
+end
+function c16000231.thop(e,tp,eg,ep,ev,re,r,rp)
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local sg=tg:Filter(Card.IsRelateToEffect,nil,e)
+	if sg:GetCount()>0 then
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+	end
 end
 function c16000231.tgtg(e,c)
 	return c:IsSetCard(0x185a) and c:IsType(TYPE_RITUAL)

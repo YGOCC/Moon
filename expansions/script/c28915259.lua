@@ -29,7 +29,7 @@ function ref.initial_effect(c)
 	--Fusion
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4:SetCode(EVENT_LEAVE_FIELD)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET)
 	e4:SetCountLimit(1,id)

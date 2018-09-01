@@ -48,8 +48,22 @@ function ref.initial_effect(c)
 	e4:SetTarget(ref.sstg)
 	e4:SetOperation(ref.ssop)
 	c:RegisterEffect(e4)
-	--Destruction Replace
+	--Draw Cycle
 	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,1))
+	e5:SetCategory(CATEGORY_TOHAND+CATEGORY_DRAW)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e5:SetProperty(EFFECT_FLAG_DELAY)
+	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCondition(ref.drcon)
+	e5:SetCost(ref.drcost)
+	e5:SetTarget(ref.drtg)
+	e5:SetOperation(ref.drop)
+	c:RegisterEffect(e5)
+	
+	--Destruction Replace
+	--[[local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e5:SetCode(EFFECT_DESTROY_REPLACE)
 	e5:SetRange(LOCATION_MZONE)
@@ -60,7 +74,7 @@ function ref.initial_effect(c)
 	c:RegisterEffect(e5)
 	local g=Group.CreateGroup()
 	g:KeepAlive()
-	e5:SetLabelObject(g)
+	e5:SetLabelObject(g)]]
 end
 function ref.matfilter(c)
 	return not c:IsType(TYPE_EFFECT)
@@ -90,7 +104,7 @@ end
 --Cannot negate/respond Summon
 function ref.effcon(e,tp,eg,ep,ev,re,r,rp)
 	local ct=ref[2]
-	return ct>3 and e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
+	return ct>3 and e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function ref.spsumsuc(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SetChainLimitTillChainEnd(ref.chlimit)
@@ -105,15 +119,22 @@ function ref.ssfilter(c,tp)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetCode(),nil,0x4107,0,2400,4,RACE_PYRO,ATTRIBUTE_LIGHT)
 end
 function ref.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local allzones=31
+	local oldzones=2424869
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local linkzone=c:GetLinkedZone(tp)
+	--Debug.Message(linkzone)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,allzones-linkzone)>0
 		and Duel.IsExistingMatchingCard(ref.ssfilter,tp,LOCATION_DECK,0,1,nil,tp)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function ref.ssop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
+	local allzones=31
+	local linkzone=e:GetHandler():GetLinkedZone(tp)
+	local zone=allzones-linkzone
+	if Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,zone)<1 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,ref.ssfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
 	if tc then
@@ -145,7 +166,7 @@ function ref.ssop(e,tp,eg,ep,ev,re,r,rp)
 		e6:SetCode(EFFECT_CHANGE_LEVEL)
 		e6:SetValue(4)
 		tc:RegisterEffect(e6,true)
-		if Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP) then
+		if Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP,zone) then
 			--Cannot be Link Material
 			local e7=Effect.CreateEffect(e:GetHandler())
 			e7:SetType(EFFECT_TYPE_SINGLE)
@@ -157,6 +178,38 @@ function ref.ssop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummonComplete()
 		end
 	end
+end
+
+--Draw
+function ref.cfilter(c,zone)
+	local seq=c:GetSequence()
+	if c:IsLocation(LOCATION_MZONE) then
+		if c:IsControler(1) then seq=seq+16 end
+	else
+		seq=c:GetPreviousSequence()
+		if c:GetPreviousControler()==1 then seq=seq+16 end
+	end
+	return bit.extract(zone,seq)~=0
+end
+function ref.drcon(e,tp,eg,ep,ev,re,r,rp)
+	local zone=Duel.GetLinkedZone(0)+(Duel.GetLinkedZone(1)<<0x10)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(ref.cfilter,1,nil,zone)
+end
+function ref.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
+end
+function ref.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function ref.drop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
 
 --Destroy Replace
@@ -196,54 +249,5 @@ end
 function ref.repop(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
 	if g==nil or #g<=0 then return end
-	Duel.Destroy(g,REASON_EFFECT)
-end
-
-
---Destruction Replace
-function ref.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsRace(RACE_FAIRY)
-end
-function ref.repcfilter(c)
-	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsAbleToRemove()
-end
-function ref.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=eg:Filter(ref.repfilter,nil,tp)
-	if chk==0 then return #g>0 end
-	local cg=Duel.GetMatchingGroup(ref.repcfilter,tp,LOCATION_GRAVE,0,nil)
-	if #g>0 and #cg>0 and Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
-		local rg=e:GetLabelObject()
-		rg:Clear()
-		if #g==1 then
-			g:GetFirst():RegisterFlagEffect(id,RESET_EVENT+0x1fc0000+RESET_CHAIN,0,1)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-			scg=cg:Select(tp,1,1,nil)
-			rg:Merge(scg)
-		else
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-			local repg=g:Select(tp,1,cg:GetCount(),nil)
-			local rtc=repg:GetFirst()
-			while rtc do
-				rtc:RegisterFlagEffect(id,RESET_EVENT+0x1fc0000+RESET_CHAIN,0,1)
-				rtc=repg:GetNext()
-			end
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSS_REMOVE)
-			local scg=cg:Select(tp,#repg,#repg,nil)
-			rg:Merge(scg)
-		end
-
-		return true
-	else return false end
-
-end
-function ref.rfilter(c)
-	return c:GetFlagEffect(id)>0
-end
-function ref.repval(e,c)
-	return ref.rfilter(c)
-end
-function ref.repop(e,tp,eg,ep,ev,re,r,rp)
-	local g=e:GetLabelObject()
-	if g==nil or #g<=0 then return end
-	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	Duel.Destroy(g,REASON_EFFECT+REASON_REPLACE)
 end

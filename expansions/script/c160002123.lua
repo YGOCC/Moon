@@ -21,13 +21,7 @@ function c160002123.initial_effect(c)
 	e1:SetTarget(c160002123.eqtg)
 	e1:SetOperation(c160002123.eqop)
 	c:RegisterEffect(e1)
-		--cannot special summon
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e3:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e3:SetValue(aux.ritlimit)
-	c:RegisterEffect(e3)
+
 	   --destroy & summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(160002123,0))
@@ -35,6 +29,7 @@ function c160002123.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCountLimit(1,160002123)
+	e2:SetCost(c160002123.spcost)
 	e2:SetTarget(c160002123.sptg)
 	e2:SetOperation(c160002123.spop)
 	c:RegisterEffect(e2)
@@ -76,19 +71,19 @@ end
 --  if g:GetCount()>0 then
 --  local tg=g:GetMaxGroup(Card.GetAttack)
 --  local dam=tg:GetFirst():GetAttack()
---	if tg:GetCount()>1 then
---		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
---		local sg=tg:Select(tp,1,1,nil)
---		Duel.HintSelection(sg)
---		local dam1=sg:GetFirst():GetAttack()
---		if Duel.Destroy(sg,REASON_EFFECT)~=0 then
---			Duel.Damage(1-tp,dam1,REASON_EFFECT)
---		end
+--  if tg:GetCount()>1 then
+--	  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+--	  local sg=tg:Select(tp,1,1,nil)
+--	  Duel.HintSelection(sg)
+--	  local dam1=sg:GetFirst():GetAttack()
+--	  if Duel.Destroy(sg,REASON_EFFECT)~=0 then
+--		  Duel.Damage(1-tp,dam1,REASON_EFFECT)
+--	  end
 	--  else
---		if Duel.Destroy(tg,REASON_EFFECT)~=0 then
---			Duel.Damage(1-tp,dam,REASON_EFFECT)
---		end
---	end
+--	  if Duel.Destroy(tg,REASON_EFFECT)~=0 then
+--		  Duel.Damage(1-tp,dam,REASON_EFFECT)
+--	  end
+--  end
 --  end
 --end
 function c160002123.eqcon(e,tp,eg,ep,ev,re,r,rp)
@@ -139,21 +134,47 @@ function c160002123.eqop(e,tp,eg,ep,ev,re,r,rp)
 				e2:SetValue(atk)
 				tc:RegisterEffect(e2)
 			end
-			--if def>0 then
-				--local e3=Effect.CreateEffect(c)
-				--e3:SetType(EFFECT_TYPE_EQUIP)
-				--e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
-				--e3:SetCode(EFFECT_UPDATE_DEFENSE)
-				--e3:SetReset(RESET_EVENT+0x1fe0000)
-				--e3:SetValue(def)
-				--tc:RegisterEffect(e3)
-			--end
+			if def>0 then
+				local e3=Effect.CreateEffect(c)
+				e3:SetType(EFFECT_TYPE_EQUIP)
+				e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
+				e3:SetCode(EFFECT_UPDATE_DEFENSE)
+				e3:SetReset(RESET_EVENT+0x1fe0000)
+				e3:SetValue(def)
+				tc:RegisterEffect(e3)
+			end
+			--substitute
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_EQUIP)
+	e2:SetCode(EFFECT_DESTROY_SUBSTITUTE)
+	e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+	e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+	e2:SetValue(c160002123.repval)
+	tc:RegisterEffect(e2)
 	end
 end
+end
+function c160002123.repval(e,re,r,rp)
+	return bit.band(r,REASON_BATTLE)~=0 or bit.band(r,REASON_EFFECT)~=0
 end
 function c160002123.spfilter(c,e,tp)
 	return c:IsSetCard(0x185a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function c160002123.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetCustomActivityCount(160002123,tp,ACTIVITY_SPSUMMON)==0 end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c160002123.splimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function c160002123.splimit(e,c,sump,sumtype,sumpos,targetp)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0x185a)
+end
+
 function c160002123.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDestructable() 
 		and Duel.IsExistingMatchingCard(c160002123.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
@@ -165,8 +186,19 @@ function c160002123.spop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,c160002123.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp)
-		if g:GetCount()>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	local tc=g:GetFirst()
+		if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+	local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1,true)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e2,true)
+	   Duel.SpecialSummonComplete()	 
 	end
 end
 end

@@ -35,6 +35,8 @@ function c160001142.initial_effect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_PZONE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	 e2:SetCountLimit(1,160001142)
 	--e2:SetCost(c160001142.thcost)
 	e2:SetTarget(c160001142.thtg)
 	e2:SetOperation(c160001142.thop)
@@ -78,19 +80,22 @@ function c160001142.thfilter(c)
 	return  c:IsFaceup()  and c:IsSetCard(0x85a)  and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
 function c160001142.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return e:GetHandler():IsDestructable()
-	and Duel.IsExistingMatchingCard(c160001142.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c160001142.thfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c160001142.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectTarget(tp,c160001142.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	 Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c160001142.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c160001142.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
- Duel.ConfirmCards(1-tp,g)
-end
+  local c=e:GetHandler()
+	if not c:IsRelateToEffect(e)  then return end
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
+	end
 end
 
 function c160001142.ssfilter(c,tp,ep,val)
@@ -166,7 +171,7 @@ function c160001142.activate2(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetTarget(c160001142.indtg)
 	e1:SetTargetRange(LOCATION_MZONE,0)
 	e1:SetValue(aux.indoval)
-	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetReset(RESET_STANDARD+RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
 function c160001142.indtg(e,c)

@@ -1,5 +1,6 @@
 --Carole,Archfiend Pixie Queen of Fiber Vine
 function c160006669.initial_effect(c)
+	 c:EnableCounterPermit(0x88)
 --pendulum summon
 	aux.EnablePendulumAttribute(c)
 	c:EnableReviveLimit()
@@ -20,12 +21,17 @@ function c160006669.initial_effect(c)
 	c:RegisterEffect(e1)
   
 
-		--cannot special summon
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e2:SetValue(aux.ritlimit)
+	 --Evolute
+	   local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_COUNTER)
+ e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,160006669)
+	--e1:SetCondition(c160006669.condition)
+	e2:SetTarget(c160006669.target)
+	e2:SetOperation(c160006669.operation)
 	c:RegisterEffect(e2)
    --indes
 	local e3=Effect.CreateEffect(c)
@@ -37,6 +43,13 @@ function c160006669.initial_effect(c)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
  
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetCode(EFFECT_CHANGE_CODE)
+	e5:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
+	e5:SetValue(500314712)
+	c:RegisterEffect(e5)
 		--special summon
 	local e8=Effect.CreateEffect(c)
 	e8:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -80,7 +93,7 @@ end
 
 function c160006669.filter(c,atk)
 	return c:IsFaceup() and c:IsAttackBelow(atk) and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL
-		and c:IsType(TYPE_EFFECT) and c:IsDestructable()
+		and c:IsType(TYPE_EFFECT)  and not c:IsSetCard(0x185a) and not c:IsType(TYPE_RITUAL)and c:IsDestructable()
 end
 function c160006669.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -118,3 +131,22 @@ function c160006669.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
+function c160006669.hhfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x85a) and c:IsType(TYPE_EVOLUTE) and c:IsCanAddCounter(0x88,3)
+end
+function c160006669.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and c160006669.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c160006669.hhfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and e:GetHandler():IsDestructable() end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(160006669,1))
+	Duel.SelectTarget(tp,c160006669.hhfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	 Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,3,0,0x88)
+end
+
+function c160006669.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:AddCounter(0x88,3) then
+		end
+	end

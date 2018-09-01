@@ -39,13 +39,7 @@ function c500313344.initial_effect(c)
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	e3:SetTarget(c500313344.target2)
 	c:RegisterEffect(e3)
-		--cannot special summon
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e4:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e4:SetValue(aux.ritlimit)
-	c:RegisterEffect(e4)
+   
 	
 end
 function c500313344.splimit(e,c,sump,sumtype,sumpos,targetp)

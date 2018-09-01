@@ -39,7 +39,7 @@ function card.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function card.negfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
 end
 function card.negfilter2(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
