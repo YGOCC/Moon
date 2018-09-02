@@ -1,4 +1,4 @@
---Effect Magic Burst
+--Effect-Magican's Magic Burst
 function c249000899.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

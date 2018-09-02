@@ -83,13 +83,14 @@ function card.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-	Duel.SendtoHand(tc,nil,REASON_EFFECT)
+	 Duel.SendtoHand(tc,nil,REASON_EFFECT) end
 	local g=Duel.SelectMatchingCard(tp,card.desfilter2,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.HintSelection(g)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.Destroy(g,REASON_EFFECT)
 end
-end
+
+
 
 function card.spfilter(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
