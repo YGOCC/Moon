@@ -1,8 +1,8 @@
 --Paintress-Ama Archfiend Goghi
 function c16000443.initial_effect(c)
    --link summon
-	aux.AddLinkProcedure(c,c16000443.mfilter,2)
-	c:EnableReviveLimit()  
+   aux.AddLinkProcedure(c,nil,2,c16000443.lcheck)
+	c:EnableReviveLimit()
   --special summon
 	--local e0=Effect.CreateEffect(c)
 	--e0:SetType(EFFECT_TYPE_FIELD)
@@ -42,6 +42,9 @@ end
 function c16000443.mfilter(c)
 	return  not c:IsLinkType(TYPE_EFFECT)
 end
+function c16000443.lcheck(g,lc)
+	return g:IsExists(Card.IsSetCard,1,nil,0xc50)
+end
 function c16000443.rfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc50) and c:IsAbleToRemoveAsCost()
 end
@@ -52,10 +55,10 @@ function c16000443.spcon(e,c)
 		and Duel.IsExistingMatchingCard(c16000443.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,3,nil)
 end
 function c16000443.spop(e,tp,eg,ep,ev,re,r,rp,c)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-    local g=Duel.SelectMatchingCard(tp,c16000443.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,3,3,nil)
-    Duel.Remove(g,POS_FACEUP,REASON_LINK)
-    e:GetHandler():SetMaterial(g:Filter(Card.IsLocation,nil,LOCATION_REMOVED))
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c16000443.rfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,3,3,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_LINK)
+	e:GetHandler():SetMaterial(g:Filter(Card.IsLocation,nil,LOCATION_REMOVED))
 end
 function c16000443.tgtg(e,c)
 	return e:GetHandler():GetLinkedGroup():IsContains(c)
@@ -68,15 +71,15 @@ function c16000443.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,PLAYER_ALL,LOCATION_REMOVED)
 end
 function c16000443.tdop(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):Filter(c16000443.filter,nil,c:GetMaterial())
-    Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
-    local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
-    if c:IsFaceup() and c:IsRelateToEffect(e) then
-    Duel.Recover(tp,ct*500,REASON_EFFECT)
-    
-    end
+	local c=e:GetHandler()
+	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):Filter(c16000443.filter,nil,c:GetMaterial())
+	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
+	if c:IsFaceup() and c:IsRelateToEffect(e) then
+	Duel.Recover(tp,ct*500,REASON_EFFECT)
+	
+	end
 end
 function c16000443.filter(c,mg)
-    return not mg:IsContains(c)
+	return not mg:IsContains(c)
 end
