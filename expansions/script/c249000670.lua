@@ -18,22 +18,17 @@ function c249000670.initial_effect(c)
 	e2:SetTarget(c249000670.target2)
 	e2:SetOperation(c249000670.operation2)
 	c:RegisterEffect(e2)
-	--draw
+	--effect gain
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(98558751,1))
-	e3:SetCategory(CATEGORY_DRAW)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetCode(EVENT_LEAVE_FIELD)
-	e3:SetCondition(c249000670.drcon)
-	e3:SetTarget(c249000670.drtg)
-	e3:SetOperation(c249000670.drop)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_BE_MATERIAL)
+	e3:SetCondition(c249000670.efcon)
+	e3:SetOperation(c249000670.efop)
 	c:RegisterEffect(e3)
 end
 function c249000670.spcon(e,c)
 	if c==nil then return true end
 	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0
-		and Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)>0
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 
@@ -68,6 +63,47 @@ function c249000670.operation2(e,tp,eg,ep,ev,re,r,rp)
 end
 function c249000670.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY)
+end
+function c249000670.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function c249000670.drop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
+end
+function c249000670.efcon(e,tp,eg,ep,ev,re,r,rp)
+	local ec=e:GetHandler():GetReasonCard()
+	return not ec:GetMaterial():IsExists(c249000633.ffilter,1,nil) and r==REASON_XYZ
+end
+function c249000670.efop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,249000670)
+	local c=e:GetHandler()
+	local rc=c:GetReasonCard()
+	local e1=Effect.CreateEffect(rc)
+	e1:SetDescription(aux.Stringid(249000670,1))
+	e1:SetCategory(CATEGORY_DRAW)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetProperty(EFFECT_FLAG_PLAYER)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c249000670.drcon)
+	e1:SetTarget(c249000670.drtg)
+	e1:SetOperation(c249000670.drop)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	rc:RegisterEffect(e1,true)
+	if not rc:IsType(TYPE_EFFECT) then
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_ADD_TYPE)
+		e2:SetValue(TYPE_EFFECT)
+		e2:SetReset(RESET_EVENT+0x1fe0000)
+		rc:RegisterEffect(e2,true)
+	end
+end
+function c249000670.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
 function c249000670.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

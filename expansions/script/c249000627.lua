@@ -6,10 +6,14 @@ function c249000627.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCondition(c249000627.condition)
 	e1:SetCost(c249000627.cost)
 	e1:SetTarget(c249000627.target)
 	e1:SetOperation(c249000627.activate)
 	c:RegisterEffect(e1)
+end
+function c249000627.condition(e,tp,eg,ep,ev,re,r,rp,chk)
+	return tp==Duel.GetTurnPlayer()
 end
 function c249000627.costfilter(c)
 	return c:IsSetCard(0x1E0) and c:IsAbleToRemoveAsCost() and c:IsType(TYPE_MONSTER)
@@ -57,7 +61,7 @@ function c249000627.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c249000627.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
@@ -73,25 +77,36 @@ function c249000627.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
-		local e1=Effect.CreateEffect(e:GetHandler())
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e1:SetCondition(c249000627.atkcon)
-		e1:SetValue(Duel.GetFieldGroupCount(0,LOCATION_ONFIELD,LOCATION_ONFIELD)*300)
-		sc:RegisterEffect(e1)
-		if Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-			and Duel.SelectYesNo(tp,aux.Stringid(16037007,1)) then
-			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-			local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-			Duel.HintSelection(g)
-			Duel.Destroy(g,REASON_EFFECT)
-		end
+		e1:SetValue(sc:GetBaseAttack())
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+		sc:RegisterEffect(e1,true)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetCode(EFFECT_CHANGE_DAMAGE)
+		e2:SetRange(LOCATION_MZONE)
+		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e2:SetTargetRange(0,1)
+		e2:SetValue(c249000627.damval)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+		sc:RegisterEffect(e2)
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_IMMUNE_EFFECT)
+		e3:SetRange(LOCATION_MZONE)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+		e3:SetValue(c249000627.immval)
+		sc:RegisterEffect(e3)
 	end
 end
-function c249000627.atkcon(e)
-	local ph=Duel.GetCurrentPhase()
-	return not ((ph==PHASE_DAMAGE or ph==PHASE_DAMAGE_CAL)
-		and Duel.GetAttacker()==e:GetHandler() and Duel.GetAttackTarget()==nil) 
+function c249000627.damval(e,re,dam,r,rp,rc)
+	if bit.band(r,REASON_BATTLE)~=0 and rc==e:GetHandler() then
+		return dam/2
+	else return dam end
+end
+function c249000627.immval(e,te)
+	return te:GetOwner()~=e:GetHandler() and te:IsActiveType(TYPE_MONSTER) and e:GetHandlerPlayer() ~= te:GetHandlerPlayer()
+		and te:GetOwner():GetAttack()<=e:GetHandler():GetAttack() and te:IsActivated()
 end

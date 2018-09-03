@@ -7,16 +7,14 @@ function c249000690.initial_effect(c)
 	e1:SetCode(EVENT_DAMAGE_STEP_END)
 	e1:SetOperation(c249000690.caop2)
 	c:RegisterEffect(e1)
-	--negate attack
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(249000364,0))
-	e2:SetCategory(CATEGORY_POSITION)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_BE_BATTLE_TARGET)
-	e2:SetCondition(c249000690.condition)
-	e2:SetTarget(c249000690.target)
-	e2:SetOperation(c249000690.operation)
-	c:RegisterEffect(e2)
+	--spsummon proc
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(c249000690.spcon)
+	c:RegisterEffect(e1)
 	--chain attack
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(249000690,0))
@@ -47,18 +45,10 @@ function c249000690.caop2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ChainAttack()
 	end
 end
-function c249000690.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsAttackPos()
-end
-function c249000690.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,e:GetHandler(),1,0,0)
-end
-function c249000690.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.ChangePosition(c,POS_FACEUP_DEFENCE)~=0 then
-		Duel.NegateAttack()
-	end
+function c249000690.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
+		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function c249000690.cacon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()

@@ -1,29 +1,36 @@
 --Angelic Summoner of Twilight
 function c249000688.initial_effect(c)
 	c:EnableReviveLimit()
-	c:SetSPSummonOnce(249000688)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x1E5),1)
 	aux.EnablePendulumAttribute(c,false)
-	--draw
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1E5),3,true)
+	--fusion summon rule
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(64880894,0))
-	e1:SetCategory(CATEGORY_DRAW)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCountLimit(1,249000688)
-	e1:SetCondition(c249000688.drcon)
-	e1:SetTarget(c249000688.drtg)
-	e1:SetOperation(c249000688.drop)
+	e1:SetDescription(aux.Stringid(27346636,1))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_EXTRA)
+	e1:SetValue(SUMMON_TYPE_FUSION)
+	e1:SetCondition(c249000688.sprcon)
+	e1:SetOperation(c249000688.sprop)
 	c:RegisterEffect(e1)
+	--move
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(92204263,0))
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,2490006881)
+	e2:SetTarget(c249000688.seqtg)
+	e2:SetOperation(c249000688.seqop)
+	c:RegisterEffect(e2)
 	--special summon other
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(31786629,0))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
+	e3:SetCountLimit(1,2490006882)
 	e3:SetCondition(c249000688.condition)
 	e3:SetCost(c249000688.cost)
 	e3:SetTarget(c249000688.target)
@@ -36,26 +43,53 @@ function c249000688.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_PZONE)
+	e4:SetCountLimit(1,2490006883)
 	e4:SetTarget(c249000688.drtg2)
 	e4:SetOperation(c249000688.drop2)
 	c:RegisterEffect(e4)
 end
-function c249000688.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO
+function c249000688.cfilter(c)
+	return c:IsFusionSetCard(0x1E5) and c:IsType(TYPE_MONSTER)
+		and c:IsCanBeFusionMaterial() and c:IsReleasable()
 end
-function c249000688.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(2)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
-	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
+function c249000688.fcheck(c,sg)
+	return c:IsFusionSetCard(0x1E5) and c:IsType(TYPE_MONSTER) and sg:IsExists(c249000688.fcheck2,2,c)
 end
-function c249000688.drop(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	if Duel.Draw(p,d,REASON_EFFECT)==2 then
-		Duel.ShuffleHand(p)
-		Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+function c249000688.fcheck2(c)
+	return c:IsFusionSetCard(0x1E5) and c:IsType(TYPE_MONSTER)
+end
+function c249000688.fselect(c,tp,mg,sg)
+	sg:AddCard(c)
+	local res=false
+	if sg:GetCount()<3 then
+		res=mg:IsExists(c249000688.fselect,1,sg,tp,mg,sg)
+	elseif Duel.GetLocationCountFromEx(tp,tp,sg)>0 then
+		res=sg:IsExists(c249000688.fcheck,1,nil,sg)
 	end
+	sg:RemoveCard(c)
+	return res
+end
+function c249000688.sprcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	local mg=Duel.GetMatchingGroup(c249000688.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil)
+	local sg=Group.CreateGroup()
+	return mg:IsExists(c249000688.fselect,1,nil,tp,mg,sg)
+end
+function c249000688.sprop(e,tp,eg,ep,ev,re,r,rp,c)
+	local mg=Duel.GetMatchingGroup(c249000688.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,nil)
+	local sg=Group.CreateGroup()
+	while sg:GetCount()<3 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local g=mg:FilterSelect(tp,c249000688.fselect,1,1,sg,tp,mg,sg)
+		sg:Merge(g)
+	end
+	local cg=sg:Filter(Card.IsFacedown,nil)
+	if cg:GetCount()>0 then
+		Duel.ConfirmCards(1-tp,cg)
+	end
+	c:SetMaterial(sg)
+	Duel.Release(sg,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 end
 function c249000688.spfilter(c)
 	return c:IsSetCard(0x1E5) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
@@ -74,47 +108,31 @@ function c249000688.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(sg,POS_FACEUP,REASON_COST)
 end
 function c249000688.tfilter(c,att,e,tp,lvrk)
-	return c:IsAttribute(att) and 
-	((c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and c:GetLevel() > lvrk and c:GetLevel() <= lvrk+3)
-	or (c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:GetRank() > lvrk and c:GetRank() <= lvrk+3))
+	return c:IsAttribute(att) and
+	((c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and (c:GetLevel() > lvrk) and (c:GetLevel() <= lvrk+3) and (c:GetLevel() <= 10))
+	or (c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and (c:GetRank() > lvrk) and (c:GetRank() <= lvrk+3) and (c:GetLevel() <= 10)))
 end
 function c249000688.filter(c,e,tp)
 	local lvrk
 	if c:GetLevel() > c:GetRank() then lvrk = c:GetLevel() else lvrk = c:GetRank() end
-	return lvrk > 0 and c:IsFaceup() and Duel.IsExistingMatchingCard(c249000688.tfilter,tp,LOCATION_EXTRA,0,1,nil,c:GetAttribute(),e,tp,lvrk)
+	return lvrk > 0 and c:IsFaceup() and Duel.GetLocationCountFromEx(tp,tp,c)>0 and Duel.IsExistingMatchingCard(c249000688.tfilter,tp,LOCATION_EXTRA,0,1,nil,c:GetAttribute(),e,tp,lvrk)
 end
-function c249000688.chkfilter(c,att)
-	return c:IsFaceup() and c:IsAttribute(att)
-end
-function c249000688.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c249000688.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler() 
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c249000688.chkfilter(chkc,e:GetLabel()) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c249000688.filter,tp,LOCATION_MZONE,0,1,c,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectTarget(tp,c249000688.filter,tp,LOCATION_MZONE,0,1,1,c,e,tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000688.filter,tp,LOCATION_MZONE,0,1,c,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c249000688.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or tc:IsFacedown() then return end
+	local tc=Duel.SelectMatchingCard(tp,c249000688.filter,tp,LOCATION_MZONE,0,1,1,c,e,tp):GetFirst()
+	if not tc then return end
 	local att=tc:GetAttribute()
 	local lvrk
 	if tc:GetLevel() > tc:GetRank() then lvrk = tc:GetLevel() else lvrk = tc:GetRank() end
 	if Duel.SendtoGrave(tc,REASON_EFFECT)==0 then return end
-	local t={}
-	local i=1
-	local p=1
-	for i=0,4 do 
-		if Duel.CheckLocation(tp,LOCATION_MZONE,i) then t[p]=i p=p+1 end
-	end
-	t[p]=nil
-	local seq=Duel.AnnounceNumber(tp,table.unpack(t))
-	Duel.MoveSequence(c,seq)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sc=Duel.SelectMatchingCard(tp,c249000688.tfilter,tp,LOCATION_EXTRA,0,1,1,nil,att,e,tp,lvrk):GetFirst()
-	if not sc or not Duel.SelectYesNo(tp,2) then return end
+	if not sc then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CHANGE_DAMAGE)
@@ -147,4 +165,16 @@ function c249000688.drop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	Duel.Draw(tp,1,REASON_EFFECT)
+end
+function c249000688.seqtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingTarget(c249000688.seqfilter,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_CONTROL)>0 end
+end
+function c249000688.seqop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or c:IsControler(1-tp) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
+	local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
+	local nseq=math.log(s,2)
+	Duel.MoveSequence(c,nseq)
 end

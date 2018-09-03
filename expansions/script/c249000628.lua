@@ -5,8 +5,8 @@ function c249000628.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e1:SetCost(c249000628.condition)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCondition(c249000628.condition)
 	e1:SetCost(c249000628.cost)
 	e1:SetTarget(c249000628.target)
 	e1:SetOperation(c249000628.activate)
@@ -76,7 +76,6 @@ function c249000628.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
-	Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c249000628.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,tc:GetRank()+1,tc:GetCode(),tc:GetAttribute())
 	local sc=g:GetFirst()
@@ -89,6 +88,10 @@ function c249000628.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP_ATTACK)
 		sc:CompleteProcedure()
+		local ph=Duel.GetCurrentPhase()
+		if ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE then
+			Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
+		end
 	end
 end
 function c249000628.tfilter(c,tp)

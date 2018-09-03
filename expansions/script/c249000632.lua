@@ -1,5 +1,6 @@
 --Arcane-Rank-Summoner Battle Mage
 function c249000632.initial_effect(c)
+	--atk
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -30,6 +31,16 @@ function c249000632.initial_effect(c)
 	e3:SetTarget(c249000632.destg)
 	e3:SetOperation(c249000632.desop)
 	c:RegisterEffect(e3)
+	--special summon
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(63528891,0))
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SPSUMMON_PROC)
+	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e4:SetRange(LOCATION_HAND)
+	e4:SetCountLimit(1,249000632)
+	e4:SetCondition(c249000632.spcon)
+	c:RegisterEffect(e4)
 end
 function c249000632.atkcon(e)
 	local ph=Duel.GetCurrentPhase()
@@ -77,4 +88,12 @@ function c249000632.desop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Destroy(tc2,REASON_EFFECT)
 		end
 	end
+end
+function c249000632.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x1E0)
+end
+function c249000632.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c249000632.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end

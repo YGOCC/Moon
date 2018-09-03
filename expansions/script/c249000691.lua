@@ -1,17 +1,14 @@
 --Twilight-Disciple Dark Sorceress
 function c249000691.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
-	--summon & set with no tribute
+	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(249000691,0))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SUMMON_PROC)
-	e1:SetCondition(c249000691.ntcon)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(c249000691.spcon)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EFFECT_SET_PROC)
-	c:RegisterEffect(e2)
 	--discard to destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(20403123,0))
@@ -36,11 +33,10 @@ function c249000691.initial_effect(c)
 	e4:SetOperation(c249000691.desop2)
 	c:RegisterEffect(e4)
 end
-function c249000691.ntcon(e,c,minc)
+function c249000691.spcon(e,c)
 	if c==nil then return true end
-	return minc==0 and c:GetLevel()>4 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0
-		and Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE)>0
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE,nil)-Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)>=2
 end
 function c249000691.confilter(c,e) 
 	return c:IsSetCard(0x1E5) and c:GetCode()~=e:GetHandler():GetCode()
