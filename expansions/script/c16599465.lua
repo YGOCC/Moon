@@ -130,13 +130,13 @@ function c16599465.sccost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c16599465.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c16599465.tgfilter,tp,LOCATION_HAND,0,1,e:GetHandler())
-		and Duel.IsExistingMatchingCard(c16599465.scfilter,tp,LOCATION_DECK,0,1,nil)
+		and Duel.IsExistingMatchingCard(c16599465.scfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_HAND)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_REMOVED)
 end
 function c16599465.scop(e,tp,eg,ep,ev,re,r,rp)
-	local dg=Duel.GetMatchingGroup(c16599465.scfilter,tp,LOCATION_DECK,0,nil)
+	local dg=Duel.GetMatchingGroup(c16599465.scfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,nil)
 	if dg:GetCount()<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c16599465.tgfilter,tp,LOCATION_HAND,0,1,dg:GetCount(),e:GetHandler())
@@ -165,5 +165,9 @@ function c16599465.scop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetTargetRange(1,0)
+	e1:SetTarget(c16599465.sumlimit)
 	Duel.RegisterEffect(e1,tp)
+end
+function c16599465.sumlimit(e,c)
+	return c:GetRace()~=RACE_FAIRY
 end

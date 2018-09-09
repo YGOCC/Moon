@@ -1,5 +1,5 @@
 --Incognita dell'Organizzazione Angeli, Amans
---=£1G*
+--Script by XGlitchy30
 function c16599452.initial_effect(c)
 	--target protection
 	local e0=Effect.CreateEffect(c)
@@ -12,9 +12,7 @@ function c16599452.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,16599452)
 	e1:SetCost(c16599452.spcost)
@@ -42,7 +40,7 @@ function c16599452.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x1559) and re:GetHandler():GetLevel()==e:GetHandler():GetLevel() and not re:GetHandler():IsType(TYPE_SYNCHRO)
 end
 function c16599452.tunerfilter(c)
-	return c:IsFaceup() and not c:IsType(TYPE_TUNER)
+	return c:IsFaceup() and not c:IsType(TYPE_TUNER) and c:GetLevel()>1
 end
 --target protection
 function c16599452.efilter(e,re,rp)
@@ -82,8 +80,7 @@ function c16599452.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 --become tuner
 function c16599452.tunercon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_COST) and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_MONSTER)
-		and re:GetHandler():IsRace(RACE_FAIRY) and e:GetHandler():IsPreviousLocation(LOCATION_DECK)
+	return e:GetHandler():IsPreviousLocation(LOCATION_DECK+LOCATION_GRAVE)
 end
 function c16599452.tunertg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c16599452.tunerfilter(chkc) end

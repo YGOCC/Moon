@@ -94,7 +94,7 @@ function c16599459.cfilter(c,lv)
 	return c:IsSetCard(0x1559) and c:GetLevel()>lv and c:IsAbleToRemoveAsCost()
 end
 function c16599459.eqfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and c:GetAttack()==0
+	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and c:GetAttack()==0 and c:GetLevel()>0
 end
 function c16599459.eqlimit(e,c)
 	return c==e:GetLabelObject()
@@ -180,6 +180,14 @@ function c16599459.thop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetValue(TYPE_TUNER)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e2)
+	--update level
+	local e2x=Effect.CreateEffect(c)
+	e2x:SetType(EFFECT_TYPE_EQUIP)
+	e2x:SetCode(EFFECT_CHANGE_LEVEL)
+	e2x:SetRange(LOCATION_SZONE)
+	e2x:SetValue(4)
+	e2x:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e2x)
 	--activation limit
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)

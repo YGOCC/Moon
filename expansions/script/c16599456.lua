@@ -2,12 +2,12 @@
 --Script by XGlitchy30
 function c16599456.initial_effect(c)
 	--battle protection
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e1:SetCondition(c16599456.battleprotection)
-	e1:SetValue(1)
-	c:RegisterEffect(e1)
+	local e1x=Effect.CreateEffect(c)
+	e1x:SetType(EFFECT_TYPE_SINGLE)
+	e1x:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e1x:SetCondition(c16599456.battleprotection)
+	e1x:SetValue(1)
+	c:RegisterEffect(e1x)
 	--target protection
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -23,6 +23,7 @@ function c16599456.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(0,1)
+	e1:SetCondition(c16599456.limcon)
 	e1:SetValue(c16599456.limval)
 	c:RegisterEffect(e1)
 	--spsummon
@@ -100,6 +101,9 @@ function c16599456.reset(e,tp,eg,ep,ev,re,r,rp)
 end
 -------------------------
 --filters
+function c16599456.limfilter(c)
+	return c:IsType(TYPE_MONSTER) and (c:IsFacedown() or not c:IsRace(RACE_FAIRY))
+end
 function c16599456.battled(c)
 	return c:GetFlagEffect(16599456)>0 and c:IsAbleToRemove()
 end
@@ -118,6 +122,9 @@ function c16599456.efilter(e,re,rp)
 	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(9)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=9)) and rp==1-e:GetHandlerPlayer()
 end
 --act limit
+function c16599456.limcon(e,tp,eg,ep,ev,re,r,rp)
+	return not Duel.IsExistingMatchingCard(c16599456.limfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+end
 function c16599456.limval(e,re,rp)
 	local rc=re:GetHandler()
 	return rc:IsLocation(LOCATION_MZONE) and re:IsActiveType(TYPE_MONSTER)

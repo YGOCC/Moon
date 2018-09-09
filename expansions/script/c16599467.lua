@@ -12,6 +12,15 @@ function c16599467.initial_effect(c)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetValue(c16599467.efilter)
 	c:RegisterEffect(e0)
+	--tuner
+	local tuner=Effect.CreateEffect(c)
+	tuner:SetType(EFFECT_TYPE_SINGLE)
+	tuner:SetCode(EFFECT_ADD_TYPE)
+	tuner:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	tuner:SetRange(LOCATION_MZONE)
+	tuner:SetCondition(c16599467.tunercon)
+	tuner:SetValue(TYPE_TUNER)
+	c:RegisterEffect(tuner)
 	--wipe field
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
@@ -65,6 +74,9 @@ function c16599467.mfilter(c,tp,sync)
 		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
 		and c:IsAbleToRemoveAsCost()
 end
+function c16599467.tunerchk(c)
+	return c:IsType(TYPE_TOKEN) and c:IsFaceup() and c:GetAttack()==0
+end
 function c16599467.wpfilter(c)
 	return c:IsType(TYPE_MONSTER) and not c:IsRace(RACE_FAIRY)
 end
@@ -77,6 +89,10 @@ end
 --target protection
 function c16599467.efilter(e,re,rp)
 	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(10)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=10)) and rp==1-e:GetHandlerPlayer()
+end
+--tuner
+function c16599467.tunercon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c16599467.tunerchk,tp,LOCATION_MZONE,0,1,nil)
 end
 --wipe field
 function c16599467.drycon(e,tp,eg,ep,ev,re,r,rp)
