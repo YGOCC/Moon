@@ -16,57 +16,64 @@ function c88890007.initial_effect(c)
     e2:SetTargetRange(LOCATION_MZONE,0)
     e2:SetValue(c88890007.atkval)
     c:RegisterEffect(e2)
-    --(3) Pay or Destroy
-    local e3=Effect.CreateEffect(c)
-    e3:SetDescription(aux.Stringid(88890007,1))
-    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-    e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-    e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
-    e3:SetRange(LOCATION_MZONE)
-    e3:SetCountLimit(1)
-    e3:SetCondition(c88890007.paycon)
-    e3:SetOperation(c88890007.payop)
+    local e3=e2:Clone()
+    e3:SetRange(LOCATION_SZONE)
+    e3:SetCondition(c88890007.atkcon)
     c:RegisterEffect(e3)
-    --(4) To hand
+    --(3) Pay or Destroy
     local e4=Effect.CreateEffect(c)
-    e4:SetDescription(aux.Stringid(88890007,2))
-    e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-    e4:SetType(EFFECT_TYPE_IGNITION)
-    e4:SetRange(LOCATION_HAND)
-    e4:SetCost(c88890007.thcost)
-    e4:SetTarget(c88890007.thtg)
-    e4:SetOperation(c88890007.thop)
+    e4:SetDescription(aux.Stringid(88890007,1))
+    e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e4:SetCode(EVENT_PHASE+PHASE_STANDBY)
+    e4:SetRange(LOCATION_MZONE)
+    e4:SetCountLimit(1)
+    e4:SetCondition(c88890007.paycon)
+    e4:SetOperation(c88890007.payop)
     c:RegisterEffect(e4)
-    --(5) Place in S/T Zone
+    --(4) To hand
     local e5=Effect.CreateEffect(c)
-    e5:SetType(EFFECT_TYPE_SINGLE)
-    e5:SetCode(EFFECT_TO_GRAVE_REDIRECT_CB)
-    e5:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e5:SetCondition(c88890007.stzcon)
-    e5:SetOperation(c88890007.stzop)
+    e5:SetDescription(aux.Stringid(88890007,2))
+    e5:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+    e5:SetType(EFFECT_TYPE_IGNITION)
+    e5:SetRange(LOCATION_HAND)
+    e5:SetCost(c88890007.thcost)
+    e5:SetTarget(c88890007.thtg)
+    e5:SetOperation(c88890007.thop)
     c:RegisterEffect(e5)
-    --(7) add
+    --(5) Place in S/T Zone
     local e6=Effect.CreateEffect(c)
-    e6:SetDescription(aux.Stringid(88890007,4))
-    e6:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-    e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-    e6:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-    e6:SetCode(EVENT_TO_GRAVE)
-    e6:SetCondition(c88890007.thcon)
-    e6:SetTarget(c88890007.thtg1)
-    e6:SetOperation(c88890007.thop1)
+    e6:SetType(EFFECT_TYPE_SINGLE)
+    e6:SetCode(EFFECT_TO_GRAVE_REDIRECT_CB)
+    e6:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+    e6:SetCondition(c88890007.stzcon)
+    e6:SetOperation(c88890007.stzop)
     c:RegisterEffect(e6)
+    --(7) add
+    local e7=Effect.CreateEffect(c)
+    e7:SetDescription(aux.Stringid(88890007,4))
+    e7:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+    e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+    e7:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+    e7:SetCode(EVENT_TO_GRAVE)
+    e7:SetCondition(c88890007.thcon)
+    e7:SetTarget(c88890007.thtg1)
+    e7:SetOperation(c88890007.thop1)
+    c:RegisterEffect(e7)
 end
 --(1) Special Summon condition
 function c88890007.splimit(e,se,sp,st)
     return se:GetHandler():IsSetCard(0x902)
 end
 --(2) Effect for card
+function c88890007.atkcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP)
+end
 function c88890007.atkfilter(c)
     return c:IsFaceup() and c:IsSetCard(0x902) and c:IsType(TYPE_MONSTER+TYPE_RITUAL) or c:IsType(TYPE_CONTINUOUS) and not c:IsType(TYPE_EQUIP)
 end
 function c88890007.atkval(e,c)
-    return Duel.GetMatchingGroupCount(c88890007.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_SZONE,0,nil)*300
+    return Duel.GetMatchingGroupCount(c88890007.atkfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_SZONE,0,nil)*200
 end
 --(3) Pay or Destroy
 function c88890007.paycon(e,tp,eg,ep,ev,re,r,rp)
@@ -74,9 +81,9 @@ function c88890007.paycon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c88890007.payop(e,tp,eg,ep,ev,re,r,rp)
     Duel.HintSelection(Group.FromCards(e:GetHandler()))
-    if Duel.CheckLPCost(tp,500) and Duel.SelectYesNo(tp,aux.Stringid(88890007,1)) then
+    if Duel.CheckLPCost(tp,600) and Duel.SelectYesNo(tp,aux.Stringid(88890007,1)) then
         Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(88890007,5))
-        Duel.PayLPCost(tp,500)
+        Duel.PayLPCost(tp,600)
     else
         Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(88890007,6))
         Duel.Destroy(e:GetHandler(),REASON_COST)

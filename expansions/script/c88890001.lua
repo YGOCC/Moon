@@ -39,7 +39,7 @@ function c88890001.initial_effect(c)
     e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
     e5:SetCode(EVENT_CHAINING)
     e5:SetRange(LOCATION_MZONE)
-    e5:SetCountLimit(2)
+    e5:SetCountLimit(1)
     e5:SetCondition(c88890001.negcon)
     e5:SetTarget(c88890001.negtg)
     e5:SetOperation(c88890001.negop)
@@ -55,17 +55,9 @@ function c88890001.initial_effect(c)
     e6:SetOperation(c88890001.stzop)
     c:RegisterEffect(e6)
     --(8) Special Summon
-    local e7=Effect.CreateEffect(c)
-    e7:SetDescription(aux.Stringid(88890001,4))
-    e7:SetType(EFFECT_TYPE_QUICK_O)
-    e7:SetCategory(CATEGORY_SPECIAL_SUMMON)
-    e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    local e7=e5:Clone()
     e7:SetRange(LOCATION_SZONE)
-    e7:SetCode(EVENT_FREE_CHAIN)
-    e7:SetCountLimit(1)
     e7:SetCondition(c88890001.spcon)
-    e7:SetTarget(c88890001.sptg)
-    e7:SetOperation(c88890001.spop)
     c:RegisterEffect(e7)
 end
 --Ritual Condition
@@ -99,14 +91,17 @@ end
 --(2) Gain ATK/DEF
 function c88890001.matcheck(e,c)
     local ct=c:GetMaterialCount()
+    local atk=e:GetHandler():GetBaseAttack()
+    local def=e:GetHandler():GetBaseDefense()
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_SINGLE)
-    e1:SetCode(EFFECT_UPDATE_ATTACK)
-    e1:SetValue(ct*300)
+    e1:SetCode(EFFECT_SET_BASE_ATTACK)
+    e1:SetValue(atk+ct*200)
     e1:SetReset(RESET_EVENT+0xff0000)
     c:RegisterEffect(e1)
     local e2=e1:Clone()
-    e2:SetCode(EFFECT_UPDATE_DEFENSE)
+    e2:SetCode(EFFECT_SET_BASE_DEFENSE)
+    e2:SetValue(def+ct*200)
     c:RegisterEffect(e2)
 end
 --(3) Banish
@@ -130,25 +125,10 @@ end
 function c88890001.unfilter(e,re)
     return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
---(5) Gain LP
-function c88890001.reccon(e,tp,eg,ep,ev,re,r,rp)
-    if ep==tp then return false end
-    local rc=eg:GetFirst()
-    return rc:IsControler(tp) and rc:IsSetCard(0x902)  and rc~=e:GetHandler()
-end
-function c88890001.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return true end
-    Duel.SetTargetPlayer(tp)
-    Duel.SetTargetParam(ev/2)
-    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-    Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,ev/2)
-end
-function c88890001.recop(e,tp,eg,ep,ev,re,r,rp)
-    if not e:GetHandler():IsRelateToEffect(e) then return end
-    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Recover(p,d,REASON_EFFECT)
-end
 --(6) Negate
+function c88890001.spcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP)
+end
 function c88890001.negcon(e,tp,eg,ep,ev,re,r,rp)
     return rp~=tp and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 end
@@ -157,12 +137,12 @@ function c88890001.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
     Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
     if re:GetHandler():IsRelateToEffect(re) then
-        Duel.SetOperationInfo(0,CATEGORY_REMOVE,eg,1,0,0)
+        Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
     end
 end
 function c88890001.negop(e,tp,eg,ep,ev,re,r,rp)
     if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re)     then
-        Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)
+        Duel.Destroy(eg,POS_FACEUP,REASON_EFFECT)
     end
 end
 --Place in S/T Zone
@@ -188,24 +168,4 @@ function c88890001.stzop(e,tp,eg,ep,ev,re,r,rp)
     e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
     c:RegisterEffect(e1)
     Duel.RaiseEvent(c,EVENT_CUSTOM+99020150,e,0,tp,0,0)
-end
---(8) Special Summon
-function c88890001.spfilter(c,e,tp)
-    return c:IsSetCard(0x902) and c:GetType()==TYPE_MONSTER+TYPE_RITUAL and c:IsAbleToHand()
-end
-function c88890001.spcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP) 
-end
-function c88890001.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then return Duel.IsExistingMatchingCard(c88890001.spfilter,tp,LOCATION_DECK,0,1,nil) end
-    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function c88890001.spop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local g=Duel.SelectMatchingCard(tp,c88890001.spfilter,tp,LOCATION_DECK,0,1,1,nil)
-    if g:GetCount()>0 then
-        Duel.SendtoHand(g,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,g)
-    end
 end

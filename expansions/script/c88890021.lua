@@ -41,7 +41,7 @@ function c88890021.initial_effect(c)
     c:RegisterEffect(e4)
     --(4)Time Limit Increase
     local e5=Effect.CreateEffect(c)
-    e5:SetDescription(aux.Stringid(88890021,6))
+    e5:SetDescription(aux.Stringid(88890021,5))
     e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
     e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
     e5:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -55,8 +55,8 @@ function c88890021.initial_effect(c)
     e7:SetType(EFFECT_TYPE_SINGLE)
     e7:SetCode(EFFECT_TO_GRAVE_REDIRECT_CB)
     e7:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-    e7:SetCondition(c88890004.stzcon)
-    e7:SetOperation(c88890004.stzop)
+    e7:SetCondition(c888900021.stzcon)
+    e7:SetOperation(c888900021.stzop)
     c:RegisterEffect(e7)
     --(6) Not Xyz Monster
     local e8=Effect.CreateEffect(c)
@@ -146,6 +146,17 @@ function c88890021.stzop(e,tp,eg,ep,ev,re,r,rp)
     e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
     c:RegisterEffect(e1)
     Duel.RaiseEvent(c,EVENT_CUSTOM+88890010,e,0,tp,0,0)
+    Duel.BreakEffect()
+    local e2=Effect.CreateEffect(c)
+    e2:SetDescription(aux.Stringid(13474291,2))
+    e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+    e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e2:SetRange(LOCATION_SZONE)
+    e2:SetCondition(c88890021.addcon)
+    e2:SetTarget(c88890021.addtg)
+    e2:SetOperation(c88890021.addop)
+    e2:SetLabel(2)
+    c:RegisterEffect(e2)
 end
 --(6) Ritual Summon
 function c88890021.spcon1(e,tp,eg,ep,ev,re,r,rp)
@@ -159,10 +170,10 @@ function c88890021.cfilter(c)
 end
 function c88890021.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and Duel.IsExistingTarget(c88890021.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp,g) end
+        and Duel.IsExistingTarget(c88890021.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,g) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-    local g=Duel.SelectTarget(tp,c88890021.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,g)
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,tp,LOCATION_HAND)
+    local g=Duel.SelectTarget(tp,c88890021.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp,g)
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function c88890021.spop1(e,tp,eg,ep,ev,re,r,rp)
     if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 or not e:GetHandler():IsRelateToEffect(e) then return end

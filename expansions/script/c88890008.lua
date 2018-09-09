@@ -64,16 +64,19 @@ function c88890008.splimit(e,se,sp,st)
     return se:GetHandler():IsSetCard(0x902)
 end
 --(2) Effect for card
+function c88890008.desrepcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():IsType(TYPE_SPELL+TYPE_CONTINUOUS) and not e:GetHandler():IsType(TYPE_EQUIP)
+end
 function c88890008.repfilter(c)
     return c:IsSetCard(0x902) and c:IsAbleToRemoveAsCost()
 end
 function c88890008.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
     if chk==0 then return not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT)
-        and Duel.IsExistingMatchingCard(c88890008.repfilter,tp,LOCATION_GRAVE,0,1,nil) end
+        and Duel.IsExistingMatchingCard(c88890008.repfilter,tp,LOCATION_HAND,0,1,nil) end
     if Duel.SelectEffectYesNo(tp,c,96) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-        local g=Duel.SelectMatchingCard(tp,c88890008.repfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+        local g=Duel.SelectMatchingCard(tp,c88890008.repfilter,tp,LOCATION_HAND,0,1,1,nil)
         Duel.Remove(g,POS_FACEUP,REASON_COST)
         return true
     else return false end
@@ -94,9 +97,9 @@ function c88890008.paycon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c88890008.payop(e,tp,eg,ep,ev,re,r,rp)
     Duel.HintSelection(Group.FromCards(e:GetHandler()))
-    if Duel.CheckLPCost(tp,500) and Duel.SelectYesNo(tp,aux.Stringid(88890008,1)) then
+    if Duel.CheckLPCost(tp,600) and Duel.SelectYesNo(tp,aux.Stringid(88890008,1)) then
         Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(88890008,5))
-        Duel.PayLPCost(tp,500)
+        Duel.PayLPCost(tp,600)
     else
         Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(88890008,6))
         Duel.Destroy(e:GetHandler(),REASON_COST)
