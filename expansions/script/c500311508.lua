@@ -72,6 +72,7 @@ function c500311508.spop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 			tc:RegisterFlagEffect(500311508,RESET_EVENT+RESETS_STANDARD,0,1,fid) 
 tc=sg1:GetNext()
+Duel.SpecialSummonComplete()
  end
 		   
 		local e1=Effect.CreateEffect(c)
