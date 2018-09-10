@@ -17,7 +17,7 @@ function c21730407.thfilter(c)
 	return c:IsSetCard(0x719) and c:IsDiscardable()
 end
 function c21730407.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c21730407.thfilter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c21730407.thfilter,tp,LOCATION_HAND,0,1,nil,e:GetHandler()) end
 	Duel.DiscardHand(tp,c21730407.thfilter,1,1,REASON_COST+REASON_DISCARD,nil)
 end
 function c21730407.thtg(e,tp,eg,ep,ev,re,r,rp,chk)

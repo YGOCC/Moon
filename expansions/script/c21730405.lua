@@ -9,9 +9,9 @@ function c21730405.initial_effect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_START)
-	e2:SetCondition(c21730405.thcon)
-	e2:SetTarget(c21730405.thtg)
-	e2:SetOperation(c21730405.thop)
+	e2:SetCondition(c21730405.retcon)
+	e2:SetTarget(c21730405.rettg)
+	e2:SetOperation(c21730405.retop)
 	c:RegisterEffect(e2)
 	--add from deck to hand
 	local e3=Effect.CreateEffect(c)
@@ -26,15 +26,15 @@ function c21730405.matfilter(c)
 	return c:IsLinkSetCard(0x719) and not c:IsType(TYPE_LINK)
 end
 --return monster to hand
-function c21730405.thcon(e)
+function c21730405.retcon(e)
 	return e:GetHandler():IsLinkState()
 end
-function c21730405.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c21730405.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetHandler():GetBattleTarget()
 	if chk==0 then return tc and tc:IsControler(1-tp) and tc:IsAbleToHand() end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,tc,1,0,0)
 end
-function c21730405.thop(e,tp,eg,ep,ev,re,r,rp)
+function c21730405.retop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetBattleTarget()
 	if tc:IsRelateToBattle() then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
