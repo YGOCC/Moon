@@ -104,6 +104,7 @@ function c19772593.atklockop(e,tp,eg,ep,ev,re,r,rp)
 		local g=ag:FilterSelect(tp,aux.TRUE,1,1,at):GetFirst()
 		if g then
 			Duel.ChangeAttackTarget(g)
+			Duel.HintSelection(g)
 		end
 	end
 end
