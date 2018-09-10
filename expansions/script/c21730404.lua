@@ -32,10 +32,14 @@ end
 function c21730404.desfilter(c,tp)
 	return c:IsSetCard(0x719) and Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
 end
+function c21730404.rcost(c)
+	return c:IsCode(21730411) and c:IsReleasable() and not c:IsDisabled() and not c:IsForbidden()
+end
 function c21730404.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsAbleToRemoveAsCost()
-		and Duel.CheckReleaseGroup(tp,c21730404.desfilter,1,false,nil,nil,tp) end
+	local b1=Duel.CheckReleaseGroup(tp,c21730404.desfilter,1,false,nil,nil,tp)
+	local b2=Duel.IsExistingMatchingCard(c21730404.rcost,tp,LOCATION_FZONE,0,1,nil)
+	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
 	if Duel.Remove(c,POS_FACEUP,REASON_COST)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -46,8 +50,13 @@ function c21730404.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 		e1:SetOperation(c21730404.tgop)
 		c:RegisterEffect(e1)
 	end
-	local g=Duel.SelectReleaseGroup(tp,c21730404.desfilter,1,1,false,nil,nil,tp)
-	Duel.Release(g,REASON_COST)
+	if b2 and (not b1 or Duel.SelectYesNo(tp,aux.Stringid(21730411,1))) then
+		local tg=Duel.GetFirstMatchingCard(c21730404.rcost,tp,LOCATION_FZONE,0,nil)
+		Duel.Release(tg,REASON_COST)
+	else
+		local g=Duel.SelectReleaseGroup(tp,c21730404.desfilter,1,1,false,nil,nil,tp)
+		Duel.Release(g,REASON_COST)
+	end
 end
 function c21730404.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end

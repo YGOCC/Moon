@@ -1,19 +1,18 @@
---S.G. Esper
+--S.G. Diver
 function c21730405.initial_effect(c)
 	--link procedure
 	aux.AddLinkProcedure(c,c21730405.matfilter,1,1)
 	c:EnableReviveLimit()
-	--return monster to hand
+	--unaffected by non-targeting
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730405,0))
-	e2:SetCategory(CATEGORY_TOHAND)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_BATTLE_START)
-	e2:SetCondition(c21730405.retcon)
-	e2:SetTarget(c21730405.rettg)
-	e2:SetOperation(c21730405.retop)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_IMMUNE_EFFECT)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetValue(c21730405.imval)
 	c:RegisterEffect(e2)
-	--add from deck to hand
+	--add from grave to hand
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -25,28 +24,21 @@ end
 function c21730405.matfilter(c)
 	return c:IsLinkSetCard(0x719) and not c:IsType(TYPE_LINK)
 end
---return monster to hand
-function c21730405.retcon(e)
-	return e:GetHandler():IsLinkState()
+--unaffected by non-targeting
+function c21730405.imval(e,re)
+	if not (re:GetOwnerPlayer()~=e:GetHandlerPlayer()) or not re:IsActivated() then return false end
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return true end
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	return not g:IsContains(e:GetHandler())
 end
-function c21730405.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local tc=e:GetHandler():GetBattleTarget()
-	if chk==0 then return tc and tc:IsControler(1-tp) and tc:IsAbleToHand() end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,tc,1,0,0)
-end
-function c21730405.retop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetHandler():GetBattleTarget()
-	if tc:IsRelateToBattle() then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-	end
-end
---add from deck to hand
+--add from grave to hand
 function c21730405.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(21730405,1))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_PHASE+PHASE_END)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
@@ -56,17 +48,18 @@ function c21730405.regop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c21730405.thfilter(c)
-	return c:IsSetCard(0x719) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x719) and c:IsAbleToHand()
 end
 function c21730405.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c21730405.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c21730405.thfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c21730405.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local sg=Duel.SelectTarget(tp,c21730405.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,1,0,0)
 end
 function c21730405.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c21730405.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end

@@ -13,7 +13,7 @@ function cm.initial_effect(c)
     c:RegisterEffect(e1)
     --To Hand
     local e2=Effect.CreateEffect(c)
-    e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+    e2:SetCategory(CATEGORY_RECOVER+CATEGORY_TOHAND)
     e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
     e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
     e2:SetCode(EVENT_TO_GRAVE)
