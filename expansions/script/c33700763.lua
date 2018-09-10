@@ -32,20 +32,20 @@ function cm.operation(c)
 	c:RegisterEffect(e1)	
 end
 function cm.drcfilter(c)
-	return c:IsSetCard(0x44a) and c:IsType(TYPE_MONSTER) and c:IsDiscardable()
+	return c:IsSetCard(0x344a) and c:IsType(TYPE_MONSTER) and c:IsDiscardable()
 end
 function cm.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.drcfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,cm.drcfilter,1,1,REASON_DISCARD+REASON_COST)
 end
 function cm.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cm.drop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
