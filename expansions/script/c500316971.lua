@@ -6,7 +6,7 @@ function c500316971.initial_effect(c)
 		--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(500316971,0))
-	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
