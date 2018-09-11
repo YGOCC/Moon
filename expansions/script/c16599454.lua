@@ -110,7 +110,7 @@ end
 -------------------------------------------------
 --filters
 function c16599454.costfilter(c)
-	return c:IsSetCard(0x1559) and c:GetLevel()>0 and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_DECK) or (c:IsFaceup() and c:IsLocation(LOCATION_MZONE)))
+	return c:IsSetCard(0x1559) and c:GetLevel()>0 and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_DECK+LOCATION_GRAVE) or (c:IsFaceup() and c:IsLocation(LOCATION_MZONE)))
 		and not c:IsCode(16599454)
 end
 function c16599454.splimit(e,c)
@@ -136,9 +136,9 @@ function c16599454.bfilter(e,c)
 end
 --change levels
 function c16599454.lvcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16599454.costfilter,tp,LOCATION_MZONE+LOCATION_DECK,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c16599454.costfilter,tp,LOCATION_MZONE+LOCATION_DECK+LOCATION_GRAVE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c16599454.costfilter,tp,LOCATION_MZONE+LOCATION_DECK,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,c16599454.costfilter,tp,LOCATION_MZONE+LOCATION_DECK+LOCATION_GRAVE,0,1,1,e:GetHandler())
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 		local op=Duel.GetOperatedGroup():GetFirst()

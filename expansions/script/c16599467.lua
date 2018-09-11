@@ -1,9 +1,26 @@
 --Quintus dell'Organizzazione Angeli, Magrubia
 --Script by XGlitchy30
 function c16599467.initial_effect(c)
-	--synchro summon
-	aux.AddSynchroProcedure(c,c16599467.tunermat,aux.NonTuner(Card.IsRace,RACE_FAIRY),1)
+	--aux.AddSynchroProcedure(c,c16599467.tunermat,aux.NonTuner(Card.IsRace,RACE_FAIRY),1)
 	c:EnableReviveLimit()
+	--synchro summon
+	local syn0=Effect.CreateEffect(c)
+	syn0:SetType(EFFECT_TYPE_SINGLE)
+	syn0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
+	syn0:SetCode(EFFECT_SPSUMMON_CONDITION)
+	syn0:SetRange(LOCATION_EXTRA)
+	c:RegisterEffect(syn0)
+	local syn=Effect.CreateEffect(c)
+	syn:SetDescription(1164)
+	syn:SetType(EFFECT_TYPE_FIELD)
+	syn:SetCode(EFFECT_SPSUMMON_PROC)
+	syn:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	syn:SetRange(LOCATION_EXTRA)
+	syn:SetCondition(c16599467.synchrocon)
+	syn:SetTarget(c16599467.synchrotg)
+	syn:SetOperation(c16599467.synchrosummon)
+	syn:SetValue(SUMMON_TYPE_SYNCHRO)
+	c:RegisterEffect(syn)
 	--target protection
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -65,12 +82,45 @@ function c16599467.initial_effect(c)
 	e3:SetOperation(c16599467.scop)
 	c:RegisterEffect(e3)
 end
+--synchro summon
+function c16599467.synchrocon(e,c,smat,mg)
+	if c==nil then return true end
+	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+	if smat and smat:IsType(TYPE_TUNER) and (not c16599467.tunermat or c16599467.tunermat(smat)) then
+		return Duel.CheckTunerMaterial(c,smat,c16599467.tunermat,c16599467.nontunermat,1,99,mg) 
+	end
+	return Duel.CheckSynchroMaterial(c,c16599467.tunermat,c16599467.nontunermat,1,99,smat,mg)
+end
+function c16599467.synchrotg(e,tp,eg,ep,ev,re,r,rp,chk,c,smat,mg)
+	local g=nil
+	if smat and smat:IsType(TYPE_TUNER) and (not c16599467.tunermat or c16599467.tunermat(smat)) then
+		g=Duel.SelectTunerMaterial(c:GetControler(),c,smat,c16599467.tunermat,c16599467.nontunermat,1,99,mg)
+	else
+		g=Duel.SelectSynchroMaterial(c:GetControler(),c,c16599467.tunermat,c16599467.nontunermat,1,99,smat,mg)
+	end
+	if g then
+		g:KeepAlive()
+		e:SetLabelObject(g)
+		return true
+	else 
+		return false 
+	end
+end
+function c16599467.synchrosummon(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
+	local g=e:GetLabelObject()
+	c:SetMaterial(g)
+	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_SYNCHRO)
+	g:DeleteGroup()
+end
 --filters
 function c16599467.tunermat(c)
 	return c:IsType(TYPE_SYNCHRO) and c:IsRace(RACE_FAIRY)
 end
-function c16599467.mfilter(c,tp,sync)
-	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+function c16599467.nontunermat(c)
+	return not c:IsType(TYPE_TUNER) and c:IsRace(RACE_FAIRY)
+end
+function c16599467.mfilter(c,sync)
+	return c:IsLocation(LOCATION_GRAVE)
 		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
 		and c:IsAbleToRemoveAsCost()
 end
@@ -102,7 +152,7 @@ function c16599467.drycost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local mat=c:GetMaterial()
 	local matc=mat:GetCount()
-	if chk==0 then return matc>0 and mat:FilterCount(c16599467.mfilter,nil,tp,c)==matc end
+	if chk==0 then return matc>0 and mat:FilterCount(c16599467.mfilter,nil,c)==matc end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=mat:Select(tp,matc,matc,nil)
 	if g:GetCount()==matc then

@@ -67,10 +67,16 @@ function c16599469.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		local opt=0
+		opt=Duel.SelectOption(tp,aux.Stringid(16599469,0),aux.Stringid(16599469,1))
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)
-		e1:SetValue(-1)
+		if opt==0 then
+			e1:SetValue(-1)
+		else
+			e1:SetValue(1)
+		end
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())

@@ -48,8 +48,8 @@ function c16599466.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 --filters
-function c16599466.mfilter(c,tp,sync)
-	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+function c16599466.mfilter(c,sync)
+	return c:IsLocation(LOCATION_GRAVE)
 		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
 		and c:IsAbleToRemoveAsCost()
 end
@@ -74,7 +74,7 @@ function c16599466.drawcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local mat=c:GetMaterial()
 	local matc=mat:GetCount()
-	if chk==0 then return matc>0 and mat:FilterCount(c16599466.mfilter,nil,tp,c)==matc end
+	if chk==0 then return matc>0 and mat:FilterCount(c16599466.mfilter,nil,c)==matc end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=mat:Select(tp,matc,matc,nil)
 	if g:GetCount()==matc then
@@ -137,9 +137,9 @@ function c16599466.sctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 end
 function c16599466.scop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
 end

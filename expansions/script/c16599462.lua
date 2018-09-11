@@ -34,6 +34,7 @@ end
 function c16599462.cfilter(c,tp)
 	return c:IsSetCard(0x1559) and c:IsType(TYPE_MONSTER) and c:GetLevel()>0
 		and Duel.IsExistingMatchingCard(c16599462.lvexc,tp,LOCATION_MZONE,0,1,c,c:GetLevel())
+		and (c:IsLocation(LOCATION_DECK+LOCATION_GRAVE) or (c:IsLocation(LOCATION_MZONE) and c:IsFaceup()))
 end
 function c16599462.lvexc(c,lv)
 	return c:IsFaceup() and c:GetLevel()~=lv
@@ -44,10 +45,10 @@ end
 --Activate
 function c16599462.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
-		return Duel.IsExistingMatchingCard(c16599462.cfilter,tp,LOCATION_DECK,0,1,nil,tp) 
+		return Duel.IsExistingMatchingCard(c16599462.cfilter,tp,LOCATION_DECK+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp) 
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c16599462.cfilter,tp,LOCATION_DECK,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,c16599462.cfilter,tp,LOCATION_DECK+LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 		local op=Duel.GetOperatedGroup():GetFirst()

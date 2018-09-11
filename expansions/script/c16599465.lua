@@ -42,14 +42,13 @@ function c16599465.initial_effect(c)
 	e3:SetCode(EVENT_REMOVE)
 	e3:SetCountLimit(1,16599465)
 	e3:SetCondition(c16599465.sccon)
-	e3:SetCost(c16599465.sccost)
 	e3:SetTarget(c16599465.sctg)
 	e3:SetOperation(c16599465.scop)
 	c:RegisterEffect(e3)
 end
 --filters
-function c16599465.mfilter(c,tp,sync)
-	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+function c16599465.mfilter(c,sync)
+	return c:IsLocation(LOCATION_GRAVE)
 		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
 		and c:IsAbleToRemoveAsCost()
 end
@@ -80,7 +79,7 @@ function c16599465.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local mat=c:GetMaterial()
 	local matc=mat:GetCount()
-	if chk==0 then return matc>0 and mat:FilterCount(c16599465.mfilter,nil,tp,c)==matc end
+	if chk==0 then return matc>0 and mat:FilterCount(c16599465.mfilter,nil,c)==matc end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=mat:Select(tp,matc,matc,nil)
 	if g:GetCount()==matc then
@@ -119,14 +118,6 @@ end
 function c16599465.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_COST) and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_MONSTER)
 		and re:GetHandler():IsRace(RACE_FAIRY) and re:GetHandler():IsType(TYPE_SYNCHRO)
-end
-function c16599465.sccost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16599465.costfilter,tp,LOCATION_DECK,0,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c16599465.costfilter,tp,LOCATION_DECK,0,1,1,e:GetHandler())
-	if g:GetCount()>0 then
-		Duel.Remove(g,POS_FACEUP,REASON_COST)
-	end
 end
 function c16599465.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c16599465.tgfilter,tp,LOCATION_HAND,0,1,e:GetHandler())

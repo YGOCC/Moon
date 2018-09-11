@@ -45,13 +45,13 @@ function c16599463.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 --filters
-function c16599463.mfilter(c,tp,sync)
-	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+function c16599463.mfilter(c,sync)
+	return c:IsLocation(LOCATION_GRAVE)
 		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
 		and c:IsAbleToRemoveAsCost()
 end
 function c16599463.lvfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x1559) and c:GetLevel()>0 and c:GetLevel()<=6
+	return c:IsFaceup() and c:IsSetCard(0x1559) and c:GetLevel()>0 and c:GetLevel()<=7
 end
 --target protection
 function c16599463.efilter(e,re,rp)
@@ -65,7 +65,7 @@ function c16599463.bpcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local mat=c:GetMaterial()
 	local matc=mat:GetCount()
-	if chk==0 then return mat:FilterCount(c16599463.mfilter,nil,tp,c)==matc end
+	if chk==0 then return matc>0 and mat:FilterCount(c16599463.mfilter,nil,c)==matc end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=mat:Select(tp,matc,matc,nil)
 	if g:GetCount()==matc then
@@ -80,8 +80,9 @@ function c16599463.bpop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetValue(1)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
+	c:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16599463,0))
 end
 --inflict damage
 function c16599463.damcon(e,tp,eg,ep,ev,re,r,rp)
@@ -123,6 +124,7 @@ function c16599463.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(1)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
+		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16599463,0))
 	end
 end
 
