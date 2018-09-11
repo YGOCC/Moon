@@ -1,7 +1,7 @@
 --Paintress-Ama Archfiend Goghi
 function c16000443.initial_effect(c)
    --link summon
-   aux.AddLinkProcedure(c,nil,2,c16000443.lcheck)
+	aux.AddLinkProcedure(c,nil,2,99,c16000443.lcheck)
 	c:EnableReviveLimit()
   --special summon
 	--local e0=Effect.CreateEffect(c)
