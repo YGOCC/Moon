@@ -1,5 +1,6 @@
 --S.G. Suppressor
 function c21730407.initial_effect(c)
+	c:SetUniqueOnField(1,0,21730407)
 	--link procedure
 	aux.AddLinkProcedure(c,c21730407.matfilter,1,1)
 	c:EnableReviveLimit()
@@ -22,7 +23,7 @@ function c21730407.initial_effect(c)
 end
 --link procedure
 function c21730407.matfilter(c)
-	return c:IsLinkSetCard(0x719) and not c:IsType(TYPE_LINK)
+	return c:IsLinkSetCard(0x719) and not (c:IsSummonType(SUMMON_TYPE_LINK) and c:IsStatus(STATUS_SPSUMMON_TURN))
 end
 --take control of monster
 function c21730407.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -52,7 +53,7 @@ function c21730407.regop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c21730407.thfilter(c)
-	return c:IsSetCard(0x719) and c:IsType(TYPE_MONSTER) and not c:IsRace(RACE_MACHINE) and c:IsAbleToHand()
+	return c:IsRace(RACE_MACHINE) and c:IsAbleToHand()
 end
 function c21730407.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c21730407.thfilter,tp,LOCATION_DECK,0,1,nil) end

@@ -2,8 +2,10 @@
 function c21730410.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(1160)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCost(c21730410.reg)
 	c:RegisterEffect(e1)
 	--send from deck to grave
 	local e2=Effect.CreateEffect(c)
@@ -26,6 +28,18 @@ function c21730410.initial_effect(c)
 	e3:SetTarget(c21730410.rmtg)
 	e3:SetOperation(c21730410.rmop)
 	c:RegisterEffect(e3)
+	--return card to hand
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(21730410,2))
+	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_PHASE+PHASE_END)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCountLimit(1)
+	e4:SetCondition(c21730410.retcon)
+	e4:SetTarget(c21730410.rettg)
+	e4:SetOperation(c21730410.retop)
+	c:RegisterEffect(e4)
 end
 --send from deck to grave
 function c21730410.tgfilter(c)
@@ -63,5 +77,26 @@ function c21730410.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	end
+end
+--return card to hand
+function c21730410.reg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	e:GetHandler():RegisterFlagEffect(21730410,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+end
+function c21730410.retcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(21730410)~=0
+end
+function c21730410.rettg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsAbleToHand() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+end
+function c21730410.retop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end

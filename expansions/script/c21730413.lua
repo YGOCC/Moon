@@ -2,8 +2,10 @@
 function c21730413.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(1160)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCost(c21730413.reg)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
 	c:RegisterEffect(e1)
 	--special summon token
@@ -31,6 +33,18 @@ function c21730413.initial_effect(c)
 	e3:SetTarget(c21730413.lktg)
 	e3:SetOperation(c21730413.lkop)
 	c:RegisterEffect(e3)
+	--add from deck to hand
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(21730410,2))
+	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_PHASE+PHASE_END)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCountLimit(1)
+	e4:SetCondition(c21730413.thcon)
+	e4:SetTarget(c21730413.thtg)
+	e4:SetOperation(c21730413.thop)
+	c:RegisterEffect(e4)
 end
 --special summon token
 function c21730413.tkfilter(c)
@@ -74,5 +88,28 @@ function c21730413.lkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.SpecialSummonRule(tp,tc,SUMMON_TYPE_LINK)
+	end
+end
+--add from deck to hand
+function c21730413.reg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	e:GetHandler():RegisterFlagEffect(21730413,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+end
+function c21730413.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(21730413)~=0
+end
+function c21730413.thfilter(c)
+	return c:IsSetCard(0x719) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
+function c21730413.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c21730413.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c21730413.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c21730413.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
 end

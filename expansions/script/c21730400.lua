@@ -18,9 +18,9 @@ function c21730400.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetHintTiming(TIMING_DAMAGE_STEP,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_DAMAGE_STEP+TIMING_END_PHASE)
 	e2:SetCost(c21730400.discon)
-	e2:SetCost(c21730400.discost)
-	e2:SetTarget(c21730400.distg)
-	e2:SetOperation(c21730400.disop)
+	e2:SetCost(c21730400.cost)
+	e2:SetTarget(c21730400.target)
+	e2:SetOperation(c21730400.operation)
 	c:RegisterEffect(e2)
 end
 --special summon from hand
@@ -30,7 +30,7 @@ function c21730400.spcon(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 --halve monster's atk/def and negate its effects
-function c21730400.disfilter(c,tp)
+function c21730400.filter(c,tp)
 	return c:IsSetCard(0x719) and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,c)
 end
 function c21730400.discon(e,tp,eg,ep,ev,re,r,rp)
@@ -39,9 +39,9 @@ end
 function c21730400.rcost(c)
 	return c:IsCode(21730411) and c:IsReleasable() and not c:IsDisabled() and not c:IsForbidden()
 end
-function c21730400.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c21730400.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local b1=Duel.CheckReleaseGroup(tp,c21730400.disfilter,1,false,nil,nil,tp)
+	local b1=Duel.CheckReleaseGroup(tp,c21730400.filter,1,false,nil,nil,tp)
 	local b2=Duel.IsExistingMatchingCard(c21730400.rcost,tp,LOCATION_FZONE,0,1,nil)
 	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
 	if Duel.Remove(c,POS_FACEUP,REASON_COST)~=0 then
@@ -58,18 +58,18 @@ function c21730400.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 		local tg=Duel.GetFirstMatchingCard(c21730400.rcost,tp,LOCATION_FZONE,0,nil)
 		Duel.Release(tg,REASON_COST)
 	else
-		local g=Duel.SelectReleaseGroup(tp,c21730400.disfilter,1,1,false,nil,nil,tp)
+		local g=Duel.SelectReleaseGroup(tp,c21730400.filter,1,1,false,nil,nil,tp)
 		Duel.Release(g,REASON_COST)
 	end
 end
-function c21730400.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c21730400.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and Card.IsFaceup(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
-function c21730400.disop(e,tp,eg,ep,ev,re,r,rp)
+function c21730400.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then

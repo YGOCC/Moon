@@ -16,9 +16,9 @@ function c21730403.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
-	e2:SetCost(c21730403.thcost)
-	e2:SetTarget(c21730403.thtg)
-	e2:SetOperation(c21730403.thop)
+	e2:SetCost(c21730403.cost)
+	e2:SetTarget(c21730403.target)
+	e2:SetOperation(c21730403.operation)
 	c:RegisterEffect(e2)
 end
 --special summon from hand
@@ -28,18 +28,18 @@ function c21730403.spcon(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 --add from deck to hand
-function c21730403.thfilter1(c)
+function c21730403.filter(c)
 	return c:IsSetCard(0x719)
 end
-function c21730403.thfilter2(c)
+function c21730403.thfilter(c)
 	return c:IsSetCard(0x719) and c:IsType(TYPE_TRAP) and c:IsAbleToHand()
 end
 function c21730403.rcost(c)
 	return c:IsCode(21730411) and c:IsReleasable() and not c:IsDisabled() and not c:IsForbidden()
 end
-function c21730403.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c21730403.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local b1=Duel.CheckReleaseGroup(tp,c21730403.thfilter1,1,false,nil,nil,tp)
+	local b1=Duel.CheckReleaseGroup(tp,c21730403.filter,1,false,nil,nil,tp)
 	local b2=Duel.IsExistingMatchingCard(c21730403.rcost,tp,LOCATION_FZONE,0,1,nil)
 	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
 	if Duel.Remove(c,POS_FACEUP,REASON_COST)~=0 then
@@ -56,17 +56,17 @@ function c21730403.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 		local tg=Duel.GetFirstMatchingCard(c21730403.rcost,tp,LOCATION_FZONE,0,nil)
 		Duel.Release(tg,REASON_COST)
 	else
-		local g=Duel.SelectReleaseGroup(tp,c21730403.thfilter1,1,1,false,nil,nil,tp)
+		local g=Duel.SelectReleaseGroup(tp,c21730403.filter,1,1,false,nil,nil,tp)
 		Duel.Release(g,REASON_COST)
 	end
 end
-function c21730403.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c21730403.thfilter2,tp,LOCATION_DECK,0,1,nil) end
+function c21730403.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c21730403.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function c21730403.thop(e,tp,eg,ep,ev,re,r,rp)
+function c21730403.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c21730403.thfilter2,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c21730403.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

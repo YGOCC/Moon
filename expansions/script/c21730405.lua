@@ -1,5 +1,6 @@
 --S.G. Diver
 function c21730405.initial_effect(c)
+	c:SetUniqueOnField(1,0,21730405)
 	--link procedure
 	aux.AddLinkProcedure(c,c21730405.matfilter,1,1)
 	c:EnableReviveLimit()
@@ -22,7 +23,7 @@ function c21730405.initial_effect(c)
 end
 --link procedure
 function c21730405.matfilter(c)
-	return c:IsLinkSetCard(0x719) and not c:IsType(TYPE_LINK)
+	return c:IsLinkSetCard(0x719) and not (c:IsSummonType(SUMMON_TYPE_LINK) and c:IsStatus(STATUS_SPSUMMON_TURN))
 end
 --unaffected by non-targeting
 function c21730405.imval(e,re)

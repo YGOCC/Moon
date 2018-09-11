@@ -1,5 +1,6 @@
 --S.G. Assaulter
 function c21730408.initial_effect(c)
+	c:SetUniqueOnField(1,0,21730408)
 	--link procedure
 	aux.AddLinkProcedure(c,c21730408.matfilter,1,1)
 	c:EnableReviveLimit()
@@ -38,7 +39,7 @@ function c21730408.regop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c21730408.tdfilter(c)
-	return c:IsSetCard(0x719) and c:IsAbleToDeck()
+	return c:IsAbleToDeck()
 end
 function c21730408.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c21730408.tdfilter(chkc) end
