@@ -39,7 +39,7 @@ function c21730403.rcost(c)
 end
 function c21730403.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local b1=Duel.CheckReleaseGroup(tp,c21730403.thfilter,1,false,nil,nil,tp)
+	local b1=Duel.CheckReleaseGroup(tp,c21730403.thfilter1,1,false,nil,nil,tp)
 	local b2=Duel.IsExistingMatchingCard(c21730403.rcost,tp,LOCATION_FZONE,0,1,nil)
 	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
 	if Duel.Remove(c,POS_FACEUP,REASON_COST)~=0 then
@@ -56,7 +56,7 @@ function c21730403.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 		local tg=Duel.GetFirstMatchingCard(c21730403.rcost,tp,LOCATION_FZONE,0,nil)
 		Duel.Release(tg,REASON_COST)
 	else
-		local g=Duel.SelectReleaseGroup(tp,c21730403.thfilter,1,1,false,nil,nil,tp)
+		local g=Duel.SelectReleaseGroup(tp,c21730403.thfilter1,1,1,false,nil,nil,tp)
 		Duel.Release(g,REASON_COST)
 	end
 end
