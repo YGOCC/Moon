@@ -38,13 +38,37 @@ c:RegisterEffect(e2)
 		--spsummon count limit
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_SPSUMMON_COUNT_LIMIT)
+	 e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e4:SetTargetRange(0,1)
-	e4:SetValue(1)
 	e4:SetTarget(c160002496.sumlimit)
 	c:RegisterEffect(e4)
+
+   local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCode(160002496)
+	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e5:SetCondition(c160002496.con)
+	e5:SetTargetRange(0,1)
+	c:RegisterEffect(e5)
+	if c160002496.global_check==nil then
+		c160002496.global_check=true
+		c160002496[0]=1
+		c160002496[1]=1
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+		ge1:SetCode(EVENT_PHASE_START+PHASE_DRAW)
+		ge1:SetOperation(c160002496.resetop)
+		Duel.RegisterEffect(ge1,0)
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+		ge2:SetCode(EVENT_SPSUMMON_SUCCESS)
+		ge2:SetOperation(c160002496.checkop)
+		Duel.RegisterEffect(ge2,0)
+	end
+end
 
 		local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -103,7 +127,7 @@ function c160002496.descon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
 function c160002496.filter(c,atk)
-return	  not c:IsAbleToHandAsCost()
+return	not c:IsAbleToHandAsCost()
 	and not c:IsType(TYPE_SYNCHRO)
 	and c:IsAbleToRemove()
 	and not c:IsType(TYPE_TOKEN)
@@ -131,7 +155,26 @@ function c160002496.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return  not c:IsAbleToHandAsCost()
 	and not c:IsType(TYPE_SYNCHRO)
 	and not c:IsType(TYPE_TOKEN)
+	and c160002496[sump]<=0
 end
+
+
+function c160002496.resetop(e,tp,eg,ep,ev,re,r,rp)
+	c160002496[0]=1
+	c160002496[1]=1
+end
+function c160002496.checkop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=eg:GetFirst()
+	while tc do
+		if tc:IsPreviousLocation(LOCATION_EXTRA) then
+			local p=tc:GetSummonPlayer()
+			c160002496[p]=c160002496[p]-1
+		end
+		tc=eg:GetNext()
+	end
+end
+
+
 function c160002496.matfilter1(c,syncard)
 	return c:IsType(TYPE_TUNER) and c:IsSetCard(0x485a) and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsCanBeSynchroMaterial(syncard)
 end
