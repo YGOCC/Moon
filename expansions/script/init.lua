@@ -109,7 +109,7 @@ Card.GetType=function(c,scard,sumtype,p)
 		end
 	end
 	if Auxiliary.Coronas[c] then
-		tpe=tpe|TYPE_FUSION
+		tpe=tpe|TYPE_CORONA
 		if not Auxiliary.Coronas[c]() then
 			tpe=tpe&~TYPE_FUSION
 		end
@@ -150,7 +150,7 @@ Card.GetOriginalType=function(c)
 		end
 	end
 	if Auxiliary.Coronas[c] then
-		tpe=tpe|TYPE_FUSION
+		tpe=tpe|TYPE_CORONA
 		if not Auxiliary.Coronas[c]() then
 			tpe=tpe&~TYPE_FUSION
 		end
@@ -1354,6 +1354,7 @@ function Auxiliary.EnableCorona(c,f,aura,type,gf)
 	--Debug.Message("Registering Corona "..c:GetCode())
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	table.insert(Auxiliary.Coronas,c)
+	Auxiliary.Coronas[c]=function() return true end
 	Auxiliary.Customs[c]=true
 	--Add Aura
 	local mt=getmetatable(c)

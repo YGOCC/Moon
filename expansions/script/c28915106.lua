@@ -42,11 +42,13 @@ end
 
 --Draw
 function ref.drcfilter(c)
-	return aux.Coronas[c]==true and c:IsAbleToGraveAsCost()
+	--Debug.Message(c:IsType(TYPE_CORONA))
+	return c:IsType(TYPE_CORONA) and c:IsAbleToGraveAsCost()
 end
 function ref.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(ref.drcfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Remove(c,POS_FACEUP,REASON_COST)
 	Duel.DiscardHand(tp,ref.drcfilter,1,1,REASON_COST+REASON_DISCARD,nil)
 end
 function ref.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
