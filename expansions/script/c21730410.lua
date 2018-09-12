@@ -31,7 +31,7 @@ function c21730410.initial_effect(c)
 	--return card to hand
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(21730410,2))
-	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e4:SetCategory(CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_SZONE)

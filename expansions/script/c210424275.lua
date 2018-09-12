@@ -14,6 +14,15 @@ function card.initial_effect(c)
 	e1:SetTarget(card.damtg1)
 	e1:SetOperation(card.damop1)
 	c:RegisterEffect(e1)
+		--special summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_SPSUMMON_PROC)
+	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCountLimit(1,210424282)
+	e2:SetCondition(card.spcon)
+	c:RegisterEffect(e2)
 		--atkup
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
@@ -27,6 +36,14 @@ function card.initial_effect(c)
 	e3:SetCost(card.cost)
 	e3:SetOperation(card.operation)
 	c:RegisterEffect(e3)
+end
+function card.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x666)
+end
+function card.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and
+		Duel.IsExistingMatchingCard(card.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function card.condition(e,tp,eg,ep,ev,re,r,rp)
 	local phase=Duel.GetCurrentPhase()
@@ -55,7 +72,7 @@ function card.filter2(c,tp)
 	return c:IsFaceup() and not c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD)
 end
 function card.betarget(e,tp,eg,ep,ev,re,r,rp)
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) or not re:GetHandler():IsSetCard(0x666) or not re:GetHandler():IsType(TYPE_MONSTER) then return false end
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) or not re:GetHandler():IsSetCard(0x666) then return false end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	return g and g:IsExists(card.filter2,1,nil,tp)
 end
