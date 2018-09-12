@@ -1,4 +1,4 @@
---Moon Burst's Weapon
+--Moon Burst's Spirit Mark
 local card = c210424274
 function card.initial_effect(c)
 	c:SetUniqueOnField(1,0,210424274)
@@ -8,6 +8,7 @@ function card.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetRange(LOCATION_EXTRA)
+	e1:SetCountLimit(1,210424283)
 	e1:SetCost(card.playcost)
 	e1:SetTarget(card.eqtg)
 	e1:SetOperation(card.eqop)
