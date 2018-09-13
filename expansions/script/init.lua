@@ -11,6 +11,7 @@ EFFECT_STABLE							=765
 EFFECT_CANNOT_BE_POLARITY_MATERIAL		=766
 EFFECT_DIMENSION_NUMBER					=500
 EFFECT_CANNOT_BE_SPACE_MATERIAL			=501
+EFFECT_CORONA_DRAW_COST					=550
 TYPE_EVOLUTE							=0x100000000
 TYPE_PANDEMONIUM						=0x200000000
 TYPE_POLARITY							=0x400000000
@@ -26,6 +27,8 @@ CTYPE_CORONA							=0x16
 CTYPE_CUSTOM							=CTYPE_EVOLUTE+CTYPE_PANDEMONIUM+CTYPE_POLARITY+CTYPE_SPATIAL+TYPE_CORONA
 
 SUMMON_TYPE_EVOLUTE						=SUMMON_TYPE_SPECIAL+388
+
+EVENT_CORONA_DRAW						=EVENT_CUSTOM+0x1600000000
 
 --Custom Type Tables
 Auxiliary.Customs={} --check if card uses custom type, indexing card
@@ -1350,7 +1353,7 @@ function Auxiliary.EquipEquip(e,tp,eg,ep,ev,re,r,rp)
 end
 
 --Corona Card init
-function Auxiliary.EnableCorona(c,f,aura,type,gf)
+function Auxiliary.EnableCorona(c,f,auramin,auramax,type,gf)
 	--Debug.Message("Registering Corona "..c:GetCode())
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	table.insert(Auxiliary.Coronas,c)
@@ -1358,7 +1361,8 @@ function Auxiliary.EnableCorona(c,f,aura,type,gf)
 	Auxiliary.Customs[c]=true
 	--Add Aura
 	local mt=getmetatable(c)
-	mt.aura=aura
+	mt.aura=auramin
+	mt.max_aura=auramax
 	--Debug.Message("Aura is "..aura.."; Set to "..c.aura)
 	--ChainCount
 	local chain=Effect.CreateEffect(c)
@@ -1404,34 +1408,52 @@ end
 --ChainCount+Check
 function Auxiliary.CoronaChainCount(func,gf)
 	return function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		c:ResetFlagEffect(1600000001)
 		e:SetLabel(Duel.GetCurrentChain())
 		if gf and not gf(ev) then return false end
 		for i=1,ev do
 			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-			if (not func) or func(te) then e:GetHandler():RegisterFlagEffect(1600000001,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1) end
+			if (not func) or func(te,e) then c:RegisterFlagEffect(1600000001,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1) end
 		end
 	end
 end
 --Chrona Draw
 function Auxiliary.CoronaFilter(c,chain)
-	--if c.aura then Debug.Message("Chain is "..chain..", Aura is "..c.aura) end
-	return c.aura and c.aura<=chain and c:GetFlagEffect(1600000001)~=0
+	return c.aura and c.aura<=chain and c.max_aura>=chain and c:GetFlagEffect(1600000001)~=0
+end
+function Auxiliary.CoronaCostCheck(c,e,tp,eg,ep,ev,re,r,rp)
+	if not c:IsHasEffect(EFFECT_CORONA_DRAW_COST) then return true end
+	local tef={c:IsHasEffect(EFFECT_CORONA_DRAW_COST)}
+	for _,te in ipairs(tef) do
+		if not te:GetValue(e,tp,eg,ep,ev,re,r,rp,0) then return false end
+	end
+	return true
 end
 function Auxiliary.CoronaDraw(e,tp,eg,ep,ev,re,r,rp)
 	local chain=e:GetLabelObject():GetLabel()
-	local g=Duel.GetMatchingGroup(Auxiliary.CoronaFilter,tp,LOCATION_EXTRA,0,nil,chain)
+	local cg=Duel.GetMatchingGroup(Auxiliary.CoronaFilter,tp,LOCATION_EXTRA,0,nil,chain)
+	g=cg:Filter(Auxiliary.CoronaCostCheck,nil,e,tp,eg,ep,ev,re,r,rp)
 	for cc in aux.Next(g) do
 		cc:ResetFlagEffect(1600000001)
 	end
 	e:GetLabelObject():SetLabel(0)
-	if Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp,1600000000)==0 and g:GetCount()>0 and Duel.SelectYesNo(tp,94) then
+	if Duel.GetTurnPlayer()==tp and Duel.GetFlagEffect(tp,1600000000)==0 and g:GetCount()>0 and Duel.SelectYesNo(tp,94) then --and Duel.SelectYesNo(tp,aux.Stringid(557,0)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local tc=g:Select(tp,1,1,nil):GetFirst()
 		if tc then
+			if tc:IsHasEffect(EFFECT_CORONA_DRAW_COST) then
+				local tef={tc:IsHasEffect(EFFECT_CORONA_DRAW_COST)}
+				for _,te in ipairs(tef) do
+					local costf=te:GetValue()
+					costf(e,tp,eg,ep,ev,re,r,rp,1)
+				end
+			end
 			local tpe=tc:GetOriginalType()-TYPE_FUSION
 			Auxiliary.AddCoronaToHand(tc,REASON_RULE,tpe)
 			Duel.ConfirmCards(1-tp,tc)
 			Duel.RaiseEvent(tc,EVENT_DRAW,e,REASON_RULE,tp,tp,1)
+			Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,e,REASON_RULE,tp,tp,1)
 			Duel.RegisterFlagEffect(tp,1600000000,RESET_PHASE+PHASE_END,0,0)
 		end
 	end

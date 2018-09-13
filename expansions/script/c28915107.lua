@@ -3,7 +3,7 @@ local ref=_G['c'..28915107]
 local id=28915107
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCorona(c,ref.matfilter,2,TYPE_MONSTER+TYPE_EFFECT,ref.refilter)
+	aux.EnableCorona(c,ref.matfilter,3,99,TYPE_MONSTER+TYPE_EFFECT,ref.refilter)
 	--NS
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -17,7 +17,7 @@ function ref.initial_effect(c)
 	c:RegisterEffect(e1)
 	--ToGrave
 	local e2=e1:Clone()
-	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCode(EVENT_REMOVE)
 	e2:SetCountLimit(1,id)
 	e2:SetLabel(2)
 	c:RegisterEffect(e2)

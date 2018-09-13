@@ -42,7 +42,7 @@ c:SetCounterLimit(0x99,15)
 	c:RegisterEffect(e4)
 	--Search
 	local e5=Effect.CreateEffect(c)
-	e5:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e5:SetCategory(CATEGORY_SEARCH)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e5:SetCode(EVENT_BECOME_TARGET)
 	e5:SetRange(LOCATION_SZONE)

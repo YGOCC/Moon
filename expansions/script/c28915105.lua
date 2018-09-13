@@ -3,7 +3,7 @@ local ref=_G['c'..28915105]
 local id=28915105
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCorona(c,ref.matfilter,3,TYPE_SPELL,nil)
+	aux.EnableCorona(c,ref.matfilter,3,99,TYPE_SPELL,nil)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DRAW+CATEGORY_TOGRAVE)
