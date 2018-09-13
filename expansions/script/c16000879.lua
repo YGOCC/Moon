@@ -1,7 +1,7 @@
 --Medivatale Elf
 function c16000879.initial_effect(c)
    --special summon
---	local e1=Effect.CreateEffect(c)
+--  local e1=Effect.CreateEffect(c)
  --   e1:SetType(EFFECT_TYPE_FIELD)
  --   e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
   --  e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -115,7 +115,7 @@ function c16000879.condition(e,tp,eg,ep,ev,re,r,rp)
 	local bc=Duel.GetAttackTarget()
 	if not bc then return false end
 	if tc:IsControler(1-tp) then tc,bc=bc,tc end
-	if tc:IsSetCard(0xab5) and bc:IsSummonType(SUMMON_TYPE_SPECIAL) and bc:IsType(TYPE_EFFECT)then
+	if tc:IsSetCard(0xab5)  and bc:IsType(TYPE_EFFECT)then
 		e:SetLabelObject(bc)
 		return true
 	else return false end
