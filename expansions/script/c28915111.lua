@@ -10,7 +10,8 @@ function ref.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e1:SetCondition(ref.sscon)
 	e1:SetCost(ref.sscost)
 	e1:SetTarget(ref.sstg)
 	e1:SetOperation(ref.ssop)
@@ -43,6 +44,10 @@ function ref.gmatfilter(eg)
 end
 
 --SS
+function ref.sscon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
+end
 function ref.sscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil) end
 	local g=Duel.SelectReleaseGroup(tp,nil,1,1,nil)

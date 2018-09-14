@@ -1363,6 +1363,8 @@ function Auxiliary.EnableCorona(c,f,auramin,auramax,type,gf)
 	local mt=getmetatable(c)
 	mt.aura=auramin
 	mt.max_aura=auramax
+	mt.corona_condition=f
+	mt.corona_global_condition=gf
 	--Debug.Message("Aura is "..aura.."; Set to "..c.aura)
 	--ChainCount
 	local chain=Effect.CreateEffect(c)
