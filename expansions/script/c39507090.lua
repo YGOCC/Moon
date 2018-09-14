@@ -1,4 +1,6 @@
 --Chronologist Token
+--v1.1 14.9.18
+--May come back and simplify later...
 Card=Card or {}
 local cod=Card
 
@@ -24,10 +26,22 @@ aux.Stringid(39507090,5), --Top Left
 aux.Stringid(39507090,6), --Top
 aux.Stringid(39507090,7)} --Top Right
 
---Link Check
+--Rotate Link Marker Clockwise
+cod.rlink_list={
+LINK_MARKER_BOTTOM_LEFT,
+LINK_MARKER_LEFT,
+LINK_MARKER_TOP_LEFT,
+LINK_MARKER_TOP,
+LINK_MARKER_TOP_RIGHT,
+LINK_MARKER_RIGHT,
+LINK_MARKER_BOTTOM_RIGHT,
+LINK_MARKER_BOTTOM}
+
+--Chronologist Link Check
 --Checks what Link Markers are "on"
 --Pass anything through ... to check for what Link Markers are "off"
-function Card.LinkCheck(c,...)
+--Returns the link marker value and a string message
+function cod.LinkCheck(c,...)
     local off=1
     local arg={...}
     local lk={}
@@ -54,12 +68,12 @@ end
 
 
 --Rotated Link Marker Value
---c for card
---ct for number to rotate by
-function Card.RLinkVal(c,ct)
+--"ct" for number to rotate by
+--Returns the total value of the rotated link markers
+function cod.RLinkVal(c,ct)
     local off=1
     local val=0
-    local link=cod.link_list
+    local link=cod.rlink_list
     for i=1,#link do
         if c:IsLinkMarker(link[i]) then
             if link[i+ct]==nil then
