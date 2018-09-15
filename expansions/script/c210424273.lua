@@ -11,12 +11,6 @@ function card.initial_effect(c)
 	e1:SetTarget(card.sumtg)
 	e1:SetOperation(card.sumop)
 	c:RegisterEffect(e1)
-	
-	
-	
-	
-	
-	
 	--sp summon, banish when leaving field
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
