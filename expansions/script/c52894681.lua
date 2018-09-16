@@ -1,6 +1,7 @@
 --Raging Oni Mask
 --Scripted by Kedy
 --Concept by XStutzX
+--Edited 16.9.18 v1.1
 local function ID()
     local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
     str=string.sub(str,1,string.len(str)-4)
@@ -31,6 +32,7 @@ function cod.initial_effect(c)
 	e2:SetTarget(cod.thtg)
 	e2:SetOperation(cod.thop)
 	c:RegisterEffect(e2)
+	cod[c]=e1
 end
 function cod.tgfilter(c,e,tp,mg,f,chkf)
 	mg:AddCard(c)
@@ -43,6 +45,7 @@ function cod.spfilter(c,e,tp,m,f,gc,chkf)
 end
 function cod.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
+	mg1:AddCard(e:GetHandler())
 	if chk==0 then return Duel.IsExistingTarget(cod.tgfilter,tp,0,LOCATION_MZONE,1,nil,e,tp,mg1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 	local g=Duel.SelectTarget(tp,cod.tgfilter,tp,0,LOCATION_MZONE,1,1,nil,e,tp,mg1,nil,tp)
@@ -61,6 +64,7 @@ function cod.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or not tc:IsRelateToEffect(e) then return end
 	local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
 	mg1:AddCard(tc)
+	mg1:AddCard(c)
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsCanBeFusionMaterial() and not tc:IsImmuneToEffect(e) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,cod.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,mg1,nil,nil,tp)

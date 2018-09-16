@@ -1,6 +1,7 @@
 --Sinister Oni Mask Ritual
 --Scripted by Kedy
 --Concept by XStutzX
+--Edited 16.9.18 v1.1
 local function ID()
     local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
     str=string.sub(str,1,string.len(str)-4)
@@ -15,6 +16,7 @@ function cod.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,id)
 	e1:SetTarget(cod.target)
 	e1:SetOperation(cod.activate)
 	c:RegisterEffect(e1)
@@ -26,6 +28,7 @@ function cod.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,id)
 	e2:SetCost(aux.bfgcost)
 	e2:SetCondition(cod.salcon)
 	e2:SetTarget(cod.saltg)
@@ -34,20 +37,55 @@ function cod.initial_effect(c)
 end
 
 --Send to Grave
-function cod.filter(c)
-	return c:IsSetCard(0xf05a) and c:IsType(TYPE_MONSTER)
+function cod.filter(c,e,tp)
+	local mt=_G["c"..c:GetCode()]
+	if not mt[c] then return end
+	local fe=mt[c]
+	return c:IsSetCard(0xf05a) and c:IsType(TYPE_MONSTER) and cod.matfilter(e,fe,tp)
+end
+function cod.matfilter(e,fe,tp)
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetCode(EFFECT_ADD_TYPE)
+	e1:SetValue(TYPE_MONSTER)
+	e1:SetReset(RESET_CHAIN)
+	c:RegisterEffect(e1)
+	local res=fe:GetTarget()(e,tp,nil,0,0,0,0,0,0)
+	e1:Reset()
+	return res
 end
 function cod.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cod.filter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cod.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,cod.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local mt=_G["c"..g:GetFirst():GetCode()]
+	local fe=mt[g:GetFirst()]
+	Duel.SendtoGrave(g,REASON_EFFECT)
+	e:SetCategory(fe:GetCategory())
+	e:SetProperty(fe:GetProperty())
+	local tg=fe:GetTarget()
+	if tg then tg(e,tp,nil,0,0,0,0,0,1) end
+	fe:SetLabelObject(e:GetLabelObject())
+	e:SetLabelObject(fe)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function cod.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,cod.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if #g<=0 then return end
-	Duel.SendtoGrave(g,REASON_EFFECT)
+	local fe=e:GetLabelObject()
+	if not fe then return end
+	e:SetLabelObject(fe:GetLabelObject())
+	local op=fe:GetOperation()
+	if op then 
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+		e1:SetCode(EFFECT_ADD_TYPE)
+		e1:SetValue(TYPE_MONSTER)
+		e1:SetReset(RESET_CHAIN)
+		e:GetHandler():RegisterEffect(e1)
+		op(e,tp,eg,ep,ev,re,r,rp) 
+	end
 end
 
 --Fusion Sub

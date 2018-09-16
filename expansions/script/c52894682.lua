@@ -1,6 +1,7 @@
 --Seeking Oni Mask
 --Scripted by Kedy
 --Concept by XStutzX
+--Edited 16.9.18 v1.1
 local function ID()
     local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
     str=string.sub(str,1,string.len(str)-4)
@@ -31,6 +32,7 @@ function cod.initial_effect(c)
 	e2:SetTarget(cod.thtg)
 	e2:SetOperation(cod.thop)
 	c:RegisterEffect(e2)
+	cod[c]=e1
 end
 
 --Fusion Summon

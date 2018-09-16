@@ -1,6 +1,7 @@
 --Tension in the Sylvan Forest
 --Scripted by Kedy
 --Concept by XStutzX
+--Edited 16.9.18 v1.1
 local function ID()
     local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
     str=string.sub(str,1,string.len(str)-4)
@@ -41,6 +42,17 @@ function cod.initial_effect(c)
 	e3:SetTarget(cod.td_tg)
 	e3:SetOperation(cod.td_op)
 	c:RegisterEffect(e3)
+	--Return
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,2))
+	e4:SetCategory(CATEGORY_TOHAND)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetRange(LOCATION_GRAVE)
+	e4:SetCountLimit(1,id)
+	e4:SetCost(aux.bfgcost)
+	e4:SetTarget(cod.th_tg)
+	e4:SetOperation(cod.th_op)
+	c:RegisterEffect(e4)
 end
 
 --Draw
@@ -71,13 +83,27 @@ function cod.cfilter(c)
 	return c:IsSetCard(0xf05b) and c:IsAbleToExtra()
 end
 function cod.td_tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(cod.cfilter,tp,LOCATION_GRAVE,0,2,nil) end
+	if chk==0 then return Duel.IsExistingTarget(cod.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,cod.cfilter,tp,LOCATION_GRAVE,0,2,2,nil)
+	local g=Duel.SelectTarget(tp,cod.cfilter,tp,LOCATION_GRAVE,0,1,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,#g,tp,LOCATION_GRAVE)
 end
 function cod.td_op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if #g<2 then return end
+	if #g<=0 then return end
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+end
+function cod.thfilter(c)
+	return c:IsSetCard(0xf05a) and c:IsType(TYPE_TRAP) and c:IsAbleToHand()
+end
+function cod.th_tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cod.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
+end
+function cod.th_op(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,cod.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	if #g>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+	end
 end

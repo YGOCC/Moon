@@ -1,6 +1,7 @@
 --Darkness Oni Mask
 --Scripted by Kedy
 --Concept by XStutzX
+--Edited 16.9.18 v1.1
 local function ID()
     local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
     str=string.sub(str,1,string.len(str)-4)
@@ -31,6 +32,7 @@ function cod.initial_effect(c)
 	e2:SetTarget(cod.thtg)
 	e2:SetOperation(cod.thop)
 	c:RegisterEffect(e2)
+	cod[c]=e1
 end
 
 --Fusion Summon
@@ -46,6 +48,7 @@ function cod.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp)
+		mg1:AddCard(c)
 		local res=Duel.IsExistingMatchingCard(cod.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,c,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -72,6 +75,7 @@ function cod.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or c:IsImmuneToEffect(e) then return end
 	if Duel.GetFlagEffect(tp,id)>0 then return false end
 	local mg1=Duel.GetFusionMaterial(tp)
+	mg1:AddCard(c)
 	local sg1=Duel.GetMatchingGroup(cod.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,c,chkf)
 	local mg2=nil
 	local sg2=nil

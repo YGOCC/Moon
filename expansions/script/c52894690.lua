@@ -1,6 +1,7 @@
 --Forest Daiyoukai
 --Scripted by Kedy
 --Concept by XStutzX
+--Edited 16.9.18 v1.1
 local function ID()
     local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
     str=string.sub(str,1,string.len(str)-4)
@@ -49,10 +50,20 @@ function cod.initial_effect(c)
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetCode(EVENT_SPSUMMON_SUCCESS)
-		ge1:SetLabel(id)
 		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		ge1:SetOperation(aux.sumreg)
+		ge1:SetOperation(cod.sumreg)
 		Duel.RegisterEffect(ge1,0)
+	end
+end
+
+--Summon Reg
+function cod.sumreg(e,tp,eg,ep,ev,re,r,rp)
+	local tc=eg:GetFirst()
+	while tc do
+		if tc:GetOriginalCode()==id then
+			tc:RegisterFlagEffect(id,RESET_EVENT+0x1ec0000,0,1)
+		end
+		tc=eg:GetNext()
 	end
 end
 
