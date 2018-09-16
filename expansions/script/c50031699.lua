@@ -98,12 +98,14 @@ function c50031699.operation2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
 	local g=Duel.GetOperatedGroup()
 	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	local ct=g:FilterCount(c50031699.cfilterx,nil)
-	if ct==5 then
+	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
+	if ct==5 and g:IsExists(c50031699.cfilterx,1,nil) and Duel.IsPlayerCanDraw(tp,1)  then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
+   
+
 function c50031699.cfilterx(c)
 	return c:IsLocation(LOCATION_DECK+LOCATION_EXTRA) and c:IsSetCard(0x185a) and c:IsType(TYPE_MONSTER)
 end

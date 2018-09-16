@@ -23,72 +23,64 @@ function c500316971.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetValue(aux.indoval)
 	c:RegisterEffect(e3)
-	--spsummon count limit
-
-
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e4:SetCondition(c500316971.con)
-	e4:SetTarget(c500316971.sumlimit)
-	e4:SetTargetRange(1,1)
-	c:RegisterEffect(e4)
-
-   local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetCode(500316971)
-	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e5:SetCondition(c500316971.con)
-	e5:SetTargetRange(1,1)
-	c:RegisterEffect(e5)
-	if c500316971.global_check==nil then
-		c500316971.global_check=true
-		c500316971[0]=1
-		c500316971[1]=1
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-		ge1:SetCode(EVENT_PHASE_START+PHASE_DRAW)
-		ge1:SetOperation(c500316971.resetop)
-		Duel.RegisterEffect(ge1,0)
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-		ge2:SetCode(EVENT_SPSUMMON_SUCCESS)
-		ge2:SetOperation(c500316971.checkop)
-		Duel.RegisterEffect(ge2,0)
-	end
+	--spsum limit
+	local e3x=Effect.CreateEffect(c)
+	e3x:SetType(EFFECT_TYPE_FIELD)
+	e3x:SetRange(LOCATION_MZONE)
+	e3x:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e3x:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3x:SetTargetRange(1,0)
+	e3x:SetCondition(c500316971.sumlimcon)
+	e3x:SetTarget(c500316971.sumlimit)
+	c:RegisterEffect(e3x)
+	local e3y=Effect.CreateEffect(c)
+	e3y:SetType(EFFECT_TYPE_FIELD)
+	e3y:SetRange(LOCATION_MZONE)
+	e3y:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e3y:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3y:SetTargetRange(0,1)
+	e3y:SetLabelObject(e3x)
+	e3y:SetCondition(c500316971.sumlimcon)
+	e3y:SetTarget(c500316971.sumlimit)
+	c:RegisterEffect(e3y)
+	--register non-Evolute Spsummon
+	local e4x=Effect.CreateEffect(c)
+	e4x:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4x:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e4x:SetRange(LOCATION_MZONE)
+	e4x:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4x:SetLabelObject(e3x)
+	e4x:SetCondition(c500316971.ctcon)
+	e4x:SetOperation(c500316971.ctop)
+	c:RegisterEffect(e4x)
+	local e4y=Effect.CreateEffect(c)
+	e4y:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4y:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e4y:SetRange(LOCATION_MZONE)
+	e4y:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4y:SetLabelObject(e3y)
+	e4y:SetCondition(c500316971.ctcon2)
+	e4y:SetOperation(c500316971.ctop)
+	c:RegisterEffect(e4y)
+	--reset labels
+	local reset=Effect.CreateEffect(c)
+	reset:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	reset:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+	reset:SetRange(LOCATION_MZONE+LOCATION_SZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_OVERLAY)
+	reset:SetCode(EVENT_TURN_END)
+	reset:SetCountLimit(1)
+	reset:SetLabelObject(e3y)
+	reset:SetCondition(c500316971.resetcon)
+	reset:SetOperation(c500316971.resetop)
+	c:RegisterEffect(reset)
 end
-
+--filters
 function c500316971.filter1(c,ec,tp)
 	return c:IsType(TYPE_RITUAL)
 end
 function c500316971.filter2(c,ec,tp)
 	return c:IsRace(RACE_PLANT) or c:IsAttribute(ATTRIBUTE_EARTH)
 end
-function c500316971.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:IsLocation(LOCATION_EXTRA) and not c:IsType(TYPE_EVOLUTE) and c500316971[sump]<=0
-end
-function c500316971.con(e,tp,eg,ep,ev,re,r,rp)
-	return  e:GetHandler():GetCounter(0x88)==7
-end
-function c500316971.resetop(e,tp,eg,ep,ev,re,r,rp)
-	c500316971[0]=1
-	c500316971[1]=1
-end
-function c500316971.checkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	while tc do
-		if tc:IsPreviousLocation(LOCATION_EXTRA) then
-			local p=tc:GetSummonPlayer()
-			c500316971[p]=c500316971[p]-1
-		end
-		tc=eg:GetNext()
-	end
-end
-
-
 function c500316971.xfilter(c,tp)
 	return c:IsSetCard(0x185a) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()  --and Duel.IsExistingMatchingCard(c500316971.xfilter2,tp,LOCATION_DECK,0,1,nil,c)
 	 
@@ -96,8 +88,18 @@ end
 function c500316971.xfilter2(c,mc)
 	 return c:IsSetCard(0x85a) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
+function c500316971.xfilter3(c)
+	return c:IsLocation(LOCATION_HAND) and c:IsType(TYPE_RITUAL)
+end
+function c500316971.ctfilter(c,tp)
+	return c:IsFaceup() and not c:IsType(TYPE_EVOLUTE) and c:GetSummonLocation()==LOCATION_EXTRA and c:GetSummonPlayer()==tp
+end
+function c500316971.ctfilter2(c,tp)
+	return c:IsFaceup() and not c:IsType(TYPE_EVOLUTE) and c:GetSummonLocation()==LOCATION_EXTRA and c:GetSummonPlayer()~=tp
+end
+-----
 function c500316971.thcon(e,tp,eg,ep,ev,re,r,rp)
-return  e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388
 end
 function c500316971.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c500316971.xfilter,tp,LOCATION_DECK,0,1,nil,tp) end
@@ -114,12 +116,37 @@ function c500316971.thop(e,tp,eg,ep,ev,re,r,rp)
 			g:Merge(sg)
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
-		if g:IsExists(c500316971.xfilter3,1,nil) and Duel.IsPlayerCanDraw(tp,1) then
-	Duel.Draw(tp,1,REASON_EFFECT)
-end
+			if g:IsExists(c500316971.xfilter3,1,nil) and Duel.IsPlayerCanDraw(tp,1) then
+				Duel.Draw(tp,1,REASON_EFFECT)
+			end
 		end
 	end
 end
-function c500316971.xfilter3(c)
-return c:IsLocation(LOCATION_HAND) and c:IsType(TYPE_RITUAL)
+--spsummon limit
+function c500316971.sumlimcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetLabel()==123
+end
+function c500316971.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsType(TYPE_EVOLUTE)
+end
+--register non-Evolute spsummon
+function c500316971.ctcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c500316971.ctfilter,1,nil,tp)
+end
+function c500316971.ctcon2(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c500316971.ctfilter2,1,nil,tp)
+end
+function c500316971.ctop(e,tp,eg,ep,ev,re,r,rp)
+	e:GetLabelObject():SetLabel(123)
+end
+--reset labels
+function c500316971.resetcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetLabelObject():GetLabel()==123 or e:GetLabelObject():GetLabelObject():GetLabel()==123
+end
+function c500316971.resetop(e,tp,eg,ep,ev,re,r,rp)
+	e:GetLabelObject():SetLabel(0)
+	e:GetLabelObject():GetLabelObject():SetLabel(0)
+	if e:GetLabelObject():GetLabel()==0 and e:GetLabelObject():GetLabelObject():GetLabel()==0 then
+		Debug.Message('Labels resetted successfully')
+	end
 end

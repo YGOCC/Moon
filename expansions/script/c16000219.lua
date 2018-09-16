@@ -8,7 +8,6 @@ function c16000219.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
-
 	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16000219,0))
@@ -130,12 +129,9 @@ function c16000219.cfilter(c)
 end
 
 function c16000219.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(c16000219.cfilter,tp,LOCATION_EXTRA,0,1,e:GetHandler()) end
+	if chk==0 then return e:GetHandler():IsFaceup() and e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
-function c16000219.cfilter(c)
-	return c:IsFaceup()  and c:IsSetCard(0x185a)  and c:IsAbleToRemoveAsCost()
 end
 function c16000219.activate2(e,tp,eg,ep,ev,re,r,rp)
  local e1=Effect.CreateEffect(e:GetHandler())
@@ -143,7 +139,7 @@ function c16000219.activate2(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e1:SetTarget(c16000219.indtg)
 	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetValue(aux.indoval)
+	e1:SetValue(1)
 	e1:SetReset(RESET_STANDARD+RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 	local e2=Effect.CreateEffect(e:GetHandler())
@@ -151,10 +147,10 @@ function c16000219.activate2(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetTarget(c16000219.indtg)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetValue(aux.indoval)
+	e2:SetValue(1)
 	e2:SetReset(RESET_STANDARD+RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 end
 function c16000219.indtg(e,c)
-	return  c:IsSetCard(0x185a)
+	return c:IsSetCard(0x185a)
 end

@@ -72,7 +72,7 @@ function card.filter2(c,tp)
 	return c:IsFaceup() and not c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD)
 end
 function card.betarget(e,tp,eg,ep,ev,re,r,rp)
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) or not re:GetHandler():IsSetCard(0x666) then return false end
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) or not re:GetHandler():IsSetCard(0x666)  or not re:GetHandler():IsControler(tp) then return false end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	return g and g:IsExists(card.filter2,1,nil,tp)
 end
