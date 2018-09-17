@@ -1,4 +1,4 @@
---S.G. Discovery
+--A.O. Spacedive
 function c21730412.initial_effect(c)
 	--activate (special summon from grave)
 	local e1=Effect.CreateEffect(c)
@@ -8,7 +8,7 @@ function c21730412.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,21730407+EFFECT_COUNT_CODE_OATH)
-	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
+	e1:SetHintTiming(TIMING_END_PHASE,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
 	e1:SetTarget(c21730412.sptg)
 	e1:SetOperation(c21730412.spop)
 	c:RegisterEffect(e1)

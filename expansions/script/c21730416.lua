@@ -24,7 +24,7 @@ function c21730409.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c21730409.retop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.DiscardHand(tp,c21730409.retfilter,1,1,REASON_EFFECT+REASON_DISCARD,nil)~=0 then
-		local sg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,aux.ExceptThisCard(e))
+		local sg=Duel.GetMatchingGroup(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 	end
 end

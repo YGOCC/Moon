@@ -1,4 +1,4 @@
---S.G. Tinkerer
+--A.O. Tinkerer
 function c21730403.initial_effect(c)
 --special summon from hand
 	local e1=Effect.CreateEffect(c)
@@ -15,7 +15,7 @@ function c21730403.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
+	e2:SetHintTiming(TIMING_END_PHASE,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
 	e2:SetCost(c21730403.cost)
 	e2:SetTarget(c21730403.target)
 	e2:SetOperation(c21730403.operation)
@@ -35,7 +35,7 @@ function c21730403.thfilter(c)
 	return c:IsSetCard(0x719) and c:IsType(TYPE_TRAP) and c:IsAbleToHand()
 end
 function c21730403.rcost(c)
-	return c:IsCode(21730411) and c:IsReleasable() and not c:IsDisabled() and not c:IsForbidden()
+	return c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730403.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

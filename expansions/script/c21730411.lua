@@ -1,9 +1,10 @@
---S.G. Nexus
+--A.O. Nexus
 function c21730411.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCost(c21730411.cost)
 	c:RegisterEffect(e1)
 	--can activate trap the turn it was set
 	local e2=Effect.CreateEffect(c)
@@ -16,4 +17,9 @@ function c21730411.initial_effect(c)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x719))
 	e2:SetCountLimit(1)
 	c:RegisterEffect(e2)
+end
+--activate
+function c21730411.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	e:GetHandler():RegisterFlagEffect(21730411,RESET_CHAIN,0,1)
 end

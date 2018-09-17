@@ -30,6 +30,8 @@ SUMMON_TYPE_EVOLUTE						=SUMMON_TYPE_SPECIAL+388
 
 EVENT_CORONA_DRAW						=EVENT_CUSTOM+0x1600000000
 
+EFFECT_COUNT_SECOND_HOPT				=1000000000
+
 --Custom Type Tables
 Auxiliary.Customs={} --check if card uses custom type, indexing card
 Auxiliary.Evolutes={} --number as index = card, card as index = function() is_xyz

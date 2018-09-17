@@ -1,4 +1,4 @@
---S.G. Diver
+--A.O. Ambusher
 function c21730405.initial_effect(c)
 	c:SetUniqueOnField(1,0,21730405)
 	--link procedure

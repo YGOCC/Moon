@@ -1,4 +1,4 @@
---S.G. Autofetcher
+--A.O. Autofetcher
 function c21730402.initial_effect(c)
 	--special summon from hand
 	local e1=Effect.CreateEffect(c)
@@ -16,7 +16,7 @@ function c21730402.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
+	e2:SetHintTiming(TIMING_END_PHASE,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
 	e2:SetCost(c21730402.cost)
 	e2:SetTarget(c21730402.target)
 	e2:SetOperation(c21730402.operation)
@@ -32,24 +32,8 @@ end
 function c21730402.filter(c)
 	return c:IsSetCard(0x719)
 end
--- function c21730402.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	-- local c=e:GetHandler()
-	-- if chk==0 then return c:IsAbleToRemoveAsCost() and Duel.CheckReleaseGroup(tp,c21730402.filter,1,false,nil,nil,tp) end
-	-- if Duel.Remove(c,POS_FACEUP,REASON_COST)~=0 then
-		-- local e1=Effect.CreateEffect(c)
-		-- e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		-- e1:SetCode(EVENT_TURN_END)
-		-- e1:SetReset(RESET_EVENT+0x1fe0000)
-		-- e1:SetCountLimit(1)
-		-- e1:SetRange(LOCATION_REMOVED)
-		-- e1:SetOperation(c21730402.tgop)
-		-- c:RegisterEffect(e1)
-	-- end
-	-- local g=Duel.SelectReleaseGroup(tp,c21730402.filter,1,1,false,nil,nil,tp)
-	-- Duel.Release(g,REASON_COST)
--- end
 function c21730402.rcost(c)
-	return c:IsCode(21730411) and c:IsReleasable() and not c:IsDisabled() and not c:IsForbidden()
+	return c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730402.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -76,13 +60,11 @@ function c21730402.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c21730402.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c21730402.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
+	Duel.Draw(tp,1,REASON_EFFECT)
 end
 --return to grave
 function c21730402.tgop(e,tp,eg,ep,ev,re,r,rp)

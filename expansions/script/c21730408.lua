@@ -1,4 +1,4 @@
---S.G. Assaulter
+--A.O. Infiltrator
 function c21730408.initial_effect(c)
 	c:SetUniqueOnField(1,0,21730408)
 	--link procedure
@@ -17,6 +17,22 @@ function c21730408.initial_effect(c)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetOperation(c21730408.regop)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(21730408,1))
+	e4:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetCode(EVENT_BATTLE_DAMAGE)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e4:SetTarget(c21730408.tdtg)
+	e4:SetOperation(c21730408.tdop)
+	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e5:SetCode(EVENT_PHASE+PHASE_END)
+	e5:SetCondition(c21730408.tdcon)
+	c:RegisterEffect(e5)
 end
 --link procedure
 function c21730408.matfilter(c)
@@ -24,22 +40,13 @@ function c21730408.matfilter(c)
 end
 --shuffle from grave into deck then draw
 function c21730408.regop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(21730408,1))
-	e1:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCode(EVENT_PHASE+PHASE_END)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
-	e1:SetReset(RESET_EVENT+0x1ee0000+RESET_PHASE+PHASE_END)
-	e1:SetTarget(c21730408.tdtg)
-	e1:SetOperation(c21730408.tdop)
-	c:RegisterEffect(e1)
+	e:GetHandler():RegisterFlagEffect(21730408,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 end
 function c21730408.tdfilter(c)
 	return c:IsAbleToDeck()
+end
+function c21730408.tdcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(21730408)~=0
 end
 function c21730408.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c21730408.tdfilter(chkc) end

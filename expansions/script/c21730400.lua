@@ -1,4 +1,4 @@
---S.G. Dampener
+--A.O. Dampener
 function c21730400.initial_effect(c)
 	--special summon from hand
 	local e1=Effect.CreateEffect(c)
@@ -8,7 +8,7 @@ function c21730400.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(c21730400.spcon)
 	c:RegisterEffect(e1)
-	--halve monster's atk/def and negate its effects
+	--change atk/def to 0 and negate effects
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730400,1))
 	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE+CATEGORY_DISABLE)
@@ -16,8 +16,8 @@ function c21730400.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetHintTiming(TIMING_DAMAGE_STEP,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_DAMAGE_STEP+TIMING_END_PHASE)
-	e2:SetCost(c21730400.discon)
+	e2:SetHintTiming(TIMING_DAMAGE_STEP+TIMING_END_PHASE,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_DAMAGE_STEP+TIMING_END_PHASE)
+	e2:SetCondition(c21730400.discon)
 	e2:SetCost(c21730400.cost)
 	e2:SetTarget(c21730400.target)
 	e2:SetOperation(c21730400.operation)
@@ -29,15 +29,18 @@ function c21730400.spcon(e,c)
 	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
---halve monster's atk/def and negate its effects
+--change atk/def to 0 and negate effects
 function c21730400.filter(c,tp)
 	return c:IsSetCard(0x719) and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,c)
+end
+function c21730400.disfilter(c)
+	return c:IsFaceup() and not (c:GetAttack()==0 and c:GetDefense()==0 and c:IsDisabled())
 end
 function c21730400.discon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c21730400.rcost(c)
-	return c:IsCode(21730411) and c:IsReleasable() and not c:IsDisabled() and not c:IsForbidden()
+	return c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730400.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -63,10 +66,10 @@ function c21730400.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c21730400.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and Card.IsFaceup(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c21730400.disfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c21730400.disfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,c21730400.disfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
 function c21730400.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -77,11 +80,10 @@ function c21730400.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		e1:SetValue(tc:GetAttack()/2)
+		e1:SetValue(0)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
-		e2:SetValue(tc:GetDefense()/2)
 		tc:RegisterEffect(e2)
 		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e3=Effect.CreateEffect(c)
