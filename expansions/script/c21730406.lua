@@ -53,7 +53,7 @@ function c21730406.regop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c21730406.thfilter(c)
-	return c:IsSetCard(0x719) and c:IsAbleToHand()
+	return c:IsSetCard(0x719) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c21730406.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c21730406.thfilter,tp,LOCATION_DECK,0,1,nil) end
