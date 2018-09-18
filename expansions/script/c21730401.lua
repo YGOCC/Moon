@@ -35,7 +35,7 @@ function c21730401.thfilter(c)
 	return c:IsSetCard(0x719) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
 function c21730401.rcost(c)
-	return c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
+	return c:IsFaceup() and c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730401.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

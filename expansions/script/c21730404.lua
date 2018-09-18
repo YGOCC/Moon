@@ -33,7 +33,7 @@ function c21730404.filter(c,tp)
 	return c:IsSetCard(0x719) and Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
 end
 function c21730404.rcost(c)
-	return c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
+	return c:IsFaceup() and c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730404.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

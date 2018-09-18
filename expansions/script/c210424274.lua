@@ -36,7 +36,7 @@ function card.initial_effect(c)
     c:RegisterEffect(e4)
 	end
 function card.costfilter(c)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGraveAsCost() and c:IsFaceup()
+	return c:IsType(TYPE_PENDULUM) and c:IsAbleToGraveAsCost() and c:IsFaceup()
 end
 function card.playcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(card.costfilter,tp,LOCATION_EXTRA,0,1,nil) end

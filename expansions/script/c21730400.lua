@@ -40,7 +40,7 @@ function c21730400.discon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c21730400.rcost(c)
-	return c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
+	return c:IsFaceup() and c:IsCode(21730411) and c:IsReleasable() and c:GetFlagEffect(21730411)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730400.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
