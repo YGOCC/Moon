@@ -1,6 +1,5 @@
 ﻿expansions/Cards-non-QCD.cdb	931004a8f53afdff4b6cd20a2d675078
 expansions/lflist.conf	79a06548ade45740f0074ed70a85ac3d
-expansions/official.cdb	8ec6c0c2b1afb43efffb1cd90dd05af2
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	0995cb10beefb28989b0f3923a655b3b
 expansions/pics/100000710.jpg	fdd67c2ea75532d08fb94a98d28067aa
@@ -10599,7 +10598,7 @@ expansions/script/c99830044.lua	0220d95558e82891bffdd41771bd0687
 expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
-expansions/script/init.lua	42561281f41c596d0efa2112930be12d
+expansions/script/init.lua	2952f4c19303ce3647d113a5e7392020
 sound/BGM/custom/ASTERIA - Joyful Tea Party.mp3	6534ddde9e7ee1d39bddb4298cd7168a
 sound/BGM/custom/ASTERIA - Queen's Palace.mp3	92fa00f308187011ddd096b1a5ff6ea7
 sound/BGM/custom/ASTERIA - Showtime.mp3	b7a41d7cac95be4278964692e8d269ab
@@ -10675,6 +10674,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	9b14dbb329bbbe91a4526d93b9184b87
+update/filelist.txt	85d962cfec3109d33e9456354b58109c
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	cd8ec17a0409262608df0e868d52387e
+update/version.txt	f74825bde511bc19ed8e2130ff0c4f67

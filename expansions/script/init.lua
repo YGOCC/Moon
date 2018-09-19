@@ -1455,16 +1455,19 @@ function Auxiliary.CoronaDraw(e,tp,eg,ep,ev,re,r,rp)
 			end
 			local tpe=tc:GetOriginalType()-TYPE_FUSION
 			Auxiliary.AddCoronaToHand(tc,REASON_RULE,tpe)
-			Duel.ConfirmCards(1-tp,tc)
-			Duel.RaiseEvent(tc,EVENT_DRAW,e,REASON_RULE,tp,tp,1)
-			Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,e,REASON_RULE,tp,tp,1)
 			Duel.RegisterFlagEffect(tp,1600000000,RESET_PHASE+PHASE_END,0,0)
 		end
 	end
 end
 function Auxiliary.AddCoronaToHand(tc,reason,tpe)
+	local tp=tc:GetOwner()
+	Duel.MoveSequence(tc,0)
+	Duel.MoveToField(tc,tp,tp,LOCATION_HAND,POS_FACEDOWN_ATTACK,true)
 	tc:SetCardData(CARDDATA_TYPE,tpe)
-	Duel.SendtoHand(tc,nil,reason)
+	Duel.SendtoHand(tc,tp,reason)
+	Duel.ConfirmCards(1-tp,tc)
+	Duel.RaiseEvent(tc,EVENT_DRAW,e,REASON_RULE,tp,tp,1)
+	Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,e,REASON_RULE,tp,tp,1)
 end
 --Corona Redirect (ED card)
 function Auxiliary.CoronaRepFilter(c)
