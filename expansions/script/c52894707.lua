@@ -163,8 +163,14 @@ function cod.mvop(e,tp,eg,ep,ev,er,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
 	local seq=math.log(Duel.SelectDisableField(tp,1,LOCATION_MZONE,LOCATION_MZONE,0),2)
-	if seq>=16 then Duel.GetControl(c,1-tp) seq=seq-16 end
-	Duel.MoveSequence(c,seq)
+	if seq>=16 then 
+		seq=seq-16
+		local zone=0
+		zone=bit.replace(zone,0x1,seq)
+		Duel.GetControl(c,1-tp,0,0,zone) 
+	else
+		Duel.MoveSequence(c,seq)
+	end
 	Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE,0,POS_FACEDOWN_DEFENSE,0)
 end
 
