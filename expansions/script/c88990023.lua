@@ -8,6 +8,7 @@ function cm.initial_effect(c)
     e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
     e1:SetCode(EVENT_FREE_CHAIN)
+    e1:SetCountLimit(1,88990023)
     e1:SetOperation(c88990023.activate)
     c:RegisterEffect(e1)
     --To Hand
