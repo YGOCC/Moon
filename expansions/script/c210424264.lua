@@ -24,6 +24,7 @@ c:SetCounterLimit(0x99,15)
 	--to hand
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e3:SetDescription(aux.Stringid(4066,8))
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1)
@@ -41,16 +42,49 @@ c:SetCounterLimit(0x99,15)
 	e4:SetOperation(card.desop)
 	c:RegisterEffect(e4)
 	--Search
-	local e5=Effect.CreateEffect(c)
-	e5:SetCategory(CATEGORY_SEARCH)
-	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e5:SetCode(EVENT_BECOME_TARGET)
-	e5:SetRange(LOCATION_SZONE)
-	e5:SetCountLimit(1)
-	e5:SetCondition(card.betarget)
-	e5:SetTarget(card.stg)
-	e5:SetOperation(card.sop)
-	c:RegisterEffect(e5)
+--	local e5=Effect.CreateEffect(c)
+--	e5:SetCategory(CATEGORY_SEARCH)
+--	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+--	e5:SetCode(EVENT_BECOME_TARGET)
+--	e5:SetRange(LOCATION_SZONE)
+--	e5:SetCountLimit(1)
+--	e5:SetCondition(card.betarget)
+--	e5:SetTarget(card.stg)
+--	e5:SetOperation(card.sop)
+--	c:RegisterEffect(e5)
+	local e6=Effect.CreateEffect(c)
+	e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e6:SetDescription(aux.Stringid(4066,7))
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetCode(EVENT_FREE_CHAIN)
+	e6:SetRange(LOCATION_SZONE)
+	e6:SetCountLimit(1)
+	e6:SetCost(card.spcost)
+	e6:SetTarget(card.sptg)
+	e6:SetOperation(card.spop)
+	c:RegisterEffect(e6)
+	
+end
+function card.spfilter(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function card.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x99,3,REASON_COST)
+	end
+	e:GetHandler():RemoveCounter(tp,0x99,3,REASON_COST)
+end
+function card.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	and Duel.IsExistingMatchingCard(card.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+end
+function card.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,card.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+end
 end
 function card.filter2(c,tp)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD) and c:IsSetCard(0x666)
