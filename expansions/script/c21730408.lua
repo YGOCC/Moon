@@ -40,7 +40,7 @@ function c21730408.matfilter(c)
 end
 --shuffle from grave into deck then draw
 function c21730408.regop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RegisterFlagEffect(21730408,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+	e:GetHandler():RegisterFlagEffect(21730408,RESET_EVENT+0x86c0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c21730408.tdfilter(c)
 	return c:IsAbleToDeck()

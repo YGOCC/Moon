@@ -23,7 +23,7 @@ function c353719611.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c353719611.cfilter(c,tp)
-	return c:IsType(TYPE_SPELL) and c:IsAbleToRemove()
+	return c:IsType(TYPE_MONSTER) or c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP) and c:IsAbleToRemove()
 		and Duel.IsExistingMatchingCard(c353719611.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetCode())
 end
 function c353719611.thfilter(c,code)

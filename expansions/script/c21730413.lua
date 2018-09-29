@@ -2,7 +2,6 @@
 function c21730413.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(1160)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(TIMING_END_PHASE,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
@@ -68,7 +67,7 @@ function c21730413.tkop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	if Duel.DiscardHand(tp,c21730413.tkfilter,1,1,REASON_EFFECT+REASON_DISCARD,nil)~=0 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-			or not Duel.IsPlayerCanSpecialSummonMonster(tp,43664495,0x120,0x4011,0,0,1,RACE_PYRO,ATTRIBUTE_FIRE,POS_FACEUP) then return end
+			or not Duel.IsPlayerCanSpecialSummonMonster(tp,21730414,0x719,0x4011,300,200,1,RACE_BEAST,ATTRIBUTE_LIGHT,POS_FACEUP) then return end
 		local token=Duel.CreateToken(tp,21730414)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 	end
