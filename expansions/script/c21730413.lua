@@ -92,7 +92,7 @@ function c21730413.lkop(e,tp,eg,ep,ev,re,r,rp)
 end
 --draw
 function c21730413.regop(e,tp,eg,ep,ev,re,r,rp,chk)
-	e:GetHandler():RegisterFlagEffect(21730413,0,0,1)
+	e:GetHandler():RegisterFlagEffect(21730413,RESET_EVENT+RESETS_STANDARD,0,1)
 end
 function c21730413.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(21730413)==0

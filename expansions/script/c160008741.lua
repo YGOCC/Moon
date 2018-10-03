@@ -2,7 +2,7 @@
 function c160008741.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,8,c160008741.filter1,c160008741.filter2,1,99)
+  aux.AddEvoluteProc(c,nil,8,c160008741.filter1,c160008741.filter2,3,99)
 	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160008741,0))

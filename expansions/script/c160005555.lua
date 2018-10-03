@@ -27,6 +27,15 @@ function c160005555.initial_effect(c)
 	e3:SetTarget(c160005555.thtg)
 	e3:SetOperation(c160005555.thop)
 	c:RegisterEffect(e3)
+		--spsummon limit
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetRange(LOCATION_PZONE)
+	e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetTarget(c160005555.sumlimit)
+	c:RegisterEffect(e4)
 end
 function c160005555.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL) then return false end
@@ -88,4 +97,7 @@ function c160005555.repop(e,tp,eg,ep,ev,re,r,rp)
 	  local tc=e:GetLabelObject()
 	tc:SetStatus(STATUS_DESTROY_CONFIRMED,false)
 	  Duel.Remove(tc,POS_FACEUP,REASON_EFFECT+REASON_REPLACE)
+end
+function c160005555.sumlimit(e,c,sump,sumtype,sumpos,targetp)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0xc50)
 end
