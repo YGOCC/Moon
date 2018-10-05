@@ -10699,6 +10699,7 @@ expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
 expansions/script/init.lua	2952f4c19303ce3647d113a5e7392020
+sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
 sound/BGM/custom/ASTERIA - Joyful Tea Party.mp3	6534ddde9e7ee1d39bddb4298cd7168a
 sound/BGM/custom/ASTERIA - Queen's Palace.mp3	92fa00f308187011ddd096b1a5ff6ea7
 sound/BGM/custom/ASTERIA - Showtime.mp3	b7a41d7cac95be4278964692e8d269ab
@@ -10774,6 +10775,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	215b32f216d817fc7263860a96fb7f39
+update/filelist.txt	d841e7d6c2fcaf63318384c5b8319b5d
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	462fceac3d7957e58be825a632be22dd
+update/version.txt	44c632a36fe2ca199f41957ccf21f6cb
