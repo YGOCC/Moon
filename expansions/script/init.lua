@@ -713,7 +713,7 @@ function Auxiliary.PandCondition(e,c,og)
 	else
 		g=Duel.GetFieldGroup(tp,loc,0)
 	end
-	return aux.PandActCheck(e) and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale)
+	return aux.PandActCheck(e) and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale) and c:GetFlagEffect(53313903)<=0
 end
 function Auxiliary.PandOperation(tpe)
 	if not tpe then tpe=TYPE_EFFECT end

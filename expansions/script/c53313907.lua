@@ -6,7 +6,7 @@ function c53313907.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_TODECK)
 	e1:SetCondition(aux.PandActCheck)
 	e1:SetTarget(c53313907.chtg)
 	e1:SetOperation(c53313907.chop)
@@ -36,20 +36,41 @@ function c53313907.initial_effect(c)
 	e5:SetOperation(c53313907.setop)
 	c:RegisterEffect(e5)
 end
+--filters
 function c53313907.filter(c)
 	return c:IsLevelBelow(6) and c:IsType(TYPE_PANDEMONIUM) and not c:IsCode(53313907)
 end
+function c53313907.cfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0xcf6) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+end
+function c53313907.thfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf6) and c:IsAbleToHand() and not c:IsCode(53313907)
+end
+function c53313907.setfilter(c)
+	return c:IsSetCard(0xcf6) and c:IsType(TYPE_PANDEMONIUM) and not c:IsCode(53313907)
+end
+--change effect
 function c53313907.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDestructable()
-		and Duel.IsExistingMatchingCard(c53313907.filter,tp,LOCATION_DECK,0,1,nil) and Duel.GetFlagEffect(tp,53313907)==0 end
+		and Duel.IsExistingMatchingCard(c53313907.cfilter,tp,LOCATION_REMOVED,0,1,e:GetHandler())
+		and Duel.IsExistingMatchingCard(c53313907.filter,tp,LOCATION_DECK,0,1,nil) and Duel.GetFlagEffect(tp,53313907)==0 
+	end
 	Duel.RegisterFlagEffect(tp,53313907,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
 end
 function c53313907.chop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) or Duel.Destroy(e:GetHandler(),REASON_EFFECT)==0 then return end
-	local g=Group.CreateGroup()
-	Duel.ChangeTargetCard(ev,g)
-	Duel.ChangeChainOperation(ev,c53313907.repop)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if Duel.Destroy(e:GetHandler(),REASON_EFFECT)~=0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local tg=Duel.SelectMatchingCard(tp,c53313907.cfilter,tp,LOCATION_REMOVED,0,1,1,e:GetHandler())
+		if tg:GetCount()<=0 then return end
+		if Duel.SendtoDeck(tg,nil,2,REASON_EFFECT)~=0 then
+			local g=Group.CreateGroup()
+			Duel.ChangeTargetCard(ev,g)
+			Duel.ChangeChainOperation(ev,c53313907.repop)
+		end
+	end
 end
 function c53313907.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -67,9 +88,7 @@ function c53313907.repop(e,tp,eg,ep,ev,re,r,rp)
 	if tc1 then Duel.ConfirmCards(1-tp,tc1) end
 	if tc2 then Duel.ConfirmCards(tp,tc2) end
 end
-function c53313907.thfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf6) and c:IsAbleToHand() and not c:IsCode(53313907)
-end
+--
 function c53313907.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c53313907.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_EXTRA)
@@ -82,9 +101,7 @@ function c53313907.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function c53313907.setfilter(c)
-	return c:IsSetCard(0xcf6) and c:IsType(TYPE_PANDEMONIUM) and not c:IsCode(53313907)
-end
+--
 function c53313907.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET)
