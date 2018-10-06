@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	17bc51ed35a46c4778f1b06c1972def7
+﻿expansions/Cards-non-QCD.cdb	b3445a19e50714e260d2aca559bfc9fb
 expansions/lflist.conf	e4b47cfdba73b7006360bf2f2e52125b
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	f598cd545dd4516abc2dbcef14d5d164
@@ -9673,17 +9673,17 @@ expansions/script/c53303460.lua	7da4eb1acf22d2cedb2db58393dc1baf
 expansions/script/c53313900.lua	299ec44fc34eca1fe529d79b03ea72c9
 expansions/script/c53313901.lua	4a38d41f98fa4e77e9a8f84baa8b3f45
 expansions/script/c53313902.lua	b4454f53494defabd3686fa2126afd14
-expansions/script/c53313903.lua	a61cb405ad29a4ff9d995217447261aa
+expansions/script/c53313903.lua	5648d1f1d6e2f6756f9dea5cfaefacc4
 expansions/script/c53313904.lua	71499e8940ba7880c863810c0b4fcc33
 expansions/script/c53313905.lua	e3d271c250aff7a30acaac9e874fc34d
 expansions/script/c53313906.lua	e5f7de70937d86e170f51d6a5b05fb22
-expansions/script/c53313907.lua	f115038f3e792ba611f367c4d6003ad5
+expansions/script/c53313907.lua	18720e62e3007e7c6dd20d902be978a7
 expansions/script/c53313908.lua	01860f99c53167dcd19e9eb4a9d3b95b
 expansions/script/c53313909.lua	f4a8235afddc915b5d4821d82c9abe35
 expansions/script/c53313910.lua	c3fcae8ef1ca30a5b88fb1ec626ccb08
-expansions/script/c53313911.lua	2588215b730919861e4fcfaf955fbaea
+expansions/script/c53313911.lua	af9f4dc802d18a57b62def1b92b2207f
 expansions/script/c53313912.lua	b119c969cf6bb363443d20306189102b
-expansions/script/c53313913.lua	4f0f82e5dd7ca197fa9929215df9390f
+expansions/script/c53313913.lua	cbe604b79606b57e7e74143e0ee39ae9
 expansions/script/c53313914.lua	fbab511d8744d45438e37f3eb3d471f5
 expansions/script/c53313915.lua	3e18b2044dcf7c29ca343a274a225908
 expansions/script/c53313916.lua	c20e209b2008687c523998ecb2e0c241
@@ -9699,7 +9699,7 @@ expansions/script/c53313925.lua	c7fcc1488ff1a13f15e2a514ba2f3818
 expansions/script/c53313926.lua	498efc82a64be94b0663aeeda25ab56d
 expansions/script/c53313927.lua	451f6335c79d1eede999cf12fe370f2f
 expansions/script/c53313928.lua	cb6f4037f60844e62a9cdaf71787df6f
-expansions/script/c53313929.lua	8bd36077d2d77873b93682e19f5d18d0
+expansions/script/c53313929.lua	403f920f8c1a5f8b5afa7100d5a840bd
 expansions/script/c53313930.lua	884b1aaa1c52d6a1d18bf4154d372d99
 expansions/script/c539193.lua	32aba09dbefa82b8a15f6662eef30370
 expansions/script/c54199839.lua	17f7206f746506eb0e65f9c018ed419f
@@ -10698,7 +10698,7 @@ expansions/script/c99830044.lua	0220d95558e82891bffdd41771bd0687
 expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
-expansions/script/init.lua	2952f4c19303ce3647d113a5e7392020
+expansions/script/init.lua	4ef4e156aa4ce0d84fede7e373e7d35e
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
 sound/BGM/custom/ASTERIA - Joyful Tea Party.mp3	6534ddde9e7ee1d39bddb4298cd7168a
 sound/BGM/custom/ASTERIA - Queen's Palace.mp3	92fa00f308187011ddd096b1a5ff6ea7
@@ -10775,6 +10775,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	d841e7d6c2fcaf63318384c5b8319b5d
+update/filelist.txt	d1cab6826ac9ccc042b82f4f68ac77eb
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	44c632a36fe2ca199f41957ccf21f6cb
+update/version.txt	1c3d45bdff8d031cac7033adbca41528
