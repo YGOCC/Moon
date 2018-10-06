@@ -3,6 +3,7 @@ function c53313905.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
 	--During your Main Phase: You can destroy this card from your Spell/Trap Zone, and if you do, Special Summon 1 Level 5 or higher "Mysterious" monster from your Hand, except "Mysterious Solar Panel". You can only use this effect of "Mysterious Solar Panel" once per turn.
 	local e1=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(53313905,0))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_SZONE)
@@ -35,6 +36,17 @@ function c53313905.initial_effect(c)
 	e3:SetTarget(c53313905.target)
 	e3:SetOperation(c53313905.operation)
 	c:RegisterEffect(e3)
+	--stats boost
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(53313905,1))
+	e4:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4:SetCondition(c53313905.statcon)
+	e4:SetTarget(c53313905.stattg)
+	e4:SetOperation(c53313905.statop)
+	c:RegisterEffect(e4)
 end
 function c53313905.filter(c,e,tp)
 	return c:IsSetCard(0xcf6) and c:IsLevelAbove(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -92,5 +104,33 @@ function c53313905.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0xfe0000)
 		e1:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e1)
+	end
+end
+--stats boost
+function c53313905.statfilter(c,tp)
+	return c:GetSummonPlayer()==1-tp
+end
+function c53313905.statcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c53313905.statfilter,1,nil,tp) and aux.PandActCheck(e)
+end
+function c53313905.stattg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
+end
+function c53313905.statop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+	if g:GetCount()>0 then
+		local sc=g:GetFirst()
+		while sc do
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetValue(100)
+			sc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_UPDATE_DEFENSE)
+			sc:RegisterEffect(e2)
+			sc=g:GetNext()
+		end
 	end
 end
