@@ -122,8 +122,8 @@ function c16599456.efilter(e,re,rp)
 	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(9)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=9)) and rp==1-e:GetHandlerPlayer()
 end
 --act limit
-function c16599456.limcon(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(c16599456.limfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+function c16599456.limcon(e)
+	return not Duel.IsExistingMatchingCard(c16599456.limfilter,e:GetHandler():GetControler(),LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 end
 function c16599456.limval(e,re,rp)
 	local rc=re:GetHandler()

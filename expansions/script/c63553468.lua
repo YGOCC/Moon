@@ -62,7 +62,7 @@ function c63553468.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	elseif sel==1 then
 		op=Duel.SelectOption(tp,aux.Stringid(63553468,0))
 	else
-		op=Duel.SelectOption(tp,aux.Stringid(63553468,1))
+		op=Duel.SelectOption(tp,aux.Stringid(63553468,1))+1
 	end
 	e:SetLabel(op)
 	if op==0 then
@@ -83,15 +83,16 @@ function c63553468.operation(e,tp,eg,ep,ev,re,r,rp)
 	else
 		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-		local g=Duel.SelectMatchingCard(tp,c63553468.setfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
-		if g then
-			Card.SetCardData(g,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
-			Duel.SSet(tp,g)
-			if not g:IsLocation(LOCATION_SZONE) then
-				if g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
-					Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
-				elseif g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or g:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
-					Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
+		local g=Duel.SelectMatchingCard(tp,c63553468.setfilter,tp,LOCATION_DECK,0,1,1,nil)
+		local tc=g:GetFirst()
+		if tc then
+			Card.SetCardData(tc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
+			Duel.SSet(tp,tc)
+			if not tc:IsLocation(LOCATION_SZONE) then
+				if tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
+					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
+				elseif tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or tc:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
+					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
 				end
 			end
 		end

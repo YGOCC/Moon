@@ -24,7 +24,7 @@ CTYPE_PANDEMONIUM						=0x2
 CTYPE_POLARITY							=0x4
 CTYPE_SPATIAL							=0x8
 CTYPE_CORONA							=0x16
-CTYPE_CUSTOM							=CTYPE_EVOLUTE+CTYPE_PANDEMONIUM+CTYPE_POLARITY+CTYPE_SPATIAL+TYPE_CORONA
+CTYPE_CUSTOM							=CTYPE_EVOLUTE+CTYPE_PANDEMONIUM+CTYPE_POLARITY+CTYPE_SPATIAL+CTYPE_CORONA
 
 SUMMON_TYPE_EVOLUTE						=SUMMON_TYPE_SPECIAL+388
 
@@ -50,9 +50,10 @@ end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter = 
+	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost = 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
-	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, Duel.RemoveCounter
+	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, 
+	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -252,16 +253,6 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 	change_position(cc,au,ad,du,dd)
 end
 
---TODO
---[[Card.IsAbleToExtra=function(c)
-	if Auxiliary.Coronas[c] then return true end
-	return is_able_to_extra(c)
-end
-Card.IsAbleToExtraAsCost=function(c)
-	if Auxiliary.Coronas[c] then return true end
-	return is_able_to_extra_as_cost(c)
-end]]
-
 Card.RemoveCounter=function(c,p,typ,ct,r)
 	local n=c:GetCounter(typ)
 	card_remcounter(c,p,typ,ct,r)
@@ -285,6 +276,14 @@ Duel.RemoveCounter=function(p,s,o,typ,ct,r,rp)
 		duel_remcounter(p,s,o,typ,ct,r)
 		return n-Duel.GetCounter(p,0,o,typ)
 	end
+end
+Card.IsAbleToExtra=function(c)
+	if Auxiliary.Coronas[c] then return true end
+	return card_is_able_to_extra(c)
+end
+Card.IsAbleToExtraAsCost=function(c)
+	if Auxiliary.Coronas[c] then return true end
+	return card_is_able_to_extra_as_cost(c)
 end
 
 --Custom Functions
@@ -1367,6 +1366,7 @@ function Auxiliary.EnableCorona(c,f,auramin,auramax,type,gf)
 	mt.max_aura=auramax
 	mt.corona_condition=f
 	mt.corona_global_condition=gf
+	mt.original_type=type
 	--Debug.Message("Aura is "..aura.."; Set to "..c.aura)
 	--ChainCount
 	local chain=Effect.CreateEffect(c)
@@ -1388,12 +1388,13 @@ function Auxiliary.EnableCorona(c,f,auramin,auramax,type,gf)
 	if not Global_CoronaRedirects then
 		Global_CoronaRedirects=true
 		--Redirect
-		local td=Effect.CreateEffect(c)
-		td:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		td:SetCode(EFFECT_SEND_REPLACE)
-		td:SetTarget(Auxiliary.CoronaToDeckTarget(c,type))
-		td:SetValue(Auxiliary.CoronaToDeckValue)
-		Duel.RegisterEffect(td,tp)
+		local ge1=Effect.GlobalEffect()
+		ge1:SetType(EFFECT_TYPE_FIELD)
+		ge1:SetCode(EFFECT_TO_DECK_REDIRECT)
+		ge1:SetTargetRange(0xff,0xff)
+		ge1:SetTarget(Auxiliary.CoronaToExtra)
+		ge1:SetValue(LOCATION_EXTRA)
+		Duel.RegisterEffect(ge1,0)
 	end
 end
 --Aura Functions
@@ -1424,7 +1425,7 @@ function Auxiliary.CoronaChainCount(func,gf)
 end
 --Chrona Draw
 function Auxiliary.CoronaFilter(c,chain)
-	return c.aura and c.aura<=chain and c.max_aura>=chain and c:GetFlagEffect(1600000001)~=0
+	return c:IsType(TYPE_CORONA) and c.aura<=chain and c.max_aura>=chain and c:GetFlagEffect(1600000001)~=0
 end
 function Auxiliary.CoronaCostCheck(c,e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsHasEffect(EFFECT_CORONA_DRAW_COST) then return true end
@@ -1470,22 +1471,11 @@ function Auxiliary.AddCoronaToHand(tc,reason,tpe)
 	Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,e,REASON_RULE,tp,tp,1)
 end
 --Corona Redirect (ED card)
-function Auxiliary.CoronaRepFilter(c)
-	return c.corona and c:GetDestination()==LOCATION_DECK and c:GetFlagEffect(1600000000)==0
-end
-function Auxiliary.CoronaToDeckTarget(tc,tpe)
-	if not tpe then tpe=TYPE_EFFECT end
-	return function(e,tp,eg,ep,ev,re,r,rp,chk)
-		local g=eg:Filter(Auxiliary.CoronaRepFilter,nil)
-		if chk==0 then return g:GetCount()>0 end
-		for cc in aux.Next(g) do
-			--local type=GetEffect(CORONA_ORIGINAL_TYPE)
-			cc:SetCardData(CARDDATA_TYPE,TYPE_FUSION+tpe)
-			e:GetHandler():RegisterFlagEffect(1600000000,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD+RESET_PHASE+PHASE_END,0,1)
-			--Duel.SendtoDeck(cc,nil,2,r+REASON_RULE)
-		end
+function Auxiliary.CoronaToExtra(e,c)
+	if c:IsType(TYPE_CORONA) then
+		Duel.MoveSequence(c,0)
+		Card.SetCardData(c,CARDDATA_TYPE,c.original_type+TYPE_FUSION)
+		return true
 	end
-end
-function Auxiliary.CoronaToDeckValue(e,c)
-	return Auxiliary.CoronaRepFilter(c)
+	return false
 end
