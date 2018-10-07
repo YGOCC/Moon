@@ -7061,7 +7061,7 @@ expansions/script/c16599452.lua	f84bd0836d060f12d8fdb250fceb52c5
 expansions/script/c16599453.lua	f5d7057fe068383963452c5e1cbe1198
 expansions/script/c16599454.lua	faca326f45d28d917f470dc64828967e
 expansions/script/c16599455.lua	5ceb42a4444399f84bcb3bab1511bbeb
-expansions/script/c16599456.lua	75d4b546bb5a613623cef915c0f0087f
+expansions/script/c16599456.lua	06ef9652ea882ba81d7f137d478cae28
 expansions/script/c16599457.lua	3a5e046d6f89b79b8da4c0262b1762e7
 expansions/script/c16599458.lua	ee1b53ce440ea04a1591ebf956297cac
 expansions/script/c16599459.lua	898c09a079447397b404f9b3ba1bda94
@@ -9811,7 +9811,7 @@ expansions/script/c63553464.lua	d3eb24396553e3a5cd239d25ae7c10d9
 expansions/script/c63553465.lua	deb18385056f60b497d5f9e15cac48cb
 expansions/script/c63553466.lua	239ddae97020a164b37e2ffe2a05d3be
 expansions/script/c63553467.lua	47a05e27e33281e482166174c07e8da2
-expansions/script/c63553468.lua	dc03f4a7fa238f5d122ac0bcc6ebb47a
+expansions/script/c63553468.lua	a2c113bbd0e6088e4e69dc8030704037
 expansions/script/c63553469.lua	5ccfa1f23be874a218aec0d06ca0d136
 expansions/script/c63553470.lua	84459f0d551affd9204bb9d7a6856f24
 expansions/script/c64599569.lua	2428497aa56e1d27e5ed6e350b00797e
@@ -10698,7 +10698,7 @@ expansions/script/c99830044.lua	0220d95558e82891bffdd41771bd0687
 expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
-expansions/script/init.lua	4ef4e156aa4ce0d84fede7e373e7d35e
+expansions/script/init.lua	3c441a875faf1b36a0804bc7e22afe88
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
 sound/BGM/custom/ASTERIA - Joyful Tea Party.mp3	6534ddde9e7ee1d39bddb4298cd7168a
 sound/BGM/custom/ASTERIA - Queen's Palace.mp3	92fa00f308187011ddd096b1a5ff6ea7
@@ -10775,6 +10775,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	dc8594bd196eb6039fc69313e2f87be8
+update/filelist.txt	b62d68849faeca7e0702c5a0b61fbc26
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	6665f4ef8ecdef9bc685f2da1ce7cb3f
+update/version.txt	7d6f6c9311178d465090bcdf96981da3
