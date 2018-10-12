@@ -107,3 +107,4 @@ end
 function cm.lfilter(c)
 	return c:IsLinkSetCard(0x1449) or c:IsLinkSetCard(0x3449)
 end
+
