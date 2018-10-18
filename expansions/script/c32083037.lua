@@ -17,7 +17,7 @@ function c32083037.initial_effect(c)
 end
 function c32083037.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function c32083037.dfilter(c)
 	return c:IsFaceup() and c:IsAbleToRemove()
@@ -37,7 +37,7 @@ function c32083037.operation(e,tp,eg,ep,ev,re,r,rp)
 	while tc do
 		local atk=tc:GetTextAttack()
 		if atk<0 then atk=0 end
-		dam=dam+atk
+		dam=dam+atk/2
 		tc=dg:GetNext()
 	end
 	Duel.Damage(1-tp,dam,REASON_EFFECT)

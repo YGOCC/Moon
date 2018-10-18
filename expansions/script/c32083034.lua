@@ -1,7 +1,7 @@
 --D.D. Dragon - Kaze
 function c32083034.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,c32083034.tfilter,aux.NonTuner(Card.IsSetCard,0x7D53),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x7D53),aux.NonTuner(Card.IsSetCard,0x7D53),1)
 	c:EnableReviveLimit()
 			--banish
 	local e1=Effect.CreateEffect(c)

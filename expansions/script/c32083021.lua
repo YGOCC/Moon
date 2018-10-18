@@ -62,15 +62,5 @@ end
 function c32083021.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c32083021.filter,tp,0,LOCATION_MZONE,nil)
 	if Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)~=0 then
-		local og=Duel.GetOperatedGroup()
-		local tc=og:GetFirst()
-		while tc do
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
-			tc=og:GetNext()
-		end
-	end
+end
 end

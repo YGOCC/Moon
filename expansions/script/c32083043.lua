@@ -1,7 +1,7 @@
 --D.D. Dragon - Akumu
 function c32083043.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,c32083043.tfilter,aux.NonTuner(Card.IsSetCard,0x7D53),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x7D53),aux.NonTuner(Card.IsSetCard,0x7D53),1)
 	c:EnableReviveLimit()
 		--attack all
 	local e2=Effect.CreateEffect(c)
