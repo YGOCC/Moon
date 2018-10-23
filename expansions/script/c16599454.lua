@@ -1,5 +1,5 @@
 --Exsecutor dell'Organizzazione Angeli, Dracodia
---Script by =£1G*
+--Script by XGlitchy30
 function c16599454.initial_effect(c)
 	--target protection
 	local e0=Effect.CreateEffect(c)
@@ -100,7 +100,7 @@ function c16599454.regop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EVENT_PHASE+PHASE_END)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1,16599454)
+	e1:SetCountLimit(1,16599454+EFFECT_COUNT_CODE_DUEL)
 	e1:SetCondition(c16599454.damcon)
 	e1:SetTarget(c16599454.damtg)
 	e1:SetOperation(c16599454.damop)

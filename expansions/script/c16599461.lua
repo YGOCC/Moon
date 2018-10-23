@@ -6,6 +6,7 @@ function c16599461.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(TIMING_SPSUMMON)
 	e1:SetTarget(c16599461.target)
 	e1:SetOperation(c16599461.activate)
 	c:RegisterEffect(e1)
@@ -38,7 +39,7 @@ function c16599461.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x1559)
 end
 function c16599461.spfilter(c,e,tp)
-	return c:IsRace(RACE_FAIRY) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --Activate
 function c16599461.target(e,tp,eg,ep,ev,re,r,rp,chk)
