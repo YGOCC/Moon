@@ -4,7 +4,8 @@
 function c50031668.initial_effect(c)
 --synchro summon
 	 aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,nil,c50031668.filter1,c50031668.filter2)
+   aux.AddEvoluteProc(c,nil,5,c50031668.filter1,c50031668.filter2,1,99)
+	c:EnableReviveLimit()
 
 	c:EnableReviveLimit()
 		local e1=Effect.CreateEffect(c)
@@ -54,7 +55,7 @@ function c50031668.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c50031668.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY)
+	return c:IsRace(RACE_FIEND)
 end
 function c50031668.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
