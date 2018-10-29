@@ -3,7 +3,7 @@ function c53313905.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
 	--During your Main Phase: You can destroy this card from your Spell/Trap Zone, and if you do, Special Summon 1 Level 5 or higher "Mysterious" monster from your Hand, except "Mysterious Solar Panel". You can only use this effect of "Mysterious Solar Panel" once per turn.
 	local e1=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(53313905,0))
+	e1:SetDescription(aux.Stringid(53313905,0))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_SZONE)

@@ -55,9 +55,9 @@ function cod.initial_effect(c)
 end
 
 --Synchro Summon
-function cod.matfilter1(c)
+function cod.matfilter1(c,syncard)
 	return (c:IsType(TYPE_TUNER) and c:IsRace(RACE_ZOMBIE))
-		or (c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_NORMAL) and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsNotTuner())
+		or (c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_NORMAL) and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsNotTuner(syncard))
 end
 
 --Gain LP

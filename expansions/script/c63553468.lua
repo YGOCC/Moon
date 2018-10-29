@@ -28,9 +28,9 @@ function c63553468.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 --filters
-function c63553468.matfilter1(c)
+function c63553468.matfilter1(c,syncard)
 	return (c:IsType(TYPE_TUNER) and (c:IsType(TYPE_PENDULUM) or c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM))
-		or ((c:IsType(TYPE_PENDULUM) or c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM) and c:IsNotTuner())
+		or ((c:IsType(TYPE_PENDULUM) or c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM) and c:IsNotTuner(syncard))
 end
 function c63553468.thfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
