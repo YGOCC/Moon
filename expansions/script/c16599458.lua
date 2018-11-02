@@ -56,7 +56,7 @@ function c16599458.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:GetAttack()~=0
 end
 function c16599458.atkfilter(c)
-	return c:IsRace(RACE_FAIRY) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return c:IsRace(RACE_FAIRY) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and c:IsFaceup()
 end
 --target protection
 function c16599458.efilter(e,re,rp)

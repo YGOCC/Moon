@@ -30,7 +30,7 @@ function c500315455.filter1(c,ec,tp)
 	return c:IsCode(500314712) 
 end
 function c500315455.filter2(c,ec,tp)
-	return c:IsSetCard(0x85a)
+	return c:IsType(TYPE_PLANT) or c:IsAttribute(ATTRIBUTE_EARTH)
 end
 
 function c500315455.discost(e,tp,eg,ep,ev,re,r,rp,chk)

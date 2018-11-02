@@ -62,6 +62,9 @@ end
 function c16599464.spfilter2(c,e,tp)
 	return c:IsSetCard(0x1559) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function c16599464.tdfilter(c)
+	return c:IsSetCard(0x1559) and c:IsAbleToDeck() and c:IsFaceup()
+end
 --target protection
 function c16599464.efilter(e,re,rp)
 	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(6)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=6)) and rp==1-e:GetHandlerPlayer()

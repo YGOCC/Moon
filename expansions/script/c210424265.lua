@@ -31,23 +31,20 @@ function card.initial_effect(c)
 	c:RegisterEffect(e3)
 	--atkup
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_ATKCHANGE)
-	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e4:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e4:SetRange(LOCATION_SZONE)
+	e4:SetTargetRange(LOCATION_MZONE,0)
 	e4:SetCondition(card.battlecon)
 	e4:SetTarget(card.tg1)
-	e4:SetOperation(card.op1)
+	e4:SetOperation(card.atkop)
 	c:RegisterEffect(e4)
-end
+	end
 function card.battlecon(e,tp,eg,ep,ev,re,r,rp)
-			local tc=Duel.GetAttacker()
-	local bc=Duel.GetAttackTarget()
-	if not bc then return false end
-	if bc:IsControler(1-tp) then bc=tc end
-	e:SetLabelObject(bc)
-	return bc:IsFaceup() and bc:IsSetCard(0x666)
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	return d~=nil and d:IsFaceup() and ((a:GetControler()==tp and a:IsSetCard(0x666) and a:IsRelateToBattle() and a:GetAttack()<d:GetAttack())
+		or (d:GetControler()==tp and d:IsSetCard(0x666) and d:IsRelateToBattle() and d:GetAttack()<a:GetAttack()))
 end
 function card.tg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local tc=Duel.GetAttacker()
@@ -57,17 +54,21 @@ function card.tg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabelObject(bc)
 	return bc:IsFaceup() and bc:IsSetCard(0x666)
 end
-function card.op1(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local tc=e:GetLabelObject()
-	if tc:IsRelateToBattle() and tc:IsFaceup() and tc:IsControler(tp) then
-	local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e1:SetValue(500)
-		tc:RegisterEffect(e1)
+function card.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	if not a:IsRelateToBattle() or a:IsFacedown() or not d:IsRelateToBattle() or d:IsFacedown() then return end
+	if a:IsControler(1-tp) then a,d=d,a end
+   local dif=d:GetAttack()-a:GetAttack()
+   if dif<0 then
+	dif=-dif
 	end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
+	e1:SetValue(800)
+	a:RegisterEffect(e1)
 end
 function card.ctop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

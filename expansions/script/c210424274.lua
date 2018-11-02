@@ -2,6 +2,9 @@
 local card = c210424274
 function card.initial_effect(c)
 	c:SetUniqueOnField(1,0,210424274)
+	--synchro summon
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
+	c:EnableReviveLimit()
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -38,20 +41,20 @@ function card.initial_effect(c)
 function card.costfilter(c)
 	return c:IsType(TYPE_PENDULUM) and c:IsAbleToGraveAsCost() and c:IsFaceup()
 end
+function card.equipfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x666)
+end
 function card.playcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(card.costfilter,tp,LOCATION_EXTRA,0,1,nil) end
 	local g=Duel.SelectMatchingCard(tp,card.costfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
 end
-function card.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x666)
-end
 function card.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.filter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.equipfilter(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingTarget(card.filter,tp,LOCATION_MZONE,0,1,nil) end
+		and Duel.IsExistingTarget(card.equipfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	Duel.SelectTarget(tp,card.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,card.equipfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	if e:GetHandler():IsLocation(LOCATION_GRAVE) then
 		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
 	end
