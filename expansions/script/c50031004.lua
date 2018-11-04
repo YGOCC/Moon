@@ -2,7 +2,7 @@
 function c50031004.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,nil,5,c50031004.filter1,c50031004.filter2)  
+ aux.AddEvoluteProc(c,nil,5,c50031004.filter1,c50031004.filter2,2,99)  
 
 --spsummon proc
 	local e0=Effect.CreateEffect(c)

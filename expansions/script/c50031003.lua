@@ -2,7 +2,7 @@
 function c50031003.initial_effect(c)
  aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,nil,4,c50031003.filter1,c50031003.filter2)  
+ aux.AddEvoluteProc(c,nil,4,c50031003.filter1,c50031003.filter2,2,99)  
 
 --spsummon proc
 	local e0=Effect.CreateEffect(c)
@@ -158,7 +158,7 @@ function c50031003.retop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c50031003.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_ATTACK)
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 

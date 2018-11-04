@@ -12,7 +12,7 @@ function c500310101.initial_effect(c)
 	c:RegisterEffect(e1) 
 end
 function c500310101.filter(c,e)
-	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)and  c:GetCounter(0x1088)==0 --c:GetStage()>c:GetCounter(0x1088)
+	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)and c:GetStage()>c:GetCounter(0x1088) --c:GetCounter(0x1088)<=0 
 end
 function c500310101.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c500310101.filter(chkc) end
