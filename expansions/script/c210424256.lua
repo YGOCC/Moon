@@ -127,9 +127,7 @@ local c=e:GetHandler()
 end
 function card.drawtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_EXTRA) and chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and card.todeckfilter(chkc) end
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and e:GetHandler():GetFlagEffect(210424256)==0
-	and Duel.IsExistingTarget(card.todeckfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,2,nil) end
-	e:GetHandler():RegisterFlagEffect(210424256,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingTarget(card.todeckfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectTarget(tp,card.todeckfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,2,2,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,2,0,0)
