@@ -57,24 +57,26 @@ function card.spfilter(c,e,tp)
 end
 function card.filter1(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and ((((c:GetLink() > 0) and Duel.IsExistingMatchingCard(card.filter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,c:GetLink(),c)) or ((c:GetLevel() > 0) and Duel.IsExistingMatchingCard(card.filter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,c:GetLevel(),c))))
+	and not c:IsType(TYPE_PENDULUM)
 end
 function card.filter2(c)
 	return c:IsAbleToDeck() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and (c:IsFaceup() or not c:IsLocation(LOCATION_EXTRA))
 end
 function card.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
-		and Duel.IsExistingMatchingCard(card.filter1,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(card.filter1,tp,LOCATION_EXTRA,0,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(card.filter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,2,nil,e,tp)			
+		end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function card.sumop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCountFromEx(tp)<=0 then return end
 	if not Duel.IsExistingMatchingCard(card.filter1,tp,LOCATION_EXTRA,0,1,nil,e,tp) then return end
+	
+	local g2=Duel.SelectMatchingCard(tp,card.filter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,2,2,nil,e,tp)
+	if Duel.SendtoDeck(g2,nil,2,REASON_EFFECT)==2 then
 	local g=Duel.SelectMatchingCard(tp,card.filter1,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
-	local lvlk
-	if tc:GetLink() > 0 then lvlk=tc:GetLink() else lvlk=tc:GetLevel() end
-	local g2=Duel.SelectMatchingCard(tp,card.filter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,lvlk,lvlk,nil,e,tp)
-	Duel.SendtoDeck(g2,nil,2,REASON_EFFECT)
 	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+end
 end
