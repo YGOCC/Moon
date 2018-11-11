@@ -68,7 +68,6 @@ c:RegisterEffect(e2)
 		ge2:SetOperation(c160002496.checkop)
 		Duel.RegisterEffect(ge2,0)
 	end
-end
 
 		local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)

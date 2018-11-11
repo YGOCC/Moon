@@ -29,15 +29,7 @@ function c50031004.initial_effect(c)
 	e1:SetOperation(c50031004.operation)
 	c:RegisterEffect(e1)
 	   --to deck
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(50031004,0))
-	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_TO_GRAVE)
-	e2:SetCondition(c50031004.retcon)
-	e2:SetTarget(c50031004.rettg)
-	e2:SetOperation(c50031004.retop)
-	c:RegisterEffect(e2)
+   
 end
 function c50031004.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK)
@@ -75,8 +67,8 @@ function c50031004.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,3)
 	local sel=0
 	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_MONSTER) end,1,nil) then sel=sel+1 end
-	if g:IsExists(function(tc) return tc:IsSetCard(0xa034) and tc:IsType(TYPE_SPELL) end,1,nil) then sel=sel+2 end
-	if g:IsExists(function(tc) return tc:IsSetCard(0xa034) and tc:IsType(TYPE_TRAP) end,1,nil) then sel=sel+4 end
+	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_SPELL) end,1,nil) then sel=sel+2 end
+	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_TRAP) end,1,nil) then sel=sel+4 end
 	if sel==0 then return end
 	--setting the option
 	if sel==1 then
