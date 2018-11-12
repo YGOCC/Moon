@@ -1,7 +1,7 @@
 --Sweethard Kato Tyla
 function c500310010.initial_effect(c)
 		  --summon success
-	local e1=Effect.CreateEffect(c)
+	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e0:SetCode(EVENT_SUMMON_SUCCESS)

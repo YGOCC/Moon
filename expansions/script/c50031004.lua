@@ -28,9 +28,8 @@ function c50031004.initial_effect(c)
 	e1:SetTarget(c50031004.target)
 	e1:SetOperation(c50031004.operation)
 	c:RegisterEffect(e1)
-	   --to deck
-   
 end
+
 function c50031004.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK)
 end
@@ -115,31 +114,4 @@ function c50031004.operation(e,tp,eg,ep,ev,re,r,rp)
 			Duel.MoveSequence(g:GetFirst(),1)
 
 end
-end
-
-
-function c50031004.rmfilter(c)
-	return  c:IsFaceup() and c:IsType(TYPE_SPELL) and c:IsAbleToRemove()
-end
-function c50031004.rmfilter2(c)
-	return  c:IsFaceup() and c:IsType(TYPE_TRAP) and c:IsAbleToDeck()
-end
-
-function c50031004.retcon(e,tp,eg,ep,ev,re,r,rp)
-	return  e:GetHandler():GetReasonPlayer()==1-tp
-		and e:GetHandler():GetPreviousControler()==tp
-end
-function c50031004.thfilter(c)
-	return c:IsSetCard(0xa34) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
-end
-function c50031004.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return Duel.IsExistingMatchingCard(c50031004.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
-end
-function c50031004.retop(e,tp,eg,ep,ev,re,r,rp)
-	 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c50031004.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoGrave(g,REASON_EFFECT)
-	end
 end
