@@ -41,7 +41,6 @@ function c11000131.filter(c)
 	return c:IsFaceup() and c:IsCode(11000132)
 end
 function c11000131.atcon(e,c)
-	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and	Duel.IsExistingMatchingCard(c11000131.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
+	local tp=e:GetHandlerPlayer()
+	return Duel.IsExistingMatchingCard(c11000131.filter,tp,LOCATION_MZONE,0,1,nil)
 end
