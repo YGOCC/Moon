@@ -19,6 +19,7 @@ function c79854525.initial_effect(c)
 	e2:SetCondition(c79854525.thcon2)
 	e2:SetTarget(c79854525.target)
 	e2:SetOperation(c79854525.operation)
+	e2:SetCountLimit(1,79854525)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCondition(c79854525.thcon3)
@@ -53,7 +54,7 @@ function c79854525.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_SYNCHRO)==0 and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c79854525.filter(c,e,tp)
-	return c:IsCode(79854524) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_PLANT) and c:IsLevel(1) and c:IsType(TYPE_TUNER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c79854525.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c79854525.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
