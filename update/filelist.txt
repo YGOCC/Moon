@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	1defcc5c8dd1886adca651249c0173c0
+﻿expansions/Cards-non-QCD.cdb	2432ed873faefa778415de0e2b2c1fa2
 expansions/lflist.conf	7deca612a1bcc7f2c0ee6258dc71fc76
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	5edc13d5a22f634f9a385dcaa8c30ca8
@@ -4590,6 +4590,7 @@ expansions/pics/53313927.jpg	44652fab85f85251f6a5df9106e8cf0e
 expansions/pics/53313928.jpg	e43d3a6a6292c7035e563886ee512306
 expansions/pics/53313929.jpg	eba10440f2fd6bc6912081981977ef2d
 expansions/pics/53313930.jpg	83fc1eb9ce627168b4f8159a39c65454
+expansions/pics/53313931.png	32b2e0b22d58ff73a582c750491d71ab
 expansions/pics/53313932.jpg	e49a527cac5d061c03345afbff322e34
 expansions/pics/53313932.png	b64e6b1e7d2a9d9651e54c3d11d6f50b
 expansions/pics/539193.jpg	6b6a1b6723ce26d72739c22e26d4beef
@@ -10170,7 +10171,8 @@ expansions/script/c53313927.lua	451f6335c79d1eede999cf12fe370f2f
 expansions/script/c53313928.lua	cb6f4037f60844e62a9cdaf71787df6f
 expansions/script/c53313929.lua	403f920f8c1a5f8b5afa7100d5a840bd
 expansions/script/c53313930.lua	884b1aaa1c52d6a1d18bf4154d372d99
-expansions/script/c53313932.lua	d2509a626aac6cbea0ca1f20d884b957
+expansions/script/c53313931.lua	78a61a3d3b73f3e5410ef9b8ab42327d
+expansions/script/c53313932.lua	ddc5000b006538474a4797f6be06a691
 expansions/script/c539193.lua	32aba09dbefa82b8a15f6662eef30370
 expansions/script/c54199839.lua	17f7206f746506eb0e65f9c018ed419f
 expansions/script/c543516051.lua	9d4096136eb3e817f75b929a5b5e0098
@@ -11267,6 +11269,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	befbd406bf5a6d65c076bed18bb3bd08
+update/filelist.txt	b3a47922f305fcdf7bc9a6c3bad814ba
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	ba5acdbbe02052960944b47dad79d4a2
+update/version.txt	edf545b6208009a87c904abe03a00a02
