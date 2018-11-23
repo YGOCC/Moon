@@ -18,12 +18,14 @@ function c79854546.initial_effect(c)
 	c:RegisterEffect(e2)
 	--protect the rest
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_EQUIP)
-	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(LOCATION_ONFIELD,LOCATION_ONFIELD)
-	e3:SetTarget(c79854546.infilter)
-	e3:SetCondition(c79854546.descon)
+    e3:SetType(EFFECT_TYPE_FIELD)
+    e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+    e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+    e3:SetRange(LOCATION_SZONE)
+    e3:SetTargetRange(LOCATION_ONFIELD,0)
+    e3:SetCondition(c79854546.descon)
+    e3:SetTarget(c79854546.infilter)
+    e3:SetValue(1)
 	c:RegisterEffect(e3)
 	--justdestroyinstead
 	local e4=Effect.CreateEffect(c)
@@ -68,11 +70,10 @@ function c79854546.eqlimit(e,c)
 end
 --protect the rest
 function c79854546.descon(e,tp,eg,ep,ev,re,r,rp)
-	local ec=e:GetHandler():GetEquipTarget()
-	return ec and ec:IsType(TYPE_SYNCHRO)
+    return e:GetHandler():GetEquipTarget() and e:GetHandler():GetEquipTarget():IsType(TYPE_SYNCHRO)
 end
 function c79854546.infilter(e,c)
-	return not c:IsCode(79854546)
+    return c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsCode(79854546)
 end
 --justdestroyinstead
 function c79854546.chcon(e,tp,eg,ep,ev,re,r,rp)
