@@ -50,7 +50,7 @@ function c16100666.indval(e,re,tp)
 	return tp~=e:GetHandlerPlayer()
 end
 function c16100666.gfilter(c,tp)
-	return not c:IsFaceup() and c:IsSetCard(0xc50) and  c:IsPreviousLocation(LOCATION_EXTRA) and c:GetOwner()==tp
+	return   c:IsSetCard(0xc50) and  c:IsPreviousLocation(LOCATION_EXTRA) and c:GetOwner()==tp
 end
 function c16100666.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c16100666.gfilter,1,nil,tp)
