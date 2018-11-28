@@ -83,11 +83,11 @@ function c101600107.exfilter(c,lv,e,tp)
 	return c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false) and c:IsSetCard(0xcd01)
 end
 function c101600107.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_HAND+LOCATION_GRAVE) and chkc:IsControler(tp) and c101600107.filter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c101600107.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c101600107.filter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
+		and Duel.IsExistingTarget(c101600107.filter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,c101600107.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,e:GetHandler(),e,tp)
+	local g=Duel.SelectTarget(tp,c101600107.filter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler(),e,tp)
 	local rg=Group.FromCards(e:GetHandler(),g:GetFirst())
 	Duel.Remove(rg,POS_FACEUP,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
@@ -100,6 +100,8 @@ function c101600107.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,c101600107.exfilter,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetLevel()+lv,e,tp)
 		local sc=sg:GetFirst()
-		Duel.SpecialSummon(sg,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
+		if Duel.SpecialSummon(sg,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)>0 then
+			sc:CompleteProcedure()
+		end
 	end
 end
