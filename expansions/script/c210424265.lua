@@ -3,7 +3,7 @@ local card = c210424265
 function card.initial_effect(c)
 	c:SetUniqueOnField(1,0,210424265)
 	c:EnableCounterPermit(0xc)
-	c:SetCounterLimit(0xc,3)
+	c:SetCounterLimit(0xc,5)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -76,9 +76,9 @@ function card.ctop2(e,tp,eg,ep,ev,re,r,rp)
 	c:RemoveCounter(tp,0xc,ct,REASON_EFFECT) 
 end
 function card.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler() and e:GetHandler():GetCounter(0xc)==3 end 
+	if chk==0 then return e:GetHandler() and e:GetHandler():GetCounter(0xc)==5 end 
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	e:GetHandler():RemoveCounter(tp,0xc,3,REASON_COST)
+	e:GetHandler():RemoveCounter(tp,0xc,5,REASON_COST)
 end
 function card.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_ONFIELD end
@@ -107,7 +107,7 @@ end
 function card.acop(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
 	e:GetHandler() c:AddCounter(0xc,1)
-	if c:GetCounter(0xc)==3 then
+	if c:GetCounter(0xc)==5 then
 		Duel.RaiseSingleEvent(c,EVENT_CUSTOM+210424265,re,0,0,p,0)
 	end
 end
