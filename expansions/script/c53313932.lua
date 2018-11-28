@@ -26,7 +26,7 @@ function c53313932.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(2)
+	e2:SetCountLimit(2,53313932)
 	e2:SetLabel(0)
 	e2:SetCost(c53313932.spcost)
 	e2:SetTarget(c53313932.sptg)
@@ -41,7 +41,7 @@ function c53313932.rfilter(c,e,tp)
 	return Duel.IsExistingMatchingCard(c53313932.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,e:GetHandler(),e,tp,c:GetAttribute()) and Duel.GetMZoneCount(tp,c)>0
 end
 function c53313932.spfilter(c,e,tp,att)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsAttribute(att) and not c:IsCode(53313932)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsAttribute(att) and c:IsSetCard(0xcf6) and not c:IsCode(53313932)
 end
 --add to hand
 function c53313932.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
