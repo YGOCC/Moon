@@ -42,7 +42,7 @@ end
 
 -- Unaffected
 function ref.immcon(e)
-	return Duel.IsExistingMatchingCard(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,nil,0xe1)
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil,0x18)
 end
 function ref.tv(e,re,rp)
   
