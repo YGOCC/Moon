@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	66cced61a6a27e876febf1737f21ae1c
+﻿expansions/Cards-non-QCD.cdb	0aa1b6d5a729d09daadcee456d7d4bf2
 expansions/lflist.conf	7deca612a1bcc7f2c0ee6258dc71fc76
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	7d23a972ee2f31a04d285cd503096ec5
@@ -6324,7 +6324,7 @@ expansions/script/c1020017.lua	ce38c6809370b4befafbe9f2b9341b69
 expansions/script/c1020018.lua	6fd4bcfd906937ace8ffa42c403e77ff
 expansions/script/c1020019.lua	2348f4aa61579c338d9a083edadde108
 expansions/script/c1020020.lua	085c90cebae729a5d5d0b31205af863a
-expansions/script/c1020021.lua	8be3fa0501ff7617fffb2f856a2091fc
+expansions/script/c1020021.lua	a6f5328f671e901b679d79ab3ebfc925
 expansions/script/c1020022.lua	7abf2cea3ab208eae2cabe279adbccd8
 expansions/script/c1020023.lua	38d6dcf903e43821031fa341975d24c0
 expansions/script/c1020024.lua	267fbba9668dab5a592bf0df96730eb3
@@ -10193,7 +10193,7 @@ expansions/script/c53313928.lua	cb6f4037f60844e62a9cdaf71787df6f
 expansions/script/c53313929.lua	403f920f8c1a5f8b5afa7100d5a840bd
 expansions/script/c53313930.lua	884b1aaa1c52d6a1d18bf4154d372d99
 expansions/script/c53313931.lua	78a61a3d3b73f3e5410ef9b8ab42327d
-expansions/script/c53313932.lua	db52fc703a58a7faa9dacf5efc508e9b
+expansions/script/c53313932.lua	809c24f50734ab85f2bead104de04783
 expansions/script/c539193.lua	32aba09dbefa82b8a15f6662eef30370
 expansions/script/c54199839.lua	17f7206f746506eb0e65f9c018ed419f
 expansions/script/c543516051.lua	9d4096136eb3e817f75b929a5b5e0098
@@ -11305,6 +11305,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	951818ca4dc74b95ce9ed7bcc4a4f534
+update/filelist.txt	a6f36f3d3eddd9d398cd794d3c415149
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	79988cceaf17f9daeea631983701417e
+update/version.txt	072f2fd2037e86361c101c4d85c24d45
