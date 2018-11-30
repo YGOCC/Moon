@@ -24,15 +24,14 @@ function c1020017.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_DISABLE)
-	e3:SetRange(LOCATION_PZONE)
 	e3:SetCondition(c1020017.discon)
-	e3:SetTargetRange(0,LOCATION_SZONE)
-	e3:SetTarget(c1020017.distg)
+	e3:SetRange(LOCATION_PZONE)
+	e3:SetTargetRange(0,LOCATION_PZONE)
 	c:RegisterEffect(e3)
+	--disable effect
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_CHAIN_SOLVING)
-	e4:SetCondition(c1020017.discon)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetOperation(c1020017.disop)
 	c:RegisterEffect(e4)
@@ -75,9 +74,6 @@ function c1020017.disfilter(c)
 end
 function c1020017.discon(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsExistingMatchingCard(c1020017.disfilter,tp,LOCATION_ONFIELD,0,1,nil) then return true end
-end
-function c1020017.distg(e,c)
-	return c:IsType(TYPE_SPELL) and (c:GetSequence()==6 or c:GetSequence()==7)
 end
 function c1020017.disop(e,tp,eg,ep,ev,re,r,rp)
 	local p,loc,seq=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)
