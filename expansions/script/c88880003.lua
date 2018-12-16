@@ -8,7 +8,6 @@ function cm.initial_effect(c)
     e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
     e1:SetType(EFFECT_TYPE_IGNITION)
     e1:SetRange(LOCATION_HAND)
-    e1:SetCountLimit(1,m)
     e1:SetCondition(cm.spcon)
     e1:SetTarget(cm.sptg)
     e1:SetOperation(cm.spop)
@@ -16,23 +15,25 @@ function cm.initial_effect(c)
     --material
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(m,1))
-    e2:SetType(EFFECT_TYPE_QUICK_O)
+    e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetCode(EVENT_FREE_CHAIN)
     e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e2:SetRange(LOCATION_HAND+LOCATION_MZONE)
     e2:SetTarget(cm.mattg)
+    e2:SetCondition(cm.spcon)
     e2:SetOperation(cm.matop)
     c:RegisterEffect(e2)
-
+    --BFG
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(m,2))
-    e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
+    e3:SetCategory(CATEGORY_TODECK+CATEGORY_RECOVER)
+    e3:SetType(EFFECT_TYPE_IGNITION)
+    e3:SetRange(LOCATION_GRAVE)
     e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-    e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-    e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-    e3:SetCode(EVENT_TO_GRAVE)
+    e3:SetCode(EVENT_FREE_CHAIN)
     e3:SetCountLimit(1,m)
     e3:SetCondition(cm.tgcon)
+    e3:SetCost(aux.bfgcost)
     e3:SetTarget(cm.target1)
     e3:SetOperation(cm.operation1)
     c:RegisterEffect(e3)
@@ -55,7 +56,6 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
         Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
     end
 end
-
 function cm.matfilter(c)
     return c:IsFaceup() and c:IsSetCard(0xffd) and c:IsType(TYPE_XYZ)
 end
@@ -75,21 +75,19 @@ function cm.matop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function cm.tgcon(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    return c:IsPreviousLocation(LOCATION_OVERLAY)
+    return Duel.GetTurnPlayer()==tp
 end
 function cm.filter1(c)
-    return c:IsSetCard(0xffd) and c:IsAbleToDeck()
+    return c:IsSetCard(0xffd) and c:IsAbleToDeck() and not c:IsCode(m)
 end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter1(chkc) end
-    if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingTarget(cm.filter1,tp,LOCATION_GRAVE,0,3,nil) end
+    if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and cm.filter1(chkc) end
+    if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingTarget(cm.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,3,nil) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-    local g=Duel.SelectTarget(tp,cm.filter1,tp,LOCATION_GRAVE,0,3,3,nil)
+    local g=Duel.SelectTarget(tp,cm.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,3,3,nil)
     Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
     Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-
 function cm.operation1(e,tp,eg,ep,ev,re,r,rp)
     local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
     if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3 then return end

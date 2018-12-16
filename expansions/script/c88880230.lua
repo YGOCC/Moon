@@ -2,84 +2,106 @@
 local m=88880230
 local cm=_G["c"..m]
 function cm.initial_effect(c)
-       --Activate
+    --draw
     local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_DESTROY)
+    e1:SetDescription(aux.Stringid(m,0))
+    e1:SetCategory(CATEGORY_DRAW)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
-    e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e1:SetCode(EVENT_FREE_CHAIN)
-    e1:SetHintTiming(0,0x1c0)
-    e1:SetCountLimit(1,88880030)
-    e1:SetCondition(cm.handcon)
-    e1:SetTarget(cm.target)
-    e1:SetOperation(cm.activate)
+    e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
+    e1:SetRange(LOCATION_HAND)
+    e1:SetCost(cm.cost)
+    e1:SetOperation(cm.operation)
     c:RegisterEffect(e1)
-    --act in hand
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_SINGLE)
     e2:SetCode(EFFECT_TRAP_ACT_IN_HAND)
-    e2:SetCondition(cm.handcon)
-    c:RegisterEffect(e2) 
-    local e4=Effect.CreateEffect(c)
-    e4:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-    e4:SetType(EFFECT_TYPE_QUICK_O)
-    e4:SetRange(LOCATION_GRAVE)
-    e4:SetCode(EVENT_FREE_CHAIN)
-    e4:SetHintTiming(0,TIMING_END_PHASE)
-    e4:SetCondition(cm.gycon)
-    e4:SetCost(aux.bfgcost)
-    e4:SetCountLimit(1,88880130)
-    e4:SetTarget(cm.target2)
-    e4:SetOperation(cm.activate2)
-    c:RegisterEffect(e4)
-end
-function cm.handcon(e)
-    return Duel.GetCurrentChain()>=2 or Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_MZONE,0,1,nil)
-end
-function cm.gycon(e)
-    return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_MZONE,0,1,nil)
+    c:RegisterEffect(e2)
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e3:SetCode(EFFECT_DESTROY_REPLACE)
+    e3:SetRange(LOCATION_GRAVE)
+    e3:SetTarget(cm.reptg)
+    e3:SetValue(cm.repval)
+    e3:SetOperation(cm.repop)
+    c:RegisterEffect(e3)
 end
 function cm.cfilter(c)
-    return c:IsSetCard(0xffd)
+    return c:IsSetCard(0xffd) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
 end
-function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 end
+function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,1,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+    local g=Duel.SelectMatchingCard(tp,cm.cfilter,tp,LOCATION_HAND,0,1,1,nil)
+    Duel.ConfirmCards(1-tp,g)
+    Duel.ShuffleHand(tp)
 end
-function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-    local g1=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
-    local g=g1:Select(tp,1,1,nil)
-    Duel.SendtoHand(g,nil,REASON_EFFECT)
+function cm.operation(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    local e1=Effect.CreateEffect(c)
+    e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+    e1:SetProperty(EFFECT_FLAG_DELAY)
+    e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+    e1:SetCondition(cm.drcon1)
+    e1:SetOperation(cm.drop1)
+    e1:SetCountLimit(5,m)
+    e1:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e1,tp)
+    --sp_summon effect
+    local e2=Effect.CreateEffect(c)
+    e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+    e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+    e2:SetCondition(cm.regcon)
+    e2:SetOperation(cm.regop)
+    e2:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e2,tp)
+    local e3=Effect.CreateEffect(c)
+    e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+    e3:SetCode(EVENT_CHAIN_SOLVED)
+    e3:SetCondition(cm.drcon2)
+    e3:SetOperation(cm.drop2)
+    e3:SetCountLimit(5,m)
+    e3:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e3,tp)
 end
-function cm.filter(c)
-    return not c:IsCode(m) and (c:IsLocation(LOCATION_HAND+LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToDeck()
+function cm.filter(c,sp)
+    return c:GetSummonPlayer()==sp
 end
-function cm.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-    local g=Duel.GetMatchingGroup(cm.filter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_REMOVED,0,nil)
-    if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
-        and g:GetClassCount(Card.GetCode)>=3 end
-    Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,3,0,0)
-    Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+function cm.drcon1(e,tp,eg,ep,ev,re,r,rp)
+    return eg:IsExists(cm.filter,1,nil,1-tp)
+        and (not re:IsHasType(EFFECT_TYPE_ACTIONS) or re:IsHasType(EFFECT_TYPE_CONTINUOUS))
 end
-function cm.activate2(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(cm.filter),tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_REMOVED,0,nil)
-    if g:GetClassCount(Card.GetCode)<3 then return end
-    local sg=Group.CreateGroup()
-    for i=1,3 do
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-        local g1=g:Select(tp,1,1,nil)
-        g:Remove(Card.IsCode,nil,g1:GetFirst():GetCode())
-        sg:Merge(g1)
-    end
-    local cg=sg:Filter(Card.IsLocation,nil,LOCATION_HAND)
-    if cg:GetCount()>0 then
-        Duel.ConfirmCards(1-tp,cg)
-    end
-    Duel.SendtoDeck(sg,nil,0,REASON_EFFECT)
-    local og=Duel.GetOperatedGroup()
-    if og:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-    local ct=og:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-    if ct==3 then
-        Duel.BreakEffect()
-        Duel.Draw(tp,1,REASON_EFFECT)
-    end
+function cm.drop1(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Draw(tp,1,REASON_EFFECT)
+    Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+end
+function cm.regcon(e,tp,eg,ep,ev,re,r,rp)
+    return eg:IsExists(cm.filter,1,nil,1-tp)
+        and re:IsHasType(EFFECT_TYPE_ACTIONS) and not re:IsHasType(EFFECT_TYPE_CONTINUOUS)
+end
+function cm.regop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.RegisterFlagEffect(tp,m,RESET_CHAIN,0,1)
+end
+function cm.drcon2(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.GetFlagEffect(tp,m)>0
+end
+function cm.drop2(e,tp,eg,ep,ev,re,r,rp)
+    local n=Duel.GetFlagEffect(tp,m)
+    Duel.ResetFlagEffect(tp,m)
+    Duel.Draw(tp,n,REASON_EFFECT)
+    Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+end
+function cm.repfilter(c,tp)
+    return c:IsFaceup() and c:IsSetCard(0xffd)
+        and c:IsControler(tp) and c:IsReason(REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
+end
+function cm.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(cm.repfilter,1,nil,tp) end
+    return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
+end
+function cm.repval(e,c)
+    return cm.repfilter(c,e:GetHandlerPlayer())
+end
+function cm.repop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 end
