@@ -37,7 +37,8 @@ function cm.initial_effect(c)
 end
 function cm.linkfilter(c,tp)
     return c:IsFaceup()
-        and ((c:IsType(TYPE_XYZ) and c:IsSetCard(0xffd)and c:GetOverlayGroup():GetCount()>0))
+        and ((c:IsType(TYPE_XYZ) and c:GetOverlayGroup():IsExists(Card.IsCode,1,nil,88880005))
+        or (c:IsCode(88880006) and c:GetOverlayGroup():GetCount()>0))
 end
 function cm.linkcon(e,c)
     if c==nil then return true end

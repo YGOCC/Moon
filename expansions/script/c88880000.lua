@@ -2,17 +2,27 @@
 local m=88880000
 local cm=_G["c"..m]
 function cm.initial_effect(c)
-    -- Negate 
+    --special summon
     local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_NEGATE)
-    e1:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_QUICK_F)
-    e1:SetCode(EVENT_CHAINING)
-    e1:SetCondition(cm.discon)
-    e1:SetCountLimit(1,8888001)
-    e1:SetCost(cm.discost)
-    e1:SetTarget(cm.distg)
-    e1:SetOperation(cm.disop)
-    c:RegisterEffect(e1)
+    e1:SetDescription(aux.Stringid(m,0))
+    e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e1:SetType(EFFECT_TYPE_IGNITION)
+    e1:SetRange(LOCATION_HAND)
+    e1:SetCountLimit(1,m)
+    e1:SetCondition(cm.spcon)
+    e1:SetTarget(cm.sptg)
+    e1:SetOperation(cm.spop)
+    c:RegisterEffect(e1)    
+    --material
+    local e2=Effect.CreateEffect(c)
+    e2:SetDescription(aux.Stringid(m,1))
+    e2:SetType(EFFECT_TYPE_QUICK_O)
+    e2:SetCode(EVENT_FREE_CHAIN)
+    e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    e2:SetRange(LOCATION_HAND+LOCATION_MZONE)
+    e2:SetTarget(cm.mattg)
+    e2:SetOperation(cm.matop)
+    c:RegisterEffect(e2)
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(m,2))
     e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -25,25 +35,7 @@ function cm.initial_effect(c)
     e3:SetOperation(cm.tgop)
     c:RegisterEffect(e3)
 end
--- Negate Spells
-function cm.discon(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    return c:GetType(TYPE_XYZ)
-        and not c:IsStatus(STATUS_BATTLE_DESTROYED) and ep==1-tp
-        and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev) and c:GetOverlayCount()>1
-end
-function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return true end
-    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-    Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-    e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
-end
-function cm.disop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.NegateEffect(ev)
-end
+-- SpecialSummon from hand
 function cm.cfilter(c)
     return c:IsFacedown() or not c:IsSetCard(0xffd)
 end
@@ -95,5 +87,5 @@ function cm.tgop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.tgcon(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-      return c:IsReason(REASON_COST) and c:IsPreviousLocation(LOCATION_OVERLAY)
+    return c:IsPreviousLocation(LOCATION_OVERLAY)
 end
