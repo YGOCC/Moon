@@ -144,6 +144,7 @@ function c1020019.indfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0xded)
 end
 function c1020019.indtg(e,c)
+	if c==nil then return end
 	return c:IsFaceup() and c:IsSetCard(0xded)
 end
 function c1020019.indval(e,re,r,rp)
