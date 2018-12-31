@@ -1,7 +1,7 @@
 --D.D. Link Dragon
 function c32083045.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x7D53),2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x7D53),2,2)
 	c:EnableReviveLimit()
     --spsummon success
     local e1=Effect.CreateEffect(c)

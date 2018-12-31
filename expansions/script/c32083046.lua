@@ -1,7 +1,7 @@
 --D.D. Dragon - Ultima Sentry
 function c32083046.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x7D53),3)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkType,0x7D53),3)
 	c:EnableReviveLimit()
 		--cannot release
 	local e1=Effect.CreateEffect(c)
