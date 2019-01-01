@@ -63,11 +63,11 @@ function c160002321.costfilter(c)
 	return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_NORMAL) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
 function c160002321.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,2,REASON_COST) and Duel.IsExistingMatchingCard(c160002321.costfilter,tp,LOCATION_EXTRA,0,1,c) end
+if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST)  and Duel.IsExistingMatchingCard(c160002321.costfilter,tp,LOCATION_EXTRA,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c160002321.costfilter,tp,LOCATION_EXTRA,0,1,1,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:GetHandler():RemoveCounter(tp,0x88,2,REASON_COST)
+	 e:GetHandler():RemoveEC(tp,2,REASON_COST)
 end
 function c160002321.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()

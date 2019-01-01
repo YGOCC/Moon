@@ -60,8 +60,8 @@ function c16000039.negcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c16000039.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+	 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c16000039.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

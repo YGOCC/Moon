@@ -80,8 +80,8 @@ function c160008741.valcheck(e,c)
 	e:GetLabelObject():SetLabel(ct)
 end
 function c160008741.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST)  end
+e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 function c160008741.filter(c)
 	return c:IsType(TYPE_EFFECT) and c:IsFaceup()  and c:IsDestructable()

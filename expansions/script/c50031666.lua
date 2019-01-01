@@ -183,11 +183,11 @@ function c50031666.costfilter(c)
 end
 function c50031666.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 local c=e:GetHandler()
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,2,REASON_COST) and Duel.IsExistingMatchingCard(c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
+	  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) and Duel.IsExistingMatchingCard(c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:GetHandler():RemoveCounter(tp,0x88,2,REASON_COST)
+	e:GetHandler():RemoveEC(tp,2,REASON_COST)
 		c:RegisterFlagEffect(50031666,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
 

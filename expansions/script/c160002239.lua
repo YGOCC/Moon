@@ -55,8 +55,8 @@ function c160002239.psfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 end
 function c160002239.pscost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST)  end
+	 e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c160002239.pstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))

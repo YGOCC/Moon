@@ -74,8 +74,8 @@ function c160001956.desfilter(c)
 	  --  and Duel.IsExistingMatchingCard(c160001956.filter(c),0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
 end
 function c160001956.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+ if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	 e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 function c160001956.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) end

@@ -36,8 +36,8 @@ function c500314216.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c500314216.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,6,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,6,REASON_COST)
+	   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,6,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,6,REASON_COST)
 end
 function c500314216.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY)

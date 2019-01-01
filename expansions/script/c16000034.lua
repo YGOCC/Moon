@@ -58,8 +58,8 @@ function c16000034.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	return ec==nil or ec:GetFlagEffect(16000034)==0
 end
 function c16000034.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+	  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c16000034.xfilter(c)
 	return  c:IsAbleToChangeControler() and c:IsFaceup()

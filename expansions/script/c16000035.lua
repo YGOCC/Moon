@@ -51,8 +51,8 @@ function c16000035.condition(e,tp,eg,ep,ev,re,r,rp)
 	return bc and bc:GetSummonLocation()==LOCATION_EXTRA
 end
 function c16000035.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+	   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 function c16000035.operation(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
