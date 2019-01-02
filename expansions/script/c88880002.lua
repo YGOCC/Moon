@@ -7,7 +7,6 @@ function cm.initial_effect(c)
     e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
     e1:SetType(EFFECT_TYPE_IGNITION)
     e1:SetRange(LOCATION_HAND)
-    e1:SetCountLimit(1,m)
     e1:SetCondition(cm.spcon)
     e1:SetTarget(cm.sptg)
     e1:SetOperation(cm.spop)
@@ -15,23 +14,27 @@ function cm.initial_effect(c)
     --material
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(m,1))
-    e2:SetType(EFFECT_TYPE_QUICK_O)
+    e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetCode(EVENT_FREE_CHAIN)
     e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e2:SetRange(LOCATION_HAND+LOCATION_MZONE)
     e2:SetTarget(cm.mattg)
+    e2:SetCondition(cm.spcon)
     e2:SetOperation(cm.matop)
     c:RegisterEffect(e2)
+    -- BFG SS
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(m,2))
-    e3:SetCategory(CATEGORY_DESTROY)
-    e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-    e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-    e3:SetCode(EVENT_TO_GRAVE)
+    e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e3:SetType(EFFECT_TYPE_IGNITION)
+    e3:SetRange(LOCATION_GRAVE)
+    e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    e3:SetCode(EVENT_FREE_CHAIN)
     e3:SetCountLimit(1,m)
     e3:SetCondition(cm.tgcon)
-    e3:SetTarget(cm.target)
-    e3:SetOperation(cm.operation)
+    e3:SetCost(aux.bfgcost)
+    e3:SetTarget(cm.tgtg)
+    e3:SetOperation(cm.tgop)
     c:RegisterEffect(e3)
 end
 -- SpecialSummon from hand
@@ -70,25 +73,32 @@ function cm.matop(e,tp,eg,ep,ev,re,r,rp)
         Duel.Overlay(tc,Group.FromCards(c))
     end
 end
-
 function cm.tgcon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.GetTurnPlayer()==tp
+end
+function cm.filter(c,e,tp)
+    return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0xffd)
+end
+function cm.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsLocation(LOCATION_GRAVE) and cm.filter(chkc,e,tp) end
+    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+        and Duel.IsExistingTarget(cm.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+    local g=Duel.SelectTarget(tp,cm.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function cm.tgop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    return c:IsPreviousLocation(LOCATION_OVERLAY)
-end
-function cm.filter(c)
-    return c:IsFaceup() and c:IsType(TYPE_MONSTER)
-end
-function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chkc then return chkc:IsOnField() and chkc:IsFaceup() end
-    if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
-    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-    local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-    Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
-end
-function cm.operation(e,tp,eg,ep,ev,re,r,rp)
- local tc=Duel.GetFirstTarget()
-    if tc:IsRelateToEffect(e) then
-        Duel.Destroy(tc,REASON_EFFECT)
+    local tc=Duel.GetFirstTarget()
+    if tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+        local e1=Effect.CreateEffect(c)
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_DISABLE)
+        e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+        tc:RegisterEffect(e1)
+        local e2=e1:Clone()
+        e2:SetCode(EFFECT_DISABLE_EFFECT)
+        tc:RegisterEffect(e2)
+        Duel.SpecialSummonComplete()
     end
 end
