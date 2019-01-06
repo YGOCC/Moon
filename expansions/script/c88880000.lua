@@ -5,14 +5,18 @@ function cm.initial_effect(c)
     -- Negate 
     local e1=Effect.CreateEffect(c)
     e1:SetCategory(CATEGORY_NEGATE)
-    e1:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_QUICK_F)
-    e1:SetCode(EVENT_CHAINING)
+    e1:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e1:SetCode(EVENT_CHAIN_SOLVED)
     e1:SetCondition(cm.discon)
-    e1:SetCountLimit(1,8888001)
-    e1:SetCost(cm.discost)
     e1:SetTarget(cm.distg)
     e1:SetOperation(cm.disop)
     c:RegisterEffect(e1)
+    local e2=Effect.CreateEffect(c)
+    e2:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e2:SetCode(EVENT_CHAINING)
+    e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+    e2:SetOperation(cm.regop)
+    c:RegisterEffect(e2)
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(m,2))
     e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -25,24 +29,30 @@ function cm.initial_effect(c)
     e3:SetOperation(cm.tgop)
     c:RegisterEffect(e3)
 end
--- Negate Spells
+function cm.regop(e,tp,eg,ep,ev,re,r,rp)
+    e:GetHandler():RegisterFlagEffect(m,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_CHAIN,0,1)
+end
+-- Reduce ATK
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     return c:GetType(TYPE_XYZ)
-        and not c:IsStatus(STATUS_BATTLE_DESTROYED) and ep==1-tp
-        and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev) and c:GetOverlayCount()>1
+        and not c:IsStatus(STATUS_BATTLE_DESTROYED) and not c:IsStatus(STATUS_DISABLED)  and c:GetFlagEffect(m)~=0 and c:GetOverlayCount()>1
 end
 function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return true end
-    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-    Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-    e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+    if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 end
 function cm.disop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.NegateEffect(ev)
+    local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+    local tc=g:GetFirst()
+    while tc do
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_UPDATE_ATTACK)
+        e1:SetValue(-100)
+        e1:SetReset(RESET_EVENT+0x1ff0000)
+        tc:RegisterEffect(e1)
+        tc=g:GetNext()
+    end
 end
 function cm.cfilter(c)
     return c:IsFacedown() or not c:IsSetCard(0xffd)
