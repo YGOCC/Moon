@@ -152,8 +152,8 @@ function c16000894.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(ev)
 end
 function c16000894.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 function c16000894.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

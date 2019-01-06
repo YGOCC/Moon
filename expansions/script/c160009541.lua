@@ -1,7 +1,7 @@
 --Carole, Queen of Fiber Vine #2 
 function c160009541.initial_effect(c)
    aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,nil,8,c160009541.filter1,c160009541.filter2)
+  aux.AddEvoluteProc(c,nil,6,c160009541.filter1,c160009541.filter2,2,99)
 	c:EnableReviveLimit() 
 	--local e1=Effect.CreateEffect(c)
 	--e1:SetType(EFFECT_TYPE_SINGLE)
@@ -95,9 +95,10 @@ function c160009541.discon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsChainNegatable(ev)
 end
 function c160009541.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+	 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
+
 function c160009541.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)

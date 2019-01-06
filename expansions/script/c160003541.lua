@@ -22,6 +22,7 @@ function c160003541.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EVENT_BATTLE_DESTROYING)
+	 e2:SetCountLimit(1,160003542)
 	e2:SetCondition(c160003541.damcon)
 	e2:SetTarget(c160003541.damtg)
 	e2:SetOperation(c160003541.damop)
@@ -33,9 +34,9 @@ function c160003541.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetCountLimit(1)
+	 e3:SetCountLimit(1,160003543)
 	e5:SetCondition(c160003541.eqcon)
-	e5:SetCost(c160003541.discost)
+	e5:SetCost(c160003541.eqcost)
 	e5:SetTarget(c160003541.eqtg)
 	e5:SetOperation(c160003541.eqop)
 	c:RegisterEffect(e5)
@@ -78,8 +79,12 @@ function c160003541.descon(e,tp,eg,ep,ev,re,r,rp)
 	return c:GetSummonType()==SUMMON_TYPE_SPECIAL+388 and c:GetMaterial():IsExists(c160003541.pmfilter,1,nil)
 end
 function c160003541.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
+end
+function c160003541.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c160003541.pmfilter(c)
 	return c:IsType(TYPE_RITUAL)
@@ -105,8 +110,8 @@ function c160003541.con(e,c)
 end
 
 function c160003541.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+ if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+		e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c160003541.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

@@ -1,7 +1,7 @@
 --Medivatale Griffin
 function c160008783.initial_effect(c)
  aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,nil,7,c160008783.filter1,c160008783.filter2)
+  aux.AddEvoluteProc(c,nil,7,c160008783.filter1,c160008783.filter2,2,99)
 	c:EnableReviveLimit() 
 end
 function c160008783.filter1(c,ec,tp)

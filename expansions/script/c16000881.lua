@@ -101,8 +101,8 @@ function c16000881.mtop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,16000881,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000881.cost(e,tp,eg,ep,ev,re,r,rp,chk)
- if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 function c16000881.xxfilter(c)
 	return  c:IsType(TYPE_SPELL+TYPE_TRAP)

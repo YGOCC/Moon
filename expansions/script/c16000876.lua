@@ -89,7 +89,8 @@ function c16000876.operation2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,16000876,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000876.con(e,tp,eg,ep,ev,re,r,rp)
-	return  e:GetHandler():GetCounter(0x88)>=4
+	return  e:GetHandler():GetECounter(tp)>=4
+   
 end
 function c16000876.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

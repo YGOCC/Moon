@@ -1,6 +1,6 @@
 --Medivatale Cactusat
 function c16000880.initial_effect(c)
-   --	--special summon
+   --   --special summon
   --  local e1=Effect.CreateEffect(c)
   --  e1:SetType(EFFECT_TYPE_FIELD)
   --  e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
@@ -98,8 +98,8 @@ function c16000880.mtop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,16000880,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000880.cost(e,tp,eg,ep,ev,re,r,rp,chk)
- if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c16000880.xxfilter(c)
 	return c:IsType(TYPE_MONSTER)

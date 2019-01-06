@@ -48,7 +48,7 @@ function c500311550.filter2(c,ec,tp)
 	return c:IsRace(RACE_PLANT+RACE_INSECT) 
 end
 function c500311550.con(e,tp,eg,ep,ev,re,r,rp)
-	return  e:GetHandler():GetCounter(0x88)==4
+	return  e:GetHandler():GetECounter(tp)==4
 end
 function c500311550.tgtg(e,c)
 	return  c:IsType(TYPE_RITUAL) or c:IsType(TYPE_EVOLUTE)

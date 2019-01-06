@@ -11,7 +11,7 @@ function c500315455.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
 	e1:SetCondition(c500315455.eqcon)
-	e1:SetCost(c500315455.discost)
+	e1:SetCost(c500315455.eqcost)
 	e1:SetTarget(c500315455.eqtg)
 	e1:SetOperation(c500315455.eqop)
 	c:RegisterEffect(e1)
@@ -34,8 +34,12 @@ function c500315455.filter2(c,ec,tp)
 end
 
 function c500315455.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,4,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
+end
+function c500315455.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c500315455.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

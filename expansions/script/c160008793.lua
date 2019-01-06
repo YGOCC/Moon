@@ -1,7 +1,7 @@
 --Medivatale Mermaid
 function c160008793.initial_effect(c)
 	aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,nil,4,c160008793.filter1,c160008793.filter2)
+  aux.AddEvoluteProc(c,nil,4,c160008793.filter1,c160008793.filter2,2,99)
 	c:EnableReviveLimit() 
 end
 function c160008793.filter1(c,ec,tp)

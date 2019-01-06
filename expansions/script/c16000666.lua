@@ -123,8 +123,8 @@ function c16000666.operation2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,16000666,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000666.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+		e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c16000666.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c16000666.fukfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) end

@@ -83,8 +83,8 @@ function c16000840.operation2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,16000840,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000840.cost3(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c16000840.target3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	  if chkc then return chkc:IsOnField() and Card.IsAbleToGrave(chkc) end

@@ -98,8 +98,8 @@ if Duel.GetFlagEffect(tp,16000896)~=0 then return end
 	Duel.RegisterFlagEffect(tp,16000896,RESET_PHASE+PHASE_END,0,1)
 end
 function c16000896.cost(e,tp,eg,ep,ev,re,r,rp,chk)
- if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 function c16000896.xxfilter(c)
 	return c:IsType(TYPE_MONSTER)

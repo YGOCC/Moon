@@ -2,7 +2,7 @@
 function c500316921.initial_effect(c)
 	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-   aux.AddEvoluteProc(c,nil,6,c500316921.filter1,c500316921.filter2)
+   aux.AddEvoluteProc(c,nil,6,c500316921.filter1,c500316921.filter2,1,99)
 	--remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500316921,0))
@@ -10,7 +10,7 @@ function c500316921.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
+	e1:SetCountLimit(1,500316921)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,0x1e0)
 	e1:SetCost(c500316921.discost)
@@ -26,8 +26,8 @@ function c500316921.filter1(c,ec,tp)
 	return c:IsRace(RACE_FIEND)
 end
 function c500316921.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
+	 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c500316921.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end
