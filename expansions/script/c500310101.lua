@@ -12,7 +12,7 @@ function c500310101.initial_effect(c)
 	c:RegisterEffect(e1) 
 end
 function c500310101.filter(c,e)
-	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)and c:GetStage()>c:GetCounter(0x1088) --c:GetCounter(0x1088)<=0 
+	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)and c:GetStage()>GetECounter(tp) --c:GetCounter(0x1088)<=0 
 end
 function c500310101.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c500310101.filter(chkc) end
@@ -49,6 +49,7 @@ function c500310101.activate(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e3)
 	tc:AddCounter(0x1088,tc:GetStage())
+	tc:AddECounter(tp,tc:GetStage())
 	end
 end
 function c500310101.damval(e,re,dam,r,rp,rc)

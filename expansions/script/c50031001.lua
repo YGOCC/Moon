@@ -54,8 +54,8 @@ function c50031001.hspop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c50031001.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
-	e:GetHandler():RemoveEC(tp,4,REASON_COST)
+   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	 e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 function c50031001.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetDecktopGroup(tp,3):GetCount()==3 end
