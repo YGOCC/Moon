@@ -111,8 +111,8 @@ function c500311003.actcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c500311003.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	  local c=e:GetHandler()
-	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) and  Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()
-	 Duel.DiscardHand(tp,Card.IsDiscardable,2,2,REASON_COST+REASON_DISCARD)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) and  Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler())end
+	 Duel.DiscardHand(tp,Card.IsDiscardable,2,2,REASON_COST+REASON_DISCARD) 
 	e:GetHandler():RemoveEC(tp,2,REASON_COST)
 	c:RegisterFlagEffect(500311003,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
