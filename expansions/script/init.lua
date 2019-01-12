@@ -885,6 +885,10 @@ function Auxiliary.PandActTarget(...)
 				for i,xe in ipairs(fx) do
 					local condition=xe:GetCondition()
 					local code=xe:GetCode()
+					local check_own_label=xe:GetLabelObject()
+					if check_own_label then
+						e:SetLabelObject(check_own_label)
+					end
 					cost=xe:GetCost()
 					tg=xe:GetTarget()
 					local tchk=(code==EVENT_FREE_CHAIN or Duel.CheckEvent(code))
@@ -909,12 +913,16 @@ function Auxiliary.PandActTarget(...)
 				e:SetLabel(op)
 				if op>0 then
 					local xe=t[op]
+					local confirm_own_label=xe:GetLabelObject()
+					if confirm_own_label then
+						e:SetLabelObject(confirm_own_label)
+					end
 					e:SetCategory(xe:GetCategory())
 					cost=xe:GetCost()
 					if cost then cost(e,tp,eg,ep,ev,re,r,rp,1) end
 					tg=xe:GetTarget()
 					if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
-					e:SetLabelObject(xe)
+					--e:SetLabelObject(xe)
 					c:RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,65)
 				else
 					e:SetCategory(0)
