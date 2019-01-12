@@ -79,11 +79,10 @@ function c160008799.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(c160008799.hhfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(160008799,1))
 	Duel.SelectTarget(tp,c160008799.hhfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,3,0,0x88)
 end
 
 function c160008799.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:AddCounter(0x88,3) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:AddECounter(tp,3) then
 		end
 	end

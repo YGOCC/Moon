@@ -1,6 +1,7 @@
 --Paintress ARMANIA
 function c16000538.initial_effect(c)
 --pendulum summon
+   aux.EnablePendulumAttribute(c,false)
 	 --Pendulum Set
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)

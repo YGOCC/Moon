@@ -1,52 +1,76 @@
 --Paintress Cesano
+--XGlitchy30 was here
 function c160007800.initial_effect(c)
-	--pendulum summon
-	aux.EnablePendulumAttribute(c)
-	--tohand
+	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(160007800,1))
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_PHASE+PHASE_END)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetCountLimit(1,16178682)
-   	e1:SetCondition(c160007800.thcon)
-	e1:SetTarget(c160007800.thtg)
-	e1:SetOperation(c160007800.thop)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(c160007800.spcon)
+	e1:SetOperation(c160007800.spop)
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--avoid battle damage
+	--apply spsummon proc
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c160007800.efilter)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCondition(c160007800.proccon)
+	e2:SetOperation(c160007800.proc)
+	e2:SetLabelObject(e1)
 	c:RegisterEffect(e2)
-  
+ --extra summon
+	   local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTarget(c160007800.target)
+	e3:SetTargetRange(1,0)
+	e3:SetValue(2)
+	c:RegisterEffect(e3)
 end
-function c160007800.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
+--filters
+function c160007800.spfilter(c)
+	return (c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_EFFECT)) or (c:IsFaceup() and c:IsSetCard(0xc50)) and c:IsAbleToRemoveAsCost()
 end
-function c160007800.efilter(e,c)
-	return not c:IsType(TYPE_EFFECT)
+--special summon
+function c160007800.spcon(e,c)
+	  if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c160007800.spfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,nil)
 end
-function c160007800.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsDestructable()
-		and Duel.IsExistingMatchingCard(c160007800.filter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function c160007800.filter(c)
-	return c:IsType(TYPE_NORMAL) and c:IsAbleToHand()
-end
-function c160007800.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c160007800.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+function c160007800.spop(e,tp,eg,ep,ev,re,r,rp,c)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c160007800.spfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,1,nil)
+	if Duel.Remove(g,POS_FACEUP,REASON_COST)~=0 then
+		local tc=Duel.GetOperatedGroup():GetFirst()
+		e:SetLabelObject(tc)
 	end
+end
+--apply spsummon proc
+function c160007800.proccon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+end
+function c160007800.proc(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=e:GetLabelObject():GetLabelObject()
+	local code=tc:GetOriginalCode()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_CHANGE_LEVEL)
+	e1:SetValue(tc:GetOriginalLevel())
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_CHANGE_CODE)
+	e2:SetValue(code)
+	e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+	c:RegisterEffect(e2)
+	c:CopyEffect(code,RESET_EVENT+RESETS_STANDARD,1)
+end
+function c160007800.target(e,c)
+	return c:IsType(TYPE_DUAL) or c:IsType(TYPE_NORMAL)
 end
