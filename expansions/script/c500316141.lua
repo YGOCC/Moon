@@ -2,7 +2,7 @@
 function c500316141.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,5,c500316141.filter1,c500316141.filter2,1,99)  
+  aux.AddEvoluteProc(c,nil,7,c500316141.filter1,c500316141.filter2,2,99)  
    --remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500316141,0))
@@ -59,8 +59,8 @@ function c500316141.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	if tc:IsRelateToEffect(e) then
   local c=e:GetHandler()	   
   if not (c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT) ~=0) then return end
-	local atk=tc:GetAttack()
-	local def=tc:GetDefense()
+	local atk=tc:GetTextAttack()/2
+	local def=tc:GetTextDefense()/2
 	if atk>0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
