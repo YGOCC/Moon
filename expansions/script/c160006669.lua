@@ -1,9 +1,8 @@
 --Paintress EX- Destructive ARMANIA
 function c160006669.initial_effect(c)
 		 --evolute procedure
-	aux.EnablePendulumAttribute(c)
 	aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,nil,5,c160006669.filter1,c160006669.filter2,2,99)
+	aux.AddEvoluteProc(c,nil,5,c160006669.filter1,c160006669.filter2,1,99)
 	c:EnableReviveLimit() 
 	--destroy
 	local e1=Effect.CreateEffect(c)
@@ -22,8 +21,8 @@ function c160006669.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetHintTiming(0,0x11e0)
- e2:SetCountLimit(1)
-e2:SetCost(c160006669.cost)
+	e2:SetCountLimit(1)
+	e2:SetCost(c160006669.cost)
 	--e2:SetTarget(c160006669.target)
 	e2:SetOperation(c160006669.operation)
 	c:RegisterEffect(e2)
@@ -35,6 +34,12 @@ e2:SetCost(c160006669.cost)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetValue(c160006669.atkval)
 	c:RegisterEffect(e4)
+end
+function c160006669.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) 
+end
+function c160006669.filter2(c,ec,tp)
+	return c:IsRace(RACE_FAIRY) 
 end
 function c160006669.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
