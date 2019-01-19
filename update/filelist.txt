@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	028dd9e8b0a0a54e6cea4ddcb29fad85
+﻿expansions/Cards-non-QCD.cdb	b1f8127d39d0629eb6cf5b32a7127b39
 expansions/lflist.conf	92636e9fd7f947bc8c83796f99d355cf
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	f831d52aa19209c28b688bd84cfea883
@@ -1605,7 +1605,7 @@ expansions/pics/160005512.jpg	7f09861619c4d97a5fe8488101a49a79
 expansions/pics/160005555.jpg	9c28e2821e729286d6b1d4324b1ed8ff
 expansions/pics/1600058.jpg	13475fbca891272f12bf0631c88bf3c8
 expansions/pics/16000666.jpg	ee70bb4e48aab35decfb0ee4932e8a01
-expansions/pics/160006669.jpg	c2d58fe490582b970028d7efe4d3bad6
+expansions/pics/160006669.jpg	88c134c483def725f52beda4ba2b6ad8
 expansions/pics/160006969.jpg	f2c3df5110ab32c9ce385e818d9be94c
 expansions/pics/160007800.jpg	bb334602cfb538ca1a3bc2f51111de2a
 expansions/pics/160007841.jpg	50d3f748f75340a6e42d5511c5c9a6eb
@@ -7409,7 +7409,7 @@ expansions/script/c160005512.lua	5e03060f99fdc19dc845469ec73ddf93
 expansions/script/c160005555.lua	4b298c655ea084884c159771bb73142c
 expansions/script/c1600058.lua	2823e6ff0a2c9c0dcd17308c08ac0a5f
 expansions/script/c16000666.lua	7480966ee87cb0fd98692ab3595e0794
-expansions/script/c160006669.lua	c70d42e5eb34129215ee23e9b1a976f8
+expansions/script/c160006669.lua	863d856630958b6c4fc2f0799ba5b392
 expansions/script/c160006969.lua	eef0e52c93840ad415c12b3176bb1a60
 expansions/script/c160007800.lua	778f15ee1eabed21f27507845b6cceee
 expansions/script/c160007841.lua	c9ff563437f09950f9a0da7a999c2542
@@ -11551,6 +11551,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	2e7490e451c687b1eaa9e704ac7c7615
+update/filelist.txt	cb5d8bad76bc29b169976c9f1e56c5ab
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	449a247e8712736142155c693dda8b5b
+update/version.txt	0d5e63de4ed2f84fdf8b323c8d50debe
