@@ -24,7 +24,7 @@ function c500314141.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c500314141.cfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0xc50) or  not c:IsType(TYPE_EFFECT)) and c:IsAbleToRemoveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0xc50) and not c:IsType(TYPE_EFFECT) and c:IsAbleToRemoveAsCost()
 end
 
 
