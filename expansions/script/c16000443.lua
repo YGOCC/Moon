@@ -76,7 +76,7 @@ function c16000443.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)
 	if c:IsFaceup() and c:IsRelateToEffect(e) then
-	Duel.Recover(tp,ct*500,REASON_EFFECT)
+	Duel.Recover(tp,ct*300,REASON_EFFECT)
 	
 	end
 end
