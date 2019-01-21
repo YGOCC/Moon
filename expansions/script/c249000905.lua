@@ -116,7 +116,7 @@ function c249000905.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000905.filter2(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf) and c:GetLevel() > 0
+	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0xcf) or c:IsSetCard(0x1048) or c:IsSetCard(0x1073)) and c:GetLevel() > 0
 end
 function c249000905.xyzfilter(c,mg)
 	local code=c:GetOriginalCode()
@@ -129,7 +129,7 @@ end
 function c249000905.mfilter2(c,mc)
 	local code=mc:GetOriginalCode()
 	local mt=_G["c" .. code]
-	return (not mt.xyz_filter or mt.xyz_filter(c)) and c:IsType(TYPE_MONSTER) and c:GetLevel()==mc:GetRank()
+	return (not mt.xyz_filter or mt.xyz_filter(c)) and c:IsType(TYPE_MONSTER) and c:GetLevel()==mc:GetRank() and (c:IsSetCard(0xcf) or c:IsSetCard(0x1048) or c:IsSetCard(0x1073))
 end
 function c249000905.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -147,7 +147,7 @@ function c249000905.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local maxct
 	local code=xyz:GetOriginalCode()
 	local mt=_G["c" .. code]
-	if mt.maxct==2 then maxct=2 else maxct=3 end
+	if mt.xyz_minct==2 then maxct=2 else maxct=3 end
 	local g=Duel.SelectMatchingCard(tp,c249000905.mfilter2,tp,LOCATION_GRAVE+LOCATION_MZONE,0,mt.xyz_minct,maxct,nil,xyz)
 	Duel.XyzSummon(tp,xyz,g)
 end
