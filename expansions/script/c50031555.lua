@@ -2,7 +2,7 @@
 
 function c50031555.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,nil,10,c50031555.filter1,c50031555.filter2,c50031555.filter3)
+  aux.AddEvoluteProc(c,nil,10,c50031555.filter1,c50031555.filter2,c50031555.filter3,3,99)
 	c:EnableReviveLimit()
   --spsummon condition
 	local e1=Effect.CreateEffect(c)
@@ -100,8 +100,8 @@ function c50031555.condition2(e,tp,eg,ep,ev,re,r,rp)
 end
 function c50031555.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	   local c=e:GetHandler()
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	c:RemoveCounter(tp,0x88,3,REASON_COST) 
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	 e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
 function c50031555.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

@@ -1,7 +1,7 @@
 --Romana, Princess of Rose VINE
 function c50031103.initial_effect(c)
 	aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,c50031103.checku,4,c50031103.filter1,c50031103.filter2)
+   aux.AddEvoluteProc(c,nil,4,c50031103.filter1,c50031103.filter2)
 	c:EnableReviveLimit()
 local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(50031103,0))
@@ -25,14 +25,11 @@ local e1=Effect.CreateEffect(c)
 	e2:SetOperation(c50031103.spop)
 	c:RegisterEffect(e2)
 end
-function c50031103.checku(sg,ec,tp)
-return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
-end
 function c50031103.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_FIRE) 
+	return c:IsType(TYPE_NORMAL)
 end
 function c50031103.filter2(c,ec,tp)
-	return c:IsRace(RACE_PLANT) 
+	return c:IsRace(RACE_PLANT) or c:IsAttribute(ATTRIBUTE_FIRE) 
 end
 function c50031103.condition(e,tp,eg,ep,ev,re,r,rp)
 	return  e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388 and e:GetHandler():IsLinkState()
@@ -83,8 +80,8 @@ function c50031103.filter(c)
 end
 function c50031103.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	c:RemoveCounter(tp,0x88,3,REASON_COST) 
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	 e:GetHandler():RemoveEC(tp,3,REASON_COST)
 	--local e1=Effect.CreateEffect(c)
   --  e1:SetType(EFFECT_TYPE_FIELD)
    -- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)

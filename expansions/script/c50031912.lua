@@ -1,7 +1,7 @@
 --Shomesa, Sunflower  of Rose VINE
 function c50031912.initial_effect(c)
 		aux.AddOrigEvoluteType(c)
- aux.AddEvoluteProc(c,nil,9,c50031912.mfilter1,c50031912.mfilter2,c50031912.mfilter3,1,99)
+ aux.AddEvoluteProc(c,nil,9,c50031912.mfilter1,c50031912.mfilter2,c50031912.mfilter3,3,99)
 	c:EnableReviveLimit()
   --spsummon condition
 	local e1=Effect.CreateEffect(c)
@@ -54,8 +54,8 @@ function c50031912.remcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c50031912.remcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
-	c:RemoveCounter(tp,0x88,3,REASON_COST) 
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	 e:GetHandler():RemoveEC(tp,3,REASON_COST)
 	--local e1=Effect.CreateEffect(c)
   --  e1:SetType(EFFECT_TYPE_FIELD)
    -- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)

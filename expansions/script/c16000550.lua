@@ -1,7 +1,7 @@
 --All-Rose Dragon of Rose VINE
 function c16000550.initial_effect(c)
 			aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,c16000550.checku,8,c16000550.filter1,c16000550.filter2)
+  aux.AddEvoluteProc(c,nil,8,c16000550.filter1,c16000550.filter2)
 	c:EnableReviveLimit() 
 	--equip
 	local e1=Effect.CreateEffect(c)
@@ -33,8 +33,8 @@ function c16000550.filter(c)
 	return c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function c16000550.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x88,4,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+   e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 function c16000550.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
@@ -94,10 +94,10 @@ function c16000550.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function c16000550.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_FIRE) 
+	return c:IsType(TYPE_NORMAL)
 end
 function c16000550.filter2(c,ec,tp)
-	return c:IsRace(RACE_PLANT) 
+	return c:IsRace(RACE_PLANT) or c:IsAttribute(ATTRIBUTE_FIRE) 
 end
 function c16000550.adcon(e)
 	local c=e:GetHandler()
@@ -123,6 +123,7 @@ function c16000550.xxxfilter(c)
 	return c:GetLevel()>0 and c:IsType(TYPE_NORMAL)  and c:IsAbleToRemove()
 end
 function c16000550.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	  local c=e:GetHandler()
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x88,3,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x88,3,REASON_COST)
 end

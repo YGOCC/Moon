@@ -2,7 +2,7 @@
   
 function c50031222.initial_effect(c)
    aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,c50031222.checku,7,c50031222.filter1,c50031222.filter2)
+ aux.AddEvoluteProc(c,nil,7,c50031222.filter1,c50031222.filter2)ter2)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
   e1:SetDescription(aux.Stringid(50031222,0))
@@ -34,20 +34,17 @@ end
 function c50031222.condition(e,tp,eg,ep,ev,re,r,rp)
 	return  e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388 and e:GetHandler():IsLinkState()
 end
-function c50031222.checku(sg,ec,tp)
-return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
-end
 function c50031222.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_FIRE) 
+	return c:IsType(TYPE_NORMAL)
 end
 function c50031222.filter2(c,ec,tp)
-	return c:IsRace(RACE_PLANT) 
+	return c:IsRace(RACE_PLANT) or c:IsAttribute(ATTRIBUTE_FIRE) 
 end
 function c50031222.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x88,3,REASON_COST) 
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST)
 and e:GetHandler():GetAttackAnnouncedCount()==0 end
-	c:RemoveCounter(tp,0x88,3,REASON_COST) 
+		e:GetHandler():RemoveEC(tp,3,REASON_COST)
   local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)

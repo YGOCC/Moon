@@ -54,7 +54,7 @@ function c160002424.atktg(e,c)
 	return c:IsType(TYPE_EFFECT)
 end
 function c160002424.val(e,c)
-	 return Duel.GetMatchingGroupCount(c160002424.ctfilter,e:GetHandler():GetControler(),LOCATION_REMOVED+LOCATION_GRAVE+LOCATION_EXTRA,LOCATION_REMOVED+LOCATION_GRAVE+LOCATION_EXTRA,nil)*-300
+	 return Duel.GetMatchingGroupCount(c160002424.ctfilter,e:GetHandler():GetControler(),LOCATION_REMOVED+LOCATION_GRAVE+LOCATION_EXTRA,0,nil)*-100
 end
 function c160002424.ctfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_EFFECT)
