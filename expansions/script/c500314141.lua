@@ -79,9 +79,20 @@ if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 		Duel.RegisterEffect(e1,tp)
 
 	end
+   local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_FIELD)
+		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e3:SetTargetRange(1,0)
+		e3:SetTarget(c500314141.sumlimit)
+		e3:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e3,tp)
 end
 function c500314141.desfilter(c,fid)
 	return c:GetFlagEffectLabel(500314141)==fid
+end
+function c500314141.sumlimit(e,c,sump,sumtype,sumpos,targetp)
+	return c:IsLocation(LOCATION_EXTRA) and not  c:IsSetCard(0xc50)
 end
 function c500314141.descon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
