@@ -1,12 +1,12 @@
 --Summon Warrior
 function c249000048.initial_effect(c)
-	--spsummon summon success
+	--summon success
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(96606246,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetCountLimit(1,2490000481)
 	e1:SetTarget(c249000048.sptg)
 	e1:SetOperation(c249000048.spop)
@@ -23,6 +23,12 @@ function c249000048.initial_effect(c)
 	e2:SetTarget(c249000048.sptg2)
 	e2:SetOperation(c249000048.spop2)
 	c:RegisterEffect(e2)
+	local e3=e1:Clone()
+	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+	c:RegisterEffect(e3)
+	local e4=e1:Clone()
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e4)
 end
 function c249000048.filter(c,e,tp)
 	return c:IsLevelBelow(8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
