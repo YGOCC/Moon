@@ -379,6 +379,13 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 		end
 	end
 	if not extramat then extramat,min,max=aux.FALSE,#t,#t end
+	local r1=Effect.CreateEffect(c)
+	r1:SetType(EFFECT_TYPE_SINGLE)
+	r1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	r1:SetCode(EFFECT_CANNOT_TURN_SET)
+	r1:SetRange(LOCATION_MZONE)
+	c:RegisterEffect(r1)
+	
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -424,7 +431,19 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 		ge3:SetCondition(Auxiliary.ECounterUseCon)
 		ge3:SetOperation(Auxiliary.ECounterUseOp)
 		Duel.RegisterEffect(ge3,0)
+		--Cannot be Summoned Face-down
+		local ge4=Effect.CreateEffect(c)
+		ge4:SetType(EFFECT_TYPE_FIELD)
+		ge4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		ge4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		ge4:SetTargetRange(1,1)
+		ge4:SetTarget(Auxiliary.FaceDownEvoluteLimit)
+		Duel.RegisterEffect(ge4,tp)
 	end
+end
+--Cannot be Summoned Face-down
+function Auxiliary.FaceDownEvoluteLimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return (c:IsType(TYPE_EVOLUTE) and (sumpos==POS_FACEDOWN_ATTACK or sumpos==POS_FACEDOWN_DEFENSE))
 end
 --E-C Replace
 function Auxiliary.ECounterUseCon(e,tp,eg,ep,ev,re,r,rp)

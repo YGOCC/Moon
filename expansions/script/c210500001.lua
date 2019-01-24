@@ -14,7 +14,7 @@ function card.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function card.con(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetTurnCount()==1
+    return Duel.GetTurnCount()==1 or not Duel.GetTurnCount()==1
 end
 function card.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,210500001)
