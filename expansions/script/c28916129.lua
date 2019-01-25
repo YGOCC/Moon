@@ -3,7 +3,7 @@
 local ref=_G['c'..28916129]
 local id=28916129
 function ref.initial_effect(c)
-	aux.EnableCorona(c,ref.matfilter,3,99,TYPE_TRAP,ref.refilter)
+	aux.EnableCoronaNeo(c,1,1,ref.matfilter)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -11,16 +11,13 @@ function ref.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
+	--e1:SetCondition(ref.actcon)
 	e1:SetTarget(ref.acttg)
 	e1:SetOperation(ref.actop)
 	c:RegisterEffect(e1)
-	
 end
-function ref.matfilter(e)
-	return e:IsActiveType(TYPE_MONSTER) and e:GetHandler():IsRace(RACE_PLANT)
-end
-function ref.refilter(ev)
-	return Duel.CheckChainUniqueness()
+function ref.matfilter(c)
+	return c:IsRace(RACE_PLANT)
 end
 
 --Activate
@@ -34,6 +31,12 @@ function ref.filter(c,e,tp)
 end
 function ref.chkfilter(c,att)
 	return c:IsFaceup() and c:IsSetCard(1854) and c:IsAttribute(att)
+end
+function ref.actcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(ref.confilter,tp,LOCATION_MZONE,0,1,nil)
+end
+function ref.confilter(c)
+	return c:IsFaceup() and c:IsRace(RACE_PLANT)
 end
 function ref.acttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and ref.chkfilter(chkc,e:GetLabel()) end

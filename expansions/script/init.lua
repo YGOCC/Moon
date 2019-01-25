@@ -1381,15 +1381,19 @@ function Auxiliary.EquipEquip(e,tp,eg,ep,ev,re,r,rp)
 end
 
 --Corona Card init
-function Auxiliary.EnableCoronaNeo(c,aura)
+function Auxiliary.EnableCoronaNeo(c,aura,mat_count,...)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	table.insert(Auxiliary.Coronas,c)
 	Auxiliary.Coronas[c]=function() return true end
 	Auxiliary.Customs[c]=true
+	--Functions
+	local funcs={...}
 	--Add Aura
 	local mt=getmetatable(c)
 	mt.aura = aura
 	mt.original_type = (c:GetType()-TYPE_FUSION)
+	mt.corona_materials = funcs
+	mt.material_count = mat_count
 	
 	--Draw replace
 	local e0=Effect.CreateEffect(c)
@@ -1426,12 +1430,29 @@ g_CoronaTracker[1]=0
 g_CoronaCount={0,0}
 g_CoronaCount[0]=0
 g_CoronaCount[1]=0
-function Auxiliary.CoronaOp(tp,val)
+function Auxiliary.CoronaOp(tp,val,r)
 	local tc=Duel.SelectMatchingCard(tp,Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,1,nil,val):GetFirst()
 	local aura=tc:GetAura()
-	aux.AddCoronaToHand(tc,REASON_RULE,tc.original_type)
-	Duel.Recover(tp,aura*500,REASON_RULE)
-	Duel.RegisterFlagEffect(tp,1600000000,RESET_PHASE+PHASE_END,1,0)
+	
+	local cg=Group.CreateGroup()
+	for key,value in pairs(tc.corona_materials) do
+		if not cg:IsExists(tc.corona_materials[key],1,nil) then
+			local sg=Duel.GetMatchingGroup(tc.corona_materials[key],tp,LOCATION_GRAVE,0,nil)
+			sg:Sub(cg)
+			local cc=sg:Select(tp,1,1,nil):GetFirst()
+			cg:AddCard(cc)
+		end
+	end
+	local ct=tc.material_count - cg:GetCount()
+	if ct>0 then
+		local sg=Duel.SelectMatchingGroup(tp,nil,tp,LOCATION_GRAVE,0,ct,ct,nil)
+		cg:Merge(sg)
+	end
+	Duel.Remove(cg,POS_FACEUP,REASON_COST+REASON_MATERIAL+1600000000)
+	
+	aux.AddCoronaToHand(tc,r,tc.original_type)
+	--Duel.Recover(tp,aura*500,REASON_RULE)
+	if (r==REASON_RULE) then Duel.RegisterFlagEffect(tp,1600000000,RESET_PHASE+PHASE_END,1,0) end
 	return tc
 end
 function Auxiliary.CoronaDrawOp(e,tp,eg,ep,ev,re,r,rp)
@@ -1446,7 +1467,7 @@ function Auxiliary.CoronaDrawOp(e,tp,eg,ep,ev,re,r,rp)
 		if d==1 then invest = 1 else
 			invest = Duel.AnnounceLevel(tp,1,d,nil)
 		end]]
-		local tc = Auxiliary.CoronaOp(tp,d)
+		local tc = Auxiliary.CoronaOp(tp,d,REASON_RULE)
 		Duel.ChangeTargetParam(ev,d-tc:GetAura())
 	end
 end
@@ -1455,13 +1476,15 @@ function Auxiliary.CoronaDesRepFilter(c,tp)
 end
 function Auxiliary.CoronaDesRepTg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if rp~=tp then return false end
-	local id=re:GetHandler():GetCode()
+	local id=0
+	if re then id=re:GetHandler():GetCode() end
 	local ct=eg:FilterCount(Auxiliary.CoronaDesRepFilter,nil,tp)
 	if chk==0 then return (rp==tp and ct>0 and (g_CoronaTracker[tp]~=id) and (Duel.GetFlagEffect(tp,1600000000)==0)
 		and Duel.IsExistingMatchingCard(Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,nil,ct)) end
 	g_CoronaTracker[tp]=id
 	if Duel.SelectEffectYesNo(tp,e:GetHandler(),573) then
-		Auxiliary.CoronaOp(tp,ct)
+		Auxiliary.CoronaOp(tp,ct,REASON_RULE)
+		return true
 	else return false end
 end
 
@@ -1470,7 +1493,11 @@ function Auxiliary.CoronaDesRepVal(e,c)
 end
 
 function Auxiliary.CoronaFilterNeo(c,ct)
-	return c:IsType(TYPE_CORONA) and c:GetAura()<=ct
+	if not (c:IsType(TYPE_CORONA) and c:GetAura()<=ct and (Duel.GetFieldGroupCount(c:GetControler(),LOCATION_GRAVE,0)>=c.material_count)) then return false end
+	for key,value in pairs(c.corona_materials) do
+		if not Duel.IsExistingMatchingCard(c.corona_materials[key],c:GetControler(),LOCATION_GRAVE,0,1,nil,nil) then return false end
+	end
+	return true
 end
 
 function Auxiliary.EnableCorona(c,f,auramin,auramax,type,gf)
