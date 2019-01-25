@@ -11,12 +11,12 @@ function c249000309.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c249000309.confilter(c)
-	return c:IsSetCard(0x15A) and c:IsType(TYPE_MONSTER)  and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVEYARD))
+	return c:IsSetCard(0x15A) and c:IsType(TYPE_MONSTER)  and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
 end
 function c249000309.condition(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return ep~=tp and loc==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainDisablable(ev)
-	and Duel.IsExistingMatchingCard(c249000309.confilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
+	and Duel.IsExistingMatchingCard(c249000309.confilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 end
 function c249000309.filter(c,e,tp)
 	return c:IsSetCard(0x15A) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

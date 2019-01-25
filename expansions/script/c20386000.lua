@@ -1,4 +1,4 @@
---Yuna
+--Yuna (restrictions fixed by somn00b)
 function c20386000.initial_effect(c)
 	c:EnableCounterPermit(0x94b)
 		--summon success
@@ -7,6 +7,7 @@ function c20386000.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCost(c20386000.spcost)
 	e1:SetTarget(c20386000.sptg)
 	e1:SetOperation(c20386000.spop)
 	c:RegisterEffect(e1)
@@ -45,9 +46,27 @@ function c20386000.initial_effect(c)
 	e6:SetTarget(c20386000.ptarget)
 	e6:SetOperation(c20386000.poperation)
 	c:RegisterEffect(e6)
+	Duel.AddCustomActivityCounter(20386000,ACTIVITY_SPSUMMON,c20386000.counterfilter)
+end
+function c20386000.counterfilter(c)
+	return (c:IsSetCard(0x31C56) or c:IsCode(20386011)) or not c:IsPreviousLocation(LOCATION_EXTRA)
 end
 function c20386000.filter(c,e,tp)
 	return c:IsSetCard(0x31C55) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c20386000.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetCustomActivityCount(20386000,tp,ACTIVITY_SPSUMMON)==0 end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c20386000.splimit)
+	Duel.RegisterEffect(e1,tp)
+end
+function c20386000.splimit(e,c)
+	return c:IsLocation(LOCATION_EXTRA) and not (c:IsSetCard(0x31C56) or c:IsCode(20386011))
 end
 function c20386000.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

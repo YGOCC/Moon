@@ -45,6 +45,11 @@ function c249000192.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c249000192.filter2,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetRank(),tc:GetAttribute(),tc:GetCode(),e,tp)
 	local sc=g:GetFirst()
 	if sc then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EXTRA_TOMAIN_KOISHI)
+		e1:SetReset(RESET_CHAIN)
+		sc:RegisterEffect(e1)
 		local mg=tc:GetOverlayGroup()
 		if mg:GetCount()~=0 then
 			Duel.Overlay(sc,mg)

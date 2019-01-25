@@ -1381,6 +1381,98 @@ function Auxiliary.EquipEquip(e,tp,eg,ep,ev,re,r,rp)
 end
 
 --Corona Card init
+function Auxiliary.EnableCoronaNeo(c,aura)
+	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
+	table.insert(Auxiliary.Coronas,c)
+	Auxiliary.Coronas[c]=function() return true end
+	Auxiliary.Customs[c]=true
+	--Add Aura
+	local mt=getmetatable(c)
+	mt.aura = aura
+	mt.original_type = (c:GetType()-TYPE_FUSION)
+	
+	--Draw replace
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e0:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
+	e0:SetRange(LOCATION_EXTRA)
+	e0:SetCode(EVENT_CHAIN_SOLVING)
+	e0:SetOperation(Auxiliary.CoronaDrawOp)
+	c:RegisterEffect(e0)
+	--Destruction replace
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_DESTROY_REPLACE)
+	e3:SetRange(LOCATION_EXTRA)
+	e3:SetTarget(Auxiliary.CoronaDesRepTg)
+	e3:SetValue(Auxiliary.CoronaDesRepVal)
+	c:RegisterEffect(e3)
+	
+	if not Global_CoronaRedirects then
+		Global_CoronaRedirects=true
+		--Redirect
+		local ge1=Effect.GlobalEffect()
+		ge1:SetType(EFFECT_TYPE_FIELD)
+		ge1:SetCode(EFFECT_TO_DECK_REDIRECT)
+		ge1:SetTargetRange(0xff,0xff)
+		ge1:SetTarget(Auxiliary.CoronaToExtra)
+		ge1:SetValue(LOCATION_EXTRA)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+g_CoronaTracker={0,0}
+g_CoronaTracker[0]=0
+g_CoronaTracker[1]=0
+g_CoronaCount={0,0}
+g_CoronaCount[0]=0
+g_CoronaCount[1]=0
+function Auxiliary.CoronaOp(tp,val)
+	local tc=Duel.SelectMatchingCard(tp,Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,1,nil,val):GetFirst()
+	local aura=tc:GetAura()
+	aux.AddCoronaToHand(tc,REASON_RULE,tc.original_type)
+	Duel.Recover(tp,aura*500,REASON_RULE)
+	Duel.RegisterFlagEffect(tp,1600000000,RESET_PHASE+PHASE_END,1,0)
+	return tc
+end
+function Auxiliary.CoronaDrawOp(e,tp,eg,ep,ev,re,r,rp)
+	local p,d,id=Duel.GetChainInfo(ev,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM,CHAININFO_CHAIN_ID)
+	local ex = (Duel.GetOperationInfo(ev,CATEGORY_DRAW) or re:IsHasCategory(CATEGORY_DRAW))
+	local user = (ep==tp) and (p==tp) and (rp==tp)
+	if not (user and ex and (g_CoronaTracker[tp]~=id) and (Duel.GetFlagEffect(tp,1600000000)==0)
+		and Duel.IsExistingMatchingCard(Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,nil,d)) then return end
+	g_CoronaTracker[tp]=id
+	if d>0 and Duel.SelectYesNo(tp,572) then
+		--[[local invest=0
+		if d==1 then invest = 1 else
+			invest = Duel.AnnounceLevel(tp,1,d,nil)
+		end]]
+		local tc = Auxiliary.CoronaOp(tp,d)
+		Duel.ChangeTargetParam(ev,d-tc:GetAura())
+	end
+end
+function Auxiliary.CoronaDesRepFilter(c,tp)
+	return c:IsControler(1-tp) and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
+end
+function Auxiliary.CoronaDesRepTg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if rp~=tp then return false end
+	local id=re:GetHandler():GetCode()
+	local ct=eg:FilterCount(Auxiliary.CoronaDesRepFilter,nil,tp)
+	if chk==0 then return (rp==tp and ct>0 and (g_CoronaTracker[tp]~=id) and (Duel.GetFlagEffect(tp,1600000000)==0)
+		and Duel.IsExistingMatchingCard(Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,nil,ct)) end
+	g_CoronaTracker[tp]=id
+	if Duel.SelectEffectYesNo(tp,e:GetHandler(),573) then
+		Auxiliary.CoronaOp(tp,ct)
+	else return false end
+end
+
+function Auxiliary.CoronaDesRepVal(e,c)
+	return Auxiliary.CoronaDesRepFilter(c,e:GetHandlerPlayer())
+end
+
+function Auxiliary.CoronaFilterNeo(c,ct)
+	return c:IsType(TYPE_CORONA) and c:GetAura()<=ct
+end
+
 function Auxiliary.EnableCorona(c,f,auramin,auramax,type,gf)
 	--Debug.Message("Registering Corona "..c:GetCode())
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end

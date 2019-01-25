@@ -4,12 +4,12 @@ local card = c210500001
 function card.initial_effect(c)	
 	--activate
 	local e1=Effect.CreateEffect(c)	
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
 	e1:SetRange(0xff)
-	e1:SetCondition(card.con)
+	--e1:SetCondition(card.con)
 	e1:SetOperation(card.op)
 	c:RegisterEffect(e1)
 end

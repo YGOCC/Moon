@@ -85,10 +85,6 @@ function c249000048.spop2(e,tp,eg,ep,ev,re,r,rp)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		tc:RegisterEffect(e2)
-		local e3=e1:Clone()
-		e3:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-		e3:SetValue(1)
-		tc:RegisterEffect(e3)
 		Duel.SpecialSummonComplete()
 	end
 end
