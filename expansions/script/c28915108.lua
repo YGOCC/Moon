@@ -3,7 +3,7 @@ local ref=_G['c'..28915108]
 local id=28915108
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCorona(c,nil,2,2,TYPE_MONSTER+TYPE_EFFECT,ref.gmatfilter)
+	aux.EnableCoronaNeo(c,1,2,ref.matfilter)
 	--Cannot Summon
 	c:EnableReviveLimit()
 	local e0=Effect.CreateEffect(c)
@@ -31,18 +31,10 @@ function ref.initial_effect(c)
 	e2:SetOperation(ref.thop)
 	c:RegisterEffect(e2)
 end
-function ref.matfilter(e,ce)
-	return e:GetHandlerPlayer()~=ce:GetHandlerPlayer()
+function ref.matfilter(c)
+	return c:IsType(TYPE_MONSTER)
 end
-function ref.gmatfilter(eg)
-	local p=-5
-	for i=1,eg do
-		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-		if p==te:GetHandlerPlayer() then return false end
-		if p==-5 then p=te:GetHandlerPlayer() end
-	end
-	return true
-end
+
 --Summon
 function ref.spcon(e,c)
 	if c==nil then return true end

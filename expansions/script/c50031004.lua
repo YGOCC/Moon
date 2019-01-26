@@ -110,7 +110,7 @@ function c50031004.operation(e,tp,eg,ep,ev,re,r,rp)
 		 Duel.Draw(tp,1,REASON_EFFECT)
 	end
  for i=1,3 do
-			local g=Duel.GetDecktopGroup(p,1)
+			local g=Duel.GetDecktopGroup(tp,1)
 			Duel.MoveSequence(g:GetFirst(),1)
 
 end

@@ -114,7 +114,7 @@ function c50031002.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
  for i=1,3 do
-			local g=Duel.GetDecktopGroup(p,1)
+			local g=Duel.GetDecktopGroup(tp,1)
 			Duel.MoveSequence(g:GetFirst(),1)
 
 end

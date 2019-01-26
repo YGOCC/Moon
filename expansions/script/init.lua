@@ -50,10 +50,10 @@ end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost = 
+	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw = 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
 	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, 
-	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost
+	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -284,6 +284,14 @@ end
 Card.IsAbleToExtraAsCost=function(c)
 	if Auxiliary.Coronas[c] then return true end
 	return card_is_able_to_extra_as_cost(c)
+end
+Duel.Draw=function(tp,ct,r)
+	local newct = ct
+	if (Duel.GetFlagEffect(tp,1600000000)==0) and Duel.IsExistingMatchingCard(Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,nil,ct) and Duel.SelectYesNo(target_player,572) then
+		local tc = Auxiliary.CoronaOp(tp,ct,REASON_RULE)
+		newct = ct - tc:GetAura()
+	end
+	duel_draw(tp,newct,r)
 end
 
 --Custom Functions
@@ -1396,13 +1404,13 @@ function Auxiliary.EnableCoronaNeo(c,aura,mat_count,...)
 	mt.material_count = mat_count
 	
 	--Draw replace
-	local e0=Effect.CreateEffect(c)
+	--[[local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e0:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
 	e0:SetRange(LOCATION_EXTRA)
 	e0:SetCode(EVENT_CHAIN_SOLVING)
 	e0:SetOperation(Auxiliary.CoronaDrawOp)
-	c:RegisterEffect(e0)
+	c:RegisterEffect(e0)]]
 	--Destruction replace
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)

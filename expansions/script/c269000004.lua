@@ -2,7 +2,7 @@
 function c269000004.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(269000004,0))
+	e1:SetDescription(aux.Stringid(14816688,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -13,7 +13,7 @@ function c269000004.initial_effect(c)
 	c:RegisterEffect(e1)
 	--todeck
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(269000004,1))
+	e2:SetDescription(aux.Stringid(14816688,1))
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -26,7 +26,7 @@ function c269000004.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c269000004.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
+	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 end
 function c269000004.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)

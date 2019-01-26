@@ -3,7 +3,8 @@ local ref=_G['c'..28915105]
 local id=28915105
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCorona(c,ref.matfilter,3,99,TYPE_SPELL,nil)
+	--aux.EnableCorona(c,ref.matfilter,3,99,TYPE_SPELL,nil)
+	aux.EnableCoronaNeo(c,1,1,ref.matfilter,ref.matfilter2)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DRAW+CATEGORY_TOGRAVE)
@@ -13,8 +14,11 @@ function ref.initial_effect(c)
 	e1:SetOperation(ref.actop)
 	c:RegisterEffect(e1)
 end
-function ref.matfilter(e)
-	return e:IsActiveType(TYPE_SPELL)
+function ref.matfilter(c)
+	return c:IsType(TYPE_SPELL)
+end
+function ref.matfilter2(c)
+	return c:GetType()==TYPE_SPELL or c:GetType()==TYPE_TRAP
 end
 
 function ref.acttg(e,tp,eg,ep,ev,re,r,rp,chk)

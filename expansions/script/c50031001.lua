@@ -109,7 +109,7 @@ function c50031001.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(dg,nil,2,REASON_EFFECT)
 	end
  for i=1,3 do
-			local g=Duel.GetDecktopGroup(p,1)
+			local g=Duel.GetDecktopGroup(tp,1)
 			Duel.MoveSequence(g:GetFirst(),1)
 
 end

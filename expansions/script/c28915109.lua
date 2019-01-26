@@ -3,14 +3,7 @@ local ref=_G['c'..28915109]
 local id=28915109
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCorona(c,nil,2,99,TYPE_SPELL,ref.refilter)
-	local e0=Effect.CreateEffect(c)
-	--e0:SetRange(LOCATION_EXTRA)
-	--e0:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetCode(EFFECT_CORONA_DRAW_COST)
-	e0:SetValue(ref.coronacost)
-	c:RegisterEffect(e0)
+	aux.EnableCoronaNeo(c,1,2,ref.matfilter)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DISABLE)
@@ -31,12 +24,8 @@ function ref.initial_effect(c)
 	e2:SetOperation(ref.drop)
 	c:RegisterEffect(e2)
 end
-function ref.refilter(ev)
-	return Duel.CheckChainUniqueness()
-end
-function ref.coronacost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD,nil)
+function ref.matfiilter(c)
+	return c:GetType()==TYPE_SPELL or c:GetType()==TYPE_TRAP
 end
 
 function ref.acttg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -3,7 +3,7 @@ local ref=_G['c'..28915111]
 local id=28915111
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCorona(c,nil,3,99,TYPE_MONSTER+TYPE_EFFECT,ref.gmatfilter)
+	aux.EnableCoronaNeo(c,1,2,ref.matfilter,ref.matfilter2,ref.matfilter3)
 	--SS
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -30,17 +30,14 @@ function ref.initial_effect(c)
 	e2:SetOperation(ref.thop)
 	c:RegisterEffect(e2)
 end
-function ref.gmatfilter(eg)
-	local monster=false
-	local spell=false
-	local trap=false
-	for i=1,eg do
-		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
-		if te:IsActiveType(TYPE_MONSTER) then monster=true end
-		if te:IsActiveType(TYPE_SPELL) then spell=true end
-		if te:IsActiveType(TYPE_TRAP) then trap=true end
-	end
-	return monster and spell and trap
+function ref.matfilter(c)
+	return c:IsType(TYPE_MONSTER)
+end
+function ref.matfilter2(c)
+	return c:IsType(TYPE_SPELL)
+end
+function ref.matfilter3(c)
+	return c:IsType(TYPE_TRAP)
 end
 
 --SS

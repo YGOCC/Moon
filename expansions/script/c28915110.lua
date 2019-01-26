@@ -3,12 +3,7 @@ local ref=_G['c'..28915110]
 local id=28915110
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCorona(c,nil,2,99,TYPE_MONSTER+TYPE_EFFECT,ref.gmatfilter)
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetCode(EFFECT_CORONA_DRAW_COST)
-	e0:SetValue(ref.coronacost)
-	c:RegisterEffect(e0)
+	aux.EnableCoronaNeo(c,1,1,ref.matfilter,ref.matfilter2)
 	--Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -19,13 +14,13 @@ function ref.initial_effect(c)
 	e1:SetOperation(ref.spop)
 	c:RegisterEffect(e1)
 end
-function ref.coronacost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD,nil)
+function ref.matfilter2(c)
+	return c:IsAttribute(ATTRIBUTE_DARK)
 end
-function ref.gmatfilter(eg)
-	return Duel.CheckChainUniqueness()
+function ref.matfilter(c)
+	return c:IsRace(RACE_PLANT)
 end
+
 --Summon
 function ref.spcon(e,c)
 	if c==nil then return true end

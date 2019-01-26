@@ -3,7 +3,8 @@ local ref=_G['c'..28915107]
 local id=28915107
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCorona(c,ref.matfilter,3,99,TYPE_MONSTER+TYPE_EFFECT,ref.refilter)
+	--aux.EnableCorona(c,ref.matfilter,3,99,TYPE_MONSTER+TYPE_EFFECT,ref.refilter)
+	aux.EnableCoronaNeo(c,1,1,ref.matfilter,ref.matfilter2)
 	--NS
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -22,11 +23,11 @@ function ref.initial_effect(c)
 	e2:SetLabel(2)
 	c:RegisterEffect(e2)
 end
-function ref.matfilter(e)
-	return e:IsActiveType(TYPE_MONSTER)
+function ref.matfilter(c)
+	return c:IsAttribute(ATTRIBUTE_EARTH)
 end
-function ref.refilter(ev)
-	return Duel.CheckChainUniqueness()
+function ref.matfilter2(c)
+	return c:IsLevelBelow(3)
 end
 
 --Summon
