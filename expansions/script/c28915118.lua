@@ -39,7 +39,7 @@ end
 function ref.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsCanRemoveEC(tp,4,REASON_COST) end
-	c:RemoveEC(tp,4,REASON_EFFECT)
+	c:RemoveEC(tp,4,REASON_COST)
 end
 function ref.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

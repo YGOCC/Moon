@@ -287,11 +287,12 @@ Card.IsAbleToExtraAsCost=function(c)
 end
 Duel.Draw=function(tp,ct,r)
 	local newct = ct
-	if (Duel.GetFlagEffect(tp,1600000000)==0) and Duel.IsExistingMatchingCard(Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,nil,ct) and Duel.SelectYesNo(target_player,572) then
+	if (Duel.GetFlagEffect(tp,1600000000)==0) and Duel.IsExistingMatchingCard(Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,nil,ct) and Duel.SelectYesNo(tp,572) then
 		local tc = Auxiliary.CoronaOp(tp,ct,REASON_RULE)
 		newct = ct - tc:GetAura()
+		Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,nil,r,tp,tp,1)
 	end
-	duel_draw(tp,newct,r)
+	return duel_draw(tp,newct,r) + (ct-newct)
 end
 
 --Custom Functions
@@ -326,6 +327,9 @@ function Card.AddEC(c,ct)
 	c:AddCounter(0x1088,ct)
 	--TODO: Remove once all Evolutes are updated
 	c:AddCounter(0x88,ct)
+end
+function Card.GetEC(c)
+	return c:GetCounter(0x1088)
 end
 function Card.IsCanRemoveEC(c,p,ct,r)
 	if GLOBAL_E_COUNTER[p]>=ct then return true end
@@ -1453,7 +1457,7 @@ function Auxiliary.CoronaOp(tp,val,r)
 	end
 	local ct=tc.material_count - cg:GetCount()
 	if ct>0 then
-		local sg=Duel.SelectMatchingGroup(tp,nil,tp,LOCATION_GRAVE,0,ct,ct,nil)
+		local sg=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_GRAVE,0,ct,ct,nil)
 		cg:Merge(sg)
 	end
 	Duel.Remove(cg,POS_FACEUP,REASON_COST+REASON_MATERIAL+1600000000)

@@ -59,7 +59,7 @@ function ref.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g0 = Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g0,g0:GetFirst():GetControler(),g0:GetCount(),g0:GetFirst():GetLocation())
 end
-function ref.operation0(e,tp,eg,ep,ev,re,r,rp)
+function ref.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g0 = Duel.GetFirstTarget()
 	Duel.Destroy(g0,REASON_EFFECT)

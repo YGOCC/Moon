@@ -8,7 +8,6 @@ function ref.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DISABLE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(ref.acttg)
 	e1:SetOperation(ref.actop)
 	c:RegisterEffect(e1)
@@ -29,9 +28,9 @@ function ref.matfiilter(c)
 end
 
 function ref.acttg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
 	local cg=e:GetHandler():GetColumnGroup()
 	g=cg:Filter(Card.IsFaceup,nil)
-	if chk==0 then return g:GetCount()>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
 function ref.actop(e,tp,eg,ep,ev,re,r,rp)
