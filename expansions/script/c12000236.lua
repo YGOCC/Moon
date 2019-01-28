@@ -141,13 +141,13 @@ end
 function c12000236.excon1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return r==REASON_LINK and c:GetReasonCard():IsSetCard(0x856)
-		and not c:IsLocation(LOCATION_DECK+LOCATION_HAND)
+		and e:GetLabel()>0 and not c:IsLocation(LOCATION_DECK+LOCATION_HAND)
 end
 function c12000236.excon2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return re and c:IsReason(REASON_EFFECT) and re:GetHandler():IsSetCard(0x856)
-		and re:GetHandler():IsType(TYPE_LINK) and not c:IsLocation(LOCATION_DECK+LOCATION_HAND)
-		and e:GetLabel()>0
+		and re:GetHandler():IsType(TYPE_LINK) and e:GetLabel()>0
+		and not c:IsLocation(LOCATION_DECK+LOCATION_HAND)
 end
 function c12000236.extg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59305593) end

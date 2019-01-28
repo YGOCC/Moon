@@ -23,7 +23,7 @@ function c12000235.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(12000235,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_BE_MATERIAL)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e3:SetCountLimit(1,12002235)
@@ -81,29 +81,52 @@ function c12000235.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return re and c:IsReason(REASON_EFFECT) and re:GetHandler():IsSetCard(0x856)
 		and re:GetHandler():IsType(TYPE_LINK) and not c:IsLocation(LOCATION_DECK+LOCATION_HAND)
 end
-function c12000235.spfilter1(c)
+function c12000235.spfilter1(c,e,tp,g,sg,rec,recmax,total_lv)
+	if not rec then return false end
+	total_lv=total_lv+c:GetLevel()
+	if rec<recmax then
+		if not sg:IsContains(c) then
+			sg:AddCard(c)
+			if c:IsReleasable() and not c:IsStatus(STATUS_BATTLE_DESTROYED) and g:IsExists(c12000235.spfilter1,1,c,e,tp,g,sg,rec+1,recmax,total_lv) then
+				return true
+			end
+		end
+	else
+		if sg:IsContains(c) then return false end
+		if c:IsReleasable() and not c:IsStatus(STATUS_BATTLE_DESTROYED) and sg:GetCount()+1==g:GetCount() and Duel.GetLocationCount(tp,LOCATION_MZONE)>-(sg:GetCount()+1) and Duel.IsExistingMatchingCard(c12000235.spfilter2,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,total_lv) then
+			sg:Clear()
+			return true
+		end
+	end
+	return false
+end
+function c12000235.no_rec_filter(c)
 	return c:IsReleasable() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
-function c12000235.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,nil,12000247)
-	if chk==0 then return g:GetCount()>0 and g:FilterCount(c12000235.spfilter1,nil)==g:GetCount() end
-	local dlv=0
-	local tc=g:GetFirst()
-	while tc do
-		dlv=dlv+tc:GetLevel()
-		tc=g:GetNext()
-	end
-	Duel.Release(g,REASON_COST)
-	e:SetLabel(dlv)
-end
 function c12000235.spfilter2(c,e,tp,dlv)
-	return c:IsSetCard(0x856) and c:IsType(TYPE_MONSTER) and c:IsLevelBelow(dlv)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x856) and c:IsType(TYPE_MONSTER) and c:IsLevelBelow(dlv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c12000235.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(100)
+	return true
 end
 function c12000235.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local dlv=e:GetLabel()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c12000235.spfilter2,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,dlv) end
+	local g=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,nil,12000247)
+	local sg=Group.CreateGroup()
+	local total_lv=0
+	local exg=g:Filter(c12000235.no_rec_filter,nil)
+	local fg=g:Filter(c12000235.spfilter1,nil,e,tp,exg,sg,1,exg:GetCount(),total_lv)
+	if chk==0 then 
+		if e:GetLabel()~=100 then return false end
+		e:SetLabel(0)
+		return fg:GetCount()>0 
+	end
+	Duel.Release(exg,REASON_COST)
+	local og=Duel.GetOperatedGroup()
+	for tc in aux.Next(og) do
+		total_lv=total_lv+tc:GetPreviousLevelOnField()
+	end
+	e:SetLabel(total_lv)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end
 function c12000235.spop(e,tp,eg,ep,ev,re,r,rp)

@@ -3,7 +3,7 @@ local ref=_G['c'..28915108]
 local id=28915108
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCoronaNeo(c,1,2,ref.matfilter)
+	aux.EnableCoronaNeo(c,1,1,ref.matfilter)
 	--Cannot Summon
 	c:EnableReviveLimit()
 	local e0=Effect.CreateEffect(c)

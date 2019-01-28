@@ -326,10 +326,23 @@ end
 function Card.AddEC(c,ct)
 	c:AddCounter(0x1088,ct)
 	--TODO: Remove once all Evolutes are updated
-	c:AddCounter(0x88,ct)
+	--c:AddCounter(0x88,ct)
 end
 function Card.GetEC(c)
 	return c:GetCounter(0x1088)
+end
+function Card.RefillEC(c)
+	local val=0
+	if c:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) then
+		local cone={c:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE)}
+		for _,te in ipairs(cone) do
+			val = val+te:GetValue()
+		end
+	else
+		val = c:GetStage() - c:GetEC()
+	end
+	c:AddEC(val)
+	return val
 end
 function Card.IsCanRemoveEC(c,p,ct,r)
 	if GLOBAL_E_COUNTER[p]>=ct then return true end
@@ -566,7 +579,9 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=e:GetLabelObject()
 	c:SetMaterial(g)
 	local tc=g:GetFirst()
+	local lvTotal=0
 	while tc do
+		lvTotal = lvTotal + tc:GetValueForEvolute(c)
 		if not tc:IsLocation(LOCATION_MZONE) then
 			local tef={tc:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL)}
 			for _,te in ipairs(tef) do
@@ -577,6 +592,11 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 			Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
 		end
 		tc=g:GetNext()
+	end
+	--Set Maximum for Convergents
+	local cone={c:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE)}
+	for _,te in ipairs(cone) do
+		te:SetValue(lvTotal)
 	end
 	g:DeleteGroup()
 end
@@ -589,14 +609,18 @@ function Auxiliary.EvoluteCounter(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	while tc do
 		if not tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) then tc:AddEC(tc:GetStage()) end
 		if tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) then 
-			local mg=tc:GetMaterial()
+			local cone={tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE)}
+			for _,te in ipairs(cone) do
+				tc:AddEC(te:GetValue())
+			end
+			--[[local mg=tc:GetMaterial()
 			local mc=mg:GetFirst()
 			local val=0
 			while mc do
 				val = val+mc:GetValueForEvolute(tc)
 				mc=mg:GetNext()
 			end
-			tc:AddEC(val)
+			tc:AddEC(val)]]
 		end
 		tc=g:GetNext()
 	end
@@ -1511,6 +1535,10 @@ function Auxiliary.CoronaFilterNeo(c,ct)
 	end
 	return true
 end
+--Shorthand for "If you performed a Corona Draw this turn"
+function Auxiliary.cdrewcon(e,tp)
+	return Duel.GetFlagEffect(tp,1600000000)~=0
+end
 
 function Auxiliary.EnableCorona(c,f,auramin,auramax,type,gf)
 	--Debug.Message("Registering Corona "..c:GetCode())
@@ -1636,4 +1664,58 @@ function Auxiliary.CoronaToExtra(e,c)
 		return true
 	end
 	return false
+end
+
+--Fusion Summon shorthand
+--Effect, player, filter for Fusion Monster, materials (optional), monster that must be used as material (optional)
+function Auxiliary.IsCanFusionSummon(f,e,tp,mg1,gc)
+	local chkf=tp
+	if mg1==nil then mg1=Duel.GetFusionMaterial(tp):Filter(Auxiliary.PerformFusionFilter,nil,e) end
+	local res=Duel.IsExistingMatchingCard(f,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf,gc)
+	if not res then
+		local ce=Duel.GetChainMaterial(tp)
+		if ce~=nil then
+			local fgroup=ce:GetTarget()
+			local mg2=fgroup(ce,e,tp)
+			local mf=ce:GetValue()
+			res=Duel.IsExistingMatchingCard(f,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,chkf,gc)
+		end
+	end
+	return res
+end
+function Auxiliary.PerformFusionFilter(c,e)
+	return not c:IsImmuneToEffect(e)
+end
+function Auxiliary.PerformFusionSummon(f,e,tp,mg1,gc)
+	local chkf=tp
+	if mg1==nil then mg1=Duel.GetFusionMaterial(tp):Filter(Auxiliary.PerformFusionFilter,nil,e) end
+	local sg1=Duel.GetMatchingGroup(f,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
+	local mg2=nil
+	local sg2=nil
+	local ce=Duel.GetChainMaterial(tp)
+	if ce~=nil then
+		local fgroup=ce:GetTarget()
+		mg2=fgroup(ce,e,tp)
+		local mf=ce:GetValue()
+		sg2=Duel.GetMatchingGroup(f,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,chkf)
+	end
+	if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
+		local sg=sg1:Clone()
+		if sg2 then sg:Merge(sg2) end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tg=sg:Select(tp,1,1,nil)
+		local tc=tg:GetFirst()
+		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,gc,chkf)
+			tc:SetMaterial(mat1)
+			Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+			Duel.BreakEffect()
+			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+		else
+			local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
+			local fop=ce:GetOperation()
+			fop(ce,e,tp,tc,mat2)
+		end
+		tc:CompleteProcedure()
+	end
 end

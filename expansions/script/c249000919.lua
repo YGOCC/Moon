@@ -37,7 +37,7 @@ function c249000919.thop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	Duel.ConfirmDecktop(p,3)
 	local g=Duel.GetDecktopGroup(p,3)
-	if g:GetCount()>0 and g:IsExists(c249000919.thfilter,1,nil) and Duel.SelectYesNo(p,aux.Stringid(249000919,1)) then
+	if g:GetCount()>0 and g:IsExists(c249000919.thfilter,1,nil) and Duel.SelectYesNo(p,aux.Stringid(94620082,1)) then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
 		local sg=g:FilterSelect(p,c249000919.thfilter,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)

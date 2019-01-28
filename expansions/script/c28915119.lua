@@ -65,8 +65,8 @@ function ref.atkop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function ref.efilter(e,re,r,rp)
-	return e:GetHandler()~=re:GetOwner() and bit.band(r,REASON_EFFECT)~=0 and not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)
+function ref.efilter(e,re)
+	return e:GetHandler()~=re:GetOwner() and not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) --and bit.band(r,REASON_EFFECT)~=0
 end
 
 --Protection

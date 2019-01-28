@@ -65,8 +65,8 @@ function c12000241.desfilter1(c,tp)
 	return c:GetOwner()==tp
 end
 function c12000241.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c12000241.desfilter1,2,nil,1-tp) end
-	local g=Duel.SelectReleaseGroup(tp,c12000241.desfilter1,2,2,nil,1-tp)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,c12000241.desfilter1,1,nil,1-tp) end
+	local g=Duel.SelectReleaseGroup(tp,c12000241.desfilter1,1,1,nil,1-tp)
 	Duel.Release(g,REASON_COST)
 end
 function c12000241.desfilter2(c)

@@ -38,7 +38,8 @@ function c12000234.spfilter1(c,e,tp)
 		or Duel.IsExistingMatchingCard(c12000234.spfilter2,tp,LOCATION_HAND,0,1,nil,c:GetRank(),e,tp))
 end
 function c12000234.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingTarget(c12000234.spfilter1,tp,0,LOCATION_MZONE,1,e:GetHandler(),e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(c12000234.spfilter1,tp,0,LOCATION_MZONE,1,e:GetHandler(),e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,c12000234.spfilter1,tp,0,LOCATION_MZONE,1,1,e:GetHandler(),e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,0)

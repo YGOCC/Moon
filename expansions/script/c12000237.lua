@@ -22,7 +22,7 @@ function c12000237.initial_effect(c)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_RELEASE)
-	e3:SetCondition(c12000230.thcon2)
+	e3:SetCondition(c12000237.thcon2)
 	c:RegisterEffect(e3)
 end
 function c12000237.cfilter(c)

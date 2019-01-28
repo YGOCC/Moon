@@ -24,6 +24,14 @@ function c249000095.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
+	--special summon
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SPSUMMON_PROC)
+	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e4:SetRange(LOCATION_HAND)
+	e4:SetCondition(c249000095.spcon)
+	c:RegisterEffect(e4)
 end
 function c249000095.filter(c)
 	return c:IsSetCard(0x15A) and c:IsAbleToHand() and not c:IsCode(249000095)
@@ -55,4 +63,9 @@ function c249000095.setop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SSet(tp,g:GetFirst())
 		Duel.ConfirmCards(1-tp,g)
 	end
+end
+function c249000095.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE,nil)-Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)>=2
 end

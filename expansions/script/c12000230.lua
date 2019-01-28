@@ -27,7 +27,7 @@ function c12000230.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c12000230.cfilter(c)
-	return not (c:IsSetCard(0x856) and c:IsLevelBelow(4))
+	return (c:IsSetCard(0x856) and c:IsLevelBelow(4))
 end
 function c12000230.spcon(e,c)
 	if c==nil then return true end

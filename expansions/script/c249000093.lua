@@ -20,6 +20,17 @@ function c249000093.initial_effect(c)
 	e2:SetTarget(c249000093.sptg)
 	e2:SetOperation(c249000093.spop)
 	c:RegisterEffect(e2)
+	--to hand
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(94620082,0))
+	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e3:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetCountLimit(1,249000093)
+	e3:SetTarget(c249000093.thtg)
+	e3:SetOperation(c249000093.thop)
+	c:RegisterEffect(e3)
 end
 function c249000093.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local d=Duel.GetAttackTarget()
@@ -46,4 +57,26 @@ function c249000093.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+end
+function c249000093.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3
+		and Duel.GetDecktopGroup(tp,3):FilterCount(Card.IsAbleToHand,nil)>0 end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,LOCATION_DECK)
+end
+function c249000093.thfilter(c)
+	return c:IsSetCard(0x15A) and c:IsAbleToHand()
+end
+function c249000093.thop(e,tp,eg,ep,ev,re,r,rp)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	Duel.ConfirmDecktop(p,3)
+	local g=Duel.GetDecktopGroup(p,3)
+	if g:GetCount()>0 and g:IsExists(c249000093.thfilter,1,nil) and Duel.SelectYesNo(p,aux.Stringid(94620082,1)) then
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
+		local sg=g:FilterSelect(p,c249000093.thfilter,1,1,nil)
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-p,sg)
+		Duel.ShuffleHand(p)
+	end
+	Duel.ShuffleDeck(p)
 end
