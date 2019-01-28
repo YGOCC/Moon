@@ -52,7 +52,7 @@ function c16000009.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(c16000009.eqlimit)
 		e1:SetLabelObject(tc)
 		c:RegisterEffect(e1)
-	tc:AddCounter(0x88,3)
+	tc:AddECounter(tp,3)
 	end
 end
 function c16000009.desop(e,tp,eg,ep,ev,re,r,rp)
