@@ -72,7 +72,7 @@ function c12000231.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c12000231.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,tp,REASON_EFFECT)
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
