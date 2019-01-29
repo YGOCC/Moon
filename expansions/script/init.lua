@@ -289,8 +289,8 @@ Duel.Draw=function(tp,ct,r)
 	local newct = ct
 	if (Duel.GetFlagEffect(tp,1600000000)==0) and Duel.IsExistingMatchingCard(Auxiliary.CoronaFilterNeo,tp,LOCATION_EXTRA,0,1,nil,ct) and Duel.SelectYesNo(tp,572) then
 		local tc = Auxiliary.CoronaOp(tp,ct,REASON_RULE)
-		newct = ct - tc:GetAura()
-		Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,nil,r,tp,tp,1)
+		newct = ct - 1 --tc:GetAura()
+		Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,nil,r,tp,tp,99)
 	end
 	return duel_draw(tp,newct,r) + (ct-newct)
 end
@@ -1508,7 +1508,7 @@ function Auxiliary.CoronaDrawOp(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function Auxiliary.CoronaDesRepFilter(c,tp)
-	return c:IsControler(1-tp) and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
+	return c:IsControler(1-tp) and c:IsLocation(LOCATION_MZONE) and c:IsReason(REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
 function Auxiliary.CoronaDesRepTg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if rp~=tp then return false end
