@@ -9,7 +9,6 @@ function ref.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCountLimit(1)
 	e1:SetCondition(ref.spcon)
 	e1:SetCost(ref.spcost)
 	e1:SetTarget(ref.sptg)
@@ -23,8 +22,8 @@ function ref.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCountLimit(1,id)
-	e2:SetCondition(aux.cdrewcon)
-	e2:SetCost(aux.bfgcost)
+	e2:SetCondition(ref.fuscon)
+	e2:SetCost(ref.fuscost)
 	e2:SetTarget(ref.fustg)
 	e2:SetOperation(ref.fusop)
 	c:RegisterEffect(e2)
@@ -59,6 +58,14 @@ function ref.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 --Fusion
+function ref.fuscon(e,tp,eg,ep,ev,re,r,rp)
+	return (ph==PHASE_MAIN1 or ph==PHASE_MAIN2) and aux.cdrewcon(e,tp)
+end
+function ref.fuscost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if c:GetFlagEffect(id)~=0 then return false end
+	aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
+end
 function ref.fusfilter(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
