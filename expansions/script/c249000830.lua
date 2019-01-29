@@ -16,7 +16,7 @@ function c249000830.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCondition(c249000830.spcon)
 	e2:SetCost(aux.bfgcost)
-	e2:SetOperation(c249000830.activate)
+	e2:SetOperation(c249000830.operation)
 	c:RegisterEffect(e2)
 end
 function c249000830.filter(c)
@@ -87,7 +87,7 @@ function c249000830.operation(e,tp,eg,ep,ev,re,r,rp)
 		and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false) and Duel.SelectYesNo(tp,2) then
 		local g2=Duel.SelectMatchingCard(tp,c249000824.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,sc:GetLink())
 		Duel.Remove(g2,POS_FACEUP,REASON_COST)
-		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(sc,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
 		sc:SetMaterial(g2)
 	end
 end

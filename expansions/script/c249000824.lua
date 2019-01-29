@@ -112,7 +112,7 @@ function c249000824.operation(e,tp,eg,ep,ev,re,r,rp)
 		and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false) and Duel.SelectYesNo(tp,2) then
 		local g2=Duel.SelectMatchingCard(tp,c249000824.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,sc:GetLink())
 		Duel.Remove(g2,POS_FACEUP,REASON_COST)
-		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(sc,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
 		sc:SetMaterial(g2)
 	end
 end

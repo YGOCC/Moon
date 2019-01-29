@@ -61,7 +61,7 @@ function c16000443.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	e:GetHandler():SetMaterial(g:Filter(Card.IsLocation,nil,LOCATION_REMOVED))
 end
 function c16000443.tgtg(e,c)
-	return e:GetHandler():GetLinkedGroup():IsContains(c)
+	return e:GetHandler():GetLinkedGroup():IsContains(c) and c:IsType(TYPE_NORMAL)
 end
 function c16000443.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)

@@ -13,7 +13,7 @@ c:EnableCounterPermit(0x88)
 	c:RegisterEffect(e1)
 end
 function c160008617.filter(c)
-	return c:IsFaceup() and c:IsType(CTYPE_EVOLUTE) and c:IsCanAddCounter(0x88,1)
+	return c:IsFaceup() and c:IsType(TYPE_EVOLUTE) 
 end
 function c160008617.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c160008617.filter(chkc) end
@@ -25,6 +25,6 @@ end
 
 function c160008617.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:AddCounter(0x88,1) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:AddEC(1)~=0 then
 		end
 	end
