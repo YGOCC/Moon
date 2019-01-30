@@ -48,15 +48,15 @@ function c500311550.filter2(c,ec,tp)
 	return c:IsRace(RACE_PLANT+RACE_INSECT) 
 end
 function c500311550.con(e,tp,eg,ep,ev,re,r,rp)
-	return  e:GetHandler():GetECounter(tp)==4
+	return  e:GetHandler():GetEC()==4
 end
 function c500311550.tgtg(e,c)
 	return  c:IsType(TYPE_RITUAL) or c:IsType(TYPE_EVOLUTE)
 end
 function c500311550.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsCanRemoveCounter(tp,0x88,4,REASON_COST) end
-	c:RemoveCounter(tp,0x88,4,REASON_COST) 
+		 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
 	--local e1=Effect.CreateEffect(c)
   --  e1:SetType(EFFECT_TYPE_FIELD)
    -- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)

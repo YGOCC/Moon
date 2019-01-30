@@ -114,7 +114,7 @@ function c160009541.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c160009541.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetCounter(0x88)>0 then
+	if c:GetEC()>0 then
 		c:RegisterFlagEffect(160009541,RESET_EVENT+0x17a0000,0,0)
 	end
 end
