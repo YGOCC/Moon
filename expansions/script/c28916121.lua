@@ -19,6 +19,7 @@ function ref.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
+	e2:SetCost(ref.fuscost)
 	e2:SetTarget(ref.fustg)
 	e2:SetOperation(ref.fusop)
 	c:RegisterEffect(e2)
@@ -49,6 +50,11 @@ end
 function ref.filter2(c,e,tp,m,f,gc,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(1854) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,chkf)
+end
+function ref.fuscost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if Duel.IsPlayerAffectedByEffect(tp,EFFECT_DISCARD_COST_CHANGE) then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,nil,1,1,REASON_COST,nil)
 end
 function ref.fustg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

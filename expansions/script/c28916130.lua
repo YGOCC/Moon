@@ -33,14 +33,10 @@ function ref.initial_effect(c)
 end
 
 --Special Summon
-function ref.cfilter(c)
-	return c:IsAbleToGraveAsCost()
-end
 function ref.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(ref.cfilter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,ref.cfilter,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
+	if Duel.IsPlayerAffectedByEffect(tp,EFFECT_DISCARD_COST_CHANGE) then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,nil,1,1,REASON_COST,nil)
 end
 function ref.spfilter(c,e,tp)
 	return c:IsSetCard(1854) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

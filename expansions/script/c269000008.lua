@@ -27,9 +27,9 @@ function c269000008.initial_effect(c)
 	--disable attack
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(246960978,2))
-	e3:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetHintTiming(0,TIMING_ATTACK)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
 	e3:SetCondition(c269000008.dacon)
@@ -89,21 +89,29 @@ function c269000008.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c269000008.dacon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttacker():GetControler()~=tp
+	return Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function c269000008.datg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc==Duel.GetAttacker() end
-	if chk==0 then return e:GetHandler():IsAbleToRemove() and Duel.GetAttacker():IsCanBeEffectTarget(e)
+	if chk==0 then return e:GetHandler():IsAbleToRemove()
 		and not e:GetHandler():IsStatus(STATUS_CHAINING) end
-	Duel.SetTargetCard(Duel.GetAttacker())
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetHandler(),1,0,0)
 end
 function c269000008.daop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.Remove(c,POS_FACEUP,REASON_EFFECT)~=0 then
-		Duel.NegateAttack()
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_ATTACK_ANNOUNCE)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		e1:SetCountLimit(1)
+		e1:SetOperation(c269000008.disop2)
+		Duel.RegisterEffect(e1,tp)
 		c:RegisterFlagEffect(269000008,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
 	end
+end
+function c269000008.disop2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,269000008)
+	Duel.NegateAttack()
 end
 function c269000008.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

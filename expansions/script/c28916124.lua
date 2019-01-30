@@ -30,6 +30,7 @@ end
 
 --Special Summon
 function ref.sscost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if Duel.IsPlayerAffectedByEffect(tp,EFFECT_DISCARD_COST_CHANGE) then return true end
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,c) end
 	Duel.DiscardHand(tp,nil,1,1,REASON_COST,c)
