@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Cardfight!! Vanguard's Soul Charge
---ソウル・チャージ
+--ソウルチャージ
 function c210400000.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
