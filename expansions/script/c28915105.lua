@@ -4,7 +4,7 @@ local id=28915105
 function ref.initial_effect(c)
 	--Corona Card
 	--aux.EnableCorona(c,ref.matfilter,3,99,TYPE_SPELL,nil)
-	aux.EnableCoronaNeo(c,1,1,ref.matfilter,ref.matfilter2)
+	aux.EnableCoronaNeo(c,3,3,ref.matfilter,ref.matfilter2)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DRAW+CATEGORY_TOGRAVE)

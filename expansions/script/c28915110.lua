@@ -3,7 +3,7 @@ local ref=_G['c'..28915110]
 local id=28915110
 function ref.initial_effect(c)
 	--Corona Card
-	aux.EnableCoronaNeo(c,1,1,ref.matfilter,ref.matfilter2)
+	aux.EnableCoronaNeo(c,1,1,ref.matfilter)
 	--Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -18,7 +18,7 @@ function ref.matfilter2(c)
 	return c:IsAttribute(ATTRIBUTE_DARK)
 end
 function ref.matfilter(c)
-	return c:IsRace(RACE_PLANT)
+	return c:IsRace(RACE_PLANT) or c:IsAttribute(ATTRIBUTE_DARK)
 end
 
 --Summon

@@ -3,7 +3,7 @@ local card = c210424275
 function card.initial_effect(c)
 	--damage
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(40634253,1))
+	e1:SetDescription(aux.Stringid(4066,8))
 	e1:SetCategory(CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
@@ -26,7 +26,7 @@ function card.initial_effect(c)
 		--atkup
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetDescription(aux.Stringid(85215458,0))
+	e3:SetDescription(aux.Stringid(4066,3))
 	e3:SetCategory(CATEGORY_ATKCHANGE)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetHintTiming(TIMING_DAMAGE_STEP)

@@ -47,7 +47,7 @@ function c39320.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c39320.tgtg(e,c)
-	return c~=e:GetHandler() and c:IsFaceup() and c:GetCode()>39300 and c:GetCode()<39321 and not c:IsCode(39311,39312)
+	return c~=e:GetHandler() and c:IsFaceup() and c:GetCode()>39300 and c:GetCode()<39322 and not c:IsCode(39311,39312)
 end
 function c39320.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()

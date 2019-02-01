@@ -24,7 +24,7 @@ function ref.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function ref.matfilter(c)
-	return c:IsAttribute(ATTRIBUTE_EARTH)
+	return c:GetAttack()==0 or c:GetDefense()==0
 end
 function ref.matfilter2(c)
 	return c:IsLevelBelow(3)

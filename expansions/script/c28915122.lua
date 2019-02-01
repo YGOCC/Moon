@@ -11,9 +11,11 @@ function ref.initial_effect(c)
 	--Effect 0
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_REMOVE)
-	e0:SetType(EFFECT_TYPE_IGNITION)
+	e0:SetType(EFFECT_TYPE_QUICK_O)
+	e0:SetCode(EVENT_FREE_CHAIN)
 	e0:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e0:SetRange(LOCATION_MZONE)
+	e0:SetCondition(aux.cdrewcon)
 	e0:SetTarget(ref.target0)
 	e0:SetOperation(ref.operation0)
 	c:RegisterEffect(e0)
@@ -59,15 +61,15 @@ end
 function ref.operation0(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 then
-		if Duel.SelectYesNo(1-tp,aux.Stringid(id,0)) then
+	if tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 then
+		if Duel.IsExistingMatchingCard(ref.rmfilter2,1-tp,LOCATION_EXTRA,0,1,nil,tc) and Duel.SelectYesNo(1-tp,aux.Stringid(id,0)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HITNMSG_REMOVE)
 			local g1 = Duel.SelectMatchingCard(1-tp,ref.rmfilter2,1-tp,LOCATION_EXTRA,0,1,1,nil,tc)
 			Duel.Remove(g1,POS_FACEUP,REASON_EFFECT)
 		else
 			Duel.Hint(HINT_SELECTMSG,tp,HITNMSG_REMOVE)
-			local g1=Duel.SelectMatchingCard(tp,ref.rmfilter3,tp,0,LOCATION_ONFIELD,1,2,nil
-			Duel.Remove(g2,POS_FACEUP,REASON_EFFECT)
+			local g1=Duel.SelectMatchingCard(tp,ref.rmfilter3,tp,0,LOCATION_ONFIELD,1,2,nil)
+			Duel.Remove(g1,POS_FACEUP,REASON_EFFECT)
 		end
 	end
 end
