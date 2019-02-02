@@ -68,7 +68,6 @@ function c50031004.operation(e,tp,eg,ep,ev,re,r,rp)
 	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_MONSTER) end,1,nil) then sel=sel+1 end
 	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_SPELL) end,1,nil) then sel=sel+2 end
 	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_TRAP) end,1,nil) then sel=sel+4 end
-	if sel==0 then return end
 	--setting the option
 	if sel==1 then
 		Duel.SelectOption(tp,aux.Stringid(50031004,1))
@@ -89,29 +88,23 @@ function c50031004.operation(e,tp,eg,ep,ev,re,r,rp)
 	elseif sel==7 then
 		opt=Duel.SelectOption(tp,aux.Stringid(50031004,1),aux.Stringid(50031004,2),aux.Stringid(50031004,3))
 	end
+	Duel.ShuffleDeck(tp)
 	--getting the option and executing
 	if opt==0 then
-  g=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1)
-	Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
+ 		g=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1)
+		Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
 	end
 	if opt==1 then
 		local c=e:GetHandler()
-		 local e1=Effect.CreateEffect(c)
-		 e1:SetType(EFFECT_TYPE_SINGLE)
-		 e1:SetCode(EFFECT_UPDATE_ATTACK)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(500)
 		e1:SetReset(RESET_PHASE+PHASE_END)
-	   c:RegisterEffect(e1)
+		c:RegisterEffect(e1)
 	end
 	if opt==2 then
 		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
-		 Duel.ShuffleHand(tp)
-		Duel.BreakEffect()
-		 Duel.Draw(tp,1,REASON_EFFECT)
+		Duel.Draw(tp,1,REASON_EFFECT)
 	end
- for i=1,3 do
-			local g=Duel.GetDecktopGroup(tp,1)
-			Duel.MoveSequence(g:GetFirst(),1)
-
-end
 end
