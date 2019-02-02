@@ -17,10 +17,11 @@ function cod.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cod.thcon(e)
-	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-	if not tc then return false end
-	return tc or tc:IsSetCard(0x523)
+--	local seq=e:GetHandler():GetSequence()
+--	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
+--	if not tc then return false end
+--	return tc or tc:IsSetCard(0x523)
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0x523)
 end
 function cod.cfilter(c)
 	return c:IsSetCard(0x523) and c:IsType(TYPE_MONSTER+TYPE_PENDULUM) and c:IsLevelAbove(5) and c:IsAbleToHand()

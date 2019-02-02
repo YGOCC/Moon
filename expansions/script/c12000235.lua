@@ -89,6 +89,9 @@ function c12000235.spfilter1(c,e,tp,g,sg,rec,recmax,total_lv)
 			sg:AddCard(c)
 			if c:IsReleasable() and not c:IsStatus(STATUS_BATTLE_DESTROYED) and g:IsExists(c12000235.spfilter1,1,c,e,tp,g,sg,rec+1,recmax,total_lv) then
 				return true
+			else
+				sg:Clear()
+				return false
 			end
 		end
 	else
@@ -96,6 +99,9 @@ function c12000235.spfilter1(c,e,tp,g,sg,rec,recmax,total_lv)
 		if c:IsReleasable() and not c:IsStatus(STATUS_BATTLE_DESTROYED) and sg:GetCount()+1==g:GetCount() and Duel.GetLocationCount(tp,LOCATION_MZONE)>-(sg:GetCount()+1) and Duel.IsExistingMatchingCard(c12000235.spfilter2,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp,total_lv) then
 			sg:Clear()
 			return true
+		else
+			sg:Clear()
+			return false
 		end
 	end
 	return false
