@@ -68,7 +68,6 @@ function c50031001.operation(e,tp,eg,ep,ev,re,r,rp)
 	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_MONSTER) end,1,nil) then sel=sel+1 end
 	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_SPELL) end,1,nil) then sel=sel+2 end
 	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_TRAP) end,1,nil) then sel=sel+4 end
-	if sel==0 then return end
 	--setting the option
 	if sel==1 then
 		Duel.SelectOption(tp,aux.Stringid(50031001,1))
@@ -89,38 +88,31 @@ function c50031001.operation(e,tp,eg,ep,ev,re,r,rp)
 	elseif sel==7 then
 		opt=Duel.SelectOption(tp,aux.Stringid(50031001,1),aux.Stringid(50031001,2),aux.Stringid(50031001,3))
 	end
+	Duel.ShuffleDeck(tp)
 	--getting the option and executing
 	if opt==0 then
-		Duel.DisableShuffleCheck()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local dg=Duel.SelectMatchingCard(Card,IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+		local dg=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 		Duel.Destroy(dg,REASON_EFFECT)
 	end
 	if opt==1 then
-		Duel.DisableShuffleCheck()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local dg=Duel.SelectMatchingCard(tp,c50031001.rmfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil)
+		local dg=Duel.SelectMatchingCard(tp,c50031001.rmfilter,tp,LOCATION_SZONE+LOCATION_GRAVE,LOCATION_SZONE+LOCATION_GRAVE,1,1,nil)
 		Duel.Remove(dg,POS_FACEUP,REASON_EFFECT)
 	end
 	if opt==2 then
-		Duel.DisableShuffleCheck()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local dg=Duel.SelectMatchingCard(tp,c50031001.rmfilter2,tp,LOCATION_SZONE+LOCATION_GRAVE,LOCATION_SZONE+LOCATION_GRAVE,1,1,nil)
 		Duel.SendtoDeck(dg,nil,2,REASON_EFFECT)
 	end
- for i=1,3 do
-			local g=Duel.GetDecktopGroup(tp,1)
-			Duel.MoveSequence(g:GetFirst(),1)
-
-end
 end
 
 
 function c50031001.rmfilter(c)
-	return  c:IsFaceup() and c:IsType(TYPE_SPELL) and c:IsAbleToRemove()
+	return c:IsFaceup() and c:IsType(TYPE_SPELL) and c:IsAbleToRemove()
 end
 function c50031001.rmfilter2(c)
-	return  c:IsFaceup() and c:IsType(TYPE_TRAP) and c:IsAbleToDeck()
+	return c:IsFaceup() and c:IsType(TYPE_TRAP) and c:IsAbleToDeck()
 end
 
 function c50031001.retcon(e,tp,eg,ep,ev,re,r,rp)
