@@ -10,6 +10,16 @@ function c210400003.initial_effect(c)
 	e1:SetTarget(c210400003.target)
 	e1:SetOperation(c210400003.activate)
 	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(1159)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCondition(c210400003.setcon)
+	e2:SetTarget(c210400003.settg)
+	e2:SetOperation(c210400003.setop)
+	c:RegisterEffect(e2)
 end
 function c210400003.condition(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetCurrentChain()<=1 or rp==tp then return false end
@@ -51,4 +61,28 @@ function c210400003.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	Duel.SendtoDeck(dg,nil,1,REASON_EFFECT)
+end
+function c210400003.cfilter(c,tp)
+	return c:GetSummonLocation()==LOCATION_DECK and c:GetSummonPlayer()==1-tp
+end
+function c210400003.setcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c210400003.cfilter,1,nil,tp)
+end
+function c210400003.settg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsSSetable() end
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
+end
+function c210400003.setop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and c:IsSSetable() then
+		Duel.SSet(tp,c)
+		Duel.ConfirmCards(1-tp,c)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x47e0000)
+		e1:SetValue(LOCATION_REMOVED)
+		c:RegisterEffect(e1)
+	end
 end

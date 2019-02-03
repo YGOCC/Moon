@@ -57,7 +57,7 @@ function c269000001.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(sg,REASON_EFFECT)
 end
 function c269000001.recon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayCount()>0
+	return e:GetHandler():GetOverlayCount()>0 and (e:GetHandler():IsFaceup() or e:GetHanlder():IsLocation(LOCATION_GRAVE)) and not e:GetHandler():IsLocation(LOCATION_DECK+LOCATION_EXTRA)
 end
 function c269000001.reop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

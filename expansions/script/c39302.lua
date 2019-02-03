@@ -18,7 +18,7 @@ function c39302.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c39302.filter(c)
-	return c:GetCode()>39300 and c:GetCode()<39322 and c:IsAbleToHand() and not c:IsCode(39311,39312)
+	return c:GetCode()>39300 and c:GetCode()<39326 and c:IsAbleToHand() and not c:IsCode(39311,39312)
 end
 function c39302.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c39302.filter,tp,LOCATION_DECK,0,1,nil) end

@@ -67,5 +67,5 @@ function c39319.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c39319.bttg(e,c)
-	return c:IsFaceup() and c:GetCode()>39300 and c:GetCode()<39322 and not c:IsCode(39311,39312) and c~=e:GetHandler() 
+	return c:IsFaceup() and c:GetCode()>39300 and c:GetCode()<39326 and not c:IsCode(39311,39312) and c~=e:GetHandler() 
 end 

@@ -51,7 +51,7 @@ function c39320.tgtg(e,c)
 end
 function c39320.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	return ep~=tp and tc:GetCode()>39300 and tc:GetCode()<39321 and not tc:IsCode(39311,39312) and tc:GetBattleTarget()~=nil
+	return ep~=tp and tc:GetCode()>39300 and tc:GetCode()<39326 and not tc:IsCode(39311,39312) and tc:GetBattleTarget()~=nil
 end
 function c39320.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(ep,ev*2)

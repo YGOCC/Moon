@@ -16,17 +16,18 @@ function c210400001.filter(c)
 end
 function c210400001.filter2(c,g)
 	local code=c:GetCode()
-	return Duel.IsExistingMatchingCard(c210400001.filter3,tp,LOCATION_DECK,0,1,nil,code)
-		and g:IsExists(Card.IsCode,1,c,code)
+	return Duel.IsExistingMatchingCard(c210400001.filter3,tp,LOCATION_DECK,0,1,nil,code) and g:IsExists(Card.IsCode,1,c,code)
 end
 function c210400001.filter3(c,code)
 	return c:IsCode(code) and c:IsAbleToHand()
 end
 function c210400001.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(c210400001.filter,tp,LOCATION_DECK,0,nil,e,tp):Filter(c210400001.filter2,nil,g)
-	if chk==0 then return g:GetCount()>0 end
+	local g=Duel.GetMatchingGroup(c210400001.filter,tp,LOCATION_DECK,0,nil)
+	if chk==0 then
+		return g:FilterCount(c210400001.filter2,nil,g)>0
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local tg=g:Select(tp,1,1,nil)
+	local tg=g:FilterSelect(tp,c210400001.filter2,1,1,nil,g)
 	local tc=tg:GetFirst()
 	tg:AddCard(g:Filter(Card.IsCode,tc,tc:GetCode()):GetFirst())
 	Duel.SendtoGrave(tg,REASON_COST)

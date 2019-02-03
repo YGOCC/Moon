@@ -17,7 +17,7 @@ function c39315.initial_effect(c)
 end
 function c39315.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_FUSION) and c:IsAbleToExtra()
-		and c:GetCode()>39300 and c:GetCode()<39319 and not c:IsCode(39311,39312)
+		and c:GetCode()>39300 and c:GetCode()<39326 and not c:IsCode(39311,39312)
 end
 function c39315.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c39315.filter(chkc) end

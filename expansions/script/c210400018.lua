@@ -35,7 +35,7 @@ function c210400018.fustg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp)
 		if Duel.IsExistingMatchingCard(Card.IsSummonType,tp,0,LOCATION_MZONE,1,nil,SUMMON_TYPE_SPECIAL) then
-			local mg2=Duel.GetMatchingGroup(c210400018.filter0,tp,LOCATION_DECK,0,nil)
+			local mg2=Duel.GetMatchingGroup(c210400018.filter0,tp,LOCATION_GRAVE,0,nil)
 			mg1:Merge(mg2)
 		end
 		local res=Duel.IsExistingMatchingCard(c210400018.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
@@ -55,8 +55,8 @@ end
 function c210400018.fusop(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(c210400018.filter1,nil,e)
-	if Duel.IsExistingMatchingCard(c210400018.cfilter,tp,0,LOCATION_MZONE,1,nil) then
-		local mg2=Duel.GetMatchingGroup(c210400018.filter0,tp,LOCATION_DECK,0,nil)
+	if Duel.IsExistingMatchingCard(Card.IsSummonType,tp,0,LOCATION_MZONE,1,nil,SUMMON_TYPE_SPECIAL) then
+		local mg2=Duel.GetMatchingGroup(c210400018.filter0,tp,LOCATION_GRAVE,0,nil)
 		mg1:Merge(mg2)
 	end
 	local sg1=Duel.GetMatchingGroup(c210400018.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)

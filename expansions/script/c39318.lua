@@ -14,15 +14,15 @@ function c39318.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTarget(c39318.tg)
-	e2:SetCountLimit(1,39324)
+	e2:SetCountLimit(1,39326)
 	e2:SetOperation(c39318.op)
 	c:RegisterEffect(e2)
 end
 function c39318.filter1(c)
-	return c:GetCode()>39300 and c:GetCode()<39322 and not c:IsCode(39311,39312) and c:IsSummonable(true,nil)
+	return c:GetCode()>39300 and c:GetCode()<39326 and not c:IsCode(39311,39312) and c:IsSummonable(true,nil)
 end
 function c39318.filter2(c,e,tp)
-	return c:GetCode()>39300 and c:GetCode()<39319 and not c:IsCode(39311,39312) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetCode()>39300 and c:GetCode()<39326 and not c:IsCode(39311,39312) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c39318.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

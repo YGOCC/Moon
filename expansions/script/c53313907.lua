@@ -74,7 +74,7 @@ function c53313907.chop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c53313907.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsType(TYPE_EQUIP) then
+	if c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsType(TYPE_EQUIP) and c:IsOnField() then
 		c:CancelToGrave(false)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
