@@ -56,7 +56,14 @@ function c12000238.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingMatchingCard(c12000238.lvfilter2,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,c12000238.lvfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,0)
+end
+function c12000238.checkhigherval(c,cp)
+	if cp:IsType(TYPE_XYZ) then
+		return c:GetLevel()>cp:GetRank() or c:GetRank()>cp:GetRank()
+	else
+		return c:GetLevel()>cp:GetLevel() or c:GetRank()>cp:GetLevel()
+	end
+	return false
 end
 function c12000238.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -67,15 +74,20 @@ function c12000238.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=g:GetMaxGroup(Card.GetLevel)
 	local sg2=g:GetMaxGroup(Card.GetRank)
 	sg:Merge(sg2)
+	for exc in aux.Next(sg) do
+		if sg:IsExists(c12000238.checkhigherval,1,exc,exc) then
+			sg:RemoveCard(exc)
+		end
+	end
 	if sg:GetCount()>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 		sg=sg:Select(tp,1,1,nil)
 	end
 	local tc1=sg:GetFirst()
 	if tc1:IsType(TYPE_XYZ) then
-		local lv=tc1:GetRank()
+		lv=tc1:GetRank()
 	else
-		local lv=tc1:GetRank()
+		lv=tc1:GetLevel()
 	end	
 	if tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
