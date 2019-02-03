@@ -79,7 +79,7 @@ if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 		Duel.RegisterEffect(e1,tp)
 
 	end
-   local e3=Effect.CreateEffect(c)
+   local e3=Effect.CreateEffect(e:GetHandler())
 		e3:SetType(EFFECT_TYPE_FIELD)
 		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)

@@ -1,7 +1,7 @@
 --Paintress EX Dark Witch Matissa
 function c16000446.initial_effect(c)
 	 --link summon
-	aux.AddLinkProcedure(c,nil,2,2)
+   aux.AddLinkProcedure(c,nil,2,2,c16000446.lcheck)
 	c:EnableReviveLimit()
 	  --duel status
  --   local e1=Effect.CreateEffect(c)
@@ -49,6 +49,9 @@ function c16000446.initial_effect(c)
 	e6:SetCost(c16000446.spcost)
 	e6:SetOperation(c16000446.spop)
 	c:RegisterEffect(e6)
+end
+function c16000446.lcheck(g,lc)
+	return g:IsExists(Card.IsSetCard,1,nil,0xc50)
 end
 
 function c16000446.indval(e,re,tp)
