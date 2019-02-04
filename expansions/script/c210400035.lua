@@ -12,7 +12,7 @@ function c210400035.initial_effect(c)
 end
 function c210400035.cfilter(c)
 	local g=Duel.GetDecktopGroup(tp,c:GetLevel())
-	return c:IsSetCard(0x785a) and c:IsLevelAbove(1) and g:FilterCount(Card.IsAbleToRemove,nil)==g:GetCount()
+	return c:IsSetCard(0x85a) and c:IsLevelAbove(1) and g:FilterCount(Card.IsAbleToRemove,nil)==g:GetCount()
 end
 function c210400035.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,c210400035.cfilter,1,nil) end
@@ -26,7 +26,7 @@ function c210400035.operation(e,tp,eg,ep,ev,re,r,rp)
 	if rg:GetCount()>rg:FilterCount(Card.IsAbleToRemove,nil) then return end
 	Duel.ConfirmDecktop(tp,e:GetLabel())
 	local g=Duel.GetDecktopGroup(tp,e:GetLabel())
-	local sg=g:Filter(Card.IsSetCard,nil,0x785e)
+	local sg=g:Filter(Card.IsSetCard,nil,0x285b)
 	if sg:GetCount()>0 then
 		Duel.DisableShuffleCheck()
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT+REASON_REVEAL)

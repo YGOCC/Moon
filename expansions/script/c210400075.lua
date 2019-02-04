@@ -1,4 +1,4 @@
---created & coded by Lyris, art by kreegan of DeviantArt
+--created & coded by Lyris, art by kreegan of deviantART
 --天剣主シロ六
 function c210400075.initial_effect(c)
 	local e0=Effect.CreateEffect(c)

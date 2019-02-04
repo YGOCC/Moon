@@ -1,8 +1,10 @@
 --created & coded by Lyris
 --S・VINEの第二女王クライッシャ
 function c210400031.initial_effect(c)
+	c:EnableReviveLimit()
+	aux.AddOrigEvoluteType(c)
+	aux.AddEvoluteProc(c,nil,8,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER))
 	c:EnableCounterPermit(0x1)
-	aux.AddEvoluteProc(c,8,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER))
 	local ae3=Effect.CreateEffect(c)
 	ae3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	ae3:SetCode(EVENT_REMOVE)
@@ -32,7 +34,7 @@ function c210400031.initial_effect(c)
 	c:RegisterEffect(ae2)
 end
 function c210400031.cfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b)
 end
 function c210400031.acop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -46,21 +48,22 @@ end
 function c210400031.eop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	c:RemoveCounter(tp,0x1,3,REASON_EFFECT)
-	c:AddCounter(0x1088,1)
+	c:AddEC(1)
+	aux.AddECounter(1)
 end
 function c210400031.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetCounter(0x1088)>0 end
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,1,REASON_COST) end
 	return Duel.SelectYesNo(tp,aux.Stringid(210400031,0))
 end
 function c210400031.repop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():RemoveCounter(tp,0x1088,1,REASON_EFFECT)
+	e:GetHandler():RemoveEC(tp,1,REASON_EFFECT)
 end
 function c210400031.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1088,2,REASON_COST) end
-	e:GetHandler():RemoveCounter(tp,0x1088,2,REASON_COST)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,2,REASON_COST)
 end
 function c210400031.filter(c,e,tp)
-	return c:IsSetCard(0x785e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x285b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c210400031.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil)>0

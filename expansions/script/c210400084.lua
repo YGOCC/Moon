@@ -1,4 +1,4 @@
---created & coded by Lyris, art by DrakeTurtle of DeviantArt
+--created & coded by Lyris, art by DrakeTurtle of deviantART
 --復剣主ダルク
 function c210400084.initial_effect(c)
 	local e0=Effect.CreateEffect(c)

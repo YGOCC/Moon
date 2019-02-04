@@ -1,4 +1,4 @@
---created & coded by Lyris, art by b0uysel of DeviantArt
+--created & coded by Lyris, art by b0uysel of deviantART
 --S・VINE曲芸師
 function c210400029.initial_effect(c)
 aux.EnableDualAttribute(c)
@@ -18,7 +18,7 @@ function c210400029.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil),POS_FACEUP,REASON_COST)
 end
 function c210400029.filter(c,e,tp)
-	return c:IsSetCard(0x785e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x285b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c210400029.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -29,15 +29,7 @@ function c210400029.op(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c210400029.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,e,tp)
-	if g:GetCount()>0 and Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
-		local tc=g:GetFirst()
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_RACE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(RACE_FAIRY)
-		tc:RegisterEffect(e1)
-		Duel.SpecialSummonComplete()
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

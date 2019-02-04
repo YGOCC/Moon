@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at https://i.ytimg.com/vi/O50o1aWbDZk/hqdefault.jpg
 --スプラッシュ
 function c210400087.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

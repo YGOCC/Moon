@@ -21,7 +21,7 @@ function c210400026.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c210400026.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e) and not c:IsCode(210400026) and c:IsAbleToGrave()
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and not c:IsCode(210400026) and c:IsAbleToGraveAsCost()
 end
 function c210400026.sptg(e,c)
 	if c==nil then return true end
@@ -30,12 +30,12 @@ function c210400026.sptg(e,c)
 		and Duel.IsExistingMatchingCard(c210400026.cfilter,tp,LOCATION_REMOVED,0,1,nil)
 end
 function c210400026.spop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(210400026,4))
 	local g=Duel.SelectMatchingCard(tp,c210400026.cfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 function c210400026.filter(c,e,tp)
-	return c:IsSetCard(0x785e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=210400026
+	return c:IsSetCard(0x285b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=210400026
 end
 function c210400026.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

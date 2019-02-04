@@ -1,4 +1,4 @@
---created & coded by Lyris, art by cows-love-clover of DeviantArt
+--created & coded by Lyris, art by cows-love-clover of deviantART
 --極神皇フレイル
 function c210400056.initial_effect(c)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x42),aux.NonTuner(nil),2)

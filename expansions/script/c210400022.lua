@@ -20,7 +20,7 @@ function c210400022.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c210400022.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b)
 end
 function c210400022.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1 and Duel.IsExistingMatchingCard(c210400022.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler())
@@ -30,7 +30,7 @@ function c210400022.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,3,1-tp,LOCATION_DECK)
 end
 function c210400022.filter(c)
-	return c:IsLocation(LOCATION_REMOVED) and c:IsSetCard(0x785a) and c:IsType(TYPE_MONSTER)
+	return c:IsLocation(LOCATION_REMOVED) and c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER)
 end
 function c210400022.op(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetDecktopGroup(tp,3)
@@ -60,7 +60,7 @@ function c210400022.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c210400022.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SendtoGrave(c,REASON_EFFECT)~=0 and c:IsLocation(LOCATION_GRAVE) and Duel.IsPlayerCanDraw(tp,1) and Duel.SelectYesNo(tp,aux.Stringid(210400022,0)) then
+	if c:IsRelateToEffect(e) and Duel.SendtoGrave(c,REASON_EFFECT+REASON_RETURN)~=0 and c:IsLocation(LOCATION_GRAVE) and Duel.IsPlayerCanDraw(tp,1) and Duel.SelectYesNo(tp,aux.Stringid(210400022,0)) then
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end

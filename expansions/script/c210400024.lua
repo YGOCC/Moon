@@ -1,97 +1,70 @@
 --created & coded by Lyris, art by Chahine Sfar
 --「S・VINE」ワイヴァーン
 function c210400024.initial_effect(c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(210400024,0))
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SUMMON_PROC)
-	e1:SetCondition(c210400024.ntcon)
-	e1:SetOperation(c210400024.nsop)
-	c:RegisterEffect(e1)
+	c:EnableUnsummonable()
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e3:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e3:SetValue(function(e,se,sp,st) return se:IsHasType(EFFECT_TYPE_ACTIONS) end)
+	c:RegisterEffect(e3)
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(c210400024.fdtg)
-	e2:SetOperation(c210400024.fdop)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e2:SetCode(EVENT_REMOVE)
+	e2:SetCondition(c210400024.spcon)
+	e2:SetTarget(c210400024.sptg)
+	e2:SetOperation(c210400024.spop)
 	c:RegisterEffect(e2)
+	local e0=Effect.CreateEffect(c)
+	e0:SetCategory(CATEGORY_REMOVE+CATEGORY_TOGRAVE)
+	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e0:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e0:SetCondition(c210400024.con)
+	e0:SetTarget(c210400024.tg)
+	e0:SetOperation(c210400024.op)
+	c:RegisterEffect(e0)
 end
-function c210400024.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e) and c:IsAbleToGraveAsCost()
-end
-function c210400024.ntcon(e,c,minc)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return minc==0 and c:GetLevel()>4 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c210400024.cfilter,tp,LOCATION_REMOVED,0,1,nil)
-end
-function c210400024.nsop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(210400024,0))
-	local g=Duel.SelectMatchingCard(tp,c210400024.cfilter,tp,LOCATION_REMOVED,0,1,3,nil)
-	local ct=Duel.SendtoGrave(g,REASON_COST+REASON_RETURN)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetReset(RESET_EVENT+0xff0000)
-	e1:SetCode(EFFECT_SET_BASE_ATTACK)
-	e1:SetValue(1400)
-	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetValue(300*ct)
-	c:RegisterEffect(e2)
-end
-function c210400024.thfilter(c)
-	return c:IsSetCard(0x785e) and c:IsAbleToHand()
-end
-function c210400024.trfilter(c)
-	return c:IsSetCard(0x785e) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
-end
-function c210400024.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c210400024.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local b1=Duel.IsExistingMatchingCard(c210400024.trfilter,tp,LOCATION_DECK,0,1,nil) and (c:GetFlagEffect(210400024)==0 or bit.band(c:GetFlagEffectLabel(210400024),0x1)~=0x1)
-	local b2=Duel.IsExistingMatchingCard(c210400024.thfilter,tp,LOCATION_DECK,0,1,nil) and (c:GetFlagEffect(210400024)==0 or bit.band(c:GetFlagEffectLabel(210400024),0x2)~=0x2)
-	if chk==0 then return b1 or b2 end
-	local op=0
-	if b1 and b2 then
-		op=Duel.SelectOption(tp,aux.Stringid(210400024,1),aux.Stringid(210400024,2))
-	elseif b1 then
-		op=Duel.SelectOption(tp,aux.Stringid(210400024,1))
-	else op=Duel.SelectOption(tp,aux.Stringid(210400024,2))+1 end
-	e:SetLabel(op)
-	if op==0 then
-		e:SetCategory(CATEGORY_REMOVE)
-		Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
-	else
-		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	return c:IsPreviousLocation(LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND) and c:IsFaceup()
+end
+function c210400024.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c210400024.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP_ATTACK)
 	end
-function c210400024.fdop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if e:GetLabel()==0 then
+end
+function c210400024.con(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+end
+function c210400024.filter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b)
+end
+function c210400024.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c210400024.filter(chkc) end
+	if chk==0 then return true end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(210400024,4))
+	local g1=Duel.SelectTarget(tp,c210400024.filter,tp,LOCATION_REMOVED,0,1,2,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g1,g1:GetCount(),0,0)
+end
+function c210400024.op(e,tp,eg,ep,ev,re,r,rp)
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	if not tg then return end
+	Duel.SendtoGrave(tg,REASON_EFFECT+REASON_RETURN)
+	local g=Duel.GetOperatedGroup()
+	if not g then g=tg:Filter(Card.IsLocation,nil,LOCATION_GRAVE) end
+	local ct=g:GetCount()
+	local dg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_SZONE,nil)
+	if ct>0 and dg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,c210400024.trfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
-			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-		end
-		if c:GetFlagEffect(210400024)==0 then
-			c:RegisterFlagEffect(210400024,RESET_PHASE+PHASE_END,0,1,0x1)
-		else
-			c:SetFlagEffectLabel(210400024,bit.bor(c:GetFlagEffectLabel(210400024),0x1))
-		end
-	else
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,c210400024.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,g)
-		end
-		if c:GetFlagEffect(210400024)==0 then
-			c:RegisterFlagEffect(210400024,RESET_PHASE+PHASE_END,0,1,0x2)
-		else
-			c:SetFlagEffectLabel(210400024,bit.bor(c:GetFlagEffectLabel(210400024),0x2))
-		end
+		local rg=dg:Select(tp,1,ct,nil)
+		Duel.HintSelection(rg)
+		Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
 	end
 end

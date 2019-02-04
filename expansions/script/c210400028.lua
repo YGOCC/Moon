@@ -47,25 +47,21 @@ function c210400028.op(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_RACE)
-		e1:SetValue(RACE_FAIRY)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_SELF_TURN,1)
-		tc:RegisterEffect(e2)
-		local e2=e1:Clone()
 		e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)
 		e2:SetValue(ATTRIBUTE_WATER)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
 		tc:RegisterEffect(e2)
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e3:SetCode(EVENT_BATTLED)
 		e3:SetOperation(c210400028.psop)
-		e3:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN,1)
+		e3:SetReset(RESET_PHASE+PHASE_END,1)
 		Duel.RegisterEffect(e3,tp)
 	end
 end
 function c210400028.psop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=e:GetOwner():GetBattleTarget()
 	if tg then
-		Duel.GetControl(tg,tp,RESET_PHASE+PHASE_END+RESET_SELF_TURN,1)
+		Duel.GetControl(tg,tp,RESET_PHASE+PHASE_END,1)
 	end
 end

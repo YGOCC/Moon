@@ -1,4 +1,4 @@
---created by LionHeartKIng of Wikia, coded by Lyris, art at http://dharmata.net/wp-content/uploads/2017/12/Chi-Chern-Fashi-534x462.jpg
+--created by LionHeartKIng of Wikia, coded by Lyris, art by Beniak pf deviantART
 --S・VINEのコースタル・プリースト
 function c210400030.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
@@ -25,7 +25,7 @@ function c210400030.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)<=1
 end
 function c210400030.spfilter(c,e,tp)
-	return c:IsSetCard(0x785e) and not c:IsCode(210400030) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x285b) and not c:IsCode(210400030) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c210400030.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

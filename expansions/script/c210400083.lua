@@ -1,4 +1,4 @@
---created & coded by Lyris, art by Animekidky of DeviantArt
+--created & coded by Lyris, art by Animekidky of deviantART
 --復剣主ティべリウス
 function c210400083.initial_effect(c)
 	local e0=Effect.CreateEffect(c)

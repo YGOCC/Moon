@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art as "The Great Wave off Kanagawa"
 --ハイ・タイド
 function c210400088.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

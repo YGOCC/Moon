@@ -1,73 +1,150 @@
---created & coded by Lyris, art by Chahine Sfar & generalzoi of DeviantArt
+--created & coded by Lyris, art by Chahine Sfar & generalzoi of deviantART
 --「S・VINE」ペガサス
 function c210400025.initial_effect(c)
-	c:EnableUnsummonable()
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(210400025,3))
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_SUMMON_PROC)
+	e1:SetCondition(c210400025.ntcon)
+	e1:SetOperation(c210400025.nsop)
+	c:RegisterEffect(e1)
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e3:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e3:SetValue(function(e,se,sp,st) return se:IsHasType(EFFECT_TYPE_ACTIONS) end)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_REMOVE)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetCondition(c210400025.tfcon)
+	e3:SetTarget(c210400025.tftg)
+	e3:SetOperation(c210400025.tfop)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_SPSUMMON_COST)
+	e4:SetOperation(c210400025.sumcost)
+	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EFFECT_FLIPSUMMON_COST)
+	c:RegisterEffect(e5)
+	local e6=e4:Clone()
+	e6:SetCode(EFFECT_SUMMON_COST)
+	c:RegisterEffect(e6)
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_REMOVE)
-	e2:SetCondition(c210400025.spcon)
-	e2:SetTarget(c210400025.sptg)
-	e2:SetOperation(c210400025.spop)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCost(aux.bfgcost)
+	e2:SetTarget(c210400025.fdtg)
+	e2:SetOperation(c210400025.fdop)
 	c:RegisterEffect(e2)
-	local e0=Effect.CreateEffect(c)
-	e0:SetCategory(CATEGORY_REMOVE+CATEGORY_TOGRAVE)
-	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e0:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e0:SetCondition(c210400025.con)
-	e0:SetTarget(c210400025.tg)
-	e0:SetOperation(c210400025.op)
-	c:RegisterEffect(e0)
 end
-function c210400025.splimit(e,se,sp,st)
-	return se:IsHasType(EFFECT_TYPE_ACTIONS)
+function c210400025.tfcfilter(c)
+	return c:IsPosition(POS_FACEUP) and c:IsSetCard(0x285b) and not c:IsCode(210400025)
 end
-function c210400025.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND) and c:IsFaceup()
+function c210400025.tfcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c210400025.tfcfilter,1,nil)
 end
-function c210400025.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c210400025.tftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,1,tp,true,true) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c210400025.spop(e,tp,eg,ep,ev,re,r,rp)
+function c210400025.tfop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP_ATTACK)
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c210400025.con(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+function c210400025.cfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b) and c:IsAbleToGraveAsCost()
 end
-function c210400025.filter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x785e)
+function c210400025.ntcon(e,c,minc)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return minc==0 and c:GetLevel()>4 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c210400025.cfilter,tp,LOCATION_REMOVED,0,1,nil)
 end
-function c210400025.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c210400025.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c210400025.filter,tp,LOCATION_REMOVED,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(210400025,0))
-	local g1=Duel.SelectTarget(tp,c210400025.filter,tp,LOCATION_REMOVED,0,1,2,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g1,g1:GetCount(),0,0)
+function c210400025.nsop(e,tp,eg,ep,ev,re,r,rp,c)
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(210400025,4))
+	local g=Duel.SelectMatchingCard(tp,c210400025.cfilter,tp,LOCATION_REMOVED,0,1,3,nil)
+	local ct=Duel.SendtoGrave(g,REASON_COST+REASON_RETURN)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetReset(RESET_EVENT+0xff0000)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(300*ct)
+	c:RegisterEffect(e1)
 end
-function c210400025.op(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	Duel.SendtoGrave(tg,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup()
-	if not g then g=tg:Filter(Card.IsLocation,nil,LOCATION_GRAVE) end
-	local ct=g:GetCount()
-	local dg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_SZONE,nil)
-	if ct>0 and dg:GetCount()>0 then
+function c210400025.lvcon(e)
+	local c=e:GetHandler()
+	return (Card.IsSummonType and not c:IsSummonType(SUMMON_TYPE_ADVANCE))
+		or (bit.band and bit.band(c:GetSummonType(),SUMMON_TYPE_ADVANCE)~=SUMMON_TYPE_ADVANCE)
+		or c:GetSummonType()&SUMMON_TYPE_ADVANCE~=SUMMON_TYPE_ADVANCE
+end
+function c210400025.sumcost(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_SET_BASE_ATTACK)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCondition(c210400025.lvcon)
+	e2:SetValue(1400)
+	e2:SetReset(RESET_EVENT+0xff0000)
+	c:RegisterEffect(e2)
+end
+function c210400025.thfilter(c)
+	return c:IsSetCard(0x285b) and c:IsAbleToHand()
+end
+function c210400025.trfilter(c)
+	return c:IsSetCard(0x285b) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+end
+function c210400025.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	local b1=Duel.IsExistingMatchingCard(c210400025.trfilter,tp,LOCATION_DECK,0,1,nil) and (c:GetFlagEffect(210400025)==0 or bit.band(c:GetFlagEffectLabel(210400025),0x1)~=0x1)
+	local b2=Duel.IsExistingMatchingCard(c210400025.thfilter,tp,LOCATION_DECK,0,1,nil) and (c:GetFlagEffect(210400025)==0 or bit.band(c:GetFlagEffectLabel(210400025),0x2)~=0x2)
+	if chk==0 then return b1 or b2 end
+	local op=0
+	if b1 and b2 then
+		op=Duel.SelectOption(tp,aux.Stringid(210400025,5),aux.Stringid(210400025,6))
+	elseif b1 then
+		op=Duel.SelectOption(tp,aux.Stringid(210400025,5))
+	else op=Duel.SelectOption(tp,aux.Stringid(210400025,6))+1 end
+	e:SetLabel(op)
+	if op~=0 then
+		e:SetCategory(CATEGORY_REMOVE)
+		Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
+	else
+		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	end
+end
+function c210400025.fdop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if e:GetLabel()~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local rg=dg:Select(tp,1,ct,nil)
-		Duel.HintSelection(rg)
-		Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
+		local g=Duel.SelectMatchingCard(tp,c210400025.trfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		end
+		if c:GetFlagEffect(210400025)==0 then
+			c:RegisterFlagEffect(210400025,RESET_PHASE+PHASE_END,0,1,0x1)
+		else
+			c:SetFlagEffectLabel(210400025,bit.bor(c:GetFlagEffectLabel(210400025),0x1))
+		end
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local g=Duel.SelectMatchingCard(tp,c210400025.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.SendtoHand(g,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,g)
+		end
+		if c:GetFlagEffect(210400025)==0 then
+			c:RegisterFlagEffect(210400025,RESET_PHASE+PHASE_END,0,1,0x2)
+		else
+			c:SetFlagEffectLabel(210400025,bit.bor(c:GetFlagEffectLabel(210400025),0x2))
+		end
 	end
 end

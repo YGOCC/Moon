@@ -20,7 +20,7 @@ function c210400023.initial_effect(c)
 	c:RegisterEffect(sl)
 end
 function c210400023.filter(c,e,tp)
-	return c:IsSetCard(0x785e) and c:GetCode()~=210400023 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x285b) and c:GetCode()~=210400023 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c210400023.con1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -41,10 +41,10 @@ function c210400023.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c210400023.op1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	Duel.SendtoGrave(c,REASON_EFFECT)
+	Duel.SendtoGrave(c,REASON_EFFECT+REASON_RETURN)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()<2 or not Duel.IsPlayerAffectedByEffect(tp,210400023) then
-		local tc=g:GetFirst()
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)		local tc=g:GetFirst()
 		local ct=0
 		while tc do
 			if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then

@@ -1,4 +1,4 @@
---created & coded by Lyris, art by ryanorosco of DeviantArt
+--created & coded by Lyris, art by ryanorosco of deviantART
 --剣主二サン
 function c210400067.initial_effect(c)
 	local e0=Effect.CreateEffect(c)

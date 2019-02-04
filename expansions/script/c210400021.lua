@@ -14,6 +14,11 @@ function c210400021.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	c:RegisterEffect(e2)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e0:SetValue(c210400021.indes)
+	c:RegisterEffect(e0)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_REMOVE)
@@ -26,7 +31,7 @@ function c210400021.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c210400021.cfilter(c)
-	return c:IsFaceup() and c:IsLevelAbove(8)
+	return c:IsFaceup() and c:GetLevel()==4
 end
 function c210400021.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c210400021.cfilter,1,nil)
@@ -46,13 +51,17 @@ function c210400021.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1ff0000)
 		e1:SetValue(8)
 		c:RegisterEffect(e1)
+		Duel.SpecialSummonComplete()
 	elseif Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 		Duel.SendtoGrave(c,REASON_RULE)
 	end
 end
+function c210400021.indes(e,c)
+	return Card.IsLevel and not c:IsLevel(e:GetHandler():GetLevel()) or c:GetLevel()~=e:GetHandler():GetLevel()
+end
 function c210400021.filter(c)
-	return c:IsSetCard(0x785e) and (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsAbleToHand()
+	return c:IsSetCard(0x285b) and (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsAbleToHand()
 end
 function c210400021.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -63,7 +72,7 @@ function c210400021.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c210400021.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.SendtoGrave(c,REASON_EFFECT)==0 or not c:IsLocation(LOCATION_GRAVE) then return end
+	if not c:IsRelateToEffect(e) or Duel.SendtoGrave(c,REASON_EFFECT+REASON_RETURN)==0 or not c:IsLocation(LOCATION_GRAVE) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c210400021.filter,tp,LOCATION_REMOVED+LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
