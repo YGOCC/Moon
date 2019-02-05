@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://static3.bigstockphoto.com/thumbs/6/5/1/large1500/156160115.jpg
 --S・VINEの姫オサ
 c210400032.spt_other_space=210400097
 function c210400032.initial_effect(c)

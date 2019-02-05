@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://static3.bigstockphoto.com/thumbs/6/5/1/large1500/156160115.jpg
 --S・VINEの姫オサ(アナザー宙)
 function c210400097.initial_effect(c)
 	c:EnableReviveLimit()

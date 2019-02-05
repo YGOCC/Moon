@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at https://st2.depositphotos.com/1007989/5894/i/950/depositphotos_58949825-stock-photo-kids-stargazing-through-telescope.jpg
 --「S・VINE」スターゲイザー
 function c210400035.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at https://previews.123rf.com/images/indomercy/indomercy1411/indomercy141100022/33343277-astronaut.jpg
 --「S・VINE」シーカー
 function c210400023.initial_effect(c)
 	local ss=Effect.CreateEffect(c)
