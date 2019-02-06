@@ -43,6 +43,9 @@ function c210400060.spop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(1)
 	e1:SetReset(RESET_PHASE+PHASE_END,2)
 	c:RegisterEffect(e1)
+	local e0=e1:Clone()
+	e0:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	c:RegisterEffect(e2)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
@@ -52,6 +55,12 @@ function c210400060.spop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetReset(RESET_PHASE+PHASE_END,2)
 	Duel.RegisterEffect(e2,tp)
 end
+function c210400060.confilter(c)
+	return aux.IsMaterialListCode(c,89943723)
+		and (not c:IsPreviousLocation(LOCATION_MZONE+LOCATION_REMOVED) or c:IsPreviousPosition(POS_FACEUP)) and c:IsLocation(LOCATION_EXTRA)
+end
 function c210400060.regop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.RegisterFlagEffect(tp,210400060,RESET_PHASE+PHASE_END,0,1)
+	if eg:IsExists(c210400060.confilter,1,nil) then
+		Duel.RegisterFlagEffect(tp,210400060,RESET_PHASE+PHASE_END,0,1)
+	end
 end

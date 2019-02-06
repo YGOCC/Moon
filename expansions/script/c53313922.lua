@@ -1,7 +1,7 @@
 --Mysterious Star Dragon
 function c53313922.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,nil,7,2,nil,nil,99)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xcf6),7,2,nil,nil,99)
 	c:EnableReviveLimit()
 	--If this card is Xyz Summoned: You can target cards on the field equal to the number of materials attached to this card, -1; destroy them.
 	local e2=Effect.CreateEffect(c)

@@ -72,7 +72,7 @@ function c210400085.posop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetOperatedGroup()
 	local mg=Duel.GetMatchingGroup(c210400085.afilter,tp,LOCATION_GRAVE,0,nil)
 	local ec=nil
-	if mg:GetCount()>=sg:GetCount() and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(210400085,7)) then
+	if mg:GetCount()>=sg:GetCount() and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(210400085,0)) then
 		Duel.BreakEffect()
 		for c in aux.Next(dg) do
 			local tc=mg:Select(tp,1,1,ec)

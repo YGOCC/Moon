@@ -37,8 +37,11 @@ function c210400057.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
+function c210400057.filter(c)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsSetCard(0x1093)
+end
 function c210400057.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(Card.IsSetCard,1,nil,0x1093)
+	return eg:IsExists(c210400057.filter,1,nil)
 end
 function c210400057.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1093) and c:IsAbleToHand()

@@ -69,7 +69,7 @@ function c210400086.matop(e,tp,eg,ep,ev,re,r,rp)
 	local sc=Duel.GetFirstTarget()
 	if not sc:IsRelateToEffect(e) or sc:IsControler(1-tp) then return end
 	local g1=Duel.GetOverlayGroup(tp,0,1)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(210400086,8))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(210400086,0))
 	local mg2=g1:Select(tp,1,1,nil)
 	local oc=mg2:GetFirst():GetOverlayTarget()
 	Duel.Overlay(sc,mg2)
