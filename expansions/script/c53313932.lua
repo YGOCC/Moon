@@ -27,7 +27,7 @@ function c53313932.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(2,53323932+EFFECT_COUNT_CODE_DUEL)
+	e2:SetCountLimit(1,53323932)
 	e2:SetLabel(0)
 	e2:SetCost(c53313932.spcost)
 	e2:SetTarget(c53313932.sptg)
@@ -39,10 +39,10 @@ function c53313932.thfilter(c)
 	return c:IsSetCard(0xcf6) and c:IsAbleToHand() and (c:IsLocation(LOCATION_GRAVE) or (c:IsLocation(LOCATION_EXTRA+LOCATION_REMOVED) and c:IsFaceup()))
 end
 function c53313932.rfilter(c,e,tp)
-	return Duel.IsExistingMatchingCard(c53313932.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,e:GetHandler(),e,tp,c:GetAttribute()) and Duel.GetMZoneCount(tp,c)>0
+	return Duel.IsExistingMatchingCard(c53313932.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,e:GetHandler(),e,tp,c:GetAttribute(),c:GetCode()) and Duel.GetMZoneCount(tp,c)>0
 end
-function c53313932.spfilter(c,e,tp,att)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsAttribute(att) and c:IsSetCard(0xcf6) and not c:IsCode(53313932)
+function c53313932.spfilter(c,e,tp,att,code)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsAttribute(att) and c:IsSetCard(0xcf6) and not c:IsCode(53313932) and not c:IsCode(code)
 end
 --add to hand
 function c53313932.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -120,28 +120,12 @@ function c53313932.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function c53313932.spop(e,tp,eg,ep,ev,re,r,rp)
-	local opt=0
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsType(TYPE_LINK) then
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.IsExistingMatchingCard(c53313932.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,2,e:GetHandler(),e,tp,tc:GetAttribute()) then
-			if Duel.SelectYesNo(tp,aux.Stringid(53313932,2)) then
-				opt=1
-			end
-		end
-	end
-	if opt==0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c53313932.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,e:GetHandler(),e,tp,tc:GetAttribute())
-		if g:GetCount()>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		end
-	else
-		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c53313932.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,e:GetHandler(),e,tp,tc:GetAttribute())
-		if g:GetCount()>1 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=g:Select(tp,2,2,nil)
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-		end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c53313932.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,e:GetHandler(),e,tp,tc:GetAttribute(),tc:GetCode())
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

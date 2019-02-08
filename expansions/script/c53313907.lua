@@ -18,6 +18,7 @@ function c53313907.initial_effect(c)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e2:SetCost(c53313907.thcost)
 	e2:SetTarget(c53313907.thtg)
 	e2:SetOperation(c53313907.thop)
 	c:RegisterEffect(e2)
@@ -42,6 +43,9 @@ function c53313907.filter(c)
 end
 function c53313907.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xcf6) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+end
+function c53313907.thcostfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf6) and c:IsAbleToRemoveAsCost()
 end
 function c53313907.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf6) and c:IsAbleToHand() and not c:IsCode(53313907)
@@ -89,6 +93,14 @@ function c53313907.repop(e,tp,eg,ep,ev,re,r,rp)
 	if tc2 then Duel.ConfirmCards(tp,tc2) end
 end
 --
+function c53313907.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c53313907.thcostfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c53313907.thcostfilter,tp,LOCATION_HAND,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
+	end
+end
 function c53313907.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c53313907.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_EXTRA)
