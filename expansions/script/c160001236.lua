@@ -1,7 +1,7 @@
 --Electrical Socket
 function c160001236.initial_effect(c)
   --link summon
-	aux.AddLinkProcedure(c,c160001236.mfilter,2)
+	aux.AddLinkProcedure(c,c160001236.mfilter,3)
 	c:EnableReviveLimit()  
 end
 function c160001236.mfilter(c)
