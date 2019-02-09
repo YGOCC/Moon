@@ -1,6 +1,6 @@
 --Painting the Power Portait
 function c160001983.initial_effect(c)
- --Activate (not Fully implimented yet)
+ --Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160001983,0))
 	e1:SetCategory(CATEGORY_DESTROY)
@@ -24,14 +24,13 @@ function c160001983.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c160001983.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xc50) and not c:IsType(TYPE_EFFECT) and c:IsAbleToRemoveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0xc50) and c:IsType(TYPE_NORMAL) and c:IsAbleToRemoveAsCost()
 end
-
-
 function c160001983.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c160001983.cfilter,tp,LOCATION_EXTRA,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c160001983.cfilter,tp,LOCATION_EXTRA,0,2,2,nil)
+	e:SetLabelObject(g:Filter(Card.IsSetCard,nil,0xc50):GetFirst())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c160001983.filter(c)
@@ -46,12 +45,23 @@ function c160001983.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c160001983.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.Destroy(tc,REASON_EFFECT)
+	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 and e:GetLabelObject()~=nil then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CANNOT_TRIGGER)
+		e1:SetReset(RESET_EVENT+0x17a0000)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_CANNOT_ACTIVATE)
+		e2:SetReset(RESET_EVENT+0x17a0000)
+		e2:SetValue(1)
+		tc:RegisterEffect(e2)
+	end
 end
 
 function c160001983.thfilter(c)
-	return c:IsSetCard(0xc50)  and c:IsType(TYPE_MONSTER)   and c:IsAbleToHand()
+	return c:IsSetCard(0xc50)  and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c160001983.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	   if chk==0 then return not e:GetHandler():IsLocation(LOCATION_DECK)
