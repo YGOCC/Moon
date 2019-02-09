@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from "Moon Mirror Shield"
 --インライトメント・ムーン盾
 function c210400009.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

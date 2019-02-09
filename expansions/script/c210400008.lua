@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from "Guardian Elma" & at https://us.123rf.com/450wm/iimages/iimages1603/iimages160300284/53485338-stock-vector-forest-scene-with-trail-in-the-woods-illustration.jpg?ver=6
 --インライトメント・エルマ武器庫
 function c210400008.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

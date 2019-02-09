@@ -38,10 +38,10 @@ function c210400057.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c210400057.filter(c)
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsSetCard(0x1093)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1093)
 end
 function c210400057.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c210400057.filter,1,nil)
+	return eg:IsExists(c210400057.filter,1,nil) and (not eg:IsContains(e:GetHandler()) or not e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD))
 end
 function c210400057.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1093) and c:IsAbleToHand()
