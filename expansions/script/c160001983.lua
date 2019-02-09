@@ -27,9 +27,9 @@ function c160001983.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsAbleToRemoveAsCost()
 end
 function c160001983.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c160001983.cfilter,tp,LOCATION_EXTRA,0,2,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c160001983.cfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c160001983.cfilter,tp,LOCATION_EXTRA,0,2,2,nil)
+	local g=Duel.SelectMatchingCard(tp,c160001983.cfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,2,2,nil)
 	e:SetLabelObject(g:Filter(Card.IsSetCard,nil,0xc50):GetFirst())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
