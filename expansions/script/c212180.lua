@@ -12,8 +12,8 @@ function c212180.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetValue(c212180.atkval)
 	c:RegisterEffect(e2)
 	--spsummon
@@ -32,8 +32,11 @@ function c212180.spcon(e,c)
 	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
+function c212180.atkfilter(c)
+	return c:IsFaceup() and c:IsRace(RACE_SPELLCASTER)
+end
 function c212180.atkval(e,c)
-	return Duel.GetMatchingGroupCount(Card.IsRace,0,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,nil,RACE_SPELLCASTER)*100
+	return Duel.GetMatchingGroupCount(c212180.atkfilter,c:GetControler(),LOCATION_MZONE+LOCATION_GRAVE,0,nil)*200
 end
 function c212180.spfilter(c,e,tp)
 	return c:IsRace(RACE_SPELLCASTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
