@@ -12,6 +12,10 @@ EFFECT_CANNOT_BE_POLARITY_MATERIAL		=766
 EFFECT_DIMENSION_NUMBER					=500
 EFFECT_CANNOT_BE_SPACE_MATERIAL			=501
 EFFECT_CORONA_DRAW_COST					=550
+EFFECT_DEFAULT_CALL						=31993443
+EFFECT_EXTRA_GEMINI						=86433590
+EFFECT_AVAILABLE_LMULTIPLE				=86433612
+EFFECT_MULTIPLE_LMATERIAL				=86433613
 TYPE_EVOLUTE							=0x100000000
 TYPE_PANDEMONIUM						=0x200000000
 TYPE_POLARITY							=0x400000000
@@ -50,10 +54,10 @@ end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw = 
+	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, registereff = 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
 	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, 
-	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw
+	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.RegisterEffect
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -293,6 +297,19 @@ Duel.Draw=function(tp,ct,r)
 		Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,nil,r,tp,tp,99)
 	end
 	return duel_draw(tp,newct,r) + (ct-newct)
+end
+Card.RegisterEffect=function(c,e,forced)
+	if c:IsStatus(STATUS_INITIALIZING) and not e then return end
+	registereff(c,e,forced)
+	local prop=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE
+	if e:IsHasProperty(EFFECT_FLAG_UNCOPYABLE) then prop=prop|EFFECT_FLAG_UNCOPYABLE end
+	local ex=Effect.CreateEffect(c)
+	ex:SetType(EFFECT_TYPE_SINGLE)
+	ex:SetProperty(prop)
+	ex:SetCode(EFFECT_DEFAULT_CALL)
+	ex:SetLabelObject(e)
+	ex:SetLabel(c:GetOriginalCode())
+	registereff(c,ex,forced)
 end
 
 --Custom Functions
@@ -1718,4 +1735,76 @@ function Auxiliary.PerformFusionSummon(f,e,tp,mg1,gc)
 		end
 		tc:CompleteProcedure()
 	end
+end
+
+---Effect Manipulation Auxiliaries---
+--Effect Conditions
+function Auxiliary.ModifyCon(con,...)
+	local cons={...}
+	return function (e,tp,eg,ep,ev,re,r,rp)
+		local check=0
+		for _,v in ipairs(cons) do
+			if not v(e,tp,eg,ep,ev,re,r,rp) then
+				check=1
+			end
+		end
+		return (con==nil or con(e,tp,eg,ep,ev,re,r,rp)) and check==0
+	end
+end
+function Auxiliary.PreserveConQuickE(con,ce)
+	return function (e,tp,eg,ep,ev,re,r,rp)
+		return (con==nil or con(e,tp,eg,ep,ev,re,r,rp)) and Duel.GetTurnPlayer()~=tp and ce~=nil
+	end
+end
+function Auxiliary.ResetEffectFunc(effect,functype,func)
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		if functype=='condition' then
+			effect:SetCondition(func)
+			e:Reset()
+		elseif functype=='cost' then
+			effect:SetCost(func)
+			e:Reset()
+		elseif functype=='target' then
+			effect:SetTarget(func)
+			e:Reset()
+		elseif functype=='operation' then
+			effect:SetOperation(func)
+			e:Reset()
+		else
+			e:Reset()
+		end
+		e:Reset()
+	end
+end
+--Custom Link Procedures Auxiliaries
+Auxiliary.LCheckGoal=function(sg,tp,lc,gf)
+	if lc:IsHasEffect(EFFECT_AVAILABLE_LMULTIPLE) then
+		return sg:CheckWithSumEqual(Auxiliary.GetMultipleLinkCount,lc:GetLink(),#sg,#sg,lc)
+			and Duel.GetLocationCountFromEx(tp,tp,sg,lc)>0 and (not gf or gf(sg))
+			and not sg:IsExists(Auxiliary.LUncompatibilityFilter,1,nil,sg,lc)
+	else
+		return sg:CheckWithSumEqual(Auxiliary.GetLinkCount,lc:GetLink(),#sg,#sg)
+			and Duel.GetLocationCountFromEx(tp,tp,sg,lc)>0 and (not gf or gf(sg))
+			and not sg:IsExists(Auxiliary.LUncompatibilityFilter,1,nil,sg,lc)
+	end
+end
+function Auxiliary.GetMultipleLinkCount(c,lc)
+	if c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL) and c:GetFlagEffect(86433612)>0 and lc:GetFlagEffect(86433612)>0 and c:GetFlagEffectLabel(86433612)==lc:GetFlagEffectLabel(86433612) then
+		local av_val={}
+		local lmat={c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL)}
+		for _,ec in ipairs(lmat) do
+			table.insert(av_val,ec:GetValue())
+		end
+		for maxval=1,10 do
+			local val=av_val[maxval]
+			av_val[maxval]=nil
+			if c:IsType(TYPE_LINK) and c:GetLink()>1 then
+				return 1+0x10000*val and 1+0x10000*c:GetLink()
+			else
+				return 1+0x10000*val
+			end
+		end
+	elseif c:IsType(TYPE_LINK) and c:GetLink()>1 then
+		return 1+0x10000*c:GetLink()
+	else return 1 end
 end
