@@ -42,7 +42,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
 function cid.filter(c)
-	return c:IsCode(210400006) and c:IsAbleToHand()
+	return c:IsCode(CARD_INLIGHTENED_PSYCHIC_HELMET) and c:IsAbleToHand()
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil) end

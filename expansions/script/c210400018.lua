@@ -98,7 +98,7 @@ function cid.fusop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c)
-	return c:IsFaceup() and c:IsCode(210400006)
+	return c:IsFaceup() and c:IsCode(CARD_INLIGHTENED_PSYCHIC_HELMET)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1 and not Duel.CheckPhaseActivity() and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)

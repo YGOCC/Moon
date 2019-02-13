@@ -27,7 +27,7 @@ function cid.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_ADD_FUSION_CODE)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetValue(70095154)
+	e2:SetValue(CARD_CYBER_DRAGON)
 	c:RegisterEffect(e2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
@@ -40,21 +40,21 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.tgfilter(c,e,tp,n)
-	return c:IsFaceup() and c:IsCode(70095154) and c:IsCanBeFusionMaterial()
+	return c:IsFaceup() and c:IsCode(CARD_CYBER_DRAGON) and c:IsCanBeFusionMaterial()
 		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,n)
 		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function cid.spfilter(c,e,tp,tc,n)
-	if not (aux.IsMaterialListCode(c,70095154) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)) then return false end
+	if not (aux.IsMaterialListCode(c,CARD_CYBER_DRAGON) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)) then return false end
 	local g=Group.FromCards(tc)
 	for i=2,n do
 		Duel.DisableActionCheck(true)
-		local tk=Duel.CreateToken(tp,70095154)
+		local tk=Duel.CreateToken(tp,CARD_CYBER_DRAGON)
 		Duel.DisableActionCheck(false)
 		g:AddCard(tk)
 	end
 	aux.FCheckAdditional=function(tp,sg,fc)
-		return sg:GetCount()==n or fc:IsCode(70095154)
+		return sg:GetCount()==n or fc:IsCode(CARD_CYBER_DRAGON)
 	end
 	local res=c:CheckFusionMaterial(g,nil,tp)
 	aux.FCheckAdditional=nil
@@ -84,7 +84,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		if sc then
 			local mg=Group.FromCards(tc)
 			for i=2,ct do
-				local ck=Duel.CreateToken(tp,70095154)
+				local ck=Duel.CreateToken(tp,CARD_CYBER_DRAGON)
 				mg:AddCard(ck)
 			end
 			sc:SetMaterial(mg)
