@@ -1,6 +1,14 @@
 --created & coded by Lyris, art from "Guardian Elma" & at https://us.123rf.com/450wm/iimages/iimages1603/iimages160300284/53485338-stock-vector-forest-scene-with-trail-in-the-woods-illustration.jpg?ver=6
 --インライトメント・エルマ武器庫
-function c210400008.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
@@ -13,21 +21,21 @@ function c210400008.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_BATTLED)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,210400008)
+	e2:SetCountLimit(1,id)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCategory(CATEGORY_DESTROY)
-	e2:SetCondition(c210400008.descon)
-	e2:SetTarget(c210400008.destg)
-	e2:SetOperation(c210400008.desop)
+	e2:SetCondition(cid.descon)
+	e2:SetTarget(cid.destg)
+	e2:SetOperation(cid.desop)
 	c:RegisterEffect(e2)
 end
-function c210400008.descon(e,tp,eg,ep,ev,re,r,rp)
+function cid.descon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
 	if d and d:IsControler(tp) then a,d=d,a end
 	return a:IsSetCard(0xda6) and a~=e:GetHandler()
 end
-function c210400008.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local dir=Duel.GetAttackTarget()==nil
 	if chkc then
 		if dir then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp)
@@ -41,7 +49,7 @@ function c210400008.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
-function c210400008.desop(e,tp,eg,ep,ev,re,r,rp)
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsControler(1-tp) then
 		Duel.Destroy(tc,REASON_EFFECT)

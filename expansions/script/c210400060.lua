@@ -1,40 +1,48 @@
 --created & coded by Lyris
 --ネオスペース・バリアー
-function c210400060.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetHintTiming(TIMINGS_CHECK_MONSTER_E)
-	e1:SetCondition(c210400060.spcon)
-	e1:SetCost(c210400060.cost)
-	e1:SetTarget(c210400060.sptg)
-	e1:SetOperation(c210400060.spop)
+	e1:SetCondition(cid.spcon)
+	e1:SetCost(cid.cost)
+	e1:SetTarget(cid.sptg)
+	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
-	if not c210400060.global_check then
-		c210400060.global_check=true
+	if not cid.global_check then
+		cid.global_check=true
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e2:SetCode(EVENT_TO_DECK)
-		e2:SetOperation(c210400060.regop)
+		e2:SetOperation(cid.regop)
 		Duel.RegisterEffect(e2,0)
 	end
 end
-function c210400060.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,210400060)~=0
+function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetFlagEffect(tp,id)~=0
 end
-function c210400060.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return not c:IsPublic() and c:GetFlagEffect(210400060)==0 end
-	c:RegisterFlagEffect(210400060,RESET_CHAIN,0,1)
+	if chk==0 then return not c:IsPublic() and c:GetFlagEffect(id)==0 end
+	c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 end
-function c210400060.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c210400060.spop(e,tp,eg,ep,ev,re,r,rp)
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 then return end
 	local e1=Effect.CreateEffect(c)
@@ -55,12 +63,12 @@ function c210400060.spop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetReset(RESET_PHASE+PHASE_END,2)
 	Duel.RegisterEffect(e2,tp)
 end
-function c210400060.confilter(c)
+function cid.confilter(c)
 	return aux.IsMaterialListCode(c,89943723)
 		and (not c:IsPreviousLocation(LOCATION_MZONE+LOCATION_REMOVED) or c:IsPreviousPosition(POS_FACEUP)) and c:IsLocation(LOCATION_EXTRA)
 end
-function c210400060.regop(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(c210400060.confilter,1,nil) then
-		Duel.RegisterFlagEffect(tp,210400060,RESET_PHASE+PHASE_END,0,1)
+function cid.regop(e,tp,eg,ep,ev,re,r,rp)
+	if eg:IsExists(cid.confilter,1,nil) then
+		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 	end
 end

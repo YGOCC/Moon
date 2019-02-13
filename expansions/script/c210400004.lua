@@ -1,6 +1,14 @@
 --Original created by RandyPandy of FanFiction.net, coded by Lyris, art at http://stuffpoint.com/dragons/image/126028-dragons-fast-black-dragon.jpg
 --アクセル・バースト・ドラゴン
-function c210400004.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	local e1=Effect.CreateEffect(c)
@@ -8,8 +16,8 @@ function c210400004.initial_effect(c)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetCondition(function(e) return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO) end)
-	e1:SetTarget(c210400004.sptg)
-	e1:SetOperation(c210400004.spop)
+	e1:SetTarget(cid.sptg)
+	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -17,38 +25,38 @@ function c210400004.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetTarget(c210400004.sttg)
-	e2:SetOperation(c210400004.stop)
+	e2:SetTarget(cid.sttg)
+	e2:SetOperation(cid.stop)
 	c:RegisterEffect(e2)
 end
-function c210400004.filter(c,e,tp)
+function cid.filter(c,e,tp)
 	return c:IsType(TYPE_TUNER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
 end
-function c210400004.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c210400004.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function c210400004.spop(e,tp,eg,ep,ev,re,r,rp)
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c210400004.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c210400004.spfilter(c,e,tp)
+function cid.spfilter(c,e,tp)
 	return c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER and c:GetOwner()==tp and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
 end
-function c210400004.sttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE+LOCATION_PZONE) and c210400004.spfilter(chkc,e,tp) end
+function cid.sttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_SZONE+LOCATION_PZONE) and cid.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c210400004.spfilter,tp,LOCATION_SZONE+LOCATION_PZONE,LOCATION_SZONE+LOCATION_PZONE,1,nil,e,tp) end
+		and Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_SZONE+LOCATION_PZONE,LOCATION_SZONE+LOCATION_PZONE,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c210400004.spfilter,tp,LOCATION_SZONE+LOCATION_PZONE,LOCATION_SZONE+LOCATION_PZONE,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_SZONE+LOCATION_PZONE,LOCATION_SZONE+LOCATION_PZONE,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function c210400004.stop(e,tp,eg,ep,ev,re,r,rp)
+function cid.stop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)

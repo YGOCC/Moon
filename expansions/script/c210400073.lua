@@ -1,39 +1,47 @@
 --created & coded by Lyris, art at http://i.ytimg.com/vi/2tvp5emvTzc/0.jpg
 --剣主トレーニング
-function c210400073.initial_effect(c)
-	c:SetUniqueOnField(1,0,210400073)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
+	c:SetUniqueOnField(1,0,id)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_TOHAND)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
-	e0:SetOperation(c210400073.activate)
+	e0:SetOperation(cid.activate)
 	c:RegisterEffect(e0)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_BE_BATTLE_TARGET)
 	e4:SetRange(LOCATION_SZONE)
-	e4:SetCondition(c210400073.discon)
-	e4:SetOperation(c210400073.disop)
+	e4:SetCondition(cid.discon)
+	e4:SetOperation(cid.disop)
 	c:RegisterEffect(e4)
 end
-function c210400073.filter(c)
+function cid.filter(c)
 	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0xbb2) or c:IsSetCard(0xbb3)) and c:IsAbleToHand()
 end
-function c210400073.activate(e,tp,eg,ep,ev,re,r,rp)
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c210400073.filter),tp,LOCATION_GRAVE,0,nil)
-	if g:GetCount()>0 and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(210400073,0)) then
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.filter),tp,LOCATION_GRAVE,0,nil)
+	if g:GetCount()>0 and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
 	end
 end
-function c210400073.discon(e,tp,eg,ep,ev,re,r,rp)
+function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=Duel.GetAttacker()
 	return ec and ec:GetControler()==tp and (ec:IsSetCard(0xbb2) or ec:IsSetCard(0xbb3)) and ec:GetBattleTarget()
 end
-function c210400073.disop(e,tp,eg,ep,ev,re,r,rp)
+function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)

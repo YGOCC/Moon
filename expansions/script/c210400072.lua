@@ -1,13 +1,21 @@
 --created & coded by Lyris, art from "Solemn Strike"
 --剣主御注意
-function c210400072.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e1:SetCountLimit(1,210400072+EFFECT_COUNT_CODE_OATH)
-	e1:SetCondition(c210400072.condition)
-	e1:SetOperation(c210400072.activate)
+	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	e1:SetCondition(cid.condition)
+	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -15,17 +23,17 @@ function c210400072.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCategory(CATEGORY_POSITION)
 	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(c210400072.target)
-	e2:SetOperation(c210400072.operation)
+	e2:SetTarget(cid.target)
+	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
 end
-function c210400072.condition(e,tp,eg,ep,ev,re,r,rp)
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local at=Duel.GetAttackTarget()
 	return at and ((a:IsControler(tp) and a:IsSetCard(0xbb2) and aux.nzdef(a:GetBattleTarget()))
 		or (at:IsControler(tp) and at:IsFaceup() and at:IsSetCard(0xbb2) and aux.nzdef(at:GetBattleTarget())))
 end
-function c210400072.activate(e,tp,eg,ep,ev,re,r,rp)
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local at=Duel.GetAttackTarget()
 	if a:IsControler(1-tp) then a,at=at,a end
@@ -37,13 +45,13 @@ function c210400072.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(at:GetDefense())
 	a:RegisterEffect(e1)
 end
-function c210400072.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local d=Duel.GetAttackTarget()
 	if chk==0 then return d:IsAttackPos() and d:IsControler(tp) and d:IsCanChangePosition() and d:IsSetCard(0xbb2) end
 	Duel.SetTargetCard(d)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,d,1,0,0)
 end
-function c210400072.operation(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsAttackPos() then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)

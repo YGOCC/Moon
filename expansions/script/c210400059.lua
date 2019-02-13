@@ -1,6 +1,14 @@
 --created & coded by Lyris
 --サイバー・ドラゴン・ティマイオス
-function c210400059.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local f1,f2,f3=Card.IsCanBeFusionMaterial,Duel.GetMatchingGroup,Duel.GetFusionMaterial
 	Card.IsCanBeFusionMaterial=function(tc,fc)
 		return f1(tc,fc) or (not tc:IsHasEffect(EFFECT_CANNOT_BE_FUSION_MATERIAL) and tc:GetOriginalCode()==c:GetOriginalCode())
@@ -26,17 +34,17 @@ function c210400059.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,210400059+EFFECT_COUNT_CODE_OATH)
-	e1:SetTarget(c210400059.target)
-	e1:SetOperation(c210400059.activate)
+	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
 end
-function c210400059.tgfilter(c,e,tp,n)
+function cid.tgfilter(c,e,tp,n)
 	return c:IsFaceup() and c:IsCode(70095154) and c:IsCanBeFusionMaterial()
-		and Duel.IsExistingMatchingCard(c210400059.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,n)
+		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,n)
 		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
-function c210400059.spfilter(c,e,tp,tc,n)
+function cid.spfilter(c,e,tp,tc,n)
 	if not (aux.IsMaterialListCode(c,70095154) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)) then return false end
 	local g=Group.FromCards(tc)
 	for i=2,n do
@@ -52,26 +60,26 @@ function c210400059.spfilter(c,e,tp,tc,n)
 	aux.FCheckAdditional=nil
 	return res
 end
-function c210400059.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local t={}
 	for i=2,6 do
-		if Duel.IsExistingTarget(c210400059.tgfilter,tp,LOCATION_MZONE,0,1,nil,e,tp,i) then table.insert(t,i) end
+		if Duel.IsExistingTarget(cid.tgfilter,tp,LOCATION_MZONE,0,1,nil,e,tp,i) then table.insert(t,i) end
 	end
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c210400059.tgfilter(chkc,e,tp,e:GetLabel()) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.tgfilter(chkc,e,tp,e:GetLabel()) end
 	if chk==0 then return #t>0 end
 	local ct=Duel.AnnounceNumber(tp,table.unpack(t))
 	e:SetLabel(ct)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c210400059.tgfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp,ct)
+	Duel.SelectTarget(tp,cid.tgfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp,ct)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function c210400059.activate(e,tp,eg,ep,ev,re,r,rp)
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 then return end
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsCanBeFusionMaterial() and not tc:IsImmuneToEffect(e) then
 		local ct=e:GetLabel()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,c210400059.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,ct)
+		local sg=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,ct)
 		local sc=sg:GetFirst()
 		if sc then
 			local mg=Group.FromCards(tc)
@@ -93,7 +101,7 @@ function c210400059.activate(e,tp,eg,ep,ev,re,r,rp)
 					e2:SetLabel(sc:GetBaseAttack())
 					e2:SetLabelObject(sc)
 					e2:SetReset(RESET_PHASE+PHASE_END)
-					e2:SetOperation(c210400059.damop)
+					e2:SetOperation(cid.damop)
 					Duel.RegisterEffect(e2,tp)
 				end
 				local e0=Effect.CreateEffect(e:GetHandler())
@@ -102,7 +110,7 @@ function c210400059.activate(e,tp,eg,ep,ev,re,r,rp)
 				e0:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 				e0:SetReset(RESET_PHASE+PHASE_END)
 				e0:SetTargetRange(1,0)
-				e0:SetTarget(c210400059.splimit)
+				e0:SetTarget(cid.splimit)
 				Duel.RegisterEffect(e0,tp)
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
@@ -114,10 +122,10 @@ function c210400059.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c210400059.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+function cid.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:GetRace()~=RACE_MACHINE
 end
-function c210400059.damop(e,tp,eg,ep,ev,re,r,rp)
+function cid.damop(e,tp,eg,ep,ev,re,r,rp)
 	local dam,ec=e:GetLabel(),e:GetLabelObject()
 	local atk=ec:GetAttack()
 	if atk>dam and atk>=ec:GetBaseAttack()*2 then

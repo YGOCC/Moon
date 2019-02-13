@@ -1,14 +1,22 @@
 --created & coded by Lyris, art from "Hero Signal" and "Destiny Signal"
 --シグナル・インターセプト
-function c210400003.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_TODECK)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
-	e1:SetCondition(c210400003.condition)
-	e1:SetTarget(c210400003.target)
-	e1:SetOperation(c210400003.activate)
+	e1:SetCondition(cid.condition)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(1159)
@@ -16,12 +24,12 @@ function c210400003.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(c210400003.setcon)
-	e2:SetTarget(c210400003.settg)
-	e2:SetOperation(c210400003.setop)
+	e2:SetCondition(cid.setcon)
+	e2:SetTarget(cid.settg)
+	e2:SetOperation(cid.setop)
 	c:RegisterEffect(e2)
 end
-function c210400003.condition(e,tp,eg,ep,ev,re,r,rp)
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetCurrentChain()<=1 or rp==tp then return false end
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
@@ -30,7 +38,7 @@ function c210400003.condition(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c210400003.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local ng=Group.CreateGroup()
 	local dg=Group.CreateGroup()
@@ -48,7 +56,7 @@ function c210400003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,ng,ng:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,dg,dg:GetCount(),0,0)
 end
-function c210400003.activate(e,tp,eg,ep,ev,re,r,rp)
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Group.CreateGroup()
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
@@ -62,17 +70,17 @@ function c210400003.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SendtoDeck(dg,nil,1,REASON_EFFECT)
 end
-function c210400003.cfilter(c,tp)
+function cid.cfilter(c,tp)
 	return c:GetSummonLocation()==LOCATION_DECK and c:GetSummonPlayer()==1-tp
 end
-function c210400003.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c210400003.cfilter,1,nil,tp)
+function cid.setcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(cid.cfilter,1,nil,tp)
 end
-function c210400003.settg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsSSetable() end
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
 end
-function c210400003.setop(e,tp,eg,ep,ev,re,r,rp)
+function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsSSetable() then
 		Duel.SSet(tp,c)

@@ -1,6 +1,14 @@
 --created & coded by Lyris, art from Assassin's Creed: Memories' Genghis Khan
 --ＣＸ復剣主王テムジン
-function c210400085.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,5,3)
 	local e0=Effect.CreateEffect(c)
@@ -12,15 +20,15 @@ function c210400085.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetValue(c210400085.val)
+	e1:SetValue(cid.val)
 	c:RegisterEffect(e1)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetTarget(c210400085.postg)
-	e3:SetOperation(c210400085.posop)
+	e3:SetTarget(cid.postg)
+	e3:SetOperation(cid.posop)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -28,40 +36,40 @@ function c210400085.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
-	e4:SetCondition(c210400085.poscon)
-	e4:SetCost(c210400085.cost)
-	e4:SetTarget(c210400085.target)
-	e4:SetOperation(c210400085.operation)
+	e4:SetCondition(cid.poscon)
+	e4:SetCost(cid.cost)
+	e4:SetTarget(cid.target)
+	e4:SetOperation(cid.operation)
 	c:RegisterEffect(e4)
 end
-function c210400085.val(e,c)
-	return Duel.GetMatchingGroupCount(c210400085.rfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*100+c:GetOverlayCount()*200
+function cid.val(e,c)
+	return Duel.GetMatchingGroupCount(cid.rfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*100+c:GetOverlayCount()*200
 end
-function c210400085.rfilter(c)
+function cid.rfilter(c)
 	return c:IsSetCard(0xbb2) and c:IsType(TYPE_MONSTER)
 end
-function c210400085.filter(c,e,tp)
-	return c:IsType(TYPE_XYZ) and c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(210400085)
+function cid.filter(c,e,tp)
+	return c:IsType(TYPE_XYZ) and c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
 end
-function c210400085.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(c210400085.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	local ct=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ct>2 then ct=2 end
-	if Duel.IsPlayerAffectedByEffect(tp,210400085) then ct=1 end
+	if Duel.IsPlayerAffectedByEffect(tp,id) then ct=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c210400085.filter,tp,LOCATION_GRAVE,0,1,ct,nil,e,tp)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,0,1,ct,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,g:GetCount(),0,0)
 end
-function c210400085.afilter(c)
-	return c:IsSetCard(0xbb2) and c:IsType(TYPE_MONSTER) and not c:IsCode(210400085)
+function cid.afilter(c)
+	return c:IsSetCard(0xbb2) and c:IsType(TYPE_MONSTER) and not c:IsCode(id)
 end
-function c210400085.posop(e,tp,eg,ep,ev,re,r,rp)
+function cid.posop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if sg:GetCount()==0 or (sg:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,210400085)) then return end
+	if sg:GetCount()==0 or (sg:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,id)) then return end
 	if ft>=g:GetCount() then
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	else
@@ -70,9 +78,9 @@ function c210400085.posop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(sg2,0,tp,tp,false,false,POS_FACEUP)
 	end
 	local dg=Duel.GetOperatedGroup()
-	local mg=Duel.GetMatchingGroup(c210400085.afilter,tp,LOCATION_GRAVE,0,nil)
+	local mg=Duel.GetMatchingGroup(cid.afilter,tp,LOCATION_GRAVE,0,nil)
 	local ec=nil
-	if mg:GetCount()>=sg:GetCount() and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(210400085,0)) then
+	if mg:GetCount()>=sg:GetCount() and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then
 		Duel.BreakEffect()
 		for c in aux.Next(dg) do
 			local tc=mg:Select(tp,1,1,ec)
@@ -81,24 +89,24 @@ function c210400085.posop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c210400085.poscon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0xbb2) and eg:IsExists(c210400085.rfilter,1,e:GetHandler())
+function cid.poscon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0xbb2) and eg:IsExists(cid.rfilter,1,e:GetHandler())
 end
-function c210400085.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
-function c210400085.spfilter(c,e,tp)
-	return c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(210400085)
+function cid.spfilter(c,e,tp)
+	return c:IsSetCard(0xbb2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
 end
-function c210400085.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c210400085.spfilter(chkc) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(c210400085.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.spfilter(chkc) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c210400085.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function c210400085.operation(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)

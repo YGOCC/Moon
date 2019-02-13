@@ -1,14 +1,22 @@
 --created & coded by Lyris
 --インライトメント・金色ヘッドホン
-function c210400013.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(1109)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCost(c210400013.cost)
-	e1:SetTarget(c210400013.target)
-	e1:SetOperation(c210400013.operation)
+	e1:SetCost(cid.cost)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -23,55 +31,55 @@ function c210400013.initial_effect(c)
 	e3:SetCode(EVENT_BATTLED)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e3:SetCondition(c210400013.descon)
-	e3:SetTarget(c210400013.thtg)
-	e3:SetOperation(c210400013.thop)
+	e3:SetCondition(cid.descon)
+	e3:SetTarget(cid.thtg)
+	e3:SetOperation(cid.thop)
 	c:RegisterEffect(e3)
 end
-function c210400013.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsDiscardable() end
 	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
-function c210400013.filter(c)
+function cid.filter(c)
 	return c:IsCode(210400006) and c:IsAbleToHand()
 end
-function c210400013.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c210400013.filter,tp,LOCATION_DECK,0,1,nil) end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function c210400013.operation(e,tp,eg,ep,ev,re,r,rp,chk)
-	local tg=Duel.GetFirstMatchingCard(c210400013.filter,tp,LOCATION_DECK,0,nil)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp,chk)
+	local tg=Duel.GetFirstMatchingCard(cid.filter,tp,LOCATION_DECK,0,nil)
 	if tg then
 		Duel.SendtoHand(tg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tg)
 	end
 end
-function c210400013.descon(e,tp,eg,ep,ev,re,r,rp)
+function cid.descon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
 	if d and d:IsControler(tp) then a,d=d,a end
 	return a:IsSetCard(0xda6) and a~=e:GetHandler()
 end
-function c210400013.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function c210400013.filter1(c)
+function cid.filter1(c)
 	return c:GetLevel()==1 and c:IsSetCard(0xda6) and c:IsAbleToHand()
 end
-function c210400013.filter2(c)
+function cid.filter2(c)
 	return c:IsSetCard(0x1da6) and c:IsAbleToHand()
 end
-function c210400013.thop(e,tp,eg,ep,ev,re,r,rp)
+function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local dir=Duel.GetAttackTarget()==nil
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c210400013.filter1,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.filter1,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		local mg=Duel.GetMatchingGroup(c210400013.filter2,tp,LOCATION_DECK,0,nil)
-		if dir and mg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(210400013,0)) then
+		local mg=Duel.GetMatchingGroup(cid.filter2,tp,LOCATION_DECK,0,nil)
+		if dir and mg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local sg=mg:Select(tp,1,1,nil)

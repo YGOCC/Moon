@@ -1,6 +1,14 @@
 --created & coded by Lyris
 --アバター・オブ・インライトメント
-function c210400019.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0xda6),5,true)
 	local e3=Effect.CreateEffect(c)
@@ -18,17 +26,17 @@ function c210400019.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetCost(c210400019.cost)
-	e2:SetOperation(c210400019.operation)
+	e2:SetCost(cid.cost)
+	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
 end
-function c210400019.filter(c)
+function cid.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xda6) and c:IsAbleToDeckAsCost()
 end
-function c210400019.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c210400019.filter,tp,LOCATION_GRAVE,0,1,nil) end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,c210400019.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil)
 	local tc=g:GetFirst()
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 	e:SetLabel(tc:GetCode())
@@ -41,7 +49,7 @@ function c210400019.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
-function c210400019.operation(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
 		c:CopyEffect(e:GetLabel(),RESET_EVENT+RESETS_STANDARD,1)

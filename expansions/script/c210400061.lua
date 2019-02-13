@@ -1,17 +1,25 @@
 --created & coded by Lyris
 --凍優性
-function c210400061.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_COUNTER)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e0:SetCode(EVENT_FREE_CHAIN)
-	e0:SetTarget(c210400061.target)
-	e0:SetOperation(c210400061.activate)
+	e0:SetTarget(cid.target)
+	e0:SetOperation(cid.activate)
 	c:RegisterEffect(e0)
 	local ec=Effect.CreateEffect(c)
 	ec:SetType(EFFECT_TYPE_SINGLE)
-	ec:SetCode(210400061+(0x1<<28))
+	ec:SetCode(id+(0x1<<28))
 	ec:SetRange(LOCATION_MZONE)
 	c:RegisterEffect(ec)
 	local eb=Effect.CreateEffect(c)
@@ -19,7 +27,7 @@ function c210400061.initial_effect(c)
 	eb:SetCode(EFFECT_SET_CONTROL)
 	eb:SetRange(LOCATION_MZONE)
 	eb:SetCondition(function(e) return e:GetHandler():GetCounter(0x1015)>0 end)
-	eb:SetValue(c210400061.ctval)
+	eb:SetValue(cid.ctval)
 	c:RegisterEffect(eb)
 	local ed=Effect.CreateEffect(c)
 	ed:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -71,41 +79,41 @@ function c210400061.initial_effect(c)
 	e8:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e8:SetRange(LOCATION_MZONE)
 	e8:SetCountLimit(1)
-	e8:SetCost(c210400061.cost)
-	e8:SetTarget(c210400061.rmtg)
-	e8:SetOperation(c210400061.rmop)
+	e8:SetCost(cid.cost)
+	e8:SetTarget(cid.rmtg)
+	e8:SetOperation(cid.rmop)
 	c:RegisterEffect(e8)
 end
-function c210400061.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsCanAddCounter(0x1015,1) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,nil,0x1015,1) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x1015,1)
 end
-function c210400061.activate(e,tp,eg,ep,ev,re,r,rp)
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsCanAddCounter(0x1015,1) then
 		tc:AddCounter(0x1015,1)
 	end
 	local p=tc:GetControler()
-	tc:ReplaceEffect(210400061,RESET_EVENT+RESETS_STANDARD)
-	tc:SetFlagEffectLabel(210400061,1-p)
+	tc:ReplaceEffect(id,RESET_EVENT+RESETS_STANDARD)
+	tc:SetFlagEffectLabel(id,1-p)
 end
-function c210400061.ctval(e,c)
+function cid.ctval(e,c)
 	return e:GetLabel()
 end
-function c210400061.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x1015,1,REASON_COST) end
 	Duel.RemoveCounter(tp,1,1,0x1015,1,REASON_COST)
 end
-function c210400061.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc~=c end
 	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,c)
 end
-function c210400061.rmop(e,tp,eg,ep,ev,re,r,rp)
+function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())

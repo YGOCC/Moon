@@ -1,6 +1,14 @@
 --created & coded by Lyris, art from Fate/Apocrypha's Saber of "Black"
 --復剣主サイフリード
-function c210400082.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetCode(EFFECT_PIERCE)
@@ -10,42 +18,42 @@ function c210400082.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetValue(c210400082.val)
+	e1:SetValue(cid.val)
 	c:RegisterEffect(e1)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
-	e3:SetTarget(c210400082.sptg)
-	e3:SetOperation(c210400082.spop)
+	e3:SetTarget(cid.sptg)
+	e3:SetOperation(cid.spop)
 	c:RegisterEffect(e3)
 end
-function c210400082.val(e,c)
-	return Duel.GetMatchingGroupCount(c210400082.rfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*100
+function cid.val(e,c)
+	return Duel.GetMatchingGroupCount(cid.rfilter,e:GetHandlerPlayer(),LOCATION_GRAVE,LOCATION_GRAVE,nil)*100
 end
-function c210400082.rfilter(c)
+function cid.rfilter(c)
 	return c:IsSetCard(0xbb2) and c:IsType(TYPE_MONSTER)
 end
-function c210400082.desfilter(c)
+function cid.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
 end
-function c210400082.spfilter(c,e,tp)
-	return c:IsSetCard(0xbb2) and not c:IsCode(210400082) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function cid.spfilter(c,e,tp)
+	return c:IsSetCard(0xbb2) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c210400082.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return true end
-	if Duel.IsExistingTarget(c210400082.desfilter,tp,LOCATION_ONFIELD,0,1,nil) and Duel.IsExistingTarget(c210400082.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) then
+	if Duel.IsExistingTarget(cid.desfilter,tp,LOCATION_ONFIELD,0,1,nil) and Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g1=Duel.SelectTarget(tp,c210400082.desfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+		local g1=Duel.SelectTarget(tp,cid.desfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g2=Duel.SelectTarget(tp,c210400082.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+		local g2=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,1,0,0)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g2,1,0,0)
 	end
 end
-function c210400082.spop(e,tp,eg,ep,ev,re,r,rp)
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ex1,dg=Duel.GetOperationInfo(0,CATEGORY_DESTROY)
 	local ex2,cg=Duel.GetOperationInfo(0,CATEGORY_SPECIAL_SUMMON)
 	if not dg or not cg then return end

@@ -1,6 +1,14 @@
 --created & coded by Lyris, art from Slim Slots : Dragon Edition
 --サイバー・ドラゴン・マック
-function c210400057.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_CHANGE_CODE)
@@ -11,7 +19,7 @@ function c210400057.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_TO_GRAVE)
-	e1:SetOperation(c210400057.operation)
+	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(2)
@@ -20,14 +28,14 @@ function c210400057.initial_effect(c)
 	e2:SetCode(EVENT_LEAVE_FIELD)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,210400057)
-	e2:SetCondition(c210400057.spcon)
+	e2:SetCountLimit(1,id)
+	e2:SetCondition(cid.spcon)
 	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(c210400057.sptg)
-	e2:SetOperation(c210400057.spop)
+	e2:SetTarget(cid.sptg)
+	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
 end
-function c210400057.operation(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -37,22 +45,22 @@ function c210400057.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
-function c210400057.filter(c)
+function cid.filter(c)
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1093)
 end
-function c210400057.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c210400057.filter,1,nil) and (not eg:IsContains(e:GetHandler()) or not e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD))
+function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(cid.filter,1,nil) and (not eg:IsContains(e:GetHandler()) or not e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD))
 end
-function c210400057.thfilter(c)
+function cid.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1093) and c:IsAbleToHand()
 end
-function c210400057.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c210400057.thfilter,tp,LOCATION_DECK,0,1,nil) end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function c210400057.spop(e,tp,eg,ep,ev,re,r,rp)
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c210400057.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

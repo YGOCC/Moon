@@ -1,25 +1,33 @@
 --created & coded by Lyris, art at https://images.homedepot-static.com/productImages/ea33e713-a782-4db2-9bb5-dfd662f36d47/svn/black-hdx-general-purpose-aw64003-64_1000.jpg and from "Degenerate Circuit"
 --サイバーダーク・エクステンション・コード
-function c210400058.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCategory(CATEGORY_EQUIP+CATEGORY_SPECIAL_SUMMON)
-	e1:SetTarget(c210400058.cost)
-	e1:SetOperation(c210400058.activate)
+	e1:SetTarget(cid.cost)
+	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1,210400058)
+	e2:SetCountLimit(1,id)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetCategory(CATEGORY_EQUIP)
-	e2:SetCondition(c210400058.condition)
-	e2:SetTarget(c210400058.target)
-	e2:SetOperation(c210400058.operation)
+	e2:SetCondition(cid.condition)
+	e2:SetTarget(cid.target)
+	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SUMMON_SUCCESS)
@@ -28,34 +36,34 @@ function c210400058.initial_effect(c)
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-function c210400058.cfilter(c)
+function cid.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsSetCard(0x4093)
 end
-function c210400058.filter3(c,tp,e)
-	return c210400058.cfilter(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function cid.filter3(c,tp,e)
+	return cid.cfilter(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c210400058.filter2(c)
+function cid.filter2(c)
 	return c:IsLevelBelow(3) and c:IsRace(RACE_DRAGON) and not c:IsForbidden()
 end
-function c210400058.cost(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then
 		local b=e:GetHandler():IsLocation(LOCATION_HAND)
 		local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c210400058.filter3,tp,LOCATION_DECK,0,1,nil,tp,e)
+		and Duel.IsExistingMatchingCard(cid.filter3,tp,LOCATION_DECK,0,1,nil,tp,e)
 		and ((b and ft>1) or (not b and ft>0))
-		and Duel.IsExistingTarget(c210400058.filter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil)
+		and Duel.IsExistingTarget(cid.filter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectTarget(tp,c210400058.filter2,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,cid.filter2,tp,LOCATION_GRAVE,0,1,1,nil)
 	local tg=g:Clone()+e:GetHandler()
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,tg,2,0,0)
 end
-function c210400058.activate(e,tp,eg,ep,ev,re,r,rp)
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(c210400058.filter3,tp,LOCATION_DECK,0,1,nil,tp,e)
+	local g=Duel.SelectMatchingCard(cid.filter3,tp,LOCATION_DECK,0,1,nil,tp,e)
 	local c=g:GetFirst()
 	local tc=Duel.GetFirstTarget()
 	if c and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 and tc and tc:IsRelateToEffect(e) then
@@ -67,7 +75,7 @@ function c210400058.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
 		e1:SetCode(EFFECT_EQUIP_LIMIT)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c210400058.eqlimit)
+		e1:SetValue(cid.eqlimit)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_EQUIP)
@@ -80,40 +88,40 @@ function c210400058.activate(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetType(EFFECT_TYPE_EQUIP)
 		e3:SetCode(EFFECT_DESTROY_SUBSTITUTE)
 		e3:SetReset(RESET_EVENT+0x1fe0000)
-		e3:SetValue(c210400058.repval)
+		e3:SetValue(cid.repval)
 		tc:RegisterEffect(e3)
 	end
 end
-function c210400058.eqlimit(e,c)
+function cid.eqlimit(e,c)
 	return e:GetOwner()==c
 end
-function c210400058.repval(e,re,r,rp)
+function cid.repval(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE)~=0
 end
-function c210400058.condition(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c210400058.cfilter,nil)
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(cid.cfilter,nil)
 	e:SetLabelObject(g:GetFirst())
 	return g:GetCount()==1
 end
-function c210400058.filter(c,ec,tp)
+function cid.filter(c,ec,tp)
 	return c:IsRace(RACE_DRAGON) and not c:IsForbidden()
-		and (ec:IsType(TYPE_FUSION) or Duel.IsExistingTarget(c210400058.filter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,c))
+		and (ec:IsType(TYPE_FUSION) or Duel.IsExistingTarget(cid.filter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,c))
 end
-function c210400058.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ec=e:GetLabelObject()
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c210400058.filter(chkc,ec,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingTarget(c210400058.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,ec,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and cid.filter(chkc,ec,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,ec,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectTarget(tp,c210400058.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,ec,tp)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,ec,tp)
 	if not c:IsType(TYPE_FUSION) then
 		local tc=g:GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		g=Duel.SelectTarget(tp,c210400058.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,tc,ec,tp)
+		g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,tc,ec,tp)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
-function c210400058.operation(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	for ec in aux.Next(tg) do
@@ -138,7 +146,7 @@ function c210400058.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
 		e1:SetCode(EFFECT_EQUIP_LIMIT)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c210400058.eqlimit)
+		e1:SetValue(cid.eqlimit)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_EQUIP)
@@ -151,7 +159,7 @@ function c210400058.operation(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetType(EFFECT_TYPE_EQUIP)
 		e3:SetCode(EFFECT_DESTROY_SUBSTITUTE)
 		e3:SetReset(RESET_EVENT+0x1fe0000)
-		e3:SetValue(c210400058.repval)
+		e3:SetValue(cid.repval)
 		tc:RegisterEffect(e3)
 	end
 end
