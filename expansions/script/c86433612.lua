@@ -13,6 +13,7 @@ function c86433612.initial_effect(c)
 	e1:SetCode(EFFECT_AVAILABLE_LMULTIPLE)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetTargetRange(LOCATION_EXTRA,LOCATION_EXTRA)
+	e1:SetLabel(86433612)
 	e1:SetTarget(c86433612.lkfilter)
 	c:RegisterEffect(e1)
 	local e1x=Effect.CreateEffect(c)
@@ -21,6 +22,7 @@ function c86433612.initial_effect(c)
 	e1x:SetRange(LOCATION_SZONE)
 	e1x:SetTargetRange(LOCATION_MZONE,0)
 	e1x:SetTarget(c86433612.matfilter)
+	e1x:SetLabel(86433612)
 	e1x:SetValue(2)
 	c:RegisterEffect(e1x)
 	--extra link escape
@@ -60,29 +62,8 @@ function c86433612.initial_effect(c)
 	e4:SetTarget(c86433612.sptg)
 	e4:SetOperation(c86433612.spop)
 	c:RegisterEffect(e4)
-	--manage labels
-	if not c86433612.global_check then
-		c86433612.global_check=true
-		local ge=Effect.CreateEffect(c)
-		ge:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge:SetCode(EVENT_ADJUST)
-		ge:SetOperation(c86433612.managelabels)
-		Duel.RegisterEffect(ge,0)
-	end
 end
 c86433612.remembertype=0
---manage labels
-function c86433612.managelabels(e)
-	local tp=e:GetHandlerPlayer()
-	local g=Duel.GetMatchingGroup(c86433612.filter,tp,LOCATION_MZONE+LOCATION_EXTRA,LOCATION_EXTRA,nil)
-	if g:GetCount()<=0 then return end
-	for tc in aux.Next(g) do
-		if tc:GetFlagEffect(86433612)<=0 then
-			tc:RegisterFlagEffect(86433612,RESET_EVENT+EVENT_CUSTOM+1111,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,1)
-		end
-		tc:SetFlagEffectLabel(86433612,2)
-	end
-end
 --filters
 function c86433612.filter(c)
 	return ((c:IsLocation(LOCATION_EXTRA) and c:IsHasEffect(EFFECT_AVAILABLE_LMULTIPLE) and c:IsType(TYPE_LINK) and c:IsRace(RACE_CYBERSE))

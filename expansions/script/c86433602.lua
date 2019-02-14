@@ -111,9 +111,9 @@ function c86433602.changecost(e,tp,eg,ep,ev,re,r,rp)
 					if cost then
 						local e1=ce:Clone()
 						if cond then
-							e1:SetCondition(aux.ModifyCon(cond,function (e,tp,eg,ep,ev,re,r,rp) return not cost(e,tp,eg,ep,ev,re,r,rp,0) and Duel.IsExistingMatchingCard(c86433602.checkfilter,tp,LOCATION_ONFIELD,0,1,nil) end))
+							e1:SetCondition(aux.ModifyCon(cond,function (e,tp,eg,ep,ev,re,r,rp) return not cost(e,tp,eg,ep,ev,re,r,rp,0) and not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,0,1,nil,TYPE_MONSTER) end))
 						else
-							e1:SetCondition(function (e,tp,eg,ep,ev,re,r,rp) return not cost(e,tp,eg,ep,ev,re,r,rp,0) and Duel.IsExistingMatchingCard(c86433602.checkfilter,tp,LOCATION_ONFIELD,0,1,nil) end)
+							e1:SetCondition(function (e,tp,eg,ep,ev,re,r,rp) return not cost(e,tp,eg,ep,ev,re,r,rp,0) and not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,0,1,nil,TYPE_MONSTER) end)
 						end
 						e1:SetCost(function (e,tp,eg,ep,ev,re,r,rp,chk)
 										if chk==0 then return true end

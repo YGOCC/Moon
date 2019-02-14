@@ -1789,22 +1789,30 @@ Auxiliary.LCheckGoal=function(sg,tp,lc,gf)
 	end
 end
 function Auxiliary.GetMultipleLinkCount(c,lc)
-	if c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL) and c:GetFlagEffect(86433612)>0 and lc:GetFlagEffect(86433612)>0 and c:GetFlagEffectLabel(86433612)==lc:GetFlagEffectLabel(86433612) then
-		local av_val={}
-		local lmat={c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL)}
-		for _,ec in ipairs(lmat) do
-			table.insert(av_val,ec:GetValue())
-		end
-		for maxval=1,10 do
-			local val=av_val[maxval]
-			av_val[maxval]=nil
-			if c:IsType(TYPE_LINK) and c:GetLink()>1 then
-				return 1+0x10000*val and 1+0x10000*c:GetLink()
-			else
-				return 1+0x10000*val
+	local egroup={lc:IsHasEffect(EFFECT_AVAILABLE_LMULTIPLE)}
+	for k,w in ipairs(egroup) do
+		local lab=w:GetLabel()
+		if c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL) then
+			local av_val={}
+			local lmat={c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL)}
+			for _,ec in ipairs(lmat) do
+				if ec:GetLabel()==lab then
+					table.insert(av_val,ec:GetValue())
+				end
+				for maxval=1,10 do
+					local val=av_val[maxval]
+					av_val[maxval]=nil
+					if c:IsType(TYPE_LINK) and c:GetLink()>1 then
+						return 1+0x10000*val and 1+0x10000*c:GetLink()
+					else
+						return 1+0x10000*val
+					end
+				end
 			end
+		elseif c:IsType(TYPE_LINK) and c:GetLink()>1 then
+			return 1+0x10000*c:GetLink()
+		else 
+			return 1 
 		end
-	elseif c:IsType(TYPE_LINK) and c:GetLink()>1 then
-		return 1+0x10000*c:GetLink()
-	else return 1 end
+	end
 end
