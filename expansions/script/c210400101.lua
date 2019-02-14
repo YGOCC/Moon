@@ -1,0 +1,36 @@
+--created & coded by Lyris, art by emryswolf of DeviantArt
+--襲雷竜－闇
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
+	aux.EnablePendulumAttribute(c)
+	local e0=Effect.CreateEffect(c)
+	e0:SetCategory(CATEGORY_DESTROY)
+	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e0:SetCondition(cid.descon)
+	e0:SetTarget(cid.destg)
+	e0:SetOperation(cid.desop)
+	c:RegisterEffect(e0)
+end
+function cid.descon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return Duel.GetTurnPlayer()~=tp and c:IsFaceup() and Duel.GetAttackTarget()==c
+end
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+end
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.Destroy(c,REASON_EFFECT)
+	end
+end
