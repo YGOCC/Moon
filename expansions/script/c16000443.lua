@@ -26,6 +26,7 @@ function c16000443.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetTarget(c16000443.tgtg3)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
 --atkup
@@ -63,6 +64,10 @@ end
 function c16000443.tgtg(e,c)
 	return e:GetHandler():GetLinkedGroup():IsContains(c) and c:IsType(TYPE_NORMAL)
 end
+function c16000443.tgtg3(e,c)
+ return e:GetHandler()==c or (c:IsType(TYPE_NORMAL) and e:GetHandler():GetLinkedGroup():IsContains(c))
+end
+ 
 function c16000443.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end

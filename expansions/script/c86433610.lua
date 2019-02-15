@@ -40,7 +40,7 @@ function c86433610.initial_effect(c)
 end
 --filters
 function c86433610.rdtfilter(c,rp,tp)
-	return c:IsSetCard(0x86f) and c:GetFlagEffect(86433610)<=0 and c:IsReason(REASON_EFFECT) and rp==1-tp and c:IsControler(tp)
+	return c:IsSetCard(0x86f) and c:IsType(TYPE_MONSTER) and c:GetFlagEffect(86433610)<=0 and c:IsReason(REASON_EFFECT) and rp==1-tp and c:IsControler(tp)
 end
 function c86433610.tdfilter(c)
 	return c:IsSetCard(0x86f) and c:IsAbleToDeck()

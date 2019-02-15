@@ -25,17 +25,18 @@ function c500314819.initial_effect(c)
 	c:RegisterEffect(e2)
 	 --handes
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e4:SetCode(EVENT_CHAINING)
-	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_PLAYER_TARGET)
+	e4:SetCode(EFFECT_ACTIVATE_COST)
 	e4:SetRange(LOCATION_MZONE)
+	e4:SetTargetRange(0,1)
 	e4:SetOperation(aux.chainreg)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(500314819,1))
 	e5:SetCategory(CATEGORY_REMOVE)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e5:SetCode(EVENT_CHAIN_SOLVED)
+	e5:SetCode(EVENT_CHAIN_SOLVING)
 	e5:SetProperty(EFFECT_FLAG_DELAY)
 	e5:SetCountLimit(1)
 	e5:SetRange(LOCATION_MZONE)
@@ -92,7 +93,7 @@ function c500314819.ctfilter(c)
 	return not c:IsType(TYPE_EFFECT)
 end
 function c500314819.hdcon(e,tp,eg,ep,ev,re,r,rp)
-   return rp==1-tp  and Duel.GetCurrentPhase()~=PHASE_DRAW and ep~=tp
+   return rp==1-tp and Duel.GetCurrentPhase()~=PHASE_DRAW and Duel.GetCurrentPhase()~=PHASE_DAMAGE and re:IsActiveType(TYPE_MONSTER) and e:GetHandler():GetFlagEffect(1)>0
 end
 function c500314819.hdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
