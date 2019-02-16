@@ -1,7 +1,7 @@
 --Paintress EX :Asslia Witchiee
 function c160001956.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
-aux.AddEvoluteProc(c,nil,7,c160001956.filter1,c160001956.filter2,1,99) 
+aux.AddEvoluteProc(c,nil,7,c160001956.filter1,c160001956.filter2,c160001956.filter3,1,99)
 		--destroy replace
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -26,12 +26,14 @@ aux.AddEvoluteProc(c,nil,7,c160001956.filter1,c160001956.filter2,1,99)
 	c:RegisterEffect(e3)
 end
 
-
-
 function c160001956.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsRace(RACE_FAIRY)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) 
 end
+
 function c160001956.filter2(c,ec,tp)
+	return c:IsRace(RACE_FAIRY)
+end
+function c160001956.filter3(c,ec,tp)
 	return not c:IsType(TYPE_EFFECT)
 end
 
@@ -70,13 +72,22 @@ function c160001956.filter(c,e,tp)
 	return c:IsType(TYPE_EFFECT) and c:IsAbleToHand()
 end
 function c160001956.desfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
+	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsSetCard(0xc50)
 	  --  and Duel.IsExistingMatchingCard(c160001956.filter(c),0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
 end
-function c160001956.descost(e,tp,eg,ep,ev,re,r,rp,chk)
- if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
-	 e:GetHandler():RemoveEC(tp,4,REASON_COST)
+function c160001956.costfilter(c)
+	return c:IsAbleToRemoveAsCost()  and  c:IsType(TYPE_PENDULUM)  and not c:IsType(TYPE_EFFECT)  and c:IsFaceup()
 end
+function c160001956.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+   local c=e:GetHandler()
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) and Duel.IsExistingMatchingCard(c160001956.costfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c160001956.costfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
+	c:RegisterFlagEffect(160001956,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
+end
+
 function c160001956.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) end
 	if chk==0 then return true end
@@ -94,11 +105,11 @@ function c160001956.desop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,c160001956.filter,tp,LOCATION_MZONE,LOCATION_MZONE,lv,lv,aux.ExceptThisCard(e))
 	   -- local tg=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
 		if g:GetCount()>0 then
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
-			if  tc:IsPreviousSetCard(0xc50) then
-				Duel.BreakEffect() 
-				Duel.SendtoHand(tc,tp,REASON_EFFECT)
-			end
+		  Duel.SendtoHand(g,nil,REASON_EFFECT)
+			--if  tc:IsPreviousSetCard(0xc50) then
+			 --   Duel.BreakEffect() 
+			 --   Duel.SendtoHand(tc,tp,REASON_EFFECT)
+		 --   end
 		end
 	end
 end
