@@ -1,5 +1,5 @@
---created & coded by Lyris, art at http://www.zerochan.net/247572
---襲雷属性－エアー
+--created & coded by Lyris, art from "Ignister Prominence, the Blasting Dracoslayer"
+--機光襲雷竜－イグニスター
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -9,18 +9,8 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	aux.EnablePendulumAttribute(c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_DESTROYED)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetCountLimit(1,id)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-	e1:SetCategory(CATEGORY_DRAW+CATEGORY_DESTROY)
-	e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(cid.cfilter,1,nil,tp) end)
-	e1:SetTarget(cid.tg)
-	e1:SetOperation(cid.op)
-	c:RegisterEffect(e1)
+	c:EnableReviveLimit()
+	aux.AddFusionProcFunRep(c,cid.ffilter,2,false)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -30,15 +20,20 @@ function cid.initial_effect(c)
 	e0:SetTarget(cid.destg)
 	e0:SetOperation(cid.desop)
 	c:RegisterEffect(e0)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	local e1=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e2:SetCode(EVENT_DESTROYED)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-	e2:SetCategory(CATEGORY_DRAW+CATEGORY_DESTROY)
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(cid.cfilter,1,nil,tp) end)
 	e2:SetTarget(cid.tg)
 	e2:SetOperation(cid.op)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e1)
+end
+function cid.ffilter(c)
+	return c:IsSetCard(0x7c4) and c:IsAttackAbove(2000)
 end
 function cid.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -55,25 +50,23 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return (c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4)
+	return (c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) or c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER) and c:IsSetCard(0x7c4)
 end
-function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,0,1,e:GetHandler())
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,0,1,nil)
 		and Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g1=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
+	local g1=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g2=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
 end
-function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if Duel.Destroy(tg,REASON_EFFECT)==0 then return end
-	Duel.Draw(tp,1,REASON_EFFECT)
-	Duel.Draw(1-tp,1,REASON_EFFECT)
+	if tg:GetCount()>0 then
+		Duel.Destroy(tg,REASON_EFFECT)
+	end
 end

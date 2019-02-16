@@ -36,6 +36,12 @@ EVENT_CORONA_DRAW						=EVENT_CUSTOM+0x1600000000
 
 EFFECT_COUNT_SECOND_HOPT				=10000000
 
+--Commonly used cards
+-- CARD_BLUEEYES_SPIRIT					=59822133
+CARD_CYBER_DRAGON						=70095154
+CARD_INLIGHTENED_PSYCHIC_HELMET			=210400006
+CARD_REDUNDANCY_TOKEN					=210400054
+
 --Custom Type Tables
 Auxiliary.Customs={} --check if card uses custom type, indexing card
 Auxiliary.Evolutes={} --number as index = card, card as index = function() is_xyz
@@ -1156,7 +1162,8 @@ function Card.SwitchSpace(c)
 	if not Auxiliary.Spatials[c] or c:GetSummonType()~=SUMMON_TYPE_SPECIAL+500 or c:GetFlagEffect(500)==0 then return false end
 	Auxiliary.Spatials[c]=nil
 	local ospc=c.spt_other_space
-	if not ospc then return false end
+	if not ospc then ospc=Duel.ReadCard(c:GetOriginalCode(),CARDDATA_ALIAS) end
+	if ospc==0 then return false end
 	c:SetEntityCode(ospc,true)
 	c:ReplaceEffect(ospc,0,0)
 	Duel.SetMetatable(c,_G["c"..ospc])

@@ -1,3 +1,5 @@
+--created & coded by Lyris, art from Cardfight!! Vanguard's V "Battlefield Storm, Sagramore"
+--リダンダンシ－聖なる騎士セイクレッド
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -6,8 +8,6 @@ local function getID()
 	return id,cod
 end
 local id,cid=getID()
---created & coded by Lyris, art from Cardfight!! Vanguard's V "Battlefield Storm, Sagramore"
---リダンダンシ－聖なる騎士セイクレッド
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -21,7 +21,7 @@ function cid.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetValue(c11111.val)
+	e2:SetValue(cid.val)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
@@ -37,11 +37,11 @@ function cid.initial_effect(c)
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e5)
 end
-function c11111.filter(c)
+function cid.filter(c)
 	return c:IsFaceup() and c:IsCode(CARD_REDUNDANCY_TOKEN)
 end
-function c11111.val(e,c)
-	return Duel.GetMatchingGroupCount(c11111.filter,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,c)*100
+function cid.val(e,c)
+	return Duel.GetMatchingGroupCount(cid.filter,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,c)*100
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

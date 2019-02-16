@@ -58,7 +58,7 @@ function cid.dop(e,tp,eg,ep,ev,re,r,rp)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_NO_BATTLE_DAMAGE)
-		e2:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e2)
 	end
 end
@@ -73,7 +73,7 @@ function cid.pop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_IMMUNE_EFFECT)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e1:SetValue(function(e,te) return not (te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) or Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):IsContains(e:GetHandler())) and te:GetOwnerPlayer()~=e:GetOwnerPlayer() end)
 		tc:RegisterEffect(e1)
 	end
