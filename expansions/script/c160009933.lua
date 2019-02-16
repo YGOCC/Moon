@@ -1,7 +1,10 @@
 --Yasmin, Young Princess of Gust Vine
 function c160009933.initial_effect(c)
-		   c:EnableReviveLimit()
-		aux.AddFusionProcCodeFun(c,500315980,aux.FilterBoolFunction(c160009933.ffilter),1,true,true)
+	  --evolute procedure
+	aux.EnablePendulumAttribute(c)
+	aux.AddOrigEvoluteType(c)
+	aux.AddEvoluteProc(c,nil,4,c160009933.filter1,c160009933.filter1,1,99)
+	c:EnableReviveLimit()
 local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160009933,0))
 	 e1:SetCategory(CATEGORY_TODECK)
@@ -9,6 +12,7 @@ local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,160009933)
+	e1:SetCost(c160009933.eqcost)
 	e1:SetCondition(c160009933.condition)
 	e1:SetTarget(c160009933.target)
 	e1:SetOperation(c160009933.operation)
@@ -25,13 +29,29 @@ local e1=Effect.CreateEffect(c)
 	e2:SetOperation(c160009933.thop)
 	c:RegisterEffect(e2)
    
+	--cannot link material
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e3:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
+
+   local e4=e3:Clone()
+   e4:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
+	c:RegisterEffect(e4)
+
 
 end
 function c160009933.ffilter(c)
 	return  c:GetLevel()<=4 and c:GetCode()~=160009933 and not c:IsCode(160009933)  and c:GetLevel()>0  or c:IsHasEffect(500317451)
 end
 function c160009933.condition(e,tp,eg,ep,ev,re,r,rp)
-	return  e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION or e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION+0x786
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388
+end
+function c160009933.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,2,REASON_COST)
 end
 function c160009933.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetControler()~=tp and chkc:GetLocation()==LOCATION_GRAVE and chkc:IsAbleToDeck() end
@@ -40,6 +60,14 @@ function c160009933.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,0,LOCATION_GRAVE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
+
+function c160009933.filter1(c,ec,tp)
+	return c:IsAttribute(ATTRIBUTE_WIND) or c:IsRace(RACE_SPELLCASTER)
+end
+function c160009933.filter2(c,ec,tp)
+	return c:IsRace(RACE_SPELLCASTER)
+end
+
 
 function c160009933.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

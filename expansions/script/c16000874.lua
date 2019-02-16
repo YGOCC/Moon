@@ -1,7 +1,13 @@
 --Storming Mirror Force Gal of Gust Vine
 function c16000874.initial_effect(c)
-		c:EnableReviveLimit()
-		aux.AddFusionProcFun2(c,c16000874.mfilterx,c16000874.ffilter,true)
+	  c:EnableReviveLimit()
+		local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0:SetCode(EFFECT_FUSION_MATERIAL)
+	e0:SetCondition(c16000874.fscondition)
+	e0:SetOperation(c16000874.fsoperation)
+	c:RegisterEffect(e0)
 		
 		local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16000874,0))
@@ -48,8 +54,20 @@ function c16000874.initial_effect(c)
 	end
 function c16000874.condition(e,tp,eg,ep,ev,re,r,rp)
 	return  e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION or e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION+0x786
-end	
+end 
 	
+function c16000874.ffilter(c)
+	return  c:IsSetCard(0x885a)   and c:IsLocation(LOCATION_MZONE) 
+end
+function c16000874.fscondition(e,g,gc)
+	if g==nil then return true end
+	if gc then return false end
+	return g:IsExists(c16000874.ffilter,3,nil)
+end
+function c16000874.fsoperation(e,tp,eg,ep,ev,re,r,rp,gc)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+	Duel.SetFusionMaterial(eg:FilterSelect(tp,c16000874.ffilter,3,63,nil))
+end
 	function c16000874.mfilterx(c)
 	return c:IsCode(160009933) 
 end

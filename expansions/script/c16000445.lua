@@ -46,11 +46,11 @@ end
 function c16000445.fscondition(e,g,gc)
 	if g==nil then return true end
 	if gc then return false end
-	return g:IsExists(c16000445.ffilter,3,nil)
+	return g:IsExists(c16000445.ffilter,4,nil)
 end
 function c16000445.fsoperation(e,tp,eg,ep,ev,re,r,rp,gc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-	Duel.SetFusionMaterial(eg:FilterSelect(tp,c16000445.ffilter,3,63,nil))
+	Duel.SetFusionMaterial(eg:FilterSelect(tp,c16000445.ffilter,4,63,nil))
 end
 function c16000445.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,3) end
@@ -111,9 +111,9 @@ function c16000445.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		e1:SetLabel(tc:GetCode())
 		Duel.RegisterEffect(e1,tp)
-        local e2=e1:Clone()
-        e2:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
-        Duel.RegisterEffect(e2,tp)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
+		Duel.RegisterEffect(e2,tp)
 
 
 	end
