@@ -49,7 +49,7 @@ function c16000985.operation(e,tp,eg,ep,ev,re,r,rp)
 	--local g2=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,nil)
 	local g2=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil)
 	local sg=Group.CreateGroup()
-	if g1:GetCount()>0 and (( g2:GetCount()==0)) or Duel.SelectYesNo(tp,aux.Stringid(16000985,1))) then
+	if g1:GetCount()>0 and (( g2:GetCount()==0) or Duel.SelectYesNo(tp,aux.Stringid(16000985,1))) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DECK)
 		local sg1=g1:Select(tp,1,1,nil)
 		Duel.HintSelection(sg1)
