@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from "Dragunity Divine Lance"
 --インライトメント・ディヴァイン槍
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
