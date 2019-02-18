@@ -70,4 +70,4 @@ end
 function cid.sdcon(e)
 	local c=e:GetHandler()
 	return c:GetFlagEffect(id)>0 and bit.band(c:GetFlagEffectLabel(id),0x3)==0x3
-	end
+end
