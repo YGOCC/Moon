@@ -48,7 +48,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return (c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) or c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER) and c:IsSetCard(0x7c4)
+	return (c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp)) and c:IsSetCard(0x7c4)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(aux.AND(cid.cfilter,aux.FilterBoolFunction(Card.IsAbleToRemoveAsCost)),1,nil,tp) end
@@ -63,7 +63,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,1)
 	local tc=g:GetFirst()
 	Duel.DisableShuffleCheck()
-	if Duel.Destroy(g,REASON_EFFECT)~=0 and and tc:IsType(TYPE_MONSTER) and tc:IsSetCard(0x7c4) then
+	if Duel.Destroy(g,REASON_EFFECT)~=0 and tc:IsType(TYPE_MONSTER) and tc:IsSetCard(0x7c4) then
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
