@@ -57,7 +57,7 @@ function card.spfilter(c,e,tp)
 end
 function card.filter1(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-	and not c:IsType(TYPE_PENDULUM)
+	and (c:IsType(TYPE_SYNCHRO) or c:IsType(TYPE_LINK))
 end
 function card.filter2(c)
 	return c:IsAbleToDeck() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and (c:IsFaceup() or not c:IsLocation(LOCATION_EXTRA))
