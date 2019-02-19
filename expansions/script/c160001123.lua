@@ -22,7 +22,7 @@ function c160001123.splimcon(e)
 	return not e:GetHandler():IsForbidden()
 end
 function c160001123.filter(c)
-	return   c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL) and c:IsAbleToHand()
+	return   c:IsSetCard(0xc50) or ( c:IsType(TYPE_NORMAL) and c:IsLevelAbove(2) ) and c:IsAbleToHand()
 end
 function c160001123.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToExtra()  end

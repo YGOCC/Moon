@@ -19,16 +19,15 @@ function c160009988.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
-	--extra summon
-	   local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
-	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e4:SetRange(LOCATION_PZONE)
-	e4:SetTarget(c160009988.target)
-	e4:SetTargetRange(1,0)
-	e4:SetValue(2)
-	c:RegisterEffect(e4)
+   --tohand
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_PZONE)
+	e3:SetCountLimit(1,160009988)
+	e3:SetTarget(c160009988.thtg)
+	e3:SetOperation(c160009988.thop)
+	c:RegisterEffect(e3)
 end
 function c160009988.atktg(e,c)
 	return c:IsType(TYPE_EFFECT)
@@ -59,7 +58,43 @@ end
 function c160009988.filter(e,c)
 	return c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL)
 end
-function c160009988.target(e,c)
-	return c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL)
+
+
+function c160009988.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0xc50)
 end
+function c160009988.filter(c)
+	return  not c:IsType(TYPE_EFFECT)and c:IsLevelAbove(2)and c:IsAbleToHand()
+end
+
+function c160009988.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsDestructable() end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+end
+
+function c160009988.psfilter(c)
+	return  c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden() 
+end
+function c160009988.thop(e,tp,eg,ep,ev,re,r,rp)
+	 local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
+  
+	local g=Duel.GetMatchingGroup(c160009988.psfilter,tp,LOCATION_DECK,0,nil)
+		if g:GetClassCount(Card.GetCode)<2 then return end
+	local ct=0
+	if Duel.CheckLocation(tp,LOCATION_PZONE,0) then ct=ct+1 end
+	if Duel.CheckLocation(tp,LOCATION_PZONE,1) then ct=ct+1 end
+	if ct>0 and g:GetCount()>0   then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+		local sg=g:Select(tp,1,ct,nil)
+		local sc=sg:GetFirst()
+		while sc do
+			Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			sc=sg:GetNext()
+		end
+
+	end
+end
+
+
 

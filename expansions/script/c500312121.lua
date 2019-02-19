@@ -21,7 +21,7 @@ function c500312121.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c500312121.filterx(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc50) or (not c:IsType(TYPE_PENDULUM) and c:IsType(TYPE_MONSTER) and  not c:IsType(TYPE_EFFECT) )and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc50) or (c:IsLevelAbove(2) and  not c:IsType(TYPE_EFFECT) )and c:IsAbleToHand()
 end
 function c500312121.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c500312121.filterx,tp,LOCATION_DECK,0,1,nil) end

@@ -15,17 +15,18 @@ function c160007854.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e2)
-	--tohand
-	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_PZONE)
-	e3:SetCountLimit(1,160007854)
-	e3:SetCondition(c160007854.thcon)
-	--e3:SetCost(c160007854.thcost)
-	e3:SetTarget(c160007854.thtg)
-	e3:SetOperation(c160007854.thop)
-	c:RegisterEffect(e3)
+
+   --extra summon
+	   local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SET_SUMMON_COUNT_LIMIT)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e4:SetRange(LOCATION_PZONE)
+	e4:SetTarget(c160007854.target)
+	e4:SetTargetRange(1,0)
+	e4:SetValue(2)
+	c:RegisterEffect(e4)
+  
 	
 end
 function c160007854.splimit(e,c,sump,sumtype,sumpos,targetp)
@@ -43,27 +44,6 @@ function c160007854.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 	
-function c160007854.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0xc50)
-end
-function c160007854.filter(c)
-	return  not c:IsType(TYPE_EFFECT)and c:IsLevelAbove(2)and c:IsAbleToHand()
-end
-function c160007854.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	  Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function c160007854.thop(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	local dg=Duel.GetFieldGroup(tp,LOCATION_PZONE,0)
-	if dg:GetCount()<2 then return end
-	if Duel.Destroy(dg,REASON_EFFECT)~=2 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c160007854.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+function c160007854.target(e,c)
+	return c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL)
 end
