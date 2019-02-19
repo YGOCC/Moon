@@ -55,7 +55,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return (c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp)) and c:IsSetCard(0x7c4)
+	return c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
 function cid.filter(c,e,tp)
 	return c:IsSetCard(0x7c4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
@@ -89,7 +89,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCondition(cid.tdescon)
 		e2:SetOperation(cid.tdesop)
 		Duel.RegisterEffect(e2,tp)
-		tc:RegisterFlagEffect(id,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1,fid)
+		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,fid)
 	end
 	Duel.SpecialSummonComplete()
 end

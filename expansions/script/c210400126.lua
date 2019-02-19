@@ -87,7 +87,7 @@ function cid.etarget(e,re)
 	return g and g:IsContains(e:GetHandler())
 end
 function cid.filter(c,tp)
-	return (c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp)) and c:IsSetCard(0x7c4)
+	return c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
 function cid.acop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:FilterCount(cid.filter,e:GetHandler(),tp)

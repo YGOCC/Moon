@@ -67,7 +67,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetCountLimit(1)
 		e0:SetRange(LOCATION_MZONE)
 		e0:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e0:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e0:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e0:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) Duel.Destroy(e:GetHandler(),REASON_EFFECT) end)
 		tc:RegisterEffect(e0,true)
 	end

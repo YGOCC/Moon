@@ -34,7 +34,7 @@ function cid.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHAIN_SOLVING)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) local c=e:GetHandler() local rc=re:GetHandler() if c:GetFlagEffect(id)==0 and re:IsActiveType(TYPE_MONSTER) and rc:IsSetCard(0xbb2) and c:GetLinkedGroup():IsContains(rc) then c:RegisterFlagEffect(id,RESET_EVENT+0x1fe0000,0,1) end end)
+	e3:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) local c=e:GetHandler() local rc=re:GetHandler() if c:GetFlagEffect(id)==0 and re:IsActiveType(TYPE_MONSTER) and rc:IsSetCard(0xbb2) and c:GetLinkedGroup():IsContains(rc) then c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1) end end)
 	c:RegisterEffect(e3)
 end
 function cid.atkfilter(c)

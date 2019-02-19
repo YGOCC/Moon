@@ -55,7 +55,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return (c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp)) and c:IsSetCard(0x7c4)
+	return c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
 function cid.mffilter0(c)
 	return c:IsCanBeFusionMaterial() and c:IsFaceup() and c:IsDestructable()
@@ -132,8 +132,7 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dg=Duel.GetMatchingGroup(cid.dfilter,tp,LOCATION_HAND,0,nil)
 	if chk==0 then return c:IsDestructable() and dg:GetCount()>0 end
 	local g=Duel.GetMatchingGroup(Card.IsAttackPos,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local hg=dg+c
-	Duel.GetOperationInfo(0,CATEGORY_DESTROY,g+hg,g:GetCount()+2,0,0)
+	Duel.GetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount()+2,tp,LOCATION_HAND)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

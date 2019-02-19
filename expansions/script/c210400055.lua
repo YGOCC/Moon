@@ -87,7 +87,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetRange(LOCATION_ONFIELD)
 			e1:SetValue(cid.efilter)
 			e1:SetCode(EFFECT_IMMUNE_EFFECT)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			nc:RegisterEffect(e1)
 		end
 	end

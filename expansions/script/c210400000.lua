@@ -62,7 +62,7 @@ function cid.atop(e,tp,eg,ep,ev,re,r,rp)
 	local ap=0x0+p+0x1
 	local ct=c:GetFlagEffectLabel(id)
 	if not ct then
-		c:RegisterFlagEffect(id,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1,ap)
+		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,ap)
 	else
 		c:SetFlagEffectLabel(id,bit.bor(ap,ct))
 	end
