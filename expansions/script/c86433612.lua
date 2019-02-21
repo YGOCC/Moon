@@ -77,7 +77,7 @@ function c86433612.matfilter(e,c)
 	return c:IsFaceup() and c:IsSetCard(0x86f) and not c:IsType(TYPE_LINK)
 end
 function c86433612.checkEL(c,tp)
-	return c:GetSequence()>6 and c:IsControler(tp)
+	return c:GetSequence()>4 and c:IsControler(tp)
 end
 function c86433612.cfilter(c)
 	return c:IsType(TYPE_MONSTER) and (c:IsType(TYPE_TOON+TYPE_SPIRIT+TYPE_UNION+TYPE_DUAL+TYPE_FLIP) or c:IsSetCard(0x86f)) and c:IsAbleToGraveAsCost()
