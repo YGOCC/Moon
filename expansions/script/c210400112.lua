@@ -73,7 +73,7 @@ function cid.pftg(e,tp,eg,ep,ev,re,r,rp,chk)
 		if not c:IsDestructable() then return false end
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(cid.pffilter1,nil)
-		mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil))
+		mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil)+c)
 		local res=Duel.IsExistingMatchingCard(cid.pffilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,c,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -93,7 +93,7 @@ function cid.pfop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or not c:IsDestructable() then return end
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(cid.pffilter1,nil,e)
-	mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil))
+	mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil)+c)
 	local sg1=Duel.GetMatchingGroup(cid.pffilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,c,chkf)
 	local mg2=nil
 	local sg2=nil
@@ -137,7 +137,7 @@ end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(cid.dfilter,tp,LOCATION_HAND,0,nil)
-	if not c:IsDestructable() or dg:GetCount()==0 then return end
+	if not c:IsDestructable() or g:GetCount()==0 then return end
 	local dg=Duel.GetMatchingGroup(Card.IsAttackPos,tp,LOCATION_MZONE,LOCATION_MZONE,nil)+g:Select(tp,1,1,c)+c
 	Duel.Destroy(dg,REASON_EFFECT)
 end
