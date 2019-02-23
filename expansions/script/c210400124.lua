@@ -13,7 +13,8 @@ function cid.initial_effect(c)
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x7c4),2,true)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY)
-	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e0:SetProperty(EFFECT_FLAG_DELAY)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e0:SetCondition(cid.descon)
@@ -40,7 +41,9 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	Duel.NegateAttack()
 	if c:IsRelateToEffect(e) then
+		Duel.BreakEffect()
 		Duel.Destroy(c,REASON_EFFECT)
 	end
 end

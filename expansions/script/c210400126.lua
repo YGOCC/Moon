@@ -14,7 +14,8 @@ function cid.initial_effect(c)
 	c:EnableCounterPermit(0x921)
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e3:SetCondition(cid.descon)
@@ -72,7 +73,9 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	Duel.NegateAttack()
 	if c:IsRelateToEffect(e) then
+		Duel.BreakEffect()
 		Duel.Destroy(c,REASON_EFFECT)
 	end
 end
