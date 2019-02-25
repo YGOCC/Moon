@@ -52,7 +52,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:GetSummonType()~=SUMMON_TYPE_SPECIAL+0x40 and
+	return c:IsFaceup() and c:IsControler(tp) and c:GetSummonType()~=SUMMON_TYPE_SPECIAL+0x40
 end
 function cid.regcon(e,tp,eg,ep,ev,re,r,rp)
 	local sf=0
