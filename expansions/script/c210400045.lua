@@ -35,7 +35,7 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)<1 then return end
 	local c,tc=e:GetHandler(),e:GetHandler()
-	if not Duel.IsPlayerCanSpecialSummonMonster(1-tp,CARD_REDUNDANCY_TOKEN,0xeeb,0x4011,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute(),POS_FACEUP) then return end
+	if not Duel.IsPlayerCanSpecialSummonMonster(tp,CARD_REDUNDANCY_TOKEN,0xeeb,0x4011,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute(),POS_FACEUP,1-tp) then return end
 	local token=Duel.CreateToken(tp,CARD_REDUNDANCY_TOKEN)
 	Duel.SpecialSummonStep(token,0,tp,1-tp,false,false,POS_FACEUP)
 	local e1=Effect.CreateEffect(c)
