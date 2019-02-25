@@ -1,5 +1,5 @@
---created & coded by Lyris, art from Cardfight!! Vanguard's V "Battlefield Storm, Sagramore"
---リダンダンシ－聖なる騎士セイクレッド
+--created & coded by Lyris
+--リダンダンシ－正鵺クロス
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -9,6 +9,8 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
+	c:EnableReviveLimit()
+	aux.AddXyzProcedure(c,nil,4,2,nil,nil,99)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_CHANGE_CODE)
@@ -16,32 +18,65 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetValue(CARD_REDUNDANCY_TOKEN)
 	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetValue(cid.val)
-	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_SUMMON_SUCCESS)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
-	e3:SetTarget(cid.target)
-	e3:SetOperation(cid.activate)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetTarget(cid.destg)
+	e3:SetOperation(cid.desop)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
-	c:RegisterEffect(e4)
-	local e5=e3:Clone()
-	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e5)
+	if not cid.global_check then
+		cid.global_check=true
+		cid[0]=0
+		cid[1]=0
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCode(EVENT_DESTROYED)
+		e2:SetOperation(cid.checkop)
+		Duel.RegisterEffect(e2,tp)
+	end
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
+	e2:SetCost(cid.cost)
+	e2:SetTarget(cid.target)
+	e2:SetOperation(cid.activate)
+	c:RegisterEffect(e2)
 end
-function cid.filter(c)
-	return c:IsFaceup() and c:IsCode(CARD_REDUNDANCY_TOKEN)
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_MZONE,0,1,aux.ExceptThisCard(e),CARD_REDUNDANCY_TOKEN)
+		and Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>0 end
+	local g=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_MZONE,0,aux.ExceptThisCard(e),CARD_REDUNDANCY_TOKEN)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
-function cid.val(e,c)
-	return Duel.GetMatchingGroupCount(cid.filter,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,c)*100
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
+	local g1=Duel.SelectMatchingCard(Card.IsCode,tp,LOCATION_MZONE,0,aux.ExceptThisCard(e),CARD_REDUNDANCY_TOKEN)
+	local g2=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
+	if g1:GetCount()>0 and Duel.Destroy(g1,REASON_EFFECT)~=0 and g2:GetCount()>0 then
+		local dt=cid[tp]
+		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local sg=g2:Select(tp,1,dt,nil)
+		Duel.HintSelection(sg)
+		Duel.Destroy(sg,REASON_EFFECT)
+	end
+end
+function cid.checkop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetTurnCount()~=cid[2] then
+		cid[0]=0
+		cid[1]=0
+		cid[2]=Duel.GetTurnCount()
+	end
+	for tc in aux.Next(eg) do
+		if tc:GetPreviousCodeOnField()==CARD_REDUNDANCY_TOKEN then cid[rp]=cid[rp]+1 end
+	end
+end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	c:RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

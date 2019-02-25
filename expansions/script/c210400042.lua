@@ -1,5 +1,5 @@
---created & coded by Lyris, art from Cardfight!! Vanguard's V "Battlefield Storm, Sagramore"
---リダンダンシ－聖なる騎士セイクレッド
+--created & coded by Lyris
+--リダンダンシ－バード鳥ワーブラー
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -17,31 +17,46 @@ function cid.initial_effect(c)
 	e1:SetValue(CARD_REDUNDANCY_TOKEN)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetValue(cid.val)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCost(cid.cost)
+	e2:SetTarget(cid.sptg)
+	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_SUMMON_SUCCESS)
+	e3:SetCode(EVENT_DISCARD)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e3:SetTarget(cid.target)
 	e3:SetOperation(cid.activate)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
-	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+	e4:SetCode(EVENT_DESTROYED)
 	c:RegisterEffect(e4)
-	local e5=e3:Clone()
-	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e5)
 end
-function cid.filter(c)
-	return c:IsFaceup() and c:IsCode(CARD_REDUNDANCY_TOKEN)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsDiscardable() end
+	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
-function cid.val(e,c)
-	return Duel.GetMatchingGroupCount(cid.filter,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,c)*100
+function cid.filter(c,e,tp)
+	return c:IsSetCard(0xeeb) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,0,1,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -53,7 +68,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c,tc=e:GetHandler(),e:GetHandler()
 	if not Duel.IsPlayerCanSpecialSummonMonster(1-tp,CARD_REDUNDANCY_TOKEN,0xeeb,0x4011,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute(),POS_FACEUP) then return end
 	local token=Duel.CreateToken(tp,CARD_REDUNDANCY_TOKEN)
-	Duel.SpecialSummonStep(token,0,1-tp,1-tp,false,false,POS_FACEUP)
+	Duel.SpecialSummonStep(token,0,tp,1-tp,false,false,POS_FACEUP)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SET_BASE_ATTACK)

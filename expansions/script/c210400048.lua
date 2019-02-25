@@ -1,5 +1,5 @@
---created & coded by Lyris, art from Cardfight!! Vanguard's V "Battlefield Storm, Sagramore"
---リダンダンシ－聖なる騎士セイクレッド
+--created & coded by Lyris
+--リダンダンシ－歯車装置ギア
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -17,31 +17,14 @@ function cid.initial_effect(c)
 	e1:SetValue(CARD_REDUNDANCY_TOKEN)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetValue(cid.val)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
+	e2:SetCost(aux.bfgcost)
+	e2:SetTarget(cid.target)
+	e2:SetOperation(cid.activate)
 	c:RegisterEffect(e2)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_SUMMON_SUCCESS)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
-	e3:SetTarget(cid.target)
-	e3:SetOperation(cid.activate)
-	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
-	c:RegisterEffect(e4)
-	local e5=e3:Clone()
-	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e5)
-end
-function cid.filter(c)
-	return c:IsFaceup() and c:IsCode(CARD_REDUNDANCY_TOKEN)
-end
-function cid.val(e,c)
-	return Duel.GetMatchingGroupCount(cid.filter,c:GetControler(),LOCATION_ONFIELD,LOCATION_ONFIELD,c)*100
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
