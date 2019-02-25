@@ -50,7 +50,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
+	return (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER)) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
 function cid.lcheck(g,lc)
 	return g:IsExists(function(c,g) return c:IsLinkAttribute(ATTRIBUTE_LIGHT) and g:IsExists(Card.IsLinkAttribute,1,c,ATTRIBUTE_DARK) end,1,nil,g)
