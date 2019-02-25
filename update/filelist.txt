@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	b1206759a19c2904e9b746a35d9d2bde
+﻿expansions/Cards-non-QCD.cdb	88fe93b0e628279f84fe0407aed0ae69
 expansions/lflist.conf	2218e5937301cfd1ed0ba46465bf26a8
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	e998a9c76334cc89b06939d2ed86b227
@@ -8175,7 +8175,17 @@ expansions/script/c210400032.lua	8f408459cf0eb29bd20caf92d1261d34
 expansions/script/c210400033.lua	0a53e9d5c1b4188a5130a1de29ea660c
 expansions/script/c210400034.lua	ffd73359ffc24ee586b2899fa5063161
 expansions/script/c210400035.lua	1001a4f00781786a87effc0e6f8cc45a
-expansions/script/c210400040.lua	805618fa528762f3cd04f7e5dbfa112d
+expansions/script/c210400040.lua	3f520aedbab38bec5fe5923ca6c7e152
+expansions/script/c210400041.lua	7b152a6b0d26fc168a30557b370aa7f7
+expansions/script/c210400042.lua	bef1a6a25e03c3d9c2b293d2cc1d5d78
+expansions/script/c210400044.lua	d06b632ec78521b1a62bf356e94599a0
+expansions/script/c210400045.lua	1be37cfa00e8ea0dad26595fe26fb231
+expansions/script/c210400046.lua	187b336edbfe243130ac02c2eaef3fa2
+expansions/script/c210400047.lua	463b2fc01ff9b00a6c2f4759fb581eaf
+expansions/script/c210400048.lua	22f45928f0e308de13bdcc443ae27f2e
+expansions/script/c210400049.lua	bf915205349593b7fa795005c92afda4
+expansions/script/c210400050.lua	b5f21ba9a399ca83b95b81a090f9b38d
+expansions/script/c210400053.lua	bb6b3ffd74fc781e9253f9a67109c2a0
 expansions/script/c210400055.lua	d63ee76ba86a796cde382a21cc4cae3e
 expansions/script/c210400056.lua	957a455ab815352838e7b1c282565d86
 expansions/script/c210400057.lua	5efce36f0903286624856308ca180505
@@ -12063,6 +12073,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	80cd380712a248c86566e7699f3ad82b
+update/filelist.txt	349a803253579430b5cdd7496362f365
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	5f37add3445bc2733d0cd2bbb90a2332
+update/version.txt	7ca9db475c320f422529e0a120c24faf
