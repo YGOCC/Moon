@@ -85,5 +85,6 @@ end
 function cid.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,aux.AND(cid.filter1,aux.FilterBoolFunction(Card.IsDestructable,e)),tp,LOCATION_DECK,0,1,1,nil)
+	Duel.Hint(HINT_CARD,0,id)
 	Duel.Destroy(g,REASON_EFFECT+REASON_REPLACE)
 end

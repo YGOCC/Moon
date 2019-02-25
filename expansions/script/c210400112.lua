@@ -83,7 +83,7 @@ function cid.pftg(e,tp,eg,ep,ev,re,r,rp,chk)
 			local ce=Duel.GetChainMaterial(tp)
 			if ce~=nil then
 				local fgroup=ce:GetTarget()
-				local mg2=fgroup(ce,e,tp)
+				local mg2=fgroup(ce,e,tp)+c
 				local mf=ce:GetValue()
 				res=Duel.IsExistingMatchingCard(cid.pffilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,c,chkf)
 			end
@@ -104,7 +104,7 @@ function cid.pfop(e,tp,eg,ep,ev,re,r,rp)
 	local ce=Duel.GetChainMaterial(tp)
 	if ce~=nil then
 		local fgroup=ce:GetTarget()
-		mg2=fgroup(ce,e,tp)
+		mg2=fgroup(ce,e,tp)+c
 		local mf=ce:GetValue()
 		sg2=Duel.GetMatchingGroup(cid.pffilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,c,chkf)
 	end

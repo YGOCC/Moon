@@ -66,13 +66,13 @@ function cid.pftg(e,tp,eg,ep,ev,re,r,rp,chk)
 		if not c:IsAbleToRemove() then return end
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(cid.pffilter1,nil)
-		mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil))
+		mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil)+c)
 		local res=Duel.IsExistingMatchingCard(cid.pffilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,c,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
 			if ce~=nil then
 				local fgroup=ce:GetTarget()
-				local mg2=fgroup(ce,e,tp)
+				local mg2=fgroup(ce,e,tp)+c
 				local mf=ce:GetValue()
 				res=Duel.IsExistingMatchingCard(cid.pffilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,c,chkf)
 			end
@@ -86,14 +86,14 @@ function cid.pfop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or not c:IsAbleToRemove() or c:IsImmuneToEffect(e) then return end
 	local chkf=tp
 	local mg1=Duel.GetFusionMaterial(tp):Filter(cid.pffilter1,nil,e)
-	mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil))
+	mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil)+c)
 	local sg1=Duel.GetMatchingGroup(cid.pffilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,c,chkf)
 	local mg2=nil
 	local sg2=nil
 	local ce=Duel.GetChainMaterial(tp)
 	if ce~=nil then
 		local fgroup=ce:GetTarget()
-		mg2=fgroup(ce,e,tp)
+		mg2=fgroup(ce,e,tp)+c
 		local mf=ce:GetValue()
 		sg2=Duel.GetMatchingGroup(cid.pffilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,c,chkf)
 	end
