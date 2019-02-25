@@ -71,10 +71,8 @@ function cid.filter2(c,e)
 end
 function cid.pop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(cid.filter2,tp,LOCATION_MZONE,0,e:GetHandler(),e)
-	local c=e:GetHandler()
-	local fid=c:GetFieldID()
 	for tc in aux.Next(sg) do
-		local e1=Effect.CreateEffect(c)
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_IMMUNE_EFFECT)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
