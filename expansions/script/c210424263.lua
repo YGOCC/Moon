@@ -73,7 +73,7 @@ function card.swapfilter1(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
 end
 function card.swapfilter2(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
 end
 function card.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:GetBaseAttack()<1501

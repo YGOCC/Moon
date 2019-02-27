@@ -81,7 +81,7 @@ function card.swapfilter1(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
 end
 function card.swapfilter2(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
 end
 function card.thfilter(c)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsDestructable() and c:IsFaceup()
@@ -146,7 +146,6 @@ function card.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --swap
-
 function card.swaptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return (chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and card.swapfilter1(chkc,e,tp))
 	and (chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.swapfilter2(chkc,e,tp)) end

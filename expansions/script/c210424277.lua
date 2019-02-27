@@ -96,23 +96,11 @@ function card.repfilter(c,e)
 	return c:IsSetCard(0x666) and c:IsFaceup()
 		and c:IsAbleToRemove()
 end
-function card.indfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
-end
-function card.desfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x666)
-end
 function card.pendfilter(c,tp)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x666)
 end
 function card.swapfilter1(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
-end
-function card.swapfilter2(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
-end
-function card.todeckfilter(c)
-	return c:IsSetCard(0x666) and c:IsAbleToDeck() and c:IsFaceup()
 end
 function card.filter1(c,e,tp)
 	local code=c:GetCode()

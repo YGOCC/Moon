@@ -24,5 +24,5 @@ function c10268936.tfilter(c)
 	return c:IsSetCard(0x19121)
 end
 function c10268936.indes(e,c)
-	return c:IsCode(10268930)
+	return c:IsSetCard(0xFAB4B)
 end 

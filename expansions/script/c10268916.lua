@@ -22,6 +22,16 @@ function c10268916.initial_effect(c)
 	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x19121))
 	e3:SetValue(c10268916.indval)
 	c:RegisterEffect(e3)
+		--cannot be target
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetTargetRange(LOCATION_MZONE,0)
+	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x19121))
+	e4:SetValue(aux.tgoval)
+	c:RegisterEffect(e4)
 end
 function c10268916.cfilter2(c)
 	return c:IsFaceup() and c:IsCode(10268930)
@@ -31,5 +41,5 @@ function c10268916.sdcon(e)
 		and not Duel.IsEnvironment(10268930))
 end
 function c10268916.indval(e,re,rp)
-	return re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
+	return re:IsActiveType(TYPE_SPELL+TYPE_TRAP+TYPE_MONSTER)
 end

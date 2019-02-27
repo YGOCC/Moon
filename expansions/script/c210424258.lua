@@ -78,7 +78,7 @@ function card.swapfilter1(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
 end
 function card.swapfilter2(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
 end
 function card.searchfilter(c)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
@@ -99,7 +99,6 @@ end
 function card.descon_quick(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(210424260)>0
 end
-
 function card.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(card.desfilter,tp,LOCATION_ONFIELD,0,1,nil)
