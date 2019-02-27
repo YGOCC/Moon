@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art by GENZOMAN of DeviantArt
 --襲雷神ズース
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")

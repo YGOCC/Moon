@@ -1,4 +1,4 @@
---created & coded by Lyris, art by cows-love-clover of deviantART
+--created & coded by Lyris, art by cows-love-clover of DeviantArt
 --極神皇フレイル
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")

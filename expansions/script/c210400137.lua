@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art at http://safebooru.org/images/745/74311c251b3ed100874bb04f02927debddd05beb.jpg
 --襲雷ストアイク
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")

@@ -1,4 +1,4 @@
---created & coded by Lyris, art by DrakeTurtle of deviantART
+--created & coded by Lyris, art by DrakeTurtle of DeviantArt
 --復剣主ダルク
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")

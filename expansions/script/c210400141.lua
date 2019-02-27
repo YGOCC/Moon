@@ -1,4 +1,4 @@
---created by NovaTsukimori, coded by Lyris
+--created by NovaTsukimori, coded by Lyris, art from Sailor Moon R Episode 9
 --襲雷サンサーラ･ボルト
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")

@@ -1,4 +1,4 @@
---created & coded by Lyris, art by hiliuyun of deviantART
+--created & coded by Lyris, art by hiliuyun of DeviantArt
 --剣主一リク
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")

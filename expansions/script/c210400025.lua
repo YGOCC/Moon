@@ -1,4 +1,4 @@
---created & coded by Lyris, art by Chahine Sfar & generalzoi of deviantART
+--created & coded by Lyris, art by Chahine Sfar & generalzoi of DeviantArt
 --「S・VINE」ペガサス
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")

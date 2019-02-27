@@ -1,4 +1,4 @@
---created by LionHeartKIng of Wikia, coded by Lyris, art by Beniak pf deviantART
+--created by LionHeartKIng of Wikia, coded by Lyris, art by Beniak pf DeviantArt
 --S・VINEのコースタル・プリースト
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
