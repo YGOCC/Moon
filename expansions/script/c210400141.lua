@@ -35,10 +35,9 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ex,g1=Duel.GetOperationInfo(0,CATEGORY_DESTROY)
-	local ex,g2=Duel.GetOperationInfo(0,CATEGORY_SPECIAL_SUMMON)
 	local tc1=g1:GetFirst()
 	if not tc1:IsRelateToEffect(e) or Duel.Destroy(tc1,REASON_EFFECT)==0 then return end
-	local tc2=g2:GetFirst()
+	local tc2=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil,g1:GetCode())
 	if tc2:IsRelateToEffect(e) then
 		Duel.BreakEffect()
 		Duel.SpecialSummon(tc2,0,tp,tp,false,false,POS_FACEUP)
