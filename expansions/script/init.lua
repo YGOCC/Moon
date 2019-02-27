@@ -20,14 +20,14 @@ TYPE_EVOLUTE							=0x100000000
 TYPE_PANDEMONIUM						=0x200000000
 TYPE_POLARITY							=0x400000000
 TYPE_SPATIAL							=0x800000000
-TYPE_CORONA								=0x1600000000
+TYPE_CORONA								=0x1000000000
 TYPE_CUSTOM								=TYPE_EVOLUTE+TYPE_PANDEMONIUM+TYPE_POLARITY+TYPE_SPATIAL+TYPE_CORONA
 
 CTYPE_EVOLUTE							=0x1
 CTYPE_PANDEMONIUM						=0x2
 CTYPE_POLARITY							=0x4
 CTYPE_SPATIAL							=0x8
-CTYPE_CORONA							=0x16
+CTYPE_CORONA							=0x10
 CTYPE_CUSTOM							=CTYPE_EVOLUTE+CTYPE_PANDEMONIUM+CTYPE_POLARITY+CTYPE_SPATIAL+CTYPE_CORONA
 
 SUMMON_TYPE_EVOLUTE						=SUMMON_TYPE_SPECIAL+388
@@ -624,7 +624,7 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	g:DeleteGroup()
 end
 function Auxiliary.ECSumFilter(c)
-	return c:GetSummonType()==SUMMON_TYPE_SPECIAL+388 and c:IsType(TYPE_EVOLUTE)
+	return c:GetSummonType()==SUMMON_TYPE_EVOLUTE and c:IsType(TYPE_EVOLUTE)
 end
 function Auxiliary.EvoluteCounter(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=eg:Filter(Auxiliary.ECSumFilter,nil)
@@ -1800,24 +1800,24 @@ function Auxiliary.GetMultipleLinkCount(c,lc)
 	for k,w in ipairs(egroup) do
 		local lab=w:GetLabel()
 		if c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL) then
-			local av_val={}
-			local lmat={c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL)}
-			for _,ec in ipairs(lmat) do
+		local av_val={}
+		local lmat={c:IsHasEffect(EFFECT_MULTIPLE_LMATERIAL)}
+		for _,ec in ipairs(lmat) do
 				if ec:GetLabel()==lab then
-					table.insert(av_val,ec:GetValue())
-				end
-				for maxval=1,10 do
-					local val=av_val[maxval]
-					av_val[maxval]=nil
-					if c:IsType(TYPE_LINK) and c:GetLink()>1 then
-						return 1+0x10000*val and 1+0x10000*c:GetLink()
-					else
-						return 1+0x10000*val
-					end
-				end
+			table.insert(av_val,ec:GetValue())
+		end
+		for maxval=1,10 do
+			local val=av_val[maxval]
+			av_val[maxval]=nil
+			if c:IsType(TYPE_LINK) and c:GetLink()>1 then
+				return 1+0x10000*val and 1+0x10000*c:GetLink()
+			else
+				return 1+0x10000*val
 			end
-		elseif c:IsType(TYPE_LINK) and c:GetLink()>1 then
-			return 1+0x10000*c:GetLink()
+		end
+			end
+	elseif c:IsType(TYPE_LINK) and c:GetLink()>1 then
+		return 1+0x10000*c:GetLink()
 		else 
 			return 1 
 		end

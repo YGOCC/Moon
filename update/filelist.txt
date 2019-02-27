@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	b8612c51f5c7f7295ccea920cc5329ab
+﻿expansions/Cards-non-QCD.cdb	e9c5e91930ba55944bf4d4ebefab5d39
 expansions/lflist.conf	2218e5937301cfd1ed0ba46465bf26a8
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	e998a9c76334cc89b06939d2ed86b227
@@ -11992,7 +11992,7 @@ expansions/script/c99830044.lua	0220d95558e82891bffdd41771bd0687
 expansions/script/c99830045.lua	a53873c20aba4544226810b4f8a16d12
 expansions/script/c99830046.lua	730ade1d71b0184568d85351e01c84fe
 expansions/script/c998721301.lua	1e12925d0c7a86affca63f51a8e31f5a
-expansions/script/init.lua	5d91f6705f4a83675b25035f0cc237ff
+expansions/script/init.lua	147bdb7654dba8695404fea329c7b2db
 expansions/script/json.lua	d41a01cf67c76915b49c57d21ac471ee
 expansions/script/lap.lua	1325997ac4231550048dae57e7eb75b0
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
@@ -12075,6 +12075,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	fb5915c97c3fc6c15ba3fe9da9dfd0fc
+update/filelist.txt	4f1fe2a159c198bb4acab1a6cbf925fa
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	2d98df52d781ff2c23184714e1b8cc80
+update/version.txt	3390e2e8db928be21e313366e41a1f03
