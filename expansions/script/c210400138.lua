@@ -23,10 +23,10 @@ function cid.filter(c)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_ONFIELD,0,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_ONFIELD,0,1,aux.ExceptThisCard(e))
 		and Duel.IsExistingTarget(Card.IsType,tp,0,LOCATION_ONFIELD,2,nil,TYPE_SPELL+TYPE_TRAP) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g1=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g1=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_ONFIELD,0,1,1,aux.ExceptThisCard(e))
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g2=Duel.SelectTarget(tp,Card.IsType,tp,0,LOCATION_ONFIELD,2,2,nil,TYPE_SPELL+TYPE_TRAP)
 	g1:Merge(g2)
