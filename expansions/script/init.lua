@@ -31,6 +31,7 @@ CTYPE_CORONA							=0x10
 CTYPE_CUSTOM							=CTYPE_EVOLUTE+CTYPE_PANDEMONIUM+CTYPE_POLARITY+CTYPE_SPATIAL+CTYPE_CORONA
 
 SUMMON_TYPE_EVOLUTE						=SUMMON_TYPE_SPECIAL+388
+SUMMON_TYPE_SPATIAL						=SUMMON_TYPE_SPECIAL+500
 
 EVENT_CORONA_DRAW						=EVENT_CUSTOM+0x1600000000
 
@@ -204,7 +205,7 @@ Card.GetPreviousTypeOnField=function(c)
 		end
 	end
 	if Auxiliary.Coronas[c] then
-		tpe=tpe|TYPE_FUSION
+		tpe=tpe|TYPE_CORONA
 		if not Auxiliary.Coronas[c]() then
 			tpe=tpe&~TYPE_FUSION
 		end
@@ -624,7 +625,7 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	g:DeleteGroup()
 end
 function Auxiliary.ECSumFilter(c)
-	return c:GetSummonType()==SUMMON_TYPE_EVOLUTE and c:IsType(TYPE_EVOLUTE)
+	return c:IsSummonType(SUMMON_TYPE_EVOLUTE) and c:IsType(TYPE_EVOLUTE)
 end
 function Auxiliary.EvoluteCounter(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=eg:Filter(Auxiliary.ECSumFilter,nil)
@@ -761,7 +762,7 @@ function Auxiliary.PandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function Auxiliary.PandePendSwitch(e,c,tp,sumtp,sumpos)
-	return bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
+	return sumtp&SUMMON_TYPE_PENDULUM==SUMMON_TYPE_PENDULUM
 end
 function Auxiliary.PaConditionFilter(c,e,tp,lscale,rscale)
 	local lv=0
@@ -1159,7 +1160,7 @@ function Auxiliary.PolarityOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 end
 --Spatials
 function Card.SwitchSpace(c)
-	if not Auxiliary.Spatials[c] or c:GetSummonType()~=SUMMON_TYPE_SPECIAL+500 or c:GetFlagEffect(500)==0 then return false end
+	if not Auxiliary.Spatials[c] or c:IsSummonType(SUMMON_TYPE_SPATIAL) or c:GetFlagEffect(500)==0 then return false end
 	Auxiliary.Spatials[c]=nil
 	local ospc=c.spt_other_space
 	if not ospc then ospc=Duel.ReadCard(c:GetOriginalCode(),CARDDATA_ALIAS) end
