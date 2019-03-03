@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	034bd815b1d42ce7527f7403ad3a94dd
+﻿expansions/Cards-non-QCD.cdb	5b7afe71dbe2a753f1742d97fa076657
 expansions/lflist.conf	2218e5937301cfd1ed0ba46465bf26a8
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	e998a9c76334cc89b06939d2ed86b227
@@ -3422,7 +3422,7 @@ expansions/pics/31880018.jpg	cb0cda0dafd6fe6f211de8250dbf585b
 expansions/pics/31880019.jpg	591146c0c6937c84895876d070baa5d9
 expansions/pics/31880020.jpg	cbce7fe5bbc40e9fd5a9e9d32e28b323
 expansions/pics/32036866.jpg	2ea3c507c3c60b496d07d5b28247129d
-expansions/pics/32083000.jpg	a672649bc76910d0e4213059535dd2ef
+expansions/pics/32083000.jpg	c76ccc46591ba79df2f5b5bedc0f4ead
 expansions/pics/32083001.jpg	142fbf20728578844e880a66359c2e8f
 expansions/pics/32083002.jpg	3ea7be50ac5489d6d9a614c95f2e15e0
 expansions/pics/32083003.jpg	ba072c03d3dcfd4df2191177a6a30ad4
@@ -9520,7 +9520,7 @@ expansions/script/c32083035.lua	6090a4f9eb32ff30be15deab2971d453
 expansions/script/c32083036.lua	da3cec1b11f39d71f609ada28c938602
 expansions/script/c32083037.lua	910c1dc32fcb8bd5707b871d57484050
 expansions/script/c32083038.lua	098ad8c6ed95fe960a6776792931f4b3
-expansions/script/c32083039.lua	97390682c68b41dc23c3f394dd63e0a8
+expansions/script/c32083039.lua	df24dd6f0a1934d8ff816b98b7df09fd
 expansions/script/c32083040.lua	35e7ada57c4759c3197c639d840d4bbb
 expansions/script/c32083041.lua	6bec045726edc9da50ce9b1e482d91c3
 expansions/script/c32083042.lua	3e20535193dda2ed7e937b049a6cb271
@@ -12106,6 +12106,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	c70ce46f252e4f09b374b64a31b5d0c3
+update/filelist.txt	08f8a558d03612526ae503a03e90e65c
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	62cd570cbcc1916cc9daf34fc38ff3ee
+update/version.txt	838d4828309368760b8f4c9d26f4d925
