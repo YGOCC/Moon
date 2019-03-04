@@ -27,7 +27,7 @@ function c160001239.mfilter(c)
 	return  not c:IsLinkType(TYPE_EFFECT)
 end
 function c160001239.rmtarget(e,c)
-	return c:IsSetCard(0xc50) 
+	return c:IsSetCard(0xc50) and not c:IsLocation(LOCATION_PZONE)
 end
 function c160001239.checktg(e,c)
 	return not c:IsPublic()
