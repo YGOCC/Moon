@@ -38,7 +38,7 @@ function c16000535.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY)
 end
 function c16000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) and Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0 end
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) and Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0 and Duel.IsExistingMatchingCard(c16000535.cfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,nil) end
 		local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_BP)
@@ -47,6 +47,12 @@ function c16000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
  e:GetHandler():RemoveEC(tp,3,REASON_COST)
+ Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c16000535.cfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+end
+function c16000535.cfilter(c)
+	return  not c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsType(TYPE_EFFECT) and c:IsAbleToRemoveAsCost()
 end
 
 function c16000535.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
