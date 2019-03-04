@@ -54,25 +54,26 @@ function cid.cfilter(c,tp)
 	return (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER)) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
 function cid.filter(c,e,tp,zone)
-	return c:IsSetCard(0x7c4) and c:IsType(TYPE_PENDULUM) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
+	return c:IsSetCard(0x7c4) and c:IsType(TYPE_PENDULUM) and (c:IsFaceup() and Duel.GetLocationCountFromEx(tp,tp,nil,c,zone)>0
+		or c:IsLocation(LOCATION_GRAVE))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,tp,zone)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_GRAVE end
-	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
-	if chk==0 then return loc~=0 and Duel.IsExistingMatchingCard(cid.filter,tp,loc,0,1,nil,e,tp,e:GetHandler():GetLinkedZone()) end
+	local zone=e:GetHandler():GetLinkedZone()
+	local loc=LOCATION_EXTRA
+	if Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,zone)>0 then loc=loc+LOCATION_GRAVE end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,loc,0,1,nil,e,tp,zone) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,loc)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_GRAVE end
-	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
-	if loc==0 then return end
+	local c=e:GetHandler()
+	local zone=c:GetLinkedZone()
+	local loc=LOCATION_EXTRA
+	if Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,zone)>0 then loc=loc+LOCATION_GRAVE end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.filter),tp,loc,0,1,1,nil,e,tp,c:GetLinkedZone())
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.filter),tp,loc,0,1,1,nil,e,tp,zone)
 	local tc=g:GetFirst()
-	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP,zone) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
