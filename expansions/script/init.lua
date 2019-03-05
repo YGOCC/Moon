@@ -255,12 +255,11 @@ Card.IsLevelAbove=function(c,lv)
 end
 Duel.ChangePosition=function(cc, au, ad, du, dd)
 	if not ad then ad=au end if not du then du=au end if not dd then dd=au end
-	if pcall(Group.GetFirst,cc) then
-		local tg=cc:Clone()
-		for c in aux.Next(tg) do
-			if c:SwitchSpace() then cc=cc-c end
-		end
-	elseif cc:SwitchSpace() then return end
+	local cc=Group.CreateGroup()+cc
+	local tg=cc:Clone()
+	for c in aux.Next(tg) do
+		if c:SwitchSpace() then cc=cc-c end
+	end
 	change_position(cc,au,ad,du,dd)
 end
 
@@ -1160,9 +1159,10 @@ function Auxiliary.PolarityOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 end
 --Spatials
 function Card.SwitchSpace(c)
-	if not Auxiliary.Spatials[c] or c:IsSummonType(SUMMON_TYPE_SPATIAL) or c:GetFlagEffect(500)==0 then return false end
+	if not Auxiliary.Spatials[c] or not c:IsSummonType(SUMMON_TYPE_SPATIAL) or c:GetFlagEffect(500)==0 then return false end
 	Auxiliary.Spatials[c]=nil
-	local ospc=c.spt_other_space
+	local mt=_G["c" .. c:GetOriginalCode()]
+	local ospc=mt.spt_other_space
 	if not ospc then ospc=Duel.ReadCard(c:GetOriginalCode(),CARDDATA_ALIAS) end
 	if ospc==0 then return false end
 	c:SetEntityCode(ospc,true)
@@ -1194,16 +1194,6 @@ function Card.IsCanBeSpaceMaterial(c,sptc)
 	return true
 end
 function Auxiliary.AddOrigSpatialType(c,isxyz)
-	local code,acode=c:GetOriginalCode(),Duel.ReadCard(c:GetOriginalCode(),CARDDATA_ALIAS)
-	local mt=_G["c" .. code]
-	local typ,rcode
-	for i=240100000,240109998 do
-		typ,rcode=Duel.ReadCard(i,CARDDATA_TYPE,CARDDATA_ALIAS)
-		if typ and typ&TYPE_XYZ==TYPE_XYZ and code==rcode or acode==i then
-			mt.spt_other_space=i
-			break
-		end
-	end
 	table.insert(Auxiliary.Spatials,c)
 	Auxiliary.Customs[c]=true
 	local isxyz=isxyz==nil and false or isxyz
@@ -1234,7 +1224,7 @@ function Auxiliary.AddSpatialProc(c,sptcheck,djn,adiff,ddiff,...)
 	ge3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	ge3:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
-		if c:IsSummonType(SUMMON_TYPE_SPECIAL+500) then
+		if c:IsSummonType(SUMMON_TYPE_SPATIAL) then
 			c:RegisterFlagEffect(500,RESET_EVENT+0x1fe0000,0,1,djn)
 		end
 	end)

@@ -32,6 +32,28 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.tg)
 	e1:SetOperation(cid.op)
 	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetCode(EFFECT_IMMUNE_EFFECT)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCondition(cid.tgcon)
+	e2:SetValue(cid.etarget)
+	c:RegisterEffect(e2)
+	local e5=e2:Clone()
+	e5:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
+	e5:SetValue(aux.imval1)
+	c:RegisterEffect(e5)
+end
+function cid.tgfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x7c4) and c:IsLevelBelow(5)
+end
+function cid.tgcon(e)
+	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
+end
+function cid.etarget(e,re)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	return g and g:IsContains(e:GetHandler())
 end
 function cid.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -50,7 +72,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER)) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
+	return c:IsPreviousLocation(LOCATION_MZONE) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(aux.AND(cid.cfilter,aux.FilterBoolFunction(Card.IsAbleToRemoveAsCost)),1,nil,tp) end

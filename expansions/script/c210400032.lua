@@ -11,7 +11,7 @@ local id,cid=getID()
 cid.spt_other_space=210400097
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddOrigSpatialType(c,false,true)
+	aux.AddOrigSpatialType(c)
 	aux.AddSpatialProc(c,nil,4,nil,400,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER))
 	local ae1=Effect.CreateEffect(c)
 	ae1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_DRAW)

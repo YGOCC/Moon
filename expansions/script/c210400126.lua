@@ -80,10 +80,10 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.tgfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x7c4)
+	return c:IsFaceup() and c:IsSetCard(0x7c4) and c:IsLevelBelow(5)
 end
 function cid.tgcon(e)
-	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
+	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function cid.etarget(e,re)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
