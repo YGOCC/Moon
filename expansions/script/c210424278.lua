@@ -5,8 +5,6 @@ function card.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x666),2)
 	c:EnableReviveLimit()
-	--pendulum summon
-	aux.EnablePendulumAttribute(c)
 	--If kill by battle, grab card
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(71106375,0))
