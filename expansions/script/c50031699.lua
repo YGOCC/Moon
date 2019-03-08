@@ -23,7 +23,7 @@ function c50031699.initial_effect(c)
 	e4:SetRange(LOCATION_GRAVE)
 	e4:SetHintTiming(0,0x11e0)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetCountLimit(1,50031699)
+	e4:SetCountLimit(1,50031609)
 	e4:SetCondition(aux.exccon)
 	e4:SetCost(aux.bfgcost)
 	e4:SetTarget(c50031699.target2)
@@ -107,5 +107,5 @@ end
    
 
 function c50031699.cfilterx(c)
-	return c:IsLocation(LOCATION_DECK+LOCATION_EXTRA) and c:IsSetCard(0x185a) and c:IsType(TYPE_MONSTER)
+	return c:IsLocation(LOCATION_DECK+LOCATION_EXTRA)  and c:IsPreviousPosition(POS_FACEUP) and c:IsSetCard(0x185a) 
 end
