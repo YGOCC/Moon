@@ -61,10 +61,10 @@ end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, registereff = 
+	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, registereff, effect_set_target_range = 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
 	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, 
-	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.RegisterEffect
+	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.RegisterEffect, Effect.SetTargetRange
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -316,6 +316,15 @@ Card.RegisterEffect=function(c,e,forced)
 	ex:SetLabelObject(e)
 	ex:SetLabel(c:GetOriginalCode())
 	registereff(c,ex,forced)
+end
+Auxiliary.kaiju_procs={}
+Effect.SetTargetRange=function(e,self,oppo)
+	if e:GetCode()==EFFECT_SPSUMMON_PROC or e:GetCode()==EFFECT_SPSUMMON_PROC_G then
+		if oppo==1 then
+			table.insert(Auxiliary.kaiju_procs,e)
+		end
+	end
+	effect_set_target_range(e,self,oppo)
 end
 
 --Custom Functions
@@ -1768,6 +1777,9 @@ function Auxiliary.ResetEffectFunc(effect,functype,func)
 		elseif functype=='operation' then
 			effect:SetOperation(func)
 			e:Reset()
+		elseif functype=='value' then
+			effect:SetValue(func)
+			e:Reset()
 		else
 			e:Reset()
 		end
@@ -1813,4 +1825,22 @@ function Auxiliary.GetMultipleLinkCount(c,lc)
 			return 1 
 		end
 	end
+end
+--
+function Auxiliary.CheckKaijuProc(e)
+	local kaijuprocs=Auxiliary.kaiju_procs
+	local check=false
+	for _,k in ipairs(kaijuprocs) do
+		if e==k then
+			check=true
+		end
+	end
+	return check
+end
+function Auxiliary.FullReset(e)
+	local lab=e:GetLabelObject()
+	if lab then
+		lab:Reset()
+	end
+	e:Reset()
 end
