@@ -72,7 +72,7 @@ end
 function c62613315.xyzfilter(c,e,tp,mc)
 	if c:GetOriginalCode()==6165656 and mc:GetCode()~=48995978 then return false end
 	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x6233) and mc:IsCanBeXyzMaterial(c)
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c62613315.fieldfilter(c,tp)
 	return c:IsCode(62613316) and c:IsType(TYPE_FIELD) and c:GetActivateEffect():IsActivatable(tp,true,true)
@@ -139,7 +139,7 @@ function c62613315.xyzop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		sc:SetMaterial(Group.FromCards(tc))
 		Duel.Overlay(sc,Group.FromCards(tc))
-		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
 	end
 end
