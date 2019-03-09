@@ -34,7 +34,7 @@ function cm.thfilter(c)
     return c:IsSetCard(0xffd) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cm.filter(c)
-    return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0xffd)
+    return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function cm.filter3(c)
     return c:IsSetCard(0xffd) and c:IsType(TYPE_MONSTER)

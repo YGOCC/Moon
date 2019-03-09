@@ -1,16 +1,14 @@
 --Mecha Blade Sky Angel
-local m=88880009
-local cm=_G["c"..m]
 function c88880009.initial_effect(c)
 --xyz summon
     c:EnableReviveLimit()
     --alternative proc
-    aux.AddXyzProcedure(c,cm.mfilter,4,2,cm.ovfilter,aux.Stringid(m,0),2,cm.xyzop)
+    aux.AddXyzProcedure(c,c88880009.mfilter,4,2,c88880009.ovfilter,aux.Stringid(88880009,0),2,c88880009.xyzop)
     c:EnableReviveLimit()
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(88880009,0))
     e1:SetType(EFFECT_TYPE_QUICK_O)
-    e1:SetCategory(CATEGORY_DAMAGE)
+    e1:SetCategory(CATEGORY_TOHAND)
     e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e1:SetCountLimit(2)
     e1:SetRange(LOCATION_MZONE)
@@ -31,23 +29,17 @@ function c88880009.atkval(e,c)
     return c:GetOverlayCount()*100
 end
 --filters
-function cm.mfilter(c)
+function c88880009.mfilter(c)
     return c:IsSetCard(0xffd)
 end
-function cm.cfilter(c)
-    return c:IsSetCard(0xffd)
+function c88880009.ovfilter(c)
+    return c:IsFaceup()
+        and ((c:IsType(TYPE_XYZ) and c:GetOverlayGroup():IsExists(Card.IsCode,1,nil,88880005))
+        or (c:IsCode(88880006) and c:GetOverlayGroup():GetCount()>0))
 end
-function cm.ovfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0xffd) and not c:IsType(TYPE_XYZ)
-end
-function cm.xyzop(e,tp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,1,nil)
-    and Duel.GetFlagEffect(tp,m)==0 end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-    local g=Duel.SelectMatchingCard(tp,cm.cfilter,tp,LOCATION_HAND,0,1,1,nil)
-    if g:GetCount()>=0 then
-        Duel.Overlay(e:GetHandler(),g)
-    end
+function c88880009.xyzop(e,tp,chk,mc)
+    if chk==0 then return mc:CheckRemoveOverlayCard(tp,1,REASON_COST) end
+    mc:RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c88880009.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
