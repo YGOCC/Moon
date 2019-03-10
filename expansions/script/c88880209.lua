@@ -1,104 +1,118 @@
---Mecha Blade Night Stalker
+--Earth Core of the Mecha Blades
 local m=88880209
 local cm=_G["c"..m]
 function cm.initial_effect(c)
+--xyz summon
     aux.AddXyzProcedure(c,cm.mfilter,4,2,cm.ovfilter,aux.Stringid(m,0),2,cm.xyzop)
     c:EnableReviveLimit()
-    local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(m,1))
-    e1:SetCategory(CATEGORY_TOGRAVE)
-    e1:SetType(EFFECT_TYPE_QUICK_O)
-    e1:SetCode(EVENT_FREE_CHAIN)
-    e1:SetRange(LOCATION_MZONE)
-    e1:SetHintTiming(TIMING_BATTLE_START,TIMING_BATTLE_START)
-    e1:SetLabel(3)
-    e1:SetCondition(cm.tgcon)
-    e1:SetCost(cm.tgcost)
-    e1:SetTarget(cm.tgtg)
-    e1:SetOperation(cm.tgop)
-    c:RegisterEffect(e1)
     local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-    e2:SetCode(EFFECT_DESTROY_REPLACE)
-    e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-    e2:SetRange(LOCATION_MZONE)
-    e2:SetTarget(cm.reptg)
+    e2:SetDescription(aux.Stringid(m,1))
+    e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e2:SetType(EFFECT_TYPE_QUICK_O)
+    e2:SetCode(EVENT_FREE_CHAIN)
+    e2:SetRange(LOCATION_REMOVED)
+    e2:SetCountLimit(1,88881209)
+    e2:SetCost(cm.rmcost)
+    e2:SetCondition(cm.spcon)
+    e2:SetTarget(cm.sptg2)
+    e2:SetOperation(cm.spop2)
     c:RegisterEffect(e2)
     local e3=Effect.CreateEffect(c)
-    e3:SetType(EFFECT_TYPE_SINGLE)
-    e3:SetCode(EFFECT_UPDATE_ATTACK)
-    e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-    e3:SetRange(LOCATION_MZONE)
-    e3:SetCondition(cm.atkcon)
-    e3:SetLabel(2)
-    e3:SetValue(cm.atkval)
+    e3:SetDescription(aux.Stringid(m,2))
+    e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+    e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+    e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+    e3:SetCountLimit(1,m)
+    e3:SetCondition(cm.xyzcon)
+    e3:SetTarget(cm.xyztg)
+    e3:SetOperation(cm.xyzop2)
     c:RegisterEffect(e3)
-    local e5=Effect.CreateEffect(c)
-    e5:SetType(EFFECT_TYPE_SINGLE)
-    e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-    e5:SetRange(LOCATION_MZONE)
-    e5:SetCode(EFFECT_IMMUNE_EFFECT)
-    e5:SetValue(cm.efilter)
-    e5:SetCondition(cm.effcon)
-    e5:SetLabel(4)
-    c:RegisterEffect(e5)
+    local e1=Effect.CreateEffect(c)
+    e1:SetDescription(aux.Stringid(m,0))
+    e1:SetCategory(CATEGORY_REMOVE)
+    e1:SetType(EFFECT_TYPE_QUICK_O)
+    e1:SetRange(LOCATION_MZONE)
+    e1:SetCode(EVENT_FREE_CHAIN)
+    e1:SetCost(cm.cost)
+    e1:SetCondition(cm.spcon)
+    e1:SetTarget(cm.target)
+    e1:SetOperation(cm.operation)
+    c:RegisterEffect(e1)
 end
---effect
-function cm.ovfilter(c)
-    return c:IsFaceup()
-        and ((c:IsType(TYPE_XYZ) and c:GetOverlayGroup():IsExists(Card.IsCode,1,nil,88880005))
-        or (c:IsCode(88880006) and c:GetOverlayGroup():GetCount()>0))
+function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+    local c=e:GetHandler()
+    if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetFlagEffect(m)==0 end
+    c:RemoveOverlayCard(tp,1,1,REASON_COST)
+    c:RegisterFlagEffect(m,RESET_CHAIN,0,1)
 end
-function cm.xyzop(e,tp,chk,mc)
-    if chk==0 then return mc:CheckRemoveOverlayCard(tp,1,REASON_COST) end
-    mc:RemoveOverlayCard(tp,1,1,REASON_COST)
+function cm.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
+    local c=e:GetHandler()
+    if chk==0 then return c:GetFlagEffect(c)==0 end
+    c:RegisterFlagEffect(c,RESET_CHAIN,0,1)
+end
+function cm.spcon(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+end
+function cm.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
+    local c=e:GetHandler()
+    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+        and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+end
+function cm.spop2(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if not c:IsRelateToEffect(e) then return end
+    Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+end
+
+function cm.filter(c)
+    return c:IsFaceup() and c:IsSetCard(0xffd) and c:IsCode(m)
 end
 function cm.mfilter(c)
     return c:IsSetCard(0xffd)
 end
-function cm.atkcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetOverlayCount()>=e:GetLabel()
+function cm.cfilter(c)
+    return c:IsSetCard(0xffd)
 end
-function cm.atkval(e,c)
-    return c:GetOverlayCount()*200
+function cm.ovfilter(c)
+    return c:IsFaceup() and c:IsSetCard(0xffd) and not c:IsType(TYPE_XYZ)
 end
-function cm.tgcon(e,tp,eg,ep,ev,re,r,rp)
-    local oppo=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
-    local self=Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)
-    return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE and oppo>self and e:GetHandler():GetOverlayCount()>=e:GetLabel()
-end
-function cm.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-    e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
-end
-function cm.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
-    local ct=g:GetCount()-Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)
-    if not e:GetHandler():IsLocation(LOCATION_ONFIELD) then ct=ct-1 end
-    if chk==0 then return ct>0 and g:IsExists(Card.IsAbleToGrave,ct,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,ct,0,0)
-end
-function cm.tgop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
-    local ct=g:GetCount()-Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)
-    if ct>0 then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-        local sg=g:FilterSelect(tp,Card.IsAbleToGrave,ct,ct,nil)
-        Duel.SendtoGrave(sg,REASON_EFFECT)
+function cm.xyzop(e,tp,chk)
+    if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,1,nil)
+    and Duel.GetFlagEffect(tp,m)==0 end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+    local g=Duel.SelectMatchingCard(tp,cm.cfilter,tp,LOCATION_HAND,0,1,1,nil)
+    if g:GetCount()>=0 then
+        Duel.Overlay(e:GetHandler(),g)
     end
 end
-function cm.effcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetOverlayCount()>=e:GetLabel()
+function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chk==0 then return e:GetHandler():IsAbleToRemove() end
+    Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
-function cm.efilter(e,te)
-    return te:GetOwner()~=e:GetOwner()
+function cm.operation(e,tp,eg,ep,ev,re,r,rp)
+    local tc=e:GetHandler()
+    if tc:IsRelateToEffect(e) then
+        Duel.Remove(tc,tc:GetPosition(),REASON_EFFECT) 
+    end
 end
-function cm.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.xyzcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)
+end
+function cm.xyzfilter(c)
+    return c:IsRace(RACE_MACHINE) 
+end
+function cm.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cm.xyzfilter(chkc) end
+    if chk==0 then return Duel.IsExistingTarget(cm.xyzfilter,tp,LOCATION_GRAVE,0,1,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(67865534,4))
+    local g=Duel.SelectTarget(tp,cm.xyzfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+    Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
+end
+function cm.xyzop2(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    if chk==0 then return c:IsReason(REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
-        and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
-    if Duel.SelectEffectYesNo(tp,c,96) then
-        c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)
-        return true
-    else return false end
+    local tc=Duel.GetFirstTarget()
+    if c:IsFaceup() and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
+        Duel.Overlay(c,Group.FromCards(tc))
+    end
 end
