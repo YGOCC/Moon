@@ -15,7 +15,7 @@ function c27796626.initial_effect(c)
     --disable
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(27796626,0))
-	e3:SetCategory(CATEGORY_REMOVE)
+    e3:SetCategory(CATEGORY_REMOVE)
     e3:SetType(EFFECT_TYPE_IGNITION)
     e3:SetRange(LOCATION_FZONE)
     e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -93,6 +93,6 @@ function c27796626.rmop(e,tp,eg,ep,ev,re,r,rp)
     if not e:GetHandler():IsRelateToEffect(e) then return end
     local tc=Duel.GetFirstTarget()
     if tc:IsRelateToEffect(e) then
-        Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+        Duel.Remove(tc,POS_FACEDOWN,REASON_EFFECT)
     end
 end
