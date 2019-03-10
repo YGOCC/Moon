@@ -19,7 +19,7 @@ function cod.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e0:SetValue(aux.fuslimit)
+	e0:SetValue(cod.fuslimit)
 	c:RegisterEffect(e0)
 	--Face-down
 	local e1=Effect.CreateEffect(c)
@@ -46,6 +46,10 @@ function cod.initial_effect(c)
 	e2:SetTarget(cod.rttg)
 	e2:SetOperation(cod.rtop)
 	c:RegisterEffect(e2)
+end
+--Fustion Limit
+function cod.fuslimit(e,se,sp,st)
+	return st&SUMMON_TYPE_FUSION==SUMMON_TYPE_FUSION and se:GetHandler():IsSetCard(0xf05a)
 end
 
 --Face-down

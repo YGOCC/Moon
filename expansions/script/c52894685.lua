@@ -1,6 +1,7 @@
---Onigami Kamashi
+--Onigami Onry-Oh
 --Scripted by Kedy
 --Concept by XStutzX
+--v1.1
 local function ID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -19,23 +20,31 @@ function cod.initial_effect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e0:SetValue(aux.fuslimit)
+	e0:SetValue(cod.fuslimit)
 	c:RegisterEffect(e0)
 	--Flip face-down
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(2)
+	e1:SetCondition(function (e,tp,eg,ep,ev,re,r,rp) return not eg:IsContains(e:GetHandler()) end)
 	e1:SetCost(cod.fdcost)
 	e1:SetTarget(cod.fdtg)
 	e1:SetOperation(cod.fdop)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCondition(function (e,tp,eg,ep,ev,re,r,rp) return not eg:IsContains(e:GetHandler()) end)
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_POSITION)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCondition(cod.fdcon2)
+	e2:SetCost(cod.fdcost)
+	e2:SetTarget(cod.fdtg)
+	e2:SetOperation(cod.fdop)
 	c:RegisterEffect(e2)
 	--Destroy
 	local e3=Effect.CreateEffect(c)
@@ -46,6 +55,11 @@ function cod.initial_effect(c)
 	e3:SetCondition(cod.descon)
 	e3:SetOperation(cod.desop)
 	c:RegisterEffect(e3)
+end
+
+--Fustion Limit
+function cod.fuslimit(e,se,sp,st)
+	return st&SUMMON_TYPE_FUSION==SUMMON_TYPE_FUSION and se:GetHandler():IsSetCard(0xf05a)
 end
 
 --Flip FD
@@ -71,6 +85,12 @@ function cod.fdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cod.pfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	if #g<=0 then return end
 	Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE,0,POS_FACEDOWN_DEFENSE,0)
+end
+
+--Flip FD 2
+function cod.fdcon2(e,tp,eg,ep,ev,re,r,rp)
+	if not re:IsActiveType(TYPE_MONSTER) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
+	return re:IsHasCategory(CATEGORY_SPECIAL_SUMMON)
 end
 
 --Destroy
