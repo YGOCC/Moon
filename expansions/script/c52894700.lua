@@ -1,7 +1,7 @@
---Oath to the Furies
+--Broken Oath
 --Scripted by Kedy
 --Concept by XStutzX
---v2.0 3-10-19
+--v2.1 3-12-19
 local function ID()
     local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
     str=string.sub(str,1,string.len(str)-4)
@@ -23,10 +23,8 @@ function cod.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Return
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_TOHAND)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_TOEXTRA)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(cod.rttg)
@@ -36,7 +34,7 @@ end
 
 --Set Face-down
 function cod.cfilter(c)
-	return c:IsCode(52894690) and c:IsAbleToGrave()
+	return (c:IsCode(52894690) or c:IsSetCard(0xf05b)) and c:IsAbleToGrave()
 end
 function cod.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cod.cfilter,tp,LOCATION_EXTRA,0,1,nil) end
@@ -45,17 +43,17 @@ function cod.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_RELEASE+REASON_COST)
 end
 
-function cod.filter(c,e,tp,m1,m2,ft)
+function cod.filter(c)
 	return c:IsFaceup() 
 end
 function cod.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 
-		and Duel.IsExistingMatchingCard(cod.filter,tp,LOCATION_ONFIELD,0,1,nil) end
+		and Duel.IsExistingMatchingCard(cod.filter,tp,0,LOCATION_ONFIELD,1,nil) end
 end
 
 function cod.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
-	local g=Duel.SelectMatchingCard(tp,cod.filter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cod.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if #g>0 then
 		Duel.HintSelection(g)
 		Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
@@ -64,20 +62,28 @@ function cod.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 
 --Return to Extra
-function cod.rfitler(c)
-	return (c:IsSetCard(0xf05b) or c:IsCode(52894690)) and c:IsAbleToExtra()
+function cod.rfilter(c,tp)
+	return (c:IsCode(52894690) or c:IsSetCard(0xf05b)) and c:IsAbleToExtra()
+		and Duel.IsExistingMatchingCard(cod.sfilter,tp,0,LOCATION_ONFIELD,1,nil)
+end
+function cod.sfilter(c)
+	return c:IsFacedown() and c:IsAbleToHand()
 end
 function cod.rttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 
-		and Duel.IsExistingMatchingCard(cod.rfilter,tp,LOCATION_MZONE,0,1,nil) end
+		and Duel.IsExistingMatchingCard(cod.rfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
 end
-
 function cod.rtop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectMatchingCard(tp,cod.rfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectMatchingCard(tp,cod.rfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
 	if #g>0 then
 		Duel.HintSelection(g)
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		if Duel.SendtoHand(g,nil,REASON_EFFECT)<=0 then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+		local rg=Duel.SelectMatchingCard(tp,cod.sfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+		if #rg<=0 then return end
+		Duel.HintSelection(rg)
+		Duel.SendtoHand(rg,nil,REASON_EFFECT)
 	end
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
