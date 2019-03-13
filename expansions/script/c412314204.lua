@@ -1,0 +1,116 @@
+--Spadaccino dell'Alba - Jonah il Principe
+--Created by Jake, Script by XGlitchy30
+--Script by XGlitchy30
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
+	--special summon
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCost(cid.spcost)
+	e1:SetTarget(cid.sptg)
+	e1:SetOperation(cid.spop)
+	c:RegisterEffect(e1)
+	--cannot be target
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCondition(cid.tgcon)
+	e2:SetValue(aux.imval1)
+	c:RegisterEffect(e2)
+	local e2x=e2:Clone()
+	e2x:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e2x:SetValue(1)
+	c:RegisterEffect(e2x)
+	--reveal top
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1,id)
+	e3:SetCost(cid.rtopcost)
+	e3:SetTarget(cid.rtoptg)
+	e3:SetOperation(cid.rtopop)
+	c:RegisterEffect(e3)
+end
+--filters
+function cid.spfilter(c,e,tp)
+	return c:IsSetCard(0x613) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function cid.tgfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x613)
+end
+--special summon
+function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsDiscardable() end
+	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
+end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) 
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.spfilter),tp,LOCATION_GRAVE,0,1,1,e:GetHandler(),e,tp)
+		if g:GetCount()>0 then
+			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		end
+	end
+end
+--cannot be target
+function cid.tgcon(e)
+	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
+end
+--reveal top
+function cid.rtopcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
+	Duel.ConfirmDecktop(tp,1)
+	local g=Duel.GetDecktopGroup(tp,1)
+	e:SetLabelObject(g:GetFirst())
+end
+function cid.rtoptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local tc=e:GetLabelObject()
+	if chk==0 then return true end
+	if tc:IsType(TYPE_MONSTER) and tc:IsSetCard(0x613) then
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,tc,1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	end
+end
+function cid.rtopop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	if not tc or not tc:IsLocation(LOCATION_DECK) then return end
+	if tc:IsType(TYPE_MONSTER) and tc:IsSetCard(0x613) and tc:IsAbleToGrave() then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 or not e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) then return end
+		Duel.DisableShuffleCheck()
+		if Duel.SendtoGrave(tc,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_GRAVE) then
+			Duel.RaiseSingleEvent(tc,EVENT_TO_GRAVE,e,0x4040,tp,ep,ev)
+			Duel.RaiseSingleEvent(tc,EVENT_DISCARD,e,0x4040,tp,ep,ev)
+			Duel.RaiseEvent(tc,EVENT_TO_GRAVE,e,0x4040,tp,ep,ev)
+			Duel.RaiseEvent(tc,EVENT_DISCARD,e,0x4040,tp,ep,ev)
+			if Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)~=0 then
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+				e1:SetValue(LOCATION_REMOVED)
+				e:GetHandler():RegisterEffect(e1,true)
+			end
+		end
+	else
+		return
+	end
+end
