@@ -1,6 +1,6 @@
---Paintress EX :Asslia Witchiee
+--Paintress EX :Assalia Witchiee
 function c160001956.initial_effect(c)
-	 aux.AddOrigEvoluteType(c)
+	aux.AddOrigEvoluteType(c)
 aux.AddEvoluteProc(c,nil,7,c160001956.filter1,c160001956.filter2,c160001956.filter3,1,99)
 		--destroy replace
 	local e2=Effect.CreateEffect(c)
@@ -89,28 +89,16 @@ function c160001956.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c160001956.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) end
-	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c160001956.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsAbleToHand() and chkc~=c end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,c)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c160001956.desop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
+	 local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		if Duel.Destroy(tc,REASON_EFFECT)==0 then return end
-		local lv=tc:GetOriginalLevel()
-		if tc:IsType(TYPE_XYZ) then return end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOHAND)
-		local g=Duel.SelectMatchingCard(tp,c160001956.filter,tp,LOCATION_MZONE,LOCATION_MZONE,lv,lv,aux.ExceptThisCard(e))
-	   -- local tg=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
-		if g:GetCount()>0 then
-		  Duel.SendtoHand(g,nil,REASON_EFFECT)
-			--if  tc:IsPreviousSetCard(0xc50) then
-			 --   Duel.BreakEffect() 
-			 --   Duel.SendtoHand(tc,tp,REASON_EFFECT)
-		 --   end
-		end
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
 function c160001956.distg(e,c)
