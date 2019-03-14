@@ -39,7 +39,7 @@ function cid.scfilter(c)
 	return c:IsSetCard(0xb05) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
 function cid.checkact(c)
-	return c:IsFaceup() and not c:IsDisabled() and c:IsAbleToGrave()
+	return c:IsFaceup() and c:IsDisabled() and c:IsAbleToGrave()
 end
 function cid.tgfilter(c,typ)
 	return cid.checkact(c) and c:IsType(typ)
