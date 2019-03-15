@@ -77,8 +77,8 @@ function cid.get_zone(c,seq,ec)
 		end
 	end
 	if c:IsLinkMarker(LINK_MARKER_TOP) then
-		if seq==1 then zone=bit.replace(zone,0x1,l)
-		if seq==3 then zone=bit.replace(zone,0x1,r)
+		if seq==1 then zone=bit.replace(zone,0x1,l) end
+		if seq==3 then zone=bit.replace(zone,0x1,r) end
 	end
 	if seq==5 then
 		if c:IsLinkMarker(LINK_MARKER_TOP) then zone=bit.replace(zone,0x1,r) end
@@ -102,7 +102,7 @@ function cid.filter(c,tp,e)
 	if c:GetPreviousControler()~=tp then seq=seq+16 end
 	local czone=cid.get_zone(c,seq,ec)
 	return ((c:GetLinkedGroup() and c:GetLinkedGroup():IsContains(ec)) or (ec:GetLinkedGroup() and ec:GetLinkedGroup():IsContains(c)))
-		and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_MZONE) and (czone~=0 and bit.extract(czone,e:GetHandler():GetSequence)~=0 or bit.extract(zone,seq)~=0)
+		and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_MZONE) and (czone~=0 and bit.extract(czone,e:GetHandler():GetSequence())~=0 or bit.extract(zone,seq)~=0)
 end
 function cid.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.filter,1,nil,tp,e)

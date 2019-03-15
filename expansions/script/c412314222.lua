@@ -1,30 +1,35 @@
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
 --created by Jake, coded by Lyris, art from Cardfight!! Vanguard's "Great Silver Wolf, Garmore"
 --Dawn Blader - Saber
-function c412314222.initial_effect(c)
+function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--materials: 2 Level 4 Warrior monsters
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),4,2)
-	--Your opponent's card effects cannot target another Warrior monster you control.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(c61380658.tglimit)
+	e2:SetTarget(cid.tglimit)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
-	--If this card is Xyz Summoned by using a "Dawn Blader" as Material: Detach 1 material from this card; both platers discard 1 card, then if you discarded a "Dawn Blader" monster by this effect, you can draw 1 card. (HOPT)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,id)
 	e1:SetCategory(CATEGORY_HANDES+CATEGORY_DRAW)
 	e1:SetCondition(cid.dcon)
+	e1:SetCost(cid.dcost)
 	e1:SetTarget(cid.dtg)
 	e1:SetOperation(cid.dop)
 	c:RegisterEffect(e1)
-	--If this card leaves the field: You can discard 1 card, and if you do, draw 1 card.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_LEAVE_FIELD)
@@ -35,7 +40,7 @@ function c412314222.initial_effect(c)
 	e3:SetOperation(cid.operation)
 	c:RegisterEffect(e3)
 end
-function c61380658.tglimit(e,c)
+function cid.tglimit(e,c)
 	return c:IsRace(RACE_WARRIOR) and c~=e:GetHandler()
 end
 function cid.dcon(e,tp,eg,ep,ev,re,r,rp)

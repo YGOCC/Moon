@@ -37,7 +37,7 @@ function cid.initial_effect(c)
 	e3:SetCountLimit(1)
 	e3:SetCategory(CATEGORY_ATKCHANGE)
 	e3:SetCost(cid.cost)
-	e3:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk) if chk==0 then return #(Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)-e:GetHandler())>0 end)
+	e3:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk) if chk==0 then return #(Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)-e:GetHandler())>0 end end)
 	e3:SetOperation(cid.operation)
 	c:RegisterEffect(e3)
 end

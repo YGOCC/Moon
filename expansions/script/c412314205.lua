@@ -48,7 +48,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e0)
 end
 function cid.cfilter(c)
-	return c:IsSetCard(0x613) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x613) and c:IsType(TYPE_MONSTER) and not c:IsCode(id)
 end
 function cid.spcon(e,c)
 	if c==nil then return true end

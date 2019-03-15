@@ -116,7 +116,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local n=e:GetHandler():GetFlagEffectLabel(id)
 	if not n then
 		e:GetHandler():RegisterFlagEffect(id,RESET_PHASE+PHASE_END+RESET_EVENT+RESET_TOFIELD+RESET_TURN_SET,0,1,1)
-	else e:GetHandler():SetFlagEffectLabel(id,n+1)
+	else e:GetHandler():SetFlagEffectLabel(id,n+1) end
 end
 function cid.dthfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x613) and c:IsAbleToHand()

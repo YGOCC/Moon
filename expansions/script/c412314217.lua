@@ -49,7 +49,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE)
 end
 function cid.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x613) c:IsAbleToDeck()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x613) and c:IsAbleToDeck()
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
