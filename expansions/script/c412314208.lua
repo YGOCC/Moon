@@ -55,9 +55,9 @@ function cid.dfilter(c)
 end
 function cid.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable()
-		and Duel.IsExistingMatchingCard(cid.dfilter,tp,LOCATION_HAND,0,1,aux.ExceptThisCard(e)) end
+		and Duel.IsExistingMatchingCard(cid.dfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-	local g=Duel.SelectMatchingCard(tp,cid.dfilter,tp,LOCATION_HAND,0,1,1,aux.ExceptThisCard(e))
+	local g=Duel.SelectMatchingCard(tp,cid.dfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler())
 	g:AddCard(e:GetHandler())
 	Duel.SendtoGrave(g,REASON_DISCARD+REASON_COST)
 end

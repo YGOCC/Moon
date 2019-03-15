@@ -89,8 +89,7 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		cid[tp]=0
 		if e:GetLabel()~=9 then return false end
 		e:SetLabel(0)
-		local res=aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) and g:CheckSubGroup(cid.filterchkc,1,2,tp,e,g)
-		return res and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) and g:CheckSubGroup(cid.filterchkc,1,2,tp,e,g) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 	local sg=g:SelectSubGroup(p,cid.filterchkc,false,1,2,tp,e,g)
