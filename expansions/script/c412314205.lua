@@ -61,11 +61,11 @@ function cid.spcop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_HAND,0,1,1,aux.ExceptThisCard(e))
 	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
 end
-function cid.filter(c)
-	return c:IsFaceup() and c:IsLevelBelow(4)
+function cid.filter(c,tp)
+	return c:GetSummonPlayer()~=tp and c:GetPreviousControler()~=tp and c:IsPreviousLocation(LOCATION_HAND)
 end
 function cid.gspcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(cid.filter,1,nil)
+	return eg:IsExists(cid.filter,1,nil,tp)
 end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND,0,1,nil) end

@@ -27,7 +27,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_MZONE)
+	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+1)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetCost(cid.spcost)
@@ -55,11 +55,11 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
 end
 function cid.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD,0,1,aux.ExceptThisCard(e)) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD,0,1,2,aux.ExceptThisCard(e))
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD,0,1,2,e:GetHandler())
 	e:SetLabel(#g)
-	Duel.SendtoGrave(g)
+	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 function cid.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -76,8 +76,8 @@ function cid.tgop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.filterchkc(sg,tp,e,g)
 	local g1=sg:Filter(Card.IsDiscardable,nil)
-	local g2=g:Filter(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false)
-	return #g1==#sg and mg:CheckSubGroup(aux.TRUE,#g,#g) or e:GetLabel()~=9
+	local g2=g:Filter(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false)-sg
+	return #g1==#sg and g2:CheckSubGroup(aux.TRUE,#sg,#sg)
 end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(9)
@@ -87,12 +87,13 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_HAND,0,nil,0x613)
 	if chk==0 then
 		cid[tp]=0
-		local res=aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) and g:CheckSubGroup(cid.filterchkc,1,2,tp,e,g)
+		if e:GetLabel()~=9 then return false end
 		e:SetLabel(0)
+		local res=aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk) and g:CheckSubGroup(cid.filterchkc,1,2,tp,e,g)
 		return res and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-	local sg=g:SelectSubGroup(p,cid.filterchkc,false,1,2,tp,e)
+	local sg=g:SelectSubGroup(p,cid.filterchkc,false,1,2,tp,e,g)
 	cid[tp]=#sg
 	aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(sg,REASON_COST+REASON_DISCARD)

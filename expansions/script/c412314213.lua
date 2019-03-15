@@ -37,7 +37,7 @@ function cid.initial_effect(c)
 end
 function cid.slevel(e,c)
 	local lv=e:GetHandler():GetLevel()
-	return 0x2<<16+lv
+	return (0x2<<16)+lv
 end
 function cid.con(e,tp,eg,ep,ev,re,r,rp)
 	local rs=r&0xc0
