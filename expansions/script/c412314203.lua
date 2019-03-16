@@ -67,7 +67,7 @@ end
 function cid.thfilter(c)
 	local m=_G["c"..c:GetCode()]
 	if not m then return false end
-	local list=m.lists_monster
+	local list=m.material_setcode
 	return c:IsSetCard(0x613) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand() and list and list==0x613
 end
 function cid.spfilter(c,e,tp)
