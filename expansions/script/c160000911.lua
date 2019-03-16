@@ -3,18 +3,18 @@ function c160000911.initial_effect(c)
 		 aux.AddOrigEvoluteType(c)
   aux.AddEvoluteProc(c,nil,8,c160000911.filter1,c160000911.filter2,2,99)
 	c:EnableReviveLimit()
-end
+
  --battle indes
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	--e1:SetValue(1)
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
    local e2=e1:Clone()
-		e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-		c:RegisterEffect(e2)
+   e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	c:RegisterEffect(e2)
 
   --Special Summon
    -- local e4=Effect.CreateEffect(c)
@@ -29,19 +29,19 @@ end
    -- e3:SetOperation(c160000911.thop)
    -- c:RegisterEffect(e3)
 
-		local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(160000911,0))
-	e2:SetCategory(CATEGORY_DISABLE)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-   e2:SetRange(LOCATION_MZONE)
-	 e2:SetProperty(EFFECT_FLAG_DELAY)
+		local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(160000911,0))
+	e3:SetCategory(CATEGORY_DISABLE)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+   e3:SetRange(LOCATION_MZONE)
+	 e3:SetProperty(EFFECT_FLAG_DELAY)
    -- e1:SetHintTiming(0,0x1c0)
-	e2:SetCountLimit(1)
-	e2:SetCost(c160000911.cost)
-	e2:SetTarget(c160000911.target)
-	e2:SetOperation(c160000911.operation)
-	c:RegisterEffect(e2)
+	e3:SetCountLimit(1)
+	e3:SetCost(c160000911.cost)
+	e3:SetTarget(c160000911.target)
+	e3:SetOperation(c160000911.operation)
+	c:RegisterEffect(e3)
   --  local e2=e1:Clone()
   --  e2:SetCode(EVENT_SPSUMMON_SUCCESS)
   --  c:RegisterEffect(e2)
@@ -71,10 +71,10 @@ function c160000911.filter1(c,ec,tp)
 end
 function c160000911.filter2(c,ec,tp)
 	return c:IsRace(RACE_PLANT) 
-
+end
 
 function c160000911.cfilter(c)
-	return c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER)and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 
 function c160000911.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -110,9 +110,9 @@ function c160000911.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterFlagEffect(160000911,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
 function c160000911.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local tc=eg:GetFirst()
-	if chk==0 then return rp==1-tp and tc:IsFaceup() and not tc:IsDisabled() end
-	Duel.SetTargetCard(tc)
+  if chk==0 then return eg:IsExists(c160000911.xxfilter,1,nil,tp) end
+	local g=eg:Filter(c160000911.xxfilter,nil,tp)
+	Duel.SetTargetCard(g)
 	Duel.SetChainLimit(c160000911.limit(Duel.GetCurrentChain()))
 end
 function c160000911.operation(e,tp,eg,ep,ev,re,r,rp,chk)
