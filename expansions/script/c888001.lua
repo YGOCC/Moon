@@ -102,6 +102,18 @@ function cx.activate(e,tp,eg,ep,ev,re,r,rp)
         Duel.ReleaseRitualMaterial(mat)
         Duel.BreakEffect()
         Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
-        tc:CompleteProcedure()
+        tc:CompleteProcedure()    
     end
+    local e3=Effect.CreateEffect(e:GetHandler())
+    e3:SetType(EFFECT_TYPE_FIELD)
+    e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+    e3:SetTargetRange(1,0)
+    e3:SetTarget(cx.splimit)
+    e3:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e3,tp)
+end
+
+function cx.splimit(e,c,tp,sumtp,sumpos)
+    return c:GetRace()~=RACE_PLANT
 end

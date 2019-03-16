@@ -20,7 +20,6 @@ function cm.initial_effect(c)
     e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
     e3:SetCode(EVENT_TO_GRAVE)
-    e3:SetCountLimit(1,m)
     e3:SetTarget(cm.sptg)
     e3:SetOperation(cm.spop)
     c:RegisterEffect(e3)
@@ -54,7 +53,8 @@ function cm.thop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function cm.spfilter(c,e,tp)
-    return c:IsSetCard(0xffa) and not c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsFaceup()
+    return c:IsSetCard(0xffa) and not c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    and (c:IsLocation(LOCATION_GRAVE) or (c:IsLocation(LOCATION_EXTRA) and c:IsFaceup()))
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_EXTRA) and chkc:IsControler(tp) and cm.spfilter(chkc,e,tp) and Duel.GetLocationCountFromEx(tp)>0 end
