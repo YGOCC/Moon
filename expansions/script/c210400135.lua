@@ -18,11 +18,9 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e0)
 	if cid.counter==nil then
 		cid.counter=true
-		cid[0]=0
-		cid[1]=0
 		local g=Group.CreateGroup()
 		g:KeepAlive()
-		cid[2]=g
+		cid[0]=g
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 		e2:SetCode(EVENT_PHASE_START+PHASE_DRAW)
@@ -36,22 +34,13 @@ function cid.initial_effect(c)
 	end
 end
 function cid.resetcount(e,tp,eg,ep,ev,re,r,rp)
-	cid[0]=0
-	cid[1]=0
-	cid[2]:Clear()
+	cid[0]:Clear()
 end
 function cid.addcount(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	while tc do
-		if tc:IsPreviousLocation(LOCATION_MZONE) and tc:IsPreviousSetCard(0x7c4) then
-			local p=tc:GetPreviousControler()
-			cid[p]=cid[p]+1
-			cid[2]:AddCard(tc)
-		elseif tc:IsSetCard(0x7c4) and tc:IsType(TYPE_MONSTER) then
-			local p=tc:GetPreviousControler()
-			cid[p]=cid[p]+1
-			cid[2]:AddCard(tc)
-		end
+		cid[0]=cid[0]+tc
+		if #cid[0]>=2 then cid[0]=cid[0]-cid[0]:GetFirst() end
 		tc=eg:GetNext()
 	end
 end
@@ -66,5 +55,5 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.droperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
-	Duel.Draw(tp,cid[2]:GetClassCount(Card.GetCode),REASON_EFFECT)
+	Duel.Draw(tp,cid[0]:GetClassCount(Card.GetCode),REASON_EFFECT)
 end
