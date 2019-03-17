@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	c8dabb7f922a844653a99d958d8f17cf
+﻿expansions/Cards-non-QCD.cdb	e0d21c5e16ef300ef1ed7a63384cbfa6
 expansions/lflist.conf	2218e5937301cfd1ed0ba46465bf26a8
 expansions/pre-release.cdb	4c3de779c5931d2c11350e1723ee53ed
 expansions/strings.conf	1569dbda0d1de5c82e7109417b2bc83a
@@ -10493,7 +10493,7 @@ expansions/script/c412314204.lua	f13937fc278b13d9a92f710b5fc20791
 expansions/script/c412314205.lua	646bc89cd90d542208f677df4a6687be
 expansions/script/c412314206.lua	6157ccf4a5c53ce23d75d585e606b926
 expansions/script/c412314207.lua	3adffa8e85b0818389dd5596e1f95ef8
-expansions/script/c412314208.lua	a2c532e853f2b066e03cb8832d0b373a
+expansions/script/c412314208.lua	6e9cd9c0d02aa974b6e573c26b599e69
 expansions/script/c412314209.lua	b7a158e794f54391b03bc1f16efc7821
 expansions/script/c412314211.lua	b1faf04c940dc9bf8e2464b2c5367cec
 expansions/script/c412314212.lua	6ac47d6bc57bed9da68216019d4f387f
@@ -10510,7 +10510,7 @@ expansions/script/c412314222.lua	1608a5e117011a0c71bd2fd4853d6886
 expansions/script/c412314223.lua	90f26e6f549ced671d41156b11a33cd1
 expansions/script/c412314224.lua	b41a8f368a50ab46bedf3d0fb3893d2e
 expansions/script/c412314225.lua	2fba7821b67ab6375d2c75f4a54a4940
-expansions/script/c412314226.lua	d66473d331a9ac593645b49eee60ab21
+expansions/script/c412314226.lua	bc53e3fc6816a2dfb7c037da61bb7e19
 expansions/script/c412314227.lua	82db143fb34dc3ed595b1517d7e50d84
 expansions/script/c4125.lua	20e37922c5c1355e4b3c6211d1987f2b
 expansions/script/c4128.lua	a40295449d71bdca5426d7c2e12e709c
@@ -12401,6 +12401,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	34e872156f491bc50cb32a3f87d20a67
+update/filelist.txt	31bcd76e0ef05758cca7fb19a3bebbfd
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	a8691bb523dabd14f7d8d795ecd48766
+update/version.txt	9350fef366167386ade30af2f8adafbb
