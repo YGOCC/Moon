@@ -3,7 +3,7 @@ function c32083044.initial_effect(c)
 --fusion material
 c:EnableReviveLimit()
 aux.AddFusionProcCodeFun(c,32083035,aux.FilterBoolFunction(Card.IsFusionSetCard,0x7D53),2,true,true)
-    --remove
+    --opponent's cards sent to grave are banished instead
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE)
@@ -17,6 +17,7 @@ aux.AddFusionProcCodeFun(c,32083035,aux.FilterBoolFunction(Card.IsFusionSetCard,
     local e2=Effect.CreateEffect(c)
     e2:SetCategory(CATEGORY_RECOVER)
     e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+    e2:SetDescription(aux.Stringid(32083044,0))
     e2:SetCode(EVENT_REMOVE)
     e2:SetRange(LOCATION_MZONE)
     e2:SetCondition(c32083044.condition)
@@ -27,6 +28,7 @@ aux.AddFusionProcCodeFun(c,32083035,aux.FilterBoolFunction(Card.IsFusionSetCard,
     local e3=Effect.CreateEffect(c)
     e3:SetCategory(CATEGORY_REMOVE)
     e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+    e3:SetDescription(aux.Stringid(32083044,1))
     e3:SetCode(EVENT_TO_GRAVE)
     e3:SetCondition(c32083044.descon)
     e3:SetTarget(c32083044.destg)
@@ -43,6 +45,7 @@ aux.AddFusionProcCodeFun(c,32083035,aux.FilterBoolFunction(Card.IsFusionSetCard,
     e6:SetCategory(CATEGORY_REMOVE)
     e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
     e6:SetCode(EVENT_SPSUMMON_SUCCESS)
+    e6:SetDescription(aux.Stringid(32083044,2))
     e6:SetRange(LOCATION_MZONE)
     e6:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
     e6:SetCondition(c32083044.rmcon)
