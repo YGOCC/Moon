@@ -97,7 +97,7 @@ function cm.spfilter(c,e,tp)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return false end
-    local g=Duel.GetMatchingGroup(cm.spfilter,tp,LOCATION_REMOVED,0,nil,e,tp)
+    local g=Duel.GetMatchingGroup(cm.spfilter,tp,LOCATION_REMOVED,2,nil,e,tp)
     if chk==0 then return Duel.GetMZoneCount(tp,e:GetHandler())>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
     local g1=g:Select(tp,1,1,nil)

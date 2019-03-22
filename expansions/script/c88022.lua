@@ -27,7 +27,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
     e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
     e1:SetTargetRange(1,1)
     e1:SetTarget(aux.TargetBoolFunction(Card.IsLocation,LOCATION_DECK+LOCATION_GRAVE+LOCATION_ONFIELD+LOCATION_REMOVED+LOCATION_EXTRA))
-    e1:SetReset(RESET_PHASE+PHASE_MAIN2)
+    e1:SetReset(RESET_PHASE+PHASE_BATTLE)
     Duel.RegisterEffect(e1,tp)
 end
 function cm.cfilter(c)

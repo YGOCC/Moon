@@ -31,7 +31,7 @@ function cm.initial_effect(c)
     c:RegisterEffect(e3)
 end
 function cm.spfilter(c)
-    return c:IsSetCard(0xff9) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+    return c:IsSetCard(0xff9) and c:IsAbleToRemoveAsCost()
 end
 function cm.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_GRAVE+LOCATION_ONFIELD,0,1,nil) end

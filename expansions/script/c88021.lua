@@ -26,10 +26,10 @@ function cm.cfilter(c)
     return c:IsAbleToRemoveAsCost()
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,2,nil) end
+    if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil) end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-    local g=Duel.SelectMatchingCard(tp,cm.cfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,2,2,nil)
-    if g:GetCount()>1 then
+    local g=Duel.SelectMatchingCard(tp,cm.cfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil)
+    if g:GetCount()>0 then
         Duel.Remove(g,POS_FACEUP,REASON_COST)
     end
 end
