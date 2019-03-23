@@ -39,7 +39,7 @@ function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,true) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -48,7 +48,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+1)
 end
 function cid.negtg(e,tp,eg,ep,ev,re,r,rp)
 	if chk==0 then return true end
