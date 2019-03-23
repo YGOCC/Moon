@@ -32,6 +32,7 @@ function cm.initial_effect(c)
     e3:SetCode(EVENT_FREE_CHAIN)
     e3:SetRange(LOCATION_MZONE)
     e3:SetHintTiming(0,TIMING_BATTLE_START+TIMING_END_PHASE)
+    e3:SetCondition(cm.spcondition)
     e3:SetCost(cm.spcost)
     e3:SetTarget(cm.sptg)
     e3:SetOperation(cm.spop)
@@ -79,9 +80,9 @@ function cm.cfilter2(c)
     return c:IsSetCard(0xff9) and c:IsLocation(LOCATION_REMOVED)
 end
 function cm.drop(e,tp,eg,ep,ev,re,r,rp)
-    local x=Duel.GetDecktopGroup(tp,3)
-    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Remove(x,POS_FACEUP,REASON_EFFECT)
+    local x=Duel.GetMatchingGroupCount(cm.cfilter,tp,LOCATION_MZONE,0,nil)
+    local hg=Duel.GetDecktopGroup(tp,x)
+    Duel.Remove(hg,POS_FACEUP,REASON_EFFECT)
     local g=Duel.GetOperatedGroup()
     local ct=g:FilterCount(cm.cfilter2,nil)
     if ct>0 then
@@ -92,6 +93,9 @@ end
 function cm.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return e:GetHandler():IsAbleToExtraAsCost() end
     Duel.SendtoDeck(e:GetHandler(),nil,0,REASON_COST)
+end
+function cm.spcondition(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_REMOVED,2,2,nil)
 end
 function cm.spfilter(c,e,tp)
     return c:IsSetCard(0xff9) and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -120,7 +124,7 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
     end
     local tc=g:GetFirst()
     while tc do
-        if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+        if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE) then
         tc=g:GetNext()
     end
     Duel.SpecialSummonComplete()

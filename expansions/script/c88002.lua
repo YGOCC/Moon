@@ -2,7 +2,6 @@
 local m=88002
 local cm=_G["c"..m]
 function cm.initial_effect(c)
-    c:EnableUnsummonable()
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -45,12 +44,12 @@ function cm.thfilter(c)
     return c:IsSetCard(0xff9) and c:IsAbleToRemove() and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP))
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,2,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,2,tp,LOCATION_DECK)
+    if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil) end
+    Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
 end
 function cm.thop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-    local g=Duel.SelectMatchingCard(tp,cm.thfilter,tp,LOCATION_DECK,0,2,2,nil)
+    local g=Duel.SelectMatchingCard(tp,cm.thfilter,tp,LOCATION_DECK,0,1,1,nil)
     local tg=g
     if tg==nil then return end
     Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)

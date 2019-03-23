@@ -39,8 +39,8 @@ function cm.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     local g=Duel.SelectMatchingCard(tp,cm.spfilter,tp,LOCATION_GRAVE+LOCATION_ONFIELD,0,1,1,nil)
     Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function cm.filter1(c,e)
-    return not c:IsImmuneToEffect(e) and c:IsAbleToRemove()
+function cm.filter1(c,e,tp,m,f,chkf)
+    return c:IsAbleToRemove()
 end
 function cm.filter2(c,e,tp,m,f,chkf)
     return c:IsType(TYPE_FUSION) and c:IsSetCard(0xff9) and (not f or f(c))

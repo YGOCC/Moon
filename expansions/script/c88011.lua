@@ -32,6 +32,7 @@ function cm.initial_effect(c)
     e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e3:SetCode(EVENT_FREE_CHAIN)
     e3:SetRange(LOCATION_MZONE)
+    e3:SetCondition(cm.spcondition)
     e3:SetHintTiming(0,TIMING_BATTLE_START+TIMING_END_PHASE)
     e3:SetCost(cm.spcost)
     e3:SetTarget(cm.sptg)
@@ -81,12 +82,18 @@ end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
     local ct=Duel.GetMatchingGroupCount(cm.cfilter,tp,LOCATION_MZONE,0,nil)
     if ct==0 then return end
+    if ct>2 then
+        ct=2
+    end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
     local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,1,ct,nil)
     if g:GetCount()>0 then
         Duel.HintSelection(g)
         Duel.Destroy(g,REASON_EFFECT)
     end
+end
+function cm.spcondition(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_REMOVED,0,2,nil)
 end
 function cm.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return e:GetHandler():IsAbleToExtraAsCost() end
@@ -119,7 +126,7 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
     end
     local tc=g:GetFirst()
     while tc do
-        if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+        if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE) then
         tc=g:GetNext()
     end
     Duel.SpecialSummonComplete()

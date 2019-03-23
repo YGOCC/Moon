@@ -59,15 +59,14 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
     Duel.ShuffleHand(p)
     Duel.BreakEffect()
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-    local g=Duel.SelectMatchingCard(p,Card.IsAttribute,p,LOCATION_HAND,0,1,1,nil,ATTRIBUTE_LIGHT)
+    local g=Duel.SelectMatchingCard(p,Card.IsSetCard,p,LOCATION_HAND,0,1,1,nil,0xff9)
     local tg=g:GetFirst()
     if tg then
         if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)==0 then
-            Duel.ConfirmCards(1-p,tg)
+            Duel.ConfirmCards(2-p,tg)
             Duel.ShuffleHand(p)
         end
     else
-        local sg=Duel.GetFieldGroup(p,LOCATION_HAND,0)
-        Duel.SendtoGrave(sg,REASON_EFFECT)
+        Duel.DiscardHand(tp,3,REASON_EFFECT)
     end
 end

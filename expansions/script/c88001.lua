@@ -2,7 +2,6 @@
 local m=88001
 local cm=_G["c"..m]
 function cm.initial_effect(c)
-    c:EnableUnsummonable()
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_FIELD)
     e1:SetCode(EFFECT_SPSUMMON_PROC)

@@ -49,7 +49,7 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp,c)
     Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function cm.drfilter(c)
-    return c:IsSetCard(0xff9) and c:IsAbleToDeck()
+    return c:IsAbleToDeck()
 end
 function cm.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsPlayerCanDraw(tp)
