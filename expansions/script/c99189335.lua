@@ -100,8 +100,8 @@ function cid.scfilter(c)
 	return c:IsCode(99189346) and c:IsAbleToHand()
 end
 --no damage
-function cid.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_MZONE,0,1,nil)
+function cid.damcon(e)
+	return Duel.IsExistingMatchingCard(cid.filter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 --mill
 function cid.millcon(e,tp,eg,ep,ev,re,r,rp)
