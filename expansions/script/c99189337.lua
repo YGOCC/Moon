@@ -44,11 +44,7 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		if Duel.Destroy(eg,REASON_EFFECT)~=0 then
-			local resetcount=1
 			local typ=eg:GetFirst():GetType()&(TYPE_SPELL+TYPE_TRAP+TYPE_MONSTER)
-			if Duel.GetCurrentPhase()==PHASE_STANDBY and Duel.GetTurnPlayer()==tp then
-				resetcount=2
-			end
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -56,13 +52,20 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetLabel(typ)
 			e1:SetCondition(cid.thcon)
 			e1:SetOperation(cid.thop)
-			e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,resetcount)
+			if Duel.GetCurrentPhase()==PHASE_STANDBY and Duel.GetTurnPlayer()==tp then
+				e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
+				e:GetHandler():RegisterFlagEffect(id,RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,2,Duel.GetTurnCount())
+			else
+				e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN)
+				e:GetHandler():RegisterFlagEffect(id,RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,1,0)
+			end
 			Duel.RegisterEffect(e1,tp)
 		end
 	end
 end
 function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil,e:GetLabel())
+	local tid=e:GetHandler():GetFlagEffectLabel(id)
+	return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil,e:GetLabel()) and tid and tid~=Duel.GetTurnCount() and Duel.GetTurnPlayer()==tp
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)

@@ -48,7 +48,7 @@ end
 --filters
 --spsummon self
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_DRAW and Duel.GetTurnPlayer()==tp and not (r==REASON_RULE)
+	return Duel.GetCurrentPhase()==PHASE_DRAW and Duel.GetTurnPlayer()==tp and r==REASON_RULE
 end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
