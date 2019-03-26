@@ -26,7 +26,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_MZONE)
+	e4:SetRange(LOCATION_FZONE)
 	e4:SetCountLimit(1,id)
 	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e4:SetCategory(CATEGORY_DRAW)
@@ -58,7 +58,8 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.Draw(Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM),REASON_EFFECT)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
 function cid.filter(c,e,tp)
 	return c:IsType(TYPE_RITUAL) and c:IsSetCard(0x50b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

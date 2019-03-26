@@ -20,6 +20,25 @@ end
 function cid.check(c,rc,g)
 	return g:IsContains(c) and c:IsCanBeRitualMaterial(rc)
 end
+function cid.alvcheck(c,rc)
+	local raw_level=c:GetRitualLevel(rc)
+	local lv1=raw_level&0xffff
+	local lv2=raw_level>>16
+	if lv2>0 then
+		return math.min(lv1,lv2)
+	else
+		return lv1
+	end
+end
+function cid.acheck(c,lv)
+	return  function(g,ec)
+				if ec then
+					return g:GetSum(cid.alvcheck,c)-cid.alvcheck(ec,c)<=lv
+				else
+					return true
+				end
+			end
+end
 function cid.filter(c,e,tp,m1,m2)
 	if bit.band(c:GetType(),0x81)~=0x81 or not c:IsSetCard(0x50b) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)
@@ -30,7 +49,7 @@ function cid.filter(c,e,tp,m1,m2)
 	end
 	if m2 and m2:IsExists(cid.check,1,c,c,mg) then return true end
 	local lv=c:GetLevel()
-	aux.GCheckAdditional=aux.RitualCheckAdditional(c,lv,"Greater")
+	aux.GCheckAdditional=cid.acheck(c,lv)
 	local res=mg:CheckSubGroup(aux.RitualCheck,1,lv,tp,c,lv,"Greater")
 	aux.GCheckAdditional=nil
 	return res
@@ -65,7 +84,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 			end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 			local lv=tc:GetLevel()
-			aux.GCheckAdditional=aux.RitualCheckAdditional(tc,lv,"Greater")
+			aux.GCheckAdditional=cid.acheck(tc,lv)
 			mat=mg:SelectSubGroup(tp,aux.RitualCheck,false,1,lv,tp,tc,lv,"Greater")
 			aux.GCheckAdditional=nil
 		end

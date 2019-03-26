@@ -62,18 +62,17 @@ function cid.rmfilter(c,tp,e)
 	local g=c:GetMaterial()
 	return c:GetSummonLocation()==LOCATION_EXTRA and c:GetSummonPlayer()~=tp
 		and (not e or c:IsRelateToEffect(e)) and c:IsAbleToRemove()
-		and (not g or #g==0 or g:IsExists(cid.matfilter,#g,nil,tp,c))
-end
-function cid.matfilter(c,tp,rc)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(1-tp)
-		and c:IsAbleToRemove() and c:GetReasonCard()==rc
-		and c:IsReason(REASON_MATERIAL)
 end
 function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:Filter(cid.rmfilter,nil,tp)
 	if chk==0 then return #g==1 end
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
+end
+function cid.matfilter(c,tp,rc)
+	return c:IsLocation(LOCATION_GRAVE) and c:IsControler(1-tp)
+		and c:IsAbleToRemove() and c:GetReasonCard()==rc
+		and c:IsReason(REASON_MATERIAL)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(cid.rmfilter,nil,tp,e)

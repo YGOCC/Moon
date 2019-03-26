@@ -67,6 +67,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetOperation(cid.rmop1)
 		Duel.RegisterEffect(e3,tp)
 		Duel.SpecialSummonComplete()
+		tc:CompleteProcedure()
 	end
 end
 function cid.rmcon1(e,tp,eg,ep,ev,re,r,rp)
