@@ -2,7 +2,7 @@
 --Scripted by Loli Dragon of Creativity
 function c88880010.initial_effect(c)
   --Xyz Materials
-  aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xba),4,2)
+  aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x889),4,2)
   c:EnableReviveLimit()
   --(1) This card cannot be destroyed in battle while it has material.
   local e1=Effect.CreateEffect(c)

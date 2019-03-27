@@ -51,7 +51,7 @@ end
 c88880012.xyz_number=300
 --(1) This card can only be Xyz Summoned by the effect of a "Rank-Up-Magic" spell card or by the effect of a "CREATION" Pendulum monster.
 function c88880012.splimit(e,se,sp,st)
-  return se:GetHandler():IsSetCard(0x95) and se:GetHandler():IsType(TYPE_SPELL) or se:GetHandler():IsSetCard(0x889) and se:GetHandler():IsType(TYPE_MONSTER) and se:GetHandler():IsType(TYPE_PENDULUM)
+  return (se:GetHandler():IsSetCard(0x95) and se:GetHandler():IsType(TYPE_SPELL)) or (se:GetHandler():IsSetCard(0x889) and (se:GetHandler():IsType(TYPE_SPELL) or se:GetHandler():IsType(TYPE_MONSTER)) and se:GetHandler():IsType(TYPE_PENDULUM))
 end
 --(2) This card cannot be destroyed in battle while it has material.
 function c88880012.indescon(e,tp,eg,ep,ev,re,r,rp)
@@ -97,7 +97,7 @@ function c88880012.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,atk)
 end
 function c88880012.damop(e,tp,eg,ep,ev,re,r,rp)
-  	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
 

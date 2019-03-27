@@ -41,7 +41,7 @@ end
 c88880011.xyz_number=300
 --(1) This card can only be Xyz Summoned by the effect of a "Rank-Up-Magic" spell card or by the effect of a "CREATION" Pendulum monster.
 function c88880011.splimit(e,se,sp,st)
-	return se:GetHandler():IsSetCard(0x95) and se:GetHandler():IsType(TYPE_SPELL) or se:GetHandler():IsSetCard(0x889) and se:GetHandler():IsType(TYPE_MONSTER) and se:GetHandler():IsType(TYPE_PENDULUM)
+	return (se:GetHandler():IsSetCard(0x95) and se:GetHandler():IsType(TYPE_SPELL)) or (se:GetHandler():IsSetCard(0x889) and (se:GetHandler():IsType(TYPE_SPELL) or se:GetHandler():IsType(TYPE_MONSTER)) and se:GetHandler():IsType(TYPE_PENDULUM))
 end
 --(2) This card cannot be destroyed in battle while it has material.
 function c88880011.indescon(e,tp,eg,ep,ev,re,r,rp)

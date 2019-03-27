@@ -51,7 +51,7 @@ end
 c88880015.xyz_number=300
 --(1) spsummon limit
 function c88880015.splimit(e,se,sp,st)
-  return se:GetHandler():IsSetCard(0x95) or se:GetHandler():IsSetCard(0x889) and se:IsType(TYPE_PENDULUM)
+  return (se:GetHandler():IsSetCard(0x95) and se:GetHandler():IsType(TYPE_SPELL)) or (se:GetHandler():IsSetCard(0x889) and (se:GetHandler():IsType(TYPE_SPELL) or se:GetHandler():IsType(TYPE_MONSTER)) and se:GetHandler():IsType(TYPE_PENDULUM))
 end
 --(2) This card cannot be destroyed in battle while it has material.
 function c88880015.indescon(e,tp,eg,ep,ev,re,r,rp)
