@@ -38,7 +38,7 @@ function cid.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x88f)
 end
 function cid.val(e,c)
-	return -Duel.GetMatchingGroupCount(cid.filter,c:GetControler(),LOCATION_ONFIELD,0,nil)*200
+	return -Duel.GetMatchingGroupCount(cid.filter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,nil)*200
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

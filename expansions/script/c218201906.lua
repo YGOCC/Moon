@@ -25,7 +25,7 @@ function cid.initial_effect(c)
 	--Once per turn you can target 1 "Bright Star" monster in your Graveyard except "Bright Star Pulsar"; Special Summon it, also for the rest of this turn you cannot Special Summon monsters, except "Bright Star" monsters. You can only use this effect of "Bright Star Pulsar" once per turn.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_GRAVE)
+	e3:SetRange(LOCATION_MZONE)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1,CARD_NEBULA_TOKEN)
@@ -42,7 +42,7 @@ function cid.spcon(e,c)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.spfilter(c,e,tp)
-	return c:IsSetCard(0x88f) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
+	return c:IsSetCard(0x88f) and c:IsCanBeSpecialSummoned(e,0x100,tp,false,false) and not c:IsCode(id)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
