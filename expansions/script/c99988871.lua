@@ -321,7 +321,7 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(df7,1-tp)
 	local df8=df6:Clone()
 	df8:SetOperation(function (e,tp)
-						return bit.lshift(0x100,pz1o)
+						return bit.lshift(0x100,pz2o)
 					end)
 	Duel.RegisterEffect(df8,1-tp)
 	--skip phase
