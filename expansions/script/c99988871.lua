@@ -280,6 +280,14 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Exile(extrag,REASON_RULE)
 	end
 	--modify field
+	local pz1s,pz2s=0,4
+	local pz1o,pz2o=0,4
+	if Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_HAND,0,1,nil,TYPE_PENDULUM) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		pz1s,pz2s=1,3
+	end
+	if Duel.IsExistingMatchingCard(Card.IsType,1-tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_HAND,0,1,nil,TYPE_PENDULUM) and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
+		pz1o,pz2o=1,3
+	end
 	local df1=Effect.CreateEffect(e:GetHandler())
 	df1:SetType(EFFECT_TYPE_FIELD)
 	df1:SetCode(EFFECT_DISABLE_FIELD)
@@ -298,17 +306,23 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(df4,1-tp)
 	local df5=df1:Clone()
 	df5:SetOperation(function (e,tp)
-						return bit.lshift(0x100,0)
+						return bit.lshift(0x100,pz1s)
 					end)
 	Duel.RegisterEffect(df5,tp)
 	local df6=df1:Clone()
 	df6:SetOperation(function (e,tp)
-						return bit.lshift(0x100,4)
+						return bit.lshift(0x100,pz2s)
 					end)
 	Duel.RegisterEffect(df6,tp)
 	local df7=df5:Clone()
+	df7:SetOperation(function (e,tp)
+						return bit.lshift(0x100,pz1o)
+					end)
 	Duel.RegisterEffect(df7,1-tp)
 	local df8=df6:Clone()
+	df8:SetOperation(function (e,tp)
+						return bit.lshift(0x100,pz2o)
+					end)
 	Duel.RegisterEffect(df8,1-tp)
 	--skip phase
 	local sk=Effect.CreateEffect(e:GetHandler())
@@ -317,14 +331,6 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 	sk:SetTargetRange(1,1)
 	sk:SetCode(EFFECT_SKIP_M2)
 	Duel.RegisterEffect(sk,tp)
-	--adjust hand limit
-	local hl=Effect.CreateEffect(e:GetHandler())
-	hl:SetType(EFFECT_TYPE_FIELD)
-	hl:SetCode(EFFECT_HAND_LIMIT)
-	hl:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	hl:SetTargetRange(1,1)
-	hl:SetValue(6)
-	Duel.RegisterEffect(hl,tp)
 	--enable skills
 	if Duel.SelectYesNo(tp,aux.Stringid(id,0)) and Duel.SelectYesNo(1-tp,aux.Stringid(id,0)) then
 		for pp=0,1 do
