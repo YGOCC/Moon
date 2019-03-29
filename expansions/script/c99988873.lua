@@ -50,7 +50,7 @@ function cid.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end
 --Double Draw
-function cid.killcon_skill(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.skillcon_skill(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	Duel.Exile(e:GetHandler(),REASON_COST)
