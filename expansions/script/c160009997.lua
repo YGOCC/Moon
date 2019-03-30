@@ -15,11 +15,11 @@ function c160009997.initial_effect(c)
 	c:RegisterEffect(e2)
 	--tohand
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_TOHAND)
+	e3:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetCountLimit(1,160009997)
-	e3:SetTarget(c160009997.thtg)
+	--e3:SetTarget(c160009997.thtg)
 	e3:SetOperation(c160009997.thop)
 	c:RegisterEffect(e3)
 end
@@ -35,19 +35,30 @@ end
 function c160009997.thfilter(c)
 	return c:IsFaceup() and (c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL)) and c:IsType(TYPE_PENDULUM) and not c:IsCode(160009997) and c:IsAbleToHand()
 end
-function c160009997.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsDestructable()
-		and Duel.IsExistingMatchingCard(c160009997.thfilter,tp,LOCATION_EXTRA,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_EXTRA)
+--function c160009997.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+  --  if chk==0 then return e:GetHandler():IsDestructable()
+  --	  and Duel.IsExistingMatchingCard(c160009997.thfilter,tp,LOCATION_EXTRA,0,1,nil) end
+--  Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+--  Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_EXTRA)
+--end
+function c160009997.evfilter(c)
+	return c:IsSetCard(0xc50)  and c:IsType(TYPE_EVOLUTE)
 end
 function c160009997.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_COST)==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c160009997.thfilter,tp,LOCATION_EXTRA,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
+	  local g=Duel.GetMatchingGroup(c160009997.evfilter,tp,LOCATION_MZONE,0,nil)
+		local tc=g:GetFirst()
+		while tc do
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+			e1:SetValue(600)
+			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_UPDATE_DEFENSE)
+			tc:RegisterEffect(e2)
+			tc=g:GetNext()
 	end
 end
