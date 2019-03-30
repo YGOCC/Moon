@@ -1,4 +1,4 @@
---Speed Duel
+--Speed Duel Mode
 --Script by XGlitchy30
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
