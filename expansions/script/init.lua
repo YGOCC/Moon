@@ -62,10 +62,11 @@ end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, registereff, effect_set_target_range = 
+	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv = 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
 	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, 
-	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.RegisterEffect, Effect.SetTargetRange
+	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.RegisterEffect, Effect.SetTargetRange, 
+	Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -326,6 +327,20 @@ Effect.SetTargetRange=function(e,self,oppo)
 		end
 	end
 	effect_set_target_range(e,self,oppo)
+end
+Auxiliary.AddXyzProcedure=function(tc,f,lv,ct,alterf,desc,maxct,op)
+	add_xyz_proc(tc,f,lv,ct,alterf,desc,maxct,op)
+	local mt=getmetatable(tc)
+	mt.material_filter=f
+	mt.material_minct=ct
+	mt.material_maxct=maxct~=nil and maxct or ct
+end
+Auxiliary.AddXyzProcedureLevelFree=function(tc,f,gf,minc,maxc,alterf,desc,op)
+	add_xyz_proc_nlv(tc,f,gf,minc,maxc,alterf,desc,op)
+	local mt=getmetatable(tc)
+	mt.material_filter=f
+	mt.material_minct=minc
+	mt.material_maxct=maxc
 end
 
 --Custom Functions
