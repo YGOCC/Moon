@@ -57,21 +57,24 @@ function cid.prevent_conflict(e,tp,eg,ep,ev,re,r,rp)
 		and e:GetHandler():GetFlagEffect(99988870)<=0
 end
 function cid.preset(e,tp,eg,ep,ev,re,r,rp)
+	local op=Duel.SelectOption(tp,aux.Stringid(id,5),aux.Stringid(id,6),aux.Stringid(id,7))
 	--Duel Start handfix
 	local drawcount1,drawcount2=0,0
-	local startlimit,startlimit2=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0),Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)
-	if startlimit>4 then
-		for i=1,startlimit-4 do
-			local rdm=Duel.GetFieldGroup(tp,LOCATION_HAND,0):GetFirst()
-			Duel.SendtoDeck(rdm,nil,1,REASON_RULE)
+	if op==0 then
+		local startlimit,startlimit2=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0),Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)
+		if startlimit>4 then
+			for i=1,startlimit-4 do
+				local rdm=Duel.GetFieldGroup(tp,LOCATION_HAND,0):GetFirst()
+				Duel.SendtoDeck(rdm,nil,1,REASON_RULE)
+			end
+		end
+		if startlimit2>4 then
+			for i=1,startlimit2-4 do
+				local rdm=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0):GetFirst()
+				Duel.SendtoDeck(rdm,nil,1,REASON_RULE)
+			end
 		end
 	end
-	if startlimit2>4 then
-		for i=1,startlimit2-4 do
-			local rdm=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0):GetFirst()
-			Duel.SendtoDeck(rdm,nil,1,REASON_RULE)
-		end
-	end	
 	if Duel.IsExistingMatchingCard(cid.glitched,tp,LOCATION_HAND,LOCATION_HAND,1,nil) then
 		local g=Duel.GetMatchingGroup(cid.glitched,tp,LOCATION_HAND+LOCATION_DECK,LOCATION_HAND+LOCATION_DECK,nil)
 		local hand1=Duel.GetMatchingGroup(cid.glitched,tp,LOCATION_HAND,0,nil)
@@ -125,19 +128,23 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Exile(e:GetHandler(),REASON_RULE)
 	excount1=excount1+1
 	--check valid deck size
-	local checksz,checksz2=Duel.GetFieldGroupCount(tp,LOCATION_DECK+LOCATION_HAND,0),Duel.GetFieldGroupCount(1-tp,LOCATION_DECK+LOCATION_HAND,0)
-	if checksz>30 or checksz2>30 then
-		Debug.Message("Found a deck that contains more than 30 cards. The Duel will be stopped, please adjust your Deck in Deck Building")
-		Duel.Win(tp,0x1)
+	if op==0 then
+		local checksz,checksz2=Duel.GetFieldGroupCount(tp,LOCATION_DECK+LOCATION_HAND,0),Duel.GetFieldGroupCount(1-tp,LOCATION_DECK+LOCATION_HAND,0)
+		if checksz>30 or checksz2>30 then
+			Debug.Message("Found a deck that contains more than 30 cards. The Duel will be stopped, please adjust your Deck in Deck Building")
+			Duel.Win(tp,0x1)
+		end
 	end
 	--add missing cards
 	if excount1>0 then
+		local minimum,maximum=20,30
+		if op==1 then minimum,maximum=40,60 end
 		local cond=false
 		local check1=Duel.GetFieldGroupCount(tp,LOCATION_DECK+LOCATION_HAND,0)
 		--decide if mandatory or optional
-		if check1<20 then
+		if check1<minimum then
 			cond=true
-		elseif check1<30 then
+		elseif check1<maximum then
 			if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 				cond=true
 			else
@@ -152,12 +159,12 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 			local slots
 			local minm=1
 			local fixcount=excount1
-			if check1<20 then
+			if check1<minimum then
 				Debug.Message("Your deck size is less than 20. Please add the minimum number of cards")
-				minm=20-check1
+				minm=minimum-check1
 			end
-			if check1+fixcount>30 then
-				fixcount=30-check1
+			if check1+fixcount>maximum then
+				fixcount=maximum-check1
 			end
 			if fixcount>0 then
 				for maxm=minm,fixcount do
@@ -195,12 +202,14 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	if excount2>0 then
+		local minimum,maximum=20,30
+		if op==1 then minimum,maximum=40,60 end
 		local cond=false
 		local check1=Duel.GetFieldGroupCount(1-tp,LOCATION_DECK+LOCATION_HAND,0)
 		--decide if mandatory or optional
-		if check1<20 then
+		if check1<minimum then
 			cond=true
-		elseif check1<30 then
+		elseif check1<maximum then
 			if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 				cond=true
 			else
@@ -215,12 +224,12 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 			local fixcount=excount2
 			local prep={}
 			local slots
-			if check1<20 then
+			if check1<minimum then
 				Debug.Message("Your deck size is less than 20. Please add the minimum number of cards")
-				minm=20-check1
+				minm=maximum-check1
 			end
-			if check1+fixcount>30 then
-				fixcount=30-check1
+			if check1+fixcount>maximum then
+				fixcount=maximum-check1
 			end
 			for maxm=minm,fixcount do
 				table.insert(prep,maxm)
@@ -262,75 +271,90 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(tp,drawcount1,REASON_RULE)
 	Duel.Draw(1-tp,drawcount2,REASON_RULE)
 	--adjust LPs
-	for lpp=0,1 do
-		if Duel.GetLP(lpp)~=4000 then
-			Duel.SetLP(lpp,4000)
+	if op~=1 then
+		local lpval=4000
+		if op==2 then
+			local lp_list={}
+			for ltemp=2000,16000,2000 do
+				table.insert(lp_list,ltemp)
+			end
+			lpval=Duel.AnnounceNumber(tp,table.unpack(lp_list))
 		end
-	end
-	--adjust extra deck
-	local extrag=Group.CreateGroup()
-	for extrap=0,1 do
-		local extra=Duel.GetFieldGroup(extrap,LOCATION_EXTRA,0)
-		if #extra>5 then
-			local extrile=extra:Select(extrap,#extra-5,#extra-5,nil)
-			extrag:Merge(extrile)
+		for lpp=0,1 do
+			if Duel.GetLP(lpp)~=lpval then
+				Duel.SetLP(lpp,lpval)
+			end
 		end
+		--adjust extra deck
+		local extrag=Group.CreateGroup()
+		local extramax=5
+		if op==2 then
+			max_list={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}
+			extramax=Duel.AnnounceNumber(tp,table.unpack(max_list))
+		end
+		for extrap=0,1 do
+			local extra=Duel.GetFieldGroup(extrap,LOCATION_EXTRA,0)
+			if #extra>extramax then
+				local extrile=extra:Select(extrap,#extra-extramax,#extra-extramax,nil)
+				extrag:Merge(extrile)
+			end
+		end
+		if #extrag>0 then
+			Duel.Exile(extrag,REASON_RULE)
+		end
+		--modify field
+		local pz1s,pz2s=0,4
+		local pz1o,pz2o=0,4
+		if Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_HAND,0,1,nil,TYPE_PENDULUM) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			pz1s,pz2s=1,3
+		end
+		if Duel.IsExistingMatchingCard(Card.IsType,1-tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_HAND,0,1,nil,TYPE_PENDULUM) and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
+			pz1o,pz2o=1,3
+		end
+		local df1=Effect.CreateEffect(e:GetHandler())
+		df1:SetType(EFFECT_TYPE_FIELD)
+		df1:SetCode(EFFECT_DISABLE_FIELD)
+		df1:SetOperation(function (e,tp)
+							return bit.lshift(0x1,0)
+						end)
+		Duel.RegisterEffect(df1,tp)
+		local df2=df1:Clone()
+		df2:SetOperation(function (e,tp)
+							return bit.lshift(0x1,4)
+						end)
+		Duel.RegisterEffect(df2,tp)
+		local df3=df1:Clone()
+		Duel.RegisterEffect(df3,1-tp)
+		local df4=df2:Clone()
+		Duel.RegisterEffect(df4,1-tp)
+		local df5=df1:Clone()
+		df5:SetOperation(function (e,tp)
+							return bit.lshift(0x100,pz1s)
+						end)
+		Duel.RegisterEffect(df5,tp)
+		local df6=df1:Clone()
+		df6:SetOperation(function (e,tp)
+							return bit.lshift(0x100,pz2s)
+						end)
+		Duel.RegisterEffect(df6,tp)
+		local df7=df5:Clone()
+		df7:SetOperation(function (e,tp)
+							return bit.lshift(0x100,pz1o)
+						end)
+		Duel.RegisterEffect(df7,1-tp)
+		local df8=df6:Clone()
+		df8:SetOperation(function (e,tp)
+							return bit.lshift(0x100,pz2o)
+						end)
+		Duel.RegisterEffect(df8,1-tp)
+		--skip phase
+		local sk=Effect.CreateEffect(e:GetHandler())
+		sk:SetType(EFFECT_TYPE_FIELD)
+		sk:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		sk:SetTargetRange(1,1)
+		sk:SetCode(EFFECT_SKIP_M2)
+		Duel.RegisterEffect(sk,tp)
 	end
-	if #extrag>0 then
-		Duel.Exile(extrag,REASON_RULE)
-	end
-	--modify field
-	local pz1s,pz2s=0,4
-	local pz1o,pz2o=0,4
-	if Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_HAND,0,1,nil,TYPE_PENDULUM) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-		pz1s,pz2s=1,3
-	end
-	if Duel.IsExistingMatchingCard(Card.IsType,1-tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_HAND,0,1,nil,TYPE_PENDULUM) and Duel.SelectYesNo(1-tp,aux.Stringid(id,1)) then
-		pz1o,pz2o=1,3
-	end
-	local df1=Effect.CreateEffect(e:GetHandler())
-	df1:SetType(EFFECT_TYPE_FIELD)
-	df1:SetCode(EFFECT_DISABLE_FIELD)
-	df1:SetOperation(function (e,tp)
-						return bit.lshift(0x1,0)
-					end)
-	Duel.RegisterEffect(df1,tp)
-	local df2=df1:Clone()
-	df2:SetOperation(function (e,tp)
-						return bit.lshift(0x1,4)
-					end)
-	Duel.RegisterEffect(df2,tp)
-	local df3=df1:Clone()
-	Duel.RegisterEffect(df3,1-tp)
-	local df4=df2:Clone()
-	Duel.RegisterEffect(df4,1-tp)
-	local df5=df1:Clone()
-	df5:SetOperation(function (e,tp)
-						return bit.lshift(0x100,pz1s)
-					end)
-	Duel.RegisterEffect(df5,tp)
-	local df6=df1:Clone()
-	df6:SetOperation(function (e,tp)
-						return bit.lshift(0x100,pz2s)
-					end)
-	Duel.RegisterEffect(df6,tp)
-	local df7=df5:Clone()
-	df7:SetOperation(function (e,tp)
-						return bit.lshift(0x100,pz1o)
-					end)
-	Duel.RegisterEffect(df7,1-tp)
-	local df8=df6:Clone()
-	df8:SetOperation(function (e,tp)
-						return bit.lshift(0x100,pz2o)
-					end)
-	Duel.RegisterEffect(df8,1-tp)
-	--skip phase
-	local sk=Effect.CreateEffect(e:GetHandler())
-	sk:SetType(EFFECT_TYPE_FIELD)
-	sk:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	sk:SetTargetRange(1,1)
-	sk:SetCode(EFFECT_SKIP_M2)
-	Duel.RegisterEffect(sk,tp)
 	--enable skills
 	if Duel.SelectYesNo(tp,aux.Stringid(id,0)) and Duel.SelectYesNo(1-tp,aux.Stringid(id,0)) then
 		for pp=0,1 do
