@@ -52,7 +52,7 @@ function c91672816.atkval(e,c)
     return e:GetHandler():GetCounter(0xbb1)*-200
 end
 function c91672816.ctfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0xbb8)
+    return c:IsFaceup() and c:IsSetCard(0xbb8) and c:IsType(TYPE_MONSTER)
 end
 function c91672816.ctop(e,tp,eg,ep,ev,re,r,rp)
     if eg:IsExists(c91672816.ctfilter,1,nil) then
