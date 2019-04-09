@@ -99,7 +99,7 @@ function c88880025.specon(e,tp,eg,ep,ev,re,r,rp,se,sp,st)
 end
 function c88880025.spefilter(c,e,tp)
 	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x889) and (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsLocation(LOCATION_EXTRA))
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function c88880025.cfilter(c)
 	return c:IsDiscardable()
