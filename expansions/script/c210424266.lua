@@ -22,28 +22,48 @@ function card.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
-	--Send 2 ponies from extra to grave, kill 1	
+	--Send ponies kill thing	
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetDescription(aux.Stringid(4066,10))
+	e4:SetCategory(CATEGORY_TODECK+CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetCountLimit(1)
-	e4:SetCost(card.descost)
+	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e4:SetCost(card.descost1)
 	e4:SetTarget(card.destarget)
 	e4:SetOperation(card.desop)
 	c:RegisterEffect(e4)
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(4066,11))
+	e5:SetCategory(CATEGORY_TODECK+CATEGORY_DESTROY)
+	e5:SetType(EFFECT_TYPE_IGNITION)
+	e5:SetRange(LOCATION_FZONE)
+	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e5:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e5:SetCost(card.descost2)
+	e5:SetTarget(card.destarget)
+	e5:SetOperation(card.desop)
+	c:RegisterEffect(e5)
 end
 function card.filter2(c,tp)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD) and c:IsSetCard(0x666)
 end
-function card.desfilter(c)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsAbleToGraveAsCost() and c:IsFaceup()
+function card.desfilter1(c)
+	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsAbleToDeckAsCost()
 end
-function card.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(card.desfilter,tp,LOCATION_EXTRA,0,2,nil) end
-	local g=Duel.SelectMatchingCard(tp,card.desfilter,tp,LOCATION_EXTRA,0,2,2,nil)
-	Duel.SendtoGrave(g,REASON_COST)
+function card.desfilter2(c)
+	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsAbleToDeckOrExtraAsCost()
+end
+function card.descost1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(card.desfilter1,tp,LOCATION_EXTRA,0,1,nil) end
+	local g=Duel.SelectMatchingCard(tp,card.desfilter1,tp,LOCATION_EXTRA,0,1,1,nil)
+	Duel.SendtoDeck(g,nil,0,REASON_COST)
+end
+function card.descost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(card.desfilter2,tp,LOCATION_GRAVE,0,2,nil) end
+	local g=Duel.SelectMatchingCard(tp,card.desfilter2,tp,LOCATION_GRAVE,0,2,2,nil)
+	Duel.SendtoDeck(g,nil,0,REASON_COST)
 end
 function card.destarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end

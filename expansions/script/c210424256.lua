@@ -3,34 +3,36 @@ local card = c210424256
 function card.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--Protect (Normal Ignition)
+	--Recover (Normal Ignition)
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_RECOVER)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCountLimit(1,210424256)
-	e1:SetTarget(card.prottg)
-	e1:SetOperation(card.protop)
+	e1:SetTarget(card.lptg)
+	e1:SetOperation(card.lpop)
 	c:RegisterEffect(e1)
-	--Protect (Quick Effect during Chain)
+	--Recover (Quick Effect during Chain)
 	local e1x=Effect.CreateEffect(c)
+	e1x:SetCategory(CATEGORY_RECOVER)
 	e1x:SetType(EFFECT_TYPE_QUICK_O)
 	e1x:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1x:SetCode(EVENT_FREE_CHAIN)
 	e1x:SetRange(LOCATION_PZONE)
 	e1x:SetCountLimit(1,210424256)
-	e1x:SetCondition(card.protcon_quick)
-	e1x:SetTarget(card.prottg)
-	e1x:SetOperation(card.protop)
+	e1x:SetCondition(card.lpcon_quick)
+	e1x:SetTarget(card.lptg)
+	e1x:SetOperation(card.lpop)
 	c:RegisterEffect(e1x)
-	--Protect (Battle Trigger)
+	--Recover (Battle Trigger)
 --	local e2=e1:Clone()
 --	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 --	e2:SetCode(EVENT_BE_BATTLE_TARGET)
 --	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET)
 --	e2:SetCondition(card.battlecon)
 --	c:RegisterEffect(e2)
-	--Protect (Chain Trigger)
+	--Recover (Chain Trigger)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_IGNORE_IMMUNE)
@@ -66,7 +68,7 @@ function card.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 --filters
-function card.indfilter(c)
+function card.lpfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
 end
 function card.pendfilter(c,tp)
@@ -79,7 +81,7 @@ function card.swapfilter2(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
 end
 function card.todeckfilter(c)
-	return c:IsSetCard(0x666) and c:IsAbleToDeck() and c:IsFaceup()
+	return c:IsAbleToDeck()
 end
 --Battle Trigger
 function card.battlecon(e,tp,eg,ep,ev,re,r,rp)
@@ -94,28 +96,26 @@ function card.setchain(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterFlagEffect(210424256,RESET_CHAIN,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE,1)
 end
 --Protect (Operation)
-function card.protcon_quick(e,tp,eg,ep,ev,re,r,rp)
+function card.lpcon_quick(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(210424256)>0
 end
-function card.prottg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and card.indfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(card.indfilter,tp,LOCATION_MZONE,0,1,nil) end
+function card.lptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.lpfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(card.lpfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,card.indfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,card.lpfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local rec=g:GetFirst():GetBaseAttack()
+	Duel.SetTargetParam(rec)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,rec)
 end
-function card.protop(e,tp,eg,ep,ev,re,r,rp)
+function card.lpop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCountLimit(1)
-		e1:SetValue(card.valcon)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e1)
+	if tc and tc:IsRelateToEffect(e) then
+	Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)
 	end
+end
 end
 function card.valcon(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
@@ -126,10 +126,10 @@ local c=e:GetHandler()
 	return eg:IsContains(e:GetHandler()) and re and re:GetOwner()~=c
 end
 function card.drawtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_EXTRA) and chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and card.todeckfilter(chkc) end
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingTarget(card.todeckfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,2,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and card.todeckfilter(chkc) end
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingTarget(card.todeckfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,card.todeckfilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,2,2,nil)
+	local g=Duel.SelectTarget(tp,card.todeckfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,2,2,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end

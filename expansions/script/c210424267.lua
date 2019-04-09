@@ -5,8 +5,9 @@ function card.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_SZONE)
-	e1:SetOperation(card.protop)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetTarget(card.target)
+	e1:SetOperation(card.activate)
 	c:RegisterEffect(e1)
 	--move card to scale
 	local e2=Effect.CreateEffect(c)
@@ -20,7 +21,7 @@ function card.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function card.filter(c)
-	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x666) and not c:IsForbidden()
+	return c:IsFaceup() and c:IsSetCard(0x666)
 end
 function card.scon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return aux.exccon(e)
@@ -28,7 +29,6 @@ end
 function card.sc(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()  end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-
 end
 function card.spfilter1(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
@@ -66,18 +66,26 @@ function card.sop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 end
-function card.protop(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(card.immunetg)
-	e1:SetValue(card.efilter)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
+function card.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(card.filter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,card.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function card.immunetg(e,c)
-	return c:IsSetCard(0x666)
+function card.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsControler(tp) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetCode(EFFECT_IMMUNE_EFFECT)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetValue(card.efilter)
+		e1:SetOwnerPlayer(tp)
+		tc:RegisterEffect(e1)
+	end
 end
 function card.efilter(e,te)
 	return te:GetOwnerPlayer()~=e:GetOwnerPlayer()
