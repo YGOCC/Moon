@@ -7,15 +7,6 @@ function c10268910.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--splimit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetRange(LOCATION_PZONE)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c10268910.splimit)
-	c:RegisterEffect(e2)
 	--equip
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(10268910,0))
@@ -88,9 +79,6 @@ function c10268910.eqop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c10268910.eqlimit(e,c)
 	return c:IsSetCard(0x19121)
-end
-function c10268910.splimit(e,c,sump,sumtype,sumpos,targetp)
-	return not c:IsSetCard(0x19121) and bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function c10268910.uncon(e)
 	return e:GetHandler():IsStatus(STATUS_UNION)

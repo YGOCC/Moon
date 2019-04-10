@@ -64,5 +64,5 @@ function c10268935.tfilter(c)
 	return c:IsSetCard(0x19121)
 end
 function c10268935.indes(e,c)
-	return c:IsCode(10268930)
+	return c:IsSetCard(0xFAB4B) and c:IsFaceup()
 end 

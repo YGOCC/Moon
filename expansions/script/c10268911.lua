@@ -8,15 +8,6 @@ function c10268911.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--splimit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetRange(LOCATION_PZONE)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c10268911.splimit)
-	c:RegisterEffect(e2)
 		--tohand
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(10268911,1))
@@ -48,9 +39,6 @@ function c10268911.initial_effect(c)
 end
 function c10268911.btarget(e,c)
 	return c~=e:GetHandler() and c:IsSetCard(0x19121)
-end
-function c10268911.splimit(e,c,sump,sumtype,sumpos,targetp)
-	return not c:IsSetCard(0x19121) and bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function c10268911.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,800) end

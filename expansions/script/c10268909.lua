@@ -8,15 +8,6 @@ function c10268909.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--splimit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetRange(LOCATION_PZONE)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c10268909.splimit)
-	c:RegisterEffect(e2)
 			--tohand
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(10268909,1))
@@ -50,26 +41,26 @@ function c10268909.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c10268909.condition(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_RITUAL or r==REASON_SYNCHRO
+	return r==REASON_RITUAL or r==REASON_FUSION
 end
 function c10268909.roperation(e,tp,eg,ep,ev,re,r,rp)
-	local rc=e:GetHandler():GetReasonCard()
-	if rc:GetFlagEffect(10268909)==0 then
-		--cannot special summon
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetDescription(aux.Stringid(10268909,0))
-		e1:SetProperty(EFFECT_FLAG_CLIENT_HINT+EFFECT_FLAG_PLAYER_TARGET)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetRange(LOCATION_MZONE)
-		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetAbsoluteRange(rp,0,1)
-		rc:RegisterEffect(e1)
-		rc:RegisterFlagEffect(10268909,RESET_EVENT+0x1fe0000,0,1)
+	local rc=eg:GetFirst()
+	while rc do
+		if rc:GetFlagEffect(10268909)==0 then
+			--cannot special summon
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetDescription(aux.Stringid(10268909,0))
+			e1:SetProperty(EFFECT_FLAG_CLIENT_HINT+EFFECT_FLAG_PLAYER_TARGET)
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetRange(LOCATION_MZONE)
+			e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetAbsoluteRange(ep,0,1)
+			rc:RegisterEffect(e1,true)
+			rc:RegisterFlagEffect(10268909,RESET_EVENT+RESETS_STANDARD,0,1)
+		end
+		rc=eg:GetNext()
 	end
-end
-function c10268909.splimit(e,c,sump,sumtype,sumpos,targetp)
-	return not c:IsSetCard(0x19121) and bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function c10268909.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,800) end

@@ -25,16 +25,16 @@ function c10268905.initial_effect(c)
 	e2:SetTarget(c10268905.target)
 	e2:SetOperation(c10268905.activate)
 	c:RegisterEffect(e2)
-		--atk
+	--def
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_UPDATE_DEFENCE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetValue(c10268905.defval)
+	e3:SetCode(EFFECT_UPDATE_DEFENSE)
+	e3:SetTargetRange(LOCATION_MZONE,0)
+	e3:SetValue(c10268905.val)
 	c:RegisterEffect(e3)
 end
-function c10268905.defval(e,c)
+function c10268905.val(e,c)
 	return c:GetOverlayCount()*500
 end
 function c10268905.efilter(e,c)

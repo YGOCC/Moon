@@ -26,7 +26,7 @@ function c10268902.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c10268902.indes(e,c)
-	return c:IsSetCard(0xFAB4B)
+	return c:IsSetCard(0xFAB4B) and c:IsFaceup()
 end 
 function c10268902.spfilter1(c,e,tp)
 	return c:IsSetCard(0x19121) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
