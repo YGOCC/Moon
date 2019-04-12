@@ -6393,8 +6393,6 @@ expansions/pics/field/90210007.jpg	e3df8e17a1666186aa04742938b6dc4b
 expansions/pics/field/92219655.jpg	2d283f55c01a8cbb60bf56a3b321d1c3
 expansions/pics/field/99189335.png	4f259dd72c540e6c7560a5097f30fa37
 expansions/pics/field/9945450.jpg	46587979b6ec1bcb8ba5144b1ae49b5a
-expansions/private/ot_changer.bat	828c32da562ee61d13c8e598d2067323
-expansions/private/sqlite3.exe	a4ad1344b840e7f4bc81e16def00d1c7
 expansions/script/c100000710.lua	8dc7a8fa1b09f27c30bf0bcf200c892c
 expansions/script/c100000711.lua	99922ff6d53fec5346678f1a05564ba1
 expansions/script/c100000712.lua	64a41474df4b09976c1a2bcc9995ff17
@@ -12639,6 +12637,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	8a69230f1dc976d643b884c060930c4a
+update/filelist.txt	96197e37b99cae28dadc49f132bdee92
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	5b5dee114caeda0ac5be833777faecb8
+update/version.txt	a27cef3d869be1593b6d1cbda1040ad2
