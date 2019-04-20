@@ -98,7 +98,7 @@ function c88880025.specon(e,tp,eg,ep,ev,re,r,rp,se,sp,st)
 	return re:GetHandler():IsSetCard(0x889) or (e:GetHandler():IsSummonType(TYPE_PENDULUM) and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0x889)) or (e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+726) and se and se:GetHandler():IsSetCode(0x889))
 end
 function c88880025.spefilter(c,e,tp)
-	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x889) and (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsLocation(LOCATION_EXTRA))
+	return c:IsSetCard(0x889) and (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_MONSTER)) and not (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function c88880025.cfilter(c)

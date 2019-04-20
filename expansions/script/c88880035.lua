@@ -22,6 +22,7 @@ function c88880035.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCountLimit(1,88880035)
+	e2:SetCondition(c88880035.drawcon)
 	e2:SetTarget(c88880035.drawtg)
 	e2:SetOperation(c88880035.drawop)
 	c:RegisterEffect(e2)
@@ -51,6 +52,9 @@ function c88880035.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --(2) Each time a "CREATION" monster is special summoned, except by this cards effect: Draw 1 card. This effect of "CREATION Summon Adversery" can only be used once a turn.
+function c88880035.drawcon(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp and bit.band(r,REASON_BATTLE)==0 and re and re:GetHandler():GetCode()~=88880035
+end
 function c88880035.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetTargetPlayer(tp)

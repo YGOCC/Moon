@@ -1,5 +1,9 @@
 --Moon Burst: Holder of Power
 local card = c210424270
+local m=210424270
+local cm=_G["c"..m]
+cm.dfc_front_side=210424279
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function card.initial_effect(c)
     --link summon
     aux.AddLinkProcedure(c,card.lfilter,2,2)
@@ -24,7 +28,25 @@ function card.initial_effect(c)
     e3:SetCondition(card.atkcon)
     e3:SetOperation(card.atkop)
     c:RegisterEffect(e3)
+		--shift
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetCode(EVENT_CHAIN_SOLVED)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCondition(card.accon)
+	e4:SetOperation(card.acop)
+	c:RegisterEffect(e4)
+
 end
+function card.accon(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		return e:GetHandler():IsAttackAbove(3000)
+end
+function card.acop(e,tp,eg,ep,ev,re,r,rp)
+local c=e:GetHandler()
+Senya.TransformDFCCard(c)
+	end
 function card.lfilter(c)
     return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666)
 end
