@@ -66,10 +66,10 @@ function c50031666.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function c50031666.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c50031666.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c50031666.nmfilter(c)
 	return  c:IsType(TYPE_NORMAL) and c:IsFaceup()

@@ -2,7 +2,7 @@
 function c500316141.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,7,c500316141.filter1,c500316141.filter2,2,99)  
+  aux.AddEvoluteProc(c,nil,7,c500316141.filter1,c500316141.filter2,c500316141.filter3,2,99)  
    --remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500316141,0))
@@ -32,6 +32,10 @@ function c500316141.initial_effect(c)
 	e2:SetOperation(c500316141.operation2)
 	c:RegisterEffect(e2)
 end
+function c500316141.filter3(c,ec,tp)
+	return not c:IsType(TYPE_EFFECT)
+end
+
 function c500316141.costfilter(c)
 	return c:IsAbleToRemoveAsCost() and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
@@ -74,10 +78,10 @@ end
 
 
 function c500316141.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c500316141.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c500316141.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

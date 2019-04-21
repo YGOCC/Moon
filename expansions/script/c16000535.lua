@@ -32,10 +32,10 @@ function c16000535.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function c16000535.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c16000535.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c16000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) and Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0 and Duel.IsExistingMatchingCard(c16000535.cfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,nil) end

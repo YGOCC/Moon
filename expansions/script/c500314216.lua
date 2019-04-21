@@ -33,14 +33,14 @@ function c500314216.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function c500314216.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c500314216.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,6,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,6,REASON_COST)
 end
 function c500314216.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c500314216.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388

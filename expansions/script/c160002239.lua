@@ -46,10 +46,10 @@ function c160002239.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function c160002239.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) 
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c160002239.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY) 
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c160002239.psfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()

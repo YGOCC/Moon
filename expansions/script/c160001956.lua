@@ -27,11 +27,11 @@ aux.AddEvoluteProc(c,nil,7,c160001956.filter1,c160001956.filter2,c160001956.filt
 end
 
 function c160001956.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) 
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 
 function c160001956.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY)
+	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c160001956.filter3(c,ec,tp)
 	return not c:IsType(TYPE_EFFECT)
