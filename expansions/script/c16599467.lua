@@ -138,7 +138,7 @@ function c16599467.thfilter(c)
 end
 --target protection
 function c16599467.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(10)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=10)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(10)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=10)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --tuner
 function c16599467.tunercon(e,tp,eg,ep,ev,re,r,rp)

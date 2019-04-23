@@ -119,7 +119,7 @@ function c16599456.battleprotection(e,tp,eg,ep,ev,re,r,rp)
 end
 --target protection
 function c16599456.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(9)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=9)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(9)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=9)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --act limit
 function c16599456.limcon(e)

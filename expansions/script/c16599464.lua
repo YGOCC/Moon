@@ -67,7 +67,7 @@ function c16599464.tdfilter(c)
 end
 --target protection
 function c16599464.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(6)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=6)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(6)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=6)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --tuner spsummon
 function c16599464.spcon(e,tp,eg,ep,ev,re,r,rp)

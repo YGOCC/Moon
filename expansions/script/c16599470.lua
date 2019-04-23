@@ -83,11 +83,11 @@ function c16599470.splimit(e,se,sp,st)
 end
 --target protection
 function c16599470.efilter(e,re,rp)
-	local g=Duel.GetMatchingGroup(c16599470.lvfilter,tp,LOCATION_MZONE,0,nil)
-	if g:GetCount()==0 then return end
+	local g=Duel.GetMatchingGroup(c16599470.lvfilter,e:GetHandler():GetControler(),LOCATION_MZONE,0,nil)
+	if g:GetCount()==0 then return false end
 	local sg=g:GetMaxGroup(Card.GetLevel)
 	local lv=sg:GetFirst():GetLevel()+1
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(lv)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=lv)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(lv)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=lv)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --search
 function c16599470.sccon(e,tp,eg,ep,ev,re,r,rp)

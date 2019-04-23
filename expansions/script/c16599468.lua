@@ -85,7 +85,7 @@ function c16599468.replacer(c)
 end
 --target protection
 function c16599468.efilter(e,re,rp)
-	return re:GetHandler():IsType(TYPE_MONSTER) and rp==1-e:GetHandlerPlayer()
+	return rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --wipe field
 function c16599468.rmcon(e,tp,eg,ep,ev,re,r,rp)

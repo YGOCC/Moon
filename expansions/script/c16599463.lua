@@ -55,7 +55,7 @@ function c16599463.lvfilter(c)
 end
 --target protection
 function c16599463.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(5)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=5)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(5)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=5)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --battle protection
 function c16599463.bpcon(e,tp,eg,ep,ev,re,r,rp)

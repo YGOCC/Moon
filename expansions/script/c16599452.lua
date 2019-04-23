@@ -44,7 +44,7 @@ function c16599452.tunerfilter(c)
 end
 --target protection
 function c16599452.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(4)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=4)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(4)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=4)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --spsummon
 function c16599452.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

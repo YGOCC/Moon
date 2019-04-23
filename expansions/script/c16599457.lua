@@ -60,7 +60,7 @@ function c16599457.costfilter2(c)
 end
 --target protection
 function c16599457.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(8)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=8)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(8)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=8)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --spsummon
 function c16599457.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

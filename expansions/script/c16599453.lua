@@ -9,14 +9,6 @@ function c16599453.initial_effect(c)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetValue(c16599453.efilter)
 	c:RegisterEffect(e0)
-	--dual attribute
-	local e0x=Effect.CreateEffect(c)
-	e0x:SetType(EFFECT_TYPE_SINGLE)
-	e0x:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e0x:SetRange(LOCATION_DECK)
-	e0x:SetCode(EFFECT_ADD_ATTRIBUTE)
-	e0x:SetValue(ATTRIBUTE_DARK)
-	c:RegisterEffect(e0x)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -57,7 +49,7 @@ function c16599453.aclimit(e,re,tp)
 end
 --target protection
 function c16599453.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(3)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=3)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(3)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=3)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --spsummon
 function c16599453.sccon(e,tp,eg,ep,ev,re,r,rp)

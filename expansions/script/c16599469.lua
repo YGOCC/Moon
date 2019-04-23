@@ -52,6 +52,9 @@ end
 function c16599469.filter(c)
 	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and c:GetLevel()>1
 end
+function c16599469.acfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x1559) and c:IsType(TYPE_SYNCHRO)
+end
 --synchro protection
 function c16599469.efilter(e,c)
 	return c:IsType(TYPE_SYNCHRO) and c:IsRace(RACE_FAIRY)
@@ -90,7 +93,7 @@ end
 --trigger limit
 function c16599469.accon(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and Duel.IsExistingMatchingCard(c16599469.acfilter,tp,LOCATION_MZONE,0,1,nil)
 end 
 function c16599469.aclimit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)

@@ -128,7 +128,7 @@ function c16599454.aclimit(e,re,tp)
 end
 --target protection
 function c16599454.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(11)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=11)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(11)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=11)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --avoid battle damage
 function c16599454.bfilter(e,c)

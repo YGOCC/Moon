@@ -39,7 +39,7 @@ function c16599451.aclimit(e,re,tp)
 end
 --target protection
 function c16599451.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(3)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=3)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(3)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=3)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --tokens
 function c16599451.tkcon(e,tp,eg,ep,ev,re,r,rp)

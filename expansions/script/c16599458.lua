@@ -60,7 +60,7 @@ function c16599458.atkfilter(c)
 end
 --target protection
 function c16599458.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(8)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=8)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(8)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=8)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --inflict damage
 function c16599458.damcon(e,tp,eg,ep,ev,re,r,rp)

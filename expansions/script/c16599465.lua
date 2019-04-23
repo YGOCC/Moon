@@ -69,7 +69,7 @@ function c16599465.exclude(c,card)
 end
 --target protection
 function c16599465.efilter(e,re,rp)
-	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(7)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=7)) and rp==1-e:GetHandlerPlayer()
+	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(7)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=7)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
 end
 --bounce set cards
 function c16599465.thcon(e,tp,eg,ep,ev,re,r,rp)
