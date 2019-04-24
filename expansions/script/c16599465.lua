@@ -24,16 +24,16 @@ function c16599465.initial_effect(c)
 	e1:SetOperation(c16599465.thop)
 	c:RegisterEffect(e1)
 	--draw
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DRAW)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetCode(EVENT_BATTLE_DAMAGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c16599465.damcon)
-	e2:SetTarget(c16599465.damtg)
-	e2:SetOperation(c16599465.damop)
-	c:RegisterEffect(e2)
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetCategory(CATEGORY_DRAW)
+	-- e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	-- e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_PLAYER_TARGET)
+	-- e2:SetCode(EVENT_BATTLE_DAMAGE)
+	-- e2:SetRange(LOCATION_MZONE)
+	-- e2:SetCondition(c16599465.damcon)
+	-- e2:SetTarget(c16599465.damtg)
+	-- e2:SetOperation(c16599465.damop)
+	-- c:RegisterEffect(e2)
 	--search
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -97,23 +97,23 @@ function c16599465.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoHand(sg,nil,REASON_EFFECT)
 end
 --draw
-function c16599465.damcon(e,tp,eg,ep,ev,re,r,rp)
-	local att=Duel.GetAttacker()
-	local def=Duel.GetAttackTarget()
-	return ep==tp and att and def
-		and ((att:GetControler()==tp and att:IsRace(RACE_FAIRY) and att:IsRelateToBattle())
-		or (def:GetControler()==tp and def:IsRace(RACE_FAIRY) and def:IsRelateToBattle()))
-end
-function c16599465.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-end
-function c16599465.damop(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
-end
+-- function c16599465.damcon(e,tp,eg,ep,ev,re,r,rp)
+	-- local att=Duel.GetAttacker()
+	-- local def=Duel.GetAttackTarget()
+	-- return ep==tp and att and def
+		-- and ((att:GetControler()==tp and att:IsRace(RACE_FAIRY) and att:IsRelateToBattle())
+		-- or (def:GetControler()==tp and def:IsRace(RACE_FAIRY) and def:IsRelateToBattle()))
+-- end
+-- function c16599465.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	-- if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	-- Duel.SetTargetPlayer(tp)
+	-- Duel.SetTargetParam(1)
+	-- Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+-- end
+-- function c16599465.damop(e,tp,eg,ep,ev,re,r,rp)
+	-- local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	-- Duel.Draw(p,d,REASON_EFFECT)
+-- end
 --search
 function c16599465.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_COST) and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_MONSTER)

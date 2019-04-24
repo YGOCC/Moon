@@ -20,15 +20,15 @@ function c16599454.initial_effect(c)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	--change levels
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1)
-	e2:SetCost(c16599454.lvcost)
-	e2:SetTarget(c16599454.lvtg)
-	e2:SetOperation(c16599454.lvop)
-	c:RegisterEffect(e2)
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetType(EFFECT_TYPE_IGNITION)
+	-- e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	-- e2:SetRange(LOCATION_MZONE)
+	-- e2:SetCountLimit(1)
+	-- e2:SetCost(c16599454.lvcost)
+	-- e2:SetTarget(c16599454.lvtg)
+	-- e2:SetOperation(c16599454.lvop)
+	-- c:RegisterEffect(e2)
 	--change control
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_CONTROL)
@@ -135,59 +135,59 @@ function c16599454.bfilter(e,c)
 	return c:IsRace(RACE_FAIRY)
 end
 --change levels
-function c16599454.lvcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16599454.costfilter,tp,LOCATION_MZONE+LOCATION_DECK+LOCATION_GRAVE,0,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c16599454.costfilter,tp,LOCATION_MZONE+LOCATION_DECK+LOCATION_GRAVE,0,1,1,e:GetHandler())
-	if g:GetCount()>0 then
-		Duel.Remove(g,POS_FACEUP,REASON_COST)
-		local op=Duel.GetOperatedGroup():GetFirst()
-		if op then
-			e:SetLabel(op:GetLevel())
-		end
-	end
-end
-function c16599454.lvfilter(c,lv)
-	return c:IsFaceup() and c:GetLevel()~=lv
-end
-function c16599454.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
-	local lv=e:GetLabel()
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and chkc~=c and c16599454.lvfilter(chkc,lv) end
-	if chk==0 then return Duel.IsExistingTarget(c16599454.lvfilter,tp,LOCATION_MZONE,0,1,c,lv) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c16599454.lvfilter,tp,LOCATION_MZONE,0,1,1,c,lv)
-end
-function c16599454.lvop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local lv=e:GetLabel()
-	local tc=Duel.GetFirstTarget()
-	if c:IsFaceup() and tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		local g=Group.CreateGroup()
-		g:AddCard(c)
-		g:AddCard(tc)
-		local gc=g:GetFirst()
-		while gc do
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_CHANGE_LEVEL)
-			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetValue(lv)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			gc:RegisterEffect(e1)
-			gc=g:GetNext()
-		end
-	end
-	--special summon limit
-	local e2=Effect.CreateEffect(e:GetHandler())
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetTargetRange(1,0)
-	e2:SetTarget(c16599454.splimit)
-	e2:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e2,tp)
-end
+-- function c16599454.lvcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	-- if chk==0 then return Duel.IsExistingMatchingCard(c16599454.costfilter,tp,LOCATION_MZONE+LOCATION_DECK+LOCATION_GRAVE,0,1,e:GetHandler()) end
+	-- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	-- local g=Duel.SelectMatchingCard(tp,c16599454.costfilter,tp,LOCATION_MZONE+LOCATION_DECK+LOCATION_GRAVE,0,1,1,e:GetHandler())
+	-- if g:GetCount()>0 then
+		-- Duel.Remove(g,POS_FACEUP,REASON_COST)
+		-- local op=Duel.GetOperatedGroup():GetFirst()
+		-- if op then
+			-- e:SetLabel(op:GetLevel())
+		-- end
+	-- end
+-- end
+-- function c16599454.lvfilter(c,lv)
+	-- return c:IsFaceup() and c:GetLevel()~=lv
+-- end
+-- function c16599454.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	-- local c=e:GetHandler()
+	-- local lv=e:GetLabel()
+	-- if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and chkc~=c and c16599454.lvfilter(chkc,lv) end
+	-- if chk==0 then return Duel.IsExistingTarget(c16599454.lvfilter,tp,LOCATION_MZONE,0,1,c,lv) end
+	-- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	-- Duel.SelectTarget(tp,c16599454.lvfilter,tp,LOCATION_MZONE,0,1,1,c,lv)
+-- end
+-- function c16599454.lvop(e,tp,eg,ep,ev,re,r,rp)
+	-- local c=e:GetHandler()
+	-- local lv=e:GetLabel()
+	-- local tc=Duel.GetFirstTarget()
+	-- if c:IsFaceup() and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+		-- local g=Group.CreateGroup()
+		-- g:AddCard(c)
+		-- g:AddCard(tc)
+		-- local gc=g:GetFirst()
+		-- while gc do
+			-- local e1=Effect.CreateEffect(e:GetHandler())
+			-- e1:SetType(EFFECT_TYPE_SINGLE)
+			-- e1:SetCode(EFFECT_CHANGE_LEVEL)
+			-- e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			-- e1:SetValue(lv)
+			-- e1:SetReset(RESET_EVENT+0x1fe0000)
+			-- gc:RegisterEffect(e1)
+			-- gc=g:GetNext()
+		-- end
+	-- end
+	-- --special summon limit
+	-- local e2=Effect.CreateEffect(e:GetHandler())
+	-- e2:SetType(EFFECT_TYPE_FIELD)
+	-- e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	-- e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	-- e2:SetTargetRange(1,0)
+	-- e2:SetTarget(c16599454.splimit)
+	-- e2:SetReset(RESET_PHASE+PHASE_END)
+	-- Duel.RegisterEffect(e2,tp)
+-- end
 --inflict damage
 function c16599454.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(16599454)>0 or e:GetHandler():GetFlagEffect(26599454)>0

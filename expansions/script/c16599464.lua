@@ -24,16 +24,16 @@ function c16599464.initial_effect(c)
 	e1:SetOperation(c16599464.spop)
 	c:RegisterEffect(e1)
 	--resource gain
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TODECK)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e2:SetCode(EVENT_BATTLE_DAMAGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c16599464.damcon)
-	e2:SetTarget(c16599464.damtg)
-	e2:SetOperation(c16599464.damop)
-	c:RegisterEffect(e2)
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetCategory(CATEGORY_TODECK)
+	-- e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	-- e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	-- e2:SetCode(EVENT_BATTLE_DAMAGE)
+	-- e2:SetRange(LOCATION_MZONE)
+	-- e2:SetCondition(c16599464.damcon)
+	-- e2:SetTarget(c16599464.damtg)
+	-- e2:SetOperation(c16599464.damop)
+	-- c:RegisterEffect(e2)
 	--spsummon
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -108,26 +108,26 @@ function c16599464.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --resource gain
-function c16599464.damcon(e,tp,eg,ep,ev,re,r,rp)
-	local att=Duel.GetAttacker()
-	local def=Duel.GetAttackTarget()
-	return ep==tp and att and def
-		and ((att:GetControler()==tp and att:IsRace(RACE_FAIRY) and att:IsRelateToBattle())
-		or (def:GetControler()==tp and def:IsRace(RACE_FAIRY) and def:IsRelateToBattle()))
-end
-function c16599464.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16599464.tdfilter,tp,LOCATION_REMOVED,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
-end
-function c16599464.damop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(c16599464.tdfilter,tp,LOCATION_REMOVED,0,nil)
-	if g:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local tc=g:Select(tp,1,3,nil)
-		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
-	end
-end
+-- function c16599464.damcon(e,tp,eg,ep,ev,re,r,rp)
+	-- local att=Duel.GetAttacker()
+	-- local def=Duel.GetAttackTarget()
+	-- return ep==tp and att and def
+		-- and ((att:GetControler()==tp and att:IsRace(RACE_FAIRY) and att:IsRelateToBattle())
+		-- or (def:GetControler()==tp and def:IsRace(RACE_FAIRY) and def:IsRelateToBattle()))
+-- end
+-- function c16599464.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	-- if chk==0 then return Duel.IsExistingMatchingCard(c16599464.tdfilter,tp,LOCATION_REMOVED,0,1,nil) end
+	-- Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
+-- end
+-- function c16599464.damop(e,tp,eg,ep,ev,re,r,rp)
+	-- local c=e:GetHandler()
+	-- local g=Duel.GetMatchingGroup(c16599464.tdfilter,tp,LOCATION_REMOVED,0,nil)
+	-- if g:GetCount()>0 then
+		-- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		-- local tc=g:Select(tp,1,3,nil)
+		-- Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
+	-- end
+-- end
 --spsummon
 function c16599464.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_COST) and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_MONSTER)

@@ -1,4 +1,4 @@
---Quartus dell'Organizzazione Angeli, Brinace
+--Quartus dell'Organizzazione Angeli, Liber
 --Script by XGlitchy30
 function c16599466.initial_effect(c)
 	--synchro summon
@@ -24,16 +24,16 @@ function c16599466.initial_effect(c)
 	e1:SetOperation(c16599466.drawop)
 	c:RegisterEffect(e1)
 	--gain atk
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_ATKCHANGE)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_CARD_TARGET)
-	e2:SetCode(EVENT_BATTLE_DAMAGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c16599466.atkcon)
-	e2:SetTarget(c16599466.atktg)
-	e2:SetOperation(c16599466.atkop)
-	c:RegisterEffect(e2)
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetCategory(CATEGORY_ATKCHANGE)
+	-- e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	-- e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_CARD_TARGET)
+	-- e2:SetCode(EVENT_BATTLE_DAMAGE)
+	-- e2:SetRange(LOCATION_MZONE)
+	-- e2:SetCondition(c16599466.atkcon)
+	-- e2:SetTarget(c16599466.atktg)
+	-- e2:SetOperation(c16599466.atkop)
+	-- c:RegisterEffect(e2)
 	--recover resources
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND)
@@ -92,30 +92,30 @@ function c16599466.drawop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 --gain atk
-function c16599466.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local att=Duel.GetAttacker()
-	local def=Duel.GetAttackTarget()
-	return ep==tp and att and def
-		and ((att:GetControler()==tp and att:IsRace(RACE_FAIRY) and att:IsRelateToBattle())
-		or (def:GetControler()==tp and def:IsRace(RACE_FAIRY) and def:IsRelateToBattle()))
-end
-function c16599466.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c16599466.atkfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c16599466.atkfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c16599466.atkfilter,tp,LOCATION_MZONE,0,1,1,nil)
-end
-function c16599466.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(ev)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
-		tc:RegisterEffect(e1)
-	end
-end
+-- function c16599466.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	-- local att=Duel.GetAttacker()
+	-- local def=Duel.GetAttackTarget()
+	-- return ep==tp and att and def
+		-- and ((att:GetControler()==tp and att:IsRace(RACE_FAIRY) and att:IsRelateToBattle())
+		-- or (def:GetControler()==tp and def:IsRace(RACE_FAIRY) and def:IsRelateToBattle()))
+-- end
+-- function c16599466.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	-- if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c16599466.atkfilter(chkc) end
+	-- if chk==0 then return Duel.IsExistingTarget(c16599466.atkfilter,tp,LOCATION_MZONE,0,1,nil) end
+	-- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	-- Duel.SelectTarget(tp,c16599466.atkfilter,tp,LOCATION_MZONE,0,1,1,nil)
+-- end
+-- function c16599466.atkop(e,tp,eg,ep,ev,re,r,rp)
+	-- local tc=Duel.GetFirstTarget()
+	-- if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		-- local e1=Effect.CreateEffect(e:GetHandler())
+		-- e1:SetType(EFFECT_TYPE_SINGLE)
+		-- e1:SetCode(EFFECT_UPDATE_ATTACK)
+		-- e1:SetValue(ev)
+		-- e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+		-- tc:RegisterEffect(e1)
+	-- end
+-- end
 --recover resources
 function c16599466.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_COST) and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_MONSTER)
