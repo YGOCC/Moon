@@ -51,23 +51,21 @@ function cid.desfilter(c,e,tp)
 end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsDestructable() and Duel.GetMZoneCount(tp,c)>0
-		and Duel.IsExistingMatchingCard(cid.desfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
+	if chk==0 then return Duel.GetMZoneCount(tp,c)>0
+		and Duel.IsExistingMatchingCard(cid.desfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) and Duel.GetTurnPlayer()~=tp end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
-		local tc=Duel.GetAttacker()
-		if tc and tc:IsControler(1-tp) then Duel.NegateAttack()
+		if Duel.GetAttacker() then Duel.NegateAttack()
 		else
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e1:SetCode(EVENT_ATTACK_ANNOUNCE)
 			e1:SetReset(RESET_PHASE+PHASE_END)
 			e1:SetCountLimit(1)
-			e1:SetCondition(function(e,tp) return Duel.GetTurnPlayer()~=tp end)
 			e1:SetOperation(cid.disop)
 			Duel.RegisterEffect(e1,tp)
 		end
