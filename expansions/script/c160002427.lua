@@ -4,6 +4,7 @@ function c160002427.initial_effect(c)
 	e1:SetDescription(aux.Stringid(160002427,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	 e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetCountLimit(1,160002427)
 	e1:SetTarget(c160002427.target)
@@ -35,7 +36,7 @@ end
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,5) end
 end
 function c160002427.filter(c)
-	return c:IsAbleToHand() and (c:IsSetCard(0x85a) and c:IsType(TYPE_SPELL+TYPE_TRAP)) 
+	return c:IsAbleToHand() and c:IsSetCard(0x885a) and c:IsType(TYPE_SPELL+TYPE_TRAP)) 
 end
 function c160002427.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,5) then return end

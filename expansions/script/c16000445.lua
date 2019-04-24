@@ -46,11 +46,11 @@ end
 function c16000445.fscondition(e,g,gc)
 	if g==nil then return true end
 	if gc then return false end
-	return g:IsExists(c16000445.ffilter,4,nil)
+	return g:IsExists(c16000445.ffilter,3,nil)
 end
 function c16000445.fsoperation(e,tp,eg,ep,ev,re,r,rp,gc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-	Duel.SetFusionMaterial(eg:FilterSelect(tp,c16000445.ffilter,4,63,nil))
+	Duel.SetFusionMaterial(eg:FilterSelect(tp,c16000445.ffilter,3,63,nil))
 end
 function c16000445.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,3) end

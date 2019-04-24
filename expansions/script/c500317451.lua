@@ -35,7 +35,7 @@ function c500317451.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_EFFECT) and not e:GetHandler():IsReason(REASON_RETURN)
 end
 function c500317451.filter(c)
-	return (c:IsSetCard(0x85a) and c:IsType(TYPE_SPELL+TYPE_TRAP)) or c:IsSetCard(0x47) and c:IsAbleToHand()
+	return (c:IsSetCard(0x885a) and c:IsType(TYPE_SPELL+TYPE_TRAP)) or c:IsSetCard(0x47) and c:IsAbleToHand()
 end
 function c500317451.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c500317451.filter,tp,LOCATION_DECK,0,1,nil) end

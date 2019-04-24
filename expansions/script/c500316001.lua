@@ -28,7 +28,7 @@ function c500316001.spcon(e,c)
 end
 
 function c500316001.thfilter(c)
-	return c:IsSetCard(0x85a) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0x885a) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 
 function c500316001.thcon(e,tp,eg,ep,ev,re,r,rp)
