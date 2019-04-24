@@ -64,7 +64,7 @@ function c500311003.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		end
 	end
 end
-end
+
 function c500311003.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,2,REASON_COST)
