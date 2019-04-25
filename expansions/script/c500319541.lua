@@ -25,7 +25,7 @@ local e1=Effect.CreateEffect(c)
 	c:RegisterEffect(e4)
 	end
 function c500319541.ffilter(c)
-	return c:IsSetCard(0x885a) and not c:IsRace(RACE_SPELLCASTER)
+	return c:IsSetCard(0x885a) and not c:IsRace(RACE_SPELLCASTER) and c:IsType(TYPE_MONSTER)
 
 end
 function c500319541.condition(e,tp,eg,ep,ev,re,r,rp)

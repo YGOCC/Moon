@@ -9,8 +9,8 @@ function c500315100.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,500315101)
-	  e1:SetTarget(c500315100.distg)
-	e1:SetOperation(c500315100.desop)
+	  e1:SetTarget(c500315100.distg2)
+	e1:SetOperation(c500315100.desop2)
 	c:RegisterEffect(e1)
 	
 		local e4=Effect.CreateEffect(c)
@@ -76,13 +76,13 @@ end
 function c500315100.cfilter(c)
 	return c:IsSetCard(0x885a) and c:IsLocation(LOCATION_GRAVE)
 end
-function c500315100.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c500315100.distg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,2) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(2)
 	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,2)
 end
-function c500315100.desop(e,tp,eg,ep,ev,re,r,rp)
+function c500315100.desop2(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.DiscardDeck(p,d,REASON_EFFECT)
 	local g=Duel.GetOperatedGroup()
