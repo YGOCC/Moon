@@ -72,17 +72,17 @@ end
 --  local tg=g:GetMaxGroup(Card.GetAttack)
 --  local dam=tg:GetFirst():GetAttack()
 --  if tg:GetCount()>1 then
---	  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
---	  local sg=tg:Select(tp,1,1,nil)
---	  Duel.HintSelection(sg)
---	  local dam1=sg:GetFirst():GetAttack()
---	  if Duel.Destroy(sg,REASON_EFFECT)~=0 then
---		  Duel.Damage(1-tp,dam1,REASON_EFFECT)
---	  end
+--	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+--	local sg=tg:Select(tp,1,1,nil)
+--	Duel.HintSelection(sg)
+--	local dam1=sg:GetFirst():GetAttack()
+--	if Duel.Destroy(sg,REASON_EFFECT)~=0 then
+--		Duel.Damage(1-tp,dam1,REASON_EFFECT)
+--	end
 	--  else
---	  if Duel.Destroy(tg,REASON_EFFECT)~=0 then
---		  Duel.Damage(1-tp,dam,REASON_EFFECT)
---	  end
+--	if Duel.Destroy(tg,REASON_EFFECT)~=0 then
+--		Duel.Damage(1-tp,dam,REASON_EFFECT)
+--	end
 --  end
 --  end
 --end
@@ -198,7 +198,7 @@ function c160002123.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2,true)
-	   Duel.SpecialSummonComplete()	 
+	   Duel.SpecialSummonComplete()  
 	end
 end
 end
