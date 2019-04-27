@@ -1,9 +1,19 @@
 --G.O.D.
+--scripted by ChaosBladesIX[EW]
 function c24680135.initial_effect(c)
 	--pendulum summon
-	--scripted by ChaosBladesIX[EW]
-	aux.EnablePendulumAttribute(c,false)
-    --e1 (currently missing)
+	aux.EnablePendulumAttribute(c)
+    --destroy
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(24680135,0))
+	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_PZONE)
+	e1:SetCountLimit(1)
+	e1:SetCondition(c24680135.pdescon)
+	e1:SetTarget(c24680135.pdestg)
+	e1:SetOperation(c24680135.pdesop)
+	c:RegisterEffect(e1)
     --indes
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -44,11 +54,41 @@ function c24680135.initial_effect(c)
 	e5:SetTarget(c24680135.distg)
 	e5:SetOperation(c24680135.disop)
 	c:RegisterEffect(e5)
-    --e6 (currently missing)
-   end
+    --destroy
+	local e6=Effect.CreateEffect(c)
+	e6:SetDescription(aux.Stringid(24680135,2))
+	e6:SetCategory(CATEGORY_DESTROY)
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCountLimit(1)
+	e6:SetCondition(c24680135.descon)
+	e6:SetTarget(c24680135.destg)
+	e6:SetOperation(c24680135.desop)
+	c:RegisterEffect(e6)
+end
 --(Pendulum Effects are currently unconfirmed)
 --Is presumed that G.O.D. is Divine/Divine-Beast and their Pendulum Scales are 13
---Pendulum Effect e1 missing  
+function c24680135.cfilter(c)--destroy ms on the field up to the n of cs in your Pzones functions
+	return (c:IsFaceup() or c:IsFacedown())
+end
+function c24680135.pdescon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c24680135.cfilter,tp,LOCATION_PZONE,0,1,nil)
+end
+function c24680135.pdestg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_PZONE,LOCATION_PZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function c24680135.pdesop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=Duel.GetMatchingGroupCount(c24680135.cfilter,tp,LOCATION_PZONE,0,nil)
+	if ct==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,ct,nil)
+	if g:GetCount()>0 then
+		Duel.HintSelection(g)
+		Duel.Destroy(g,REASON_EFFECT)
+	end
+end
 ---------------------------------------------------------
 function c24680135.atkop(e,tp,eg,ep,ev,re,r,rp)--gain atk function
 	local c=e:GetHandler()
@@ -127,4 +167,24 @@ function c24680135.disop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---Monster Effect e6 missing 
+function c24680135.filter(c)--destroy ms on the field up to the n of cs in your Pzones functions
+	return (c:IsFaceup() or c:IsFacedown())
+end
+function c24680135.descon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c24680135.filter,tp,LOCATION_PZONE,0,1,nil)
+end
+function c24680135.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_PZONE,LOCATION_PZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function c24680135.desop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=Duel.GetMatchingGroupCount(c24680135.filter,tp,LOCATION_PZONE,0,nil)
+	if ct==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,ct,nil)
+	if g:GetCount()>0 then
+		Duel.HintSelection(g)
+		Duel.Destroy(g,REASON_EFFECT)
+	end
+end
