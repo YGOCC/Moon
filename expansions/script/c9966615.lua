@@ -113,7 +113,7 @@ function cid.redirect(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
 	local b1=a and not a:IsType(TYPE_TOKEN) and a:IsStatus(STATUS_BATTLE_DESTROYED) and a:IsControler(1-tp) and d and d==c and d:GetFlagEffect(id)>0
 	local b2=d and not d:IsType(TYPE_TOKEN) and d:IsStatus(STATUS_BATTLE_DESTROYED) and d:IsControler(1-tp) and a==c and a:GetFlagEffect(id)>0
-	if (not b1 and not b2) or not c:IsOnField() or c:IsFacedown() or not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return end
+	if (not b1 and not b2) or not c:IsOnField() or c:IsFacedown() or c:IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetCode(EFFECT_SEND_REPLACE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -138,5 +138,8 @@ function cid.repop(e,tp,eg,ep,ev,re,r,rp)
 	local xc=e:GetLabelObject()
 	if not xc:IsOnField() or xc:IsFacedown() then return end
 	Duel.Hint(HINT_CARD,1-tp,id)
+	if e:GetHandler():IsType(TYPE_XYZ) and e:GetHandler():GetOverlayCount()>0 then
+		Duel.SendtoGrave(e:GetHandler():GetOverlayGroup(),REASON_RULE)
+	end
 	Duel.Overlay(xc,Group.FromCards(e:GetHandler()))
 end

@@ -36,7 +36,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2x)
 	--get effect
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_SINGLE)
+	e3:SetType(EFFECT_TYPE_XMATERIAL)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e3:SetCountLimit(1)
 	e3:SetCondition(cid.vcon)

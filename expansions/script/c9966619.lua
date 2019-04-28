@@ -74,6 +74,9 @@ function cid.repop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	if #g>0 then
 		Duel.HintSelection(g)
+		if e:GetHandler():IsType(TYPE_XYZ) and e:GetHandler():GetOverlayCount()>0 then
+			Duel.SendtoGrave(e:GetHandler():GetOverlayGroup(),REASON_RULE)
+		end
 		Duel.Overlay(g:GetFirst(),Group.FromCards(e:GetHandler()))
 	end
 end
