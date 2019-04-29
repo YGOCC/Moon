@@ -33,8 +33,11 @@ function c160002123.initial_effect(c)
 	e2:SetTarget(c160002123.sptg)
 	e2:SetOperation(c160002123.spop)
 	c:RegisterEffect(e2)
+	 Duel.AddCustomActivityCounter(160002123,ACTIVITY_SPSUMMON,c160002123.counterfilter)
 end
-
+function c160002123.counterfilter(c)
+	return c:GetSummonLocation()~=LOCATION_EXTRA
+end
 function c160002123.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0x185a) or c:IsRace(RACE_PLANT) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM

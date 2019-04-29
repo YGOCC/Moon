@@ -1,110 +1,124 @@
---Fiber Vine Customs
-function c160002124.initial_effect(c)
---Activate
+--Vine Rebreeding
+--Script by XGlitchy30
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
+	--ritual summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,160002124)
-	e1:SetTarget(c160002124.target)
-	e1:SetOperation(c160002124.activate)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
-	--search
+	 --search
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,160002125)
-		e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCondition(c160002124.thcon)
-	e2:SetCost(c160002124.thcost)
-	e2:SetTarget(c160002124.thtg)
-	e2:SetOperation(c160002124.thop)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCondition(cid.thcon)
+	e2:SetCost(cid.thcost)
+	e2:SetTarget(cid.thtg)
+	e2:SetOperation(cid.thop)
 	c:RegisterEffect(e2)
 end
-function c160002124.filter(c,e,tp,m)
-	if not c:IsSetCard(0x85a) or bit.band(c:GetType(),0x81)~=0x81
-		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) or not (c:IsLocation(LOCATION_EXTRA) and c:IsFaceup()) then return false end
-	local mg=m:Filter(Card.IsCanBeRitualMaterial,c,c)
-	if c:IsCode(21105106) then return c:ritual_custom_condition(mg) end
-	if c.mat_filter then
-		mg=mg:Filter(c.mat_filter,nil)
+--filters
+function cid.filter(c,e,tp,m1)
+	if not c:IsSetCard(0x85a) or not (c:IsLocation(LOCATION_PZONE) or (c:IsLocation(LOCATION_EXTRA) and c:IsFaceup() and bit.band(c:GetType(),0x1000081)==0x1000081))
+		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then 
+			return false
 	end
-	return mg:CheckWithSumEqual(Card.GetRitualLevel,c:GetOriginalLevel(),1,99,c)
-end
-function c160002124.sfilter(c,e,tp,m)
-	if not c:IsSetCard(0x85a) or bit.band(c:GetOriginalType(),TYPE_RITUAL)~=TYPE_RITUAL or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
-	local mg=m:Filter(Card.IsCanBeRitualMaterial,c,c)
-	if c:IsCode(21105106) then return c:ritual_custom_condition(mg) end
-	if c.mat_filter then
-		mg=mg:Filter(c.mat_filter,nil)
+	local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if c:IsLocation(LOCATION_EXTRA) then
+		ft=Duel.GetLocationCountFromEx(tp)
 	end
-	return mg:CheckWithSumEqual(Card.GetRitualLevel,c:GetOriginalLevel(),1,99,c)
+	if ft>0 then	
+		return mg:CheckWithSumEqual(Card.GetRitualLevel,c:GetLevel(),1,99,c)
+	else
+		return ft>-1 and mg:IsExists(cid.mfilterf,1,nil,tp,mg,c)
+	end
 end
-function c160002124.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.mfilterf(c,tp,mg,rc)
+	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and ((rc:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,c)>0) or (rc:IsLocation(LOCATION_PZONE) and c:GetSequence()<5)) then
+		Duel.SetSelectedCard(c)
+		return mg:CheckWithSumEqual(Card.GetRitualLevel,rc:GetLevel(),0,99,rc)
+	else return false end
+end
+--ritual summon
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local mg=Duel.GetRitualMaterial(tp)
-		local sg=Duel.GetMatchingGroup(c160002124.filter,tp,LOCATION_PZONE+LOCATION_EXTRA,0,nil,e,tp,mg)
-		local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_PZONE,0)):Filter(c160002124.sfilter,nil,e,tp,mg)
-		sg:Merge(pg)
-		return sg:GetCount()>0
+		local mg1=Duel.GetRitualMaterial(tp)
+		return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_PZONE+LOCATION_EXTRA,0,1,nil,e,tp,mg1)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_PZONE+LOCATION_EXTRA)
 end
-function c160002124.activate(e,tp,eg,ep,ev,re,r,rp)
-	local mg=Duel.GetRitualMaterial(tp)
-	local sg=Duel.GetMatchingGroup(c160002124.filter,tp,LOCATION_SZONE+LOCATION_EXTRA,0,nil,e,tp,mg)
-	local pg=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_PZONE,0)):Filter(c160002124.sfilter,nil,e,tp,mg)
-	sg:Merge(pg)
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
+	local mg1=Duel.GetRitualMaterial(tp)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tg=sg:Select(tp,1,1,nil)
-	local tc=tg:GetFirst()
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_PZONE+LOCATION_EXTRA,0,1,1,nil,e,tp,mg1)
+	local tc=g:GetFirst()
 	if tc then
-		mg=mg:Filter(Card.IsCanBeRitualMaterial,tc,tc)
-		if tc:IsCode(21105106) then
-			tc:ritual_custom_operation(mg)
-			local mat=tc:GetMaterial()
-			Duel.ReleaseRitualMaterial(mat)
-		else
-			if tc.mat_filter then
-				mg=mg:Filter(tc.mat_filter,nil)
-			end
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-			local mat=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel(),1,99,tc)
-			tc:SetMaterial(mat)
-			Duel.ReleaseRitualMaterial(mat)
+		local mg=mg1:Filter(Card.IsCanBeRitualMaterial,tc,tc)
+		local mat=nil
+		if tc:IsLocation(LOCATION_EXTRA) then
+			ft=Duel.GetLocationCountFromEx(tp)
 		end
+		if ft>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+			mat=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel(),1,99,tc)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+			mat=mg:FilterSelect(tp,cid.mfilterf,1,1,nil,tp,mg,tc)
+			Duel.SetSelectedCard(mat)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+			local mat2=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,tc:GetLevel(),0,99,tc)
+			mat:Merge(mat2)
+		end
+		tc:SetMaterial(mat)
+		Duel.ReleaseRitualMaterial(mat)
 		Duel.BreakEffect()
 		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 		tc:CompleteProcedure()
 	end
 end
-function c160002124.thcon(e,tp,eg,ep,ev,re,r,rp)
+
+function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
-function c160002124.cfilter(c)
+function cid.cfilter(c)
 	return c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
-function c160002124.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(c160002124.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
+		and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c160002124.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	g:AddCard(e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function c160002124.thfilter(c,e,tp)
+function cid.thfilter(c,e,tp)
 	return c:IsSetCard(0x85a) and c:IsType(TYPE_MONSTER) and  c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c160002124.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c160002124.thfilter(chkc,e,tp) end
+function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chkc then return chkc:IsLocation(LOCATION_GRAVE) and cid.thfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c160002124.thfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) end
+		and Duel.IsExistingTarget(cid.thfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c160002124.thfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,cid.thfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function c160002124.thop(e,tp,eg,ep,ev,re,r,rp)
+function cid.thop(e,tp,eg,ep,ev,re,r,rp)
   local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
