@@ -37,6 +37,7 @@ SUMMON_TYPE_SPATIAL						=SUMMON_TYPE_SPECIAL+500
 
 EVENT_CORONA_DRAW						=EVENT_CUSTOM+0x1600000000
 EVENT_XYZATTACH							=EVENT_CUSTOM+9966607
+EVENT_LP_CHANGE							=EVENT_CUSTOM+68007397
 
 EFFECT_COUNT_SECOND_HOPT				=10000000
 
@@ -67,11 +68,11 @@ end
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
 	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv,
-	duel_overlay= 
+	duel_overlay, duel_set_lp= 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
 	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, 
 	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.RegisterEffect, Effect.SetTargetRange, 
-	Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree,Duel.Overlay
+	Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -382,6 +383,18 @@ Duel.Overlay=function(xyz,mat)
 	duel_overlay(xyz,mat)
 	if oct and xyz:GetOverlayCount()>oct then
 		Duel.RaiseEvent(mat,EVENT_XYZATTACH,nil,0,0,xyz:GetControler(),xyz:GetOverlayCount()-oct)
+	end
+end
+Duel.SetLP=function(p,setlp,...)
+	local opt={...}
+	local rule,rplayer=nil,0
+	if opt[1] then reason=opt[1] end
+	if opt[2] then rplayer=opt[2] end
+	local prev=Duel.GetLP(p)
+	local event_test=Duel.GetMatchingGroup(aux.TRUE,p,0xff,0xff,nil):GetFirst()
+	duel_set_lp(p,setlp)
+	if not rule and Duel.GetLP(p)~=prev then
+		Duel.RaiseEvent(event_test,EVENT_LP_CHANGE,nil,REASON_EFFECT,rplayer,p,Duel.GetLP(p)-prev)
 	end
 end
 
