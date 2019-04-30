@@ -49,7 +49,7 @@ function c249000909.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000909.cfilter2(c,tp)
-	return c:IsFaceup() and c:GetSummonPlayer()==tp and (c:IsSetCard(0xcf) or c:IsSetCard(0x1048) or c:IsSetCard(0x1073) and (c:IsLevelAbove(7) or c:GetRank()>7))
+	return c:IsFaceup() and c:GetSummonPlayer()==tp and (c:IsSetCard(0xcf) or c:IsSetCard(0x1048) or c:IsSetCard(0x1073)) and (c:IsLevelAbove(7) or c:GetRank()>7)
 end
 function c249000909.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c249000909.cfilter2,1,nil,tp)
