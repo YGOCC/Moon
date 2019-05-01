@@ -62,10 +62,10 @@ function c16000443.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	e:GetHandler():SetMaterial(g:Filter(Card.IsLocation,nil,LOCATION_REMOVED))
 end
 function c16000443.tgtg(e,c)
-	return e:GetHandler():GetLinkedGroup():IsContains(c) and c:IsType(TYPE_NORMAL)
+	return  e:GetHandler()==c or (not c:IsType(TYPE_EFFECT) and c:IsType(TYPE_MONSTER) and e:GetHandler():GetLinkedGroup():IsContains(c))
 end
 function c16000443.tgtg3(e,c)
- return e:GetHandler()==c or (c:IsType(TYPE_NORMAL) and e:GetHandler():GetLinkedGroup():IsContains(c))
+ return e:GetHandler()==c or (not c:IsType(TYPE_EFFECT) and c:IsType(TYPE_MONSTER) e:GetHandler():GetLinkedGroup():IsContains(c))
 end
  
 function c16000443.tdcon(e,tp,eg,ep,ev,re,r,rp)

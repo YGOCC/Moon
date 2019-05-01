@@ -46,9 +46,11 @@ function c249000346.confilter2(c,rkmin,rkmax)
 	return c:GetRank() >= rkmin and c:GetRank() <= rkmax 
 end
 function c249000346.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c249000346.confilter2,tp,LOCATION_EXTRA,0,1,nil,1,4)
-	and Duel.IsExistingMatchingCard(c249000346.confilter2,tp,LOCATION_EXTRA,0,1,nil,5,6)
-	and Duel.IsExistingMatchingCard(c249000346.confilter2,tp,LOCATION_EXTRA,0,1,nil,7,99)
+	local g=Duel.GetMatchingGroup(Card.IsFaceDown,tp,LOCATION_EXTRA,0,nil)
+	return Duel.IsExistingMatchingCard(c249000677.confilter2,tp,LOCATION_EXTRA,0,1,nil,1,4)
+	and Duel.IsExistingMatchingCard(c249000677.confilter2,tp,LOCATION_EXTRA,0,1,nil,5,6)
+	and Duel.IsExistingMatchingCard(c249000677.confilter2,tp,LOCATION_EXTRA,0,1,nil,7,99)
+	and g:GetClassCount(Card.GetCode) == g:GetCount()
 end
 function c249000346.cfilter(c)
 	return c:IsSetCard(0x4073) and c:IsType(TYPE_MONSTER) and not c:IsPublic()
@@ -120,7 +122,12 @@ function c249000346.operation(e,tp,eg,ep,ev,re,r,rp)
 		local xyzg=Duel.GetMatchingGroup(c249000346.xyzfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 		if xyzg:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local xyz=xyzg:RandomSelect(tp,1):GetFirst()	
+			local xyz=xyzg:RandomSelect(tp,1):GetFirst()
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_EXTRA_TOMAIN_KOISHI)
+			e1:SetReset(RESET_CHAIN)
+			xyz:RegisterEffect(e1)	
 			if Duel.SpecialSummonStep(xyz,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP) then
 				Duel.Overlay(xyz,tg2)
 				Duel.SpecialSummonComplete()
