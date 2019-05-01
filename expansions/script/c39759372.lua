@@ -47,7 +47,7 @@ function c39759372.actfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsFacedown() and c:CheckActivateEffect(false,false,false)~=nil
 end
 function c39759372.setfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) --and c:IsSSetable()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
 --Deck Master Functions
 function c39759372.DMCost(e,tp,eg,ep,ev,re,r,rp)

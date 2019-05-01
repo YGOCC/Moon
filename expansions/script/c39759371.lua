@@ -72,11 +72,10 @@ end
 --Deck Master Functions
 function c39759371.DMCost(e,tp,eg,ep,ev,re,r,rp)
 	local e0=Effect.CreateEffect(e:GetHandler())
-	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e0:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_IGNORE_IMMUNE)
-	e0:SetCode(EVENT_CHAIN_ACTIVATING)
-	e0:SetCondition(c39759371.tgcon)
-	e0:SetOperation(c39759371.tgop)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e0:SetCode(EFFECT_RANDOM_TARGET)
+	e0:SetTargetRange(1,0)
 	Duel.RegisterEffect(e0,tp)
 end
 function c39759371.mscon(e,c)
@@ -94,100 +93,6 @@ function c39759371.penalty(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoHand(g,1-tp,REASON_EFFECT)
 			Duel.ConfirmCards(tp,g)
 		end
-	end
-end
---random target selection (WARNING: Some cards that choose multiple targets might cause buggy interactions)
-function c39759371.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	if rp~=tp or re:IsHasType(EFFECT_TYPE_CONTINUOUS) or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
-	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if not g then return false end
-	if g:GetCount()==1 then
-		local tc=g:GetFirst()
-		e:SetLabelObject(tc)
-		e:SetLabel(0)
-		return tc
-	else
-		e:SetLabelObject(g)
-		e:SetLabel(g:GetCount()-1)
-		return true
-	end
-end
-function c39759371.tgop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=ev
-	local label=Duel.GetFlagEffectLabel(0,39759371)
-	if label then
-		if ev==bit.rshift(label,16) then ct=bit.band(label,0xffff) end
-	end
-	local ce,cp=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
-	local tf=re:GetTarget()
-	local ceg,cep,cev,cre,cr,crp=Duel.GetChainEvent(ct)
-	local ctt=0
-	if e:GetLabel()>0 then ctt=e:GetLabel() end
-	if not Duel.IsExistingTarget(c39759371.filter2,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,1,nil,ce,cp,tf,ceg,cep,cev,cre,cr,crp,ctt) then 
-		Debug.Message('It is currently impossible to randomize the targets of '..tostring(re:GetHandler()))
-		return 
-	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.GetMatchingGroup(c39759371.filter2,tp,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,nil,ce,cp,tf,ceg,cep,cev,cre,cr,crp,ctt)
-	g:KeepAlive()
-	local ct=1
-	for i in aux.Next(g) do
-		i:RegisterFlagEffect(39759371,RESET_EVENT+EVENT_CUSTOM+39759371,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE,1)
-		i:SetFlagEffectLabel(39759371,ct)
-		ct=ct+1
-	end
-	local labfix=1
-	local tc={}
-	if e:GetLabel()<=0 then
-		local check=true
-		while check do
-			local rgd=math.random(1,g:GetCount())
-			if g:IsExists(c39759371.randomcheck,1,nil,rgd) then
-				local gm=g:Filter(c39759371.randomcheck,nil,rgd)
-				tc[0]=gm:GetFirst()
-				g:RemoveCard(tc[0])
-				check=false
-			end
-		end
-		local val=ct+bit.lshift(ev+1,16)
-		if label then
-			Duel.SetFlagEffectLabel(0,39759371,val)
-		else
-			Duel.RegisterFlagEffect(0,39759371,RESET_CHAIN,0,1,val)
-		end
-		if tc[0]~=e:GetLabelObject() then
-			local gtc=Group.CreateGroup()
-			gtc:AddCard(tc[0])
-			Duel.ChangeTargetCard(ev,gtc)
-		end
-	else
-		for times=0,ctt,1 do
-			local check=true
-			while check do
-				local rgd=math.random(1,g:GetCount())
-				if g:IsExists(c39759371.randomcheck,1,nil,rgd) then
-					local gm=g:Filter(c39759371.randomcheck,nil,rgd)
-					tc[times]=gm:GetFirst()
-					g:RemoveCard(tc[times])
-					check=false
-					if ce:GetLabelObject() and ce:GetLabelObject()~=tc[times] and labfix>0 then
-						ce:SetLabelObject(tc[times])
-					end
-					labfix=math.random(0,1)
-				end
-			end
-		end
-		local gtg=Group.CreateGroup()
-		for chk=0,ctt,1 do
-			gtg:AddCard(tc[chk])
-		end
-		local val=ct+bit.lshift(ev+1,16)
-		if label then
-			Duel.SetFlagEffectLabel(0,39759371,val)
-		else
-			Duel.RegisterFlagEffect(0,39759371,RESET_CHAIN,0,1,val)
-		end
-		Duel.ChangeTargetCard(ev,gtg)
 	end
 end
 --Ability: Bombdrop

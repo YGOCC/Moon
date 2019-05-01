@@ -16,6 +16,7 @@ EFFECT_DEFAULT_CALL						=31993443
 EFFECT_EXTRA_GEMINI						=86433590
 EFFECT_AVAILABLE_LMULTIPLE				=86433612
 EFFECT_MULTIPLE_LMATERIAL				=86433613
+EFFECT_RANDOM_TARGET					=39759371
 TYPE_EVOLUTE							=0x100000000
 TYPE_PANDEMONIUM						=0x200000000
 TYPE_POLARITY							=0x400000000
@@ -72,11 +73,11 @@ end
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
 	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv,
-	duel_overlay, duel_set_lp= 
+	duel_overlay, duel_set_lp, duel_select_target= 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
 	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, 
 	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.RegisterEffect, Effect.SetTargetRange, 
-	Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP
+	Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -419,6 +420,67 @@ Duel.SetLP=function(p,setlp,...)
 		Duel.RaiseEvent(event_test,EVENT_LP_CHANGE,nil,REASON_EFFECT,rplayer,p,Duel.GetLP(p)-prev)
 	end
 end
+Duel.SelectTarget=function(actp,func,self,loc1,loc2,cmin,cmax,exc,...)
+	local extras={...}
+	if Duel.IsPlayerAffectedByEffect(actp,EFFECT_RANDOM_TARGET) then
+		local rg=Duel.GetMatchingGroup(func,self,loc1,loc2,exc,table.unpack(extras))
+		rg:KeepAlive()
+		if rg:IsExists(Auxiliary.CheckPrevRandom,1,nil) then
+			local resg=rg:Filter(Auxiliary.CheckPrevRandom,nil)
+			for res in aux.Next(resg) do
+				res:ResetFlagEffect(39759371)
+			end
+		end
+		local rct=rg:GetCount()
+		local rlist={}
+		local rlct=0
+		for rnum=1,rct do
+			table.insert(rlist,rnum)
+			rlct=rlct+1
+		end
+		for tc in aux.Next(rg) do
+			local rgd
+			local loop1=0
+			while loop1==0 do
+				rgd=math.random(1,rlct)
+				if rlist[rgd]~=nil then
+					loop1=1
+				end
+			end
+			tc:RegisterFlagEffect(39759371,0,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,1)
+			tc:SetFlagEffectLabel(39759371,rlist[rgd])
+			rlist[rgd]=nil
+		end
+		local llist={}
+		local llct=0
+		for rnum2=1,rct do
+			table.insert(llist,rnum2)
+			llct=llct+1
+		end
+		for maxs=cmin,cmax do
+			local rgd2
+			local loop1=0
+			while loop1==0 do
+				rgd2=math.random(1,llct)
+				if llist[rgd2]~=nil then
+					loop1=1
+				end
+			end
+			for fftc in aux.Next(rg) do
+				if fftc:GetFlagEffectLabel(39759371)==llist[rgd2] then
+					fftc:SetFlagEffectLabel(39759371,999)
+					llist[rgd2]=nil
+				end
+			end
+		end
+		rg:DeleteGroup()
+		return duel_select_target(actp,Auxiliary.RandomTargetFilter,self,loc1,loc2,cmin,cmax,exc,table.unpack(extras))
+	else
+		return duel_select_target(actp,func,self,loc1,loc2,cmin,cmax,exc,table.unpack(extras))
+	end
+end
+					
+			
 
 --Custom Functions
 --Evolutes
@@ -2289,4 +2351,11 @@ function Auxiliary.DMToExtra(typ)
 		end
 		return false
 	end
+end
+--Random Target Auxiliary
+function Auxiliary.CheckPrevRandom(c)
+	return c:GetFlagEffect(39759371)>0
+end
+function Auxiliary.RandomTargetFilter(c)
+	return c:GetFlagEffect(39759371)>0 and c:GetFlagEffectLabel(39759371)==999
 end

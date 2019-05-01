@@ -12,7 +12,7 @@ function c39759362.initial_effect(c)
 	ab:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
 	ab:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
 	ab:SetCondition(aux.CheckDMActivatedState)
-	ab:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_NORMAL)
+	ab:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_NORMAL))
 	c:RegisterEffect(ab)
 	--Monster Effects--
 	--search+summon
