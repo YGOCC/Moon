@@ -1,8 +1,18 @@
 --Moon Burst: Holder of Courage
-local card = c210424271
-function card.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+local id2=id+1000000
+cid.dfc_front_side=id2
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+function cid.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,card.lfilter,2,2)
+	aux.AddLinkProcedure(c,cid.lfilter,2,2)
 	c:EnableReviveLimit()
 	--indes
 	local e1=Effect.CreateEffect(c)
@@ -27,25 +37,44 @@ function card.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_BATTLED)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e4:SetCondition(card.rmcon)
-	e4:SetTarget(card.rmtg)
-	e4:SetOperation(card.rmop)
+	e4:SetCondition(cid.rmcon)
+	e4:SetTarget(cid.rmtg)
+	e4:SetOperation(cid.rmop)
 	c:RegisterEffect(e4)
+	--Art swap
+	local exx=Effect.CreateEffect(c)
+	exx:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	exx:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	exx:SetCode(EVENT_ADJUST)
+	exx:SetRange(LOCATION_MZONE)
+	exx:SetCondition(cid.artcon)
+	exx:SetOperation(cid.artop)
+	c:RegisterEffect(exx)
 end
-function card.lfilter(c)
+--Art swap
+function cid.artcon(e,tp,eg,ep,ev,re,r,rp)
+local c=e:GetHandler()
+  return (c:GetOriginalCode()==id or c:GetOriginalCode()==cid.dfc_front_side) and
+  e:GetHandler():GetAttack()>=c:GetTextAttack()+1200
+end
+function cid.artop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Senya.TransformDFCCard(c)
+end
+function cid.lfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666)
 end
-function card.rmcon(e,tp,eg,ep,ev,re,r,rp)
+function cid.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
 	e:SetLabelObject(bc)
 	return bc and bc:IsStatus(STATUS_BATTLE_DESTROYED) and c:IsStatus(STATUS_OPPO_BATTLE)
 end
-function card.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetLabelObject(),1,0,0)
 end
-function card.rmop(e,tp,eg,ep,ev,re,r,rp)
+function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local bc=e:GetLabelObject()
 	if bc:IsRelateToBattle() and bc:IsAbleToRemove() then
 	Duel.Remove(bc,POS_FACEUP,REASON_EFFECT)

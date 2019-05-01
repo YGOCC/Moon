@@ -1,16 +1,23 @@
 --Battle in the Storm
-local card = c210424266
-function card.initial_effect(c)
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,210424272+EFFECT_COUNT_CODE_OATH)
-	e1:SetTarget(card.target)
-	e1:SetOperation(card.activate)
+	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
-		--boost
+	--boost
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
@@ -30,9 +37,9 @@ function card.initial_effect(c)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
-	e4:SetCost(card.descost1)
-	e4:SetTarget(card.destarget)
-	e4:SetOperation(card.desop)
+	e4:SetCost(cid.descost1)
+	e4:SetTarget(cid.destarget)
+	e4:SetOperation(cid.desop)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(4066,11))
@@ -41,54 +48,54 @@ function card.initial_effect(c)
 	e5:SetRange(LOCATION_FZONE)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e5:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
-	e5:SetCost(card.descost2)
-	e5:SetTarget(card.destarget)
-	e5:SetOperation(card.desop)
+	e5:SetCost(cid.descost2)
+	e5:SetTarget(cid.destarget)
+	e5:SetOperation(cid.desop)
 	c:RegisterEffect(e5)
 end
-function card.filter2(c,tp)
+function cid.filter2(c,tp)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD) and c:IsSetCard(0x666)
 end
-function card.desfilter1(c)
+function cid.desfilter1(c)
 	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsAbleToDeckAsCost()
 end
-function card.desfilter2(c)
+function cid.desfilter2(c)
 	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsAbleToDeckOrExtraAsCost()
 end
-function card.descost1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(card.desfilter1,tp,LOCATION_EXTRA,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,card.desfilter1,tp,LOCATION_EXTRA,0,1,1,nil)
+function cid.descost1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.desfilter1,tp,LOCATION_EXTRA,0,1,nil) end
+	local g=Duel.SelectMatchingCard(tp,cid.desfilter1,tp,LOCATION_EXTRA,0,1,1,nil)
 	Duel.SendtoDeck(g,nil,0,REASON_COST)
 end
-function card.descost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(card.desfilter2,tp,LOCATION_GRAVE,0,2,nil) end
-	local g=Duel.SelectMatchingCard(tp,card.desfilter2,tp,LOCATION_GRAVE,0,2,2,nil)
+function cid.descost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.desfilter2,tp,LOCATION_GRAVE,0,2,nil) end
+	local g=Duel.SelectMatchingCard(tp,cid.desfilter2,tp,LOCATION_GRAVE,0,2,2,nil)
 	Duel.SendtoDeck(g,nil,0,REASON_COST)
 end
-function card.destarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.destarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDestroy,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,Card.IsAbleToDestroy,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
-function card.desop(e,tp,eg,ep,ev,re,r,rp)
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 	Duel.Destroy(tc,REASON_EFFECT)
 end
 end
-function card.searchfilter(c)
+function cid.searchfilter(c)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
-function card.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(card.searchfilter,tp,LOCATION_DECK,0,1,nil) end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function card.activate(e,tp,eg,ep,ev,re,r,rp)
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,card.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 	Duel.SendtoHand(g,nil,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,g)

@@ -1,12 +1,18 @@
 --Moon Burst: Holder of Power
-local card = c210424270
-local m=210424270
-local cm=_G["c"..m]
-cm.dfc_front_side=210424279
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+local id2=id+1000000
+cid.dfc_front_side=id2
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
-function card.initial_effect(c)
+function cid.initial_effect(c)
     --link summon
-    aux.AddLinkProcedure(c,card.lfilter,2,2)
+    aux.AddLinkProcedure(c,cid.lfilter,2,2)
     c:EnableReviveLimit()
     --indes
     local e1=Effect.CreateEffect(c)
@@ -25,40 +31,41 @@ function card.initial_effect(c)
     e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
     e3:SetCode(EVENT_BECOME_TARGET)
     e3:SetRange(LOCATION_MZONE)
-    e3:SetCondition(card.atkcon)
-    e3:SetOperation(card.atkop)
+    e3:SetCondition(cid.atkcon)
+    e3:SetOperation(cid.atkop)
     c:RegisterEffect(e3)
-		--shift
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e4:SetCode(EVENT_CHAIN_SOLVED)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetCondition(card.accon)
-	e4:SetOperation(card.acop)
-	c:RegisterEffect(e4)
-
+	--Art swap
+	local exx=Effect.CreateEffect(c)
+	exx:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	exx:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	exx:SetCode(EVENT_ADJUST)
+	exx:SetRange(LOCATION_MZONE)
+	exx:SetCondition(cid.artcon)
+	exx:SetOperation(cid.artop)
+	c:RegisterEffect(exx)
 end
-function card.accon(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-		return e:GetHandler():IsAttackAbove(3000)
-end
-function card.acop(e,tp,eg,ep,ev,re,r,rp)
+--Art swap
+function cid.artcon(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
-Senya.TransformDFCCard(c)
-	end
-function card.lfilter(c)
+  return (c:GetOriginalCode()==id or c:GetOriginalCode()==cid.dfc_front_side) and
+  e:GetHandler():GetAttack()>=c:GetTextAttack()+1200
+end
+function cid.artop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Senya.TransformDFCCard(c)
+end
+function cid.lfilter(c)
     return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666)
 end
-function card.filter2(c,tp)
+function cid.filter2(c,tp)
     return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x666)
 end
-function card.atkcon(e,tp,eg,ep,ev,re,r,rp)
+function cid.atkcon(e,tp,eg,ep,ev,re,r,rp)
     if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
     local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-    return g and g:IsExists(card.filter2,1,nil,tp)
+    return g and g:IsExists(cid.filter2,1,nil,tp)
 end
-function card.atkop(e,tp,eg,ep,ev,re,r,rp)
+function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local e1=Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_SINGLE)
