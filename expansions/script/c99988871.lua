@@ -57,7 +57,7 @@ function cid.prevent_conflict(e,tp,eg,ep,ev,re,r,rp)
 		and e:GetHandler():GetFlagEffect(99988870)<=0
 end
 function cid.preset(e,tp,eg,ep,ev,re,r,rp)
-	local op=Duel.SelectOption(tp,aux.Stringid(id,5),aux.Stringid(id,6),aux.Stringid(id,7))
+	local op=Duel.SelectOption(tp,aux.Stringid(id,5),aux.Stringid(id,6),aux.Stringid(id,7),aux.Stringid(id,8))
 	--Duel Start handfix
 	local drawcount1,drawcount2=0,0
 	if op==0 then
@@ -271,7 +271,7 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(tp,drawcount1,REASON_RULE)
 	Duel.Draw(1-tp,drawcount2,REASON_RULE)
 	--adjust LPs
-	if op~=1 then
+	if op~=1 and op~=3 then
 		local lpval=4000
 		if op==2 then
 			local lp_list={}
@@ -356,15 +356,54 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(sk,tp)
 	end
 	--enable skills
-	if Duel.SelectYesNo(tp,aux.Stringid(id,0)) and Duel.SelectYesNo(1-tp,aux.Stringid(id,0)) then
-		for pp=0,1 do
-			local dtype=available_dtypes[2]
-			local cd=0
-			cd=Duel.AnnounceCardFilter(pp,table.unpack(dtype))
-			local card=Duel.CreateToken(pp,cd)
-			Duel.Remove(card,POS_FACEUP,REASON_RULE)
-			Duel.SendtoExtraP(card,pp,REASON_RULE)
-			card:RegisterFlagEffect(id,RESET_EVENT+EVENT_CUSTOM+id,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE,1)
+	if op==3 then
+		if Duel.SelectYesNo(tp,aux.Stringid(id,0)) and Duel.SelectYesNo(1-tp,aux.Stringid(id,0)) then
+			for pp=0,1 do
+				local dtype=available_dtypes[2]
+				local cd=0
+				cd=Duel.AnnounceCardFilter(pp,table.unpack(dtype))
+				local card=Duel.CreateToken(pp,cd)
+				Duel.Remove(card,POS_FACEUP,REASON_RULE)
+				Duel.SendtoExtraP(card,pp,REASON_RULE)
+				card:RegisterFlagEffect(id,RESET_EVENT+EVENT_CUSTOM+id,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE,1)
+				--tag partner skill
+				local cd2=0
+				cd2=Duel.AnnounceCardFilter(pp,table.unpack(dtype))
+				local card2=Duel.CreateToken(pp,cd2)
+				local savecode=card2:GetCode()
+				Duel.Exile(card2,REASON_RULE)
+				local e0=Effect.CreateEffect(e:GetHandler())	
+				e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+				e0:SetCode(EVENT_ADJUST)
+				e0:SetLabel(savecode)
+				e0:SetCondition(cid.tagskillcon)
+				e0:SetOperation(cid.tagskill)
+				Duel.RegisterEffect(e0,pp)
+			end
+		end
+	else
+		if Duel.SelectYesNo(tp,aux.Stringid(id,0)) and Duel.SelectYesNo(1-tp,aux.Stringid(id,0)) then
+			for pp=0,1 do
+				local dtype=available_dtypes[2]
+				local cd=0
+				cd=Duel.AnnounceCardFilter(pp,table.unpack(dtype))
+				local card=Duel.CreateToken(pp,cd)
+				Duel.Remove(card,POS_FACEUP,REASON_RULE)
+				Duel.SendtoExtraP(card,pp,REASON_RULE)
+				card:RegisterFlagEffect(id,RESET_EVENT+EVENT_CUSTOM+id,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE,1)
+			end
 		end
 	end
+end
+--tag partner skill
+function cid.tagskillcon(e,tp,eg,ep,ev,re,r,rp)
+	return not Duel.IsExistingMatchingCard(Card.IsType,1,nil,TYPE_SKILL)
+end
+function cid.tagskill(e,tp,eg,ep,ev,re,r,rp)
+	local cd2=e:GetLabel()
+	local card2=Duel.CreateToken(tp,cd2)
+	Duel.Remove(card2,POS_FACEUP,REASON_RULE)
+	Duel.SendtoExtraP(card2,tp,REASON_RULE)
+	card2:RegisterFlagEffect(id,RESET_EVENT+EVENT_CUSTOM+id,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE,1)
+	e:Reset()
 end
