@@ -75,7 +75,7 @@ function c249000091.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local ac=Duel.AnnounceCardFilter(tp,tc:GetRace(),OPCODE_ISRACE,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,249000091,OPCODE_ISCODE,OPCODE_OR)
 	local sc=Duel.CreateToken(tp,ac)
-	while not (sc:IsType(TYPE_XYZ) and sc:GetRank() == rk +1 and sc:IsRace(race) and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false))
+	while not (sc:IsType(TYPE_XYZ) and (sc:GetRank() == rk +1 or sc:GetRank() == rk +2) and sc:IsRace(race) and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false))
 	do
 		ac=Duel.AnnounceCardFilter(tp,tc:GetRace(),OPCODE_ISRACE,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,249000091,OPCODE_ISCODE,OPCODE_OR)
 		sc=Duel.CreateToken(tp,ac)

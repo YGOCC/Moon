@@ -112,7 +112,7 @@ function c249000942.tgfilter(c,e,tp,eg,ep,ev,re,r,rp)
 		local etemp=cardstruct.c249000942Effect_Table2[i]
 		if etemp and (etemp:IsHasType(EFFECT_TYPE_IGNITION) 
 		--or etemp:IsHasType(EFFECT_TYPE_TRIGGER_O) or etemp:IsHasType(EFFECT_TYPE_TRIGGER_F)
-		or etemp:IsHasType(EFFECT_TYPE_QUICK_O)) and e:GetHandler():IsLocation(etemp:GetRange()) then
+		or (etemp:IsHasType(EFFECT_TYPE_QUICK_O) and etemp:GetCode()==EVENT_FREE_CHAIN)) and e:GetHandler():IsLocation(etemp:GetRange()) then
 			--local etemp2=e:GetLabelObject()
 			--local valideffect=true
 			--while etemp2 do	
@@ -144,7 +144,7 @@ function c249000942.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(c249000942.tgfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,eg,ep,ev,re,r,rp) then return end
 	if not (Duel.IsExistingMatchingCard(c249000942.costfilter,tp,LOCATION_GRAVE,0,1,nil)
 		or Duel.IsExistingMatchingCard(c249000942.costfilter2,tp,LOCATION_HAND,0,1,nil)) then return end
-	if Duel.GetFlagEffect(tp,e:GetLabel())>0  or not Duel.SelectYesNo(tp,aux.Stringid(85602018,0)) then return end
+	if Duel.GetFlagEffect(tp,e:GetLabel())>0  or not Duel.SelectYesNo(tp,aux.Stringid(115000261,2)) then return end
 	local option
 	if Duel.IsExistingMatchingCard(c249000942.costfilter2,tp,LOCATION_HAND,0,1,nil)  then option=0 end
 	if Duel.IsExistingMatchingCard(c249000942.costfilter,tp,LOCATION_GRAVE,0,1,nil) then option=1 end
