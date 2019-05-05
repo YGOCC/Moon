@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	11992e438d1d93f998948ee108c5ae7f
+﻿expansions/Cards-non-QCD.cdb	15469774195c16024a0796b00a3ff1bd
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	2218e5937301cfd1ed0ba46465bf26a8
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -9210,7 +9210,7 @@ expansions/script/c249000634.lua	fc24c45ce87631756e1fc2a6e37b715b
 expansions/script/c249000635.lua	29277b7f8367c34386a6fd34e1b3971c
 expansions/script/c249000636.lua	afdf9f92c6c9cf63dd4982ef0829062c
 expansions/script/c249000637.lua	f77697d36644fcc7e31b54e89157c333
-expansions/script/c249000638.lua	6c443253e59a79f7dd9bb218576db3de
+expansions/script/c249000638.lua	b274ef3fa1409064b1a691d67a683705
 expansions/script/c249000639.lua	f6802595f72fa13e3869551ad097702d
 expansions/script/c249000640.lua	2908895d08489af7d97ed49a1c55d72c
 expansions/script/c249000641.lua	c3258b57a0cc2428b2fa4ca5d51ccaa9
@@ -9584,7 +9584,7 @@ expansions/script/c26591157.lua	6a518e89c5676d86bd229425dc365d8f
 expansions/script/c26591158.lua	3c06f4c623093726aa77be7f19d453a0
 expansions/script/c26591159.lua	e21abce8968863bcd9764c7fd15b6520
 expansions/script/c269.lua	57c7bebb13ec9d13e5bec06d1a349c1c
-expansions/script/c269000001.lua	23cd3ebfc55dd2feb2eee562406825e5
+expansions/script/c269000001.lua	52a3db6dd227bf7ef587a3b179922870
 expansions/script/c269000002.lua	7f7ff175e00e41a290e050c54a2e6a53
 expansions/script/c269000003.lua	e0adc2aa9bbeee329e56a7a4ee193149
 expansions/script/c269000004.lua	d094e6b0893e36b5efc922ef6cda04c9
@@ -12825,6 +12825,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	27e7d04f969b25501d94dd4d4a9bf1e2
+update/filelist.txt	a57c412cebb3d9395a71acfe322cc661
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	84d29668b389e5c141f0de33b39e58ec
+update/version.txt	a730d6da5f4031c0435171ec414bbb46

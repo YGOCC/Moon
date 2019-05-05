@@ -84,7 +84,7 @@ function c269000001.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=c:GetTurnCounter()
 	ct=ct+1
 	c:SetTurnCounter(ct)
-	if ct==2 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
+	if ct==2 then
 		Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -93,6 +93,7 @@ function c269000001.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(c:GetAttack()*2)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 		c:RegisterEffect(e1)
+		Duel.SpecialSummonComplete()
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_FIELD)
 		e2:SetCode(EFFECT_CHANGE_DAMAGE)
@@ -101,7 +102,6 @@ function c269000001.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(c269000001.damval)
 		e2:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e2,tp)
-		Duel.SpecialSummonComplete()
 	end
 end
 function c269000001.damval(e,re,val,r,rp,rc)
