@@ -397,7 +397,7 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 end
 --tag partner skill
 function cid.tagskillcon(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(Card.IsType,1,nil,TYPE_SKILL)
+	return not Duel.IsExistingMatchingCard(Card.IsType,tp,0xff,0,1,nil,TYPE_SKILL)
 end
 function cid.tagskill(e,tp,eg,ep,ev,re,r,rp)
 	local cd2=e:GetLabel()
