@@ -1,8 +1,8 @@
 --Number C300: CREATION-Eyes Dimensional Wrecker Dragon
-local card = c88880012
-local m=88880012
+local card = c88881012
+local m=88881012
 local cm=_G["c"..m]
-cm.dfc_front_side=m+1000
+cm.dfc_front_side=m-1000
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function card.initial_effect(c)
   --Xyz Summon
@@ -31,6 +31,14 @@ function card.initial_effect(c)
   e3:SetTarget(card.atktg)
   e3:SetOperation(card.atkop)
   c:RegisterEffect(e3)
+  local exx=Effect.CreateEffect(c)
+  exx:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+  exx:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+  exx:SetCode(EVENT_TURN_END)
+  exx:SetRange(LOCATION_MZONE)
+  exx:SetCondition(card.artcon)
+  exx:SetOperation(card.artop)
+  c:RegisterEffect(exx)
   --(4) When this card destroys a monster by battle: deal damage equal to the destroyed monsters ATK.
   local e4=Effect.CreateEffect(c)
   e4:SetDescription(aux.Stringid(88880012,1))
@@ -78,21 +86,21 @@ function card.atkop(e,tp,eg,ep,ev,re,r,rp)
   local c=e:GetHandler()
   local tc=sg:GetSum(Card.GetLevel)*200 or sg:GetSum(Card.GetRank)*200
   if c:IsRelateToEffect(e) and c:IsFaceup() then
-	Senya.TransformDFCCard(c)
 	local atk=tc
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetValue(atk/2)
+	e1:SetValue(atk)
 	c:RegisterEffect(e1)
-	Duel.BreakEffect()
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
-	e2:SetValue(atk/2)
-	c:RegisterEffect(e2)
   end
+end
+function card.artcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return (c:GetOriginalCode()==m or c:GetOriginalCode()==cm.dfc_front_side)
+end
+function card.artop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Senya.TransformDFCCard(c)
 end
 --(4) When this card destroys a monster by battle: deal damage equal to the destroyed monsters ATK.
 function card.damcon(e,tp,eg,ep,ev,re,r,rp)

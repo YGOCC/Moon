@@ -61,36 +61,37 @@ function c269000001.recon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c269000001.reop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local count=2
-	if Duel.GetCurrentPhase==PHASE_STANDBY and Duel.GetTurnPlayer()==tp then
-		count=3
-	end
-	c:RegisterFlagEffect(269000001,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,count)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetRange(LOCATION_REMOVED+LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK)
+	e1:SetRange(LOCATION_REMOVED+LOCATION_GRAVE)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,count)
+	if Duel.GetCurrentPhase()==PHASE_STANDBY and Duel.GetTurnPlayer()==tp then
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,3)
+	else
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
+	end
 	e1:SetCountLimit(1)
+	e1:SetCondition(c269000001.spcon)
 	e1:SetOperation(c269000001.spop)
-	e1:SetLabel(0)
 	c:RegisterEffect(e1)
+	c:SetTurnCounter(0)
+end
+function c269000001.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
 end
 function c269000001.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()~=tp then return end
 	local c=e:GetHandler()
 	local ct=c:GetTurnCounter()
 	ct=ct+1
 	c:SetTurnCounter(ct)
-	if c:GetFlagEffect(269000001)~=0 and ct==2 then
-		Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP)
+	if ct==2 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
+		Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
 		e1:SetCode(EFFECT_SET_ATTACK)
 		e1:SetValue(c:GetAttack()*2)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 		c:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_FIELD)
@@ -100,6 +101,7 @@ function c269000001.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(c269000001.damval)
 		e2:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e2,tp)
+		Duel.SpecialSummonComplete()
 	end
 end
 function c269000001.damval(e,re,val,r,rp,rc)

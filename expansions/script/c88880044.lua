@@ -26,6 +26,7 @@ function c88880044.initial_effect(c)
 	e2:SetCondition(c88880044.discon2)
 	e2:SetOperation(c88880044.disop2)
 	c:RegisterEffect(e2)
+	--(3) If a monster is banished by this effect: Increase the ATK of all "CREATION-Eyes" Xyz monsters you control by half the banished monsters ATK.
 end
 --(1)
 function c88880044.cfilter(c)

@@ -113,11 +113,11 @@ end
 --Monster Effects
 --(1) 
 function c88880027.indes(e,c)
-	return not (c:IsSetCard(0x48) and c:IsSetCard(0x889))
+	return not c:IsSetCard(0x48) or c:IsSetCard(0x889)
 end
 --(2) Your opponent cannot activate spell effects while this card is face-up on the field. 
 function c88880027.aclimit(e,re,tp)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsType(TYPE_SPELL)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE+EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_QUICK_O) and re:IsType(TYPE_SPELL)
 end
 --(3)
 function c88880027.atkop(e,tp,eg,ep,ev,re,r,rp)

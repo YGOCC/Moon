@@ -39,7 +39,7 @@ function c88880020.atvcon(e,tp,eg,ep,ev,re,r,rp)
 end
 --(2) All "CREATION" Xyz monsters gain 1000 ATK/DEF points.
 function c88880020.indtg(e,c)
-	return c:IsSetCard(0x889) and c:IsType(TYPE_XYZ)
+	return c:IsSetCard(0x889) and c:IsType(TYPE_XYZ) and not c:IsSetCard(0x903)
 end
 --(3) Once per turn, when an attack is declared involving your "CREATION" Xyz monster: Place up to 2 "CREATION" Pendulum monsteres from your deck or extra deck into the Pendulum Zone, but destroy them at the end of the turn.
 function c88880020.pencon(e,tp,eg,ep,ev,re,r,rp)

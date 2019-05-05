@@ -26,11 +26,14 @@ function c249000637.initial_effect(c)
 			local cardstruct=_G["c" .. code]
 			if not cardstruct.c249000637Effect_Table_Exists then
 				cardstruct.c249000637Effect_Table_Exists=true
+				cardstruct.c249000637Effect_Table_Card=self
 				cardstruct.c249000637Effect_Table = {}
 				cardstruct.c249000637Effect_Count = 1
 			end
-			cardstruct.c249000637Effect_Table[cardstruct.c249000637Effect_Count] = e
-			cardstruct.c249000637Effect_Count=cardstruct.c249000637Effect_Count + 1
+			if cardstruct.c249000637Effect_Table_Card==self then
+				cardstruct.c249000637Effect_Table[cardstruct.c249000637Effect_Count] = e
+				cardstruct.c249000637Effect_Count=cardstruct.c249000637Effect_Count + 1
+			end
 			self.RegisterEffect_249000637(self,e)
 		end
 	end
@@ -42,8 +45,14 @@ function c249000637.initial_effect(c)
 	e3:SetTarget(c249000637.target2)
 	e3:SetOperation(c249000637.operation2)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_ADJUST)
+	e4:SetRange(LOCATION_MZONE)	
+	e4:SetOperation(c249000637.tokenop)
+	c:RegisterEffect(e4)
 end
-c249000637.adaptive_validation=true
+c249000637.targetvalid=true
 function c249000637.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer() and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
 		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 and Duel.GetDrawCount(tp)>0
@@ -95,30 +104,33 @@ function c249000637.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,c249000637.costfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function c249000637.tgfilter(c,e)
+function c249000637.tgfilter(c,e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if not c:IsType(TYPE_EFFECT) then return false end
 	local code=c:GetOriginalCode()
 	local cardstruct=_G["c" .. code]
-	if cardstruct.adaptive_validation then return false end
+	c249000637.targetvalid=false
 	local i=1
 	for i=1,cardstruct.c249000637Effect_Count do
 		local etemp=cardstruct.c249000637Effect_Table[i]
-		if etemp and etemp:IsHasType(EFFECT_TYPE_IGNITION) then 	
+		if etemp and etemp:IsHasType(EFFECT_TYPE_IGNITION) and e:GetHandler():IsLocation(etemp:GetRange()) then 	
 			local conf=etemp:GetCondition() 	
 			local tef=etemp:GetTarget()
 			local cof=etemp:GetCost()
 			if not conf or conf(e,tp,eg,ep,ev,re,r,rp) then
 				if not tef or tef(e,tp,eg,ep,ev,re,r,rp,0,nil) then
+					c249000637.targetvalid=true
 					if not cof or cof(e,tp,eg,ep,ev,re,r,rp,0) then return true end
 				end
 			end
 		end
-	end	
+	end
+	c249000637.targetvalid=true	
 	return false
 end
 function c249000637.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000637.tgfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil,e) end
-	local tc=Duel.SelectMatchingCard(tp,c249000637.tgfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil,e):GetFirst()
+	if c249000637.targetvalid==false then return false end
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000637.tgfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil,e,tp,eg,ep,ev,re,r,rp,chk,chkc) end
+	local tc=Duel.SelectMatchingCard(tp,c249000637.tgfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil,e,tp,eg,ep,ev,re,r,rp,chk,chkc):GetFirst()
 	local code=tc:GetOriginalCode()
 	local cardstruct=_G["c" .. code]
 	local t={}
@@ -127,7 +139,7 @@ function c249000637.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local p=1
 	for i=1,cardstruct.c249000637Effect_Count do
 		local etemp=cardstruct.c249000637Effect_Table[i]
-		if etemp and etemp:IsHasType(EFFECT_TYPE_IGNITION) then
+		if etemp and etemp:IsHasType(EFFECT_TYPE_IGNITION) and e:GetHandler():IsLocation(etemp:GetRange()) then
 			local conf=etemp:GetCondition()	
 			local tef=etemp:GetTarget()
 			local cof=etemp:GetCost()
@@ -160,4 +172,15 @@ function c249000637.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local te=e:GetLabelObject()
 	local op=te:GetOperation()
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
+end
+function c249000637.tokenop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0xFF,0xFF,nil)
+	local tc=g:GetFirst()
+	while tc do
+		local temp=Duel.CreateToken(tp,tc:GetOriginalCode())
+		local code=temp:GetOriginalCode()
+		local cardstruct=_G["c" .. code]
+		if cardstruct.initial_effect then cardstruct.initial_effect(temp) end
+		tc=g:GetNext()
+	end
 end

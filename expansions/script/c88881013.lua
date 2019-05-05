@@ -1,8 +1,8 @@
---Number C300: CREATION-Eyes Dimensional Requiem Dragon
-local card = c88880015
-local m=88880015
+--Number card00: Galaxy-Eyes Intergalactic Dragon
+local card = c88881013
+local m=88881013
 local cm=_G["c"..m]
-cm.dfc_front_side=m+1000
+cm.dfc_front_side=m-1000
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function card.initial_effect(c)
   --Xyz Summon
@@ -21,20 +21,28 @@ function card.initial_effect(c)
   e2:SetCondition(card.indescon)
   e2:SetValue(1)
   c:RegisterEffect(e2)
-  --(3) You can detach 1 material: attach all cards your opponent controls to this card as material and if you do, this card gains 500 ATK for each card attached, then, this card gains 1000 ATK. 
+  --(3) Once per turn, you can detach 1 material: banish 1 monster your opponent controls for each card in your Pendulum Zone, then, gain ATK equal to half the banished monster(s) combined ATK.
   local e3=Effect.CreateEffect(c)
-  e3:SetDescription(aux.Stringid(88880015,0))
-  e3:SetCategory(CATEGORY_ATKCHANGE)
+  e3:SetDescription(aux.Stringid(88880013,0))
+  e3:SetCategory(CATEGORY_REMOVE)
   e3:SetType(EFFECT_TYPE_IGNITION)
   e3:SetRange(LOCATION_MZONE)
   e3:SetCost(card.atkcost)
   e3:SetTarget(card.atktg)
   e3:SetOperation(card.atkop)
-  e3:SetCountLimit(1,88880015)
+  e3:SetCountLimit(1)
   c:RegisterEffect(e3)
+  local exx=Effect.CreateEffect(c)
+  exx:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+  exx:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+  exx:SetCode(EVENT_TURN_END)
+  exx:SetRange(LOCATION_MZONE)
+  exx:SetCondition(card.artcon)
+  exx:SetOperation(card.artop)
+  c:RegisterEffect(exx)
   --(4) When this card destroys a monster by battle: deal damage equal to the destroyed monsters ATK. 
   local e4=Effect.CreateEffect(c)
-  e4:SetDescription(aux.Stringid(88880015,1))
+  e4:SetDescription(aux.Stringid(88880013,1))
   e4:SetCategory(CATEGORY_DAMAGE)
   e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
   e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -62,34 +70,39 @@ end
 function card.indescon(e,tp,eg,ep,ev,re,r,rp)
   return e:GetHandler():GetOverlayCount()>0
 end
---(3) You can detach 1 material: attach all cards your opponent controls to this card as material and if you do, this card gains 500 ATK for each card attached, then, this card gains 1000 ATK. 
+--(3) Once per turn, you can detach 1 material: banish 1 monster your opponent controls for each card in your Pendulum Zone, then, gain ATK equal to half the banished monster(s) combined ATK.
 function card.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-  if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-  e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
-function card.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-  if chk==0 then return true end
-  local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
-  Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,g,g:GetCount(),0,0)
+function card.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_MZONE)
 end
 function card.atkop(e,tp,eg,ep,ev,re,r,rp)
+  local ht=Duel.GetFieldGroupCount(tp,LOCATION_PZONE,0)
+  if ht==0 then return end
+  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+  local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,ht,nil)
   local c=e:GetHandler()
-  local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
-  local tc = g:GetFirst()
-  while tc do
-	if c:IsRelateToEffect(e) then
-	  Duel.Overlay(c,tc)
-	end
-	tc=g:GetNext()
+  local atk=rg:GetSum(Card.GetAttack)
+  if rg:GetCount()>0 then
+	Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
+	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(atk/2)
+	c:RegisterEffect(e1)
   end
-  local atk=g:GetCount()
-  if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
-  local e1=Effect.CreateEffect(c)
-  e1:SetType(EFFECT_TYPE_SINGLE)
-  e1:SetCode(EFFECT_UPDATE_ATTACK)
-  e1:SetValue(atk*500+1000)
-  c:RegisterEffect(e1)
-  Senya.TransformDFCCard(c)
+end
+function card.artcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return (c:GetOriginalCode()==m or c:GetOriginalCode()==cm.dfc_front_side)
+end
+function card.artop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Senya.TransformDFCCard(c)
 end
 --(4) When this card destroys a monster by battle: deal damage equal to the destroyed monsters ATK.
 function card.damtg(e,tp,eg,ep,ev,re,r,rp,chk)

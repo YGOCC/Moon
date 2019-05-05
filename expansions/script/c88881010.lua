@@ -1,9 +1,9 @@
 --Number 300: Galaxy-Eyes Photonic Tachyon Dragon
 --Scripted by Loli Dragon of Creativity
-local card = c88880010
-local m=88880010
+local card = c88881010
+local m=88881010
 local cm=_G["c"..m]
-cm.dfc_front_side=m+1000
+cm.dfc_front_side=m-1000
 xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function card.initial_effect(c)
   --Xyz Materials
@@ -18,18 +18,25 @@ function card.initial_effect(c)
   c:RegisterEffect(e1)
   --(2) Once per turn, if this card battles, you can detach 1 material: destroy all cards in your Pendulum Zones and if you do, this card gains 200 ATK equal to the combined Levels/Ranks of all cards destroyed by this effect, but at the end of the damage step half the gained ATK.
   local e2=Effect.CreateEffect(c)
-  e2:SetDescription(aux.Stringid(88880010,0))
+  e2:SetDescription(aux.Stringid(88881010,0))
   e2:SetCategory(CATEGORY_DESTROY)
   e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
   e2:SetCode(EVENT_BATTLE_CONFIRM)
   e2:SetCost(card.atkcost)
-  e2:SetCondition(card.atkcon)
   e2:SetTarget(card.atktg)
   e2:SetOperation(card.atkop)
   c:RegisterEffect(e2)
+  local exx=Effect.CreateEffect(c)
+  exx:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+  exx:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+  exx:SetCode(EVENT_DAMAGE_STEP_END)
+  exx:SetRange(LOCATION_MZONE)
+  exx:SetCondition(card.artcon)
+  exx:SetOperation(card.artop)
+  c:RegisterEffect(exx)
   --(3) When this card destroys a monster by battle: deal damage equal to half the destroyed monsters ATK.
   local e3=Effect.CreateEffect(c)
-  e3:SetDescription(aux.Stringid(88880010,1))
+  e3:SetDescription(aux.Stringid(88881010,1))
   e3:SetCategory(CATEGORY_DAMAGE)
   e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
   e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -60,7 +67,6 @@ function card.atkop(e,tp,eg,ep,ev,re,r,rp)
   local c=e:GetHandler()
   local tc=sg:GetSum(Card.GetLevel)*100 or sg:GetSum(Card.GetRank)*100
   if c:IsRelateToEffect(e) and c:IsFaceup() then
-	Senya.TransformDFCCard(c)
 	local atk=tc
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -74,17 +80,29 @@ function card.atkop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_DAMAGE)
 	e2:SetValue(atk/2)
 	c:RegisterEffect(e2)
+	local exx=Effect.CreateEffect(c)
+	exx:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	exx:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	exx:SetCode(EVENT_ADJUST+EVENT_DAMAGE_STEP_END)
+	exx:SetRange(LOCATION_MZONE)
+	exx:SetCondition(card.artcon)
+	exx:SetOperation(card.artop)
+	c:RegisterEffect(exx)
   end
 end
-function card.atkcon(e,tp,eg,ep,ev,re,r,rp)
-  local c=e:GetHandler()
-  return (c:GetOriginalCode()==m or c:GetOriginalCode()==cm.dfc_front_side)
+function card.artcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return (c:GetOriginalCode()==m or c:GetOriginalCode()==cm.dfc_front_side)
+end
+function card.artop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Senya.TransformDFCCard(c)
 end
 --(3)
 function card.damcon(e,tp,eg,ep,ev,re,r,rp)
-  local c=e:GetHandler()
-  local bc=c:GetBattleTarget()
-  return c:IsRelateToBattle() and bc:IsLocation(LOCATION_GRAVE) and bc:IsType(TYPE_MONSTER)
+	local c=e:GetHandler()
+	local bc=c:GetBattleTarget()
+	return c:IsRelateToBattle() and bc:IsLocation(LOCATION_GRAVE) and bc:IsType(TYPE_MONSTER)
 end
 function card.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
