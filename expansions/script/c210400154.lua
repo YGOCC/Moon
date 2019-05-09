@@ -63,7 +63,7 @@ function cid.zones(e,tp)
 	return zone
 end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
-	local g,e1,e0,e3=e:GetLabelObject():Filter(Card.IsLocation,nil,LOCATION_MZONE),Effect.CreateEffect(e:GetHandler())
+	local g,e1,e0,e3=e:GetLabelObject():GetLabelObject():Filter(Card.IsLocation,nil,LOCATION_MZONE),Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_DISABLE)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD-0x10e0000)
