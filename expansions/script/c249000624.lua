@@ -20,6 +20,15 @@ function c249000624.initial_effect(c)
 		ge1:SetOperation(aux.sumreg)
 		Duel.RegisterEffect(ge1,0)
 	end
+	--spsummon
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCost(aux.bfgcost)
+	e2:SetTarget(c249000624.sptg)
+	e2:SetOperation(c249000624.spop)
+	c:RegisterEffect(e2)
 end
 function c249000624.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(249000624)>0
@@ -58,5 +67,21 @@ function c249000624.operation(e,tp,eg,ep,ev,re,r,rp)
 	local dc=Duel.GetOperatedGroup():GetFirst()
 	if dc:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.SelectYesNo(tp,2) then
 		Duel.SpecialSummon(dc,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
+function c249000624.spfilter(c,e,tp)
+	return c:IsSetCard(0x1D9) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c249000624.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c249000624.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+end
+function c249000624.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c249000624.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

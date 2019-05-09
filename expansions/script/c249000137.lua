@@ -27,7 +27,7 @@ function c249000137.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsPreviousPosition(POS_FACEUP) and rp~=tp and not c:IsLocation(LOCATION_DECK)
 end
 function c249000137.spfilter(c,e,tp)
-	return c:GetLevel()==4 and c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetLevel()==4 and c:IsRace(RACE_SPELLCASTER) and c:IsSetCard(0x1D9) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c249000137.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -58,8 +58,43 @@ function c249000137.operation2(e,tp,eg,ep,ev,re,r,rp,c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-			e1:SetValue(tc:GetLevel() * 300)
+			e1:SetValue(tc:GetLevel() * 200)
 			c:RegisterEffect(e1)
+	elseif (tc:GetType()==TYPE_SPELL or tc:GetType()==TYPE_SPELL+TYPE_QUICKPLAY) then
+			local ae=tc:GetActivateEffect()
+			if tc:GetLocation()==LOCATION_GRAVE and ae then
+				local e1=Effect.CreateEffect(tc)
+				e1:SetDescription(ae:GetDescription())
+				e1:SetType(EFFECT_TYPE_IGNITION)
+				e1:SetCountLimit(1)
+				e1:SetRange(LOCATION_GRAVE)
+				e1:SetReset(RESET_EVENT+0x2fe0000+RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
+				e1:SetCondition(c249000137.spellcon)
+				e1:SetTarget(c249000137.spelltg)
+				e1:SetOperation(c249000137.spellop)
+				tc:RegisterEffect(e1)
+			end
 		end
 	end
+end
+function c249000137.spellcon(e,tp,eg,ep,ev,re,r,rp,chk)
+	return e:GetHandler():GetTurnID()~=Duel.GetTurnCount()
+end
+function c249000137.spelltg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local ae=e:GetHandler():GetActivateEffect()
+	local ftg=ae:GetTarget()
+	if chk==0 then
+		return not ftg or ftg(e,tp,eg,ep,ev,re,r,rp,chk)
+	end
+	if ae:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	else e:SetProperty(0) end
+	if ftg then
+		ftg(e,tp,eg,ep,ev,re,r,rp,chk)
+	end
+end
+function c249000137.spellop(e,tp,eg,ep,ev,re,r,rp)
+	local ae=e:GetHandler():GetActivateEffect()
+	local fop=ae:GetOperation()
+	fop(e,tp,eg,ep,ev,re,r,rp)
 end

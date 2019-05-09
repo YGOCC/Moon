@@ -6,17 +6,10 @@ function c249000572.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,249000572)
-	e1:SetCondition(c249000572.condition)
 	e1:SetCost(c249000572.cost)
 	e1:SetTarget(c249000572.target)
 	e1:SetOperation(c249000572.operation)
 	c:RegisterEffect(e1)
-end
-function c249000572.confilter(c)
-	return c:IsSetCard(0x1D1) and c:GetCode()~=249000572 and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
-end
-function c249000572.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c249000572.confilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,nil)
 end
 function c249000572.costfilter(c)
 	return c:IsSetCard(0x1D1) and c:IsAbleToRemoveAsCost() and c:IsType(TYPE_MONSTER)

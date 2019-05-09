@@ -1,15 +1,12 @@
 --Spell-Disciple Gravity Sorcerer
 function c249000622.initial_effect(c)
-	--spsummon
+	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(249000622,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(c249000622.spcon)
-	e1:SetTarget(c249000622.sptg)
-	e1:SetOperation(c249000622.spop)
 	c:RegisterEffect(e1)
 	--sp summon
 	local e2=Effect.CreateEffect(c)
@@ -18,24 +15,42 @@ function c249000622.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,249000622)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetCost(c249000622.cost)
 	e2:SetTarget(c249000622.sptg2)
 	e2:SetOperation(c249000622.spop2)
 	c:RegisterEffect(e2)
 end
-function c249000622.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local at=Duel.GetAttacker()
-	return at:GetControler()~=tp and Duel.GetAttackTarget()==nil
+function c249000622.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
+		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
-function c249000622.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+function c249000622.costfilter(c)
+	return c:IsSetCard(0x1D9) and c:IsAbleToRemoveAsCost() and c:IsType(TYPE_MONSTER)
 end
-function c249000622.spop(e,tp,eg,ep,ev,re,r,rp)
+function c249000622.costfilter2(c)
+	return c:IsSetCard(0x1D9) and not c:IsPublic()
+end
+function c249000622.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) then
-		Duel.NegateAttack()
+	if chk==0 then return (Duel.IsExistingMatchingCard(c249000622.costfilter,tp,LOCATION_GRAVE,0,1,nil)
+	or Duel.IsExistingMatchingCard(c249000622.costfilter2,tp,LOCATION_HAND,0,1,c)) end
+	local option
+	if Duel.IsExistingMatchingCard(c249000622.costfilter2,tp,LOCATION_HAND,0,1,c)  then option=0 end
+	if Duel.IsExistingMatchingCard(c249000622.costfilter,tp,LOCATION_GRAVE,0,1,nil) then option=1 end
+	if Duel.IsExistingMatchingCard(c249000622.costfilter,tp,LOCATION_GRAVE,0,1,nil)
+	and Duel.IsExistingMatchingCard(c249000622.costfilter2,tp,LOCATION_HAND,0,1,c) then
+		option=Duel.SelectOption(tp,526,1102)
+	end
+	if option==0 then
+		local g=Duel.SelectMatchingCard(tp,c249000622.costfilter2,tp,LOCATION_HAND,0,1,1,c)
+		Duel.ConfirmCards(1-tp,g)
+		Duel.ShuffleHand(tp)
+	end
+	if option==1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,c249000622.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
 end
 function c249000622.filter(c,e,tp)

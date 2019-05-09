@@ -66,9 +66,8 @@ function c249000625.targetfilter(c)
 end
 function c249000625.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return (chkc:IsOnField() or chkc:IsLocation(LOCATION_GRAVE)) end
-	if chk==0 then return Duel.IsExistingTarget(c249000625.targetfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c249000625.targetfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(c249000625.targetfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil) and Duel.GetLocationCountFromEx(tp,tp,e:GetHandler())>0 end
+	local g=Duel.SelectTarget(tp,c249000625.targetfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,1,nil)
 end
 function c249000625.codefilter(c,code)
 	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsCode(code)
@@ -76,19 +75,23 @@ end
 function c249000625.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and c:IsRelateToEffect(e) and c:IsControler(tp) then
+	if tc:IsRelateToEffect(e) and c:IsRelateToEffect(e) and Duel.GetLocationCountFromEx(tp,tp,c)>0 then
 		local lvrk
 		if tc:GetRank() > 0 then lvrk=tc:GetRank() else lvrk=tc:GetLevel() end
-		local ac=Duel.AnnounceCard(tp)
+		local ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,OPCODE_AND,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,249000625,OPCODE_ISCODE,OPCODE_OR)
+		if ac==249000625 then return end
 		local cc=Duel.CreateToken(tp,ac)
 		while not (cc:IsType(TYPE_XYZ) and (cc:GetRank()-lvrk <=2 or cc:GetRank()-lvrk >=-2) and
 		cc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)	and cc:IsRace(tc:GetRace()) and cc:IsAttribute(tc:GetAttribute()) and not Duel.IsExistingMatchingCard(c249000625.codefilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,ac))
 		do
-			ac=Duel.AnnounceCard(tp)
+			ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,OPCODE_AND,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,249000625,OPCODE_ISCODE,OPCODE_OR)
+			if ac==249000625 then return end
 			cc=Duel.CreateToken(tp,ac)
 		end
-		Duel.SpecialSummon(cc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
+		Duel.SendtoDeck(cc,nil,0,REASON_RULE)
+		cc:SetMaterial(Group.FromCards(c))
 		Duel.Overlay(cc,c)
+		Duel.SpecialSummon(cc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
 		if tc2 then
 			Duel.Overlay(cc,tc2)
