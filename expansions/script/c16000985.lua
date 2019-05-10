@@ -1,4 +1,3 @@
---Dark Pitull of Gust Vine
 function c16000985.initial_effect(c)
 	 c:EnableReviveLimit()
 		local e0=Effect.CreateEffect(c)
@@ -16,7 +15,7 @@ function c16000985.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCode(EVENT_TOGRAVE)
+	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetCountLimit(1,16000985)
 	e1:SetCondition(c16000985.ctcon)
 	e1:SetTarget(c16000985.target)
@@ -41,16 +40,15 @@ function c16000985.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c16000985.cfilter,1,nil)
 end
 function c16000985.target(e,tp,eg,ep,ev,re,r,rp,chk)
- if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,0x1e,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,0,0x1e)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,0,LOCATION_HAND+LOCATION_ONFIELD,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,1-tp,LOCATION_HAND+LOCATION_ONFIELD)
 end
 function c16000985.operation(e,tp,eg,ep,ev,re,r,rp)
-   local g1=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
-	--local g2=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,nil)
-	local g2=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil)
+    local g1=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,nil)
+	local g2=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_HAND,nil)
 	local sg=Group.CreateGroup()
-	if g1:GetCount()>0 and (( g2:GetCount()==0) or Duel.SelectYesNo(tp,aux.Stringid(16000985,1))) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DECK)
+	if g1:GetCount()>0 and (g2:GetCount()==0 or Duel.SelectYesNo(tp,aux.Stringid(16000985,1))) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local sg1=g1:Select(tp,1,1,nil)
 		Duel.HintSelection(sg1)
 		sg:Merge(sg1)
