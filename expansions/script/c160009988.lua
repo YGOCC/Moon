@@ -92,9 +92,18 @@ function c160009988.thop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 			sc=sg:GetNext()
 		end
-
+	 local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(c160009988.sumlimit)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
 	end
 end
-
+function c160009988.sumlimit(e,c,sump,sumtype,sumpos,targetp)
+	return c:IsLocation(LOCATION_EXTRA) and not ( c:IsSetCard(0xc50) or not c:IsType(TYPE_EFFECT))
+end
 
 
