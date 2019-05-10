@@ -98,7 +98,7 @@ function c249000638.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,c249000638.costfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function c249000638.tgfilter(c,e)
+function c249000638.tgfilter(c,e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if not c:IsType(TYPE_EFFECT) then return false end
 	local code=c:GetOriginalCode()
 	local cardstruct=_G["c" .. code]
