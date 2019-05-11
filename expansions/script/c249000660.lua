@@ -27,28 +27,16 @@ function c249000660.initial_effect(c)
 	e3:SetOperation(c249000660.deckop)
 	c:RegisterEffect(e3)
 end
-function c249000660.spfilter(c)
-	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsDiscardable()
-end
 function c249000660.spcon(e,c)
 	if c==nil then return true end
-	if c:IsHasEffect(EFFECT_NECRO_VALLEY) then return false end
 	local tp=c:GetControler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
-	local g=Duel.GetMatchingGroup(c249000660.spfilter,tp,LOCATION_HAND,0,nil)
-	if not c:IsAbleToGraveAsCost() or Duel.IsPlayerAffectedByEffect(tp,EFFECT_NECRO_VALLEY) then
-		g:RemoveCard(c)
-	end
-	return g:GetCount() > 1
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_HAND,0,1,c,0x1D9)
 end
 function c249000660.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.GetMatchingGroup(c249000660.spfilter,c:GetControler(),LOCATION_HAND,0,nil)
-	if not c:IsAbleToGraveAsCost() or Duel.IsPlayerAffectedByEffect(tp,EFFECT_NECRO_VALLEY) then
-		g:RemoveCard(c)
-	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-	local sg=g:Select(tp,2,2,nil)
-	Duel.SendtoGrave(sg,REASON_COST+REASON_DISCARD)
+	local g=Duel.SelectMatchingCard(tp,Card.IsSetCard,tp,LOCATION_HAND,0,1,1,c,0x1D9)
+	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
 end
 function c249000660.aclimit(e,re,tp)
 	return re:GetActivateLocation()==LOCATION_GRAVE

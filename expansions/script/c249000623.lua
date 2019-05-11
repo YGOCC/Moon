@@ -23,6 +23,16 @@ function c249000623.initial_effect(c)
 	e2:SetTarget(c249000623.thtg)
 	e2:SetOperation(c249000623.thop)
 	c:RegisterEffect(e2)
+	--spsummon
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(45531624,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1)
+	e3:SetTarget(c249000623.sptg)
+	e3:SetOperation(c249000623.spop)
+	c:RegisterEffect(e3)
 end
 function c249000623.cfilter(c,tp)
 	return c:IsControler(tp) and c:IsPreviousLocation(LOCATION_DECK) and not c:IsReason(REASON_DRAW)
@@ -50,7 +60,7 @@ function c249000623.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and e:GetHandler():IsReason(REASON_DESTROY)
 end
 function c249000623.filter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsSetCard(0x1D9)
+	return c:IsFaceup() and c:IsAbleToHand() and c:IsSetCard(0x1D9)
 end
 function c249000623.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c36733451.filter(chkc) end
@@ -64,5 +74,21 @@ function c249000623.thop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
+	end
+end
+function c249000623.spfilter(c,e,tp)
+	return c:IsSetCard(0x1D9) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c249000623.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c249000623.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+end
+function c249000623.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c249000623.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
