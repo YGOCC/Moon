@@ -2359,3 +2359,15 @@ end
 function Auxiliary.RandomTargetFilter(c)
 	return c:GetFlagEffect(39759371)>0 and c:GetFlagEffectLabel(39759371)==999
 end
+
+--Global Card Effect Table
+if not global_card_effect_table_global_check then
+	global_card_effect_table_global_check=true
+	global_card_effect_table={}
+	Card.register_global_card_effect_table = Card.RegisterEffect
+	function Card:RegisterEffect(e)
+		if not global_card_effect_table[self] then global_card_effect_table[self]={} end
+		table.insert(global_card_effect_table[self],e)
+		self.register_global_card_effect_table(self,e)
+	end
+end
