@@ -23,6 +23,7 @@ end
 --filters
 function cid.filter(c,rg)
 	if not c:IsFaceup() or not c:IsType(TYPE_XYZ) or not c:IsAttribute(ATTRIBUTE_DARK) or c:GetRank()<=0 then return false end
+	local result=false
 	if rg:IsContains(c) then
 		rg:RemoveCard(c)
 		result=rg:IsExists(cid.levelchk,1,nil,c:GetRank(),nil)
