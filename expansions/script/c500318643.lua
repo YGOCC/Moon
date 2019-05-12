@@ -21,7 +21,7 @@ function c500318643.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c500318643.filter0(c)
-	return c:IsOnField() and c:IsAbleToRemove()
+	return c:IsOnField()  and c:IsAbleToRemove()  not c:IsImmuneToEffect(e)
 end
 function c500318643.filter1(c,e)
 	return c:IsOnField() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e)

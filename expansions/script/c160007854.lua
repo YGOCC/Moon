@@ -9,7 +9,7 @@ function c160007854.initial_effect(c)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0xc50))
+	e1:SetTarget(c160007854.atktg)
 	e1:SetValue(300)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
@@ -28,6 +28,10 @@ function c160007854.initial_effect(c)
 	c:RegisterEffect(e4)
   
 	
+end
+
+function c160007854.atktg(e,c)
+	return not c:IsType(TYPE_EFFECT)
 end
 function c160007854.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL) then return false end
