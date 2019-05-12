@@ -843,7 +843,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 	ge6:SetCountLimit(1,10000000)
 	ge6:SetCondition(Auxiliary.PandCondition)
 	ge6:SetCost(Auxiliary.PandCost)
-	ge6:SetOperation(Auxiliary.PandOperation(typ))
+	ge6:SetOperation(Auxiliary.PandOperation)
 	ge6:SetValue(726)
 	c:RegisterEffect(ge6)
 	--add Pendulum-like redirect property
@@ -956,77 +956,74 @@ function Auxiliary.PandCondition(e,c,og)
 	end
 	return aux.PandActCheck(e) and g:IsExists(Auxiliary.PaConditionFilter,1,nil,e,tp,lscale,rscale) and c:GetFlagEffect(53313903)<=0
 end
-function Auxiliary.PandOperation(tpe)
-	if not tpe then tpe=TYPE_EFFECT end
-	return	function(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
-				local lscale=c:GetLeftScale()
-				local rscale=c:GetRightScale()
-				if lscale>rscale then lscale,rscale=rscale,lscale end
-				local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
-				local ft2=Duel.GetLocationCountFromEx(tp)
-				local ft=Duel.GetUsableMZoneCount(tp)
-				if Duel.IsPlayerAffectedByEffect(tp,59822133) then
-					if ft1>0 then ft1=1 end
-					if ft2>0 then ft2=1 end
-					ft=1
-				end
-				local loc=0
-				if ft1>0 then loc=loc+LOCATION_HAND end
-				if ft2>0 then loc=loc+LOCATION_EXTRA end
-				local tg=nil
-				if og then
-					tg=og:Filter(Card.IsLocation,nil,loc):Filter(Auxiliary.PaConditionFilter,nil,e,tp,lscale,rscale)
-				else
-					tg=Duel.GetMatchingGroup(Auxiliary.PaConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale)
-				end	
-				ft1=math.min(ft1,tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND))
-				ft2=math.min(ft2,tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA))
-				local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
-				if ect and ect<ft2 then ft2=ect end
-				while true do
-					local ct1=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
-					local ct2=tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
-					local ct=ft
-					if ct1>ft1 then ct=math.min(ct,ft1) end
-					if ct2>ft2 then ct=math.min(ct,ft2) end
-					if ct<=0 then break end
-					if sg:GetCount()>0 and not Duel.SelectYesNo(tp,210) then ft=0 break end
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-					local g=tg:Select(tp,1,ct,nil)
-					tg:Sub(g)
-					sg:Merge(g)
-					if g:GetCount()<ct then ft=0 break end
-					ft=ft-g:GetCount()
-					ft1=ft1-g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
-					ft2=ft2-g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
-				end
-				if ft>0 then
-					local tg1=tg:Filter(Card.IsLocation,nil,LOCATION_HAND)
-					local tg2=tg:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
-					if ft1>0 and ft2==0 and tg1:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
-						local ct=math.min(ft1,ft)
-						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-						local g=tg1:Select(tp,1,ct,nil)
-						sg:Merge(g)
-			end
-			if ft1==0 and ft2>0 and tg2:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
-				local ct=math.min(ft2,ft)
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				local g=tg2:Select(tp,1,ct,nil)
-				sg:Merge(g)
-			end
+function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
+	local lscale=c:GetLeftScale()
+	local rscale=c:GetRightScale()
+	if lscale>rscale then lscale,rscale=rscale,lscale end
+	local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local ft2=Duel.GetLocationCountFromEx(tp)
+	local ft=Duel.GetUsableMZoneCount(tp)
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then
+		if ft1>0 then ft1=1 end
+		if ft2>0 then ft2=1 end
+		ft=1
+	end
+	local loc=0
+	if ft1>0 then loc=loc+LOCATION_HAND end
+	if ft2>0 then loc=loc+LOCATION_EXTRA end
+	local tg=nil
+	if og then
+		tg=og:Filter(Card.IsLocation,nil,loc):Filter(Auxiliary.PaConditionFilter,nil,e,tp,lscale,rscale)
+	else
+		tg=Duel.GetMatchingGroup(Auxiliary.PaConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale)
+	end	
+	ft1=math.min(ft1,tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND))
+	ft2=math.min(ft2,tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA))
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if ect and ect<ft2 then ft2=ect end
+	while true do
+		local ct1=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+		local ct2=tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
+		local ct=ft
+		if ct1>ft1 then ct=math.min(ct,ft1) end
+		if ct2>ft2 then ct=math.min(ct,ft2) end
+		if ct<=0 then break end
+		if sg:GetCount()>0 and not Duel.SelectYesNo(tp,210) then ft=0 break end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=tg:Select(tp,1,ct,nil)
+		tg:Sub(g)
+		sg:Merge(g)
+		if g:GetCount()<ct then ft=0 break end
+		ft=ft-g:GetCount()
+		ft1=ft1-g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+		ft2=ft2-g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
+	end
+	if ft>0 then
+		local tg1=tg:Filter(Card.IsLocation,nil,LOCATION_HAND)
+		local tg2=tg:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
+		if ft1>0 and ft2==0 and tg1:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
+			local ct=math.min(ft1,ft)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=tg1:Select(tp,1,ct,nil)
+			sg:Merge(g)
 		end
-		if sg:GetCount()>0 then
-			Duel.HintSelection(Group.FromCards(c))
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e1:SetCode(EVENT_SPSUMMON)
-			e1:SetRange(LOCATION_SZONE)
-			e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(Card.IsSummonType,1,nil,SUMMON_TYPE_SPECIAL+726) end)
-			e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) Auxiliary.PandEnableFUInED(e:GetHandler(),REASON_RULE,tpe)(e,tp,eg,ep,ev,re,r,rp) end)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			c:RegisterEffect(e1)
+		if ft1==0 and ft2>0 and tg2:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
+			local ct=math.min(ft2,ft)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=tg2:Select(tp,1,ct,nil)
+			sg:Merge(g)
 		end
+	end
+	if sg:GetCount()>0 then
+		Duel.HintSelection(Group.FromCards(c))
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_SPSUMMON)
+		e1:SetRange(LOCATION_SZONE)
+		e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(Card.IsSummonType,1,nil,SUMMON_TYPE_SPECIAL+726) end)
+		e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) Duel.SendtoGrave(e:GetHandler(),REASON_RULE) end)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		c:RegisterEffect(e1)
 	end
 end
 function Auxiliary.PaCheckFilter(c)
