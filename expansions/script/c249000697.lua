@@ -17,42 +17,19 @@ function c249000697.initial_effect(c)
 	e2:SetTarget(c249000697.sptg)
 	e2:SetOperation(c249000697.spop)
 	c:RegisterEffect(e2)
-	--xyz
-	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetDescription(1073)
-	e3:SetHintTiming(0,0x1c0)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetTarget(c249000697.target)
-	e3:SetOperation(c249000697.operation)
-	c:RegisterEffect(e3)
 	--material
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(19310321,0))
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_GRAVE)
-	e4:SetCost(c249000697.cost)
-	e4:SetTarget(c249000697.target2)
-	e4:SetOperation(c249000697.operation2)
-	c:RegisterEffect(e4)
-	--draw
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(24943456,0))
-	e5:SetCategory(CATEGORY_DRAW)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e5:SetCode(EVENT_LEAVE_FIELD)
-	e5:SetCondition(c249000697.drcon)
-	e5:SetTarget(c249000697.drtg)
-	e5:SetOperation(c249000697.drop)
-	c:RegisterEffect(e5)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(19310321,0))
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCost(c249000697.cost)
+	e3:SetTarget(c249000697.target2)
+	e3:SetOperation(c249000697.operation2)
+	c:RegisterEffect(e3)
 end
 function c249000697.filter(c,e,sp)
-	return c:GetLevel() > 0 and c:IsCanBeSpecialSummoned(e,0,sp,false,false)
+	return c:GetLevel() > 0 and c:GetLevel() <=6 and c:IsCanBeSpecialSummoned(e,0,sp,false,false)
 end
 function c249000697.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c249000697.filter(chkc,e,tp) end
@@ -84,41 +61,52 @@ function c249000697.spop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 		e3:SetRange(LOCATION_MZONE)
 		e3:SetReset(RESET_EVENT+0x1fe0000)
-		e3:SetValue(c249000697.xyzlv)
+		e3:SetValue(tc:GetOriginalLevel())
 		tc:RegisterEffect(e3)
+		--xyz summon
+		local e4=Effect.CreateEffect(c)
+		e4:SetType(EFFECT_TYPE_FIELD)
+		e4:SetCode(EFFECT_SPSUMMON_PROC_G)
+		e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	 	e4:SetReset(RESET_EVENT+0x1fe0000)
+		e4:SetRange(LOCATION_MZONE)
+		e4:SetCondition(c249000697.spcon2)
+		e4:SetOperation(c249000697.spop2)
+		tc:RegisterEffect(e4)	
 	end
 	Duel.SpecialSummonComplete()
 end
-function c249000697.xyzlv(e,c,rc)
-	return e:GetHandler():GetLevel()+((e:GetHandler():GetLevel()+1)*0x10000)
-end
-function c249000697.xyzfilter(c)
-	return c:IsXyzSummonable(nil)
-end
-function c249000697.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000697.xyzfilter,tp,LOCATION_EXTRA,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-end
-function c249000697.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c249000697.xyzfilter,tp,LOCATION_EXTRA,0,nil)
-	if g:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tg=g:Select(tp,1,1,nil)
-		Duel.XyzSummon(tp,tg:GetFirst(),nil)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
-		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tg:GetFirst():RegisterEffect(e1,true)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
-		e2:SetCountLimit(1)
-		e2:SetValue(aux.TRUE)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
-		tg:GetFirst():RegisterEffect(e2,true)
+function c249000697.xyzfilter(c,c2,e,tp)
+	local returnval=false
+	local c3
+	local g=Group.CreateGroup()
+	local i=0
+	for key,value in pairs(global_card_effect_table[c]) do
+		local etemp=value
+		if etemp and etemp:GetDescription()==1165 and etemp:GetCondition() then
+			local conf=etemp:GetCondition()
+			for i=0,5 do
+			 	c3=Debug.AddCard(c2:GetOriginalCode(),tp,tp,0,nil,true)
+			 	g:AddCard(c3)
+			end
+			returnval=conf(etemp,c,g,2,99)
+		end
 	end
+	return returnval
+end
+function c249000697.spcon2(e,c,og)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCountFromEx(tp,tp,c)>0 and Duel.IsExistingMatchingCard(c249000697.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,c,e,tp)
+end
+function c249000697.spop2(e,tp,eg,ep,ev,re,r,rp,c,og)
+	Duel.Hint(HINT_CARD,0,249000697)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local spg=Duel.SelectMatchingCard(tp,c249000697.xyzfilter,tp,LOCATION_EXTRA,0,1,1,nil,e:GetHandler(),e,tp)
+	og:Merge(spg)
+	Duel.SendtoGrave(e:GetHandler(),REASON_RULE)
+	spg:GetFirst():SetMaterial(Group.FromCards(e:GetHandler()))
+	Duel.Overlay(spg:GetFirst(),e:GetHandler())
 end
 function c249000697.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -149,17 +137,4 @@ function c249000697.operation2(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.Overlay(tc,g)
 	end
-end
-function c249000697.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and e:GetHandler():IsReason(REASON_DESTROY)
-end
-function c249000697.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-end
-function c249000697.drop(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
 end

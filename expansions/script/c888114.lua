@@ -1,9 +1,8 @@
---Invocyte Macius
-local m=888113
+--Invocyte Silithu
+local m=888114
 local cm=_G["c"..m]
 function cm.initial_effect(c)
     c:EnableReviveLimit()
-    --copy effect
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_QUICK_O)
     e0:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -15,32 +14,29 @@ function cm.initial_effect(c)
     e0:SetOperation(cm.eop)
     c:RegisterEffect(e0)
     local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_SINGLE)
-    e1:SetCode(EFFECT_IMMUNE_EFFECT)
-    e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+    e1:SetDescription(aux.Stringid(m,0))
+    e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e1:SetType(EFFECT_TYPE_IGNITION)
     e1:SetRange(LOCATION_MZONE)
-    e1:SetValue(cm.UMfilter)
-    c:RegisterEffect(e1) 
+    e1:SetCountLimit(1)
+    e1:SetTarget(cm.tgtg)
+    e1:SetOperation(cm.tgop)
+    c:RegisterEffect(e1)    
     local e2=Effect.CreateEffect(c)
-    e2:SetDescription(aux.Stringid(m,0))
-    e2:SetCategory(CATEGORY_ATKCHANGE)
-    e2:SetType(EFFECT_TYPE_IGNITION)
+    e2:SetType(EFFECT_TYPE_FIELD)
+    e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
     e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1)
-    e2:SetOperation(cm.operation)
-    c:RegisterEffect(e2)    
+    e2:SetTargetRange(LOCATION_SZONE,0)
+    e2:SetTarget(cm.indtg)
+    e2:SetValue(1)
+    c:RegisterEffect(e2) 
 end
---filters
-function cm.dtgfilter(c)
-    return c:IsSetCard(0xff8) and c:IsAbleToGrave()
+function cm.indtg(e,c)
+    return c:IsSetCard(0xff8)
 end
 function cm.filter(c,e)
     return c:IsFaceup() and c:IsSetCard(0xff8) and c:IsType(TYPE_MONSTER) and c:IsCanBeEffectTarget(e)
 end
-function cm.UMfilter(e,te)
-    return te:IsActiveType(TYPE_MONSTER) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
-end
---copy effect
 function cm.ecost(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
     if chk==0 then return c:IsDiscardable() end
@@ -66,14 +62,21 @@ function cm.eop(e,tp,eg,ep,ev,re,r,rp)
         tc:RegisterEffect(e2,true)
     end    
 end
-function cm.operation(e,tp,eg,ep,ev,re,r,rp)
+function cm.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsLocation(LOCATION_GRAVE) and cm.sfilter(chkc,e,tp) end
+    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+        and Duel.IsExistingTarget(cm.sfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+    local g=Duel.SelectTarget(tp,cm.sfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
+    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function cm.tgop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    if c:IsFaceup() and c:IsRelateToEffect(e) then
-        local e1=Effect.CreateEffect(c)
-        e1:SetType(EFFECT_TYPE_SINGLE)
-        e1:SetCode(EFFECT_UPDATE_ATTACK)
-        e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
-        e1:SetValue(500)
-        c:RegisterEffect(e1)
+    local tc=Duel.GetFirstTarget()
+    if tc and tc:IsRelateToEffect(e) then
+        Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
     end
+end
+function cm.sfilter(c,e,tp)
+    return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0xff8)
 end

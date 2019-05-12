@@ -108,9 +108,9 @@ function c249000945.operation1(e,tp,eg,ep,ev,re,r,rp)
 end
 function c249000945.tgfilter(c,e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if not c:IsType(TYPE_EFFECT) then return false end
-	if not global_card_effect_table_globalcardeffecttable[c] then return false end
+	if not global_card_effect_table[c] then return false end
 	c249000945.targetvalidi=false
-	for key,value in pairs(global_card_effect_table_globalcardeffecttable[c]) do
+	for key,value in pairs(global_card_effect_table[c]) do
 		local etemp=value
 		if etemp and etemp:IsHasType(EFFECT_TYPE_IGNITION) and e:GetHandler():IsLocation(etemp:GetRange()) then 	
 			local conf=etemp:GetCondition() 	
@@ -134,7 +134,7 @@ function c249000945.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local t={}
 	local desc_t = {}
 	local p=1
-	for key,value in pairs(global_card_effect_table_globalcardeffecttable[tc]) do
+	for key,value in pairs(global_card_effect_table[tc]) do
 		local etemp=value
 		if etemp and etemp:IsHasType(EFFECT_TYPE_IGNITION) and e:GetHandler():IsLocation(etemp:GetRange()) then
 			local conf=etemp:GetCondition() 	
@@ -177,8 +177,8 @@ end
 function c249000945.tgfilter2(c,e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if not c:IsType(TYPE_EFFECT) then return false end
 	c249000945.targetvalidq=false
-	if not global_card_effect_table_globalcardeffecttable[c] then return false end
-	for key,value in pairs(global_card_effect_table_globalcardeffecttable[c]) do
+	if not global_card_effect_table[c] then return false end
+	for key,value in pairs(global_card_effect_table[c]) do
 		local etemp=value
 		if etemp and etemp:IsHasType(EFFECT_TYPE_QUICK_O) and e:GetHandler():IsLocation(etemp:GetRange()) and (etemp:GetCode()==EVENT_FREE_CHAIN or (etemp:GetCode()==EVENT_ATTACK_ANNOUNCE and Duel.GetAttacker()) or (etemp:GetCode()~=EVENT_ATTACK_ANNOUNCE and Duel.GetCurrentChain()>0)) then
 			local conf=etemp:GetCondition() 	
@@ -202,7 +202,7 @@ function c249000945.target3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local t={}
 	local desc_t = {}
 	local p=1
-	for key,value in pairs(global_card_effect_table_globalcardeffecttable[tc]) do
+	for key,value in pairs(global_card_effect_table[tc]) do
 		local etemp=value
 		if etemp and etemp:IsHasType(EFFECT_TYPE_QUICK_O) and e:GetHandler():IsLocation(etemp:GetRange()) and (etemp:GetCode()==EVENT_FREE_CHAIN or (etemp:GetCode()==EVENT_ATTACK_ANNOUNCE and Duel.GetAttacker())) then
 			local conf=etemp:GetCondition() 	
@@ -240,8 +240,8 @@ end
 function c249000945.tgfilter3(c,e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if not c:IsType(TYPE_EFFECT) then return false end
 	c249000945.targetvalidq=false
-	if not global_card_effect_table_globalcardeffecttable[c] then return false end
-	for key,value in pairs(global_card_effect_table_globalcardeffecttable[c]) do
+	if not global_card_effect_table[c] then return false end
+	for key,value in pairs(global_card_effect_table[c]) do
 		local etemp=value
 		if etemp and etemp:IsHasType(EFFECT_TYPE_QUICK_O) and e:GetHandler():IsLocation(etemp:GetRange()) and (etemp:GetCode()==EVENT_CHAINING and Duel.GetCurrentChain()>0) then
 			local conf=etemp:GetCondition() 	
@@ -265,7 +265,7 @@ function c249000945.target4(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local t={}
 	local desc_t = {}
 	local p=1
-		for key,value in pairs(global_card_effect_table_globalcardeffecttable[tc]) do
+		for key,value in pairs(global_card_effect_table[tc]) do
 		local etemp=value
 		if etemp and etemp:IsHasType(EFFECT_TYPE_QUICK_O) and e:GetHandler():IsLocation(etemp:GetRange()) and (etemp:GetCode()==EVENT_CHAINING and Duel.GetCurrentChain()>0) then
 			local conf=etemp:GetCondition() 	
