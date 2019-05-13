@@ -171,6 +171,7 @@ function cid.swaptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_PZONE)
 end
 function cid.swapop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local g=Duel.SelectMatchingCard(tp,cid.swapfilter1,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 and
