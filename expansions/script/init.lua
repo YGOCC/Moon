@@ -512,8 +512,9 @@ end
 function Auxiliary.GetECounter(p)
 	return GLOBAL_E_COUNTER[p]
 end
-function Card.AddEC(c,ct)
+function Card.AddEC(c,ct,p)
 	c:AddCounter(0x1088,ct)
+	if p then Auxiliary.AddECounter(p,ct) end
 	--TODO: Remove once all Evolutes are updated
 	--c:AddCounter(0x88,ct)
 end
@@ -530,22 +531,28 @@ function Card.RefillEC(c)
 	else
 		val = c:GetStage() - c:GetEC()
 	end
-	c:AddEC(val)
+	c:AddEC(val,c:GetControler())
 	return val
 end
 function Card.IsCanRemoveEC(c,p,ct,r)
-	if GLOBAL_E_COUNTER[p]>=ct then return true end
-	return c:IsCanRemoveCounter(tp,0x1088,ct-GLOBAL_E_COUNTER[p],REASON_COST)
+--	if Auxiliary.GetECounter(p)>=ct then return true end
+	return c:IsCanRemoveCounter(p,0x1088,ct,REASON_COST)
+end
+function Duel.IsCanRemoveEC(p,s,o,ct,r)
+--	if Auxiliary.GetECounter(p)>=ct then return true end
+	return Duel.IsCanRemoveCounter(p,s,o,0x1088,ct,r)
 end
 function Card.RemoveEC(c,p,ct,r)
-	local ecounters=0
-	if Auxiliary.GetECounter(p)>0 and Duel.SelectEffectYesNo(p,c,1551) then
-		local max=GLOBAL_E_COUNTER[p]
-		if max>ct then max=ct end
-		ecounters = Duel.AnnounceLevel(p,1,max,nil)
-		Auxiliary.AddECounter(p,-ecounters)
+	if Auxiliary.GetECounter(p)>0 then
+		Auxiliary.AddECounter(p,-ct)
 	end
-	if ct-ecounters>0 then c:RemoveCounter(p,0x1088,ct-ecounters,r) end
+	if ct>0 then c:RemoveCounter(p,0x1088,ct,r) end
+end
+function Duel.RemoveEC(p,s,o,ct,r)
+	if Auxiliary.GetECounter(p)>=ct then
+		Auxiliary.AddECounter(p,-ct)
+	end
+	if ct>0 then Duel.RemoveCounter(p,s,o,0x1088,ct,r) end
 end
 function Card.IsCanBeEvoluteMaterial(c,ec)
 	if c:GetLevel()<=0 and c:GetRank()<=0 and not c:IsStatus(STATUS_NO_LEVEL) then return false end
@@ -796,11 +803,11 @@ function Auxiliary.EvoluteCounter(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=eg:Filter(Auxiliary.ECSumFilter,nil)
 	local tc=g:GetFirst()
 	while tc do
-		if not tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) then tc:AddEC(tc:GetStage()) end
+		if not tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) then tc:AddEC(tc:GetStage(),tp) end
 		if tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) then 
 			local cone={tc:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE)}
 			for _,te in ipairs(cone) do
-				tc:AddEC(te:GetValue())
+				tc:AddEC(te:GetValue(),tp)
 			end
 			--[[local mg=tc:GetMaterial()
 			local mc=mg:GetFirst()
