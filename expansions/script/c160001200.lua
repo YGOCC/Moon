@@ -6,7 +6,7 @@ function c160001200.initial_effect(c)
   aux.AddEvoluteProc(c,nil,5,c160001200.filter1,c160001200.filter2,1,99)
 	  local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160001200,0))
-	e1:SetCategory(CATEGORY_DRAW)
+	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
    -- e1:SetCountLimit(1,160001200)
@@ -42,13 +42,13 @@ function c160001200.filterx(c,ec,tp)
 	return c:IsSetCard(0xc50) and c:IsAbleToRemove()
 end
 
-function c16000538.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c160001200.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c160001200.filterx,tp,LOCATION_GRAVE,0,1,nil) end
 	local sg=Duel.GetMatchingGroup(c160001200.filterx,tp,LOCATION_GRAVE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,sg,sg:GetCount(),0,0)
 end
 
-function c16000538.activate(e,tp,eg,ep,ev,re,r,rp)
+function c160001200.drop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(c160001200.filterx,tp,LOCATION_GRAVE,0,nil)
 	 Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 	Duel.Recover(p,500,REASON_EFFECT)

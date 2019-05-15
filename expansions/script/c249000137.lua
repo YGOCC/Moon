@@ -62,7 +62,7 @@ function c249000137.operation2(e,tp,eg,ep,ev,re,r,rp,c)
 			c:RegisterEffect(e1)
 	elseif (tc:GetType()==TYPE_SPELL or tc:GetType()==TYPE_SPELL+TYPE_QUICKPLAY) then
 			local ae=tc:GetActivateEffect()
-			if tc:GetLocation()==LOCATION_GRAVE and ae then
+			if tc:GetLocation()==LOCATION_GRAVE and ae and not (tc:GetType()==TYPE_SPELL+TYPE_QUICKPLAY and ae:GetCode()~=EVENT_FREE_CHAIN) then
 				local e1=Effect.CreateEffect(tc)
 				e1:SetDescription(ae:GetDescription())
 				e1:SetType(EFFECT_TYPE_IGNITION)
