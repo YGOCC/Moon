@@ -12,6 +12,7 @@ function c249000053.initial_effect(c)
 	e2:SetCategory(CATEGORY_TOGRAVE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
+	e2:SetCondition(c249000053.con)
 	e2:SetTarget(c249000053.tg)
 	e2:SetOperation(c249000053.op)
 	c:RegisterEffect(e2)
@@ -45,6 +46,12 @@ function c249000053.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+end
+function c249000053.confilter(c)
+	return c:IsSetCard(0x2073) and c:GetCode()~=249000055 and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
+end
+function c249000053.con(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c249000053.confilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 end
 function c249000053.filter2(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()

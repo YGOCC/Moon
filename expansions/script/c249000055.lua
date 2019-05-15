@@ -12,12 +12,28 @@ function c249000055.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
+	e2:SetCondition(c249000055.con)
 	e2:SetCost(c249000055.co)
 	e2:SetOperation(c249000055.op)
 	c:RegisterEffect(e2)
+	--spsummon
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(94656263,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetCode(EVENT_SUMMON_SUCCESS)
+	e3:SetCondition(c249000055.spcon)
+	e3:SetTarget(c249000055.sptg)
+	e3:SetOperation(c249000055.spop)
+	c:RegisterEffect(e3)
+end
+function c249000055.ffilter(c)
+	return not c:IsSetCard(0x2073)
 end
 function c249000055.efcon(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_XYZ
+	local ec=e:GetHandler():GetReasonCard()
+	return not ec:GetMaterial():IsExists(c249000055.ffilter,1,nil) and r==REASON_XYZ
 end
 function c249000055.efop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -59,6 +75,12 @@ function c249000055.drop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.DiscardHand(p,nil,1,1,REASON_EFFECT+REASON_DISCARD)
 	end
+end
+function c249000055.confilter(c)
+	return c:IsSetCard(0x2073) and c:GetCode()~=249000055 and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
+end
+function c249000055.con(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c249000055.confilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 end
 function c249000055.rfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
@@ -104,4 +126,17 @@ function c249000055.op(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_XYZ))
 	Duel.RegisterEffect(e3,tp)
 end
-
+function c249000055.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local ec=eg:GetFirst()
+	return ep==tp and ec:IsSetCard(0x2073)
+end
+function c249000055.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c249000055.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
+end

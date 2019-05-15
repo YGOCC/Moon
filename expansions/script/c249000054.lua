@@ -17,7 +17,7 @@ function c249000054.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c249000054.filter(c)
-	return c:IsFaceup() and not c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
 end
 function c249000054.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c1249000054.filter(chkc) end
