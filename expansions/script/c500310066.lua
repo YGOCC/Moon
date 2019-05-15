@@ -17,20 +17,17 @@ function c500310066.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-   --direct attack
+	 --destroy
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(EFFECT_DIRECT_ATTACK)
+	e4:SetDescription(aux.Stringid(500310066,0))
+	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4:SetCost(c500310066.descost)
+	e4:SetTarget(c500310066.destg)
+	e4:SetOperation(c500310066.desop)
 	c:RegisterEffect(e4)
-	--atkup
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(500310066,0))
-	e5:SetCategory(CATEGORY_ATKCHANGE)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e5:SetCode(EVENT_BATTLE_DAMAGE)
-	e5:SetCondition(c500310066.atkcon)
-	e5:SetOperation(c500310066.atkop)
-	c:RegisterEffect(e5)
 		 --disable
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD)
@@ -46,7 +43,7 @@ function c500310066.initial_effect(c)
 	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e7:SetType(EFFECT_TYPE_IGNITION)
 	e7:SetRange(LOCATION_MZONE)
-	e7:SetCountLimit(1)
+	e7:SetCountLimit(1,500310066)
 	e7:SetCost(c500310066.eqcost)
 	e7:SetTarget(c500310066.target)
 	e7:SetOperation(c500310066.activate)
@@ -100,4 +97,24 @@ function c500310066.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local dam=Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)*300
 	Duel.Damage(p,dam,REASON_EFFECT)
+end
+function c500310066.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,2,REASON_COST)
+end
+function c500310066.xxfilter(c)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
+end
+function c500310066.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and c500310066.xxfilter(chkc) and chkc~=e:GetHandler() end
+	if chk==0 then return Duel.IsExistingTarget(c500310066.xxfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,c500310066.xxfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function c500310066.desop(e,tp,eg,ep,ev,re,r,rp)
+   local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
+	end
 end

@@ -1,63 +1,93 @@
---SC2 Unit - Melee - Medivac
+--Xyz-Magician's Rank-Up Staff
 function c249000275.initial_effect(c)
-	--tohand
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(75878039,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetTarget(c249000275.target)
 	e1:SetOperation(c249000275.operation)
 	c:RegisterEffect(e1)
-	--recover
+	--Destroy
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(43385557,0))
-	e2:SetCategory(CATEGORY_RECOVER)
-	e2:SetType(EFFECT_TYPE_TRIGGER_F+EFFECT_TYPE_FIELD)
-	e2:SetCode(EVENT_PHASE+PHASE_END)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetCountLimit(1)
-	e2:SetCondition(c249000275.reccon)
-	e2:SetTarget(c249000275.rectg)
-	e2:SetOperation(c249000275.recop)
+	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e2:SetCode(EVENT_LEAVE_FIELD)
+	e2:SetOperation(c249000275.desop)
 	c:RegisterEffect(e2)
+	--set
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(36429703,1))
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetCondition(c249000275.setcon)
+	e3:SetTarget(c249000275.settg)
+	e3:SetOperation(c249000275.setop)
+	c:RegisterEffect(e3)
 end
-function c249000275.filter(c)
-	return c:IsSetCard(0x1AB) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(249000275) and c:IsLevelBelow(6)
+function c249000275.filter(c,e,tp)
+	return c:IsSetCard(0x2073) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c249000275.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000275.filter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+function c249000275.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c249000275.filter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(c249000275.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,c249000275.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
+end
+function c249000275.eqlimit(e,c)
+	return e:GetOwner()==c
 end
 function c249000275.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c249000275.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
+		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
+		Duel.Equip(tp,c,tc)
+		--Add Equip limit
+		local e1=Effect.CreateEffect(tc)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EQUIP_LIMIT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetValue(c249000275.eqlimit)
+		c:RegisterEffect(e1)
+	end
+end
+function c249000275.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetHandler():GetEquipTarget()
+	if tc and tc:IsLocation(LOCATION_MZONE) then
+		Duel.Destroy(tc,REASON_EFFECT)
+	end
+end
+function c249000275.setcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=c:GetPreviousEquipTarget()
+	return c:IsReason(REASON_LOST_TARGET) and c:IsReason(REASON_DESTROY) and tc:IsLocation(LOCATION_OVERLAY)
+end
+function c249000275.setfilter(c)
+	return c:IsSetCard(0x95) and c:IsType(TYPE_SPELL) and c:IsSSetable()
+end
+function c249000275.settg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000275.setfilter,tp,LOCATION_DECK,0,1,nil) end
+end
+function c249000275.setop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
+	local g=Duel.SelectMatchingCard(tp,c249000275.setfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.SSet(tp,tc)
+		if tc:IsType(TYPE_QUICKPLAY) then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+			e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+		end
 		Duel.ConfirmCards(1-tp,g)
 	end
-	if c:IsRelateToEffect(e) and c:IsPosition(POS_FACEUP_ATTACK) then
-		Duel.BreakEffect()
-		Duel.ChangePosition(c,POS_FACEUP_DEFENCE)
-	end
-end
-function c249000275.reccon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
-end
-function c249000275.filter2(c)
-	return c:IsFaceup() and (c:IsSetCard(0x1AB) or c:IsSetCard(0x1AC))
-end
-function c249000275.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local ct=Duel.GetMatchingGroupCount(c249000275.filter2,tp,LOCATION_MZONE,0,nil)
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(ct*400)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,ct*400)
-end
-function c249000275.recop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetMatchingGroupCount(c249000275.filter2,tp,LOCATION_MZONE,0,nil)
-	Duel.Recover(tp,ct*400,REASON_EFFECT)
 end
