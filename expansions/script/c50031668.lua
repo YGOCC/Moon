@@ -92,8 +92,17 @@ function c50031668.operation(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(RESET_TURN_SET)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e2)
-		else Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)end
-		Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)
+		  local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_UPDATE_ATTACK)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e2:SetValue(tc:GetAttack())
+			c:RegisterEffect(e2)
+		 Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+		else Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+		Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)end
+		 
 	end 
 	end
 function c50031668.spcon(e,tp,eg,ep,ev,re,r,rp)
