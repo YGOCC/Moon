@@ -19,6 +19,7 @@ function c111765874.initial_effect(c)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCondition(c111765874.spcon)
 	e2:SetOperation(c111765874.spop)
+	e2:SetValue(1)
 	c:RegisterEffect(e2)
 --search
 	local e3=Effect.CreateEffect(c)

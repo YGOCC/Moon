@@ -70,13 +70,16 @@ function c111765876.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetCode(EVENT_PHASE+PHASE_END)
 		e4:SetCountLimit(1)
 		e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+		e4:SetLabelObject(tc)
 		e4:SetOperation(c111765876.desop)
 		e4:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e4,tp)
 	end
 end
 function c111765876.desop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Destroy(e:GetLabelObject(),REASON_EFFECT)
+	local tc=e:GetLabelObject()
+	if not tc or not tc:IsLocation(LOCATION_ONFIELD) then return end
+	Duel.Destroy(tc,REASON_EFFECT)
 end
 --float
 function c111765876.thcon(e,tp,eg,ep,ev,re,r,rp)
