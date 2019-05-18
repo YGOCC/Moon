@@ -46,12 +46,12 @@ function c249000964.initial_effect(c)
 	e6:SetType(EFFECT_TYPE_QUICK_O)
 	e6:SetCode(EVENT_FREE_CHAIN)
 	e6:SetRange(LOCATION_MZONE)
-	e6:SetHintTiming(TIMING_DAMAGE_STEP)
+	e6:SetHintTiming(TIMING_DAMAGE_STEP+TIMING_END_PHASE)
 	e6:SetCountLimit(1)
-	e6:SetCondition(c249000965.condition)
-	e6:SetCost(c249000965.cost)
-	e6:SetTarget(c249000965.target)
-	e6:SetOperation(c249000965.operation)
+	e6:SetCondition(c249000964.condition)
+	e6:SetCost(c249000964.cost)
+	e6:SetTarget(c249000964.target)
+	e6:SetOperation(c249000964.operation)
 	c:RegisterEffect(e6)
 end
 c249000964.xyz_number=12
@@ -101,20 +101,20 @@ end
 function c249000964.splimit(e,se,sp,st)
 	return (se:GetHandler():IsSetCard(0x95) and se:GetHandler():IsType(TYPE_SPELL)) or e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
-function c249000965.condition(e,tp,eg,ep,ev,re,r,rp)
+function c249000964.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
-function c249000965.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c249000964.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
-function c249000965.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c249000964.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 end
-function c249000965.operation(e,tp,eg,ep,ev,re,r,rp)
+function c249000964.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())

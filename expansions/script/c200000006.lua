@@ -44,12 +44,13 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
 function cid.spfilter(c,e,tp)
-    return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	 if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	 if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 and 
+	 c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1) then
 	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
     local tc=g:GetFirst()
 	 Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) 
@@ -58,7 +59,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EVENT_PHASE+PHASE_END)
 		e2:SetCountLimit(1)
 		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e2:SetLabelObject(tc)
+		e2:SetLabelObject(c)
 		e2:SetCondition(cid.descon)
 		e2:SetOperation(cid.desop)
 		Duel.RegisterEffect(e2,c)

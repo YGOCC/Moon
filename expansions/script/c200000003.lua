@@ -59,7 +59,7 @@ function cid.searchfilter(c)
 	return c:IsSetCard(0x700) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-    return (bit.band(r,REASON_BATTLE+REASON_DESTROY)==REASON_BATTLE+REASON_DESTROY)  
+    return not (bit.band(r,REASON_BATTLE+REASON_DESTROY)==REASON_BATTLE+REASON_DESTROY)  
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
