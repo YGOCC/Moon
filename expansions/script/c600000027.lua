@@ -61,12 +61,25 @@ function c600000027.initial_effect(c)
 	e8:SetTarget(c600000027.thtg)
 	e8:SetOperation(c600000027.thop)
 	c:RegisterEffect(e8)
+	--reduce
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e9:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e9:SetCondition(c600000027.rdcon)
+	e9:SetOperation(c600000027.rdop)
+	c:RegisterEffect(e9)
 end
 function c600000027.atkval(e,c)
 	return Duel.GetCounter(e:GetOwnerPlayer(),1,0,0x4a8)*100
 end
 function c600000027.sumlimit(e,c)
 	return not c:IsSetCard(0x24a8)
+end
+function c600000027.rdcon(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp
+end
+function c600000027.rdop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(ep,ev/2)
 end
 function c600000027.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(tp,4)

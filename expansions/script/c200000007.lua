@@ -61,6 +61,18 @@ function cid.damop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(0x700)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		bc:RegisterEffect(e1)
+		bc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,2)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetDescription(aux.Stringid(id,1))
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCode(EVENT_PHASE+PHASE_END)
+		e2:SetCountLimit(1)
+		e2:SetLabel(Duel.GetTurnCount())
+		e2:SetLabelObject(bc)
+		e2:SetCondition(cid.descon)
+		e2:SetOperation(cid.desop)
+		e2:SetReset(RESET_PHASE+PHASE_END,2)
+		Duel.RegisterEffect(e2,tp)
 			end
          if option==1 then
             Duel.MoveToField(bc,1-tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
@@ -71,8 +83,30 @@ function cid.damop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(0x700)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		bc:RegisterEffect(e1)
+			bc:RegisterEffect(e1)
+		bc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,2)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetDescription(aux.Stringid(id,1))
+		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e2:SetCode(EVENT_PHASE+PHASE_END)
+		e2:SetCountLimit(1)
+		e2:SetLabel(Duel.GetTurnCount())
+		e2:SetLabelObject(bc)
+		e2:SetCondition(cid.descon)
+		e2:SetOperation(cid.desop)
+		e2:SetReset(RESET_PHASE+PHASE_END,2)
+		Duel.RegisterEffect(e2,tp)
         end
     --end
+end
+function cid.descon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	return Duel.GetTurnCount()~=e:GetLabel() and tc:GetFlagEffect(id)~=0
+end
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetLabelObject()
+	Duel.Hint(HINT_CARD,0,id)
+	Duel.Destroy(tc,REASON_EFFECT)
 end
 
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -106,7 +140,6 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 	end
 	end
-	
 function cid.lfilter(c)
     return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x700) and not c:IsType(TYPE_TOKEN)
 end
