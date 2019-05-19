@@ -68,8 +68,8 @@ function c249000027.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	or Duel.IsExistingMatchingCard(c249000027.costfilter2,tp,LOCATION_HAND,0,1,c)) end
 	local option
 	if Duel.IsExistingMatchingCard(c249000027.costfilter2,tp,LOCATION_HAND,0,1,c)  then option=0 end
-	if Duel.IsExistingMatchingCard(c249000027.costfilter,tp,LOCATION_GRAVE,0,1,nil) then option=1 end
-	if Duel.IsExistingMatchingCard(c249000027.costfilter,tp,LOCATION_GRAVE,0,1,nil)
+	if Duel.IsExistingMatchingCard(c249000027.costfilter,tp,LOCATION_GRAVE,0,1,c) then option=1 end
+	if Duel.IsExistingMatchingCard(c249000027.costfilter,tp,LOCATION_GRAVE,0,1,c)
 	and Duel.IsExistingMatchingCard(c249000027.costfilter2,tp,LOCATION_HAND,0,1,c) then
 		option=Duel.SelectOption(tp,526,1102)
 	end
@@ -80,7 +80,7 @@ function c249000027.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	if option==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,c249000027.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,c249000027.costfilter,tp,LOCATION_GRAVE,0,1,1,c)
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
 end

@@ -24,7 +24,7 @@ function cid.initial_effect(c)
 end
 --filters
 function cid.skillcon(e,c)
-	return e:GetHandler():IsFaceup() and e:GetHandler():GetFlagEffect(99988871)>0 and Duel.GetFlagEffect(tp,id)<=0 and Duel.GetLP(tp)<=3000 and Duel.GetLP(tp)>=1100
+	return e:GetHandler():IsFaceup() and e:GetHandler():GetFlagEffect(99988871)>0 and Duel.GetFlagEffect(tp,id)==0 and Duel.GetLP(tp)<=3000 and Duel.GetLP(tp)>=1100
 end
 --Burning Draw
 function cid.skillop(e,tp,eg,ep,ev,re,r,rp,c)
