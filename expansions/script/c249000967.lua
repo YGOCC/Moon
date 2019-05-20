@@ -13,7 +13,7 @@ function c249000967.initial_effect(c)
 	e1:SetTarget(c249000967.sptg)
 	e1:SetOperation(c249000967.spop)
 	c:RegisterEffect(e1)
-	--spsummon
+	--spsummon on damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(2)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -24,6 +24,17 @@ function c249000967.initial_effect(c)
 	e2:SetTarget(c249000967.sptg2)
 	e2:SetOperation(c249000967.spop2)
 	c:RegisterEffect(e2)
+	--spsummon from hand
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(45531624,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1)
+	e3:SetCondition(aux.IsDualState)
+	e3:SetTarget(c249000967.sptg3)
+	e3:SetOperation(c249000967.spop3)
+	c:RegisterEffect(e3)
 end
 function c249000967.spfilter(c,tp)
 	return c:IsReason(REASON_DESTROY) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsType(TYPE_MONSTER)
@@ -72,5 +83,21 @@ function c249000967.spop2(e,tp,eg,ep,ev,re,r,rp)
 			tc=g:GetNext()
 		end
 		Duel.SpecialSummonComplete()
+	end
+end
+function c249000967.spfilter(c,e,tp)
+	return c:IsRace(RACE_CYBERSE) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c249000967.sptg3(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c249000967.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+end
+function c249000967.spop3(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c249000967.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

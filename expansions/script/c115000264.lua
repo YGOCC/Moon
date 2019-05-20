@@ -23,6 +23,15 @@ function c115000264.initial_effect(c)
 	e2:SetCondition(c115000264.ccon)
 	e2:SetValue(aux.imval1)
 	c:RegisterEffect(e2)
+	--special summon
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_SPSUMMON_PROC)
+	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SPSUM_PARAM)
+	e3:SetTargetRange(POS_FACEUP_DEFENSE,0)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetCondition(c115000264.spcon)
+	c:RegisterEffect(e3)
 end
 function c115000264.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsDisabled() and e:GetHandler():IsDefensePos()
@@ -48,4 +57,13 @@ function c115000264.atkfilter(c)
 end
 function c115000264.ccon(e)
 	return Duel.IsExistingMatchingCard(c115000264.atkfilter,tp,LOCATION_MZONE,0,1,c)
+end
+function c115000264.cfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x1AB)
+end
+function c115000264.spcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c1150002640.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end

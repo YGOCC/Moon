@@ -24,13 +24,40 @@ function cid.initial_effect(c)
 	e5:SetDescription(aux.Stringid(16898077,2))
 	e5:SetCategory(CATEGORY_DESTROY)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e5:SetCode(EVENT_MSET+EVENT_SSET)
+	e5:SetCode(EVENT_MSET)
 	e5:SetRange(LOCATION_SZONE)
+	e5:SetCondition(cid.accon1)
 	e5:SetTarget(cid.sptg)
 	e5:SetOperation(cid.spop)
 	c:RegisterEffect(e5)
+	local e1=e5:Clone()
+	e1:SetCode(EVENT_SSET)
+	c:RegisterEffect(e1)
+	local e3=e5:Clone()
+	e3:SetCode(EVENT_CHANGE_POS)
+	e3:SetCondition(cid.accon2)
+	c:RegisterEffect(e3)
+	local e4=e5:Clone()
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4:SetCondition(cid.accon3)
+	c:RegisterEffect(e4)
 end
 --if in back row and card set, sp summon and destroy set
+function cid.accon1(e,tp,eg,ep,ev,re,r,rp)
+	return eg:GetFirst():IsControler(tp) or eg:GetFirst():IsControler(1-tp)
+end
+function cid.filter2(c,tp)
+	return (c:IsControler(tp) or c:IsControler(1-tp)) and bit.band(c:GetPreviousPosition(),POS_FACEUP)~=0 and bit.band(c:GetPosition(),POS_FACEDOWN)~=0
+end
+function cid.accon2(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(cid.filter2,1,nil,tp)
+end
+function cid.filter3(c,tp)
+	return (c:IsControler(tp) or c:IsControler(1-tp)) and c:IsFacedown()
+end
+function cid.accon3(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(cid.filter3,1,nil,tp)
+end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
