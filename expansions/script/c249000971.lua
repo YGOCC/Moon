@@ -89,7 +89,7 @@ function cid.skillcon_skill(e,c)
 	and Duel.GetMatchingGroupCount(cid.filter5,tp,LOCATION_MZONE,0,nil)<2 and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0))
 end
 function cid.skillop(e,tp,eg,ep,ev,re,r,rp,c)
-    Duel.Hint(HINT_CARD,1-tp,id)
+    Duel.Hint(HINT_CARD,0,id)
 	local option
 	if Duel.IsExistingMatchingCard(cid.filter4,tp,LOCATION_DECK,0,1,nil,e,tp) and Duel.GetMatchingGroupCount(cid.filter5,tp,LOCATION_MZONE,0,nil)<2 then option=0 end
 	if (Duel.IsExistingMatchingCard(cid.filter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) or Duel.IsExistingMatchingCard(cid.filter2,tp,LOCATION_MZONE,0,1,nil,e,tp)) then option=1 end

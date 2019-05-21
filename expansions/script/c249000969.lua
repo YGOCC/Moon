@@ -49,7 +49,7 @@ function c249000969.operation(e,tp,eg,ep,ev,re,r,rp)
 	local token=Duel.CreateToken(tp,ac)
 	Duel.ConfirmCards(1-tp,Group.FromCards(token))
 	for key,value in pairs(global_card_effect_table[token]) do
-		if value:IsHasProperty(EFFECT_FLAG_SET_AVAILABLE) and value:GetCode()~=EFFECT_IMMUNE_EFFECT then
+		if value:IsHasProperty(EFFECT_FLAG_SET_AVAILABLE) and value:GetCode()~=EFFECT_IMMUNE_EFFECT and value:GetCode()~=EFFECT_CANNOT_USE_AS_COST then
 			local etemp=value:Clone()
 			etemp:SetCost(aux.TRUE)
 			etemp:SetProperty(0)
@@ -99,7 +99,7 @@ function c249000969.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	if not tg or not tg:IsContains(e:GetHandler()) or not Duel.IsChainDisablable(ev) then return false end
 	local rc=re:GetHandler()
-	if Duel.GetFlagEffect(tp,249000969)==0 and Duel.IsExistingMatchingCard(c249000969.filter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,1131) then
+	if e:GetHandler():GetFlagEffect(249000969)==0 and Duel.IsExistingMatchingCard(c249000969.filter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,1131) then
 		local g=Duel.SelectMatchingCard(tp,c249000969.filter,tp,LOCATION_HAND,0,1,1,nil)
 		Duel.ConfirmCards(1-tp,g)
 		e:GetHandler():RegisterFlagEffect(249000969,RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)

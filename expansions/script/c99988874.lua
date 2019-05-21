@@ -28,7 +28,7 @@ function cid.skillcon(e,c)
 end
 --Burning Draw
 function cid.skillop(e,tp,eg,ep,ev,re,r,rp,c)
-    Duel.Hint(HINT_CARD,1-tp,id)
+    Duel.Hint(HINT_CARD,0,id)
 	local p1=Duel.GetLP(tp)-100
 	local d=math.floor(p1/1000)
 	Duel.SetLP(tp,100)
