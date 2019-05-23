@@ -37,7 +37,8 @@ function cid.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+	e3:SetCountLimit(1,id)
+	e3:SetCategory(CATEGORY_DISABLE+CATEGORY_TODECK)
 	e3:SetCondition(cid.discon)
 	e3:SetTarget(cid.distg)
 	e3:SetOperation(cid.negop)
@@ -102,23 +103,22 @@ function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp and Duel.IsChainDisablable(ev)
 end
 function cid.filter(c)
-	return c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER) and c:IsDestructable()
-		and (c:IsFaceup() and c:IsType(TYPE_PENDULUM) or c:IsLocation(LOCATION_HAND))
+	return c:IsSetCard(0x7c4) and c:IsType(TYPE_PENDULUM) and c:IsAbleToDeck()
 end
 function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_EXTRA+LOCATION_HAND,0,nil)
-	if chk==0 then return not re:GetHandler():IsStatus(STATUS_DISABLED) and #g>0 end
+	if chk==0 then return not re:GetHandler():IsStatus(STATUS_DISABLED) and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 	local ct=1
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-		g,ct=g+re:GetHandler(),ct+1
+	if re:GetHandler():IsAbleToDeck() and re:GetHandler():IsRelateToEffect(re) then
+		ct=ct+1
 	end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,ct,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,ct,tp,LOCATION_GRAVE)
 end
 function cid.negop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,1,nil)
-	if #g>0 and Duel.Destroy(g,REASON_EFFECT)~=0 and Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(eg,REASON_EFFECT)
+	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_GRAVE,0,nil)
+	if #g>0 and Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local dg=g:Select(tp,1,1,nil)
+		Duel.SendtoDeck(eg+dg,nil,2,REASON_EFFECT)
 	end
 end
