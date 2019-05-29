@@ -52,7 +52,7 @@ function c31157205.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.Release(g,REASON_COST)
 end
 function c31157205.spfilter(c,e,tp)
-    return c:IsSetCard(0xc70) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return c:IsSetCard(0xc70) and not c:IsCode(31157205) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c31157205.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
