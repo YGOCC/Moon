@@ -51,5 +51,16 @@ function c68709338.spop(e,tp,eg,ep,ev,re,r,rp)
         e2:SetReset(RESET_EVENT+0x1fe0000)
         tc:RegisterEffect(e2,true)
         Duel.SpecialSummonComplete()
-    end
+        local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_FIELD)
+		e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e3:SetReset(RESET_PHASE+PHASE_END)
+		e3:SetTargetRange(1,0)
+		e3:SetTarget(c68709338.splimit)
+		Duel.RegisterEffect(e3,tp)
+	end
+end
+function c68709338.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not (c:IsSetCard(0xf09)) and c:IsLocation(LOCATION_EXTRA)
 end

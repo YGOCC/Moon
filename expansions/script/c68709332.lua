@@ -50,10 +50,12 @@ function c68709332.initial_effect(c)
 	e5:SetCountLimit(1,68739332)
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e5:SetCode(EVENT_LEAVE_FIELD)
-	e5:SetProperty(EFFECT_FLAG_DELAY)
+	e5:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e5:SetCost(c68709332.sp2cost)
 	e5:SetTarget(c68709332.sp2tg)
 	e5:SetOperation(c68709332.sp2op)
 	c:RegisterEffect(e5)
+	Duel.AddCustomActivityCounter(68709332,ACTIVITY_SPSUMMON,c68709332.counterfilter)
 end
 function c68709332.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
@@ -113,7 +115,7 @@ end
 function c68709332.recop(e,tp,eg,ep,ev,re,r,rp)
     local tc=Duel.GetFirstTarget()
     if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:GetAttack()>0 then
-        Duel.Recover(tp,tc:GetAttack()/2,REASON_EFFECT)
+        Duel.Recover(tp,tc:GetBaseAttack()/2,REASON_EFFECT)
     end
 end
 function c68709332.sfilter(c,e,tp)
@@ -144,6 +146,20 @@ function c68709332.operation(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 -- on leaving field SS 2 Arc. M
+function c68709332.counterfilter(c)
+	return c:GetSummonLocation()~=LOCATION_EXTRA or c:IsSetCard(0xf09)
+end
+function c68709332.sp2cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetCustomActivityCount(68709332,tp,ACTIVITY_SPSUMMON)==0 end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c68709332.sp2limit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
 function c68709332.filter1(c,e,tp)
 	return c:IsSetCard(0xf08) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
@@ -180,4 +196,7 @@ function c68709332.sp2op(e,tp,eg,ep,ev,re,r,rp)
 		local g=Group.FromCards(tc1,tc2)
 		Duel.ConfirmCards(1-tp,g)
 	end
+end
+function c68709332.sp2limit(e,c,sump,sumtype,sumpos,targetp)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0xf09)
 end
