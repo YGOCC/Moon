@@ -3,13 +3,13 @@ function c160004545.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x285a),8,3)
 	c:EnableReviveLimit()
-		--spsummon limit
-	local e1=Effect.CreateEffect(c)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(aux.xyzlimit)
-	c:RegisterEffect(e1)
+   --	 --spsummon limit
+  --  local e1=Effect.CreateEffect(c)
+  --  e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+   -- e1:SetType(EFFECT_TYPE_SINGLE)
+   -- e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+   -- e1:SetValue(aux.xyzlimit)
+   -- c:RegisterEffect(e1)
 		--material
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
@@ -109,14 +109,14 @@ end
 function c160004545.disop(e,tp,eg,ep,ev,re,r,rp)
    if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
-	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0 then return end
+  --  if Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0 then return end
 	Duel.BreakEffect()
-for i=1,2 do
-		  Duel.Hint(HINT_CARD,PLAYER_ALL,160005414)
-	local token=Duel.CreateToken(1-tp,160005414)
-	Duel.SpecialSummon(token,0,1-tp,1-tp,false,false,POS_FACEUP)
-end
-   Duel.SpecialSummonComplete()
+--for i=1,2 do
+  --		Duel.Hint(HINT_CARD,PLAYER_ALL,160005414)
+ --   local token=Duel.CreateToken(1-tp,160005414)
+ --   Duel.SpecialSummon(token,0,1-tp,1-tp,false,false,POS_FACEUP)
+--end
+ --  Duel.SpecialSummonComplete()
 	Duel.Recover(1-tp,1000,REASON_EFFECT)
 
 end

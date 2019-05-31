@@ -4,12 +4,13 @@ function c16000892.initial_effect(c)
 			--end battle phase
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16000892,0))
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	   e1:SetCategory(CATEGORY_DESTROY)
+	 e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCountLimit(1,16000892+EFFECT_COUNT_CODE_DUEL)
 	e1:SetCondition(c16000892.condition)
-	e1:SetCost(c16000892.cost)
+   -- e1:SetCost(c16000892.cost)
 	e1:SetOperation(c16000892.operation)
 	c:RegisterEffect(e1)
 			--Search
@@ -62,6 +63,8 @@ function c16000892.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c16000892.operation(e,tp,eg,ep,ev,re,r,rp)
+ local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)

@@ -13,6 +13,7 @@ function c16000535.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,0x1e0)
+	e1:SetCondition(c16000535.condition)
 	e1:SetCost(c16000535.cost)
 	e1:SetTarget(c16000535.target)
 	e1:SetOperation(c16000535.operation)
@@ -22,7 +23,7 @@ function c16000535.initial_effect(c)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(aux.exccon)
+ --   e2:SetCondition(aux.exccon)
 	e2:SetCost(c16000535.thcost)
 	e2:SetTarget(c16000535.thtg)
 	e2:SetOperation(c16000535.thop)
@@ -37,15 +38,13 @@ end
 function c16000535.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
+function c16000535.condition(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	return Duel.GetTurnPlayer()~=tp 
+end
 function c16000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) and Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0 and Duel.IsExistingMatchingCard(c16000535.cfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,nil) end
-		local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_BP)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-	e1:SetTargetRange(1,0)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
+  if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) and Duel.IsExistingMatchingCard(c16000535.cfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,nil) end
+  
  e:GetHandler():RemoveEC(tp,3,REASON_COST)
  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c16000535.cfilter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,1,nil)
@@ -126,5 +125,5 @@ function c16000535.thop(e,tp,eg,ep,ev,re,r,rp)
 		
 	end
 	Duel.ShuffleHand(tp)
-		Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+	  --  Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
 end
