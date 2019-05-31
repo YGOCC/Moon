@@ -8,16 +8,17 @@ function c16000889.initial_effect(c)
 	e0:SetCondition(c16000889.fscondition)
 	e0:SetOperation(c16000889.fsoperation)
 	c:RegisterEffect(e0)
-		--destroy replace (not fully completed)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_DESTROY_REPLACE)
-	e1:SetRange(LOCATION_MZONE)
-	 e1:SetCountLimit(1)
-	e1:SetTarget(c16000889.desreptg)
-	e1:SetValue(c16000889.desrepval)
-	e1:SetOperation(c16000889.desrepop)
-	c:RegisterEffect(e1)
+		--destroy replace (not fully complete)
+	 --destroy replace
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EFFECT_DESTROY_REPLACE)
+	e4:SetRange(LOCATION_MZONE)
+ e4:SetCountLimit(1)
+	e4:SetTarget(c16000889.reptg)
+	e4:SetValue(c16000889.repval)
+e4:SetOperation(c16000889.desrepop)
+	c:RegisterEffect(e4)
 	 --remove
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_REMOVE)
@@ -45,15 +46,15 @@ function c16000889.fsoperation(e,tp,eg,ep,ev,re,r,rp,gc)
 	Duel.SetFusionMaterial(eg:FilterSelect(tp,c16000889.ffilter,2,2,nil))
 end
 
-function c16000889.repfilter(c,tp)
 
-  return c:IsFaceup() and c:IsSetCard(0x885a) and c:IsLocation(LOCATION_MZONE)
-		and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
+function c16000889.repfilter(c,tp)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
+		and c:IsSetCard(0x885a) and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
 function c16000889.repfilterxxl(c,e)
 	return  c:IsAbleToGrave()
 end
-function c16000889.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c16000889.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	   if chk==0 then return   eg:IsExists(c16000889.repfilter,1,nil,tp)
 		and Duel.IsExistingMatchingCard(c16000889.repfilterxxl,tp,LOCATION_DECK,0,3,nil) end
 	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
@@ -65,6 +66,8 @@ function c16000889.desrepop(e,tp,eg,ep,ev,re,r,rp)
   
 	Duel.DiscardDeck(tp,3,REASON_EFFECT+REASON_REPLACE)
 end
+
+
 
 function  c16000889.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
