@@ -1043,8 +1043,12 @@ function Auxiliary.PandActCon(e,tp,eg,ep,ev,re,r,rp)
 end
 function Auxiliary.PandEnConFUInED(tpe)
 	return	function(e,tp,eg,ep,ev,re,r,rp)
-				if e:GetHandler():GetDestination()==LOCATION_GRAVE then
+				if (e:GetHandler():GetFlagEffect(706)>0 or e:GetHandler():GetFlagEffect(726)>0) and e:GetHandler():GetDestination()~=LOCATION_GRAVE then
+					Auxiliary.PandDisableFUInED(e:GetHandler(),tpe)(e,tp,eg,ep,ev,re,r,rp)
+				elseif e:GetHandler():GetDestination()==LOCATION_GRAVE then
 					Auxiliary.PandEnableFUInED(e:GetHandler(),e:GetHandler():GetReason(),tpe)(e,tp,eg,ep,ev,re,r,rp)
+				else
+					return
 				end
 	end
 end
@@ -1090,8 +1094,9 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 							if cc:IsCanTurnSet() then
 								Duel.ChangePosition(cc,POS_FACEDOWN_ATTACK)
 								Duel.RaiseEvent(cc,EVENT_SSET,e,reason,cc:GetControler(),cc:GetControler(),0)
+								cc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1)
 							end
-						else Duel.SSet(cc:GetControler(),cc) end
+						else Duel.SSet(cc:GetControler(),cc) cc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
 						if not cc:IsLocation(LOCATION_SZONE) then
 							cc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+tpe)
 						end
@@ -1102,8 +1107,9 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 						if tc:IsCanTurnSet() then
 							Duel.ChangePosition(tc,POS_FACEDOWN_ATTACK)
 							Duel.RaiseEvent(tc,EVENT_SSET,e,reason,tc:GetControler(),tc:GetControler(),0)
+							tc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1)
 						end
-					else Duel.SSet(tc:GetControler(),tc) end
+					else Duel.SSet(tc:GetControler(),tc) tc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
 					if not tc:IsLocation(LOCATION_SZONE) then
 						tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+tpe)
 					end
