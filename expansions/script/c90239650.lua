@@ -1,87 +1,109 @@
---Pandemoniumgraph Magician
-local card = c90239650
-function card.initial_effect(c)
+--Mago Pandemoniografo
+--Script by XGlitchy30
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
-	--special summon
+	--PANDEMONIUM EFFECTS
+	--spsummon
+	local pand1=Effect.CreateEffect(c)
+	pand1:SetDescription(aux.Stringid(id,0))
+	pand1:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	pand1:SetType(EFFECT_TYPE_QUICK_O)
+	pand1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	pand1:SetCode(EVENT_FREE_CHAIN)
+	pand1:SetRange(LOCATION_SZONE)
+	pand1:SetCountLimit(1,id)
+	pand1:SetCondition(aux.PandActCheck)
+	pand1:SetTarget(cid.pandtg)
+	pand1:SetOperation(cid.pandop)
+	c:RegisterEffect(pand1)
+	aux.EnablePandemoniumAttribute(c,pand1)
+	--MONSTER EFFECTS
+	--special summon rule
 	local e1=Effect.CreateEffect(c)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetDescription(aux.Stringid(90239650,1))
-	e1:SetRange(LOCATION_SZONE)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e1:SetCondition(card.condition)
-	e1:SetTarget(card.qtg)
-	e1:SetOperation(card.qop)
+	e1:SetDescription(aux.Stringid(id,2))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCountLimit(1,id+100)
+	e1:SetCondition(cid.spcon)
+	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
-	aux.EnablePandemoniumAttribute(c,e1)
-	--turn set
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(90239650,2))
-	e3:SetCategory(CATEGORY_POSITION)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1)
-	e3:SetLabelObject(e1)
-	e3:SetTarget(card.postg)
-	e3:SetOperation(card.posop)
-	c:RegisterEffect(e3)
-	--This card cannot be Pandemonium Summoned from your Extra Deck while you have a "Pandemoniumgraph" card in your Pandemonium Zone.
+	--quick act
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e2:SetRange(LOCATION_EXTRA)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetValue(card.splimit)
+	e2:SetDescription(aux.Stringid(id,3))
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+	e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,id+200)
+	e2:SetTargetRange(LOCATION_SZONE,0)
+	e2:SetTarget(cid.quickact)
 	c:RegisterEffect(e2)
-	--Once per turn, if you do not have another card in your Pandemonium Zone: You can place this face-up card in your Monster Zone into your Spell/Trap Zone, and if you do, that Zone is treated as a Pandemonium Zone.
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetCountLimit(1)
-	e4:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		return not Duel.IsExistingMatchingCard(aux.PaCheckFilter,tp,LOCATION_SZONE,0,1,nil)
-	end)
-	e4:SetTarget(card.paztg)
-	e4:SetOperation(card.pazop)
-	c:RegisterEffect(e4)
 end
-function card.postg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2) and Duel.GetTurnPlayer()==tp and e:GetHandler():IsCanTurnSet() end
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,c,1,0,0)
+--filters
+function cid.filter(c,tp)
+	return c:IsFaceup() and c:IsSetCard(0xcf80)
+		and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or c:GetSequence()<5)
 end
-function card.posop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		aux.PandSSet(c,REASON_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
+function cid.seqfix(c,ft)
+	return ft>0 or c:GetSequence()<5
+end
+function cid.cfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcf80) and not c:IsCode(id)
+		and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
+end
+--spsummon
+function cid.pandtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.filter(chkc,tp) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_MZONE,0,1,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function cid.pandop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		if not e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) or not Duel.IsPlayerCanSpecialSummonMonster(tp,id,0xcf80,0x21,2500,2000,7,RACE_SPELLCASTER,ATTRIBUTE_DARK) then return end
+		if Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			Duel.BreakEffect()
+			e:GetHandler():AddMonsterAttribute(TYPE_EFFECT+TYPE_PANDEMONIUM)
+			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,true,false,POS_FACEUP)
+		end
 	end
 end
-
-function card.condition(e,tp,eg,ep,ev,re,r,rp)
-	return aux.PandActCheck(e) and Duel.GetTurnPlayer()~=tp
+--special summon rule
+function cid.spcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,c)
+	return g:GetCount()>0 and ft>-1 and g:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)>-ft
 end
-function card.qtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
-	local tg=Duel.GetAttacker()
-	if chkc then return chkc==tg end
-	if chk==0 then return tg:IsOnField() and tg:IsCanBeEffectTarget(e) and c:GetFlagEffect(90239650)==0 end
-	c:RegisterFlagEffect(90239650,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
-	Duel.SetTargetCard(tg)
-end
-function card.qop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.NegateAttack()
-end
-function card.splimit(e,se,sp,st)
-	return not Duel.IsExistingMatchingCard(function(c) return c:IsSetCard(0xcf80) and c:IsFaceup() end,e:GetHandlerPlayer(),LOCATION_PZONE,0,1,nil)
-		or bit.band(st,SUMMON_TYPE_SPECIAL+726)~=SUMMON_TYPE_SPECIAL+726
-end
-function card.paztg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
-end
-function card.pazop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetHandler()
-	if tc:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+function cid.spop(e,tp,eg,ep,ev,re,r,rp,c)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,c)
+	local sg=nil
+	if ft<=0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local zg=g:Filter(cid.seqfix,nil,ft)
+		sg=zg:FilterSelect(tp,Card.IsLocation,1,1,nil,LOCATION_MZONE)
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		sg=g:Select(tp,1,1,nil)
 	end
+	Duel.Destroy(sg,REASON_COST)
+end
+--quickact
+function cid.quickact(e,c)
+	return c:IsType(TYPE_PANDEMONIUM) and c:IsSetCard(0xcf80)
 end
