@@ -44,7 +44,7 @@ function c16000985.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,1-tp,LOCATION_HAND+LOCATION_ONFIELD)
 end
 function c16000985.operation(e,tp,eg,ep,ev,re,r,rp)
-    local g1=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,nil)
+	local g1=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,nil)
 	local g2=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_HAND,nil)
 	local sg=Group.CreateGroup()
 	if g1:GetCount()>0 and (g2:GetCount()==0 or Duel.SelectYesNo(tp,aux.Stringid(16000985,1))) then
@@ -65,7 +65,7 @@ function c16000985.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION or bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION+0x786
 end
 function c16000985.ffilter(c)
-	return  c:IsSetCard(0x885a)   and c:IsLocation(LOCATION_MZONE) 
+	return  c:IsSetCard(0x885a)  and c:IsType(TYPE_MONSTER) 
 end
 function c16000985.fscondition(e,g,gc)
 	if g==nil then return true end

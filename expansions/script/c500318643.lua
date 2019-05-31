@@ -20,8 +20,8 @@ function c500318643.initial_effect(c)
 	e2:SetOperation(c500318643.thop)
 	c:RegisterEffect(e2)
 end
-function c500318643.filter0(c)
-	return c:IsOnField()  and c:IsAbleToRemove()  not c:IsImmuneToEffect(e)
+function c500318643.filter0(c,e)
+	return c:IsOnField() and c:IsAbleToRemove()
 end
 function c500318643.filter1(c,e)
 	return c:IsOnField() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e)

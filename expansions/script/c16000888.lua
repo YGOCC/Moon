@@ -34,7 +34,7 @@ end
 
 
 function c16000888.filter1(c,e)
-	return and c:IsCanBeFusionMaterial() not c:IsImmuneToEffect(e)
+	return  c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
 end
 function c16000888.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x885a) and (not f or f(c))

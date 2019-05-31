@@ -38,14 +38,18 @@ function c16000789.conditon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
 function c16000789.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,2) end
+   if chk==0 then return true end 
 	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,2)
+		Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,1-tp,2)
 end
 function c16000789.cfilter(c)
-	return c:IsLocation(LOCATION_GRAVE) and c:IsSetCard(0x786d) and c:IsType(TYPE_MONSTER)
+	return c:IsLocation(LOCATION_GRAVE) and c:IsSetCard(0x885a) and c:IsType(TYPE_MONSTER)
 end
 function c16000789.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.DiscardDeck(tp,2,REASON_EFFECT)
+ Duel.DiscardDeck(1-tp,2,REASON_EFFECT)
+ Duel.DiscardDeck(tp,2,REASON_EFFECT)
+
+	
 	local g=Duel.GetOperatedGroup()
 	local ct=g:FilterCount(c16000789.cfilter,nil)
 	if ct==0 then return end
@@ -58,7 +62,8 @@ function c16000789.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(500)
 		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
-	end
+
+end
 end
 function c16000789.indval(e,re,tp)
 	return tp~=e:GetHandlerPlayer()
