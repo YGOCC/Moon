@@ -10,7 +10,7 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),6,2,cid.ovfilter,aux.Stringid(id,0),3,cid.xyzop)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),6,2,cid.ovfilter,aux.Stringid(id,0),2,cid.xyzop)
 	c:EnableReviveLimit()
 	--boost atk
 	local e1=Effect.CreateEffect(c)
