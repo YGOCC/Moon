@@ -60,7 +60,7 @@ end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	local tgp,loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainDisablable(ev)
-		and tgp~=tp and (loc==LOCATION_MZONE or loc==LOCATION_SZONE or loc==LOCATION_FZONE or LOCATION_PZONE)
+		and tgp~=tp and (loc==LOCATION_MZONE or loc==LOCATION_SZONE or loc==LOCATION_FZONE or loc==LOCATION_PZONE)
 end
 function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

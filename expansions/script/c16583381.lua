@@ -42,7 +42,7 @@ function cid.filter(c)
 end
 function cid.spfilter(c,e,tp)
 	return c:IsSetCard(0xa6e) and not c:IsAttribute(ATTRIBUTE_WIND) and c:IsType(TYPE_MONSTER) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 --search
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -77,7 +77,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.spfilter),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
 		local tc=g:GetFirst()
 		if tc then 
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end

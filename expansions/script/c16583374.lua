@@ -21,11 +21,10 @@ function cid.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_TOHAND)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
-	e2:SetCode(EVENT_REMOVE)
-	e2:SetRange(LOCATION_MZONE)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE+LOCATION_HAND)
 	e2:SetCountLimit(1,id)
+	e2:SetCost(cid.thcost)
 	e2:SetTarget(cid.thtg)
 	e2:SetOperation(cid.thop)
 	c:RegisterEffect(e2)
@@ -61,6 +60,9 @@ function cid.spfilter(c,e,tp)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingMatchingCard(cid.checktrigger,tp,LOCATION_MZONE,0,1,nil)
 		and not Duel.IsExistingMatchingCard(cid.chkfilter,tp,LOCATION_MZONE,0,1,nil,c:GetAttribute())
 end
+function cid.attrfilter(c,e)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xa6e) and c:GetAttribute()~=e:GetHandler():GetAttribute()
+end
 --spsummon proc
 function cid.spsumcon(e,c)
 	if c==nil then return true end
@@ -79,6 +81,10 @@ function cid.attribute(e,c)
 	return attr
 end
 --add
+function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.rcfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler(),tp) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_ONFIELD)

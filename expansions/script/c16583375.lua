@@ -9,6 +9,14 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
+	--attribute gain
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e0:SetCode(EFFECT_ADD_ATTRIBUTE)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetValue(cid.attribute)
+	c:RegisterEffect(e0)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -48,6 +56,20 @@ function cid.costfilter(c)
 end
 function cid.sumtarget(e,c)
 	return c:GetOriginalAttribute()==e:GetLabel()
+end
+function cid.attrfilter(c,e)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xa6e) and c:GetAttribute()~=e:GetHandler():GetAttribute()
+end
+--attribute gain
+function cid.attribute(e,c)
+	local g=Duel.GetMatchingGroup(cid.attrfilter,e:GetHandlerPlayer(),LOCATION_REMOVED,LOCATION_REMOVED,nil,e)
+	local attr=0
+	for tc in aux.Next(g) do
+		if bit.band(e:GetHandler():GetAttribute(),tc:GetAttribute())==0 then
+			attr=bit.bor(attr,tc:GetAttribute())
+		end
+	end
+	return attr
 end
 --special summon
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)

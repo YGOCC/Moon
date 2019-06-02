@@ -18,10 +18,10 @@ function cid.initial_effect(c)
 	e1:SetCountLimit(1)
 	e1:SetValue(cid.valcon)
 	c:RegisterEffect(e1)
-	--special summon (self)
+	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,id)
@@ -38,6 +38,10 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.effop)
 	c:RegisterEffect(e3)
 end
+--filters
+function cid.spfilter(c,e,tp)
+	return (c:IsAttribute(ATTRIBUTE_EARTH) or (c:IsSetCard(0xa6e) and not c:IsAttribute(ATTRIBUTE_EARTH))) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 --indes
 function cid.valcon(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
@@ -53,13 +57,36 @@ function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) 
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 then
+			local og=Duel.GetOperatedGroup()
+			if og:IsExists(Card.IsSetCard,1,nil,0xa6e) then
+				local ag=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+				if ag:GetCount()<=0 then return end
+				local tc=ag:GetFirst()
+				while tc do
+					local e1=Effect.CreateEffect(e:GetHandler())
+					e1:SetType(EFFECT_TYPE_SINGLE)
+					e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+					e1:SetCode(EFFECT_UPDATE_ATTACK)
+					e1:SetValue(-500)
+					e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+					tc:RegisterEffect(e1)
+					local e2=e1:Clone()
+					e2:SetCode(EFFECT_UPDATE_DEFENSE)
+					tc:RegisterEffect(e2)
+					tc=ag:GetNext()
+				end
+			end
+		end
+	end
 end
 --effect gain
 function cid.effcon(e,tp,eg,ep,ev,re,r,rp)

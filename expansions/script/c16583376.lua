@@ -21,6 +21,7 @@ function cid.initial_effect(c)
 	p1:SetRange(LOCATION_SZONE)
 	p1:SetCountLimit(1,id)
 	p1:SetCondition(aux.PandActCheck)
+	p1:SetCost(cid.thcost)
 	p1:SetTarget(cid.thtg)
 	p1:SetOperation(cid.thop)
 	c:RegisterEffect(p1)
@@ -88,6 +89,10 @@ function cid.rcfilter(c,attr)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xa6e) and c:GetAttribute()~=attr and c:IsAbleToHand()
 end
 --pandemonium effect
+function cid.thcost(e,tp,eg,ep,ev,re,r,rp)
+	if chk==0 then return Duel.GetFlagEffect(tp,id)<=0 end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and cid.chkfilter(chkc,tp) end
 	if chk==0 then return Duel.IsExistingTarget(cid.chkfilter,tp,LOCATION_REMOVED,0,1,nil,tp) end
