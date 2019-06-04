@@ -2,7 +2,7 @@
 function c16000969.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,7,c16000969.filter1,c16000969.filter2,2,99)	
+  aux.AddEvoluteProc(c,nil,8,c16000969.filter1,c16000969.filter2,2,99)	
   --Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16000969,0))
@@ -15,6 +15,12 @@ function c16000969.initial_effect(c)
 	e1:SetTarget(c16000969.target)
 	e1:SetOperation(c16000969.operation)
 	c:RegisterEffect(e1) 
+ local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e5:SetCode(EVENT_LEAVE_FIELD_P)
+	e5:SetOperation(c16000969.checkop)
+	c:RegisterEffect(e5)
  local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(16000969,2))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -32,8 +38,8 @@ function c16000969.filter2(c,ec,tp)
 end
 function c16000969.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-		 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
-	e:GetHandler():RemoveEC(tp,4,REASON_COST)
+		 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 	--local e1=Effect.CreateEffect(c)
   --  e1:SetType(EFFECT_TYPE_FIELD)
    -- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
@@ -68,10 +74,16 @@ end
 function c16000969.bantg(e,c)
 	return c:IsCode(e:GetLabel())
 end
+function c16000969.checkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:GetEC()>0 then
+		c:RegisterFlagEffect(16000969,RESET_EVENT+0x17a0000,0,0)
+	end
+end
 function c16000969.sccon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return (c:IsReason(REASON_BATTLE) or (c:GetReasonPlayer()==1-tp and c:IsReason(REASON_EFFECT+REASON_COST)))
-		and c:IsPreviousPosition(POS_FACEUP)
+		and c:IsPreviousPosition(POS_FACEUP) and c:GetFlagEffect(16000969)>0
 end
 
 function c16000969.scop(e,tp,eg,ep,ev,re,r,rp)
