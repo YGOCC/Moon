@@ -92,8 +92,8 @@ function c500316141.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterFlagEffect(500316141,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
 function c500316141.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and re:IsHasType(EFFECT_TYPE_ACTIVATE)
-		and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainDisablable(ev)
+	   return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
 end
 function c500316141.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	 if chk==0 then return not re:GetHandler():IsStatus(STATUS_DISABLED) end
