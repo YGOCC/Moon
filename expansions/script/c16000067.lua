@@ -40,7 +40,7 @@ function c16000067.filter2(c,e)
 	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and not c:IsImmuneToEffect(e)
 end
 function c16000067.activate(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(c16000067.filter2,tp,LOCATION_MZONE,0,nil,e)
+	local sg=Duel.GetMatchingGroup(c16000067.filter,tp,LOCATION_MZONE,0,nil,e)
 	local c=e:GetHandler()
 	local fid=c:GetFieldID()
 	local tc=sg:GetFirst()
