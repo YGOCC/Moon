@@ -1,5 +1,5 @@
 function c50031159.initial_effect(c)
- 	--extra summon
+	--extra summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
@@ -14,10 +14,10 @@ function c50031159.initial_effect(c)
 	c:RegisterEffect(e2)
 		--summon success
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetOperation(c50031159.sumsuc)
-
+	   e3:SetRange(LOCATION_MZONE)
 	c:RegisterEffect(e3)
 		local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -25,16 +25,16 @@ function c50031159.initial_effect(c)
 	e6:SetOperation(c50031159.cedop)
 	e6:SetReset(RESET_PHASE+PHASE_END)
 	e6:SetLabelObject(e2)
-	Duel.RegisterEffect(e6)
+	c:RegisterEffect(e6)
 		--Draw
---	local e4=Effect.CreateEffect(c)
---	e4:SetDescription(aux.Stringid(50031159,0))
---	e4:SetCategory(CATEGORY_TOHAND)
---	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
---	e4:SetCode(EVENT_RELEASE)
---	e4:SetTarget(c50031159.thtg)
---	e4:SetOperation(c50031159.thop)
---	c:RegisterEffect(e4)
+--  local e4=Effect.CreateEffect(c)
+--  e4:SetDescription(aux.Stringid(50031159,0))
+--  e4:SetCategory(CATEGORY_TOHAND)
+--  e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+--  e4:SetCode(EVENT_RELEASE)
+--  e4:SetTarget(c50031159.thtg)
+--  e4:SetOperation(c50031159.thop)
+--  c:RegisterEffect(e4)
 end
 function c50031159.sumop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,50031159)~=0 then return end
@@ -78,14 +78,14 @@ function c50031159.cedop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --function c50031159.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
---	if chk==0 then return Duel.IsExistingMatchingCard(c50031159.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
---	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
+--  if chk==0 then return Duel.IsExistingMatchingCard(c50031159.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
+--  Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
 --end
 --function c50031159.thop(e,tp,eg,ep,ev,re,r,rp)
---	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
---	local g=Duel.SelectMatchingCard(tp,c50031159.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+--  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+--  local g=Duel.SelectMatchingCard(tp,c50031159.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	--if g:GetCount()>0 then
-	--	Duel.SendtoHand(g,nil,REASON_EFFECT)
+	--  Duel.SendtoHand(g,nil,REASON_EFFECT)
  --Duel.ConfirmCards(1-tp,g)
 --end
 --end
