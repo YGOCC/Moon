@@ -68,7 +68,33 @@ function cm.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
+	if Duel.Draw(p,d,REASON_EFFECT)~=0 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_END)
+		e1:SetRange(LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_HAND)
+		e1:SetTarget(cm.destg)
+		e1:SetOperation(cm.desop)
+		e1:SetCountLimit(1)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetRange(LOCATION_REMOVED+LOCATION_ONFIELD)
+		c:RegisterEffect(e2)
+	end
+end
+function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		local h1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+		if e:GetHandler():IsLocation(LOCATION_HAND) then h1=h1-1 end
+		return h1
+	end
+	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function cm.desop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+	Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
 end
 --Monster Effects
 --(1)

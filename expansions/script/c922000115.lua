@@ -9,9 +9,9 @@ function cm.initial_effect(c)
 	aux.AddContactFusionProcedure(c,Card.IsAbleToDeckOrExtraAsCost,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_HAND,0,aux.tdcfop(c))
 	--(1) This card can attack all monsters your opponent controls.
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_ATTACK_ALL)
-	e1:SetValue(1)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetOperation(cm.sucop)
 	c:RegisterEffect(e1)
 	--(2) Once per turn, you can send 1 "Orcadragon" monster from your deck to the GY (Quick Effect): banish 1 card your opponent controls.
 	local e2=Effect.CreateEffect(c)
@@ -28,6 +28,15 @@ function cm.initial_effect(c)
 end
 function cm.matfil(c)
 	return c:IsFusionSetCard(0x904) and c:GetLevel()==8
+end
+--(1)
+function cm.sucop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
+	e1:SetValue(c:GetMaterialCount()-1)
+	c:RegisterEffect(e1)
 end
 --(2)
 function cm.cfilter(c)

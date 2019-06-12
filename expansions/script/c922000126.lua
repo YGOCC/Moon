@@ -18,19 +18,23 @@ function cm.initial_effect(c)
 	e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)
 	e2:SetValue(ATTRIBUTE_WATER)
 	c:RegisterEffect(e2)
-	--(3) All Non-WATER monsters on the field have their effects negated and cannot attack.
+	--(3) While you control a WATER monster: neither player can declare attacks against WATER monsters, also all other cards on the field have their effects negated.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e3:SetTargetRange(LOCATION_ONFIELD,LOCATION_ONFIELD)
 	e3:SetCode(EFFECT_DISABLE_EFFECT)
-	e3:SetTarget(aux.NOT(aux.TargetBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER)))
+	e3:SetCondition(cm.negcon)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
 	e4:SetCode(EFFECT_DISABLE)
 	c:RegisterEffect(e4)
-	local e5=e3:Clone()
-	e5:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e5:SetValue(cm.atlimit)
 	c:RegisterEffect(e5)
 end
 --(1)
@@ -52,4 +56,14 @@ function cm.actop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(tp,sg)
 	end
+end
+--(3)
+function cm.negfilter(c)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
+end
+function cm.negcon(e)
+	return Duel.IsExistingMatchingCard(cm.negfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
+end
+function cm.atlimit(e,c)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER)
 end

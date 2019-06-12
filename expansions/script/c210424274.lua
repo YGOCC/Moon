@@ -14,6 +14,7 @@ function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	--special summon rule
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(4066,12))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
@@ -140,7 +141,7 @@ function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK)==0 then return end
+		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
 		Duel.Equip(tp,c,tc)
 		--Add Equip limit
 		local e2=Effect.CreateEffect(tc)
