@@ -1,20 +1,16 @@
 --Bloom Maiden of Fiber Vine
 function c16000219.initial_effect(c)
 --pendulum summon
-	aux.EnablePendulumAttribute(c)
+   
 	c:EnableReviveLimit()
-	--Activate
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_ACTIVATE)
-	e0:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e0)
+
 	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16000219,0))
 	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_BATTLE_START)
-	e1:SetCondition(c16000219.descon)
+   e1:SetCondition(c16000219.descon)
 	e1:SetTarget(c16000219.destg)
 	e1:SetOperation(c16000219.desop)
 	c:RegisterEffect(e1)
@@ -25,25 +21,27 @@ function c16000219.initial_effect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetHintTiming(TIMING_DAMAGE_STEP)
-	e2:SetRange(LOCATION_PZONE)
+	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCondition(c16000219.condition2)
-	--e2:SetCost(c16000219.cost2)
+	e2:SetCost(c16000219.cost2)
 	e2:SetTarget(c16000219.target)
 	e2:SetOperation(c16000219.operation2)
 	c:RegisterEffect(e2)
 
---to deck
-	   local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(16000219,0))
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetRange(LOCATION_EXTRA)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetHintTiming(0,0x11e0)
-	e4:SetCost(c16000219.cost2)
-	e4:SetOperation(c16000219.activate2)
+--indes
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetTargetRange(LOCATION_MZONE,0)
+	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x185a))
+	--e4:SetValue(1)
 	c:RegisterEffect(e4)
+	   local e5=e4:Clone()
+	e5:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	c:RegisterEffect(e5)
 	
 end
 
@@ -64,10 +62,11 @@ function c16000219.condition2(e,tp,eg,ep,ev,re,r,rp)
 		return true
 	else return false end
 end
---function c16000219.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	--if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
-	--Duel.SendtoGrave(e:GetHandler(),REASON_COST)
---end
+function c16000219.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	   local c=e:GetHandler()
+	if chk==0 then return c:IsDiscardable() end
+	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
+end
 function c16000219.cfilter2(c)
 	return c:IsFaceup()
 end
@@ -77,7 +76,6 @@ and Duel.IsExistingMatchingCard(c16000219.cfilter2,tp,0,LOCATION_MZONE,1,nil) en
 end
 function c16000219.operation2(e,tp,eg,ep,ev,re,r,rp,chk)
 local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
 	local g=Duel.GetMatchingGroup(c16000219.cfilter2,tp,0,LOCATION_MZONE,nil)
 	local tc=g:GetFirst()
 	while tc do
@@ -90,8 +88,6 @@ local c=e:GetHandler()
 		tc=g:GetNext()
 	end
 end
-
-
 
 function c16000219.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -108,6 +104,8 @@ function c16000219.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(bc,nil,REASON_EFFECT)
 	end
 end
+
+
 function c16000219.dkcon(e,tp,eg,ep,ev,re,r,rp)
 	return re~=e:GetLabelObject()
 end
@@ -123,33 +121,11 @@ function c16000219.dkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	end
-end
+
 function c16000219.cfilter(c)
 	return c:IsFaceup() and  c:IsSetCard(0x185a)  and c:IsAbleToDeck()
 end
 
-function c16000219.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsFaceup() and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
-function c16000219.activate2(e,tp,eg,ep,ev,re,r,rp)
- local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e1:SetTarget(c16000219.indtg)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetValue(1)
-	e1:SetReset(RESETS_STANDARD+RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-	local e2=Effect.CreateEffect(e:GetHandler())
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e2:SetTarget(c16000219.indtg)
-	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetValue(1)
-	e2:SetReset(RESETS_STANDARD+RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e2,tp)
 end
 function c16000219.indtg(e,c)
 	return c:IsSetCard(0x185a)

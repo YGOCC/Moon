@@ -85,9 +85,13 @@ function c50031569.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c50031569.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetCounter(0x88)>0 then
+	if c:GetEC()>0 then
 		c:RegisterFlagEffect(50031569,RESET_EVENT+0x17a0000,0,0)
 	end
+end
+function c50031569.checkop(e,tp,eg,ep,ev,re,r,rp)
+   local c=e:GetHandler()
+	return c:GetFlagEffect(50031569)>0
 end
 function c50031569.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

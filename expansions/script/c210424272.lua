@@ -35,49 +35,6 @@ function cid.initial_effect(c)
 	e3:SetTarget(cid.drawtg)
 	e3:SetOperation(cid.drawop)
 	c:RegisterEffect(e3)
-	--Art swap
-	local exx=Effect.CreateEffect(c)
-	exx:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	exx:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	exx:SetCode(EVENT_ADJUST)
-	exx:SetRange(LOCATION_MZONE)
-	exx:SetCondition(cid.artcon)
-	exx:SetOperation(cid.artop)
-	c:RegisterEffect(exx)
-	--Art swap
-	local exx2=Effect.CreateEffect(c)
-	exx2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	exx2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	exx2:SetCode(EVENT_ADJUST)
-	exx2:SetRange(LOCATION_MZONE)
-	exx2:SetCondition(cid.artcon2)
-	exx2:SetOperation(cid.artop2)
-	c:RegisterEffect(exx2)
-end
---Art swap
-function cid.artcon(e,tp,eg,ep,ev,re,r,rp)
-local c=e:GetHandler()
-  return (c:GetOriginalCode()==id or c:GetOriginalCode()==id2) and
-  e:GetHandler():GetAttack()>=c:GetTextAttack()+1000
-end
-function cid.artop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tcode=id2
-	c:SetEntityCode(tcode,true)
-	--c:ReplaceEffect(tcode,0,0)
-	--	Duel.SetMetatable(c,_G["c"..tcode])
-end
-function cid.artcon2(e,tp,eg,ep,ev,re,r,rp)
-local c=e:GetHandler()
-  return (c:GetOriginalCode()==id or c:GetOriginalCode()==id2) and 
-  e:GetHandler():GetAttack()<c:GetTextAttack()+1000
-end
-function cid.artop2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tcode=id
-	c:SetEntityCode(tcode,true)
---	c:ReplaceEffect(tcode,0,0)
---	Duel.SetMetatable(c,_G["c"..tcode])
 end
 function cid.betarget(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsContains(e:GetHandler())

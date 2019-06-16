@@ -14,31 +14,28 @@ function c500312525.initial_effect(c)
 	c:RegisterEffect(e2)	
 end
 function c500312525.filter(c,e,tp)
-	return c:IsFaceup() and c:IsRace(RACE_PLANT)
+	return c:IsSetCard(0x85a) and c:IsSSetable()
 end
 
 function c500312525.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c500312525.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c500312525.filter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c500312525.filter,tp,LOCATION_MZONE,0,1,1,nil)
+ if chkc then return c500312525.filter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and Duel.IsExistingTarget(c500312525.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
+	local g=Duel.SelectTarget(tp,c500312525.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c500312525.op(e,tp,eg,ep,ev,re,r,rp)
+  local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(e:GetHandler())
+	if tc:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
+		Duel.SSet(tp,tc)
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_RITUAL_LEVEL)
-		e1:SetValue(c500312525.rlevel)
-		e1:SetReset(RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
+		e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-	end
 end
-
-function c500312525.rlevel(e,c)
-	local lv=e:GetHandler():GetLevel()
-	if c:IsType(TYPE_RITUAL) then
-		local clv=c:GetLevel()
-		return lv*65536+clv
-	else return lv end
 end
+  

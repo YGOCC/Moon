@@ -1,19 +1,23 @@
 function c500313344.initial_effect(c)
 --pendulum summon
-	aux.EnablePendulumAttribute(c)
 		c:EnableReviveLimit()
-	--Activate
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_ACTIVATE)
-	e0:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e0)
+
+	 local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetTargetRange(LOCATION_MZONE,0)
+	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x85a))
+	e4:SetValue(aux.tgoval)
+	c:RegisterEffect(e4)
    
 	--tohand
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(500313344,0))
 	e0:SetCategory(CATEGORY_TOHAND)
 	e0:SetType(EFFECT_TYPE_IGNITION)
-	e0:SetRange(LOCATION_PZONE)
+	e0:SetRange(LOCATION_HAND)
+	 e0:SetCost(c500313344.cost)
 	e0:SetCountLimit(1,500313344)
 	e0:SetTarget(c500313344.thtg)
 	e0:SetOperation(c500313344.thop)
@@ -57,9 +61,14 @@ function c500313344.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDestructable() and Duel.IsExistingMatchingCard(c500313344.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
 end
+function c500313344.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsDiscardable() end
+	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
+end
 function c500313344.thop(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 then return end
+	if not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c500313344.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	if g:GetCount()>0 then

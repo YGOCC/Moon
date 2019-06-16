@@ -10,10 +10,25 @@ function c160002525.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
    -- e1:SetHintTiming(0,0x1e0)
+	e1:SetCountLimit(1,160002526)
 	e1:SetCost(c160002525.cost)
 	e1:SetTarget(c160002525.target)
 	e1:SetOperation(c160002525.operation)
 	c:RegisterEffect(e1)
+	--destroy
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(160002525,1))
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1,160002726)
+	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
+	e3:SetCost(c160002525.descost)
+	e3:SetTarget(c160002525.destg)
+	e3:SetOperation(c160002525.desop)
+	c:RegisterEffect(e3)
 end
 
 
@@ -61,7 +76,7 @@ function c160002525.operation(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 		e3:SetRange(LOCATION_MZONE)
 		e3:SetCountLimit(1)
-		e3:SetOperation(c160002525.desop)
+		e3:SetOperation(c160002525.desxop)
 		e3:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e3)
 	tc:RegisterEffect(e3,true)
@@ -70,6 +85,35 @@ function c160002525.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 
-function c160002525.desop(e,tp,eg,ep,ev,re,r,rp)
+function c160002525.desxop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+end
+
+function c160002525.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+   if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
+function c160002525.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsFaceup() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function c160002525.sipfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_EVOLUTE) 
+end
+function c160002525.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+	if  Duel.Destroy(tc,REASON_EFFECT) ~=0 then
+  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectMatchingCard(tp,c160002525.sipfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	if g:GetCount()>0 then
+	  local tc=g:GetFirst()
+	 tc:AddEC(3)
+	end
+end
+	end
 end
