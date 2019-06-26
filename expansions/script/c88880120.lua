@@ -23,7 +23,7 @@ function cm.initial_effect(c)
 end
 
 function cm.filter(c)
-    return c:IsFaceup() and c:IsType(TYPE_XYZ)
+    return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0xffd)
 end
 function cm.mattg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cm.filter(chkc) end

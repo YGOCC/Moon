@@ -78,7 +78,7 @@ function cm.tgcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.tgcon(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-      return c:IsReason(REASON_COST) and c:IsPreviousLocation(LOCATION_OVERLAY)
+      return c:IsPreviousLocation(LOCATION_OVERLAY)
 end
 function cm.filter(c,e,tp)
     return c:IsSetCard(0xffd) and c:IsAbleToHand()
