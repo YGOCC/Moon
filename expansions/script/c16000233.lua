@@ -27,7 +27,7 @@ function c16000233.initial_effect(c)
 	--Negate
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(16000233,1))
-	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
+	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetCountLimit(1,16001233)

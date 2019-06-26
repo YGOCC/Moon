@@ -45,7 +45,7 @@ function c160008803.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c160008803.cfilter(c)
-	return c:IsFaceup() and  c:GetSummonLocation()==LOCATION_EXTRA  and c:IsType(TYPE_EFFECT)
+	return c:IsFaceup() and  c:GetSummonLocation()==LOCATION_EXTRA  and not c:IsType(TYPE_EFFECT)
 end
 function c160008803.sprcon(e,c)
 	if c==nil then return true end

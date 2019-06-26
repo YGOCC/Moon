@@ -17,8 +17,8 @@ function c500311592.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,500311592)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCondition(aux.exccon)
-	e2:SetCost(c500311592.negcost)
+	e2:SetCondition(c500311592.negcon)
+	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(c500311592.target2)
 	e2:SetOperation(c500311592.activate2)
 	c:RegisterEffect(e2)
@@ -36,6 +36,9 @@ function c500311592.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c500311592.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and c:IsAbleToRemoveAsCost()
+end
+function c500311592.negcon(e,tp,eg,ep,ev,re,r,rp)
+	return aux.exccon(e) and Duel.GetTurnPlayer()==tp
 end
 function c500311592.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c500311592.cfilter,tp,LOCATION_EXTRA,0,1,nil) end
