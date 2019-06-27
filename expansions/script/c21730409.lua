@@ -1,9 +1,9 @@
 --A.O. Connector
 function c21730409.initial_effect(c)
-  --link procedure
-  aux.AddLinkProcedure(c,nil,2,2,c21730409.lcheck)
+	--link procedure
+	aux.AddLinkProcedure(c,nil,2,2,c21730409.lcheck)
 	c:EnableReviveLimit()
-  --unaffected
+	--unaffected
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730409,0))
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -12,13 +12,13 @@ function c21730409.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(c21730409.imval)
 	c:RegisterEffect(e2)
-  --draw
-  local e3=Effect.CreateEffect(c)
-  e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-  e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-  e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-  e3:SetOperation(c21730409.regop)
-  c:RegisterEffect(e3)
+	--draw
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetOperation(c21730409.regop)
+	c:RegisterEffect(e3)
 end
 --link procedure
 function c21730409.lcheck(g,lc)
@@ -37,12 +37,12 @@ function c21730409.regop(e,tp,eg,ep,ev,re,r,rp)
   local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(21730409,1))
 	e1:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-  e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-  e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
 	e1:SetRange(LOCATION_MZONE)
-  e1:SetCountLimit(1,21730409)
-  e1:SetReset(RESET_EVENT+0x86c0000+RESET_PHASE+PHASE_END)
+	e1:SetCountLimit(1,21730409)
+	e1:SetReset(RESET_EVENT+0x86c0000+RESET_PHASE+PHASE_END)
 	e1:SetTarget(c21730409.drtg)
 	e1:SetOperation(c21730409.drop)
 	c:RegisterEffect(e1)
@@ -60,8 +60,8 @@ function c21730409.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c21730409.drop(e,tp,eg,ep,ev,re,r,rp)
-  local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-  if tg:GetCount()<=0 then return end
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	if tg:GetCount()<=0 then return end
 	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
 	local g=Duel.GetOperatedGroup()
 	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end

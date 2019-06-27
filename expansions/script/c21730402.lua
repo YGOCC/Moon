@@ -8,8 +8,8 @@ function c21730402.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(c21730402.spcon)
 	c:RegisterEffect(e1)
-  --negate
-  local e2=Effect.CreateEffect(c)
+	--negate
+	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730402,1))
 	e2:SetCategory(CATEGORY_DISABLE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -33,13 +33,13 @@ function c21730402.filter(c,tp)
 	return c:IsSetCard(0x719) and Duel.IsExistingTarget(c21730402.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c)
 end
 function c21730402.tgfilter(c)
-  return c:IsFaceup() and not c:IsDisabled()
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
 end
 function c21730402.rcost(c)
 	return c:IsFaceup() and c:IsCode(21730412) and c:IsReleasable() and c:GetFlagEffect(21730412)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730402.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-  local c=e:GetHandler()
+	local c=e:GetHandler()
 	local b1=Duel.CheckReleaseGroup(tp,c21730402.filter,1,false,nil,nil,tp)
 	local b2=Duel.IsExistingMatchingCard(c21730402.rcost,tp,LOCATION_FZONE,0,1,nil)
 	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
@@ -53,7 +53,7 @@ function c21730402.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c21730402.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-  if chkc then return chkc:IsLocation(LOCATION_MZONE) and c21730402.tgfilter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c21730402.tgfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c21730402.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,c21730402.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
@@ -61,13 +61,13 @@ function c21730402.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c21730402.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and not tc:IsDisabled() and tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsType(TYPE_EFFECT) and not tc:IsDisabled() then
 		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_DISABLE)
-    e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_DISABLE_EFFECT)

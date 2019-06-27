@@ -14,7 +14,7 @@ function c21730411.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1)
-  e2:SetCost(c21730411.reg)
+	e2:SetCost(c21730411.reg)
 	e2:SetTarget(c21730411.rmtg)
 	e2:SetOperation(c21730411.rmop)
 	c:RegisterEffect(e2)
@@ -37,13 +37,13 @@ function c21730411.rmfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x719)
 end
 function c21730411.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-  if chkc then return false end
-  if chk==0 then return Duel.IsExistingTarget(c21730411.rmfilter,tp,LOCATION_MZONE,0,1,nil) end
-  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-  local g1=Duel.SelectTarget(tp,c21730411.rmfilter,tp,LOCATION_MZONE,0,1,1,nil)
-  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-  local g2=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,0,1,g1:GetFirst())
-  g1:Merge(g2)
+	if chkc then return false end
+	if chk==0 then return Duel.IsExistingTarget(c21730411.rmfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g1=Duel.SelectTarget(tp,c21730411.rmfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g2=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,0,1,g1:GetFirst())
+	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g1,2,0,0)
 end
 function c21730411.rmop(e,tp,eg,ep,ev,re,r,rp)

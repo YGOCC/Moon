@@ -9,9 +9,9 @@ function c21730406.initial_effect(c)
 	e1:SetCondition(c21730406.spcon)
 	c:RegisterEffect(e1)
 	--search
-  local e2=Effect.CreateEffect(c)
+	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730406,1))
-  e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
@@ -29,7 +29,7 @@ function c21730406.spcon(e,c)
 end
 --search
 function c21730406.filter(c,tp)
-  return c:IsSetCard(0x719)
+	return c:IsSetCard(0x719)
 end
 function c21730406.thfilter(c)
 	return c:IsSetCard(0x719) and c:IsType(TYPE_TRAP) and c:IsAbleToHand()
@@ -38,7 +38,7 @@ function c21730406.rcost(c)
 	return c:IsFaceup() and c:IsCode(21730412) and c:IsReleasable() and c:GetFlagEffect(21730412)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730406.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-  local c=e:GetHandler()
+	local c=e:GetHandler()
 	local b1=Duel.CheckReleaseGroup(tp,c21730406.filter,1,false,nil,nil,tp)
 	local b2=Duel.IsExistingMatchingCard(c21730406.rcost,tp,LOCATION_FZONE,0,1,nil)
 	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
@@ -52,11 +52,11 @@ function c21730406.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c21730406.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-  if chk==0 then return Duel.IsExistingMatchingCard(c21730406.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c21730406.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c21730406.operation(e,tp,eg,ep,ev,re,r,rp)
-  Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c21730406.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)

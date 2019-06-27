@@ -1,10 +1,10 @@
 --A.O. Subjugator
 function c21730408.initial_effect(c)
-  --link procedure
+	--link procedure
 	aux.AddLinkProcedure(c,c21730408.matfilter,1,1)
 	c:EnableReviveLimit()
-  --steal
-  local e2=Effect.CreateEffect(c)
+	--steal
+	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730408,0))
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -13,13 +13,13 @@ function c21730408.initial_effect(c)
 	e2:SetTarget(c21730408.cttg)
 	e2:SetOperation(c21730408.ctop)
 	c:RegisterEffect(e2)
-  --search
-  local e3=Effect.CreateEffect(c)
-  e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-  e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-  e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-  e3:SetOperation(c21730408.regop)
-  c:RegisterEffect(e3)
+	--search
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetOperation(c21730408.regop)
+	c:RegisterEffect(e3)
 end
 --link procedure
 function c21730408.matfilter(c)

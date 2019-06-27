@@ -8,8 +8,8 @@ function c21730401.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(c21730401.spcon)
 	c:RegisterEffect(e1)
-  --banish
-  local e2=Effect.CreateEffect(c)
+	--banish
+	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730401,1))
 	e2:SetCategory(CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)

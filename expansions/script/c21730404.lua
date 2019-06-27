@@ -8,12 +8,12 @@ function c21730404.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(c21730404.spcon)
 	c:RegisterEffect(e1)
-  --draw
-  local e2=Effect.CreateEffect(c)
+	--draw
+	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730404,1))
-  e2:SetCategory(CATEGORY_DRAW)
+	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
-  e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetHintTiming(TIMING_END_PHASE,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
@@ -30,13 +30,13 @@ function c21730404.spcon(e,c)
 end
 --draw
 function c21730404.filter(c,tp)
-  return c:IsSetCard(0x719)
+	return c:IsSetCard(0x719)
 end
 function c21730404.rcost(c)
 	return c:IsFaceup() and c:IsCode(21730412) and c:IsReleasable() and c:GetFlagEffect(21730412)==0 and not c:IsDisabled() and not c:IsForbidden()
 end
 function c21730404.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-  local c=e:GetHandler()
+	local c=e:GetHandler()
 	local b1=Duel.CheckReleaseGroup(tp,c21730404.filter,1,false,nil,nil,tp)
 	local b2=Duel.IsExistingMatchingCard(c21730404.rcost,tp,LOCATION_FZONE,0,1,nil)
 	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
@@ -50,10 +50,10 @@ function c21730404.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c21730404.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-  if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c21730404.operation(e,tp,eg,ep,ev,re,r,rp)
-  local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(tp,1,REASON_EFFECT)
 end

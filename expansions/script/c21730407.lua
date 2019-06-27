@@ -1,26 +1,26 @@
 --A.O. Diver
 function c21730407.initial_effect(c)
-  --link procedure
+	--link procedure
 	aux.AddLinkProcedure(c,c21730407.matfilter,1,1)
 	c:EnableReviveLimit()
-  --mill
-  local e2=Effect.CreateEffect(c)
-  e2:SetDescription(aux.Stringid(21730407,0))
-  e2:SetCategory(CATEGORY_TOGRAVE)
-  e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-  e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-  e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	--mill
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(21730407,0))
+	e2:SetCategory(CATEGORY_TOGRAVE)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,21730407)
-  e2:SetTarget(c21730407.tgtg)
-  e2:SetOperation(c21730407.tgop)
-  c:RegisterEffect(e2)
-  --add from gy
-  local e3=Effect.CreateEffect(c)
-  e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-  e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-  e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-  e3:SetOperation(c21730407.regop)
-  c:RegisterEffect(e3)
+	e2:SetTarget(c21730407.tgtg)
+	e2:SetOperation(c21730407.tgop)
+	c:RegisterEffect(e2)
+	--add from gy
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetOperation(c21730407.regop)
+	c:RegisterEffect(e3)
 end
 --link procedure
 function c21730407.matfilter(c)

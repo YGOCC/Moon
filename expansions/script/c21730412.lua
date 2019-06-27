@@ -6,7 +6,7 @@ function c21730412.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(c21730412.cost)
 	c:RegisterEffect(e1)
-	--activate "a.o." traps the turn they were set
+	--activate in set turn
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(21730412,0))
 	e2:SetType(EFFECT_TYPE_FIELD)
