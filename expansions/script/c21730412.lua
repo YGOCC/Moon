@@ -14,9 +14,15 @@ function c21730412.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_SZONE,0)
+	e2:SetCondition(c21730412.condition)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x719))
 	e2:SetCountLimit(1)
 	c:RegisterEffect(e2)
+end
+--activate in set turn
+function c21730412.condition(e)
+	local tp=e:GetHandler():GetControler()
+	return Duel.GetFieldGroupCount(tp,LOCATION_SZONE,0)<=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 end
 --activate
 function c21730412.cost(e,tp,eg,ep,ev,re,r,rp,chk)
