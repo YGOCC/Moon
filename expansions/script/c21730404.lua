@@ -41,7 +41,7 @@ function c21730404.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b2=Duel.IsExistingMatchingCard(c21730404.rcost,tp,LOCATION_FZONE,0,1,nil)
 	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
 	Duel.Remove(c,POS_FACEUP,REASON_COST)
-	if b2 and (not b1 or Duel.SelectYesNo(tp,aux.Stringid(21730412,2))) then
+	if b2 and (not b1 or Duel.SelectYesNo(tp,aux.Stringid(21730412,1))) then
 		local tg=Duel.GetFirstMatchingCard(c21730404.rcost,tp,LOCATION_FZONE,0,nil)
 		Duel.Release(tg,REASON_COST)
 	else

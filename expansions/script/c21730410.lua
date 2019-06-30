@@ -29,7 +29,7 @@ function c21730410.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
 	local ct=g:GetCount()-Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)
 	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_RTOHAND)
-	local sg=g:FilterSelect(1-tp,c21730410.filter,ct,ct,nil,1-tp)
+	local sg=g:FilterSelect(1-tp,Card.IsAbleToHand,ct,ct,nil,1-tp)
 	if Duel.SendtoHand(sg,nil,REASON_EFFECT)<=0 then
 		if c:IsRelateToEffect(e) then
 			c:CancelToGrave()
