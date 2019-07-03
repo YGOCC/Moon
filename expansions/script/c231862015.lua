@@ -77,7 +77,7 @@ function cid.lptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.lpop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) then return end
 	local ap=Duel.Recover(tp,cid[tp]*50,REASON_EFFECT)
 	local ct=c:GetFlagEffectLabel(id)
 	if not ct then
