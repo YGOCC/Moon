@@ -10,12 +10,13 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	local f=Duel.Damage
 	Duel.Damage=function(p,val,r,step)
-		if step==nil then step=false end
-		if Duel.GetFlagEffect(p,id)==0 then return f(p,val,r,step) end
-		local v=f(p,val,r,true)
-		f(1-p,val,r,true)
-		if not step then Duel.RDComplete() end
-		return v
+		if Duel.GetFlagEffect(p,id)~=0 and not step then
+			local v=f(p,val,r,true)
+			f(1-p,val,r,true)
+			Duel.RDComplete()
+			return v
+		end
+		return f(p,val,r,step)
 	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
