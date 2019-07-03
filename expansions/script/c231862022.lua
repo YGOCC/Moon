@@ -36,7 +36,7 @@ function cid.initial_effect(c)
     c:RegisterEffect(e4)
     --Activate(from GY)
     local e5=Effect.CreateEffect(c)
-    e5:SetDescription(aux.Stringid(id,1))
+    e5:SetDescription(aux.Stringid(2318620,1))
     e5:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY+CATEGORY_TOHAND)
     e5:SetType(EFFECT_TYPE_QUICK_O)
     e5:SetCode(EVENT_CHAINING)
@@ -68,7 +68,7 @@ function cid.activate1(e,tp,eg,ep,ev,re,r,rp)
     Duel.RDComplete()
 end
 function cid.condition2(e,tp,eg,ep,ev,re,r,rp)
-    return tp~=ep and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+    return tp~=ep and re:IsActiveType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsChainNegatable(ev)
 end
 function cid.target2(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end

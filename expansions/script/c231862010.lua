@@ -14,7 +14,7 @@ function cid.initial_effect(c)
     c:EnableReviveLimit()
     --Special Summon
     local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(id,1))
+    e1:SetDescription(aux.Stringid(2318620,1))
     e1:SetCategory(CATEGORY_DAMAGE+CATEGORY_DICE+CATEGORY_SPECIAL_SUMMON)
     e1:SetType(EFFECT_TYPE_IGNITION)
     e1:SetRange(LOCATION_MZONE)
@@ -63,8 +63,7 @@ function cid.lcheck(g,lc)
     return g:IsExists(Card.IsLinkSetCard,1,nil,0x52f) and not g:IsExists(Card.IsLinkCode,1,nil,id)
 end
 function cid.spfilter(c,e,tp,lv)
-    if (lv~=6 and not c:IsLevel(lv) and c:IsLevelAbove(1)) or (lv==6 and c:IsLevelBelow(5)) then return false end
-    return c:IsSetCard(0x52f) and not c:IsType(TYPE_LINK) and (c:IsLocation(LOCATION_DECK) or c:IsFaceup()) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return c:IsSetCard(0x52f) and c:IsLevel(lv) and not c:IsType(TYPE_LINK) and (c:IsLocation(LOCATION_DECK) or c:IsFaceup()) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
@@ -72,10 +71,9 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK+LOCATION_REMOVED)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
     local dc=Duel.TossDice(tp,1)
     local g=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_DECK+LOCATION_REMOVED,LOCATION_REMOVED,nil,e,tp,dc)
-    if Duel.Damage(tp,dc*100,REASON_EFFECT)~=0 and #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+    if Duel.Damage(tp,dc*100,REASON_EFFECT)~=0 and Duel.GetLP(tp)>0 and #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
         Duel.BreakEffect()
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
         local sg=g:Select(tp,1,1,nil)

@@ -77,7 +77,7 @@ function cid.negcon1(e,tp,eg,ep,ev,re,r,rp)
     return tp~=ep and Duel.GetCurrentChain()==0  and Duel.GetLP(tp)<=Duel.GetLP(1-tp)-3000
 end
 function cid.negcon2(e,tp,eg,ep,ev,re,r,rp)
-    return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+    return tp~=ep and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev) and Duel.GetLP(tp)<=Duel.GetLP(1-tp)-3000
 end
 function cid.thfilter(c,e,tp)
     return c:IsSetCard(0x52f) and (c:IsLocation(LOCATION_DECK) or c:IsFaceup()) and not c:IsCode(id) and c:IsAbleToHand()
