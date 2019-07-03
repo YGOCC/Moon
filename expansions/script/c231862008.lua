@@ -39,7 +39,7 @@ function cid.checkzone(tp)
 	return bit.band(zone,0x1f)
 end
 function cid.spfilter(c,e,tp,lv,zone)
-	return c:IsLevel(lv) and not c:IsType(TYPE_LINK) and c:IsLocation(LOCATION_GRAVE) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
+	return c:IsLevelBelow(lv) and not c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
