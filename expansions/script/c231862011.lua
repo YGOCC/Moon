@@ -46,6 +46,7 @@ end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local zone=e:GetHandler():GetLinkedZone()
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil,e,tp,zone) end
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,500)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -90,6 +91,7 @@ function cid.spstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone) end
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,1500)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function cid.spsop(e,tp,eg,ep,ev,re,r,rp)

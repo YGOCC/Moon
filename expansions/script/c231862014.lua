@@ -62,6 +62,7 @@ end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,100)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -87,13 +88,16 @@ end
 function cid.acttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.actfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
 	if not Duel.CheckPhaseActivity() then e:SetLabel(1) else e:SetLabel(0) end
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,100)
 end
 function cid.actop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.Damage(tp,100,REASON_EFFECT)==0 or Duel.GetLP(tp)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(2318620,0))
 	if e:GetLabel()==1 then Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1) end
 	local tc=Duel.SelectMatchingCard(tp,cid.actfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 	Duel.ResetFlagEffect(tp,id)
 	if tc then
+		Duel.BreakEffect()
 		local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 		if fc then
 			Duel.SendtoGrave(fc,REASON_RULE)

@@ -88,6 +88,7 @@ end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,100)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_HAND+LOCATION_REMOVED)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -111,23 +112,22 @@ function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
 	local tc=g:GetFirst()
-	local atk=tc:GetAttack()
-		while tc do
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_UPDATE_ATTACK)
-			e1:SetValue(-200)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e1)
-			local e2=e1:Clone(e:GetHandler())
-			e2:SetCode(EFFECT_UPDATE_DEFENSE)
-			tc:RegisterEffect(e2)
-			if (atk>0 and tc:IsAttack(e:GetHandler())<=2000) then
-			local e3=Effect.CreateEffect(e:GetHandler())
-			e3:SetType(EFFECT_TYPE_SINGLE)
-			e3:SetCode(EFFECT_DISABLE_EFFECT)
-			e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-			tc:RegisterEffect(e3)
-		end
+	while tc do
+		local atk=tc:GetAttack()
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(-200)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone(e:GetHandler())
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		tc:RegisterEffect(e2)
+		if (atk>0 and tc:IsAttack(e:GetHandler())<=2000) then
+		local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_DISABLE_EFFECT)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e3)
 	end
 end

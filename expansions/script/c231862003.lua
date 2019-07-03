@@ -102,6 +102,7 @@ end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,100)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK+LOCATION_REMOVED)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)

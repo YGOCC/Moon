@@ -60,6 +60,7 @@ end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
 		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,500)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)

@@ -63,6 +63,7 @@ end
 function cid.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,200)
 end
 function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local dc=Duel.TossDice(tp,1)*200

@@ -22,6 +22,7 @@ function cid.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1)
 	e2:SetCategory(CATEGORY_DICE+CATEGORY_COUNTER)
 	e2:SetTarget(cid.cttg)
@@ -31,8 +32,9 @@ function cid.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetRange(LOCATION_SZONE)
+	e3:SetCountLimit(1)
 	e3:SetOperation(cid.damop)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_FREE_CHAIN)
@@ -43,7 +45,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return r==REASON_EFFECT and rp~=tp and e:GetHandler():GetDestination()~=LOCATION_OVERLAY end
+	if chk==0 then return e:GetHandler():GetReason()&REASON_EFFECT~=0 and rp~=tp and e:GetHandler():GetDestination()~=LOCATION_OVERLAY end
 	return true
 end
 function cid.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -51,7 +53,7 @@ function cid.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
 end
 function cid.ctop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if not e:GetHandler():IsRelateToEffect(e) or #g==0 then return end
 	local dc=Duel.TossDice(tp,1)
 	for i=1,dc do

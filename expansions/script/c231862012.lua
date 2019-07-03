@@ -44,6 +44,7 @@ end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,100)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_GRAVE)
 end
 function cid.checkzone(tp)
@@ -85,6 +86,7 @@ end
 function cid.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToDeck() and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,2,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,1500)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,c,3,tp,LOCATION_REMOVED)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,2000)
 end

@@ -64,7 +64,7 @@ function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_DECK,0,1,nil)
 	end
 	local rg=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_DECK,0,1,1,nil)
-	e:SetLabelObject(rg)
+	e:SetLabelObject(rg:GetFirst())
 	Duel.Remove(rg,POS_FACEUP,REASON_COST)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -90,7 +90,7 @@ function cid.adop(e,tp,eg,ep,ev,re,r,rp)
 	else e:SetLabel(1) end
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	local code=e:GetLabelObject()
+	local code=e:GetLabelObject():GetCode()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,code)
 	if g:GetCount()>0 then

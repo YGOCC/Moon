@@ -72,6 +72,7 @@ function cid.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,PLAYER_ALL,100)
 end
 function cid.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -88,12 +89,15 @@ end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,PLAYER_ALL,100)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK+LOCATION_REMOVED)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local dc=Duel.TossDice(tp,1)
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.spfilter),tp,LOCATION_GRAVE+LOCATION_DECK,0,nil,e,tp,dc)
-	if Duel.Damage(tp,dc*100,REASON_EFFECT)~=0 and Duel.Damage(1-tp,dc*100,REASON_EFFECT)~=0 and Duel.GetLP(tp)>0 and Duel.GetLP(1-tp)>0 and #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+	if Duel.Damage(tp,dc*100,REASON_EFFECT,true)==0 and Duel.Damage(1-tp,dc*100,REASON_EFFECT,true)==0 then return end
+	Duel.RDComplete()
+	if Duel.GetLP(tp)>0 and Duel.GetLP(1-tp)>0 and #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=g:Select(tp,1,1,nil)
@@ -110,6 +114,7 @@ function cid.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
 		and Duel.IsExistingMatchingCard(cid.spfilter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,100)
 end
 function cid.spop1(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
