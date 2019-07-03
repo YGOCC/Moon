@@ -71,6 +71,13 @@ TYPE_EXTRA=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK+TYPE_EVOLUTE+TYPE_POLARIT
 function Card.IsCustomType(c,tpe,scard,sumtype,p)
 	return (c:GetType(scard,sumtype,p)>>32)&tpe>0
 end
+function GetID()
+    local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+    str=string.sub(str,1,string.len(str)-4)
+    local scard=_G[str]
+    local s_id=tonumber(string.sub(str,2))
+    return scard,s_id
+end
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
