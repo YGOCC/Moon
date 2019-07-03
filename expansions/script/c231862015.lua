@@ -81,9 +81,9 @@ function cid.lpop(e,tp,eg,ep,ev,re,r,rp)
 	local ap=Duel.Recover(tp,cid[tp]*50,REASON_EFFECT)
 	local ct=c:GetFlagEffectLabel(id)
 	if not ct then
-		Duel.RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1,ap)
+		c:RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1,ap)
 	else
-		Duel.SetFlagEffectLabel(id,ct+ap)
+		c:SetFlagEffectLabel(id,ct+ap)
 	end
 	if c:GetFlagEffectLabel(id)<1000 then return end
 	Duel.BreakEffect()
