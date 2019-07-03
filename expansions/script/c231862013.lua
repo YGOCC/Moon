@@ -58,7 +58,7 @@ function cid.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner() and ex
 end
 function cid.dmop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():GetControler()==ep then e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END) end
+	if e:GetHandler():GetControler()==ep then e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1) end
 end
 function cid.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 end
