@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	a259c99bfa938431c8735b491a78e50a
+﻿expansions/Cards-non-QCD.cdb	b5909a8eff79a2150baadb6a123528f2
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	ddbb6450d83ed712b05c917b9ef70edc
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -2429,8 +2429,8 @@ expansions/pics/21730411.jpg	f96f9b8e118a4702f9cf4f8820e31460
 expansions/pics/21730412.jpg	85b428489ef48d21e47b50a768ae8353
 expansions/pics/21730413.jpg	eea788ce43ee69847d0b7f8188fc0877
 expansions/pics/21730414.jpg	b2c1fff613e61570f4cdd70224345309
-expansions/pics/21730415.jpg	71da986740bdef532a4fc151951b80df
-expansions/pics/21730416.jpg	71da986740bdef532a4fc151951b80df
+expansions/pics/21730415.jpg	b23d08a1113a7cccc8033c567144dfc3
+expansions/pics/21730416.jpg	85b428489ef48d21e47b50a768ae8353
 expansions/pics/21770839.jpg	f51ce888bc38520dfa087af2d0386c60
 expansions/pics/218201900.png	c51d5b70cae9c36910938e2c5c9adc05
 expansions/pics/218201901.png	28e23ba29c0ff64ef3745ab4db75dc31
@@ -9138,8 +9138,8 @@ expansions/script/c21730411.lua	a662f8254c0f9fda4c56b8d970efb358
 expansions/script/c21730412.lua	c53c9ad8325918eea6121591cd8974dc
 expansions/script/c21730413.lua	60188a89c9b22b59a6301b5ad58c22a6
 expansions/script/c21730414.lua	f2f7d9acc1679e28449aa8f74e1cdba8
-expansions/script/c21730415.lua	06d08036d5c1a67a47f42c963eb6ce6f
-expansions/script/c21730416.lua	633fafbf54095e79a38ac6deb23f755e
+expansions/script/c21730415.lua	24ec3a60eac645010f79ca9efb982606
+expansions/script/c21730416.lua	48eb2f9cae9119f77c998d08920e1b19
 expansions/script/c21770839.lua	fd71dbaca9515641be90b66ff0e87d60
 expansions/script/c218201900.lua	80c1eec28be7608a282b8aa5185af5ad
 expansions/script/c218201901.lua	81134ea93c61453e4fa20ef32e8c1061
@@ -13359,6 +13359,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	6cb7233d7bcb5acf18e108946ec7167e
+update/filelist.txt	57e98fcc92d1b33d9f029f2f6ae69854
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	698ad48c7db079e78bc0d70a4356ba45
+update/version.txt	c04ddbb630bdfe29810ff88161452658
