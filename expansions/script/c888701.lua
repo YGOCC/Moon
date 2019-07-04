@@ -27,7 +27,7 @@ function cm.initial_effect(c)
 end
 
 function cm.filter(c)
-    return c:IsSetCard(0xff1) and c:IsType(TYPE_MONSTER) and not c:IsCode(m) and c:IsAbleToHand()
+    return c:IsSetCard(0xff1) and not c:IsCode(m) and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -39,6 +39,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
     if g:GetCount()>0 then
         Duel.SendtoHand(g,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g)
+        Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
     end
 end
 
