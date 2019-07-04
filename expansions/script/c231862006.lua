@@ -1,15 +1,6 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts - Zekhe
-local function getID()
-    local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-    str=string.sub(str,1,string.len(str)-4)
-    local cod=_G[str]
-    local id=tonumber(string.sub(str,2))
-    return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-    --special summon(from hand or gy)
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(2318620,0))
     e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -23,14 +14,12 @@ function cid.initial_effect(c)
     e2:SetRange(LOCATION_GRAVE)
     e2:SetCountLimit(1,id)
     c:RegisterEffect(e2)
-    --cannot disable
     local e3=Effect.CreateEffect(c)
     e3:SetType(EFFECT_TYPE_SINGLE)
     e3:SetCode(EFFECT_CANNOT_DISABLE_SPSUMMON)
     e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
     e3:SetCondition(cid.imcon)
     c:RegisterEffect(e3)
-    --damage
     local e4=Effect.CreateEffect(c)
     e4:SetDescription(aux.Stringid(2318620,0))
     e4:SetCategory(CATEGORY_DAMAGE)
@@ -43,7 +32,6 @@ function cid.initial_effect(c)
     e4:SetTarget(cid.damtg)
     e4:SetOperation(cid.damop)
     c:RegisterEffect(e4)
-    --atk up
     local e5=Effect.CreateEffect(c)
     e5:SetDescription(aux.Stringid(2318620,1))
     e5:SetCategory(CATEGORY_ATKCHANGE)
@@ -121,7 +109,6 @@ function cid.damop(e,tp,eg,ep,ev,re,r,rp)
     local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
     Duel.Damage(p,d,REASON_EFFECT)
 end
-
 function cid.atkcon(e,tp,eg,ep,ev,re,r,rp)
     return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end

@@ -1,15 +1,6 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts - Killing Cut
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_REMOVE+CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -18,7 +9,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
-	--Activate(from gy)(summon)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DISABLE_SUMMON+CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
@@ -37,7 +27,6 @@ function cid.initial_effect(c)
 	local e4=e2:Clone()
 	e4:SetCode(EVENT_SPSUMMON)
 	c:RegisterEffect(e4)
-	--Activate(from gy)(effect)
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_NEGATE+CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
@@ -70,8 +59,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)
 		Duel.BreakEffect()
-		Duel.Damage(tp,1500,REASON_EFFECT,true)
-		Duel.RDComplete()
+		Duel.Damage(tp,1500,REASON_EFFECT)
 	end
 end
 function cid.negcon1(e,tp,eg,ep,ev,re,r,rp)

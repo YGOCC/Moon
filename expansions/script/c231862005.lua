@@ -1,15 +1,6 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts - Sejhe
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--special summon(from hand)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2318620,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -23,7 +14,6 @@ function cid.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
 	c:RegisterEffect(e2)
-	--dice special summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(2318620,0))
 	e3:SetCategory(CATEGORY_DICE+CATEGORY_SPECIAL_SUMMON)
@@ -36,7 +26,6 @@ function cid.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
-	--atkdown
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(2318620,1))
 	e8:SetCategory(CATEGORY_ATKCHANGE)

@@ -1,15 +1,6 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts - Vira
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--dice to Special
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2318620,0))
 	e1:SetCategory(CATEGORY_DICE+CATEGORY_SPECIAL_SUMMON)
@@ -22,7 +13,6 @@ function cid.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-	--remove
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(2318620,2))
 	e3:SetCategory(CATEGORY_REMOVE)

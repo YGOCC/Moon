@@ -1,27 +1,16 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts - The Isolated Town
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--boost
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_DAMAGE)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetOperation(cid.op)
 	c:RegisterEffect(e2)
-	--Special Summon
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(2318620,1))
 	e4:SetCategory(CATEGORY_DAMAGE+CATEGORY_DICE+CATEGORY_SPECIAL_SUMMON)
@@ -31,7 +20,6 @@ function cid.initial_effect(c)
 	e4:SetTarget(cid.sptg)
 	e4:SetOperation(cid.spop)
 	c:RegisterEffect(e4)
-	--activate 1 from deck or gy
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_LEAVE_FIELD)

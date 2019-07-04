@@ -1,15 +1,6 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts - Albtraum
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2318620,0))
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -19,7 +10,6 @@ function cid.initial_effect(c)
 	e1:SetCondition(cid.sumcon)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--take damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(2318620,1))
 	e2:SetCategory(CATEGORY_DAMAGE)
@@ -30,7 +20,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.target)
 	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
-	--dice special summon(from deck)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(2318620,2))
 	e3:SetCategory(CATEGORY_DAMAGE+CATEGORY_DICE+CATEGORY_SPECIAL_SUMMON)
@@ -41,7 +30,6 @@ function cid.initial_effect(c)
 	e3:SetTarget(cid.sptg)
 	e3:SetOperation(cid.spop)
 	c:RegisterEffect(e3)
-	--to hand
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(2318620,2))
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)

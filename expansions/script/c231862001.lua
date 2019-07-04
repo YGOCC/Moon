@@ -1,15 +1,6 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts - Libraetum
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Special Summon(itself)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2318620,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DAMAGE)
@@ -22,7 +13,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.sumtg)
 	e1:SetOperation(cid.sumop)
 	c:RegisterEffect(e1)
-	--Special Summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(2318620,1))
 	e2:SetCategory(CATEGORY_DAMAGE+CATEGORY_DICE+CATEGORY_SPECIAL_SUMMON)
@@ -32,7 +22,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.sptg)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
-	--special 1 if you took 1k or more
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(2318620,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)

@@ -1,15 +1,6 @@
---created by ZEN, coded by TaxingCorn117
---Die Meistersinger von Blood Arts - Weiss
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+--created by ZEN, coded by TaxingCorn117 & Lyris
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--link summon
 	aux.AddLinkProcedure(c,nil,2,99,cid.lcheck)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -28,7 +19,6 @@ function cid.initial_effect(c)
 	e6:SetCondition(cid.rccon)
 	e6:SetOperation(cid.rcop)
 	c:RegisterEffect(e6)
-	--If this card is in your GY, except during the turn it was sent there: You can take 1500 damage, then shuffle this card and 2 of your banished cards into the Deck, then gain 2000 LP.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)

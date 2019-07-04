@@ -1,15 +1,6 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts - Pinning Knives
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Activate(summon)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DISABLE_SUMMON+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -24,7 +15,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON)
 	c:RegisterEffect(e3)
-	--Activate(effect)
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
@@ -34,7 +24,6 @@ function cid.initial_effect(c)
 	e4:SetTarget(cid.target2)
 	e4:SetOperation(cid.activate2)
 	c:RegisterEffect(e4)
-	--Activate(from GY)
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(2318620,1))
 	e5:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY+CATEGORY_TOHAND)
@@ -65,8 +54,7 @@ function cid.activate1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateSummon(eg)
 	Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)
 	Duel.BreakEffect()
-	Duel.Damage(tp,1500,REASON_EFFECT,true)
-	Duel.RDComplete()
+	Duel.Damage(tp,1500,REASON_EFFECT)
 end
 function cid.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=ep and re:IsActiveType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsChainNegatable(ev)
@@ -83,13 +71,12 @@ function cid.activate2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 		Duel.BreakEffect()
-		Duel.Damage(tp,1500,REASON_EFFECT,true)
-		Duel.RDComplete()
+		Duel.Damage(tp,1500,REASON_EFFECT)
 	end
 end
 function cid.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp==1-tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
-		and Duel.GetLP(tp)<=Duel.GetLP(1-tp)-3000
+	and Duel.GetLP(tp)<=Duel.GetLP(1-tp)-3000
 end
 function cid.thfilter(c,e,tp)
 	return c:IsSetCard(0x52f) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and not c:IsCode(id) and c:IsAbleToHand()

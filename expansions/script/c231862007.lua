@@ -1,15 +1,6 @@
 --created by ZEN, coded by TaxingCorn117
---Blood Arts Commander - Erse
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2318620,0))
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -18,14 +9,12 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_HAND+LOCATION_GRAVE)
 	e1:SetCondition(cid.sumcon)
 	c:RegisterEffect(e1)
-	--cannot disable
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_CANNOT_DISABLE_SPSUMMON)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e2:SetCondition(cid.imcon)
 	c:RegisterEffect(e2)
-	--special summon + damage
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
