@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	b7482297f97a1dcbb9433002df2dad73
+﻿expansions/Cards-non-QCD.cdb	3ced7e9b4a8b278c4d00d7f9caeb42bc
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	ddbb6450d83ed712b05c917b9ef70edc
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -6597,8 +6597,8 @@ expansions/pics/9945535.jpg	8ee81f1cbf922ef1b31a54a45b1f633c
 expansions/pics/9945540.jpg	694d3271be22a83736183ee105a67c8f
 expansions/pics/9945545.jpg	5af9aa32f4e91402ee62eb2ed85c1544
 expansions/pics/9945550.jpg	f7a256f747cd197dcaf3bd4d326150e2
-expansions/pics/9945555.jpg	0
-expansions/pics/9945560.jpg	0
+expansions/pics/9945555.jpg	7ba15b22f7e1be1adb82096e3f82e53b
+expansions/pics/9945560.jpg	a63dd3b9f66faea0f3d0e46f0a7144cc
 expansions/pics/9945565.jpg	588ad3aeec482bc5bb43cdfeac3d08f6
 expansions/pics/9945570.jpg	4f7dac9abe17408dbedf35e67ccfc020
 expansions/pics/9945575.jpg	227aacd5f91f31dea837dfd456e971a7
@@ -8757,8 +8757,6 @@ expansions/script/c20150005.lua	9e24a98628efb87c0f1f4c671ff38a6b
 expansions/script/c20150006.lua	e84771ab45be71c370710ec40dbe7a36
 expansions/script/c20150007.lua	5c1738dd218d2defc7b72c3684131125
 expansions/script/c20150008.lua	07f90ae474437fa2876c6a7406ea1706
-expansions/script/c20181413.lua	efba9850687083dde9486f5d124ff7f3
-expansions/script/c20181414.lua	49e0bf0b90f2027df1a82ab719e0e7ed
 expansions/script/c20191720.lua	471c14996fbf43495eaff516f366eff1
 expansions/script/c20386000.lua	8877c632d05364c7c8536bd01e897fe3
 expansions/script/c20386001.lua	684a8fbc71d2f135e8ec1d54e7d59488
@@ -13361,6 +13359,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	bbb1b4024933bbd95041422ccac19edd
+update/filelist.txt	9e452f3e971be4666a9c620d35af9be1
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	45d0df1c59f2a516c9e96f0c8fe31520
+update/version.txt	795612d2cac44c21fa88665695f3f6b6
