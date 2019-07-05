@@ -35,10 +35,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--set
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(21730413,2))
+	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_LEAVE_FIELD)
+	e4:SetCondition(s.setcon)
 	e4:SetTarget(s.settg)
 	e4:SetOperation(s.setop)
 	c:RegisterEffect(e4)
@@ -85,6 +86,9 @@ function s.lkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --set
+function s.setcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousPosition(POS_FACEUP)
+end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsSSetable() end

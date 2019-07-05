@@ -31,25 +31,18 @@ function s.spcon(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 --draw
-function s.filter(c)
-	return c:IsSetCard(0x719)
-end
-function s.cfilter(c,tp)
-	return c:IsReleasable() and Duel.IsPlayerAffectedByEffect(tp,21730412)
+function s.filter(c,tp)
+	return (c:IsSetCard(0x719) and c:IsLocation(LOCATION_MZONE))
+		or (c:IsLocation(LOCATION_FZONE) and Duel.IsPlayerAffectedByEffect(tp,21730412))
+		and c:IsReleasable()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local b1=Duel.CheckReleaseGroup(tp,s.filter,1,false,nil,nil,tp)
-	local b2=Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_FZONE,0,1,nil)
-	if chk==0 then return c:IsAbleToRemoveAsCost() and (b1 or b2) end
+	if chk==0 then return c:IsAbleToRemoveAsCost()
+		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE+LOCATION_FZONE,0,1,nil,tp) end
 	Duel.Remove(c,POS_FACEUP,REASON_COST)
-	if b2 and (not b1 or Duel.SelectYesNo(tp,aux.Stringid(21730412,2))) then
-		local mc=Duel.GetFirstMatchingCard(s.cfilter,tp,LOCATION_FZONE,0,nil)
-		Duel.Release(mc,REASON_COST)
-	else
-		local sg=Duel.SelectReleaseGroup(tp,s.filter,1,1,false,nil,nil,tp)
-		Duel.Release(sg,REASON_COST)
-	end
+	local sg=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_MZONE+LOCATION_FZONE,0,1,1,nil,tp)
+	Duel.Release(sg,REASON_COST)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

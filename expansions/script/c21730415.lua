@@ -24,14 +24,14 @@ function s.initial_effect(c)
 	e2:SetTarget(s.distg)
 	e2:SetOperation(s.disop)
 	c:RegisterEffect(e2)
-	--activate (draw)
+	--draw
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,2))
 	e3:SetCategory(CATEGORY_DRAW)
-	e3:SetType(EFFECT_TYPE_ACTIVATE)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetHintTiming(TIMINGS_CHECK_MONSTER+TIMING_END_PHASE,TIMINGS_CHECK_MONSTER+TIMING_BATTLE_START+TIMING_END_PHASE)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_LEAVE_FIELD)
+	e3:SetCondition(s.drcon)
 	e3:SetCost(s.drcost)
 	e3:SetTarget(s.drtg)
 	e3:SetOperation(s.drop)
@@ -80,6 +80,9 @@ end
 function s.drfilter(c)
 	return c:IsSetCard(0x719) and c:IsLevel(3) and c:IsAbleToRemoveAsCost()
 end
+function s.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousPosition(POS_FACEDOWN)
+end
 function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.drfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
@@ -87,9 +90,19 @@ function s.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	c=e:GetHandler()
+	if chk==0 then return c:IsSSetable() and Duel.IsPlayerCanDraw(tp,1) end
+	if c:IsLocation(LOCATION_GRAVE) then
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,c,1,0,0)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Draw(tp,1,REASON_EFFECT)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and c:IsSSetable() then
+		if Duel.SSet(tp,c)~=0 then
+			Duel.ConfirmCards(1-tp,c)
+			Duel.Draw(tp,1,REASON_EFFECT)
+		end
+	end
 end
