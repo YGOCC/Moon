@@ -28,7 +28,6 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsPlayerAffectedByEffect(tp,21730412)
 end
 --search
 function s.filter(c,tp)
