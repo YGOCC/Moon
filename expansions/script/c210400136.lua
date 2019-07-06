@@ -1,13 +1,6 @@
 --created by LionHeartKIng, coded by Lyris, art at http://nicolelbates.com/wp-content/uploads///Lightning-Bolt-by-Todd-Secki.jpg
 --襲雷ラッシュ
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)

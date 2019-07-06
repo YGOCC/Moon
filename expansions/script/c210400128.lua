@@ -1,13 +1,6 @@
 --created & coded by Lyris, art from "Ignister Prominence, the Blasting Dracoslayer"
 --機光襲雷竜－イグニスター
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,aux.AND(aux.FilterBoolFunction(Card.IsSetCard,0x7c4),aux.FilterBoolFunction(Card.IsAttackAbove,2000)),2,false)

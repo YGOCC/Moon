@@ -1,13 +1,6 @@
 --created & coded by Lyris, art from "Vylon Element" & at https://us.123rf.com/450wm/racener/racener1605/racener160500001/56306432-abstract-blue-luminous-sound-waves-background-for-parties-clubs-discos-and-concerts-.jpg?ver=6
 --インライトメント・金色ヘッドホン
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(1109)

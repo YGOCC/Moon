@@ -1,13 +1,6 @@
 --created & coded by Lyris, art at https://st2.depositphotos.com/1007989/5894/i/950/depositphotos_58949825-stock-photo-kids-stargazing-through-telescope.jpg
 --「S・VINE」スターゲイザー
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

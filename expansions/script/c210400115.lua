@@ -1,13 +1,6 @@
 --created by LionHeartKIng, coded by Lyris, art from Yu-Gi-Oh! BAM's "Mirror" Power-up & "Cyber Dragon"
 --襲雷竜－金
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
 	local e1=Effect.CreateEffect(c)

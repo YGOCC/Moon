@@ -1,13 +1,6 @@
 --created & coded by Lyris, art at https://78.media.tumblr.com/e349861ac74f1e6d72f42fa7ad8cd8f7/tumblr_p2oxlkOMsG1w0w6bio1_1280.jpg
 --ニュートリックス・ホリー
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)

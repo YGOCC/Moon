@@ -1,13 +1,6 @@
 --created & coded by Lyris, art from "Guardian Elma" & at https://us.123rf.com/450wm/iimages/iimages1603/iimages160300284/53485338-stock-vector-forest-scene-with-trail-in-the-woods-illustration.jpg?ver=6
 --インライトメント・エルマ武器庫
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
