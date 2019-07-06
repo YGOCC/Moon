@@ -84,8 +84,9 @@ end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local dc=Duel.TossDice(tp,1)
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.spfilter),tp,LOCATION_GRAVE+LOCATION_DECK,0,nil,e,tp,dc)
-	if Duel.Damage(tp,dc*100,REASON_EFFECT,true)==0 and Duel.Damage(1-tp,dc*100,REASON_EFFECT,true)==0 then return end
+	local d1,d2=Duel.Damage(tp,dc*100,REASON_EFFECT,true),Duel.Damage(1-tp,dc*100,REASON_EFFECT,true)
 	Duel.RDComplete()
+	if d1==0 and d2==0 then return end
 	if Duel.GetLP(tp)>0 and Duel.GetLP(1-tp)>0 and #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -110,8 +111,7 @@ function cid.spop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,cid.spfilter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,e,tp)
 	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) then
-			Duel.BreakEffect()
-			Duel.Damage(tp,100,REASON_EFFECT,true)
-			Duel.RDComplete()
+		Duel.BreakEffect()
+		Duel.Damage(tp,100,REASON_EFFECT)
 	end
 end
