@@ -49,7 +49,7 @@ function cid.regop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetOperation(cid.op)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-	e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
+	e:GetHandler():RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1)
 end
 function cid.cd(e,tp,eg,ep,ev,re,r,rp)
 	return tp==ep
