@@ -1,0 +1,118 @@
+--created by Swag, coded by Lyris
+local cid,id=GetID()
+function cid.initial_effect(c)
+	c:EnableReviveLimit()
+	aux.AddOrigPandemoniumType(c)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
+	e4:SetTargetRange(1,0)
+	e4:SetTarget(cid.splimit)
+	c:RegisterEffect(e4)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_QUICK_O)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	e0:SetRange(LOCATION_SZONE)
+	e0:SetCountLimit(1)
+	e0:SetCategory(CATEGORY_DESTROY)
+	e0:SetCondition(aux.PandActCheck)
+	e0:SetCost(cid.cost)
+	e0:SetTarget(cid.destg)
+	e0:SetOperation(cid.activate)
+	c:RegisterEffect(e0)
+	aux.EnablePandemoniumAttribute(c,e0)
+	aux.AddFusionProcFunFunRep(c,cid.mfilter,aux.FilterBoolFunction(Card.IsSetCard,0x9b5),2,2,false,true)
+	aux.AddContactFusionProcedure(c,Card.IsAbleToGraveAsCost,LOCATION_MZONE,0,function(c) return function(g) Duel.SendtoGrave(g,REASON_COST) end end)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e1:SetValue(cid.splimit)
+	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetValue(1)
+	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EFFECT_IMMUNE_EFFECT)
+	e3:SetValue(cid.efilter)
+	c:RegisterEffect(e3)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_UPDATE_ATTACK)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetValue(function(e,c) return Duel.GetMatchingGroupCount(aux.FilterBoolFunction(Card.IsRace,RACE_DINOSAUR),e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)*600 end)
+	c:RegisterEffect(e5)
+	local e6=Effect.CreateEffect(c)
+	e6:SetCategory(CATEGORY_DAMAGE)
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetCountLimit(1)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetTarget(cid.target)
+	e6:SetOperation(cid.operation)
+	c:RegisterEffect(e6)
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e7:SetCode(EVENT_LEAVE_FIELD)
+	e7:SetProperty(EFFECT_FLAG_DELAY)
+	e7:SetCategory(CATEGORY_DAMAGE)
+	e7:SetCondition(function(e) return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION) end)
+	e7:SetTarget(cid.pentg)
+	e7:SetOperation(cid.penop)
+	c:RegisterEffect(e7)
+end
+function cid.filter(c)
+	return c:IsType(TYPE_PANDEMONIUM) and c:IsAbleToGraveAsCost()
+end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_HAND,0,1,1,nil)
+	Duel.SendtoGrave(g+e:GetHandler(),REASON_COST)
+end
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
+	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+end
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
+	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+	Duel.Destroy(sg,REASON_EFFECT)
+end
+function cid.mfilter(c)
+	return c:IsRace(RACE_DINOSAUR) and c:IsType(TYPE_FUSION)
+end
+function cid.splimit(e,se,sp,st)
+	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
+end
+function cid.efilter(e,te)
+	return te:IsActiveType(TYPE_MONSTER) and te:GetOwner()~=e:GetOwner()
+end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsRace,tp,LOCATION_GRAVE,0,1,nil,RACE_DINOSAUR) end
+	Duel.SetTargetPlayer(1-tp)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
+end
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	local d=Duel.GetMatchingGroupCount(Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_DINOSAUR)*500
+	Duel.Damage(p,d,REASON_EFFECT)
+end
+function cid.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1500)
+end
+function cid.penop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if Duel.Damage(1-tp,1500,REASON_EFFECT)>0 and c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
+		aux.PandSSet(c,REASON_EFFECT,TYPE_EFFECT+TYPE_FUSION)(e,tp,eg,ep,ev,re,r,rp)
+	end
+end
