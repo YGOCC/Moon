@@ -23,7 +23,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.filter(c)
-	return c:IsSetCard(0x9b5) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x9b5) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_HAND,0,1,nil) end

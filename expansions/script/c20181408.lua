@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_PANDEMONIUM),2,2)
+	aux.AddLinkProcedure(c,cid.matfilter,2,2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -31,6 +31,9 @@ function cid.initial_effect(c)
 	e3:SetTarget(cid.tgtg)
 	e3:SetOperation(cid.tgop)
 	c:RegisterEffect(e3)
+end
+function cid.matfilter(c)
+	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
 end
 function cid.tefilter(c)
 	return c:IsType(TYPE_PANDEMONIUM) and c:IsSetCard(0x9b5) and not c:IsForbidden()
