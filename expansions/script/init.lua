@@ -1183,7 +1183,6 @@ function Auxiliary.PandActTarget(...)
 					if cost then cost(e,tp,eg,ep,ev,re,r,rp,1) end
 					tg=xe:GetTarget()
 					if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
-					--e:SetLabelObject(xe)
 					c:RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,65)
 				else
 					e:SetCategory(0)
