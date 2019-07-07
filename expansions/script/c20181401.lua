@@ -80,9 +80,9 @@ function cid.cfilter(c)
 	return c:IsCode(id) and c:IsAbleToRemoveAsCost()
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE,0,2,nil) end
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE,0,2,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_GRAVE,0,2,2,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_GRAVE,0,2,2,e:GetHandler())
 	Duel.Remove(g+e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)

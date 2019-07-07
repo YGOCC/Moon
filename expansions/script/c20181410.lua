@@ -22,8 +22,8 @@ function cid.initial_effect(c)
 	e0:SetOperation(cid.spop)
 	c:RegisterEffect(e0)
 	aux.EnablePandemoniumAttribute(c,e0)
-	aux.AddFusionProcCodeFunRep(c,id,aux.FilterBoolFunction(Card.IsRace,RACE_DINOSAUR),1,63,true,true)
-	aux.AddContactFusionProcedure(c,Card.IsReleasable,LOCATION_MZONE,0,function(c) return function(g) Duel.Release(g,REASON_COST) end end)
+	aux.AddFusionProcCodeFunRep(c,20181407,aux.FilterBoolFunction(Card.IsRace,RACE_DINOSAUR),1,63,true,true)
+	aux.AddContactFusionProcedure(c,Card.IsReleasable,LOCATION_MZONE,0,function(g) Duel.Release(g,REASON_COST) end)
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_SINGLE)
 	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -131,6 +131,32 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
+end
+function cid.cfilter(c,tp,code)
+	return c:IsAbleToGraveAsCost() and c:IsSetCard(0x9b5) and c:IsType(TYPE_MONSTER)
+		and (not code and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_DECK,0,1,c,tp,{c:GetCode()}) or not c:IsCode(table.unpack(code)))
+end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_DECK,0,1,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g1=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_DECK,0,1,1,nil,tp)
+	local tc=g1:GetFirst()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g2=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_DECK,0,1,1,tc,tp,{tc:GetCode()})
+	Duel.SendtoGrave(g1+g2,REASON_EFFECT)
+end
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
+	end
 end
 function cid.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0

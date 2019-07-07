@@ -46,14 +46,14 @@ function cid.teop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
 	local g=Duel.SelectMatchingCard(tp,cid.tefilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
-		aux.PandEnableFUInED(g,REASON_EFFECT)
+		aux.PandEnableFUInED(g,REASON_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
 	return c:IsAbleToGraveAsCost() and (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)))
-		and Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode())
+		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode())
 end
-function cid.thfilter(c,code)
+function cid.filter(c,code)
 	return c:IsCode(code) and c:IsType(TYPE_PANDEMONIUM)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -64,7 +64,8 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		e:SetLabel(0)
-		return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,tp)
+		return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET)
+			and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,tp)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,tp)
@@ -74,9 +75,9 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_DECK,0,1,1,nil,e:GetLabel())
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e:GetLabel())
 	if #g>0 then
-		aux.PandSSet(g,REASON_EFFECT)
+		aux.PandSSet(g,REASON_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.tgcon(e,tp,eg,ep,ev,re,r,rp)
