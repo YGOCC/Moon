@@ -51,7 +51,7 @@ function cid.teop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.cfilter(c,tp)
 	return c:IsAbleToGraveAsCost() and (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)))
-		and Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode()) end
+		and Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode())
 end
 function cid.thfilter(c,code)
 	return c:IsCode(code) and c:IsType(TYPE_PANDEMONIUM)
