@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	432c5c46efcb3bb51a720511c9d51a62
+﻿expansions/Cards-non-QCD.cdb	dec4c7974014d507dcb37906d5defc34
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	ddbb6450d83ed712b05c917b9ef70edc
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -2034,6 +2034,22 @@ expansions/pics/20150005.jpg	d8b1d1df5eed4b3e84f690f21ad41ba4
 expansions/pics/20150006.jpg	2f33cf16a70f4f55d951a9db4b0217bd
 expansions/pics/20150007.jpg	3e758151a3f27c83a9e6fb387d3a5a89
 expansions/pics/20150008.jpg	ebad2b406207333d493306f918675852
+expansions/pics/20181401.png	e69e4e37e87c68acd2882b12360ea41b
+expansions/pics/20181402.png	a0713cd250870f2a9cf07cd5f43fa6c2
+expansions/pics/20181403.png	ff20af26b2fb768a1c41919d04e87e2d
+expansions/pics/20181404.png	47d47fefd171b22f3d5b31c80d9968ad
+expansions/pics/20181405.png	34b3093510aedf70564dd755e8af099e
+expansions/pics/20181406.png	498fd4c309faaf0313334e27896390ab
+expansions/pics/20181407.png	8bffbc2d09a3af651101199cf3f370ff
+expansions/pics/20181408.png	ab413f703d39fe4776c986d862645b99
+expansions/pics/20181409.png	d88c0256d950b382adf89cacf091caf8
+expansions/pics/20181410.png	b3a18829627b9253569110a2143e3b77
+expansions/pics/20181411.png	685e218585f2c6ea9c27532cc70c8d8f
+expansions/pics/20181412.png	78719f8bad6864c1878b6a8d5f36188a
+expansions/pics/20181413.png	39520dc74176ebf7d02c88267c51bcc8
+expansions/pics/20181414.png	49424d459bdfbf5317612c195120e9ee
+expansions/pics/20181415.png	8123733d8a3c19a6e5b0ac5f70320f11
+expansions/pics/20181416.png	1741cceee11ad5d5704c0b83935b6c3f
 expansions/pics/20191720.jpg	0c931c521c0c5eae62ef105d4dcea96e
 expansions/pics/20345391.png	68b185f50e38c3480aca0b3dd49bdf31
 expansions/pics/20386000.jpg	be8e51d0b647e575a9ae4b5114c621c4
@@ -13371,6 +13387,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	13c92a1602e8b1a6b9de57466a4c83da
+update/filelist.txt	4e2b354890d0ca5787ed12e25b4728f4
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	fb1720861dd6fbe62673a6c34e68e95f
+update/version.txt	26ac84798027549c3a4218d8b94730da
