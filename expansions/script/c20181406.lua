@@ -80,9 +80,9 @@ function cid.desfilter(c)
 	return c:IsAbleToGraveAsCost() and c:IsRace(RACE_DINOSAUR)
 end
 function cid.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.desfilter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.desfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,cid.desfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.desfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -108,7 +108,7 @@ function cid.tgfilter(c,code)
 	return c:IsCode(code) and c:IsAbleToGrave()
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil,tp) end
+	if chk==0 then return e:GetHandler():GetFlagEffect(id)>0 and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
@@ -117,6 +117,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,tp)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
+		Duel.ConfirmCards(1-tp,g)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local tg=Duel.SelectMatchingCard(tp,cid.tgfilter,tp,LOCATION_DECK,0,1,1,nil,tc:GetCode())
 		if #tg>0 then
