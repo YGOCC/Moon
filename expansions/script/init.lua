@@ -854,7 +854,7 @@ end
 
 --Bigbangs
 function Card.IsCanBeBigbangMaterial(c,ec)
-	if c:IsAttack(0) and c:IsDefense(0) or c:IsType(TYPE_LINK) then return false end
+	if c:IsType(TYPE_LINK) then return false end
 	local tef={c:IsHasEffect(EFFECT_CANNOT_BE_BIGBANG_MATERIAL)}
 	for _,te in ipairs(tef) do
 		if te:GetValue()(te,ec) then return false end
@@ -924,10 +924,16 @@ end
 function Auxiliary.BigbangRecursiveFilter(c,tp,sg,mg,bc,ct,...)
 	sg:AddCard(c)
 	ct=ct+1
-	local funs,max={...},0
-	for i=1,#funs do max=max+funs[i][3] end
-	local res=Auxiliary.BigbangCheckGoal(tp,sg,bc,ct,...)
-		or (ct<max and mg:IsExists(Auxiliary.BigbangRecursiveFilter,1,sg,tp,sg,mg,bc,ct,...))
+	local funs,max,chk={...},0
+	for i=1,#funs do
+		max=max+funs[i][3]
+		if funs[i][1](c) then
+			chk=true
+		end
+	end
+	if max>99 then max=99 end
+	local res=chk and (Auxiliary.BigbangCheckGoal(tp,sg,bc,ct,...)
+		or (ct<max and mg:IsExists(Auxiliary.BigbangRecursiveFilter,1,sg,tp,sg,mg,bc,ct,...)))
 	sg:RemoveCard(c)
 	ct=ct-1
 	return res
@@ -938,11 +944,12 @@ function Auxiliary.BigbangCheckGoal(tp,sg,bc,ct,...)
 		if not sg:IsExists(funs[i][1],1,nil) then return false end
 		min=min+funs[i][2]
 	end
-	return ct>=min and sg:CheckWithSumGreater(Card.GetBigbangAttack,bc:GetAttack(),min/#funs,min/#funs) and sg:CheckWithSumGreater(Card.GetBigbangDefense,bc:GetDefense(),min/#funs,min/#funs) and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0
+	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:GetSum(Card.GetBigbangAttack)>=bc:GetAttack() and sg:GetSum(Card.GetBigbangDefense)>=bc:GetDefense()
 end
 function Auxiliary.BigbangTarget(...)
 	local funs,min,max={...},0,0
 	for i=1,#funs do min=min+funs[i][2] max=max+funs[i][3] end
+	if max>99 then max=99 end
 	return  function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 				local mg=Duel.GetMatchingGroup(Card.IsCanBeBigbangMaterial,tp,LOCATION_MZONE,0,nil,c)
 				local bg=Group.CreateGroup()
