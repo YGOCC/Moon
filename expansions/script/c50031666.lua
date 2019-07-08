@@ -185,7 +185,7 @@ function c50031666.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c50031666.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) and Duel.IsExistingMatchingCard(c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) and Duel.IsExistingMatchingCard(c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) and c:GetFlagEffect(50031666)==0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c50031666.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
