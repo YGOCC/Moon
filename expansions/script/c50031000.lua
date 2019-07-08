@@ -96,7 +96,7 @@ function c50031000.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
-function c50031000.filter(c,e,tp)
+function c50031000.xfilter(c,e,tp)
 	return c:IsRace(RACE_ZOMBIE) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
