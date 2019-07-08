@@ -1,5 +1,8 @@
 --Creation Paladin
 function c81450650.initial_effect(c)
+	c:EnableReviveLimit()
+	aux.AddOrigBigbangType(c)
+	aux.AddBigbangProc(c,aux.FilterEqualFunction(Card.GetVibe,1),1,aux.FilterEqualFunction(Card.GetVibe,-1),1)
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -8,17 +11,6 @@ function c81450650.initial_effect(c)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(c81450650.val)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EFFECT_UPDATE_DEFENSE)
-	c:RegisterEffect(e2)
-	--
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetOperation(c81450650.regop)
-	c:RegisterEffect(e3)
-	c:EnableReviveLimit()
 	--ATK Down
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_ATKCHANGE)
@@ -30,34 +22,19 @@ function c81450650.initial_effect(c)
 	e4:SetTarget(c81450650.atktg)
 	e4:SetOperation(c81450650.atkop)
 	c:RegisterEffect(e4)
-	--Additional Effects here
-	if not c81450650.global_check then
-		c81450650.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetLabel(624)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c81450650.chk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-c81450650.bigbang=true
-c81450650.generation_o=7
-c81450650.generation=c81450650.generation_o
-c81450650.bbmatrc=RACE_WARRIOR+RACE_MACHINE
-function c81450650.material(mc)
-	return true
-end
-function c81450650.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,e:GetLabel())
-	Duel.CreateToken(1-tp,e:GetLabel())
+	--special summon
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(34471458,1))
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e4:SetCode(EVENT_LEAVE_FIELD)
+	e4:SetTarget(c81450650.sptg)
+	e4:SetOperation(c81450650.spop)
+	c:RegisterEffect(e4)
 end
 function c81450650.val(e,c)
-	local ct=e:GetHandler():GetFlagEffectLabel(81450650)
-	if not ct then return 0 end
-	return ct
+	return e:GetHandler():GetMaterialCount()*200
 end
 function c81450650.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -81,9 +58,6 @@ function c81450650.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(c81450650.atkval)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		tc:RegisterEffect(e2)
 	end
 end
 function c81450650.atkval(e,c)
@@ -91,5 +65,25 @@ function c81450650.atkval(e,c)
 		return c:GetRank()*-200
 	else
 		return c:GetLevel()*-200
+	end
+end
+function c81450650.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local tc=e:GetHandler()
+	local mg=tc:GetMaterial()
+	if chk==0 then return tc:IsSummonType(SUMMON_TYPE_SPECIAL+624) and mg:IsExists(c81450650.mgfilter,1,nil,e,tp,tc) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
+end
+function c81450650.mgfilter(c,e,tp,bc)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED)
+		and c:GetReason()&0x8000000008==0x8000000008 and c:GetReasonCard()==bc
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function c81450650.spop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetHandler()
+	local mg=tc:GetMaterial()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=mg:FilterSelect(tp,aux.NecroValleyFilter(c81450650.mgfilter),1,1,nil,e,tp,tc)
+	if #g>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
