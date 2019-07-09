@@ -2665,7 +2665,7 @@ function Auxiliary.TimeleapOperation(customop)
 				if not customop then
 					Duel.Remove(g,POS_FACEUP,REASON_MATERIAL+0x10000000000)
 				else
-					customop(e,tp,eg,ep,ev,re,r,rp,c)
+					customop(e,tp,eg,ep,ev,re,r,rp,c,g)
 				end
 				g:DeleteGroup()
 			end
