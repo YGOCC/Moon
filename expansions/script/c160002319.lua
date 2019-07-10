@@ -2,6 +2,7 @@
 --Conjoint Disarm
 local cid,id=GetID()
 function cid.initial_effect(c)
+	aux.AddOrigConjointType(c)
 	aux.EnableConjointAttribute(c,3)
 	--If all cards you control (min. 1) are Evolute Monsters: target 2 cards on the field; destroy them.
 	local e1=Effect.CreateEffect(c)
@@ -39,10 +40,10 @@ function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)>0 and not Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,nil) end
+	if chkc then return chkc:IsOnField() and chkc~=e:GetHandler() end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,2,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,2,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)

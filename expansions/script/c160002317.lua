@@ -2,6 +2,7 @@
 --Conjoint Twister
 local cid,id=GetID()
 function cid.initial_effect(c)
+	aux.AddOrigConjointType(c)
 	aux.EnableConjointAttribute(c,1)
 	--Remove up to 9 E-Cs from 1 Evolute Monster you control, then target 1 Spell/Trap for each 3 E-Cs removed; destroy them.
 	local e1=Effect.CreateEffect(c)

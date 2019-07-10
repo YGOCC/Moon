@@ -898,8 +898,14 @@ end
 
 --Conjoints
 function Card.GetConjointNumber(c)
-	local ef=c:IsHasEffect(EFFECT_CONJOINT_EVOLUTE_RATING)
-	return ef and ef:GetValue()(te,ec)
+	if not Auxiliary.Conjoints[c] then return 0 end
+	local te=c:IsHasEffect(EFFECT_CONJOINT_EVOLUTE_RATING)
+	if c:IsLocation(LOCATION_OVERLAY) then return c:GetFlagEffectLabel(394) end
+	if type(te:GetValue())=='function' then
+		return te:GetValue()(te,c)
+	else
+		return te:GetValue()
+	end
 end
 function Card.IsConjointedTo(c)
 	return (c:GetFlagEffect(394)>0 or c:IsType(TYPE_SPELL+TYPE_TRAP)) and c:GetOverlayTarget():IsType(TYPE_EVOLUTE)
@@ -907,23 +913,24 @@ end
 function Auxiliary.AddOrigConjointType(c)
 	table.insert(Auxiliary.Conjoints,c)
 	Auxiliary.Customs[c]=true
+	Auxiliary.Conjoints[c]=aux.TRUE
 end
 function Auxiliary.EnableConjointAttribute(c,ce)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_CONJOINT_EVOLUTE_RATING)
 	e1:SetValue(Auxiliary.CEVal(ce))
 	c:RegisterEffect(e1)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_SPSUMMON_PROC_G)
-	e4:SetRange(LOCATION_OVERLAY)
-	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE)
-	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetDescription(2)
+	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetCondition(Auxiliary.DisjointTarget)
-	e4:SetOperation(Auxiliary.DisjointOp(ce))
+	e4:SetOperation(Auxiliary.DisjointOp)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_XMATERIAL+EFFECT_TYPE_CONTINUOUS)
@@ -936,7 +943,6 @@ function Auxiliary.EnableConjointAttribute(c,ce)
 		e3:SetType(EFFECT_TYPE_FIELD)
 		e3:SetCode(EFFECT_SPSUMMON_PROC_G)
 		e3:SetRange(LOCATION_MZONE)
-		e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		e3:SetCondition(Auxiliary.ConjointTarget)
 		e3:SetOperation(Auxiliary.ConjointOp(ce))
@@ -969,7 +975,7 @@ end
 function Auxiliary.ConjointTarget(e,c,og)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(Auxiliary.EvoluteFilter,tp,LOCATION_MZONE,0,1,c)
+	return c:GetFlagEffect(0)==0 and Duel.IsExistingMatchingCard(Auxiliary.EvoluteFilter,tp,LOCATION_MZONE,0,1,c)
 end
 function Auxiliary.ConjointOp(ce)
 	return	function(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
@@ -977,43 +983,52 @@ function Auxiliary.ConjointOp(ce)
 				local g=Duel.SelectMatchingCard(tp,Auxiliary.EvoluteFilter,tp,LOCATION_MZONE,0,1,1,c)
 				Duel.HintSelection(g+c)
 				local tc=g:GetFirst()
+				if c:GetOverlayCount()>0 then Duel.SendtoGrave(c:GetOverlayGroup(),REASON_RULE) end
 				Duel.Overlay(tc,c)
 				Auxiliary.AddCE(ce)(e,tp)
-				if c:IsLocation(LOCATION_OVERLAY) and c:IsType(TYPE_EVOLUTE) then c:RegisterFlagEffect(394,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_IGNORE_IMMUNE,1) end
+				if c:IsLocation(LOCATION_OVERLAY) and c:IsType(TYPE_EVOLUTE) then c:RegisterFlagEffect(394,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_IGNORE_IMMUNE,1,ce) end
+				c:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 			end
+end
+function Auxiliary.ConjointedFilter(c)
+	return c:GetFlagEffect(0)==0 or c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function Auxiliary.DisjointTarget(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 or c:IsType(TYPE_SPELL+TYPE_TRAP)
+	local g=c:GetOverlayGroup():Filter(Auxiliary.ConjointedFilter,nil)
+	return #g>0 and (Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 or g:IsExists(Card.IsType,1,nil,TYPE_SPELL+TYPE_TRAP))
 end
-function Auxiliary.DisjointOp(ce)
-	return	function(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
-				Duel.Hint(HINT_CARD,0,c:GetOriginalCode())
-				local tc=c:GetOverlayTarget()
-				tc:RemoveEC(tp,math.min(ce,tc:GetEC()),REASON_RULE)
-				if c:IsType(TYPE_EFFECT) then
-					sg=sg+c
-					if c:IsType(TYPE_EVOLUTE) then
-						local e1=Effect.CreateEffect(c)
-						e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-						e1:SetCode(EVENT_SPSUMMON)
-						e1:SetRange(LOCATION_MZONE)
-						e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return e:GetOwner():GetSummonLocation()==LOCATION_OVERLAY and e:GetHandler():IsType(TYPE_CONJOINT) end)
-						e1:SetOperation(Auxiliary.SwapConjoint)
-						e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-						tc:RegisterEffect(e1)
-					end
-					else Duel.SendtoDeck(c,nil,2,REASON_RULE) end
-			end
+function Auxiliary.DisjointOp(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
+	Duel.Hint(HINT_SELECTMSG,tp,12)
+	local tc=c:GetOverlayGroup():FilterSelect(tp,Auxiliary.ConjointedFilter,1,1,nil):GetFirst()
+	Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
+	c:RemoveEC(tp,math.min(tc:GetConjointNumber(),c:GetEC()),REASON_RULE)
+	if tc:IsType(TYPE_EFFECT) then
+		sg:AddCard(tc)
+		if tc:IsType(TYPE_EVOLUTE) then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+			e1:SetCode(EVENT_SPSUMMON)
+			e1:SetRange(LOCATION_MZONE)
+			e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(aux.FilterEqualFunction(Card.GetSummonLocation,LOCATION_OVERLAY),1,nil) end)
+			e1:SetOperation(Auxiliary.SwapConjoint)
+			c:RegisterEffect(e1)
+		end
+		else Duel.SendtoDeck(tc,nil,2,REASON_RULE) end
+		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 end
 function Auxiliary.SwapConjoint(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=e:GetOwner()
+	if not Duel.SelectEffectYesNo(tp,c) then return end
+	local cn=c:GetConjointNumber()
+	local tc=eg:GetFirst()
+	if c:GetOverlayCount()>0 then Duel.SendtoGrave(c:GetOverlayGroup(),REASON_RULE) end
 	Duel.Overlay(tc,c)
 	if c:IsLocation(LOCATION_OVERLAY) then
-		Auxiliary.AddCE(c:GetConjointNumber())(e,tp)
-		c:RegisterFlagEffect(394,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_IGNORE_IMMUNE,1)
+		Auxiliary.AddCE(cn)(e,tp)
+		c:RegisterFlagEffect(394,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_IGNORE_IMMUNE,1,cn)
 	end
+	e:Reset()
 end
 function Auxiliary.AddCE(ce)
 	return	function(e,tp)
@@ -1035,8 +1050,12 @@ function Auxiliary.STConjointOp(ce)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 				local g=Duel.SelectMatchingCard(tp,Auxiliary.EvoluteFilter,tp,LOCATION_MZONE,0,1,1,c)
 				Duel.HintSelection(g+c)
+				c:CancelToGrave()
+				local cn=c:GetConjointNumber()
 				Duel.Overlay(g:GetFirst(),c)
 				Auxiliary.AddCE(ce)(e,tp)
+				c:RegisterFlagEffect(394,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_IGNORE_IMMUNE,1,cn)
+				c:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 			end
 end
 function Auxiliary.DesRepDisjoint(ce)
