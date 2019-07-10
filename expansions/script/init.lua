@@ -396,7 +396,7 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 	for c in aux.Next(tg) do
 		if c:SwitchSpace() then cc=cc-c end
 	end
-	change_position(cc,au,ad,du,dd)
+	return change_position(cc,au,ad,du,dd)
 end
 
 Card.RemoveCounter=function(c,p,typ,ct,r)
@@ -559,14 +559,19 @@ Duel.SelectTarget=function(actp,func,self,loc1,loc2,cmin,cmax,exc,...)
 	end
 end
 Duel.Remove=function(cc,pos,r)
-	if pos&POS_FACEDOWN~=0 and r&REASON_EFFECT~=0 then
-		local cc=Group.CreateGroup()+cc
-		local tg=cc:Clone()
-		for c in aux.Next(tg) do
-			if c:IsHasEffect(EFFECT_CANNOT_BANISH_FD_EFFECT) then cc=cc-c end
+	local cc=Group.CreateGroup()+cc
+	local tg=cc:Clone()
+	for c in aux.Next(tg) do
+		if pos&POS_FACEDOWN~=0 and r&REASON_EFFECT~=0 then
+			local ef=c:IsHasEffect(EFFECT_CANNOT_BANISH_FD_EFFECT)
+			local cf=ef:GetValue()
+			local typ=aux.GetValueType(cf)
+			if typ=="function" then
+				if fc(ef,c:GetReasonEffect(),c:GetReasonPlayer()) then cc=cc-c end
+			elseif fc>0 then cc=cc-c end
 		end
 	end
-	duel_banish(cc,pos,r)
+	return duel_banish(cc,pos,r)
 end
 
 --Custom Functions
