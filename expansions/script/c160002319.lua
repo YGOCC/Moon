@@ -1,6 +1,6 @@
 --created by Chahine, coded by Lyris
 --Conjoint Disarm
-local id,cid=GetID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.EnableConjointAttribute(c,3)
 	--If all cards you control (min. 1) are Evolute Monsters: target 2 cards on the field; destroy them.
