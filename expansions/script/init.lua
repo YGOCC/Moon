@@ -1008,7 +1008,7 @@ function Auxiliary.DisjointOp(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 		if tc:IsType(TYPE_EVOLUTE) then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e1:SetCode(EVENT_SPSUMMON)
+			e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 			e1:SetRange(LOCATION_MZONE)
 			e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(aux.FilterEqualFunction(Card.GetSummonLocation,LOCATION_OVERLAY),1,nil) end)
 			e1:SetOperation(Auxiliary.SwapConjoint)
@@ -1020,13 +1020,14 @@ end
 function Auxiliary.SwapConjoint(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not Duel.SelectEffectYesNo(tp,c) then return end
-	local cn=c:GetConjointNumber()
 	local tc=eg:GetFirst()
 	if c:GetOverlayCount()>0 then Duel.SendtoGrave(c:GetOverlayGroup(),REASON_RULE) end
+	local cn=c:GetConjointNumber()
 	Duel.Overlay(tc,c)
 	if c:IsLocation(LOCATION_OVERLAY) then
 		Auxiliary.AddCE(cn)(e,tp)
 		c:RegisterFlagEffect(394,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_IGNORE_IMMUNE,1,cn)
+		c:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 	end
 	e:Reset()
 end
