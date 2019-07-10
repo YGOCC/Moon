@@ -24,6 +24,7 @@ EFFECT_RANDOM_TARGET				=39759371
 EFFECT_CANNOT_BE_TIMELEAP_MATERIAL	=825
 EFFECT_MUST_BE_TIMELEAP_MATERIAL	=826
 EFFECT_FUTURE						=827
+EFFECT_CANNOT_BANISH_FD_EFFECT		=856
 TYPE_EVOLUTE						=0x100000000
 TYPE_PANDEMONIUM					=0x200000000
 TYPE_POLARITY						=0x400000000
@@ -97,11 +98,11 @@ end
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, is_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
 	get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_remcounter, duel_remcounter, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv,
-	duel_overlay, duel_set_lp, duel_select_target= 
+	duel_overlay, duel_set_lp, duel_select_target, duel_banish = 
 	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
 	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.RemoveCounter, 
 	Duel.RemoveCounter, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.RegisterEffect, Effect.SetTargetRange, 
-	Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget
+	Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove
 
 Card.GetRank=function(c)
 	if Auxiliary.Evolutes[c] or Auxiliary.Spatials[c] then return 0 end
@@ -556,6 +557,16 @@ Duel.SelectTarget=function(actp,func,self,loc1,loc2,cmin,cmax,exc,...)
 	else
 		return duel_select_target(actp,func,self,loc1,loc2,cmin,cmax,exc,table.unpack(extras))
 	end
+end
+Duel.Remove=function(cc,pos,r)
+	if pos&POS_FACEDOWN~=0 and r&REASON_EFFECT~=0 then
+		local cc=Group.CreateGroup()+cc
+		local tg=cc:Clone()
+		for c in aux.Next(tg) do
+			if c:IsHasEffect(EFFECT_CANNOT_BANISH_FD_EFFECT) then cc=cc-c end
+		end
+	end
+	duel_banish(cc,pos,r)
 end
 
 --Custom Functions

@@ -13308,7 +13308,7 @@ expansions/script/c99988883.lua	0086aa43eab63341d10d5eab6fbbec81
 expansions/script/c99988884.lua	1196ba8d010cd032355475552bf2b3cb
 expansions/script/c99988885.lua	594b4646a046875814610c324512fd91
 expansions/script/c99988886.lua	aaec3a40aee0792f7e3b024b499c869a
-expansions/script/init.lua	2ce2fd0886c8e45a5d23a493fb17c13b
+expansions/script/init.lua	ab751bb661abb8512cc7b68282c7f99f
 expansions/script/json.lua	d41a01cf67c76915b49c57d21ac471ee
 expansions/script/lap.lua	1325997ac4231550048dae57e7eb75b0
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
@@ -13391,6 +13391,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	c03af9cc4a6fafbcc6aa1c0ac622286e
+update/filelist.txt	d0759275370b1b41f0c12aaeb2ea6606
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	0f453639f419a3027306fdef6112d55d
+update/version.txt	15f0fe4167990de8cf5d9185245624ec
