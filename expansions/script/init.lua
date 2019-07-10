@@ -69,6 +69,7 @@ CARD_NEBULA_TOKEN					=218201917
 --Custom Type Tables
 Auxiliary.Customs={} --check if card uses custom type, indexing card
 Auxiliary.Evolutes={} --number as index = card, card as index = function() is_xyz
+Auxiliary.Conjoints={} --number as index = card, card as index = function() is_xyz
 Auxiliary.Bigbangs={} --number as index = card, card as index = function() is_synchro
 Auxiliary.Pandemoniums={} --number as index = card, card as index = function() is_pendulum
 Auxiliary.Polarities={} --number as index = card, card as index = function() is_synchro
