@@ -1035,7 +1035,7 @@ function Auxiliary.STConjointOp(ce)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 				local g=Duel.SelectMatchingCard(tp,Auxiliary.EvoluteFilter,tp,LOCATION_MZONE,0,1,1,c)
 				Duel.HintSelection(g+c)
-				Duel.Overlay(tc,c)
+				Duel.Overlay(g:GetFirst(),c)
 				Auxiliary.AddCE(ce)(e,tp)
 			end
 end
