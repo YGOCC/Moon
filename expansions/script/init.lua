@@ -567,8 +567,8 @@ Duel.Remove=function(cc,pos,r)
 			local cf=ef:GetValue()
 			local typ=aux.GetValueType(cf)
 			if typ=="function" then
-				if fc(ef,c:GetReasonEffect(),c:GetReasonPlayer()) then cc=cc-c end
-			elseif fc>0 then cc=cc-c end
+				if cf(ef,c:GetReasonEffect(),c:GetReasonPlayer()) then cc=cc-c end
+			elseif cf>0 then cc=cc-c end
 		end
 	end
 	return duel_banish(cc,pos,r)
