@@ -94,6 +94,10 @@ function c160005555.thop(e,tp,eg,ep,ev,re,r,rp)
 				 local e6=e1:Clone()
 				e6:SetCode(EFFECT_CANNOT_BE_SPACE_MATERIAL)
 				tc:RegisterEffect(e6)
+
+  local e7=e1:Clone()
+				e6:SetCode(EFFECT_CANNOT_BE_BIGBANG_MATERIAL)
+				 tc:RegisterEffect(e7)
 			end
 		end
 	end

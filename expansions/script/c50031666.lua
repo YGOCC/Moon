@@ -85,7 +85,7 @@ function c50031666.atkfilter(c)
 	return bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL  and c:IsType(TYPE_EFFECT)
 end
 function c50031666.costfilter(c)
-	return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_NORMAL) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
+	return c:IsAbleToRemoveAsCost() and not c:IsType(TYPE_EFFECT) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
 function c50031666.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0xc50) or c:IsType(TYPE_NORMAL) then return false end

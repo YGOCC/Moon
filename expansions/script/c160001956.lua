@@ -44,7 +44,7 @@ function c160001956.repfilter(c,tp)
 end
 function c160001956.repfilterxxl(c,e)
 	return not c:IsType(TYPE_EFFECT)
-		and c:IsAbleToRemove()
+		and c:IsAbleToRemove() and c:IsFaceup()
 end
 function c160001956.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(c160001956.repfilter,1,nil,tp)  and Duel.IsExistingMatchingCard(c160001956.repfilterxxl,tp,LOCATION_EXTRA,0,1,c,e) end

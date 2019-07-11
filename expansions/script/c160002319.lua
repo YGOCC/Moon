@@ -34,10 +34,10 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cid.cfilter(c)
-	return c:IsFacedown() or not c:IsType(TYPE_EVOLUTE)
+	return c:IsFacedown() or not c:IsType(TYPE_EVOLUTE) or not ( c:IsType(TYPE_EVOLUTE) and c:IsType(TYPE_CONJOINT))
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)>0 and not Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0 and not Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc~=e:GetHandler() end

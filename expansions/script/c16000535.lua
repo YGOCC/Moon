@@ -51,7 +51,7 @@ function c16000535.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c16000535.cfilter(c)
-	return  not c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsType(TYPE_EFFECT) and c:IsAbleToRemoveAsCost()
+	return  not c:IsType(TYPE_SPELL+TYPE_TRAP) and (c:IsLocation(LOCATION_GRAVE+LOCATION_HAND) or (c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_PENDULUM) and c:IsFaceup())) and not c:IsType(TYPE_EFFECT) and c:IsAbleToRemoveAsCost()
 end
 
 function c16000535.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
