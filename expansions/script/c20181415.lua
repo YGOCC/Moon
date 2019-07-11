@@ -23,7 +23,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.filter(c,tp)
-	return c:IsFaceup() c:IsRace(RACE_DINOSAUR) and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_DECK,0,1,nil,{c:GetCode()})
+	return c:IsFaceup() and c:IsRace(RACE_DINOSAUR) and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_DECK,0,1,nil,{c:GetCode()})
 end
 function cid.cfilter(c,t)
 	return c:IsAbleToGrave() and c:IsSetCard(0x9b5) and not c:IsCode(table.unpack(t))
