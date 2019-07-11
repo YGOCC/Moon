@@ -1080,7 +1080,7 @@ function Auxiliary.DesRepDisjoint(ce)
 				local c=e:GetHandler()
 				if chk==0 then return c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE) and c:CheckRemoveOverlayCard(tp,1,REASON_RULE) end
 				if Duel.SelectEffectYesNo(tp,c,96) then
-					c:RemoveEC(tp,math.min(ce,tc:GetEC()),REASON_RULE)
+				c:RemoveEC(tp,math.min(ce,c:GetEC()),REASON_RULE)
 					c:RemoveOverlayCard(tp,1,1,REASON_RULE)
 					return true
 				else return false end
