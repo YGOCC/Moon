@@ -56,7 +56,7 @@ end
 
 function c160003232.repfilter(c,tp)
   
- return c:IsFaceup() c:IsSetCard(0x185a) and c:IsType(TYPE_RITUAL) and c:IsLocation(LOCATION_MZONE)
+ return c:IsFaceup() and c:IsSetCard(0x185a) and c:IsType(TYPE_RITUAL) and c:IsLocation(LOCATION_MZONE)
 		and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
 end
 
