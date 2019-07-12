@@ -96,9 +96,9 @@ function c500316141.condition2(e,tp,eg,ep,ev,re,r,rp)
 		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
 end
 function c500316141.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	 if chk==0 then return not re:GetHandler():IsStatus(STATUS_DISABLED) end
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
+	  if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function c500316141.operation2(e,tp,eg,ep,ev,re,r,rp)
-	   Duel.NegateEffect(ev)
+	   Duel.NegateActivation(ev)
 	end
