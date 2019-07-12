@@ -22,8 +22,8 @@ function c160003232.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EFFECT_DESTROY_REPLACE)
 	e3:SetRange(LOCATION_GRAVE)
-	e3:SetCountLimit(1,160003233)
-	e3:SetTarget(c160003232.reptg)
+   e3:SetTarget(c160003232.reptg)
+	e3:SetValue(c160003232.repval)
 	e3:SetOperation(c160003232.repop)
 	c:RegisterEffect(e3)
 end
@@ -55,12 +55,17 @@ function c160003232.efilter(e,re)
 end
 
 function c160003232.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
-		and c:IsSetCard(0x185a) and c:IsType(TYPE_RITUAL) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
+  
+ return c:IsFaceup() c:IsSetCard(0x185a) and c:IsType(TYPE_RITUAL) and c:IsLocation(LOCATION_MZONE)
+		and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
 end
+
 function c160003232.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(c160003232.repfilter,1,nil,tp) end
-	return Duel.SelectYesNo(tp,aux.Stringid(160003232,0))
+	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
+end
+function c160003232.repval(e,c)
+	return c160003232.repfilter(c,e:GetHandlerPlayer())
 end
 function c160003232.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
