@@ -47,6 +47,9 @@ end
 function cid.spfilter(c,e,tp)
 	return c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK)
 end
+function cid.xyzfixfilter(c)
+	return c:GetOverlayCount()>0
+end
 --xyz limit
 function cid.xyzlim(e)
 	local c=e:GetHandler()
@@ -60,6 +63,10 @@ end
 function cid.attachop(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
 	if d:IsRelateToBattle() and e:GetHandler():IsRelateToEffect(e) then
+		local dg=tc:GetOverlayGroup()
+		if #dg>0 then
+			Duel.SendtoGrave(dg,REASON_RULE)
+		end
 		Duel.Overlay(e:GetHandler(),Group.FromCards(d))
 	end
 end
@@ -82,6 +89,12 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,e:GetHandler())
 	local dgc=dg:GetCount()
 	if dgc<=0 or not e:GetHandler():IsRelateToEffect(e) or e:GetHandler():IsFacedown() then return end
+	local xyzfix=dg:Filter(cid.xyzfixfilter,nil)
+	if #xyzfix>0 then
+		for xyztc in aux.Next(xyzfix) do
+			Duel.SendtoGrave(xyztc:GetOverlayGroup(),REASON_RULE)
+		end
+	end
 	Duel.Overlay(e:GetHandler(),dg)
 	local check=0
 	for tc in aux.Next(dg) do

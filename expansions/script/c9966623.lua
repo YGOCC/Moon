@@ -44,6 +44,13 @@ function cid.initial_effect(c)
 	local e3x=e3:Clone()
 	e3x:SetCode(EFFECT_DISABLE_EFFECT)
 	c:RegisterEffect(e3x)
+	local e3y=Effect.CreateEffect(c)
+	e3y:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3y:SetCode(EVENT_CHAIN_SOLVING)
+	e3y:SetRange(LOCATION_MZONE)
+	e3y:SetCondition(cid.discon)
+	e3y:SetOperation(cid.disop)
+	c:RegisterEffect(e3y)
 end
 --filters
 function cid.ovfilter(c)
@@ -52,6 +59,15 @@ end
 function cid.xyzop(e,tp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+end
+function cid.fixfilter(c,e)
+	return e:GetHandler():GetOverlayGroup():IsContains(c)
+end
+function cid.fixdisable(c,re)
+	return c:IsCode(re:GetHandler():GetCode())
+end
+function cid.nfilter(c,cc)
+	return c:IsCode(cc:GetCode())
 end
 --attach
 function cid.athtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -82,13 +98,21 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 --negate
 function cid.disable(e,c)
-	local check=false
+	local check=0
 	local g=e:GetHandler():GetOverlayGroup()
 	if g:GetCount()<=0 then return false end
 	for tc in aux.Next(g) do
 		if c:IsCode(tc:GetCode()) then
-			check=true
+			check=check+1
+		else
+			check=check
 		end
 	end
-	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and check
+	return (c:IsType(TYPE_SPELL+TYPE_TRAP) or (c:IsType(TYPE_MONSTER) and (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)>0))) and check>0
+end
+function cid.discon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetOverlayGroup():IsExists(cid.fixdisable,1,nil,re)
+end
+function cid.disop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.NegateEffect(ev)
 end
