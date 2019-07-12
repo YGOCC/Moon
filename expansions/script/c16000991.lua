@@ -52,7 +52,7 @@ end
 function cid.filter1(c,ec,tp)
 	return not c:IsType(TYPE_TOKEN)
 end
- function cid.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
+ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end  

@@ -1,5 +1,6 @@
 --I scripted this Loli, then lewded her.
 function c160001142.initial_effect(c)
+  c:EnableReviveLimit()
 		   --spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160001142,0))
