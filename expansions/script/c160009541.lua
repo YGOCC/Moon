@@ -61,10 +61,10 @@ function c160009541.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function c160009541.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_EARTH) 
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 function c160009541.filter2(c,ec,tp)
-	return c:IsRace(RACE_PLANT) 
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 --function c160009541.descon(e,tp,eg,ep,ev,re,r,rp)
 --  Debug.Message("Appear, Queen of Cursed Fallen Warriors!")

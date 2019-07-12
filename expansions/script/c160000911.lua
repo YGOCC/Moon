@@ -67,10 +67,10 @@ function c160000911.initial_effect(c)
 
 end
 function c160000911.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_EARTH) 
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT)  
 end
 function c160000911.filter2(c,ec,tp)
-	return c:IsRace(RACE_PLANT) 
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 
 function c160000911.cfilter(c)

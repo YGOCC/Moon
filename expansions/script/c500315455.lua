@@ -35,10 +35,10 @@ function c500315455.initial_effect(c)
 	--c:RegisterEffect(e4)
 end
 function c500315455.filter1(c,ec,tp)
-	return c:IsType(TYPE_PLANT)
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 function c500315455.filter2(c,ec,tp)
-	return   c:IsAttribute(ATTRIBUTE_EARTH)
+	return   c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 
 function c500315455.discost(e,tp,eg,ep,ev,re,r,rp,chk)

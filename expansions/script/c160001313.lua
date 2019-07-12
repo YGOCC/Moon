@@ -39,10 +39,10 @@ function c160001313.chainlm(e,rp,tp)
 	return tp==rp
 end
 function c160001313.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_EARTH)
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 function c160001313.filter2(c,ec,tp)
-	return c:IsRace(RACE_PLANT)
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 
 function c160001313.cost(e,tp,eg,ep,ev,re,r,rp,chk)

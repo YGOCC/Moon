@@ -40,10 +40,10 @@ function c160003541.initial_effect(c)
 	c:RegisterEffect(e4) 
 end
 function c160003541.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_EARTH) 
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 function c160003541.filter2(c,ec,tp)
-	return c:IsRace(RACE_PLANT) 
+	return c:IsAttribute(ATTRIBUTE_EARTH) or c:IsRace(RACE_PLANT) 
 end
 
 function c160003541.damcon(e,tp,eg,ep,ev,re,r,rp)
