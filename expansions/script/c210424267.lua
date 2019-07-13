@@ -16,62 +16,61 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
-	--move cid to scale
+	--spsummon
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetDescription(aux.Stringid(69181753,0))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(cid.scon)
-	e2:SetCost(cid.sc)
-	e2:SetTarget(cid.stg)
-	e2:SetOperation(cid.sop)
+	e2:SetCountLimit(1,id)
+	e2:SetCondition(cid.spcon)
+	e2:SetCost(cid.spcost)
+	e2:SetTarget(cid.sptg)
+	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
 end
-function cid.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x666)
+function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local at=Duel.GetAttacker()
+	return at:GetControler()~=tp and Duel.GetAttackTarget()==nil
 end
-function cid.scon(e,tp,eg,ep,ev,re,r,rp,chk)
-	return aux.exccon(e)
-end
-function cid.sc(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()  end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
-function cid.spfilter1(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
+function cid.spfilter(c,e,tp)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsFaceup() 
 end
-function cid.spfilter2(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM) and c:IsFaceup()
-end
-function cid.stg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return (chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and cid.spfilter1(chkc,e,tp))
-	and (chkc:IsLocation(LOCATION_EXTRA) and chkc:IsControler(tp) and cid.spfilter2(chkc,e,tp)) end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and Duel.IsExistingMatchingCard(cid.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp)
-	and Duel.IsExistingMatchingCard(cid.spfilter1,tp,LOCATION_PZONE,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(42378577,2))
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_PZONE)
+		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA)
 end
-function cid.sop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,cid.spfilter1,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 and
-	not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
-	
-	local g=Duel.GetMatchingGroup(cid.spfilter2,tp,LOCATION_EXTRA,0,nil)
-	local ct=0
-	if Duel.CheckLocation(tp,LOCATION_PZONE,0) then ct=ct+1 end
-	if Duel.CheckLocation(tp,LOCATION_PZONE,1) then ct=ct+1 end
-	if ct>0 and g:GetCount()>0  then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		local sg=g:Select(tp,1,1,nil)
-		local sc=sg:GetFirst()
-		while sc do
-			Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-			sc=sg:GetNext()
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
+	if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		local a=Duel.GetAttacker()
+		local ag=a:GetAttackableTarget()
+		if a:IsAttackable() and not a:IsImmuneToEffect(e) and ag:IsContains(tc) then
+			Duel.BreakEffect()
+			Duel.ChangeAttackTarget(tc)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			e1:SetValue(math.ceil(tc:GetBaseAttack()*1))
+			tc:RegisterEffect(e1)
 		end
+	end
 end
+function cid.rev(e,re,r,rp,rc)
+	return bit.band(r,REASON_BATTLE)~=0 and e:GetHandler()==Duel.GetAttackTarget()
 end
+function cid.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x666)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.filter(chkc) end
