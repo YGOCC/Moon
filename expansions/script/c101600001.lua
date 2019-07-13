@@ -1,7 +1,7 @@
 --Last Stand of "C"
 function c101600001.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
+		aux.EnablePendulumAttribute(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -57,7 +57,7 @@ function c101600001.pcfilter(c)
 	return (c:GetSequence()==6 or c:GetSequence()==7)
 end
 function c101600001.pctg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetMatchingGroupCount(c101600001.pcfilter,tp,0,LOCATION_SZONE,nil)<2 end
+	if chk==0 then return Duel.GetMatchingGroupCount(aux.TRUE,tp,0,LOCATION_PZONE,nil)<2 end
 end
 function c101600001.pcop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

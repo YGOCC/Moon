@@ -82,7 +82,7 @@ function c16000989.activate(e,tp,eg,ep,ev,re,r,rp)
    local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or not c:RemoveOverlayCard(tp,1,1,REASON_EFFECT) or nor tc:RemoveEC(tp,2,REASON_EFFECT) or tc:IsFacedown() then return end
+	if not tc:IsRelateToEffect(e) or not c:RemoveOverlayCard(tp,1,1,REASON_EFFECT) or not tc:RemoveEC(tp,2,REASON_EFFECT) or tc:IsFacedown() then return end
    local g=Duel.GetMatchingGroup(c16000989.spfilter,tp,LOCATION_DECK,0,tc:GetAttribute()) 
 	local sg=Duel.SelectMatchingCard(tp,(c16000989.spfilter),tp,LOCATION_DECK,0,1,1,nil,e,tp,tc:GetAttribute())
 	if sg:GetCount()>0 and Duel.SpecialSummonStep(sg:GetFirst(),0,tp,tp,false,false,POS_FACEUP_DEFENSE)  then
