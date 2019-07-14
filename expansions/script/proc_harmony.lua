@@ -23,15 +23,10 @@ Card.GetType=function(c,scard,sumtype,p)
 			tpe=tpe&~TYPE_SYNCHRO
 		end
 	end
+	return tpe
 end
 Card.GetOriginalType=function(c)
 	local tpe=get_orig_type(c)
-	if Auxiliary.Harmonies[c] then
-		tpe=tpe|TYPE_HARMONY
-		if not Auxiliary.Harmonies[c]() then
-			tpe=tpe&~TYPE_SYNCHRO
-		end
-	end
 	if Auxiliary.Harmonies[c] then
 		tpe=tpe|TYPE_HARMONY
 		if not Auxiliary.Harmonies[c]() then

@@ -12,6 +12,7 @@ Auxiliary.Relays={} --number as index = card
 --overwrite functions
 local get_type, is_type, get_orig_type, get_prev_type_field =
 Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField
+
 Card.GetType=function(c,scard,sumtype,p)
 	if Auxiliary.Relays[c] then
 		tpe=tpe|TYPE_RELAY
