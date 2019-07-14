@@ -1,0 +1,290 @@
+--Not yet finalized values
+--Custom constants
+EFFECT_CANNOT_BE_TIMELEAP_MATERIAL	=825
+EFFECT_MUST_BE_TIMELEAP_MATERIAL	=826
+EFFECT_FUTURE						=827
+TYPE_TIMELEAP						=0x10000000000
+if TYPE_CUSTOM&TYPE_TIMELEAP==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_TIMELEAP end
+CTYPE_TIMELEAP						=0x100
+if CTYPE_CUSTOM&CTYPE_TIMELEAP==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_TIMELEAP end
+SUMMON_TYPE_TIMELEAP				=SUMMON_TYPE_SPECIAL+825
+
+--Custom Type Table
+Auxiliary.Timeleaps={} --number as index = card, card as index = function() is_synchro
+
+--overwrite constants
+if TYPE_EXTRA&TYPE_TIMELEAP==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_TIMELEAP end
+
+--overwrite functions
+local get_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
+	get_prev_level_field, is_level, is_level_below, is_level_above = 
+	Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
+	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove
+
+Card.GetType=function(c,scard,sumtype,p)
+	local tpe=scard and get_type(c,scard,sumtype,p) or get_type(c)
+	if Auxiliary.Timeleaps[c] then
+		tpe=tpe|TYPE_TIMELEAP
+		if not Auxiliary.Timeleaps[c]() then
+			tpe=tpe&~TYPE_SYNCHRO
+		end
+	end
+	return tpe
+end
+Card.GetOriginalType=function(c)
+	local tpe=get_orig_type(c)
+	if Auxiliary.Timeleaps[c] then
+		tpe=tpe|TYPE_TIMELEAP
+		if not Auxiliary.Timeleaps[c]() then
+			tpe=tpe&~TYPE_SYNCHRO
+		end
+	end
+	return tpe
+end
+Card.GetPreviousTypeOnField=function(c)
+	local tpe=get_prev_type_field(c)
+	if Auxiliary.Timeleaps[c] then
+		tpe=tpe|TYPE_TIMELEAP
+		if not Auxiliary.Timeleaps[c]() then
+			tpe=tpe&~TYPE_SYNCHRO
+		end
+	end
+	return tpe
+end
+Card.GetLevel=function(c)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return 0 end
+	return get_level(c)
+end
+Card.GetRitualLevel=function(c,rc)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return 0 end
+	return get_rit_level(c,rc)
+end
+GetSynchroLevel=function(c,sc)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return 0 end
+	return get_syn_level(c,sc)
+end
+Card.GetOriginalLevel=function(c)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return 0 end
+	return get_orig_level(c)
+end
+Card.IsXyzLevel=function(c,xyz,lv)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return 0 end
+	return is_xyz_level(c,xyz,lv)
+end
+Card.GetPreviousLevelOnField=function(c)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return 0 end
+	return get_prev_level_field(c)
+end
+Card.IsLevel=function(c,...)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
+	local funs={...}
+	for key,value in pairs(funs) do
+		if c:GetLevel()==value then return true end
+	end
+	return false
+end
+Card.IsLevelBelow=function(c,lv)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
+	return is_level_below(c,lv)
+end
+Card.IsLevelAbove=function(c,lv)
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
+	return is_level_above(c,lv)
+end
+
+--Custom Functions
+function Card.IsCanBeTimeleapMaterial(c,ec,...)
+	local funs={...}
+	local exctyp=funs[1]
+	if not exctyp then
+		if c:IsType(TYPE_LINK) or c:IsType(TYPE_EVOLUTE) or c:IsType(TYPE_XYZ) then return false end
+	end
+	local tef={c:IsHasEffect(EFFECT_CANNOT_BE_TIMELEAP_MATERIAL)}
+	for _,te in ipairs(tef) do
+		if te:GetValue()(te,ec) then return false end
+	end
+	return true
+end
+function Auxiliary.AddOrigTimeleapType(c,issynchro)
+	table.insert(Auxiliary.Timeleaps,c)
+	Auxiliary.Customs[c]=true
+	local issynchro=issynchro==nil and false or issynchro
+	Auxiliary.Timeleaps[c]=function() return issynchro end
+end
+function Auxiliary.AddTimeleapProc(c,futureval,sumcon,filter,customop,...)
+	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
+	local t={...}
+	local list={}
+	local min,max=1,1
+	if #t>0 then
+		for i=1,#t do
+			if type(t[#t])=='number' then
+				max=t[#t]
+				table.remove(t)
+				if type(t[#t])=='number' then
+					min=t[#t]
+					table.remove(t)
+				else
+					min=max
+					max=99
+				end
+				table.insert(list,{t[#t],min,max})
+				table.remove(t)
+			end
+		end
+	else
+		table.insert(list,{999,min,max})
+	end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetRange(LOCATION_EXTRA)
+	e1:SetCondition(Auxiliary.TimeleapCondition(sumcon,filter,table.unpack(list)))
+	e1:SetTarget(Auxiliary.TimeleapTarget(filter,table.unpack(list)))
+	e1:SetOperation(Auxiliary.TimeleapOperation(customop))
+	e1:SetValue(825)
+	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e2:SetCode(EFFECT_FUTURE)
+	e2:SetValue(Auxiliary.FutureVal(futureval))
+	c:RegisterEffect(e2)
+end
+function Auxiliary.TimeleapCondition(sumcon,filter,...)
+	local funs={...}
+	return  function(e,c)
+				if c==nil then return true end
+				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
+				local tp=c:GetControler()
+				local mg=Duel.GetMatchingGroup(Card.IsCanBeTimeleapMaterialMaterial,tp,LOCATION_MZONE,0,nil,c)
+				return (not sumcon or sumcon(e,c))
+					and mg:IsExists(Auxiliary.TimeleapMaterialFilter,1,nil,filter,e,tp,Group.CreateGroup(),mg,c,0,table.unpack(funs))
+			end
+end
+function Auxiliary.TimeleapMaterialFilter(c,filter,e,tp,sg,mg,bc,ct,...)
+	sg:AddCard(c)
+	ct=ct+1
+	local funs,max,chk={...},1
+	if (not filter or filter(c,e,mg)) then
+		chk=true
+	end
+	if #funs>0 then
+		for i=1,#funs do
+			if funs[i][1]~=999 then 
+				max=max+funs[i][3]
+			else
+				max=funs[i][3]
+			end
+			if funs[i][1]~=999 and funs[i][1](c,e,mg) then
+				chk=true
+			end
+		end
+	end
+	if max>99 then max=99 end
+	local res=chk and (Auxiliary.TimeleapCheckGoal(tp,sg,bc,ct,table.unpack(funs))
+		or (ct<max and mg:IsExists(Auxiliary.TimeleapMaterialFilter,1,sg,filter,e,tp,sg,mg,bc,ct,table.unpack(funs))))
+	sg:RemoveCard(c)
+	ct=ct-1
+	return res
+end
+function Auxiliary.TimeleapCheckGoal(tp,sg,bc,ct,...)
+	local funs,min={...},1
+	if #funs>0 then
+		for i=1,#funs do
+			if funs[i][1]~=999 and not sg:IsExists(funs[i][1],funs[i][2],nil) then return false end
+			if funs[i][1]~=999 then 
+				min=min+funs[i][2]
+			else
+				min=funs[i][2]
+			end
+		end
+	end
+	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0
+end
+function Auxiliary.TimeleapTarget(filter,...)
+	local funs,min,max={...},1,1
+	for i=1,#funs do
+		if funs[i][1]~=999 then
+			min=min+funs[i][2] 
+			max=max+funs[i][3]
+		else
+			min=funs[i][2] 
+			max=funs[i][3]
+		end
+	end
+	if max>99 then max=99 end
+	return  function(e,tp,eg,ep,ev,re,r,rp,chk,c)
+				local mg=Duel.GetMatchingGroup(Card.IsCanBeTimeleapMaterial,tp,LOCATION_MZONE,0,nil,c)
+				local bg=Group.CreateGroup()
+				local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_TIMELEAP_MATERIAL)}
+				for _,te in ipairs(ce) do
+					local tc=te:GetHandler()
+					if tc then bg:AddCard(tc) end
+				end
+				if #bg>0 then
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
+					bg:Select(tp,#bg,#bg,nil)
+				end
+				local sg=Group.CreateGroup()
+				sg:Merge(bg)
+				local finish=false
+				while not (sg:GetCount()>=max) do
+					finish=Auxiliary.TimeleapCheckGoal(tp,sg,c,#sg,table.unpack(funs))
+					local cg=mg:Filter(Auxiliary.TimeleapMaterialFilter,sg,filter,e,tp,sg,mg,c,#sg,table.unpack(funs))
+					if #cg==0 then break end
+					local cancel=not finish
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+					local tc=cg:SelectUnselect(sg,tp,finish,cancel,min,max)
+					if not tc then break end
+					if not bg:IsContains(tc) then
+						if not sg:IsContains(tc) then
+							sg:AddCard(tc)
+							if (sg:GetCount()>=max) then finish=true end
+						else
+							sg:RemoveCard(tc)
+						end
+					elseif #bg>0 and #sg<=#bg then
+						return false
+					end
+				end
+				if finish then
+					sg:KeepAlive()
+					e:SetLabelObject(sg)
+					return true
+				else return false end
+			end
+end
+function Auxiliary.TimeleapOperation(customop)
+	return  function(e,tp,eg,ep,ev,re,r,rp,c)
+				local g=e:GetLabelObject()
+				c:SetMaterial(g)
+				if not customop then
+					Duel.Remove(g,POS_FACEUP,REASON_MATERIAL+0x10000000000)
+				else
+					customop(e,tp,eg,ep,ev,re,r,rp,c,g)
+				end
+				g:DeleteGroup()
+			end
+end
+function Card.GetFuture(c)
+	if not Auxiliary.Timeleaps[c] then return 0 end
+	local te=c:IsHasEffect(EFFECT_FUTURE)
+	if type(te:GetValue())=='function' then
+		return te:GetValue()(te,c)
+	else
+		return te:GetValue()
+	end
+end
+function Card.IsFuture(c,future)
+	return c:GetFuture()==future
+end
+function Auxiliary.FutureVal(future)
+	return  function(e,c)
+				local future=future
+				--insert modifications here
+				return future
+			end
+end
