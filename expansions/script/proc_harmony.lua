@@ -169,7 +169,7 @@ function Auxiliary.HarmonyOperation(ph)
 					if p>0 then
 						Duel.SkipPhase(tp,p,RESET_PHASE+p,1)
 					end
-					ph=ph~&1<<i
+					ph=ph&~1<<i
 					if ph==0 then break end
 				end
 			end

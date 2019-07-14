@@ -39,6 +39,19 @@ function GetID()
 	local s_id=tonumber(string.sub(str,2))
 	return scard,s_id
 end
+dofile("expansions/script/proc_evolute.lua") --Evolutes
+dofile("expansions/script/proc_conjoint.lua") --Conjoints
+dofile("expansions/script/proc_pandemonium.lua") --Pandemoniums
+dofile("expansions/script/proc_polarity.lua") --Polarities
+dofile("expansions/script/proc_spatial.lua") --Spatials
+dofile("expansions/script/proc_corona.lua") --Coronas
+dofile("expansions/script/proc_skill.lua") --Skills
+dofile("expansions/script/proc_deckmaster.lua") --Deck Masters
+dofile("expansions/script/proc_bigbang.lua") --Bigbangs
+dofile("expansions/script/proc_timeleap.lua") --Time Leaps
+dofile("expansions/script/proc_relay.lua") --Relays
+dofile("expansions/script/proc_harmony.lua") --Harmonies
+dofile("expansions/script/proc_accent.lua") --Accents
 
 --overwrite functions
 local is_type, card_remcounter, duel_remcounter, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv,
@@ -211,19 +224,6 @@ Duel.Remove=function(cc,pos,r)
 end
 
 --Custom Functions
-dofile("expansions/script/proc_evolute.lua") --Evolutes
-dofile("expansions/script/proc_conjoint.lua") --Conjoints
-dofile("expansions/script/proc_pandemonium.lua") --Pandemoniums
-dofile("expansions/script/proc_polarity.lua") --Polarities
-dofile("expansions/script/proc_spatial.lua") --Spatials
-dofile("expansions/script/proc_corona.lua") --Coronas
-dofile("expansions/script/proc_skill.lua") --Skills
-dofile("expansions/script/proc_deckmaster.lua") --Deck Masters
-dofile("expansions/script/proc_bigbang.lua") --Bigbangs
-dofile("expansions/script/proc_timeleap.lua") --Time Leaps
-dofile("expansions/script/proc_relay.lua") --Relays
-dofile("expansions/script/proc_harmony.lua") --Harmonies
-dofile("expansions/script/proc_accent.lua") --Accents
 --add procedure to equip spells equipping by rule
 function Auxiliary.AddEquipProcedure(c,p,f,eqlimit,cost,tg,op,con,ctlimit)
 	--Note: p==0 is check equip spell controler, p==1 for opponent's, PLAYER_ALL for both player's monsters
