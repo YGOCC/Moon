@@ -212,12 +212,18 @@ Duel.Remove=function(cc,pos,r)
 	local tg=cc:Clone()
 	for c in aux.Next(tg) do
 		if pos&POS_FACEDOWN~=0 and r&REASON_EFFECT~=0 then
-			local ef=c:IsHasEffect(EFFECT_CANNOT_BANISH_FD_EFFECT)
-			local cf=ef:GetValue()
-			local typ=aux.GetValueType(cf)
-			if typ=="function" then
-				if cf(ef,c:GetReasonEffect(),c:GetReasonPlayer()) then cc=cc-c end
-			elseif cf>0 then cc=cc-c end
+			local ef={c:IsHasEffect(EFFECT_CANNOT_BANISH_FD_EFFECT)}
+			for _,te1 in ipairs(ef) do
+				local cf=te1:GetValue()
+				local typ=aux.GetValueType(cf)
+				if typ=="function" then
+					if cf(te1,c:GetReasonEffect(),c:GetReasonPlayer()) then 
+						cc=cc-c 
+					end
+				elseif cf>0 then 
+					cc=cc-c 
+				end
+			end
 		end
 	end
 	return duel_banish(cc,pos,r)
