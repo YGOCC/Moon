@@ -119,10 +119,11 @@ function cid.disable(e,c)
 end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(cid.fixdisable,1,nil,re) and re:GetHandler():GetFlagEffect(id)<=0
+		and not re:GetHandler():IsControler(tp)
 end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 	local rx=re:GetHandler()
-	if not e:GetHandler():GetOverlayGroup():IsExists(cid.fixdisable,1,nil,re) or rx:GetFlagEffect(id)>0 then return end
+	if not e:GetHandler():GetOverlayGroup():IsExists(cid.fixdisable,1,nil,re) or rx:GetFlagEffect(id)>0 or rx:IsControler(tp) then return end
 	Duel.NegateEffect(ev)
 end
 function cid.flagop(e,tp,eg,ep,ev,re,r,rp)
