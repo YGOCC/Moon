@@ -1,3 +1,5 @@
+--coded by Lyris
+--アクセント召喚
 --Not yet finalized values
 --Custom constants
 EFFECT_CANNOT_BE_ACCENTED_MATERIAL	=562
@@ -5,15 +7,15 @@ EFFECT_MUST_BE_AMATERIAL			=563
 EFFECT_ACCENT_SUBSTITUTE			=564
 EFFECT_ADD_ACCENT_CODE				=565
 TYPE_ACCENT							=0x100000000000
-if TYPE_CUSTOM&TYPE_ACCENT==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_ACCENT end
+TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_ACCENT
 CTYPE_ACCENT						=0x1000
-if CTYPE_CUSTOM&CTYPE_ACCENT==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_ACCENT end
+CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_ACCENT
 
 --Custom Type Table
 Auxiliary.Accents={} --number as index = card, card as index = function() is_fusion
 
 --overwrite constants
-if TYPE_EXTRA&TYPE_ACCENT==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_ACCENT end
+TYPE_EXTRA							=TYPE_EXTRA|TYPE_ACCENT
 
 --overwrite functions
 local get_type, is_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location =

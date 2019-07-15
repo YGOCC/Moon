@@ -1,16 +1,18 @@
+--coded by Lyris
+--調波召喚
 --Not yet finalized values
 --Custom constants
 EFFECT_CANNOT_BE_HARMONIZED_MATERIAL=531
 TYPE_HARMONY						=0x80000000000
-if TYPE_CUSTOM&TYPE_HARMONY==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_HARMONY end
+TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_HARMONY
 CTYPE_HARMONY						=0x800
-if CTYPE_CUSTOM&CTYPE_HARMONY==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_HARMONY end
+CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_HARMONY
 
 --Custom Type Table
 Auxiliary.Harmonies={} --number as index = card, card as index = function() is_synchro
 
 --overwrite constants
-if TYPE_EXTRA&TYPE_HARMONY==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_HARMONY end
+TYPE_EXTRA							=TYPE_EXTRA|TYPE_HARMONY
 
 --overwrite functions
 local get_type, is_type, get_orig_type, get_prev_type_field =

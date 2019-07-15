@@ -1,9 +1,10 @@
+--created by Glitchy, coded by Lyris
 --Not yet finalized values
 --Custom constants
-TYPE_SKILL							=0x2000000000
-if TYPE_CUSTOM&TYPE_SKILL==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_SKILL end
-CTYPE_SKILL							=0x20
-if CTYPE_CUSTOM&CTYPE_SKILL==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_SKILL end
+TYPE_SKILL		=0x2000000000
+TYPE_CUSTOM		=TYPE_CUSTOM|TYPE_SKILL
+CTYPE_SKILL		=0x20
+CTYPE_CUSTOM	=CTYPE_CUSTOM|CTYPE_SKILL
 
 --Custom Type Table
 Auxiliary.Skills={} --number as index = card, card as index = function() is_pendulum

@@ -1,17 +1,18 @@
+--created by Kinny, coded by Lyris
 --Not yet finalized values
 --Custom constants
-EFFECT_CORONA_DRAW_COST				=550
-TYPE_CORONA							=0x1000000000
-if TYPE_CUSTOM&TYPE_CORONA==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_CORONA end
-CTYPE_CORONA						=0x10
-if CTYPE_CUSTOM&CTYPE_CORONA==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_CORONA end
-EVENT_CORONA_DRAW					=EVENT_CUSTOM+0x1600000000
+EFFECT_CORONA_DRAW_COST	=550
+TYPE_CORONA				=0x1000000000
+TYPE_CUSTOM				=TYPE_CUSTOM|TYPE_CORONA
+CTYPE_CORONA			=0x10
+CTYPE_CUSTOM			=CTYPE_CUSTOM|CTYPE_CORONA
+EVENT_CORONA_DRAW		=EVENT_CUSTOM+0x1600000000
 
 --Custom Type Table
 Auxiliary.Coronas={} --number as index = card, card as index = function() is_fusion
 
 --overwrite constants
-if TYPE_EXTRA&TYPE_CORONA==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_CORONA end
+TYPE_EXTRA				=TYPE_EXTRA|TYPE_CORONA
 
 --overwrite functions
 local get_type, get_orig_type, get_prev_type_field, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw = 

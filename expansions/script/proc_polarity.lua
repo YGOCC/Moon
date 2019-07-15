@@ -3,15 +3,15 @@
 EFFECT_STABLE						=765
 EFFECT_CANNOT_BE_POLARITY_MATERIAL	=766
 TYPE_POLARITY						=0x400000000
-if TYPE_CUSTOM&TYPE_POLARITY==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_POLARITY end
+TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_POLARITY
 CTYPE_POLARITY						=0x4
-if CTYPE_CUSTOM&CTYPE_POLARITY==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_POLARITY end
+CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_POLARITY
 
 --Custom Type Table
 Auxiliary.Polarities={} --number as index = card, card as index = function() is_synchro
 
 --overwrite constants
-if TYPE_EXTRA&TYPE_POLARITY==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_POLARITY end
+TYPE_EXTRA							=TYPE_EXTRA|TYPE_POLARITY
 
 --overwrite functions
 local get_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 

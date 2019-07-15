@@ -1,3 +1,4 @@
+--created by Chahine, coded by Lyris
 --Not yet finalized values
 --Custom constants
 EFFECT_STAGE						=388		--
@@ -7,9 +8,9 @@ EFFECT_EVOLUTE_LEVEL				=391
 EFFECT_MUST_BE_EVOLUTE_MATERIAL		=392
 EFFECT_CONVERGENT_EVOLUTE			=393
 TYPE_EVOLUTE						=0x100000000
-if TYPE_CUSTOM&TYPE_EVOLUTE==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_EVOLUTE end
+TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_EVOLUTE
 CTYPE_EVOLUTE						=0x1
-if CTYPE_CUSTOM&CTYPE_EVOLUTE==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_EVOLUTE end
+CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_EVOLUTE
 
 SUMMON_TYPE_EVOLUTE					=SUMMON_TYPE_SPECIAL+388
 
@@ -17,7 +18,7 @@ SUMMON_TYPE_EVOLUTE					=SUMMON_TYPE_SPECIAL+388
 Auxiliary.Evolutes={} --number as index = card, card as index = function() is_xyz
 
 --overwrite constants
-if TYPE_EXTRA&TYPE_EVOLUTE==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_EVOLUTE end
+TYPE_EXTRA							=TYPE_EXTRA|TYPE_EVOLUTE
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, get_orig_type, get_prev_type_field = 

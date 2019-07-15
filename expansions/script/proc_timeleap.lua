@@ -1,19 +1,20 @@
+--created by Swag, coded by Lyris
 --Not yet finalized values
 --Custom constants
 EFFECT_CANNOT_BE_TIMELEAP_MATERIAL	=825
 EFFECT_MUST_BE_TIMELEAP_MATERIAL	=826
 EFFECT_FUTURE						=827
 TYPE_TIMELEAP						=0x10000000000
-if TYPE_CUSTOM&TYPE_TIMELEAP==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_TIMELEAP end
+TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_TIMELEAP
 CTYPE_TIMELEAP						=0x100
-if CTYPE_CUSTOM&CTYPE_TIMELEAP==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_TIMELEAP end
+CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_TIMELEAP
 SUMMON_TYPE_TIMELEAP				=SUMMON_TYPE_SPECIAL+825
 
 --Custom Type Table
 Auxiliary.Timeleaps={} --number as index = card, card as index = function() is_synchro
 
 --overwrite constants
-if TYPE_EXTRA&TYPE_TIMELEAP==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_TIMELEAP end
+TYPE_EXTRA							=TYPE_EXTRA|TYPE_TIMELEAP
 
 --overwrite functions
 local get_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 

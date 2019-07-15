@@ -1,17 +1,18 @@
+--created by Meedogh, coded by Lyris
 --Not yet finalized values
 --Custom constants
 EFFECT_CANNOT_BE_BIGBANG_MATERIAL	=624
 EFFECT_MUST_BE_BIGBANG_MATERIAL		=625
 TYPE_BIGBANG						=0x8000000000
-if TYPE_CUSTOM&TYPE_BIGBANG==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_BIGBANG end
+TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_BIGBANG
 CTYPE_BIGBANG						=0x80
-if CTYPE_CUSTOM&CTYPE_BIGBANG==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_BIGBANG end
+CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_BIGBANG
 
 --Custom Type Table
 Auxiliary.Bigbangs={} --number as index = card, card as index = function() is_synchro
 
 --overwrite constants
-if TYPE_EXTRA&TYPE_BIGBANG==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_BIGBANG end
+TYPE_EXTRA							=TYPE_EXTRA|TYPE_BIGBANG
 
 --overwrite functions
 local get_type, get_orig_type, get_prev_type_field = 

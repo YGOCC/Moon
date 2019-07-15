@@ -1,18 +1,20 @@
+--coded by Lyris
+--スペーシュル召喚
 --Not yet finalized values
 --Custom constants
-EFFECT_DIMENSION_NUMBER				=500
-EFFECT_CANNOT_BE_SPACE_MATERIAL		=501
-TYPE_SPATIAL						=0x800000000
-if TYPE_CUSTOM&TYPE_SPATIAL==0 then TYPE_CUSTOM=TYPE_CUSTOM+TYPE_SPATIAL end
-CTYPE_SPATIAL						=0x8
-if CTYPE_CUSTOM&CTYPE_SPATIAL==0 then CTYPE_CUSTOM=CTYPE_CUSTOM+CTYPE_SPATIAL end
-SUMMON_TYPE_SPATIAL					=SUMMON_TYPE_SPECIAL+500
+EFFECT_DIMENSION_NUMBER			=500
+EFFECT_CANNOT_BE_SPACE_MATERIAL	=501
+TYPE_SPATIAL					=0x800000000
+TYPE_CUSTOM						=TYPE_CUSTOM|TYPE_SPATIAL
+CTYPE_SPATIAL					=0x8
+CTYPE_CUSTOM					=CTYPE_CUSTOM|CTYPE_SPATIAL
+SUMMON_TYPE_SPATIAL				=SUMMON_TYPE_SPECIAL+500
 
 --Custom Type Table
 Auxiliary.Spatials={} --number as index = card, card as index = function() is_xyz
 
 --overwrite constants
-if TYPE_EXTRA&TYPE_SPATIAL==0 then TYPE_EXTRA=TYPE_EXTRA+TYPE_SPATIAL end
+TYPE_EXTRA						=TYPE_EXTRA|TYPE_SPATIAL
 
 --overwrite functions
 local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, get_orig_type, get_prev_type_field, change_position = 
