@@ -2,7 +2,7 @@
 function c160009955.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-	aux.AddEvoluteProc(c,nil,6,c160009955.filter1,c160009955.filter1,1,99) 
+	aux.AddEvoluteProc(c,nil,5,c160009955.filter1,c160009955.filter1,1,99) 
 		--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160009955,0))
@@ -38,7 +38,7 @@ function c160009955.counterfilter(c)
 	return c:GetSummonLocation()~=LOCATION_EXTRA
 end
 function c160009955.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) and Duel.GetCustomActivityCount(160009955,tp,ACTIVITY_SPSUMMON)==0 end
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) and Duel.GetCustomActivityCount(160009955,tp,ACTIVITY_SPSUMMON)==0 end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
@@ -47,7 +47,7 @@ function c160009955.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetTarget(c160009955.splimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-	 e:GetHandler():RemoveEC(tp,3,REASON_COST)
+	 e:GetHandler():RemoveEC(tp,2,REASON_COST)
 end
 function c160009955.splimit(e,c,sump,sumtype,sumpos,targetp)
 	return c:IsLocation(LOCATION_EXTRA) and not c:IsRace(RACE_MACHINE)
