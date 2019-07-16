@@ -1,5 +1,5 @@
 --Starlignment of the Skies - Pluutoni
---Scripted by: AMB
+--Scripted by: XGlitchy30
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -162,10 +162,10 @@ end
 function cid.cfilter(c,e,tp,id)
 	if not id then return false end
 	if id==0 then
-		return (c:IsType(TYPE_MONSTER) and c:IsRank(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp) and Duel.GetLocationCountFromEx(tp)>0)
+		return (c:IsType(TYPE_MONSTER) and c:IsRank(4) and c:IsCanBeSpecialSummoned(e,0,1-tp,false,false,POS_FACEUP,tp) and Duel.GetLocationCountFromEx(tp)>0)
 			or c:IsAbleToRemove()
 	elseif id==1 then
-		return c:IsType(TYPE_MONSTER) and c:IsRank(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp) and Duel.GetLocationCountFromEx(tp)>0
+		return c:IsType(TYPE_MONSTER) and c:IsRank(4) and c:IsCanBeSpecialSummoned(e,0,1-tp,false,false,POS_FACEUP,tp) and Duel.GetLocationCountFromEx(tp)>0
 	else
 		return c:IsAbleToRemove()
 	end
@@ -183,7 +183,7 @@ function cid.ptop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.tgfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if #g>0 then
 		if Duel.SpecialSummon(g,0,tp,1-tp,false,false,POS_FACEUP) then
-			local extra=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA):Filter(cid.cfilter,1,nil,e,tp,0)
+			local extra=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA):Filter(cid.cfilter,nil,e,tp,0)
 			if #extra>0 then
 				if extra:IsExists(cid.cfilter,1,nil,e,tp,1) then
 					Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SPSUMMON)
