@@ -88,6 +88,7 @@ end
 function cid.etarget(e,re)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	return g and g:IsContains(e:GetHandler())
+end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,eg:GetSum(Card.GetAttack()))

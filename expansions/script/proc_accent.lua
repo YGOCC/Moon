@@ -18,8 +18,8 @@ Auxiliary.Accents={} --number as index = card, card as index = function() is_fus
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_ACCENT
 
 --overwrite functions
-local get_type, is_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location =
-Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation
+local get_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location =
+Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation
 
 Card.GetType=function(c,scard,sumtype,p)
 	local tpe=scard and get_type(c,scard,sumtype,p) or get_type(c)

@@ -15,8 +15,8 @@ Auxiliary.Harmonies={} --number as index = card, card as index = function() is_s
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_HARMONY
 
 --overwrite functions
-local get_type, is_type, get_orig_type, get_prev_type_field =
-Card.GetType, Card.IsType, Card.GetOriginalType, Card.GetPreviousTypeOnField
+local get_type, get_orig_type, get_prev_type_field =
+Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField
 Card.GetType=function(c,scard,sumtype,p)
 	local tpe=scard and get_type(c,scard,sumtype,p) or get_type(c)
 	if Auxiliary.Harmonies[c] then

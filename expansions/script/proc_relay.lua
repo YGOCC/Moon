@@ -156,8 +156,8 @@ end
 function Auxiliary.RelayEnableExtra(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local loc=LOCATION_DECK
-	if mIsExtra(c) then loc=loc+LOCATION_HAND end
-	if chk==0 then return c:IsOnField() and c:GetDestination()&loc~=0 and e:GetLabelObject():GetLabel()~=0 end
+	if c:IsType(TYPE_EXTRA) then loc=loc+LOCATION_HAND end
+	if chk==0 then return c:IsOnField() and c:GetDestination() and c:GetDestination()&loc~=0 and e:GetLabelObject():GetLabel()~=0 end
 	return true
 end
 function Auxiliary.RelayEnableMain(e,tp,eg,ep,ev,re,r,rp)
