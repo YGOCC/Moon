@@ -23,7 +23,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Immune
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(5066,14))
+	e2:SetDescription(aux.Stringid(4066,14))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetHintTiming(TIMING_DAMAGE_STEP)
@@ -31,12 +31,12 @@ function cid.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id)
-	e2:SetTarget(cid.immunetg)
-	e2:SetOperation(cid.immuneop)
+	e2:SetTarget(cid.boosttg)
+	e2:SetOperation(cid.boostop)
 	c:RegisterEffect(e2)
 		--negate
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(5066,13))
+	e4:SetDescription(aux.Stringid(4066,13))
 	e4:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
@@ -61,14 +61,14 @@ end
 function cid.ponyfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666)
 end
---500 atk and immunity
-function cid.immunetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+--500 atk
+function cid.boosttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.ponyfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(cid.ponyfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,cid.ponyfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function cid.immuneop(e,tp,eg,ep,ev,re,r,rp)
+function cid.boostop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
@@ -78,18 +78,7 @@ function cid.immuneop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e1:SetValue(500)
 		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-		e2:SetRange(LOCATION_MZONE)
-		e2:SetCode(EFFECT_IMMUNE_EFFECT)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		e2:SetValue(cid.efilter)
-		tc:RegisterEffect(e2)
 	end
-end
-function cid.efilter(e,te)
-	return te:IsActiveType(TYPE_SPELL+TYPE_TRAP) and te:GetOwnerPlayer()~=e:GetOwnerPlayer()
 end
 --Negate
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)

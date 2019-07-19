@@ -39,7 +39,7 @@ if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()  end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function cid.spfilter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsFaceup() 
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsFaceup() and c:GetBaseAttack()<2001
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
