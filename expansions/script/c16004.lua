@@ -39,6 +39,7 @@ function s.initial_effect(c)
 end
 function s.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return rp==tp and re and re:GetHandler():IsControler(tp) and re:GetHandler():IsSetCard(0x308)
+		and re:IsActiveType(TYPE_MONSTER)
 end
 function s.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

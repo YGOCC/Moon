@@ -29,7 +29,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_LOCATION)
 	local tc=re:GetHandler()
 	return tc:IsControler(1-tp) and (not loc==LOCATION_MZONE or tc:IsCanTurnSet()) and Duel.IsChainDisablable(ev)
-		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and tc:IsType(TYPE_MONSTER)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
