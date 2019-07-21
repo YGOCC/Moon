@@ -39,8 +39,8 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetHandler():GetLinkedGroup()
 	if g:IsExists(Card.IsControler,1,nil,tp) then bool=true end
-	if chk==0 then return #g>0 and ((not bool and Duel.IsPlayerCanDraw(tp,1)) or (bool and Duel.IsPlayerCanDraw(tp,2))) end
-	if #g>0 then Duel.Destroy(g,REASON_EFFECT) e:SetLabel(1) end
+	if chk==0 then return #g>0 and (bool and Duel.IsPlayerCanDraw(tp,1)) end
+	if #g>0 then Duel.Destroy(g,REASON_COST) if bool then e:SetLabel(1) end end
 	if bool then Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1) end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
