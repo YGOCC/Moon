@@ -77,5 +77,5 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)>0
+	Duel.Draw(p,d,REASON_EFFECT)
 end
