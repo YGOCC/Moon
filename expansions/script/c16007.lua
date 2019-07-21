@@ -44,6 +44,7 @@ function s.sptfilter(c,tp)
 end
 function s.sppfilter(c,tp)
 	return c:IsReleasable() and Duel.GetMZoneCount(1-tp,c,tp)>0
+	and c:IsPosition(POS_FACEDOWN_DEFENSE)
 end
 function s.spcon(e,c)
 	if c==nil then return true end

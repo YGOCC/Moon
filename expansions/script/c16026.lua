@@ -98,5 +98,5 @@ function s.handfilter(e)
 end
 function s.handcon(e)
 	local tp=e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(s.handfilter,tp,LOCATION_MZONE,0,1,nil)
+	return #Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)<#Duel.GetFieldGroup(tp,LOCATION_EXTRA,0)
 end
