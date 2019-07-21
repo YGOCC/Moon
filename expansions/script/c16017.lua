@@ -74,6 +74,8 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g2=g:FilterSelect(tp,s.spfilter2,1,1,mc,tp,mc)
 	g1:Merge(g2)
+	local g3=g:FilterSelect(tp,s.spfilter2,1,1,g1,tp,mc)
+	g1:Merge(g3)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 end
 function s.bancon(e,tp,eg,ep,ev,re,r,rp)
