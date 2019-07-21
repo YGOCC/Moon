@@ -42,18 +42,9 @@ function s.desop(e,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=g:Select(1-tp,5,5,nil)
 	Duel.ConfirmCards(tp,tg)
-	local sg1=tg:Filter(s.spfun,nil,e,1-tp) --summon
-	local sg2=tg:Clone()
-	sg2:Remove(s.spfun,nil,e,tp) --send
-	if #sg1>ft then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		sg3=sg1:Select(1-tp,ft,ft,nil)
-		sg1=sg1:Filter(function(c) return sg3:IsContains(c) end,nil)
-		sg2=tg:Filter(function(c) return not sg3:IsContains(c) end,nil)
-	end
-	local ct1=Duel.SpecialSummon(sg1,0,1-tp,1-tp,false,false,POS_FACEUP)
-	local ct2=Duel.SendtoGrave(sg2,REASON_EFFECT)
-	if not (ct1+ct2==5) or ct1==0 then return end
+	local sg=tg:Filter(s.spfun,nil,e,1-tp)
+	local ct=Duel.SpecialSummon(sg1,0,1-tp,1-tp,false,false,POS_FACEUP)
+	if ct==0 then return end
 	Duel.BreakEffect()
 	Duel.ChangePosition(Duel.GetMatchingGroup(Card.IsCanBeTurnSet,tp,0,LOCATION_MZONE,nil),POS_FACEDOWN_DEFENSE)
 	local g=Duel.GetOperatedGroup()
