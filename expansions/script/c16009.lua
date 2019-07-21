@@ -73,5 +73,5 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	else
 		cng=0
 	end
-	if cng>0 then Duel.Draw(tp,2,REASON_EFFECT) else Duel.Draw(tp,3,REASON_EFFECT) end
+	if cng==1 then Duel.Draw(tp,2,REASON_EFFECT) elseif cng==0 then Duel.Draw(tp,3,REASON_EFFECT) end
 end
