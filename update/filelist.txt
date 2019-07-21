@@ -2,7 +2,7 @@
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
-expansions/strings.conf	e6ee220c9b5daeb7c591566a0d6f7089
+expansions/strings.conf	18a4723c05b951462d93beb38af68463
 expansions/pics/100000710.jpg	fdd67c2ea75532d08fb94a98d28067aa
 expansions/pics/100000711.jpg	5765df2b1b3000212fa62deaeff8b824
 expansions/pics/100000712.jpg	91cdc94e414e64688bedcbb4d4a0d3cf
@@ -13523,6 +13523,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	d4390b81aff68c28d13e82d95de865e5
+update/filelist.txt	41778ccc6d0a9ea4282cce453bb0ff08
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	8361edd6265eaf1196f950a285ef165d
+update/version.txt	6490e4eb7051f43b0f753b765b5f9219
