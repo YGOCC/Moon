@@ -43,7 +43,7 @@ function s.desop(e,tp)
 	local tg=g:Select(1-tp,5,5,nil)
 	Duel.ConfirmCards(tp,tg)
 	local sg=tg:Filter(s.spfun,nil,e,1-tp)
-	local ct=Duel.SpecialSummon(sg1,0,1-tp,1-tp,false,false,POS_FACEUP)
+	local ct=Duel.SpecialSummon(sg,0,1-tp,1-tp,false,false,POS_FACEUP)
 	if ct==0 then return end
 	Duel.BreakEffect()
 	Duel.ChangePosition(Duel.GetMatchingGroup(Card.IsCanBeTurnSet,tp,0,LOCATION_MZONE,nil),POS_FACEDOWN_DEFENSE)
