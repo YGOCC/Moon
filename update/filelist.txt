@@ -8678,7 +8678,7 @@ expansions/script/c16005.lua	55375d7eef1b72d7f8430c22530c5ee7
 expansions/script/c16006.lua	8e81c07d699586ca407c92c83831db51
 expansions/script/c16007.lua	782f2bee8eab3750cd711cf9349ceca6
 expansions/script/c16008.lua	827361fc054f8da20e972ca2275b8845
-expansions/script/c16009.lua	44e8c98ad7cd151ed50ee41ae8220f93
+expansions/script/c16009.lua	1563b6dfe5dd1e68406dbd47f06b362f
 expansions/script/c16010.lua	777c176d16d333b66223440b3703c19f
 expansions/script/c16011.lua	e7e0d0d3394bd9b0e29d370f67df63dc
 expansions/script/c16012.lua	f99faf2b515ab2b75ab1fd3bf0c32216
@@ -8686,13 +8686,13 @@ expansions/script/c16013.lua	7897a68dda624f44448f16e73aa1c1da
 expansions/script/c16014.lua	4da9e6c59107f4fb8932309f2a3356ee
 expansions/script/c16015.lua	61318693600e74c0fa6f71aba7d679cc
 expansions/script/c16016.lua	928a2d3ae926dc29521531b0dd532d92
-expansions/script/c16017.lua	d6204276e9db465524c2b3577f5129d9
-expansions/script/c16018.lua	f02f0a904b9f66cdc29a757fab26e9ea
+expansions/script/c16017.lua	fabf674d158843289bd73c956f11ca7a
+expansions/script/c16018.lua	ed23afa0d06dce4fda743303d2b9d63d
 expansions/script/c16019.lua	b5dbb37d2c41e23a342d0ddca2b39edf
 expansions/script/c16020.lua	2658a3f78506d7b02d50695edf56ecac
 expansions/script/c16021.lua	007c1e3cba0f6ee2abc1a48f774da001
 expansions/script/c16022.lua	b172939d83f4ad46d18353862c6dd3d9
-expansions/script/c16023.lua	08aa0f706f4094869e12e5845d701572
+expansions/script/c16023.lua	a05526cd02b7431be3e9026379d8e539
 expansions/script/c16024.lua	734c044a6c547c3ef7ea9250bd74346f
 expansions/script/c16025.lua	b2ca20725b149c0e83ff3a049ea90e47
 expansions/script/c16026.lua	efd781f99ffb72ca9600ccb6eea5a989
@@ -13523,6 +13523,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	3d0976a5260d71b12f7e44401ec0b9bb
+update/filelist.txt	06104ea4789022b398941c5063ef5eec
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	13215f9a80e989e99d8f46c672a97b10
+update/version.txt	e2057944eb5ca18e11360f775d2cc608
