@@ -15,16 +15,7 @@ function s.initial_effect(c)
 	--fusion summon
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,s.ffilter,3,false)
-	--special summon rule
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_FIELD)
-	e0:SetCode(EFFECT_SPSUMMON_PROC)
-	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e0:SetRange(LOCATION_EXTRA)
-	e0:SetCondition(s.spcon)
-	e0:SetOperation(s.spop)
-	e0:SetValue(SUMMON_TYPE_FUSION)
-	c:RegisterEffect(e0)
+	aux.AddContactFusionProcedure(c,s.cfilter,LOCATION_MZONE,0,Duel.SendtoDeck,nil,1,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -43,35 +34,6 @@ end
 function s.cfilter(c,fc)
 	return c:IsAbleToDeckAsCost() and c:IsCanBeFusionMaterial(fc)
 		and c:IsFusionSetCard(0x308) and (c:GetLevel()>=8)
-end
-function s.fselect(c,tp,mg,sg)
-	sg:AddCard(c)
-	local res=false
-	if sg:GetCount()<3 then
-		res=mg:IsExists(s.fselect,1,sg,tp,mg,sg)
-	elseif Duel.GetLocationCountFromEx(tp,tp,sg)>0 then
-		res=sg:GetClassCount(Card.GetFusionCode)==3
-	end
-	sg:RemoveCard(c)
-	return res
-end
-function s.spcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local mg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil,c)
-	local sg=Group.CreateGroup()
-	return mg:IsExists(s.fselect,1,nil,tp,mg,sg)
-end
-function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local mg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil,c)
-	local sg=Group.CreateGroup()
-	while sg:GetCount()<3 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=mg:FilterSelect(tp,s.fselect,1,1,sg,tp,mg,sg)
-		sg:Merge(g)
-	end
-	c:SetMaterial(sg)
-	Duel.SendtoDeck(sg,nil,1,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)

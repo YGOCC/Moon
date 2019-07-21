@@ -55,9 +55,13 @@ function s.spfilter(c)
 		and c:GetLevel()>=3
 end
 function s.spfilter1(c,tp,g)
-	return g:IsExists(s.spfilter2,1,c,tp,c)
+	return g:IsExists(s.spfilter2,1,c,tp,c,g)
 end
-function s.spfilter2(c,tp,mc)
+function s.spfilter2(c,tp,mc,g)
+	return Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,mc))>0
+		and g:IsExists(s.spfilter3,1,Group.FromCards(c,mc),tp,c,g)
+end
+function s.spfilter3(c,tp,mc,g)
 	return Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,mc))>0
 end
 function s.sprcon(e,c)
@@ -74,7 +78,7 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g2=g:FilterSelect(tp,s.spfilter2,1,1,mc,tp,mc)
 	g1:Merge(g2)
-	local g3=g:FilterSelect(tp,s.spfilter2,1,1,g1,tp,mc)
+	local g3=g:FilterSelect(tp,s.spfilter3,1,1,g1,tp,mc)
 	g1:Merge(g3)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 end
