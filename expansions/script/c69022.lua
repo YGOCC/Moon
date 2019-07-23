@@ -40,7 +40,6 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetCondition(function(e,tp) return Duel.GetLP(tp)>Duel.GetLP(1-tp) end)
 	e3:SetTarget(s.atktg)
 	e3:SetValue(s.atkval)
 	c:RegisterEffect(e3)
@@ -86,6 +85,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.atktg(e,c)
+	local tp=e:GetHandlerPlayer() 
+	if not (Duel.GetLP(tp)>Duel.GetLP(1-tp)) then return false end
 	local lg=e:GetHandler():GetLinkedGroup()
 	return c:IsType(TYPE_XYZ) and c:IsAttribute(ATTRIBUTE_WATER) and lg:IsContains(c)
 end
