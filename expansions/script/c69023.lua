@@ -52,7 +52,6 @@ function s.cfilter(c,tp)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsSummonType(SUMMON_TYPE_XYZ)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(s.cfilter,1,nil,tp) then Debug.Message(re and re:GetHandler():IsSetCard(0x95)) end
 	return eg:IsExists(s.cfilter,1,nil,tp) and re and re:GetHandler():IsSetCard(0x95)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
