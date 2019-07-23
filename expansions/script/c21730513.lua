@@ -66,9 +66,10 @@ end
 function s.acfilter(c,code)
 	return c:IsFaceup() and c:IsCode(code) and c:IsType(TYPE_SPELL)
 end
-function s.accon(e)
-	local code=e:GetHandler():GetEquipTarget():GetCode()
-	return Duel.IsExistingMatchingCard(s.acfilter,tp,LOCATION_ONFIELD,0,1,nil,code)
+function s.accon(e,tp)
+	local et=e:GetHandler():GetEquipTarget()
+	return et:IsType(TYPE_NORMAL)
+		and Duel.IsExistingMatchingCard(s.acfilter,tp,LOCATION_ONFIELD,0,1,nil,et:GetCode())
 end
 function s.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER)

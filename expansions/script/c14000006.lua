@@ -1,6 +1,8 @@
 --时穿剑·雌之剑
 local m=14000006
 local cm=_G["c"..m]
+cm.named_with_Chronoblade=1
+xpcall(function() require("expansions/script/c14000001") end,function() require("script/c14000001") end)
 function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -22,7 +24,7 @@ function cm.setfilter(c)
 	return c:IsCode(14000005) and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsForbidden()
 end
 function cm.cfilter(c)
-	return c:IsSetCard(0x1404) and c:IsAbleToDeckAsCost()
+	return chrb.CHRB(c) and c:IsAbleToDeckAsCost()
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end

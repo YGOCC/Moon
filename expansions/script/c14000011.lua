@@ -1,6 +1,8 @@
 --时穿剑·湍流剑
 local m=14000011
 local cm=_G["c"..m]
+cm.named_with_Chronoblade=1
+xpcall(function() require("expansions/script/c14000001") end,function() require("script/c14000001") end)
 function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -29,7 +31,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.filter(c)
-	return c:IsSetCard(0x1404) and c:IsAbleToHand()
+	return chrb.CHRB(c) and c:IsAbleToHand() and not c:IsCode(m)
 end
 function cm.tdfilter(c)
 	return c:IsAbleToDeck()
@@ -47,7 +49,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=1 then return end
 	if Duel.SendtoHand(tg,nil,REASON_EFFECT)~=0 then
 		local g=Duel.GetMatchingGroup(cm.tdfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,nil)
-		if g:GetCount()>0 then
+		if #g>0 then
 			Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 		end
 	end

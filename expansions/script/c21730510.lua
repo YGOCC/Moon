@@ -16,13 +16,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--additional pendulum summon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_EXTRA_PENDULUM_SUMMON)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetTargetRange(1,0)
-	e3:SetValue(s.pendvalue)
-	e3:SetRange(LOCATION_MZONE)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetOperation(s.penop)
 	c:RegisterEffect(e3)
 end
 --link procedure
@@ -39,4 +35,15 @@ end
 --additional pendulum summon
 function s.pendvalue(e,c)
 	return c:IsType(TYPE_NORMAL)
+end
+function s.penop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_EXTRA_PENDULUM_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetValue(s.pendvalue)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end

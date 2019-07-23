@@ -1,6 +1,8 @@
 --时穿剑魄·圣
 local m=14000017
 local cm=_G["c"..m]
+cm.named_with_Chronoblade=1
+xpcall(function() require("expansions/script/c14000001") end,function() require("script/c14000001") end)
 function cm.initial_effect(c)
 	c:SetSPSummonOnce(m)
 	--xyz summon
@@ -15,13 +17,13 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.mfilter(c)
-	return c:IsSetCard(0x1404)
+	return chrb.CHRB(c)
 end
 function cm.xyzcheck(g)
-	return g:GetClassCount(Card.GetCode)==g:GetCount()
+	return g:GetClassCount(Card.GetCode)==#g
 end
 function cm.effilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1404)
+	return c:IsType(TYPE_MONSTER) and chrb.CHRB(c)
 end
 function cm.efop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()  

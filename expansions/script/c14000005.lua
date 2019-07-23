@@ -1,6 +1,8 @@
 --时穿剑·雄之剑
 local m=14000005
 local cm=_G["c"..m]
+cm.named_with_Chronoblade=1
+xpcall(function() require("expansions/script/c14000001") end,function() require("script/c14000001") end)
 function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -35,7 +37,7 @@ function cm.setfilter(c)
 	return c:IsCode(14000006) and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsForbidden()
 end
 function cm.cfilter(c)
-	return c:IsSetCard(0x1404) and c:IsAbleToDeckAsCost()
+	return chrb.CHRB(c) and c:IsAbleToDeckAsCost()
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
@@ -75,7 +77,7 @@ function cm.lkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(mat,REASON_COST)
 end
 function cm.lktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cm.profilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0 and Duel.IsExistingMatchingCard(cm.profilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
 function cm.lkop(e,tp,eg,ep,ev,re,r,rp)

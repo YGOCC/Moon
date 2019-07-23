@@ -1,6 +1,8 @@
 --时穿剑·寒鞘剑
 local m=14000016
 local cm=_G["c"..m]
+cm.named_with_Chronoblade=1
+xpcall(function() require("expansions/script/c14000001") end,function() require("script/c14000001") end)
 function cm.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,nil,3,3,cm.lcheck)
@@ -23,7 +25,7 @@ function cm.initial_effect(c)
 	e3:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTargetRange(0,1)
-	e3:SetValue(cm.aclimit)
+	e3:SetValue(aux.TRUE)
 	e3:SetCondition(cm.actcon)
 	c:RegisterEffect(e3)
 	--cannot attack
@@ -48,10 +50,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function cm.lcheck(g,lc)
-	return g:GetClassCount(Card.GetCode)==g:GetCount()
-end
-function cm.aclimit(e,re,tp)
-	return not re:GetHandler():IsImmuneToEffect(e)
+	return g:GetClassCount(Card.GetCode)==#g
 end
 function cm.actcon(e)
 	return Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()

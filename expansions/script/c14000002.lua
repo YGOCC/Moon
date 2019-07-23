@@ -1,6 +1,8 @@
 --时穿剑阵·诛仙
 local m=14000002
 local cm=_G["c"..m]
+cm.named_with_Chronoblade=1
+xpcall(function() require("expansions/script/c14000001") end,function() require("script/c14000001") end)
 function cm.initial_effect(c)
 	--Activate
 	local e0=Effect.CreateEffect(c)
@@ -35,7 +37,7 @@ function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function cm.cfilter(c,tp)
-	return c:IsSetCard(0x1404) and c:IsAbleToDeckAsCost() and (c:IsControler(tp) or c:IsFaceup())
+	return chrb.CHRB(c) and c:IsAbleToDeckAsCost() and (c:IsControler(tp) or c:IsFaceup())
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler(),tp) end
@@ -72,7 +74,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.chainop(e,tp,eg,ep,ev,re,r,rp)
-	if re:GetHandler():IsSetCard(0x1404) then
+	if chrb.CHRB(re:GetHandler()) then
 		Duel.SetChainLimit(cm.chainlm)
 	end
 end

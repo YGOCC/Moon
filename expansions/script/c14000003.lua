@@ -1,6 +1,8 @@
 --时穿剑阵·灭神
 local m=14000003
 local cm=_G["c"..m]
+cm.named_with_Chronoblade=1
+xpcall(function() require("expansions/script/c14000001") end,function() require("script/c14000001") end)
 function cm.initial_effect(c)
 	--Activate
 	local e0=Effect.CreateEffect(c)
@@ -44,7 +46,7 @@ function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function cm.cfilter(c)
-	return c:IsSetCard(0x1404) and c:IsAbleToDeckAsCost()
+	return chrb.CHRB(c) and c:IsAbleToDeckAsCost()
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
@@ -54,7 +56,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function cm.spfilter(c,e,tp)
-	return c:IsSetCard(0x1404) and c:GetLevel()==4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return chrb.CHRB(c) and c:IsLevel(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -81,10 +83,12 @@ end
 function cm.adcon(e,c)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return ((a and a:IsControler(tp) and a:IsSetCard(0x1404)) or (d and d:IsControler(tp) and d:IsSetCard(0x1404))) and (Duel.GetCurrentPhase()==PHASE_DAMAGE or Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL)
+	local tp=e:GetHandlerPlayer()
+	return ((a and a:IsControler(tp) and chrb.CHRB(a)) or (d and d:IsControler(tp) and chrb.CHRB(d))) and (Duel.GetCurrentPhase()==PHASE_DAMAGE or Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL)
 end
 function cm.adtg(e,c)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return (a and a:IsControler(tp) and a:IsSetCard(0x1404) and c==a:GetBattleTarget()) or (d and d:IsControler(tp) and d:IsSetCard(0x1404) and c==d:GetBattleTarget())
+	local tp=e:GetHandlerPlayer()
+	return (a and a:IsControler(tp) and chrb.CHRB(a) and c==a:GetBattleTarget()) or (d and d:IsControler(tp) and chrb.CHRB(d) and c==d:GetBattleTarget())
 end
