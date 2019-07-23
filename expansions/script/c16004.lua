@@ -68,17 +68,29 @@ function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetCondition(function(e) return Duel.GetTurnCount()>e:GetLabel() end)
-	if Duel.GetTurnPlayer()==tp then
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN,1)
-	else
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
+	if not tc:IsRelateToEffect(e) then return end
+	if Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)==0 or not tc:IsLocation(LOCATION_DECK) then return end
+	Duel.BreakEffect()
+	local g=Duel.GetDeckTopGroup(1-tp,1)
+	Duel.ConfirmCards(Duel.GetTurnPlayer(),g)
+	Duel.ConfirmCards(1-Duel.GetTurnPlayer(),g)
+	local tc=g:GetFirst()
+	if tc:IsType(TYPE_MONSTER) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE,1-tp)
+		and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 then
+		if Duel.SpecialSummonStep(tc,0,tp,1-tp,false,false,POS_FACEDOWN_DEFENSE) then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCondition(function(e) return Duel.GetTurnCount()>e:GetLabel() end)
+			if Duel.GetTurnPlayer()==tp then
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN,1)
+			else
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
+			end
+			e1:SetLabel(Duel.GetTurnCount())
+			tc:RegisterEffect(e1)
+			Duel.SpecialSummonComplete()
+		end
 	end
-	e1:SetLabel(Duel.GetTurnCount())
-	tc:RegisterEffect(e1)
-	Duel.Draw(p,d,REASON_EFFECT)
 end
