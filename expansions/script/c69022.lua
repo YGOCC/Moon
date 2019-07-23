@@ -51,9 +51,6 @@ function s.setcon(e,tp,eg,ep,ev,re,r,rp)
 	local lg=e:GetHandler():GetLinkedGroup()
 	return eg:IsExists(s.setcfilter,1,nil,lg)
 end
-function s.setfilter(c)
-	return ((c:IsType(TYPE_SPELL) and c:IsSetCard(0x46)) or (c:IsType(TYPE_QUICKPLAY) and c:IsSetCard(0xa5))) and c:IsSSetable()
-end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chk==0 then return true end
     Duel.SetTargetPlayer(tp)
@@ -68,7 +65,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsLinkState()
 end
 function s.filter(c)
-	return (c:IsSetCard(0x6969) or c:IsSetCard(0x95)) and c:IsAbleToHand()
+	return c:IsSetCard(0x6969) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end

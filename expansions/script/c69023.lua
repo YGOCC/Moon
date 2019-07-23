@@ -34,7 +34,6 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_ONFIELD,0)
-	e2:SetCondition(function(e,tp) return Duel.GetLP(tp)>Duel.GetLP(1-tp) end)
 	e2:SetTarget(s.indes)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
@@ -45,14 +44,15 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCountLimit(2)
-	e1:SetTarget(s.target)
-	e1:SetOperation(s.operation)
+	e1:SetTarget(s.target1)
+	e1:SetOperation(s.operation1)
 	c:RegisterEffect(e1)
 end
 function s.cfilter(c,tp)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsSummonType(SUMMON_TYPE_XYZ)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	if eg:IsExists(s.cfilter,1,nil,tp) then Debug.Message(re and re:GetHandler():IsSetCard(0x95)) end
 	return eg:IsExists(s.cfilter,1,nil,tp) and re and re:GetHandler():IsSetCard(0x95)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -76,12 +76,14 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.indes(e,c)
+	local tp=e:GetHandlerPlayer()
+	if not (Duel.GetLP(tp)>Duel.GetLP(1-tp)) then return end
 	return c:IsSetCard(0x6969) or (c:IsAttribute(ATTRIBUTE_WATER) and c:IsType(TYPE_XYZ)) and c:IsFaceup()
 end
 function s.filter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER) and c:GetLevel()>0
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function s.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
@@ -92,7 +94,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	else op=Duel.SelectOption(tp,aux.Stringid(70908596,1),aux.Stringid(70908596,2)) end
 	e:SetLabel(op)
 end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
+function s.operation1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
