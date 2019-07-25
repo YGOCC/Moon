@@ -5,7 +5,7 @@ if not RSTFVal then
 	RSTFVal=RSTFVal or {}
 	tfrsv=RSTFVal
 function tfrsv.SSLimitEffect(c)
-	c:EnableUnsummonable()
+	--c:EnableUnsummonable()
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
