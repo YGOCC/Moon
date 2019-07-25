@@ -2460,7 +2460,7 @@ function rscf.SetSummonCondition(cardtbl,isnsable,sumvalue,iseffectspsum,resettb
 	if tc2:IsStatus(STATUS_COPYING_EFFECT) then return end
 	if not isnsable then
 		if iseffectspsum or (sumvalue and sumvalue==rsval.spcons) then
-			tc2:EnableUnsummonable()
+			--tc2:EnableUnsummonable()
 		else
 			tc2:EnableReviveLimit()
 		end
