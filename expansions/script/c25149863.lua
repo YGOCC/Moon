@@ -114,6 +114,7 @@ function cid.eop(e,tp,eg,ep,ev,re,r,rp)
 		--reveal xyz
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,3))
+		e1:SetCategory(CATEGORY_REMOVE)
 		e1:SetType(EFFECT_TYPE_QUICK_O)
 		e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 		e1:SetCode(EVENT_FREE_CHAIN)
@@ -165,7 +166,9 @@ function cid.xyzop(e,tp,eg,ep,ev,re,r,rp)
 end
 --reveal xyz
 function cid.costfilter(c,e,tp,eg,ep,ev,re,r,rp)
-	if not c:IsRank(4) or not c:IsType(TYPE_XYZ) or not c:IsType(TYPE_EFFECT) or c:IsFaceup() or c:IsSetCard(0x2595) then return false end
+	if not c:IsRank(4) or not c:IsType(TYPE_XYZ) or not c:IsType(TYPE_EFFECT) or c:IsFaceup() or c:IsSetCard(0x2595) 
+		or not Duel.IsExistingMatchingCard(cid.rmfilter,tp,LOCATION_EXTRA,0,1,nil,c:GetCode()) then return false 
+	end
 	local check=0
 	local egroup={c:IsHasEffect(EFFECT_DEFAULT_CALL)}
 	for _,te1 in ipairs(egroup) do
@@ -188,6 +191,9 @@ function cid.costfilter(c,e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	return check>0
+end
+function cid.rmfilter(c,code)
+	return c:IsCode(code) and c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
 end
 function cid.chkflag(c)
 	return c:GetFlagEffect(id)>0
@@ -299,6 +305,7 @@ function cid.pttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 								if tgt then tgt(e,tp,eg,ep,ev,re,r,rp,1) end
 								effect:SetLabelObject(e:GetLabelObject())
 								e:SetLabelObject(effect)
+								Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_EXTRA)
 							end
 						end
 					end
@@ -308,6 +315,7 @@ function cid.pttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function cid.ptop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local te=e:GetLabelObject()
 	local tc=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE):Filter(cid.chkflag,nil):GetFirst()
 	if not te then return end
@@ -317,5 +325,56 @@ function cid.ptop(e,tp,eg,ep,ev,re,r,rp)
 		e:SetLabelObject(te:GetLabelObject())
 		local op=te:GetOperation()
 		if op then op(e,tp,eg,ep,ev,re,r,rp) end
+		local rg=Duel.GetMatchingGroup(cid.rmfilter,tp,LOCATION_EXTRA,0,nil,te:GetHandler():GetCode())
+		if #rg>0 then
+			if Duel.Remove(rg,POS_FACEUP,REASON_EFFECT+REASON_TEMPORARY)~=0 then
+				local fid=c:GetFieldID()
+				local og=Duel.GetOperatedGroup()
+				local oc=og:GetFirst()
+				local turnp=1
+				if Duel.GetTurnPlayer()~=tp then
+					turnp=2
+				end
+				while oc do
+					oc:RegisterFlagEffect(id+300,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,0,turnp,fid)
+					oc:RegisterFlagEffect(id+301,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,0,turnp,Duel.GetTurnCount())
+					oc=og:GetNext()
+				end
+				og:KeepAlive()
+				local e1=Effect.CreateEffect(c)
+				e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+				e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+				e1:SetCode(EVENT_PHASE+PHASE_END)
+				e1:SetCountLimit(1)
+				e1:SetLabel(fid)
+				e1:SetLabelObject(og)
+				e1:SetCondition(cid.retcon)
+				e1:SetOperation(cid.retop)
+				e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN,turnp)
+				Duel.RegisterEffect(e1,tp)
+			end
+		end
+	end
+end
+function cid.retfilter(c,fid,turn)
+	return c:GetFlagEffectLabel(id+300)==fid and c:GetFlagEffectLabel(id+301)~=turn
+end
+function cid.retcon(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetTurnPlayer()==tp then return false end
+	local g=e:GetLabelObject()
+	if not g:IsExists(cid.retfilter,1,nil,e:GetLabel(),Duel.GetTurnCount()) then
+		g:DeleteGroup()
+		e:Reset()
+		return false
+	else return true end
+end
+function cid.retop(e,tp,eg,ep,ev,re,r,rp)
+	local g=e:GetLabelObject()
+	local sg=g:Filter(cid.retfilter,nil,e:GetLabel(),Duel.GetTurnCount())
+	g:DeleteGroup()
+	local tc=sg:GetFirst()
+	while tc do
+		Duel.SendtoDeck(tc,tc:GetPreviousControler(),0,REASON_EFFECT)
+		tc=sg:GetNext()
 	end
 end

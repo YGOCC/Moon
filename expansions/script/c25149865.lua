@@ -136,7 +136,7 @@ end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) 
-		and Duel.IsExistingMatchingCard(cid.matfilter,tp,LOCATION_HAND,0,1,nil) 
+		and Duel.IsExistingMatchingCard(cid.matfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil) 
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
@@ -148,7 +148,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)>0 then
 		local og=Duel.GetOperatedGroup():GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local g2=Duel.SelectMatchingCard(tp,cid.matfilter,tp,LOCATION_HAND,0,1,2,nil)
+		local g2=Duel.SelectMatchingCard(tp,cid.matfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,2,nil)
 		if #g2>0 then
 			Duel.ConfirmCards(1-tp,g2)
 			Duel.Overlay(og,g2)
