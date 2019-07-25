@@ -1,3 +1,4 @@
+-- Cosmic Wing Erde by TKNight
 function c905.initial_effect(c) 
 	--equip from MMZ
 	local e0=Effect.CreateEffect(c)
@@ -196,7 +197,7 @@ end
 
 --lose atk/def
 function c905.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
+	return  not Duel.IsExistingMatchingCard(c905.spfilter,tp,LOCATION_MZONE,0,1,nil) and Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c905.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end

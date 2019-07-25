@@ -51,7 +51,7 @@ function c908.initial_effect(c)
 	e7:SetValue(300)
 	c:RegisterEffect(e7)
 	local e9=e7:Clone()
-	e9:SetCode(EFFECT_UPDATE_ATTACK)
+	e9:SetCode(EFFECT_UPDATE_DEFENSE)
 		c:RegisterEffect(e9)
 	--destroy
 		local e8=Effect.CreateEffect(c)

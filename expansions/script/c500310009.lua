@@ -2,7 +2,7 @@
 function c500310009.initial_effect(c)
 	   aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,6,c500310009.filter1,c500310009.filter2,1,99)
+  aux.AddEvoluteProc(c,nil,6,c500310009.filter1,c500310009.filter2)
 	--disable search
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)

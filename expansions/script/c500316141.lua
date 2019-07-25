@@ -1,8 +1,9 @@
 --Paintress EX: Coupé-out Matissa
-function c500316141.initial_effect(c)
+local cid,id=GetID()
+function cid.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,7,c500316141.filter1,c500316141.filter2,c500316141.filter3,2,99)  
+  aux.AddEvoluteProc(c,nil,7,cid.filter1,cid.filter2,cid.filter3,2,99)  
    --remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500316141,0))
@@ -13,52 +14,65 @@ function c500316141.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(2)
-	e1:SetCost(c500316141.cost)
-	e1:SetTarget(c500316141.target)
-	e1:SetOperation(c500316141.operation)
+	e1:SetCost(cid.cost)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
-	   --Negate
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(500316141,0))
-	e2:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e2:SetCode(EVENT_CHAINING)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,500316141)
-   e2:SetCost(c500316141.cost2)
-	e2:SetCondition(c500316141.condition2)
-	e2:SetTarget(c500316141.target2)
-	e2:SetOperation(c500316141.operation2)
-	c:RegisterEffect(e2)
+--Negate
+	--  local e2=Effect.CreateEffect(c)
+	--   e2:SetDescription(aux.Stringid(500316141,0))
+	--   e2:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
+	--   e2:SetType(EFFECT_TYPE_QUICK_O)
+	--  e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	--  e2:SetCode(EVENT_CHAINING)
+	--  e2:SetRange(LOCATION_MZONE)
+	---  e2:SetCountLimit(1,500316141)
+	-- e2:SetCost(cid.cost2)
+	--  e2:SetCondition(cid.condition2)
+	-- e2:SetTarget(cid.target2)
+	--  e2:SetOperation(cid.operation2)
+	-- c:RegisterEffect(e2)
+   --atkdown
+	local e8=Effect.CreateEffect(c)
+	e8:SetDescription(aux.Stringid(10000020,1))
+	e8:SetCategory(CATEGORY_ATKCHANGE)
+	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e8:SetRange(LOCATION_MZONE)
+	e8:SetCountLimit(1)
+	e8:SetCode(EVENT_SUMMON_SUCCESS)
+	e8:SetCondition(cid.atkcon)
+	e8:SetCost(cid.cost2)
+	e8:SetTarget(cid.atktg)
+	e8:SetOperation(cid.atkop)
+	c:RegisterEffect(e8)
 end
-function c500316141.filter3(c,ec,tp)
+function cid.filter3(c,ec,tp)
 	return not c:IsType(TYPE_EFFECT)
 end
 
-function c500316141.costfilter(c)
+function cid.costfilter(c)
 	return c:IsAbleToRemoveAsCost() and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
-function c500316141.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) and Duel.IsExistingMatchingCard(c500316141.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) and Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c500316141.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 	c:RegisterFlagEffect(500316141,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
-function c500316141.filterxx(c,ec,tp)
+function cid.filterxx(c,ec,tp)
 	return c:IsType(TYPE_EFFECT) and c:IsAbleToRemove()
 end
-function c500316141.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetControler()~=tp and chkc:GetLocation()==LOCATION_GRAVE and c500316141.filterxx(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c500316141.filterxx,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:GetControler()~=tp and chkc:GetLocation()==LOCATION_GRAVE and cid.filterxx(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filterxx,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,c500316141.filterxx,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil)
+	local g=Duel.SelectTarget(tp,cid.filterxx,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
-function c500316141.operation(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
   local c=e:GetHandler()	   
@@ -77,28 +91,57 @@ function c500316141.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 
-function c500316141.filter1(c,ec,tp)
+function cid.filter1(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
-function c500316141.filter2(c,ec,tp)
+function cid.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
-function c500316141.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return  Duel.IsExistingMatchingCard(c500316141.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
+	if chk==0 then return  Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c500316141.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.costfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	c:RegisterFlagEffect(500316141,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
-function c500316141.condition2(e,tp,eg,ep,ev,re,r,rp)
-	   return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
+function cid.atkfilter(c,e,tp)
+	return c:IsControler(tp) and c:IsPosition(POS_FACEUP_ATTACK) and (not e or c:IsRelateToEffect(e))
 end
-function c500316141.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	  if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+function cid.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(cid.atkfilter,1,nil,nil,1-tp)
 end
-function c500316141.operation2(e,tp,eg,ep,ev,re,r,rp)
-	   Duel.NegateActivation(ev)
+function cid.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetCard(eg)
+end
+function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(cid.atkfilter,nil,e,1-tp)
+	local dg=Group.CreateGroup()
+	local c=e:GetHandler()
+	local tc=g:GetFirst()
+	while tc do
+		local preatk=tc:GetAttack()
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(-1500)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		if preatk~=0 and tc:IsAttack(0) then dg:AddCard(tc) end
+		tc=g:GetNext()
 	end
+	Duel.Destroy(dg,REASON_EFFECT)
+end
+
+--function cid.condition2(e,tp,eg,ep,ev,re,r,rp)
+	--	 return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+	----		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
+	--end
+	--function cid.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	--	if chk==0 then return true end
+	--   Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	--end
+	--function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
+	--	   Duel.NegateActivation(ev)
+	--   end
