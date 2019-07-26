@@ -195,8 +195,8 @@ end
 function cid.rmfilter(c,code)
 	return c:IsCode(code) and c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
 end
-function cid.chkflag(c)
-	return c:GetFlagEffect(id)>0
+function cid.chkflag(c,e)
+	return c:GetFlagEffect(id)>0 and c:IsRelateToEffect(e) and c:GetOverlayCount()>0
 end
 function cid.tgxyz(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetOverlayGroup():IsExists(cid.matxyz,1,nil)
@@ -221,7 +221,7 @@ function cid.pttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 				checkmaster=checkmaster+1
 			end
 		end
-		return checkmaster>0 and Duel.IsExistingTarget(cid.tgxyz,tp,LOCATION_MZONE,0,1,nil)
+		return checkmaster>0 and Duel.IsExistingTarget(cid.tgxyz,tp,LOCATION_MZONE,0,2,nil)
 	end
 	e:SetLabel(0)
 	local c=e:GetHandler()
@@ -241,12 +241,15 @@ function cid.pttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.ConfirmCards(1-tp,g)
 		local rv=g:GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-		local tcg=Duel.SelectTarget(tp,cid.tgxyz,tp,LOCATION_MZONE,0,1,1,nil)
+		local tcg=Duel.SelectTarget(tp,cid.tgxyz,tp,LOCATION_MZONE,0,2,2,nil)
 		if #tcg>0 then
 			Duel.ClearTargetCard()
 			local tc=tcg:GetFirst()
-			tc:RegisterFlagEffect(id,RESET_CHAIN,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE,1)
-			tc:CreateEffectRelation(e)
+			while tc do
+				tc:RegisterFlagEffect(id,RESET_CHAIN,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE,1)
+				tc:CreateEffectRelation(e)
+				tc=tcg:GetNext()
+			end
 			local flag,desc=1,{}
 			local egroup={rv:IsHasEffect(EFFECT_DEFAULT_CALL)}
 			for _,te1 in ipairs(egroup) do
@@ -317,10 +320,14 @@ end
 function cid.ptop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local te=e:GetLabelObject()
-	local tc=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE):Filter(cid.chkflag,nil):GetFirst()
+	local tc=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE):Filter(cid.chkflag,nil,e)
 	if not te then return end
-	if not tc or not tc:IsRelateToEffect(e) or tc:GetOverlayCount()<=0 then return end
-	if Duel.SendtoGrave(tc:GetOverlayGroup(),REASON_EFFECT)~=0 then
+	if #tc<=1 then return end
+	local gg=Group.CreateGroup()
+	for tt in aux.Next(tc) do
+		gg:Merge(tt:GetOverlayGroup())
+	end
+	if Duel.SendtoGrave(gg,REASON_EFFECT)~=0 then
 		Duel.BreakEffect()
 		e:SetLabelObject(te:GetLabelObject())
 		local op=te:GetOperation()
