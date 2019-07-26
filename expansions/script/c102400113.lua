@@ -54,8 +54,8 @@ function cid.pffilter2(c,e,tp,m,f,gc,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,chkf)
 end
 function cid.pftg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	if chk==0 then
-		local c=e:GetHandler()
 		if not c:IsAbleToRemove() then return end
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(cid.pffilter1,nil)
@@ -73,6 +73,8 @@ function cid.pftg(e,tp,eg,ep,ev,re,r,rp,chk)
 		return res
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,c,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_ONFIELD)
 end
 function cid.pfop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -100,7 +102,7 @@ function cid.pfop(e,tp,eg,ep,ev,re,r,rp)
 			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,c,chkf)
 			tc:SetMaterial(mat1)
 			Duel.Remove(c,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
-			Duel.Destroy(mat1-c,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+			if Duel.Destroy(mat1-c,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)+1<#mat1 then return end
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 		else

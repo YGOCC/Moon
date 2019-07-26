@@ -189,6 +189,15 @@ end
 function Auxiliary.cdrewcon(e,tp)
 	return Duel.GetFlagEffect(tp,1600000000)~=0
 end
+--Corona Redirect (ED card)
+function Auxiliary.CoronaToExtra(e,c)
+	if c:IsType(TYPE_CORONA) then
+		Duel.MoveSequence(c,0)
+		Card.SetCardData(c,CARDDATA_TYPE,c.original_type+TYPE_FUSION)
+		return true
+	end
+	return false
+end
 --Aura Functions
 function Card.GetAura(c)
 	if not c.aura then return 0 end

@@ -87,6 +87,12 @@ function Card.GetCell(c)
 		return te:GetValue()
 	end
 end
+function Auxiliary.AddOrigBypathType(c,isxyz)
+	table.insert(Auxiliary.Bypaths,c)
+	Auxiliary.Customs[c]=true
+	local isxyz=isxyz==nil and false or isxyz
+	Auxiliary.Bypaths[c]=function() return isxyz end
+end
 function Auxiliary.AddBypathProc(c,cell,...)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local t={...}
