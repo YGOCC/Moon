@@ -103,7 +103,6 @@ function cid.DMCost(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e3,tp)
 end
 function cid.penalty(e,tp,eg,ep,ev,re,r,rp)
-	Debug.Message('abc')
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
@@ -252,15 +251,15 @@ function cid.abop(e,tp,eg,ep,ev,re,r,rp)
 	local lab=e:GetLabel()
 	local zone=0
 	if lab==1000 then
-		zone=bit.bor(bit.lshift(0x1,20),bit.lshift(0x100,20))
+		zone=bit.lshift(0x1,20)
 	elseif lab==2000 then
-		zone=bit.bor(bit.lshift(0x1,19),bit.lshift(0x100,19))
+		zone=bit.lshift(0x1,19)
 	elseif lab==3000 then
-		zone=bit.bor(bit.lshift(0x1,18),bit.lshift(0x100,18))
+		zone=bit.lshift(0x1,18)
 	elseif lab==4000 then
-		zone=bit.bor(bit.lshift(0x1,17),bit.lshift(0x100,17))
+		zone=bit.lshift(0x1,17)
 	elseif lab==5000 then
-		zone=bit.bor(bit.lshift(0x1,16),bit.lshift(0x100,16))
+		zone=bit.lshift(0x1,16)
 	else
 		zone=zone
 	end
