@@ -148,13 +148,13 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 		set:SetOperation(Auxiliary.PandSSet(c,REASON_RULE,typ))
 		c:RegisterEffect(set)
 	end
-	Duel.AddCustomActivityCounter(c:GetOriginalCode(),ACTIVITY_SPSUMMON,Auxiliary.PaCheck)
+	Duel.AddCustomActivityCounter(10000000,ACTIVITY_SPSUMMON,Auxiliary.PaCheck)
 end
 function Auxiliary.PaCheck(c)
 	return not c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
 function Auxiliary.PandCost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetCustomActivityCount(e:GetHandler():GetOriginalCode(),tp,ACTIVITY_SPSUMMON)==0 end
+	if chk==0 then return Duel.GetCustomActivityCount(10000000,tp,ACTIVITY_SPSUMMON)==0 end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
