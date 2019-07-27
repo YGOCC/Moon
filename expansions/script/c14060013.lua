@@ -4,7 +4,7 @@ local cm=_G["c"..m]
 function cm.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,cm.fusfilter,cm.fusfilter,1,true,true)
+	aux.AddFusionProcCodeFun(c,cm.fusfilter1,cm.fusfilter,1,true,true)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c,false)
 	--base attack
@@ -66,15 +66,18 @@ end
 function cm.fusfilter(c,e,tp)
 	return (c:IsFacedown() or (c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_DARK))) and c:IsType(TYPE_MONSTER)
 end
+function cm.fusfilter1(c,e,tp)
+	return c:IsFusionSetCard(0x1406) and c:IsType(TYPE_MONSTER)
+end
 function cm.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function cm.cfilter(c,tp)
-	return ((c:IsFacedown() or (c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_DARK))) and c:IsType(TYPE_MONSTER))
+	return ((c:IsFusionSetCard(0x1406) or c:IsFacedown() or (c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_DARK))) and c:IsType(TYPE_MONSTER))
 		and c:IsCanBeFusionMaterial() 
 end
 function cm.fcheck(c,sg)
-	return (c:IsFacedown() or (c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_DARK))) and c:IsType(TYPE_MONSTER) and sg:FilterCount(cm.fcheck2,c)+1==sg:GetCount()
+	return c:IsFusionSetCard(0x1406) and c:IsType(TYPE_MONSTER) and sg:FilterCount(cm.fcheck2,c)+1==sg:GetCount()
 end
 function cm.fcheck2(c)
 	return (c:IsFacedown() or (c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_DARK))) and c:IsType(TYPE_MONSTER)
@@ -116,7 +119,7 @@ function cm.atkfilter(c,e,tp)
 	return c:IsSetCard(0x1406) and c:IsFaceup()
 end
 function cm.atkval(e,c)
-	return Duel.GetMatchingGroupCount(cm.atkfilter,c:GetControler(),LOCATION_DECK+LOCATION_EXTRA,0,nil)*600
+	return Duel.GetMatchingGroupCount(cm.atkfilter,c:GetControler(),LOCATION_DECK+LOCATION_EXTRA,0,nil)*400
 end
 function cm.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -134,13 +137,11 @@ function cm.tscon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsFaceup()
 end
 function cm.tstg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsCanTurnSet,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	local g=Duel.GetMatchingGroup(Card.IsCanTurnSet,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 end
 function cm.tsop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(Card.IsCanTurnSet,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if g:GetCount()>0 then
 		Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)

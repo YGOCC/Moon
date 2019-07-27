@@ -50,17 +50,24 @@ function cm.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(0,LOCATION_MZONE+LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED)
+	e4:SetTargetRange(0,0xff)
 	e4:SetTarget(cm.disable)
 	e4:SetCode(EFFECT_DISABLE)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e5:SetType(EFFECT_TYPE_FIELD)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetCode(EVENT_CHAIN_SOLVING)
-	e5:SetCondition(cm.discon)
-	e5:SetOperation(cm.disop)
+	e5:SetTargetRange(0,0xff)
+	e5:SetTarget(cm.disable)
+	e5:SetCode(EFFECT_DISABLE_EFFECT)
 	c:RegisterEffect(e5)
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCode(EVENT_CHAIN_SOLVING)
+	e6:SetCondition(cm.discon)
+	e6:SetOperation(cm.disop)
+	c:RegisterEffect(e6)
 end
 function cm.synfilter(c,e,tp)
 	return c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_TUNER)
@@ -72,7 +79,7 @@ function cm.atkfilter(c,e,tp)
 	return c:IsSetCard(0x1406) and c:IsFaceup()
 end
 function cm.atkval(e,c)
-	return Duel.GetMatchingGroupCount(cm.atkfilter,c:GetControler(),LOCATION_DECK+LOCATION_EXTRA,0,nil)*800
+	return Duel.GetMatchingGroupCount(cm.atkfilter,c:GetControler(),LOCATION_DECK+LOCATION_EXTRA,0,nil)*300
 end
 function cm.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -92,7 +99,6 @@ end
 function cm.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,PLAYER_ALL,LOCATION_REMOVED+LOCATION_GRAVE)
-	Duel.SetChainLimit(aux.FALSE)
 end
 function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -105,13 +111,13 @@ end
 function cm.disable(e,c)
 	local atk=e:GetHandler():GetBaseAttack()
 	local atk1=c:GetBaseAttack()
-	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and atk1<=atk
+	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and c:IsType(TYPE_MONSTER) and atk1<=atk and (atk1>=0 or c:IsLocation(LOCATION_MZONE)) and not (c:IsFacedown() and c:IsLocation(LOCATION_EXTRA))
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	local atk=e:GetHandler():GetBaseAttack()
 	local atk1=re:GetHandler():GetBaseAttack()
 	return e:GetHandler():IsFaceup()
-		and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsControler(1-tp) and atk1<=atk
+		and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsControler(1-tp) and atk1<=atk and (atk1>=0 or c:IsLocation(LOCATION_MZONE))
 end
 function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)

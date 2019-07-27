@@ -7,7 +7,6 @@ local function getID()
 	return id,cod
 end
 local id,cid=getID()
-local id2=id+1000000
 function cid.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
@@ -142,7 +141,6 @@ function cid.drawtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)==0 then return end
 	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
