@@ -169,15 +169,15 @@ function cid.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,nil)
+		local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		return #g>0 and g:IsExists(cid.columncheckg,1,nil,tp)
 	end
 end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if #g<=0 then return end
-	local sg=Duel.GetMatchingGroup(cid.gcheck,tp,0,LOCATION_ONFIELD,nil,g,tp)
+	local sg=Duel.GetMatchingGroup(cid.gcheck,tp,0,LOCATION_ONFIELD,nil,g)
 	if #sg<=0 then return end
 	local dg=Group.CreateGroup()
 	dg:KeepAlive()
