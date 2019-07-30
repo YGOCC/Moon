@@ -151,10 +151,10 @@ end
 function cid.spfilter2(c,tp,g,mg,attr,link)
 	if not mg:IsContains(c) then mg:AddCard(c) end
 	if Duel.IsExistingMatchingCard(cid.lkfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,mg,tp) then
-		link=link+1
+		link=1
 	end
 	if c:IsAttribute(attr) then mg:RemoveCard(c) return false end
-	if (Duel.GetLocationCountFromEx(tp,tp,mg)>0 and link>0) or g:IsExists(cid.spfilter2,1,mg,tp,g,mg,c:GetAttribute()+attr,link) then
+	if (Duel.GetLocationCountFromEx(tp,tp,mg)>0 and link>0) or g:IsExists(cid.spfilter2,1,mg,tp,g,mg,c:GetAttribute()+attr,0) then
 		mg:RemoveCard(c)
 		return true
 	else
