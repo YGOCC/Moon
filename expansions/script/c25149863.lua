@@ -58,11 +58,11 @@ end
 function cid.prttg(e,c)
 	return c:IsType(TYPE_XYZ) and c:IsRank(4)
 end
-function cid.xyzfilter(c)
+function cid.xyzfilterprot(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsType(TYPE_MONSTER)
 end
 function cid.selfprt(e)
-	return Duel.IsExistingMatchingCard(cid.xyzfilter,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	return Duel.IsExistingMatchingCard(cid.xyzfilterprot,e:GetHandlerPlayer(),LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 --search
 -- function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
