@@ -3,7 +3,7 @@ local m=14060003
 local cm=_G["c"..m]
 function cm.initial_effect(c)
 	Duel.EnableGlobalFlag(GLOBALFLAG_DECK_REVERSE_CHECK)
-	c:EnableUnsummonable()
+	--c:EnableUnsummonable()
 	--splimit
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
