@@ -40,8 +40,8 @@ function GetID()
 	return scard,s_id
 end
 --overwrite functions
-local is_type, card_remcounter, duel_remcounter, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv, duel_overlay, duel_set_lp, duel_select_target, duel_banish, get_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location, get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw = 
-	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Card.RegisterEffect, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation, Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetLevel, Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw
+local is_type, card_remcounter, duel_remcounter, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv, duel_overlay, duel_set_lp, duel_select_target, duel_banish, get_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location, get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, card_check_remove_overlay_card = 
+	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Card.RegisterEffect, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation, Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetLevel, Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.CheckRemoveOverlayCard
 
 dofile("expansions/script/proc_evolute.lua") --Evolutes
 dofile("expansions/script/proc_conjoint.lua") --Conjoints
@@ -227,7 +227,13 @@ Duel.Remove=function(cc,pos,r)
 	end
 	return duel_banish(cc,pos,r)
 end
-
+Card.CheckRemoveOverlayCard=function(c,tp,ct,r)
+	if Duel.IsPlayerAffectedByEffect(tp,25149863) and bit.band(r,REASON_COST)~=0 then
+		Duel.RegisterFlagEffect(tp,25149863,0,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_IMMUNE,1)
+		Duel.SetFlagEffectLabel(tp,25149863,ct)
+	end
+	return card_check_remove_overlay_card(c,tp,ct,r)
+end
 --Custom Functions
 --add procedure to equip spells equipping by rule
 function Auxiliary.AddEquipProcedure(c,p,f,eqlimit,cost,tg,op,con,ctlimit)
