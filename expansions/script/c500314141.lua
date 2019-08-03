@@ -22,6 +22,7 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.thop)
 	c:RegisterEffect(e2)
 end
+cid.card_code_list={500314142}
 function cid.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc50) and not c:IsType(TYPE_EFFECT) and c:IsAbleToRemoveAsCost()
 end
