@@ -1,5 +1,6 @@
 --Rocksaber Dawnbringer
 function c96643268.initial_effect(c)
+    c:SetSPSummonOnce(96643268)
 --    local NoF=Effect.CreateEffect(c)
 --    NoF:SetType(EFFECT_TYPE_SINGLE)
 --    NoF:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)

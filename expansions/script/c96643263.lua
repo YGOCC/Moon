@@ -8,7 +8,7 @@ function c96643263.initial_effect(c)
     e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
     e1:SetType(EFFECT_TYPE_IGNITION)
     e1:SetRange(LOCATION_PZONE)
-    e1:SetCountLimit(1,966432631)
+    e1:SetCountLimit(1,432631)
     e1:SetCondition(c96643263.spcon)
     e1:SetCost(c96643263.spcost)
     e1:SetTarget(c96643263.sptg)
@@ -21,7 +21,7 @@ function c96643263.initial_effect(c)
     e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e2:SetCode(EVENT_SUMMON_SUCCESS)
     e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-    e2:SetCountLimit(1,966432632)
+    e2:SetCountLimit(1,432632)
     e2:SetTarget(c96643263.target)
     e2:SetOperation(c96643263.operation)
     c:RegisterEffect(e2)
@@ -38,7 +38,7 @@ function c96643263.initial_effect(c)
     e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e5:SetProperty(EFFECT_FLAG_DELAY)
     e5:SetCode(EVENT_TO_GRAVE)
-    e5:SetCountLimit(1,966432632)
+    e5:SetCountLimit(1,432632)
     e5:SetCondition(c96643263.descon)
     e5:SetTarget(c96643263.destg)
     e5:SetOperation(c96643263.desop)
@@ -103,18 +103,16 @@ end
 function c96643263.descon(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():IsPreviousLocation(LOCATION_EXTRA)
 end
-function c96643263.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-    local exc=nil
-    if e:IsHasType(EFFECT_TYPE_ACTIVATE) then exc=e:GetHandler() end
-    local g=Duel.GetMatchingGroup(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,exc)
-    if chk==0 then return g:GetCount()>0 end
+function c96643263.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:GetLocation()==LOCATION_ONFIELD end
+    if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+    local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
     Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c96643263.desop(e,tp,eg,ep,ev,re,r,rp)
-    local exc=nil
-    if e:IsHasType(EFFECT_TYPE_ACTIVATE) then exc=e:GetHandler() end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-    local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,exc)
+    local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+    local tc=g:GetFirst()
     if g:GetCount()>0 then
         Duel.HintSelection(g)
         Duel.Destroy(g,REASON_EFFECT)
