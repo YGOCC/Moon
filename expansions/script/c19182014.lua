@@ -17,7 +17,7 @@ function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_SZONE,0,2,nil)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK)>0 end
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_SZONE,0,nil)
