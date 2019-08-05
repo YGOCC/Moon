@@ -31,7 +31,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local b2=Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and tc:CheckUniqueOnField(tp) and tc:IsType(TYPE_MONSTER) and not tc:IsForbidden() and Duel.IsExistingMatchingCard(cid.filter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tc)
 	local opt=0
 	if b1 and b2 then
-		opt=Duel.SelectOption(tp,1068,2)+1
+		opt=Duel.SelectOption(tp,2,1068)+1
 	elseif b1 then opt=1
 	elseif b2 then opt=2
 	end
