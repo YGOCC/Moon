@@ -69,21 +69,19 @@ function c68709337.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=c:GetReasonCard()
 	return c:IsLocation(LOCATION_GRAVE) and rc:IsSetCard(0xf09) and r&REASON_LINK~=0
 end
-function c68709337.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c68709337.tgfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,c68709337.tgfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
-end
 function c68709337.tgfilter(c)
-	return c:IsSetCard(0xf08) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeck()
+	return c:IsSetCard(0xf08) and c:IsType(TYPE_SPELL+TYPE_TRAP)
+end
+function c68709337.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c68709337.tgfilter(chkc) end
+    if chk==0 then return Duel.IsExistingTarget(c68709337.tgfilter,tp,LOCATION_GRAVE,0,1,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local sg=Duel.SelectTarget(tp,c68709337.tgfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,1,0,0)
 end
 function c68709337.tgop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-    if tg:FilterCount(Card.IsRelateToEffect,nil,e)~=1 then return end
-    Duel.SendtoHand(tg,nil,0,REASON_EFFECT)
-    local g=Duel.GetOperatedGroup()
-    if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then end
-	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+    local tc=Duel.GetFirstTarget()
+    if tc:IsRelateToEffect(e) then
+        Duel.SendtoHand(tc,nil,REASON_EFFECT)
+    end
 end

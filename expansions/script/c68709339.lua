@@ -29,9 +29,9 @@ function c68709339.filter(c)
 	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0xf08) or c:IsSetCard(0xf09))
 end
 function c68709339.atkval(e,c)
-	local g=Duel.GetMatchingGroup(c21785144.filter,c:GetControler(),LOCATION_GRAVE,0,nil)
-	local ct=g:GetClassCount(Card.GetCode)
-	return ct*200
+    local g=Duel.GetMatchingGroup(c68709339.filter,c:GetControler(),LOCATION_GRAVE,0,nil)
+    local ct=g:GetClassCount(Card.GetCode)
+    return ct*200
 end
 function c68709339.atcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

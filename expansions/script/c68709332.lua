@@ -1,6 +1,8 @@
 --HDD Neptune
 --coded by Concordia
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function c68709332.initial_effect(c)
+	Senya.AddSummonSE(c,aux.Stringid(68709332,0))
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcCodeFun(c,68709329,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf08),1,true,true)

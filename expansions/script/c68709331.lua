@@ -1,6 +1,8 @@
 --HDDNoire
 --coded by Concordia, cred senpaizuri3, Radioboy, Kretin, Moon_Burst, Naab and André
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function c68709331.initial_effect(c)
+	Senya.AddSummonSE(c,aux.Stringid(68709331,0))
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcCodeFun(c,68709327,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf08),1,true,true)

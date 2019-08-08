@@ -1,6 +1,8 @@
 --HDDVert
 --coded by Concordia
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function c68709330.initial_effect(c)
+	Senya.AddSummonSE(c,aux.Stringid(68709330,0))
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcCodeFun(c,68709328,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf08),1,true,true)
