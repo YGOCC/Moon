@@ -86,7 +86,7 @@ function cid.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:GetBaseAttack()<1501
 end
 function cid.filter(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and
+	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsFaceup() and c:IsType(TYPE_PENDULUM) and 
 	((c:IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) or (Duel.GetLocationCountFromEx(tp)>0 and c:IsLocation(LOCATION_EXTRA)))
 end
 --Battle Trigger
