@@ -7,7 +7,6 @@ local function getID()
 	return id,cod
 end
 local id,cid=getID()
-local id2=id+1000000
 function cid.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
@@ -69,8 +68,8 @@ function cid.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCountLimit(1,id+1000)
 	e5:SetCondition(cid.betarget)
-	e5:SetTarget(cid.xswingtg)
-	e5:SetOperation(cid.xswingop)
+	e5:SetTarget(cid.sptg)
+	e5:SetOperation(cid.spop)
 	c:RegisterEffect(e5)
 end
 --filters
@@ -86,8 +85,9 @@ end
 function cid.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:GetBaseAttack()<1501
 end
-function cid.swingfilter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x666) 
+function cid.filter(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and
+	((c:IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) or (Duel.GetLocationCountFromEx(tp)>0 and c:IsLocation(LOCATION_EXTRA)))
 end
 --Battle Trigger
 function cid.battlecon(e,tp,eg,ep,ev,re,r,rp)
@@ -131,22 +131,16 @@ function cid.betarget(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
 	return eg:IsContains(e:GetHandler()) and re and re:GetOwner()~=c
 end
-	function cid.xswingtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.swingfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(cid.swingfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,cid.swingfilter,tp,LOCATION_MZONE,0,1,1,nil)
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_EXTRA)
 end
-function cid.xswingop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_EXTRA_ATTACK)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	e1:SetValue(1)
-	tc:RegisterEffect(e1)
-end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
 --swap
 function cid.swaptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

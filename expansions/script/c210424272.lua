@@ -7,7 +7,6 @@ local function getID()
 	return id,cod
 end
 local id,cid=getID()
-local id2=id+1000000
 function cid.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,cid.lfilter,1,1)
@@ -26,7 +25,7 @@ function cid.initial_effect(c)
 	--send to deck, draw 1
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_BECOME_TARGET)

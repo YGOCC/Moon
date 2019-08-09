@@ -37,7 +37,6 @@ function c249000927.initial_effect(c)
 	e5:SetCategory(CATEGORY_DRAW)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_BATTLED)
-	e5:SetCost(c249000927.drcost)
 	e5:SetTarget(c249000927.drtg)
 	e5:SetOperation(c249000927.drop)
 	c:RegisterEffect(e5)
@@ -61,15 +60,6 @@ function c249000927.efilter(e,te)
 end
 function c249000927.atkcon(e)
 	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_MZONE)>0
-end
-function c249000927.drcostfilter(c)
-	return c:IsSetCard(0x1FC) and c:IsAbleToDeckOrExtraAsCost()
-end
-function c249000927.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000927.drcostfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c249000927.drcostfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c249000927.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

@@ -13,10 +13,18 @@ function c249000922.initial_effect(c)
 	e2:SetCost(c249000922.cost)
 	e2:SetOperation(c249000922.activate)
 	c:RegisterEffect(e2)
+	--negate
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-	e3:SetCode(EFFECT_QP_ACT_IN_SET_TURN)
+	e3:SetDescription(aux.Stringid(5818294,0))
+	e3:SetCategory(CATEGORY_DISABLE)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_CHAINING)
+	e3:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+	e3:SetCountLimit(1)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCondition(c249000922.negcon)
+	e3:SetTarget(c249000922.negtg)
+	e3:SetOperation(c249000922.negop)
 	c:RegisterEffect(e3)
 end
 function c249000922.costfilter(c)
@@ -44,4 +52,19 @@ function c249000922.indct(e,re,r,rp)
 	if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
 		return 1
 	else return 0 end
+end
+function c249000922.tfilter(c,tp)
+	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) and c:IsFaceup() and c:IsSetCard(0x1FC)
+end
+function c249000922.negcon(e,tp,eg,ep,ev,re,r,rp)
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
+	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	return g and g:IsExists(c249000922.tfilter,1,nil,tp) and Duel.IsChainDisablable(ev)
+end
+function c249000922.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
+end
+function c249000922.negop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.NegateEffect(ev)
 end
