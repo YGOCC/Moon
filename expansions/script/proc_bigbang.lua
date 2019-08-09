@@ -191,6 +191,6 @@ end
 function Auxiliary.BigbangOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=e:GetLabelObject()
 	c:SetMaterial(g)
-	Duel.Destroy(g,REASON_MATERIAL+0x8000000000)
+	Duel.SendtoGrave(g,REASON_DESTROY+REASON_MATERIAL+0x8000000000)
 	g:DeleteGroup()
 end
