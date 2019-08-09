@@ -75,7 +75,7 @@ function c81450650.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c81450650.mgfilter(c,e,tp,bc)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED)
-		and c:GetReason()&0x8000000008==0x8000000008 and c:GetReasonCard()==bc
+		and c:GetReason()==0x9 and c:GetReasonCard()==bc
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c81450650.spop(e,tp,eg,ep,ev,re,r,rp)
