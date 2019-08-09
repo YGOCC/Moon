@@ -52,7 +52,7 @@ function c52401237.initial_effect(c)
 	e4:SetCode(EFFECT_DESTROY_REPLACE)
 	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e4:SetTarget(c52401237.reptg)
-	e4:SetValue(function(e,c) return c52401237.repfilter(c,e:GetHandlerPlayer()) end)
+	e4:SetValue(function(e,tc) return c52401237.repfilter(tc,e:GetHandlerPlayer()) end)
 	e4:SetOperation(c52401237.repop)
 	c:RegisterEffect(e4)
 end
