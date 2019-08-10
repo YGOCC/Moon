@@ -22,10 +22,12 @@ end
 
 -- SpecialSummon from hand
 function c16000129.cfilter(c)
-	return c:IsFacedown() or not c:IsSetCard(0x185a) or c:IsCode(16000129)
+	return c:IsFaceup() and c:IsSetCard(0x185a) and not c:IsCode(16000129)
 end
 function c16000129.spcon(e,c)
-	  return not Duel.IsExistingMatchingCard(c16000129.cfilter,tp,LOCATION_MZONE,0,1,nil)
+ if c==nil then return true end
+	  return  Duel.IsExistingMatchingCard(c16000129.cfilter,tp,LOCATION_MZONE,0,1,nil) or  return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
+		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 
 function c16000129.filter(c,e,sp)
