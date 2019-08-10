@@ -55,7 +55,7 @@ function cid.cd(e,tp,eg,ep,ev,re,r,rp)
 	return tp==ep
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Recover(tp,ev/2,REASON_EFFECT)
+	if Duel.GetLP(tp)>0 then Duel.Recover(tp,ev/2,REASON_EFFECT) end
 end
 function cid.filter(c)
 	return c:IsCode(id) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
