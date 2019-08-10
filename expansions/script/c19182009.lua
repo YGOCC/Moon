@@ -1,7 +1,7 @@
 --created by Alastar Rainford, coded by Lyris
 local cid,id=GetID()
 function cid.initial_effect(c)
-	c:EnableReviveLimit(c)
+	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep2(c,aux.FilterBoolFunction(Card.IsRace,RACE_PSYCHO),2,64,true)
 	aux.AddContactFusionProcedure(c,cid.cfilter,LOCATION_MZONE,0,cid.sprop)
 	local e1=Effect.CreateEffect(c)
