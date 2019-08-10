@@ -99,15 +99,15 @@ function c500315455.eqop(e,tp,eg,ep,ev,re,r,rp)
 				e2:SetValue(atk)
 				tc:RegisterEffect(e2)
 			end
-			--if def>0 then
-				--local e3=Effect.CreateEffect(c)
-				--e3:SetType(EFFECT_TYPE_EQUIP)
-				--e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
-				--e3:SetCode(EFFECT_UPDATE_DEFENSE)
-				--e3:SetReset(RESET_EVENT+0x1fe0000)
-				--e3:SetValue(def)
-				--tc:RegisterEffect(e3)
-			--end
+			if def>0 then
+				local e3=Effect.CreateEffect(c)
+				e3:SetType(EFFECT_TYPE_EQUIP)
+				e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
+				e3:SetCode(EFFECT_UPDATE_DEFENSE)
+				e3:SetReset(RESET_EVENT+0x1fe0000)
+				e3:SetValue(def)
+				tc:RegisterEffect(e3)
+			end
 	end
 end
 end
