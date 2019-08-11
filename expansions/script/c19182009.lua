@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep2(c,aux.FilterBoolFunction(Card.IsRace,RACE_PSYCHO),2,64,true)
+	aux.AddFusionProcFunRep2(c,aux.FilterBoolFunction(Card.IsRace,RACE_PSYCHO),2,63,true)
 	aux.AddContactFusionProcedure(c,cid.cfilter,LOCATION_MZONE,0,cid.sprop)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -55,7 +55,7 @@ function cid.filter2(c,eqc)
 	return c:IsFaceup() and eqc:CheckEquipTarget(c)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.filter(chkc,tp)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.filter(chkc,tp) end
 	if chk==0 then return true end
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	if ft>3 then ft=3 end

@@ -1,0 +1,51 @@
+--created & coded by Lyris
+--ヒート・ブレイカー・ドラゴン
+local cid,id=GetID()
+function cid.initial_effect(c)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(cid.spcon)
+	e1:SetValue(1)
+	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCondition(cid.condition)
+	e2:SetTarget(cid.sptg)
+	e2:SetOperation(cid.spop)
+	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(LOCATION_ONFIELD,LOCATION_ONFIELD)
+	e3:SetTarget(function(e,c) return c~=e:GetHandler() end)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
+	local e4=e3:Clone()
+	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	c:RegisterEffect(e4)
+end
+function cid.spcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,5,nil,TYPE_CONTINUOUS)
+end
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
+	return re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.GetTurnPlayer()~=tp
+end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,1,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP)
+end
