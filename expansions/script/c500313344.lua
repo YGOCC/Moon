@@ -70,7 +70,6 @@ function cid.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	if g:GetCount()>0 then
