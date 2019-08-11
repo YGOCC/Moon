@@ -189,6 +189,17 @@ end
 function Auxiliary.cdrewcon(e,tp)
 	return Duel.GetFlagEffect(tp,1600000000)~=0
 end
+--Add Corona to hand
+function Auxiliary.AddCoronaToHand(tc,reason,tpe)
+	local tp=tc:GetOwner()
+	Duel.MoveSequence(tc,0)
+	Duel.MoveToField(tc,tp,tp,LOCATION_HAND,POS_FACEDOWN_ATTACK,true)
+	tc:SetCardData(CARDDATA_TYPE,tpe)
+	Duel.SendtoHand(tc,tp,reason)
+	Duel.ConfirmCards(1-tp,tc)
+	Duel.RaiseEvent(tc,EVENT_DRAW,e,REASON_RULE,tp,tp,1)
+	Duel.RaiseEvent(tc,EVENT_CORONA_DRAW,e,REASON_RULE,tp,tp,1)
+end
 --Corona Redirect (ED card)
 function Auxiliary.CoronaToExtra(e,c)
 	if c:IsType(TYPE_CORONA) then

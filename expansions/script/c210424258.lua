@@ -7,7 +7,6 @@ local function getID()
 	return id,cod
 end
 local id,cid=getID()
-local id2=id+1000000
 function cid.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
@@ -62,7 +61,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e4)
 	--on target, search 1 S/T
 	local e5=Effect.CreateEffect(c)
-	e5:SetCategory(CATEGORY_SEARCH)
+	e5:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e5:SetType(EFFECT_TYPE_QUICK_O)
 	e5:SetCode(EVENT_BECOME_TARGET)
 	e5:SetRange(LOCATION_MZONE)
