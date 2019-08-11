@@ -1,6 +1,6 @@
 --Gem-Apprentice
 function c249000238.initial_effect(c)
-	--special summon
+	--to hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(249000238,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -12,6 +12,14 @@ function c249000238.initial_effect(c)
 	e1:SetTarget(c249000238.target)
 	e1:SetOperation(c249000238.operation)
 	c:RegisterEffect(e1)
+	--special summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_SPSUMMON_PROC)
+	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCondition(c249000238.spcon)
+	c:RegisterEffect(e2)
 end
 function c249000238.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsReason(REASON_RETURN)
@@ -30,4 +38,9 @@ function c249000238.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+end
+function c249000238.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.GetFieldGroupCount(c:GetControler(),LOCATION_ONFIELD,0,nil) < Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_ONFIELD,nil)
 end

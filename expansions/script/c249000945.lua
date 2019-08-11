@@ -131,6 +131,7 @@ function c249000945.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if c249000945.targetvalidi==false then return false end
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000945.tgfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil,e,tp,eg,ep,ev,re,r,rp,chk,chkc) end
 	local tc=Duel.SelectMatchingCard(tp,c249000945.tgfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil,e,tp,eg,ep,ev,re,r,rp,chk,chkc):GetFirst()
+	Duel.ConfirmCards(1-tp,tc)
 	local t={}
 	local desc_t = {}
 	local p=1
@@ -199,6 +200,7 @@ function c249000945.target3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if c249000945.targetvalidq==false then return false end
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000945.tgfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil,e,tp,eg,ep,ev,re,r,rp,chk,chkc) end
 	local tc=Duel.SelectMatchingCard(tp,c249000945.tgfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil,e,tp,eg,ep,ev,re,r,rp,chk,chkc):GetFirst()
+	Duel.ConfirmCards(1-tp,tc)
 	local t={}
 	local desc_t = {}
 	local p=1
@@ -262,6 +264,7 @@ function c249000945.target4(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if c249000945.targetvalidq==false then return false end
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000945.tgfilter3,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil,e,tp,eg,ep,ev,re,r,rp,chk,chkc) end
 	local tc=Duel.SelectMatchingCard(tp,c249000945.tgfilter3,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil,e,tp,eg,ep,ev,re,r,rp,chk,chkc):GetFirst()
+	Duel.ConfirmCards(1-tp,tc)
 	local t={}
 	local desc_t = {}
 	local p=1

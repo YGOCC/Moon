@@ -28,7 +28,9 @@ function c249000934.costfilter(c)
 	return c:IsSetCard(0x47) and c:IsAbleToRemoveAsCost()
 end
 function c249000934.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000934.costfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000934.costfilter,tp,LOCATION_GRAVE,0,2,nil) end
+	local g=Duel.SelectMatchingCard(tp,c249000934.costfilter,tp,LOCATION_GRAVE,0,2,2,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 end
 function c249000934.filter(c)

@@ -7,6 +7,7 @@ function c249000936.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
+	e1:SetCondition(c249000936.condition)
 	e1:SetCost(c249000936.cost)
 	e1:SetTarget(c249000936.target)
 	e1:SetOperation(c249000936.activate)
@@ -17,6 +18,14 @@ function c249000936.initial_effect(c)
 	e2:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
 	e2:SetCondition(c249000936.handcon)
 	c:RegisterEffect(e2)
+end
+function c249000936.confilter(c)
+	return c:IsSetCard(0x47)
+end
+function c249000936.condition(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c249000936.confilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local ct=g:GetClassCount(Card.GetCode)
+	return ct>1
 end
 function c249000936.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end
