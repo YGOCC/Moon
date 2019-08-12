@@ -23,7 +23,7 @@ function c249000237.initial_effect(c)
 	e2:SetOperation(c249000237.operation)
 	c:RegisterEffect(e2)
 end
-unction c249000237.spscon(e,tp,eg,ep,ev,re,r,rp)
+function c249000237.spscon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
 	return ep==tp and ec:IsSetCard(0x47)
 end
