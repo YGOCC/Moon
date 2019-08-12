@@ -43,14 +43,14 @@ function c249000980.drfilter(c)
 	return (c:IsSetCard(0x1FE) or c:IsCode(70238111)) and c:IsAbleToDeck() and not c:IsCode(249000980)
 end
 function c249000980.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000980.drfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,2,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000980.drfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c249000980.drop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsExistingMatchingCard(c249000980.drfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,2,nil) then return end
-	local g=Duel.SelectMatchingCard(tp,c249000980.drfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,2,2,nil)
+	if not Duel.IsExistingMatchingCard(c249000980.drfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) then return end
+	local g=Duel.SelectMatchingCard(tp,c249000980.drfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	Duel.ShuffleDeck(tp)
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)	
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
