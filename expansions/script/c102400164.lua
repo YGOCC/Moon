@@ -20,14 +20,14 @@ function cid.initial_effect(c)
 	e2:SetValue(cid.hlimit)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-	e3:SetTarget(cid.tg)
-	e3:SetOperation(cid.op)
+	e3:SetCost(cid.cost)
+	e3:SetTarget(cid.drtg)
+	e3:SetOperation(cid.drop)
 	c:RegisterEffect(e3)
 end
 function cid.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -57,27 +57,35 @@ function cid.hlimit(e)
 	end
 	return ct+1
 end
-function cid.filter(c)
-	return not c:IsType(TYPE_EXTRA) and c:IsAbleToDeck()
+function cid.cfilter(c)
+	return c:IsType(TYPE_MONSTER) c:IsSetCard(0x70b) and not c:IsPublic()
 end
-function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) end
-	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,3,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_HAND,0,1,1,nil)
+	Duel.ConfirmCards(1-tp,g)
+	Duel.ShuffleHand(tp)
+end
+function cid.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local h1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+	local h2=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)
+	if chk==0 then return (Duel.IsPlayerCanDraw(tp) or h1==0)
+		and (Duel.IsPlayerCanDraw(1-tp) or h2==0)
+		and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_HAND,LOCATION_HAND,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,PLAYER_ALL,LOCATION_HAND)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
 end
-function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3 then return end
-	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_DECK)
-	if g:IsExists(Card.IsControler,1,nil,tp) then Duel.ShuffleDeck(tp) end
-	if g:IsExists(Card.IsControler,1,nil,1-tp) then Duel.ShuffleDeck(1-tp) end
-	if #g==3 then
+function cid.drop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,LOCATION_HAND)
+	if Duel.SendtoDeck(g,nil,0,REASON_RULE)~=0 then
+		local og=g:Filter(Card.IsLocation,nil,LOCATION_DECK)
+		if og:IsExists(Card.IsControler,1,nil,tp) then Duel.ShuffleDeck(tp) end
+		if og:IsExists(Card.IsControler,1,nil,1-tp) then Duel.ShuffleDeck(1-tp) end
 		Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_RULE)
-		Duel.Draw(1-tp,1,REASON_RULE)
+		local ct1=og:FilterCount(aux.FilterEqualFunction(Card.GetPreviousControler,tp),nil)
+		local ct2=og:FilterCount(aux.FilterEqualFunction(Card.GetPreviousControler,1-tp),nil)
+		Duel.Draw(tp,ct1,REASON_RULE)
+		Duel.Draw(1-tp,ct2,REASON_RULE)
 	end
 end

@@ -23,9 +23,9 @@ function cid.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,id)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
+	e3:SetCountLimit(1)
+	e3:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
+	e3:SetCost(cid.cost)
 	e3:SetTarget(cid.tg)
 	e3:SetOperation(cid.op)
 	c:RegisterEffect(e3)
@@ -57,27 +57,27 @@ function cid.hlimit(e)
 	end
 	return ct+1
 end
-function cid.filter(c)
-	return not c:IsType(TYPE_EXTRA) and c:IsAbleToDeck()
+function cid.cfilter(c)
+	return c:IsSetCard(0x70b) and c:IsDiscardable()
 end
-function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) end
-	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,3,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,cid.filter,1,1,REASON_COST+REASON_DISCARD)
+end
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(2)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
+end
+function cid.dfilter(c)
+	return c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_EFFECT) and not c:IsPublic
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3 then return end
-	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_DECK)
-	if g:IsExists(Card.IsControler,1,nil,tp) then Duel.ShuffleDeck(tp) end
-	if g:IsExists(Card.IsControler,1,nil,1-tp) then Duel.ShuffleDeck(1-tp) end
-	if #g==3 then
-		Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_RULE)
-		Duel.Draw(1-tp,1,REASON_RULE)
-	end
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	local ct=Duel.Draw(p,d,REASON_EFFECT)
+	local g=Duel.GetDecktopGroup(p,ct):Filter(cid.dfilter,nil)
+	if #g==0 then return end
+	Duel.ConfirmCards(1-tp,g)
+	if Duel.SendtoDeck(g,1-tp,2,REASON_EFFECT)<ct then Duel.ShuffleHand(tp) end
 end

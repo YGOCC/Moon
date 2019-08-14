@@ -59,9 +59,9 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local dir=Duel.GetAttackTarget()==nil
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
 	if chk==0 then return true end
-	if Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) then
+	if Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
+		local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 		if dir then
 			e:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)

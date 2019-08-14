@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Insakerator Ix
+--created & coded by Lyris
+--火良運
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If you draw this card: You can reveal this card; Special Summon it, then unless it was drawn by a card effect, draw 1 card.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -11,7 +11,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.sptg1)
 	e1:SetOperation(cid.spop1)
 	c:RegisterEffect(e1)
-	--Your hand size limit is increased by 1.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_HAND_LIMIT)
@@ -20,7 +19,6 @@ function cid.initial_effect(c)
 	e2:SetTargetRange(1,0)
 	e2:SetValue(cid.hlimit)
 	c:RegisterEffect(e2)
-	--If this card is Special Summoned: Make both players draw 1 card.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
