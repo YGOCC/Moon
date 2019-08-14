@@ -18,6 +18,7 @@ EFFECT_COUNT_SECOND_HOPT			=10000000
 --Commonly used cards
 CARD_BLUEEYES_SPIRIT				=59822133
 CARD_CYBER_DRAGON					=70095154
+CARD_PYRO_CLOCK						=1082946
 CARD_INLIGHTENED_PSYCHIC_HELMET		=210400006
 CARD_REDUNDANCY_TOKEN				=210400054
 CARD_NEBULA_TOKEN					=218201917
@@ -56,6 +57,7 @@ dofile("expansions/script/proc_timeleap.lua") --Time Leaps
 dofile("expansions/script/proc_relay.lua") --Relays
 dofile("expansions/script/proc_harmony.lua") --Harmonies
 dofile("expansions/script/proc_accent.lua") --Accents
+dofile("expansions/script/proc_toxia.lua") --Toxias
 
 Card.IsType=function(c,tpe,scard,sumtype,p)
 	local custpe=tpe>>32

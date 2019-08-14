@@ -7,7 +7,6 @@ function c249000933.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(c249000933.spcon1)
-	e1:SetOperation(c249000933.spop1)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -49,7 +48,7 @@ function c249000933.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c249000933.spfilter1(c)
-	return c:IsSetCard(0x47) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x47)
 end
 function c249000933.spcon1(e,c)
 	if c==nil then return true end
@@ -57,14 +56,8 @@ function c249000933.spcon1(e,c)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c249000933.spfilter1,tp,LOCATION_GRAVE,0,1,nil)
 end
-function c249000933.spop1(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c249000933.spfilter1,tp,LOCATION_GRAVE,0,2,2,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
-end
 function c249000933.spfilter2(c)
-	return c:IsSetCard(0x47) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x47) and c:IsDiscardable()
 end
 function c249000933.spcon2(e,c)
 	if c==nil then return true end
@@ -76,7 +69,7 @@ function c249000933.spop2(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g1=Duel.SelectMatchingCard(tp,c249000933.spfilter2,tp,LOCATION_HAND,0,2,2,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	Duel.SendtoGrave(g1,REASON_COST)
+	Duel.SendtoGrave(g1,REASON_COST+REASON_DISCARD)
 end
 function c249000933.costchange(e,re,rp,val)
 	if re and re:GetHandler():IsSetCard(0x47) and not re:GetHandler():IsCode(9236985) then
@@ -90,11 +83,11 @@ function c249000933.filter(c)
 end
 function c249000933.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000933.filter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function c249000933.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c249000933.filter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c249000933.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

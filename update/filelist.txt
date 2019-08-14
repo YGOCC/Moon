@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	e3eaf88fb89760fe25106bcc9441035f
+﻿expansions/Cards-non-QCD.cdb	d9322832cc2245bf188dad330a479d05
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -10340,7 +10340,7 @@ expansions/script/c249000929.lua	4a7410244ffe12b9ad2d176864d52f16
 expansions/script/c249000930.lua	ddb7e0dbefb3bfc5effc6e0b6a4637f4
 expansions/script/c249000931.lua	47408a0a77664259bb80af1b58b91c99
 expansions/script/c249000932.lua	4f4a27e5824b1f9cf02ccd3dc92a02b6
-expansions/script/c249000933.lua	e89f412b75d8da594e6bf31dbf488984
+expansions/script/c249000933.lua	4cd0946db23db4d8727d8512ac47e4bd
 expansions/script/c249000934.lua	cdbd6e768a8779b0cc278578fed25a92
 expansions/script/c249000935.lua	5c5905725e2fe2075ff566f3c22c2799
 expansions/script/c249000936.lua	a8589fb7df226cf533b4c1efc12420c9
@@ -13973,7 +13973,7 @@ expansions/script/c99988883.lua	0086aa43eab63341d10d5eab6fbbec81
 expansions/script/c99988884.lua	1196ba8d010cd032355475552bf2b3cb
 expansions/script/c99988885.lua	594b4646a046875814610c324512fd91
 expansions/script/c99988886.lua	aaec3a40aee0792f7e3b024b499c869a
-expansions/script/init.lua	d5ca93b755618b42aed6379001770284
+expansions/script/init.lua	eb02645901e7a3f21050bf4fef2ded29
 expansions/script/json.lua	d41a01cf67c76915b49c57d21ac471ee
 expansions/script/lap.lua	1325997ac4231550048dae57e7eb75b0
 expansions/script/proc_accent.lua	0f1b6ee2dcc20cee10b3ab19fee0b393
@@ -13990,6 +13990,7 @@ expansions/script/proc_relay.lua	081713b9b8cdea0a0981fea73b27ca0d
 expansions/script/proc_skill.lua	cbaa68f0971f731a81abf7bd080276b2
 expansions/script/proc_spatial.lua	62c0aaaf4623ec2136085fd3057e3fc2
 expansions/script/proc_timeleap.lua	7fe3eb417419f765c8a2866e000fddc7
+expansions/script/proc_toxia.lua	f0d767a7f09b9103ba2bfe2f868c97e5
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
 sound/BGM/custom/ASTERIA - Joyful Tea Party.mp3	6534ddde9e7ee1d39bddb4298cd7168a
 sound/BGM/custom/ASTERIA - Queen's Palace.mp3	92fa00f308187011ddd096b1a5ff6ea7
@@ -14070,6 +14071,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	b2b3e83023bcc52b9c03a6e726f3dd17
+update/filelist.txt	49fb274bc2fdf3d6cf04303b3e9d8eea
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	3ff00e84067dab84418a1337a077364c
+update/version.txt	32df140f0a26d6e8edbb2e31ffa05e52
