@@ -18,17 +18,20 @@ function c249000982.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(c249000982.filter1,tp,LOCATION_ONFIELD,0,1,c)
 		and Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,c) end
-	local g1=Duel.SelectTarget(tp,c249000982.filter1,tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g1=Duel.SelectTarget(tp,c249000982.filter1,tp,LOCATION_ONFIELD,0,1,1,c)
+	e:SetLabelObject(g1:GetFirst())
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,1,0,0)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g2=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g2,1,0,0)
-	e:SetLabelObject(g2:GetFirst())
+	local g2=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,c)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g2,1,0,0)
 end
 function c249000982.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	local tc=e:GetLabelObject()
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local tc2=g:GetFirst()
+	if tc==tc2 then tc2=g:GetNext() end
+	if tc and tc==e:GetLabelObject() and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
@@ -48,8 +51,7 @@ function c249000982.activate(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e3,true)
 	end
-	local tc2=e:GetLabelObject()
-	if tc2:IsRelateToEffect(e) then
+	if tc2 and tc2:IsRelateToEffect(e) then
 		Duel.Destroy(tc2,REASON_EFFECT)
 	end
 end
