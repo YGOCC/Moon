@@ -63,7 +63,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	for i=1,ft do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 		g=g+Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,g,tp)
-		if i<ft or not Duel.SelectYesNo(tp,aux.Stringid(id,0)) then break end
+		if i<ft and not Duel.SelectYesNo(tp,aux.Stringid(id,0)) then break end
 	end
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,#g,0,0)
