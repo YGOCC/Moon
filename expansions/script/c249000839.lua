@@ -10,18 +10,13 @@ function c249000839.initial_effect(c)
 	e1:SetTarget(c249000839.target)
 	e1:SetOperation(c249000839.operation)
 	c:RegisterEffect(e1)
-	Duel.AddCustomActivityCounter(249000839,ACTIVITY_SPSUMMON,c249000839.counterfilter)
-end
-function c249000839.counterfilter(c)
-	return c:GetSummonType()~=SUMMON_TYPE_LINK
 end
 function c249000839.costfilter(c)
 	return c:IsSetCard(0x1F7) and c:IsAbleToRemoveAsCost()
 end
 function c249000839.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler() 
-	if chk==0 then return Duel.GetCustomActivityCount(249000839,tp,ACTIVITY_SPSUMMON)==0
-	and Duel.IsExistingMatchingCard(c249000839.costfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000839.costfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil)
 		end
 	if Duel.GetLP(tp) < 3000 then
 		Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
@@ -31,15 +26,6 @@ function c249000839.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c249000839.costfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(c249000839.splimitcost)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
 end
 function c249000839.splimitcost(e,c,tp,sumtp,sumpos)
 	return bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK
@@ -72,6 +58,15 @@ function c249000839.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetLabelObject(tc)
 		Duel.RegisterEffect(e1,tp)
 		tc:CompleteProcedure()
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_FIELD)
+		e2:SetRange(LOCATION_MZONE)
+		e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+		e2:SetTargetRange(1,0)
+		e2:SetTarget(c249000839.splimitcost)
+		e2:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e2,tp)
 	end
 end
 function c249000839.rmcon(e,tp,eg,ep,ev,re,r,rp)

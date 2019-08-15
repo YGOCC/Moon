@@ -50,7 +50,7 @@ function c1787.matfilter1(c,syncard)
 	return c:IsType(TYPE_TUNER) and c:IsAttribute(ATTRIBUTE_WIND) and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsCanBeSynchroMaterial(syncard)
 end
 function c1787.matfilter2(c,syncard)
-	return c:IsNotTuner() and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsCanBeSynchroMaterial(syncard)
+	return c:IsNotTuner(syncard) and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsCanBeSynchroMaterial(syncard)
 end
 function c1787.synfilter1(c,syncard,lv,g1,g2,g3,g4)
 	local tlv=c:GetSynchroLevel(syncard)
