@@ -22,11 +22,12 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_PZONE,0,nil,0x7c4)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local tg=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA+LOCATION_PZONE,0,3,3,nil)
+	local tg=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA,0,3-#g,3-#g,nil)
 	if tg:GetCount()~=3 then return end
-	local ct=Duel.Destroy(tg,REASON_EFFECT)
-	if ct==3 then
+	local dt=Duel.Destroy(tg+Duel.GetFieldGroup(tp,LOCATION_PZONE,0),REASON_EFFECT)
+	if dt==3 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,2,REASON_EFFECT)
 	end

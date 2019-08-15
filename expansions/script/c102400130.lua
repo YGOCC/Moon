@@ -83,9 +83,10 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EVENT_PHASE+PHASE_END)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e2:SetCountLimit(1)
+		e2:SetRange(LOCATION_MZONE)
 		e2:SetLabelObject(tc)
 		e2:SetOperation(cid.tdesop)
-		Duel.RegisterEffect(e2,tp)
+		tc:RegisterEffect(e2)
 	end
 	Duel.SpecialSummonComplete()
 end
