@@ -56,5 +56,5 @@ function c249000936.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000936.handcon(e)
-	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0,nil)==0
+	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0,nil)==0
 end

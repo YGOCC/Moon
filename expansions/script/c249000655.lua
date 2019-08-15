@@ -47,13 +47,32 @@ function c249000655.recop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(tp,ct*400,REASON_EFFECT)
 end
 function c249000655.costfilter(c)
-	return c:IsSetCard(0x2052) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x2052) and c:IsAbleToRemoveAsCost() and c:IsType(TYPE_MONSTER)
+end
+function c249000655.costfilter2(c,e)
+	return c:IsSetCard(0x2052) and not c:IsPublic() and c:IsType(TYPE_MONSTER)
 end
 function c249000655.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000655.costfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c249000655.costfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	local c=e:GetHandler()
+	if chk==0 then return (Duel.IsExistingMatchingCard(c249000655.costfilter,tp,LOCATION_GRAVE,0,1,nil)
+	or Duel.IsExistingMatchingCard(c249000655.costfilter2,tp,LOCATION_HAND,0,1,c)) end
+	local option
+	if Duel.IsExistingMatchingCard(c249000655.costfilter2,tp,LOCATION_HAND,0,1,c)  then option=0 end
+	if Duel.IsExistingMatchingCard(c249000655.costfilter,tp,LOCATION_GRAVE,0,1,nil) then option=1 end
+	if Duel.IsExistingMatchingCard(c249000655.costfilter,tp,LOCATION_GRAVE,0,1,nil)
+	and Duel.IsExistingMatchingCard(c249000655.costfilter2,tp,LOCATION_HAND,0,1,c) then
+		option=Duel.SelectOption(tp,526,1102)
+	end
+	if option==0 then
+		g=Duel.SelectMatchingCard(tp,c249000655.costfilter2,tp,LOCATION_HAND,0,1,1,c)
+		Duel.ConfirmCards(1-tp,g)
+		Duel.ShuffleHand(tp)
+	end
+	if option==1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,c249000655.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
+	end
 end
 function c249000655.tgfilter1(c,e,tp)
 	return Duel.IsExistingMatchingCard(c249000655.tgfilter3,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetOriginalRace())
