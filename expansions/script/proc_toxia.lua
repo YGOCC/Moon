@@ -67,16 +67,18 @@ function Auxiliary.AddToxiaProc(c,potency,sac,req,...)
 	c:RegisterEffect(ge2)
 end
 function Auxiliary.ToxiaCondition(req,...)
+	local funs={...}
 	return  function(e,c)
 				if c==nil then return true end
 				if c:IsType(TYPE_PENDULUM+TYPE_PANDEMONIUM+TYPE_RELAY) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
-				return req(e,tp,0,...)
+				return req(e,tp,0,table.unpack(funs))
 			end
 end
 function Auxiliary.ToxiaOperation(potency,sac,req,...)
+	local funs={...}
 	return  function(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
-				req(e,tp,1,...)
+				req(e,tp,1,table.unpack(funs))
 				Duel.Hint(HINT_CARD,0,c:GetOriginalCode())
 				local e0=sac(1-tp,potency)
 				c:SetTurnCounter(0)
