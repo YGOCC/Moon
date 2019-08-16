@@ -20,14 +20,14 @@ function c249000657.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c249000657.filter1(c)
-	return c:IsSetCard(0x1052) and c:IsAbleToDeck()
+	return c:IsSetCard(0x1052) or c:IsSetCard(0x2052) and c:IsAbleToDeck()
 end
 function c249000657.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(c249000657.filter1,tp,LOCATION_GRAVE,0,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(c249000657.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
 		and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g1=Duel.SelectTarget(tp,c249000657.filter1,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g1=Duel.SelectTarget(tp,c249000657.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,1,0,0)
 	e:SetLabelObject(g1:GetFirst())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)

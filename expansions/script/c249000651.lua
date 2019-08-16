@@ -19,6 +19,18 @@ function c249000651.initial_effect(c)
 	e2:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e2:SetValue(aux.FALSE)
 	c:RegisterEffect(e2)
+	--destroy
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(33776843,0))
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetCountLimit(1)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCondition(c249000651.condition)
+	e3:SetTarget(c249000651.target)
+	e3:SetOperation(c249000651.operation)
+	c:RegisterEffect(e3)
 end
 function c249000651.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)>0 end
@@ -51,5 +63,24 @@ function c249000651.damop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.Damage(p,dam,REASON_EFFECT)
 			end
 		end
+	end
+end
+function c249000651.condition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetTurnID()~=Duel.GetTurnCount()
+end
+function c249000651.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function c249000651.operation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 and tc:IsPreviousLocation(LOCATION_MZONE) then
+		local atk=tc:GetTextAttack()
+		if atk<0 then atk=0 end
+		Duel.BreakEffect()
+		Duel.Damage(1-tp,atk,REASON_EFFECT)
 	end
 end

@@ -12,7 +12,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.filter(c)
-	return c:IsSetCard(0x7c4) and c:IsType(TYPE_PENDULUM) and c:IsDestructable() and c:IsFaceup()
+	return c:IsSetCard(0x7c4) and c:IsType(TYPE_PENDULUM) and c:IsDestructable() and c:IsFaceup() and 
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2)
@@ -25,7 +25,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_PZONE,0,nil,0x7c4)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local tg=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA,0,3-#g,3-#g,nil)
-	if tg:GetCount()~=3 then return end
+	if #tg+#g~=3 then return end
 	local dt=Duel.Destroy(tg+Duel.GetFieldGroup(tp,LOCATION_PZONE,0),REASON_EFFECT)
 	if dt==3 then
 		Duel.BreakEffect()

@@ -25,7 +25,7 @@ function c249000937.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c249000937.filter4(c,e,tp)
 	if not (c:GetLevel() > 0) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
-	local mg=Duel.GetMatchingGroup(c249000937.filter5,tp,LOCATION_MZONE+LOCATION_HAND,0,nil)
+	local mg=Duel.GetMatchingGroup(c249000937.filter5,tp,LOCATION_GRAVE+LOCATION_HAND,0,nil)
 	return mg:CheckWithSumGreater(Card.GetLevel,math.ceil(c:GetLevel()*1.5),c)
 end
 function c249000937.filter5(c)
@@ -36,7 +36,7 @@ function c249000937.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c249000937.activate(e,tp,eg,ep,ev,re,r,rp)
-	local mg=Duel.GetMatchingGroup(c249000937.filter5,tp,LOCATION_MZONE+LOCATION_HAND,0,nil)
+	local mg=Duel.GetMatchingGroup(c249000937.filter5,tp,LOCATION_GRAVE+LOCATION_HAND,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=Duel.SelectMatchingCard(tp,c249000937.filter4,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 	local tc=tg:GetFirst()
