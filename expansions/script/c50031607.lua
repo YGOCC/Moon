@@ -61,7 +61,7 @@ end
 
 
 		function c50031607.condition(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_MATERIAL+0x10000000
+	return r== REASON_EVOLUTE ~=0
 end
 function c50031607.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

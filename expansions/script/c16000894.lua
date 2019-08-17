@@ -108,8 +108,7 @@ function c16000894.ffilter(c)
 end
 function c16000894.mtcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetReasonCard()
-	return  ec:GetMaterial():IsExists(c16000894.ffilter,1,nil) and r&(REASON_SUMMON+REASON_FUSION+REASON_SYNCHRO+REASON_RITUAL+REASON_XYZ+REASON_LINK)==0
-end
+	return  ec:GetMaterial():IsExists(c16000894.ffilter,1,nil) and  r==REASON_EVOLUTE ~=0
 function c16000894.mtop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,16000894)~=0 then return end
 	Duel.Hint(HINT_CARD,0,16000894)

@@ -62,7 +62,7 @@ function c16000876.ffilter(c)
 end
 		function c16000876.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetReasonCard()
-	return  ec:GetMaterial():IsExists(c16000876.ffilter,1,nil) and r&(REASON_SUMMON+REASON_FUSION+REASON_SYNCHRO+REASON_RITUAL+REASON_XYZ+REASON_LINK)==0
+	return  ec:GetMaterial():IsExists(c16000876.ffilter,1,nil) and  r==REASON_EVOLUTE ~=0
 end
 function c16000876.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

@@ -3,17 +3,17 @@ local ref=_G['c'..16000830]
 local id=16000830
 function c16000830.initial_effect(c)
   --special summon
---	local e0=Effect.CreateEffect(c)
---	e0:SetType(EFFECT_TYPE_FIELD)
---	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
---	e0:SetCode(EFFECT_SPSUMMON_PROC)
---	e0:SetRange(LOCATION_HAND)
---	e0:SetCountLimit(1,16000830)
---	e0:SetCondition(c16000830.sprcon)
---	c:RegisterEffect(e0) 
---	local e1=e0:Clone()
----	e1:SetCondition(c16000830.sprcon2)
---	c:RegisterEffect(e1)
+--  local e0=Effect.CreateEffect(c)
+--  e0:SetType(EFFECT_TYPE_FIELD)
+--  e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+--  e0:SetCode(EFFECT_SPSUMMON_PROC)
+--  e0:SetRange(LOCATION_HAND)
+--  e0:SetCountLimit(1,16000830)
+--  e0:SetCondition(c16000830.sprcon)
+--  c:RegisterEffect(e0) 
+--  local e1=e0:Clone()
+--- e1:SetCondition(c16000830.sprcon2)
+--  c:RegisterEffect(e1)
 	--summon success
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -131,7 +131,7 @@ function c16000830.splimit(e,c)
 end
 function c16000830.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetReasonCard()
-	return ec:GetMaterial():IsExists(c16000830.ffilter,1,nil) and r&(REASON_SUMMON+REASON_FUSION+REASON_SYNCHRO+REASON_RITUAL+REASON_XYZ+REASON_LINK)==0
+	return ec:GetMaterial():IsExists(c16000830.ffilter,1,nil) and  r==REASON_EVOLUTE ~=0
 end
 function c16000830.operation2(e,tp,eg,ep,ev,re,r,rp)
   if Duel.GetFlagEffect(tp,16000830)~=0 then return end
