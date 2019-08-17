@@ -14,6 +14,8 @@ CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_EVOLUTE
 
 SUMMON_TYPE_EVOLUTE					=SUMMON_TYPE_SPECIAL+388
 
+REASON_EVOLUTE						=0x10000000
+
 --Custom Type Table
 Auxiliary.Evolutes={} --number as index = card, card as index = function() is_xyz
 
@@ -384,7 +386,7 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 				op(tc,tp)
 			end
 		else
-			Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
+			Duel.SendtoGrave(g,REASON_MATERIAL+REASON_EVOLUTE)
 		end
 		tc=g:GetNext()
 	end
