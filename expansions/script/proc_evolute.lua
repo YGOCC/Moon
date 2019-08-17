@@ -299,37 +299,37 @@ function Auxiliary.EvoluteValue(c,ec)
 		return rk+0x10000*lv
 	end
 end
-function Auxiliary.EvoluteRecursiveFilter(c,tp,sg,mg,ec,ct,minc,maxc,...)
+function Auxiliary.EvoluteRecursiveFilter(c,tp,sg,mg,ec,ct,minc,maxc,echeck,...)
 	sg:AddCard(c)
 	if not (c.EvoFakeMaterial and c.EvoFakeMaterial()) then ct=ct+1 end
 	
-	local res=Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,...)
-		or (ct<maxc and mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,sg,tp,sg,mg,ec,ct,minc,maxc,...))
+	local res=Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,echeck,...)
+		or (ct<maxc and mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,sg,tp,sg,mg,ec,ct,minc,maxc,echeck,...))
 	sg:RemoveCard(c)
 	if not (c.EvoFakeMaterial and c.EvoFakeMaterial()) then ct=ct-1 end
 	return res
 end
-function Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,...)
+function Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,echeck,...)
 	local funs={...}
 	for _,f in pairs(funs) do
-		if not sg:IsExists(f,1,nil) then return false end
+		if not sg:IsExists(f,ct,nil) and (not echeck or not echeck(sg,ec,tp)) then return false end
 	end
-	return ct>=minc and (ec:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) or sg:CheckWithSumEqual(Auxiliary.EvoluteValue,ec:GetStage(),ct,ct,ec)) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0
+	return ct>=minc and (not echeck or echeck(sg,ec,tp)) and (ec:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) or sg:CheckWithSumEqual(Auxiliary.EvoluteValue,ec:GetStage(),ct,ct,ec)) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0
 end
-function Auxiliary.EvoluteCondition(outdate1,outdate2,min,max,...)
+function Auxiliary.EvoluteCondition(echeck,outdate,min,max,...)
 	local funs={...}
 	return  function(e,c)
 				if c==nil then return true end
 				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local mg=Auxiliary.GetEvoluteMaterials(c,tp)
-				return mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,nil,tp,Group.CreateGroup(),mg,c,0,min,max,table.unpack(funs))
+				return mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,nil,tp,Group.CreateGroup(),mg,c,0,min,max,echeck,table.unpack(funs))
 			end
 end
 function Auxiliary.GetEvoluteMaterials(ec,tp)
 	return Duel.GetMatchingGroup(Card.IsCanBeEvoluteMaterial,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,0,nil,ec)
 end
-function Auxiliary.EvoluteTarget(outdate1,outdate2,minc,maxc,...)
+function Auxiliary.EvoluteTarget(echeck,outdate,minc,maxc,...)
 	local funs={...}
 	return  function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 				local mg=Auxiliary.GetEvoluteMaterials(c,tp)
@@ -348,7 +348,7 @@ function Auxiliary.EvoluteTarget(outdate1,outdate2,minc,maxc,...)
 				local finish=false
 				while not (sg:GetCount()>=maxc) do
 					finish=Auxiliary.EvoluteCheckGoal(tp,sg,c,minc,#sg,table.unpack(funs))
-					local cg=mg:Filter(Auxiliary.EvoluteRecursiveFilter,sg,tp,sg,mg,c,#sg,minc,maxc,table.unpack(funs))
+					local cg=mg:Filter(Auxiliary.EvoluteRecursiveFilter,sg,tp,sg,mg,c,#sg,minc,maxc,echeck,table.unpack(funs))
 					if #cg==0 then break end
 					local cancel=not finish
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
