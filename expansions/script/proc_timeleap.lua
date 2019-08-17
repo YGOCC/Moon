@@ -8,7 +8,10 @@ TYPE_TIMELEAP						=0x10000000000
 TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_TIMELEAP
 CTYPE_TIMELEAP						=0x100
 CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_TIMELEAP
+
 SUMMON_TYPE_TIMELEAP				=SUMMON_TYPE_SPECIAL+825
+
+REASON_TIMELEAP	=0x10000000000
 
 --Custom Type Table
 Auxiliary.Timeleaps={} --number as index = card, card as index = function() is_synchro
@@ -18,9 +21,9 @@ TYPE_EXTRA							=TYPE_EXTRA|TYPE_TIMELEAP
 
 --overwrite functions
 local get_type, get_orig_type, get_prev_type_field, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, 
-	get_prev_level_field, is_level, is_level_below, is_level_above = 
+	get_prev_level_field, is_level, is_level_below, is_level_above, get_reason = 
 	Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetLevel, 
-	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove
+	Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Card.GetReason
 
 Card.GetType=function(c,scard,sumtype,p)
 	local tpe=scard and get_type(c,scard,sumtype,p) or get_type(c)
@@ -92,6 +95,14 @@ Card.IsLevelAbove=function(c,lv)
 	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
 	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
 	return is_level_above(c,lv)
+end
+Card.GetReason=function(c)
+	local rs=get_reason(c)
+	local rc=c:GetReasonCard()
+	if rc and Auxiliary.Timeleaps[rc] then
+		rs=rs|REASON_TIMELEAP
+	end
+	return rs
 end
 
 --Custom Functions

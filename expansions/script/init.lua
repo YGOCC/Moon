@@ -33,6 +33,9 @@ TYPE_EXTRA							=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK
 function Card.IsCustomType(c,tpe,scard,sumtype,p)
 	return (c:GetType(scard,sumtype,p)>>32)&tpe>0
 end
+function Card.IsCustomReason(c,rs)
+	return (c:GetReason()>>32)&rs>0
+end
 function GetID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -42,7 +45,7 @@ function GetID()
 end
 --overwrite functions
 local is_type, card_remcounter, duel_remcounter, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv, duel_overlay, duel_set_lp, duel_select_target, duel_banish, get_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location, get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, card_check_remove_overlay_card = 
-	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Card.RegisterEffect, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation, Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetLevel, Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.CheckRemoveOverlayCard
+	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Card.RegisterEffect, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation, Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetLevel, Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.CheckRemoveOverlayCard, Card.IsReason
 
 dofile("expansions/script/proc_evolute.lua") --Evolutes
 dofile("expansions/script/proc_conjoint.lua") --Conjoints
@@ -58,7 +61,15 @@ dofile("expansions/script/proc_relay.lua") --Relays
 dofile("expansions/script/proc_harmony.lua") --Harmonies
 dofile("expansions/script/proc_accent.lua") --Accents
 dofile("expansions/script/proc_toxia.lua") --Toxias
+dofile("expansions/script/proc_annotee.lua") --Annotees
 
+Card.IsReason=function(c,rs)
+	local cusrs=rs>>32
+	local ors=rs&0xffffffff
+	if c:GetReason()&ors>0 then return true end
+	if cusrs<=0 then return false end
+	return c:IsCustomReason(cusrs)
+end
 Card.IsType=function(c,tpe,scard,sumtype,p)
 	local custpe=tpe>>32
 	local otpe=tpe&0xffffffff

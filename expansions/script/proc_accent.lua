@@ -11,6 +11,8 @@ TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_ACCENT
 CTYPE_ACCENT						=0x1000
 CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_ACCENT
 
+REASON_ACCENT						=0x4000000000
+
 --Custom Type Table
 Auxiliary.Accents={} --number as index = card, card as index = function() is_fusion
 
@@ -18,8 +20,8 @@ Auxiliary.Accents={} --number as index = card, card as index = function() is_fus
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_ACCENT
 
 --overwrite functions
-local get_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location =
-Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation
+local get_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location, get_reason =
+	Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation, Card.GetReason
 
 Card.GetType=function(c,scard,sumtype,p)
 	local tpe=scard and get_type(c,scard,sumtype,p) or get_type(c)
@@ -53,7 +55,7 @@ Card.GetPreviousTypeOnField=function(c)
 end
 Card.GetPreviousLocation=function(c)
 	local lc=get_prev_location(c)
-	if lc==LOCATION_REMOVED and c:IsLocation(LOCATION_DECK) and c:IsReason(0x4000000000) then
+	if lc==LOCATION_REMOVED and c:IsLocation(LOCATION_DECK) and c:IsReason(REASON_ACCENT) then
 		if c:IsType(TYPE_MONSTER) then lc=LOCATION_MZONE
 		else lc=LOCATION_SZONE end
 	end
@@ -65,6 +67,14 @@ Card.GetPreviousLocation=function(c)
 end
 Card.IsPreviousLocation=function(c,loc)
 	return c:GetPreviousLocation()&loc>0
+end
+Card.GetReason=function(c)
+	local rs=get_reason(c)
+	local rc=c:GetReasonCard()
+	if rc and Auxiliary.Accents[rc] or Auxiliary.Accents[c:GetReasonEffect():GetOwner()] then
+		rs=rs|REASON_ACCENT
+	end
+	return rs
 end
 
 --Custom Functions
@@ -125,7 +135,7 @@ function Auxiliary.AddAccentProc(c,f,...)
 	Duel.RegisterEffect(ge2,0)
 end
 function Auxiliary.MaterialFilter(c,atc)
-	return not c:IsLocation(LOCATION_REMOVED) or c:GetReason()&REASON_MATERIAL+0x4000000000~=REASON_MATERIAL+0x4000000000 or c:GetReasonCard()~=atc or c:IsFacedown()
+	return not c:IsLocation(LOCATION_REMOVED) or c:GetReason()&REASON_MATERIAL+REASON_ACCENT~=REASON_MATERIAL+REASON_ACCENT or c:GetReasonCard()~=atc or c:IsFacedown()
 end
 function Auxiliary.AccentShuffleOp(e,tp,eg,ep,ev,re,r,rp)
 	local ag=Duel.GetMatchingGroup(Card.IsType,tp,0xff,0xff,nil,TYPE_ACCENT)
@@ -138,7 +148,7 @@ function Auxiliary.AccentShuffleOp(e,tp,eg,ep,ev,re,r,rp)
 			g=c:GetMaterial()
 			if g:IsExists(Auxiliary.MaterialFilter,1,nil,c) then sumable=false end
 			if sumable then
-				Duel.SendtoDeck(g,nil,2,0x4000000000)
+				Duel.SendtoDeck(g,nil,2,REASON_ACCENT)
 			end
 			c:ResetFlagEffect(10003000)
 		end

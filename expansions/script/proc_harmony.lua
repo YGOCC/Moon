@@ -8,6 +8,8 @@ TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_HARMONY
 CTYPE_HARMONY						=0x800
 CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_HARMONY
 
+REASON_HARMONY						=0x2000000000
+
 --Custom Type Table
 Auxiliary.Harmonies={} --number as index = card, card as index = function() is_synchro
 
@@ -15,8 +17,9 @@ Auxiliary.Harmonies={} --number as index = card, card as index = function() is_s
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_HARMONY
 
 --overwrite functions
-local get_type, get_orig_type, get_prev_type_field =
-Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField
+local get_type, get_orig_type, get_prev_type_field, get_reason =
+	Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetReason
+
 Card.GetType=function(c,scard,sumtype,p)
 	local tpe=scard and get_type(c,scard,sumtype,p) or get_type(c)
 	if Auxiliary.Harmonies[c] then
@@ -46,6 +49,14 @@ Card.GetPreviousTypeOnField=function(c)
 		end
 	end
 	return tpe
+end
+Card.GetReason=function(c)
+	local rs=get_reason(c)
+	local rc=c:GetReasonCard()
+	if rc and Auxiliary.Harmonies[rc] then
+		rs=rs|REASON_HARMONY
+	end
+	return rs
 end
 
 --Custom Functions
@@ -158,7 +169,7 @@ function Auxiliary.HarmonyOperation(ph)
 	return  function(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 				local g=e:GetLabelObject()
 				c:SetMaterial(g)
-				Duel.SendtoDeck(g,nil,2,REASON_MATERIAL+0x2000000000)
+				Duel.SendtoDeck(g,nil,2,REASON_MATERIAL+REASON_HARMONY)
 				g:DeleteGroup()
 				local p
 				for i=0,9 do

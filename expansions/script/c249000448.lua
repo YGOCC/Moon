@@ -1,5 +1,13 @@
 --Ovarlay-Force Emerald Gunner
 function c249000448.initial_effect(c)
+	--spsummon proc
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(c249000448.spcon)
+	c:RegisterEffect(e1)
 	--destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(249000448,0))
@@ -11,6 +19,11 @@ function c249000448.initial_effect(c)
 	e3:SetTarget(c249000448.destg)
 	e3:SetOperation(c249000448.desop)
 	c:RegisterEffect(e3)
+end
+function c249000448.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
+		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function c249000448.filter1(c)
 	return c:IsType(TYPE_XYZ) and c:IsAbleToDeck()

@@ -8,6 +8,8 @@ TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_BIGBANG
 CTYPE_BIGBANG						=0x80
 CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_BIGBANG
 
+REASON_BIGBANG						=0x8000000000
+
 --Custom Type Table
 Auxiliary.Bigbangs={} --number as index = card, card as index = function() is_synchro
 
@@ -15,8 +17,8 @@ Auxiliary.Bigbangs={} --number as index = card, card as index = function() is_sy
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_BIGBANG
 
 --overwrite functions
-local get_type, get_orig_type, get_prev_type_field = 
-	Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField
+local get_type, get_orig_type, get_prev_type_field, get_reason = 
+	Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetReason
 
 Card.GetType=function(c,scard,sumtype,p)
 	local tpe=scard and get_type(c,scard,sumtype,p) or get_type(c)
@@ -47,6 +49,14 @@ Card.GetPreviousTypeOnField=function(c)
 		end
 	end
 	return tpe
+end
+Card.GetReason=function(c)
+	local rs=get_reason(c)
+	local rc=c:GetReasonCard()
+	if rc and Auxiliary.Bigbangs[rc] then
+		rs=rs|REASON_BIGBANG
+	end
+	return rs
 end
 
 --Custom Functions
@@ -191,6 +201,6 @@ end
 function Auxiliary.BigbangOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=e:GetLabelObject()
 	c:SetMaterial(g)
-	Duel.SendtoGrave(g,REASON_DESTROY+REASON_MATERIAL+0x8000000000)
+	Duel.SendtoGrave(g,REASON_DESTROY+REASON_MATERIAL+REASON_BIGBANG)
 	g:DeleteGroup()
 end
