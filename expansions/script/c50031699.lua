@@ -31,7 +31,7 @@ function c50031699.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c50031699.filter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x85a) or c:IsRace(RACE_PLANT))and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x85a) or c:IsRace(RACE_PLANT))and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(50031699)
 end
 function c50031699.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
