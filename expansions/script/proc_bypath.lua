@@ -5,7 +5,7 @@
 EFFECT_CELL							=686
 TYPE_BYPATH							=0x200000000000
 TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_BYPATH
-CTYPE_BYPATH						=0x200000000000
+CTYPE_BYPATH						=0x2000
 CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_BYPATH
 
 --Custom Type Table
@@ -129,6 +129,7 @@ function Auxiliary.AddBypathProc(c,cell,...)
 	ge2:SetCondition(Auxiliary.BypathCondition(table.unpack(list)))
 	ge2:SetTarget(Auxiliary.BypathTarget(table.unpack(list)))
 	ge2:SetOperation(Auxiliary.BypathOperation)
+	ge2:SetValue(0x26)
 	c:RegisterEffect(ge2)
 	if not BYPATH_CHECKLIST then
 		BYPATH_CHECKLIST=0

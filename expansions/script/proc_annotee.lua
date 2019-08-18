@@ -3,15 +3,15 @@
 EFFECT_INHERITOR					=748
 EFFECT_CANNOT_BE_ANNOTEE_MATERIAL	=749
 EFFECT_MUST_BE_ANNOTEE_MATERIAL		=750
-TYPE_ANNOTEE						=0x1000000000
+TYPE_ANNOTEE						=0x800000000000
 TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_ANNOTEE
-CTYPE_ANNOTEE						=0x8
+CTYPE_ANNOTEE						=0x8000
 CTYPE_CUSTOM						=CTYPE_CUSTOM|TYPE_ANNOTEE
 
 REASON_ANNOTEE						=0x800000000
 
 --Custom Type Table
-Auxiliary.Annotees={} --number as index = card, card as index = function() is_xyz
+Auxiliary.Annotees={} --number as index = card, card as index = function() is_ritual
 
 --overwrite functions
 local get_type, get_orig_type, get_prev_type_field, get_reason = 

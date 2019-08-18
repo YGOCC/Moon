@@ -5,7 +5,7 @@
 -- EFFECT_POTENCY=717
 TYPE_TOXIA=0x400000000000
 TYPE_CUSTOM=TYPE_CUSTOM|TYPE_TOXIA
-CTYPE_TOXIA=0x8
+CTYPE_TOXIA=0x4000
 CTYPE_CUSTOM=CTYPE_CUSTOM|CTYPE_TOXIA
 
 --Custom Type Table
@@ -103,7 +103,7 @@ function Auxiliary.ToxiaSummon(e,tp,eg,ep,ev,re,r,rp)
 	ct=ct+1
 	c:SetTurnCounter(ct)
 	if ct==e:GetLabel() then
-		if Duel.SpecialSummon(c,0x29,tp,tp,false,false,POS_FACEUP)~=0 then c:CompleteProcedure() end
+		if Duel.SpecialSummon(c,50,tp,tp,false,false,POS_FACEUP)~=0 then c:CompleteProcedure() end
 		e:GetLabelObject():Reset()
 	end
 end

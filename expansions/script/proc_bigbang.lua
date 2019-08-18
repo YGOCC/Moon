@@ -115,7 +115,7 @@ function Auxiliary.AddBigbangProc(c,...)
 	ge2:SetCondition(Auxiliary.BigbangCondition(table.unpack(list)))
 	ge2:SetTarget(Auxiliary.BigbangTarget(table.unpack(list)))
 	ge2:SetOperation(Auxiliary.BigbangOperation)
-	ge2:SetValue(624)
+	ge2:SetValue(340)
 	c:RegisterEffect(ge2)
 end
 function Auxiliary.BigbangCondition(...)

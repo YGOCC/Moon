@@ -12,7 +12,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.filter(c)
-	return c:IsSetCard(0x7c4) and c:IsType(TYPE_PENDULUM) and c:IsDestructable() and c:IsFaceup() and 
+	return c:IsSetCard(0x7c4) and c:IsType(TYPE_PENDULUM) and c:IsDestructable() and c:IsFaceup()
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2)
