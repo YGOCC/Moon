@@ -62,6 +62,7 @@ dofile("expansions/script/proc_harmony.lua") --Harmonies
 dofile("expansions/script/proc_accent.lua") --Accents
 dofile("expansions/script/proc_toxia.lua") --Toxias
 dofile("expansions/script/proc_annotee.lua") --Annotees
+dofile("expansions/script/proc_chroma.lua") --Chromas
 
 Card.IsReason=function(c,rs)
 	local cusrs=rs>>32

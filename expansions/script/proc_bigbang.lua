@@ -148,7 +148,7 @@ end
 function Auxiliary.BigbangCheckGoal(tp,sg,bc,ct,...)
 	local funs,min={...},0
 	for i=1,#funs do
-		if not sg:IsExists(funs[i][1],1,nil) then return false end
+		if not sg:IsExists(funs[i][1],funs[i][2],nil) then return false end
 		min=min+funs[i][2]
 	end
 	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:GetSum(Card.GetBigbangAttack)>=bc:GetAttack() and sg:GetSum(Card.GetBigbangDefense)>=bc:GetDefense()
