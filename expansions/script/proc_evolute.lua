@@ -185,6 +185,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	--... format - any number of materials + optional material - min, max (min can be 0, max can be nil which will set it to 99)	use aux.TRUE for generic materials
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local t={...}
+	if type(echeck)=='function' then table.insert(t,echeck) end
 	local extramat,min,max
 	if type(t[#t])=='number' then
 		max=t[#t]
@@ -298,22 +299,22 @@ function Auxiliary.EvoluteValue(c,ec)
 		return rk+0x10000*lv
 	end
 end
-function Auxiliary.EvoluteRecursiveFilter(c,tp,sg,mg,ec,ct,minc,maxc,echeck,...)
+function Auxiliary.EvoluteRecursiveFilter(c,tp,sg,mg,ec,ct,minc,maxc,...)
 	sg:AddCard(c)
 	if not (c.EvoFakeMaterial and c.EvoFakeMaterial()) then ct=ct+1 end
 	
-	local res=Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,echeck,...)
-		or (ct<maxc and mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,sg,tp,sg,mg,ec,ct,minc,maxc,echeck,...))
+	local res=Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,...)
+		or (ct<maxc and mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,sg,tp,sg,mg,ec,ct,minc,maxc,...))
 	sg:RemoveCard(c)
 	if not (c.EvoFakeMaterial and c.EvoFakeMaterial()) then ct=ct-1 end
 	return res
 end
-function Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,echeck,...)
+function Auxiliary.EvoluteCheckGoal(tp,sg,ec,minc,ct,...)
 	local funs={...}
 	for _,f in pairs(funs) do
-		if not sg:IsExists(f,ct,nil) then return false end
+		if not sg:IsExists(f,1,nil) then return false end
 	end
-	return ct>=minc and (not echeck or echeck(sg,ec,tp)) and (ec:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) or sg:CheckWithSumEqual(Auxiliary.EvoluteValue,ec:GetStage(),ct,ct,ec)) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0
+	return ct>=minc and (ec:IsHasEffect(EFFECT_CONVERGENT_EVOLUTE) or sg:CheckWithSumEqual(Auxiliary.EvoluteValue,ec:GetStage(),ct,ct,ec)) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0
 end
 function Auxiliary.EvoluteCondition(outdate1,outdate2,min,max,...)
 	local funs={...}
@@ -322,7 +323,7 @@ function Auxiliary.EvoluteCondition(outdate1,outdate2,min,max,...)
 				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local mg=Auxiliary.GetEvoluteMaterials(c,tp)
-				return mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,nil,tp,Group.CreateGroup(),mg,c,0,min,max,outdate1,table.unpack(funs))
+				return mg:IsExists(Auxiliary.EvoluteRecursiveFilter,1,nil,tp,Group.CreateGroup(),mg,c,0,min,max,table.unpack(funs))
 			end
 end
 function Auxiliary.GetEvoluteMaterials(ec,tp)
@@ -346,8 +347,8 @@ function Auxiliary.EvoluteTarget(outdate1,outdate2,minc,maxc,...)
 				sg:Merge(bg)
 				local finish=false
 				while not (sg:GetCount()>=maxc) do
-					finish=Auxiliary.EvoluteCheckGoal(tp,sg,c,minc,#sg,outdate1,table.unpack(funs))
-					local cg=mg:Filter(Auxiliary.EvoluteRecursiveFilter,sg,tp,sg,mg,c,#sg,minc,maxc,outdate1,table.unpack(funs))
+					finish=Auxiliary.EvoluteCheckGoal(tp,sg,c,minc,#sg,table.unpack(funs))
+					local cg=mg:Filter(Auxiliary.EvoluteRecursiveFilter,sg,tp,sg,mg,c,#sg,minc,maxc,table.unpack(funs))
 					if #cg==0 then break end
 					local cancel=not finish
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)

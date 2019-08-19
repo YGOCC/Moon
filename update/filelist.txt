@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	3f272d107ef70372dfea95bfeadb5324
+﻿expansions/Cards-non-QCD.cdb	e302ff87ae26f96a4ea2a0ed8354aba8
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -14014,7 +14014,7 @@ expansions/script/proc_bypath.lua	5b03b3ac9463198d5905aae4ff2e01ba
 expansions/script/proc_conjoint.lua	5690f18a1e6cc180cad5f1d5e8900aa7
 expansions/script/proc_corona.lua	2fa2f91a020530c23f0f8533eb66668e
 expansions/script/proc_deckmaster.lua	9f785df09b4401d9db722a868b40941d
-expansions/script/proc_evolute.lua	6ba82b45df7cdbfc7ac42f919fe1d915
+expansions/script/proc_evolute.lua	dd16f70829b0f7688cae99d7ea8aa267
 expansions/script/proc_harmony.lua	be03062d5b6edae1d2cfac7b0b1c5df9
 expansions/script/proc_pandemonium.lua	44818cf34f274f0a999ea3292777e22c
 expansions/script/proc_polarity.lua	c631b11611f4a498f4c63e0f715e7559
@@ -14103,6 +14103,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	f4160b803cd1ca364bc8bdec55a86856
+update/filelist.txt	20a120561a2e917bd8a500aa82161997
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	f92f415b4fd9e1007a9e262eb37b1343
+update/version.txt	9737bb1b428605aa2bc64484f023259f
