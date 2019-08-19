@@ -9,13 +9,13 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-	e1:SetCategory(CATEGORY_DRAW+CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(cid.cfilter,1,nil,tp) end)
 	e1:SetTarget(cid.tg)
 	e1:SetOperation(cid.op)
 	c:RegisterEffect(e1)
 	local e0=Effect.CreateEffect(c)
-	e0:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
+	e0:SetCategory(CATEGORY_DESTROY)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
@@ -40,15 +40,16 @@ end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.NegateAttack()
-	if c:IsRelateToEffect(e) and c:IsDestructable() then
-		Duel.BreakEffect()
-		Duel.Destroy(c,REASON_EFFECT)
-		Duel.Draw(tp,1,REASON_EFFECT)
+	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
+		local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+		if #g>0 then
+			Duel.BreakEffect()
+			Duel.Destroy(g,REASON_EFFECT)
+		end
 	end
 end
 function cid.cfilter(c,tp)
@@ -56,20 +57,29 @@ function cid.cfilter(c,tp)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,0,1,e:GetHandler())
-		and Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g1=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g2=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local n=e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0
+	local f=function(tc) return n==0 or tc:IsAbleToHand() end
+	local m=n~=0 and HINTMSG_RTOHAND or HINTMSG_DESTROY
+	if chk==0 then return Duel.IsExistingTarget(f,tp,LOCATION_ONFIELD,0,1,e:GetHandler())
+		and Duel.IsExistingTarget(f,tp,0,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,m)
+	local g1=Duel.SelectTarget(tp,f,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
+	Duel.Hint(HINT_SELECTMSG,tp,m)
+	local g2=Duel.SelectTarget(tp,f,tp,0,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
+	if n==0 then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,2,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
+	else Duel.SetOperationInfo(0,CATEGORY_TOHAND,g1,2,0,0) end
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
+	if n~=0 then
+		Duel.SendtoHand(tg,nil,REASON_EFFECT)
+		return
+	end
 	if Duel.Destroy(tg,REASON_EFFECT)==0 then return end
 	Duel.Draw(tp,1,REASON_EFFECT)
 	Duel.Draw(1-tp,1,REASON_EFFECT)

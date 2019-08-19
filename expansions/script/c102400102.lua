@@ -15,7 +15,7 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.op)
 	c:RegisterEffect(e1)
 	local e0=Effect.CreateEffect(c)
-	e0:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
+	e0:SetCategory(CATEGORY_DESTROY)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
@@ -40,32 +40,35 @@ end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.NegateAttack()
-	if c:IsRelateToEffect(e) and c:IsDestructable() then
-		Duel.BreakEffect()
-		Duel.Destroy(c,REASON_EFFECT)
-		Duel.Draw(tp,1,REASON_EFFECT)
+	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
+		local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+		if #g>0 then
+			Duel.BreakEffect()
+			Duel.Destroy(g,REASON_EFFECT)
+		end
 	end
 end
 function cid.cfilter(c,tp)
 	return (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER)) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
-function cid.filter(c)
-	return c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER and c:IsSetCard(0x7c4) and c:IsAbleToHand() and not c:IsCode(id)
+function cid.filter(c,n)
+	if not c:IsSetCard(0x7c4) or not c:IsAbleToHand() then return false end
+	if n==0 then return c:IsType(TYPE_MONSTER) and not c:IsCode(id)
+	else return c:IsType(TYPE_SPELL+TYPE_TRAP) end
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil,e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0)
+	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end

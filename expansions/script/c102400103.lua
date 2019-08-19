@@ -15,7 +15,7 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.op)
 	c:RegisterEffect(e1)
 	local e0=Effect.CreateEffect(c)
-	e0:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
+	e0:SetCategory(CATEGORY_DESTROY)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
@@ -40,29 +40,33 @@ end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.NegateAttack()
-	if c:IsRelateToEffect(e) and c:IsDestructable() then
-		Duel.BreakEffect()
-		Duel.Destroy(c,REASON_EFFECT)
-		Duel.Draw(tp,1,REASON_EFFECT)
+	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
+		local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+		if #g>0 then
+			Duel.BreakEffect()
+			Duel.Destroy(g,REASON_EFFECT)
+		end
 	end
 end
 function cid.cfilter(c,tp)
 	return (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER)) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
-function cid.filter(c,e,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsSetCard(0x7c4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function cid.filter(c,e,tp,n)
+	if not c:IsSetCard(0x7c4) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
+	if n==0 then return c:IsAttribute(ATTRIBUTE_LIGHT)
+	else return c:IsAttribute(ATTRIBUTE_DARK) and not c:IsCode(id)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.filter(chkc,e,tp) end
+	local n=e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.filter(chkc,e,tp,n) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,n) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,n)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)

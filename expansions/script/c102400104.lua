@@ -15,7 +15,7 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.op)
 	c:RegisterEffect(e1)
 	local e0=Effect.CreateEffect(c)
-	e0:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
+	e0:SetCategory(CATEGORY_DESTROY)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
@@ -40,15 +40,16 @@ end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.NegateAttack()
-	if c:IsRelateToEffect(e) and c:IsDestructable() then
-		Duel.BreakEffect()
-		Duel.Destroy(c,REASON_EFFECT)
-		Duel.Draw(tp,1,REASON_EFFECT)
+	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
+		local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+		if #g>0 then
+			Duel.BreakEffect()
+			Duel.Destroy(g,REASON_EFFECT)
+		end
 	end
 end
 function cid.cfilter(c,tp)
@@ -69,11 +70,12 @@ end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if e:IsHasType(EFFECT_TYPE_FIELD) then
+	local n=e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0
+	if n~=0 then
 		if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 or not tc:IsRelateToEffect(e) then return end
 		Duel.BreakEffect()
 	end
-	if (e:IsHasType(EFFECT_TYPE_FIELD) or tc:IsRelateToEffect(e)) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+	if (n~=0 or tc:IsRelateToEffect(e)) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) and n~=0 then
 		local fid=c:GetFieldID()
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
