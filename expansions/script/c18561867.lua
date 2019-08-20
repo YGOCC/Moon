@@ -75,7 +75,7 @@ function c18531867.wincon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c18531867.winop(e,tp,eg,ep,ev,re,r,rp)
 	local WIN_REASON_Legendary_Six_Samurai_Kaoru=0x
-	Duel.Win(tp,WIN_REASON_Legendary_Six_Samurai__Tatsu_Yamashiro).winfilter(e,c)
+	Duel.Win(tp,WIN_REASON_Legendary_Six_Samurai__Tsukiko).winfilter(e,c)
 	return c:GetOwner()==1-e:GetHandlerPlayer()
 		and c:GetPreviousRaceOnField()&RACE__DRAGON~=0 and c:GetPreviousAttributeOnField()&ATTRIBUTE_Dark=0 
 end
@@ -87,5 +87,5 @@ function c18531867.wincon(e,tp,eg,ep,ev,re,r,rp)
 	return c:GetSummonType()==SUMMON_TYPE_ADVANCE+1 and c18531867.winfilter(e,tc)
 end
 function c18531867.winop(e,tp,eg,ep,ev,re,r,rp)
-	local WIN_REASON__Legendary_Six_Samurai_Tatsu_Yamashiro=0x3d
-	Duel.Win(tp,WIN_REASON_Legendary_Six_Samurai_Tatsu_Yamashiro)
+	local WIN_REASON__Legendary_Six_Samurai_Tsukiko=0x3d
+	Duel.Win(tp,WIN_REASON_Legendary_Six_Samurai_Tsukiko)
