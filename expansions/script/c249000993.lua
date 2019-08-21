@@ -51,9 +51,9 @@ function c249000993.setfilter(c,tp)
 end
 function c249000993.settg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_GRAVE) and c249000993.setfilter(chkc,tp) end
-	if chk==0 then return Duel.IsExistingTarget(c249000993.setfilter,tp,0,LOCATION_GRAVE,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingTarget(c249000993.setfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectTarget(tp,c249000993.setfilter,tp,0,LOCATION_GRAVE,1,1,nil,tp)
+	local g=Duel.SelectTarget(tp,c249000993.setfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 end
 function c249000993.setop(e,tp,eg,ep,ev,re,r,rp)
