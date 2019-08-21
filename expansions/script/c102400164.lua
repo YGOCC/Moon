@@ -11,14 +11,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.sptg1)
 	e1:SetOperation(cid.spop1)
 	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_HAND_LIMIT)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(1,0)
-	e2:SetValue(cid.hlimit)
-	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
@@ -45,17 +37,6 @@ function cid.spop1(e,tp,eg,ep,ev,re,r,rp)
 		or c:IsReason(REASON_EFFECT) then return end
 	Duel.BreakEffect()
 	Duel.Draw(tp,1,REASON_EFFECT)
-end
-function cid.hlimit(e)
-	local tp,ht=e:GetHandlerPlayer(),{Duel.IsPlayerAffectedByEffect(tp,EFFECT_HAND_LIMIT)}
-	table.remove(ht,e)
-	local ct=6
-	for _,he in ipairs(ht) do
-		local hc=he:GetValue()
-		if type(hc)=='function' then hc=hc(e) end
-		if hc~=ct then ct=hc end
-	end
-	return ct+1
 end
 function cid.cfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x70b) and not c:IsPublic()
