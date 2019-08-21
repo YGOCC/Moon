@@ -57,9 +57,6 @@ function cid.hlimit(e)
 	end
 	return ct+1
 end
-function cid.filter(c)
-	return c:()
-end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDeck,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,nil) end
