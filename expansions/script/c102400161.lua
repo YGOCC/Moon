@@ -1,5 +1,5 @@
 --created & coded by Lyris
---火良運
+--火良運ピ
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -58,13 +58,13 @@ function cid.hlimit(e)
 	return ct+1
 end
 function cid.filter(c)
-	return not c:IsType(TYPE_EXTRA) and c:IsAbleToDeck()
+	return c:()
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) end
-	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,nil) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDeck,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,3,nil)
+	local g=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,3,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
 end
@@ -72,10 +72,11 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3 then return end
 	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup():Filter(Card.IsLocation,nil,LOCATION_DECK)
-	if g:IsExists(Card.IsControler,1,nil,tp) then Duel.ShuffleDeck(tp) end
-	if g:IsExists(Card.IsControler,1,nil,1-tp) then Duel.ShuffleDeck(1-tp) end
-	if #g==3 then
+	local g=Duel.GetOperatedGroup()
+	local tg=g:Filter(Card.IsLocation,nil,LOCATION_DECK)
+	if tg:IsExists(Card.IsControler,1,nil,tp) then Duel.ShuffleDeck(tp) end
+	if tg:IsExists(Card.IsControler,1,nil,1-tp) then Duel.ShuffleDeck(1-tp) end
+	if #g:Filter(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)==3 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_RULE)
 		Duel.Draw(1-tp,1,REASON_RULE)

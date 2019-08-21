@@ -57,30 +57,19 @@ function cid.cfilter(c,tp)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	local n=e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0
-	local f=function(tc) return n==0 or tc:IsAbleToHand() end
-	local m=n~=0 and HINTMSG_RTOHAND or HINTMSG_DESTROY
-	if chk==0 then return Duel.IsExistingTarget(f,tp,LOCATION_ONFIELD,0,1,e:GetHandler())
-		and Duel.IsExistingTarget(f,tp,0,LOCATION_ONFIELD,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,m)
-	local g1=Duel.SelectTarget(tp,f,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
-	Duel.Hint(HINT_SELECTMSG,tp,m)
-	local g2=Duel.SelectTarget(tp,f,tp,0,LOCATION_ONFIELD,1,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,LOCATION_ONFIELD,0,1,e:GetHandler())
+		and Duel.IsExistingTarget(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g1=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g2=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
-	if n==0 then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,2,0,0)
-		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,PLAYER_ALL,1)
-	else Duel.SetOperationInfo(0,CATEGORY_TOHAND,g1,2,0,0) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g1,2,0,0)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) and e:IsHasType(EFFECT_TYPE_FIELD) then return end
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if n~=0 then
-		Duel.SendtoHand(tg,nil,REASON_EFFECT)
-		return
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	if #g>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
-	if Duel.Destroy(tg,REASON_EFFECT)==0 then return end
-	Duel.Draw(tp,1,REASON_EFFECT)
-	Duel.Draw(1-tp,1,REASON_EFFECT)
 end

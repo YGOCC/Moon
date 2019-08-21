@@ -28,9 +28,9 @@ function cid.initial_effect(c)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCountLimit(1,id)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e2:SetCategory(CATEGORY_TOHAND)
-	e2:SetTarget(cid.ptg)
-	e2:SetOperation(cid.pop)
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DRAW)
+	e2:SetTarget(cid.tg)
+	e2:SetOperation(cid.op)
 	c:RegisterEffect(e2)
 end
 function cid.descon(e,tp,eg,ep,ev,re,r,rp)
@@ -74,21 +74,5 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if ct==2 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
-	end
-end
-function cid.pfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x7c4) and c:IsAbleToHand()
-end
-function cid.ptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.pfilter,tp,LOCATION_EXTRA,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_EXTRA)
-end
-function cid.pop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.pfilter,tp,LOCATION_EXTRA,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
 	end
 end

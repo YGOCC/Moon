@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Final Fantasy VII's "Bahamut"
---機夜行襲雷－ダスク
+--機夜光襲雷－ダスク
 local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
@@ -58,7 +58,7 @@ end
 function cid.filter(c,e,tp,n)
 	if not c:IsSetCard(0x7c4) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
 	if n==0 then return c:IsAttribute(ATTRIBUTE_LIGHT)
-	else return c:IsAttribute(ATTRIBUTE_DARK) and not c:IsCode(id)
+	else return c:IsAttribute(ATTRIBUTE_DARK) end
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local n=e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0

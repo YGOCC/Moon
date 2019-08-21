@@ -28,7 +28,6 @@ function cid.initial_effect(c)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCountLimit(1,id)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetTarget(cid.tg)
 	e2:SetOperation(cid.op)
 	c:RegisterEffect(e2)
@@ -56,9 +55,8 @@ function cid.cfilter(c,tp)
 	return (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER)) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local loc=e:IsHasType(EFFECT_TYPE_FIELD) and LOCATION_EXTRA or LOCATION_DECK
 	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) or e:IsHasType(EFFECT_TYPE_SINGLE)) and ((Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) or e:IsHasType(EFFECT_TYPE_FIELD)) and Duel.IsExistingMatchingCard(cid.spfilter,tp,loc,0,1,nil) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) or e:IsHasType(EFFECT_TYPE_SINGLE)) and ((Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) or e:IsHasType(EFFECT_TYPE_FIELD)) and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_DECK,0,1,nil) end
 	if e:IsHasType(EFFECT_TYPE_FIELD) then Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0) end
 end
 function cid.spfilter(c)
@@ -66,10 +64,9 @@ function cid.spfilter(c)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local loc=e:IsHasType(EFFECT_TYPE_FIELD) and LOCATION_EXTRA or LOCATION_DECK
 	if e:IsHasType(EFFECT_TYPE_FIELD) and (not c:IsRelateToEffect(e) or Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,loc,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
 		if e:IsHasType(EFFECT_TYPE_FIELD) then Duel.BreakEffect() end

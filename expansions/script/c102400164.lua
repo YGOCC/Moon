@@ -1,5 +1,5 @@
 --created & coded by Lyris
---火良運
+--火良運ル
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -58,7 +58,7 @@ function cid.hlimit(e)
 	return ct+1
 end
 function cid.cfilter(c)
-	return c:IsType(TYPE_MONSTER) c:IsSetCard(0x70b) and not c:IsPublic()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x70b) and not c:IsPublic()
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND,0,1,nil) end

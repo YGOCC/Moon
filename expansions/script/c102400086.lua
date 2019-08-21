@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Naruto Episode 33
---ＲＵＭ呪わらし剣主
+--RUM呪わらし剣主
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

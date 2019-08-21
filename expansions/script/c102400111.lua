@@ -57,8 +57,8 @@ function cid.cfilter(c,tp)
 end
 function cid.filter(c,e,tp,n)
 	if not c:IsSetCard(0x7c4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
-	if n==0 then return c:IsAttribute(ATTRIBUTE_DARK)
-	else return c:IsAttribute(ATTRIBUTE_LIGHT)
+	if n==0 then return c:IsAttribute(ATTRIBUTE_FIRE)
+	else return c:IsAttribute(ATTRIBUTE_WATER) end
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local n=e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0

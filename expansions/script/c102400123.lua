@@ -1,5 +1,5 @@
 --created & coded by Lyris, art by Idouyouichi on Pixiv
---機夜行襲雷竜－ミッドナイト
+--機夜光襲雷竜－ミッドナイト
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()

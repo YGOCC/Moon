@@ -1,5 +1,5 @@
 --created & coded by Lyris
---機夜行襲雷竜－モーニング
+--機夜光襲雷竜－モーニング
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()

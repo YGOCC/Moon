@@ -1,5 +1,5 @@
 --created & coded by Lyris, art by Takayama Toshiaki
---機夜行襲雷－エーブニング
+--機夜光襲雷－エーブニング
 local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
@@ -55,17 +55,14 @@ end
 function cid.cfilter(c,tp)
 	return (c:IsPreviousLocation(LOCATION_MZONE) or c:IsType(TYPE_MONSTER)) and (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
 end
-function cid.filter(c,n)
-	if not c:IsSetCard(0x7c4) or not c:IsAbleToHand() then return end
-	if n==0 then return c:IsType(TYPE_SPELL+TYPE_TRAP)
-	else return c:IsType(TYPE_MONSTER) end
+function cid.filter(c)
+	return c:IsSetCard(0x7c4) and c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local n=e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cid.filter(chkc,n) end
-	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,0,1,nil,n) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cid.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil,n)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)

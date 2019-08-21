@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Assassin's Creed: Memories' Genghis Khan
---ＣＸ復剣主王テムジン
+--CX復剣主王テムジン
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()

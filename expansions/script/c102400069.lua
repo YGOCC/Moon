@@ -1,5 +1,5 @@
 --created & coded by Lyris, art from Three Kingdoms
---剣主アレ四ャンド王
+--剣主アレ四ゃンド王
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()

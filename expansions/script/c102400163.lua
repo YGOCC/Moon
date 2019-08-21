@@ -1,5 +1,5 @@
 --created & coded by Lyris
---火良運
+--火良運セ
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
