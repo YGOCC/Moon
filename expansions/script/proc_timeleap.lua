@@ -15,6 +15,7 @@ REASON_TIMELEAP	=0x10000000000
 
 --Custom Type Table
 Auxiliary.Timeleaps={} --number as index = card, card as index = function() is_synchro
+table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_TIMELEAP_MATERIAL)
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_TIMELEAP

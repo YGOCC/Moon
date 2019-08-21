@@ -9,6 +9,7 @@ CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_POLARITY
 
 --Custom Type Table
 Auxiliary.Polarities={} --number as index = card, card as index = function() is_synchro
+table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_POLARITY_MATERIAL)
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_POLARITY

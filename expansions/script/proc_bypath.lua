@@ -3,6 +3,7 @@
 --Not yet finalized values
 --Custom constants
 EFFECT_CELL							=686
+EFFECT_CANNOT_BE_BYPATH_MATERIAL	=687
 TYPE_BYPATH							=0x200000000000
 TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_BYPATH
 CTYPE_BYPATH						=0x2000
@@ -10,6 +11,7 @@ CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_BYPATH
 
 --Custom Type Table
 Auxiliary.Bypaths={} --number as index = card, card as index = function() is_xyz
+table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_BYPATH_MATERIAL)
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_BYPATH

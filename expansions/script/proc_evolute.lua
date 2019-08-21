@@ -18,6 +18,7 @@ REASON_EVOLUTE						=0x10000000
 
 --Custom Type Table
 Auxiliary.Evolutes={} --number as index = card, card as index = function() is_xyz
+table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_EVOLUTE_MATERIAL)
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_EVOLUTE

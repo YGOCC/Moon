@@ -56,7 +56,7 @@ function c249000315.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
 end
 function c249000315.drop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,c249000315.drfilter,tp,LOCATION_REMOVED,0,3,3,nil)
+	local g=Duel.SelectMatchingCard(tp,c249000315.drfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,3,3,nil)
 	if g:GetCount()<3 then return end
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	Duel.ShuffleDeck(tp)
@@ -114,10 +114,10 @@ function c249000315.operation(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
 		e1:SetCode(EFFECT_ADD_CODE)
 		e1:SetValue(code)
 		c:RegisterEffect(e1)
-		c:CopyEffect(code,RESET_EVENT+RESETS_STANDARD,1)
+		c:CopyEffect(code,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
 	end
 end

@@ -12,6 +12,7 @@ SUMMON_TYPE_SPATIAL				=SUMMON_TYPE_SPECIAL+970
 
 --Custom Type Table
 Auxiliary.Spatials={} --number as index = card, card as index = function() is_xyz
+table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_SPACE_MATERIAL)
 
 --overwrite constants
 TYPE_EXTRA						=TYPE_EXTRA|TYPE_SPATIAL

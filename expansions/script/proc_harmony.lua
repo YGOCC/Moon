@@ -12,6 +12,7 @@ REASON_HARMONY						=0x2000000000
 
 --Custom Type Table
 Auxiliary.Harmonies={} --number as index = card, card as index = function() is_synchro
+table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_HARMONIZED_MATERIAL)
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_HARMONY

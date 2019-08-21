@@ -15,6 +15,7 @@ REASON_ACCENT						=0x4000000000
 
 --Custom Type Table
 Auxiliary.Accents={} --number as index = card, card as index = function() is_fusion
+table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_ACCENTED_MATERIAL)
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_ACCENT

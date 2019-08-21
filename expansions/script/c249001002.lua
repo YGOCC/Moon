@@ -48,5 +48,6 @@ function c249001002.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249001002.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+	local c=e:GetHandler()
+	if c:IsAbleToHand() then Duel.SendtoHand(c,nil,REASON_EFFECT) else Duel.SendtoGrave(c,REASON_EFFECT) end
 end

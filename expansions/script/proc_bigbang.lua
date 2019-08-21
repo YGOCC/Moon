@@ -12,6 +12,7 @@ REASON_BIGBANG						=0x8000000000
 
 --Custom Type Table
 Auxiliary.Bigbangs={} --number as index = card, card as index = function() is_synchro
+table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_BIGBANG_MATERIAL)
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_EXTRA|TYPE_BIGBANG

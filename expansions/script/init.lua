@@ -25,6 +25,7 @@ CARD_NEBULA_TOKEN					=218201917
 
 --Custom Type Tables
 Auxiliary.Customs={} --check if card uses custom type, indexing card
+Auxiliary.CannotBeEDMatCodes = {}
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK
@@ -376,6 +377,46 @@ function Auxiliary.PerformFusionSummon(f,e,tp,mg1,gc)
 			fop(ce,e,tp,tc,mat2)
 		end
 		tc:CompleteProcedure()
+	end
+end
+--Can't be used for any ED materials
+table.insert(Auxiliary.CannotBeEDMatCodes,EFFECT_CANNOT_BE_FUSION_MATERIAL)
+table.insert(Auxiliary.CannotBeEDMatCodes,EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+table.insert(Auxiliary.CannotBeEDMatCodes,EFFECT_CANNOT_BE_XYZ_MATERIAL)
+table.insert(Auxiliary.CannotBeEDMatCodes,EFFECT_CANNOT_BE_LINK_MATERIAL)
+function Auxiliary.CannotBeEDMaterial(c,f,range,isrule,reset)
+	local property = 0
+	if (isrule == nil or isrule == true) then
+		property = property+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE
+	end
+	if range ~=nil then
+		property = property+EFFECT_FLAG_SINGLE_RANGE
+	end
+	for _,val in ipairs(Auxiliary.CannotBeEDMatCodes) do
+		local restrict = Effect.CreateEffect(c)
+		restrict:SetType(EFFECT_TYPE_SINGLE)
+		restrict:SetCode(val)
+		if (property ~= 0) then
+			restrict:SetProperty(property)
+		end
+		if range~=nil then
+			restrict:SetRange(range)
+		end
+		if f==nil then
+			restrict:SetValue(1)
+		else
+			restrict:SetValue(Auxiliary.FilterToCannotValue(f))
+		end
+		if reset~=nil then
+			restrict:SetReset(reset)
+		end
+		c:RegisterEffect(restrict)
+	end
+end
+function Auxiliary.FilterToCannotValue(f)
+	return function (e,c)
+		if not c then return false end
+		return not f(c)
 	end
 end
 
