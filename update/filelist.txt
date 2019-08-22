@@ -14036,7 +14036,7 @@ expansions/script/proc_accent.lua	76d7024d863cf581611aa4659c9b90dd
 expansions/script/proc_annotee.lua	27c6005e7a2554f322fa2f46c995021b
 expansions/script/proc_bigbang.lua	7d06a55fda0ddca56c4cc14cdba91a6f
 expansions/script/proc_bypath.lua	bb8a2d63f0c62ed6b2a2607af617c071
-expansions/script/proc_chroma.lua	714f5c869d25dc7f20d650ae99b3fb29
+expansions/script/proc_chroma.lua	dde2e10209e22e6a37c7a798549bccf7
 expansions/script/proc_conjoint.lua	5690f18a1e6cc180cad5f1d5e8900aa7
 expansions/script/proc_corona.lua	2fa2f91a020530c23f0f8533eb66668e
 expansions/script/proc_deckmaster.lua	9f785df09b4401d9db722a868b40941d
@@ -14048,7 +14048,7 @@ expansions/script/proc_relay.lua	88b397c6fcd871cd9bd477369bc98268
 expansions/script/proc_skill.lua	cbaa68f0971f731a81abf7bd080276b2
 expansions/script/proc_spatial.lua	872193df91b316f902d415745b1d4b55
 expansions/script/proc_timeleap.lua	bb6cbd93de87b3a8cf55fe80ea6f61ee
-expansions/script/proc_toxia.lua	1875c5755d790fbfa78be35e05cfc967
+expansions/script/proc_toxia.lua	871d914cb3689a557c4444afd832c829
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
 sound/BGM/custom/ASTERIA - Joyful Tea Party.mp3	6534ddde9e7ee1d39bddb4298cd7168a
 sound/BGM/custom/ASTERIA - Queen's Palace.mp3	92fa00f308187011ddd096b1a5ff6ea7
@@ -14129,6 +14129,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	91d7fac5b7565cc3201b25426293b2ee
+update/filelist.txt	80ce4d1819efea60570dd3183484fd73
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	f1be65b416009e524d18cc6450335c9e
+update/version.txt	3740db3182f248cb38734d9d13654094

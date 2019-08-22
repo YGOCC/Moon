@@ -54,7 +54,7 @@ end
 
 --Custom Functions
 function Card.IsCanBeChromaMaterial(c,mc)
-	if mc:IsStatus(STATUS_NO_LEVEL) or mc:IsFacedown() then return false end
+	if mc:IsFacedown() then return false end
 	local tef2={mc:IsHasEffect(EFFECT_CANNOT_HAVE_CHROMA_MATERIAL)}
 	for _,te2 in ipairs(tef2) do
 		if te2:GetValue()(te2,c) then return false end
@@ -90,10 +90,25 @@ function Auxiliary.CConditionFilter(c,e,tp,sg,mg,mat)
 	sg:RemoveCard(c)
 	return res
 end
+function Card.GetIndicatorValue(c)
+	local lv=c:GetLevel()
+	local rk=c:GetRank()
+	local lk=c:GetLink()
+	local st=c:GetStage()
+	local sb=c:GetStability()
+	local dn=c:GetDimensionNo()
+	local fr=c:GetFuture()
+	local cl=c:GetCell()
+	return (lv>0 and lv) or (rk>0 and rk) or (st>0 and st)
+		or (sb>0 and sb) or (dn>0 and dn) or (fr>0 and fr)
+		or (cl>0 and cl) or Duel.ReadCard(c,CARDDATA_LEVEL)
+end
 function Auxiliary.ChromaGoal(sg,e,tp,mat)
 	local ct=#sg
 	return ct>1 and Duel.GetUsableMZoneCount(tp)>ct-1
-		and mat:GetLevel()==sg:GetSum(function(c) local lv,rk,st,sb,dn,fr,cl=c:GetLevel(),c:GetRank(),c:GetStage(),c:GetStability(),c:GetDimensionNo(),c:GetFuture(),c:GetCell() return (lv>0 and lv) or (rk>0 and rk) or (st>0 and st) or (sb>0 and sb) or (dn>0 and dn) or (fr>0 and fr) or (cl>0 and cl) or Duel.ReadCard(c,CARDDATA_LEVEL) end)
+		and (mat:GetIndicatorValue()==sg:GetSum(Card.GetIndicatorValue)
+			or mat:GetAttack()<=sg:GetSum(Card.GetAttack)
+			or mat:GetDefense()<=sg:GetSum(Card.GetDefense))
 		and sg:IsExists(Auxiliary.ChromaCheck,ct,nil,mat,e,tp)
 end
 function Auxiliary.ChromaCheck(c,mat,e,tp)
