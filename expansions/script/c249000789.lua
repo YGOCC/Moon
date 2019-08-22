@@ -59,11 +59,11 @@ function c249000789.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,c249000789.disfilter,1,1,REASON_COST+REASON_DISCARD)
 end
 function c249000789.setfilter(c)
-	return c:GetType()==0x4 and c:IsSSetable() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsType(TYPE_TRAP) and c:IsSSetable() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c249000789.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_GRAVE and chkc:GetControler()==tp and c249000789.setfilter(chkc) end
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingTarget(c249000789.setfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	local g=Duel.SelectTarget(tp,c249000789.setfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 end
 function c249000789.operation(e,tp,eg,ep,ev,re,r,rp)

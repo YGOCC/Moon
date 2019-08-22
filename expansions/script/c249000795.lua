@@ -16,6 +16,7 @@ function c249000795.cfilter1(c)
 end
 function c249000795.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c249000795.cfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+		and Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD,nil)-Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0,nil)>=2
 end
 function c249000795.filter(c,e)
 	return c:IsAbleToDeck() and c:IsCanBeEffectTarget(e) and c:IsType(TYPE_MONSTER) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))

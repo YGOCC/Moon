@@ -74,7 +74,7 @@ function c249000311.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1B2) and not c:IsCode(249000311) and c:IsAbleToHand()
 end
 function c249000311.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000311.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c249000311.operation2(e,tp,eg,ep,ev,re,r,rp)

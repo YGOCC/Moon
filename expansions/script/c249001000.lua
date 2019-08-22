@@ -1,28 +1,22 @@
 --Azure Paladin Squire
 function c249001000.initial_effect(c)
 	--spsummon
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(45531624,0))
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1)
+	e1:SetTarget(c249001000.sptg)
+	e1:SetOperation(c249001000.spop)
+	c:RegisterEffect(e1)
+	--effect gain
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(45531624,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1)
-	e2:SetTarget(c249001000.sptg)
-	e2:SetOperation(c249001000.spop)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_BE_MATERIAL)
+	e2:SetCondition(c249001000.efcon)
+	e2:SetOperation(c249001000.efop)
 	c:RegisterEffect(e2)
-	--draw
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(18036057,0))
-	e3:SetCategory(CATEGORY_DRAW)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCode(EVENT_BATTLE_DAMAGE)
-	e3:SetCountLimit(1)
-	e3:SetCondition(c249001000.condition2)
-	e3:SetTarget(c249001000.target2)
-	e3:SetOperation(c249001000.operation2)
-	c:RegisterEffect(e3)
 end
 function c249001000.spfilter(c,e,tp)
 	return c:IsRace(RACE_WARRIOR) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -40,16 +34,42 @@ function c249001000.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c249001000.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and eg:GetFirst():GetControler()==tp
+function c249001000.efcon(e,tp,eg,ep,ev,re,r,rp)
+	return r==REASON_XYZ
 end
-function c249001000.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+function c249001000.efop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local rc=c:GetReasonCard()
+	local e1=Effect.CreateEffect(rc)
+	e1:SetDescription(aux.Stringid(24610207,0))
+	e1:SetCategory(CATEGORY_DRAW)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c249001000.drcon)
+	e1:SetTarget(c249001000.drtg)
+	e1:SetOperation(c249001000.drop)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	rc:RegisterEffect(e1,true)
+	if not rc:IsType(TYPE_EFFECT) then
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_ADD_TYPE)
+		e2:SetValue(TYPE_EFFECT)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		rc:RegisterEffect(e2,true)
+	end
+end
+function c249001000.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
+end
+function c249001000.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c249001000.operation2(e,tp,eg,ep,ev,re,r,rp)
+function c249001000.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end

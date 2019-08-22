@@ -50,7 +50,7 @@ end
 function c249000790.setcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,0x30CF)
 	local ct=g:GetClassCount(Card.GetCode)
-	return ct>1
+	return ct>1 and Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD,nil)-Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0,nil)>=3
 end
 function c249000790.filter(c)
 	return c:IsType(TYPE_SPELL) and c:IsSSetable()

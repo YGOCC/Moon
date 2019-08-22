@@ -10,14 +10,13 @@ function c249000996.initial_effect(c)
 	e1:SetTarget(c249000996.target)
 	e1:SetOperation(c249000996.activate)
 	c:RegisterEffect(e1)
-	--To hand
+	--Set
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TOHAND)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetDescription(aux.Stringid(94220427,0))
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCountLimit(1,249000996)
-	e2:SetCost(c249000996.setcost)
+	e2:SetCondition(c249000996.setcon)
 	e2:SetTarget(c249000996.settg)
 	e2:SetOperation(c249000996.setop)
 	c:RegisterEffect(e2)
@@ -56,19 +55,13 @@ function c249000996.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
-		local c=e:GetHandler()
-		if c:IsRelateToEffect(e) then
-			c:CancelToGrave()
-			Duel.Overlay(sc,Group.FromCards(c))
-		end
 	end
 end
-function c249000996.filter(c)
-	return c:IsSetCard(0x200) and c:IsDiscardable()
+function c249000996.filter(c,tp)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsSetCard(0x200)
 end
-function c249000996.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c249000996.filter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,c249000996.filter,1,1,REASON_COST+REASON_DISCARD)
+function c249000996.setcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c249000996.filter,1,nil,tp)
 end
 function c249000996.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsSSetable() end
@@ -79,5 +72,12 @@ function c249000996.setop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and c:IsSSetable() then
 		Duel.SSet(tp,c)
 		Duel.ConfirmCards(1-tp,c)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x47e0000)
+		e1:SetValue(LOCATION_DECKSHF)
+		c:RegisterEffect(e1)
 	end
 end
