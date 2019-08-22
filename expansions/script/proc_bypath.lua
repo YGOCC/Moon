@@ -11,6 +11,7 @@ CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_BYPATH
 
 --Custom Type Table
 Auxiliary.Bypaths={} --number as index = card, card as index = function() is_xyz
+Auxiliary.BypathSeqs={}
 table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_BYPATH_MATERIAL)
 
 --overwrite constants
@@ -89,34 +90,23 @@ function Card.GetCell(c)
 		return te:GetValue()
 	end
 end
+function Card.IsCanBeBypathMaterial(c,bc)
+	if bc:IsFacedown() then return false end
+	local tef2={bc:IsHasEffect(EFFECT_CANNOT_BE_BYPATH_MATERIAL)}
+	for _,te2 in ipairs(tef2) do
+		if te2:GetValue()(te2,c) then return false end
+	end
+	return true
+end
 function Auxiliary.AddOrigBypathType(c,isxyz)
 	table.insert(Auxiliary.Bypaths,c)
 	Auxiliary.Customs[c]=true
 	local isxyz=isxyz==nil and false or isxyz
 	Auxiliary.Bypaths[c]=function() return isxyz end
+	Auxiliary.BypathSeqs[c]={}
 end
-function Auxiliary.AddBypathProc(c,cell,...)
+function Auxiliary.AddBypathProc(c,cell,minc,maxc,...)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
-	local t={...}
-	local list={}
-	local min,max
-	for i=1,#t do
-		min,max=1,99
-		if type(t[#t])=='number' then
-			max=t[#t]
-			table.remove(t)
-			if type(t[#t])=='number' then
-				min=t[#t]
-				table.remove(t)
-			else
-				min=max
-				max=99
-			end
-		end
-		table.insert(list,{t[#t],min,max})
-		table.remove(t)
-		if #t<1 then break end
-	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -128,8 +118,8 @@ function Auxiliary.AddBypathProc(c,cell,...)
 	ge2:SetCode(EFFECT_SPSUMMON_PROC)
 	ge2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 	ge2:SetRange(LOCATION_EXTRA)
-	ge2:SetCondition(Auxiliary.BypathCondition(table.unpack(list)))
-	ge2:SetTarget(Auxiliary.BypathTarget(table.unpack(list)))
+	ge2:SetCondition(Auxiliary.BypathCondition(minc,maxc,...))
+	ge2:SetTarget(Auxiliary.BypathTarget(minc,maxc,...))
 	ge2:SetOperation(Auxiliary.BypathOperation)
 	ge2:SetValue(0x26)
 	c:RegisterEffect(ge2)
@@ -141,15 +131,15 @@ function Auxiliary.AddBypathProc(c,cell,...)
 		ge1:SetOperation(function() BYPATH_CHECKLIST=0 end)
 		Duel.RegisterEffect(ge1,0)
 	end
-	e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_SPSUMMON_PROC_G)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetCondition(Auxiliary.GBypathCon)
-	e3:SetOperation(Auxiliary.GBypathOp)
-	e3:SetValue(0x26)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_SPSUMMON_PROC_G)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCondition(Auxiliary.GBypathCon)
+	e2:SetOperation(Auxiliary.GBypathOp)
+	e2:SetValue(0x26)
+	c:RegisterEffect(e2)
 end
 function Auxiliary.CellVal(cell)
 	return	function(e,c)
@@ -158,32 +148,24 @@ function Auxiliary.CellVal(cell)
 				return ce
 			end
 end
-function Auxiliary.ByCheckRecursive(c,tp,sg,mg,bc,ct,...)
+function Auxiliary.ByCheckRecursive(c,tp,sg,mg,bc,min,max,ct,...)
 	sg:AddCard(c)
 	ct=ct+1
-	local funs,max,chk={...},0
-	for i=1,#funs do
-		max=max+funs[i][3]
-		if funs[i][1](c) then
-			chk=true
-		end
-	end
-	if max>99 then max=99 end
-	local res=chk and (Auxiliary.ByCheckGoal(tp,sg,bc,ct,...)
-		or (ct<max and mg:IsExists(Auxiliary.ByCheckRecursive,1,sg,tp,sg,mg,bc,...)))
+	local res=Auxiliary.ByCheckGoal(tp,sg,bc,min,ct,...)
+		or (ct<max and mg:IsExists(Auxiliary.ByCheckRecursive,1,sg,tp,sg,mg,bc,min,max,...))
 	sg:RemoveCard(c)
 	ct=ct-1
 	return res
 end
-function Auxiliary.ByCheckGoal(tp,sg,bc,ct,...)
-	local funs,min={...},0
+function Auxiliary.ByCheckGoal(tp,sg,bc,min,ct,...)
+	local funs={...}
 	for i=1,#funs do
-		if not sg:IsExists(funs[i][1],1,nil) then return false end
-		min=min+funs[i][2]
+		if not sg:IsExists(funs[i],ct,nil) then return false end
 	end
-	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:FilterCount(Auxiliary.ByGoalCheck,nil)>=ct
+	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:IsExists(Auxiliary.ByGoalCheck,ct,nil,bc)
 end
-function Auxiliary.ByGoalCheck(c)
+function Auxiliary.ByGoalCheck(c,bc)
+	if not c:IsCanBeBypathMaterial(bc) then return false end
 	local p=c:GetControler()
 	local g=c:GetColumnGroup():Filter(function(tc) return tc:IsControler(p) or tc:GetSequence()>4 end,nil)
 	local seq=c:GetSequence()
@@ -192,7 +174,7 @@ function Auxiliary.ByGoalCheck(c)
 		return g:IsExists(function(tc) return g:IsContains(tc) end,1,c)
 	else return g:IsExists(Auxiliary.TRUE,1,c) end
 end
-function Auxiliary.BypathCondition(...)
+function Auxiliary.BypathCondition(min,max...)
 	local funs={...}
 	return	function(e,c)
 				if c==nil then return true end
@@ -200,25 +182,32 @@ function Auxiliary.BypathCondition(...)
 				local tp=c:GetControler()
 				local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
 				local sg=Group.CreateGroup()
-				return g:IsExists(Auxiliary.ByCheckRecursive,1,nil,tp,sg,g,c,table.unpack(funs))
+				return g:IsExists(Auxiliary.ByCheckRecursive,1,nil,tp,sg,g,c,0,min,max,table.unpack(funs))
 			end
 end
-function Auxiliary.BypathTarget(...)
-	local funs,min,max={...},0,0
-	for i=1,#funs do min=min+funs[i][2] max=max+funs[i][3] end
-	if max>99 then max=99 end
+function Auxiliary.BypathTarget(min,max...)
+	local funs={...}
+	if not min then min=2 end
+	if not max then max=99 end
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
+				local t=Auxiliary.BypathSeqs[c]
+				while t[1]~=nil do table.remove(t) end
 				local mg=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
 				local sg=Group.CreateGroup()
 				local finish=false
 				while not (sg:GetCount()>=max) do
-					finish=Auxiliary.ByCheckGoal(tp,sg,c,#sg,table.unpack(funs))
-					local cg=mg:Filter(Auxiliary.ByCheckRecursive,sg,tp,sg,mg,c,#sg,table.unpack(funs))
+					finish=Auxiliary.ByCheckGoal(tp,sg,c,min,#sg,table.unpack(funs))
+					local cg=mg:Filter(Auxiliary.ByCheckRecursive,sg,tp,sg,mg,c,0,min,max,#sg,table.unpack(funs))
 					if #cg==0 then break end
 					local cancel=not finish
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 					local tc=cg:SelectUnselect(sg,tp,finish,cancel,min,max)
 					if not tc then break end
+					table.remove(tempfun,1)
+					local seq=tc:GetSequence()
+					local p=tc:GetControler()
+					if not p~=tp and seq<5 then seq=4-seq end
+					table.insert(t,{[0]=tc,[1]=p,[2]=seq})
 					if not sg:IsContains(tc) then
 						sg:AddCard(tc)
 						if (sg:GetCount()>=max) then finish=true end
@@ -243,6 +232,35 @@ function Auxiliary.BypathOperation(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(sg,REASON_RULE)
 	Duel.Overlay(c,mg)
 	mg:DeleteGroup()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EVENT_SPSUMMON)
+	e1:SetOperation(Auxiliary.BypathOnSummon)
+	c:RegisterEffect(e1)
+end
+function Auxiliary.BypathOnSummon(e,tp)
+	local c=e:GetHandler()
+	local t=Auxiliary.BypathSeqs[c]
+	local flag=0
+	local mg=c:GetMaterial()
+	for tc in aux.Next(mg) do
+		for j=1,#t do
+			if t[j][0]==tc then
+				flag=flag|0x1<<t[j][2]
+			end
+		end
+	end
+	flag=flag~0xff
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
+	local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,flag)
+	local nseq=math.log(2,s)
+	local seq=c:GetSequence()
+	if seq==5 then seq=1 end
+	if seq==6 then seq=3 end
+	seq=math.log(2,seq)
+	if seq~=nseq then Duel.MoveSequence(c,nseq) end
+	e:Reset
 end
 function Auxiliary.ByConditionFilter(c,e,tp,cell1,cell2,zone)
 	if c:IsType(TYPE_LINK) then return false end
