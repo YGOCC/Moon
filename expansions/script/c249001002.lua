@@ -34,20 +34,30 @@ function c249001002.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.DisableShuffleCheck()
 	if Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)<1 then return end
 	local g2=g:Filter(Card.IsLocation,nil,LOCATION_REMOVED)
+	if g2:GetCount()<1 then return end
 	local tc=g2:GetFirst()
 	while tc do
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetRange(LOCATION_REMOVED)
-		e1:SetCode(EVENT_PHASE+PHASE_END)
-		e1:SetCountLimit(1)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		e1:SetOperation(c249001002.thop)
-		tc:RegisterEffect(e1)
+		tc:RegisterFlagEffect(249001002,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1)
 		tc=g2:GetNext()
 	end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetCountLimit(1)
+	e1:SetReset(RESET_EVENT+RESET_PHASE+PHASE_END)
+	e1:SetLabelObject(g2)
+	e1:SetOperation(c249001002.thop)
+	Duel.RegisterEffect(e1,tp)
+	e1:GetLabelObject():KeepAlive()
 end
 function c249001002.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsAbleToHand() then Duel.SendtoHand(c,nil,REASON_EFFECT) else Duel.SendtoGrave(c,REASON_EFFECT) end
+	local g=e:GetLabelObject():Filter(c249001002.thfilter,nil,e)
+	local g2=g:Filter(Card.IsAbleToHand,nil)
+	g:Sub(g2)
+	if g2:GetCount()>0 then Duel.SendtoHand(g2,nil,REASON_EFFECT) end
+	if g:GetCount()>0 then Duel.SendtoGrave(g,REASON_EFFECT) end
+	e:GetLabelObject():DeleteGroup()
+end
+function c249001002.thfilter(c,e)
+	return c:IsLocation(LOCATION_REMOVED) and c:GetFlagEffect(249001002)~=0
 end
