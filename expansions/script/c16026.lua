@@ -40,7 +40,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,s.tgfilter,1,1,REASON_COST,nil)
 end
 function s.filter(c,tp,typ)
-	return c:GetSummonPlayer()~=tp --and c:GetSummonLocation()&LOCATION_EXTRA~=0
+	return c:GetSummonPlayer()~=tp and c:GetSummonLocation()&LOCATION_EXTRA~=0
 		and c:IsAbleToDeck() and c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and c:IsType(typ)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -64,7 +64,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.activate1(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(s.filter,nil,tp,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM):Filter(Card.IsRelateToEffect,nil,e)
+	local g=eg:Filter(s.filter,nil,tp,TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_PENDULUM)
 	if #g>0 then
 		if Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)~=0 then
 			Duel.BreakEffect()
