@@ -61,6 +61,7 @@ dofile("expansions/script/proc_timeleap.lua") --Time Leaps
 dofile("expansions/script/proc_relay.lua") --Relays
 dofile("expansions/script/proc_harmony.lua") --Harmonies
 dofile("expansions/script/proc_accent.lua") --Accents
+dofile("expansions/script/proc_bypath.lua") --Bypaths
 dofile("expansions/script/proc_toxia.lua") --Toxias
 dofile("expansions/script/proc_annotee.lua") --Annotees
 dofile("expansions/script/proc_chroma.lua") --Chromas
