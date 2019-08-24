@@ -6,6 +6,7 @@ function c249000788.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(c249000788.cost)
+	e1:SetTarget(c249000788.target)
 	e1:SetOperation(c249000788.activate)
 	c:RegisterEffect(e1)
 	--set
@@ -50,6 +51,13 @@ function c249000788.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		local g=Duel.SelectMatchingCard(tp,c249000788.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
+end
+function c249000788.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.IsExistingMatchingCard(c249000788.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,1,nil) 
+		and Duel.IsExistingMatchingCard(c249000788.racefilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,RACE_ALL)
+		and Duel.IsExistingMatchingCard(c249000788.attfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,0xFF) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
 function c249000788.racefilter(c,race)
 	return c:IsRace(race) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))

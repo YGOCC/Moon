@@ -1,4 +1,4 @@
---Chaos Gravity
+--Chaos Teleport
 function c249000944.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -14,7 +14,7 @@ function c249000944.cfilter(c)
 	return c:IsFaceup() and (c:IsSetCard(0xcf) or c:IsSetCard(0x1048) or c:IsSetCard(0x1073))
 end
 function c249000944.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c249000944.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(c249000944.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c249000944.filter(c)
 	return (c:IsSetCard(0xcf) or c:IsSetCard(0x1048) or c:IsSetCard(0x1073)) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
