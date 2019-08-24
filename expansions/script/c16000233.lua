@@ -27,7 +27,7 @@ function c16000233.initial_effect(c)
 	--Negate
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(16000233,1))
-	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	e4:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON+CATEGORY_TOEXTRA)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetCountLimit(1,16001233)
@@ -107,6 +107,8 @@ function c16000233.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(c16000233.filter,tp,LOCATION_DECK,0,1,nil,e,tp,b1,nil)
 		and Duel.IsExistingMatchingCard(c16000233.filter2,tp,LOCATION_DECK,0,1,nil,e,tp,b1,nil) end
 	 Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,nil,1,tp,LOCATION_DECK)
 end
 function c16000233.operation(e,tp,eg,ep,ev,re,r,rp)
 	 local c=e:GetHandler()

@@ -98,7 +98,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x6969) and not c:IsCode(id)
+	return c:IsSetCard(0x6969) and c:IsType(TYPE_MONSTER) and not c:IsCode(id)
 end
 function s.target0(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_HAND+LOCATION_GRAVE)

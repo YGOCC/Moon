@@ -24,17 +24,11 @@ function c69011.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x6969) and c:IsAbleToHand()
 end
 function c69011.gytg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(c69011.filter,tp,LOCATION_GRAVE,0,nil)
-	if chk==0 then return g:GetClassCount(Card.GetCode)>2 end
-	local sg=Group.CreateGroup()
-	for i=1,3 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g1=g:Select(tp,1,1,nil)
-		g:Remove(Card.IsCode,nil,g1:GetFirst():GetCode())
-		sg:Merge(g1)
-	end
-	Duel.SetTargetCard(sg)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,#g,tp,LOCATION_GRAVE)
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c81191584.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c690111.filter,tp,LOCATION_GRAVE,0,2,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectTarget(tp,c69011.filter,tp,LOCATION_GRAVE,0,2,2,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,2,0,0)
 end
 function c69011.gyop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
