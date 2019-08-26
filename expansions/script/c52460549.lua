@@ -14,7 +14,7 @@ function cid.cfilter(c,e,tp)
 end
 function cid.filter(c,mc,e,tp)
 	return c:IsType(TYPE_BIGBANG) and c:IsCanBeSpecialSummoned(e,340,tp,false,false)
-		and aux.IsMaterialListCode(c,mc:GetOriginalCode())
+		and aux.IsCodeListed(c,mc:GetOriginalCode())
 		and mc:IsCanBeBigBangMaterial(c) and Duel.GetLocationCountFromEx(tp,tp,mc)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
