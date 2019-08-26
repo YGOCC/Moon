@@ -1,55 +1,62 @@
---Spark Cosmo'n
-function c81400264.initial_effect(c)
-	 --spsummon
+--created by Meedogh, coded by Meedogh & Lyris
+local cid,id=GetID()
+function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(81400264,0))
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetTarget(c81400264.target)
-	e1:SetOperation(c81400264.operation)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EFFECT_DESTROY_REPLACE)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetTarget(cid.reptg)
+	e2:SetValue(cid.repval)
+	e2:SetOperation(cid.repop)
+	c:RegisterEffect(e2)
 end
-function c81400264.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0xCF11) and c:IsLevelAbove(1)
+function cid.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0xCF11)
 end
-function c81400264.spfilter(c,e,tp)
-	return c:IsSetCard(0xCF11) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function c81400264.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c81400264.filter(chkc,e,tp) end
-	if chk==0 then return Duel.IsExistingTarget(c81400264.filter,tp,LOCATION_MZONE,0,1,nil)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c81400264.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,c81400264.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	local tc=g:GetFirst()
-	local op=0
-	if tc:GetLevel()==1 then op=Duel.SelectOption(tp,aux.Stringid(70908596,1))
-		else op=Duel.SelectOption(tp,aux.Stringid(70908596,1),aux.Stringid(70908596,2)) end
-	e:SetLabel(op)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+	Duel.SelectTarget(tp,cid.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c81400264.operation(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_UPDATE_LEVEL)
+		e1:SetCode(EFFECT_SWAP_AD)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
-		if e:GetLabel()==0 then
-			e1:SetValue(1)
-		else e1:SetValue(-1) end
-		if tc:RegisterEffect(e1) then
-			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g2=Duel.SelectMatchingCard(tp,c81400264.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-			if g2:GetCount()>0 then
-				Duel.SpecialSummon(g2,0,tp,tp,false,false,POS_FACEUP)
-			end
+		if tc:RegisterEffect(e1) and e:GetHandler():IsRelateToEffect(e) then
+			Duel.BreakEffect()
+			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
+end
+function cid.repfilter(c,tp)
+	return c:IsFaceup() and c:IsType(TYPE_BIGBANG) and c:IsLocation(LOCATION_MZONE)
+		and c:IsControler(tp) and not c:IsReason(REASON_REPLACE)
+end
+function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(cid.repfilter,1,nil,tp) end
+	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
+end
+function cid.repval(e,c)
+	return cid.repfilter(c,e:GetHandlerPlayer())
+end
+function cid.repop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 end

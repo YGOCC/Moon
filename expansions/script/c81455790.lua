@@ -1,53 +1,57 @@
---Sonic Cosmo'n
-function c81455790.initial_effect(c)
-	--spsumon
+--created by Meedogh, coded by Meedogh & Lyris
+local cid,id=GetID()
+function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(81455790)
+	e1:SetCode(EVENT_DESTROYED)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(c81455790.spcon)
-	e1:SetTarget(c81455790.sptg)
-	e1:SetOperation(c81455790.spop)
+	e1:SetCondition(cid.spcon)
+	e1:SetTarget(cid.sptg)
+	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
-	if not c81455790.global_check then
-		c81455790.global_check=true
-		--register
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_ADJUST)
-		ge1:SetCountLimit(1)
-		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge1:SetOperation(c81455790.operation)
-		Duel.RegisterEffect(ge1,0)
-	end
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetCountLimit(1,id)
+	e2:SetTarget(cid.tg)
+	e2:SetOperation(cid.op)
+	c:RegisterEffect(e2)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_EQUIP)
+	e5:SetCode(EFFECT_ATTACK_ALL)
+	e5:SetValue(1)
+	c:RegisterEffect(e5)
 end
-function c81455790.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
-		Duel.CreateToken(tp,419)
-		Duel.CreateToken(1-tp,419)
-		Duel.RegisterFlagEffect(tp,419,nil,0,1)
-		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
-	end
+function cid.cfilter(c,tp)
+	return c:IsControler(tp) and c:IsSetCode(0xCF11) and c:IsPreviousLocation(LOCATION_MZONE)
 end
-function c81455790.cfilter(c,tp)
-	local val=0
-	if c:GetFlagEffect(584)>0 then val=c:GetFlagEffectLabel(584) end
-	return c:IsControler(tp) and c:IsSetCode(0xCF11) and c:GetLevel()~=val
+function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(cid.cfilter,1,nil,tp)
 end
-function c81455790.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c81455790.cfilter,1,nil,tp)
-end
-function c81455790.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c81455790.spop(e,tp,eg,ep,ev,re,r,rp)
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
-		Duel.SendtoGrave(c,REASON_RULE)
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
