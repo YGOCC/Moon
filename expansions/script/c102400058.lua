@@ -59,7 +59,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(cid.filter3,tp,LOCATION_DECK,0,1,nil,tp,e)
 	local c=g:GetFirst()
 	local tc=Duel.GetFirstTarget()
-	if c and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 and tc and tc:IsRelateToEffect(e) then
+	if c and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 and tc and tc:IsRelateToEffect(e) and tc:IsRace(RACE_DRAGON) and tc:IsLevelBelow(3) and not tc:IsForbidden() then
 		local atk=tc:GetTextAttack()
 		if atk<0 then atk=0 end
 		if not Duel.Equip(tp,tc,c,false) then return end
@@ -116,12 +116,13 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsRace,nil,RACE_DRAGON):Filter(aux.NOT(Card.IsForbidden),nil)
 	for ec in aux.Next(tg) do
 		if tg:GetCount()==1 then break end
 		tg:RemoveCard(ec)
 	end
 	local c=e:GetLabelObject()
+	if not c:IsType(TYPE_FUSION) then tg=tg:Filter(Card.IsLevelBelow,nil,3) end
 	for i=1,Duel.GetCurrentChain() do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 		if te:GetHandler()==c and te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then

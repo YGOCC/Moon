@@ -30,6 +30,30 @@ function cid.initial_effect(c)
 	e4:SetTarget(cid.sptg2)
 	e4:SetOperation(cid.spop2)
 	c:RegisterEffect(e4)
+	local s1=Effect.CreateEffect(c)
+	s1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	s1:SetCode(EVENT_SUMMON_SUCCESS)
+	s1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	s1:SetOperation(function() Duel.Hint(HINT_SOUND,0,aux.Stringid(id,10)) end)
+	c:RegisterEffect(s1)
+	local s2=s1:Clone()
+	s2:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+	c:RegisterEffect(s2)
+	local s3=s1:Clone()
+	s3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(s3)
+	local s5=Effect.CreateEffect(c)
+	s5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	s5:SetCode(EVENT_ATTACK_ANNOUNCE)
+	s5:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	s5:SetOperation(function() Duel.Hint(HINT_SOUND,0,aux.Stringid(id,12)) end)
+	c:RegisterEffect(s5)
+	local s6=Effect.CreateEffect(c)
+	s6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	s6:SetCode(EVENT_DESTROYED)
+	s6:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	s6:SetOperation(function(e,tp) if not c:IsPreviousLocation(LOCATION_SZONE) or Duel.GetTurnPlayer()==tp then Duel.Hint(HINT_SOUND,0,aux.Stringid(id,13)) else Duel.Hint(HINT_SOUND,0,aux.Stringid(id,11)) end end)
+	c:RegisterEffect(s6)
 end
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -76,7 +100,10 @@ function cid.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if not c:IsRelateToEffect(e) or Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 or #tg==0 then return end
 	Duel.BreakEffect()
-	if tg:IsExists(Card.IsAbleToDeck,1,nil) and Duel.SelectYesNo(tp,1105) then
+	if tg:IsExists(Card.IsAbleToDeck,1,nil) and Duel.SelectOption(tp,1124,1105)==1 then
 		Duel.SendtoDeck(tg,nil,2,REASON_EFFECT)
-	else Duel.Destroy(tg,REASON_EFFECT) end
+	else
+		if Duel.GetTurnPlayer()~=tp then Duel.Hint(HINT_SOUND,0,aux.Stringid(id,11)) end
+		Duel.Destroy(tg,REASON_EFFECT)
+	end
 end

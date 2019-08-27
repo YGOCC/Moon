@@ -61,7 +61,7 @@ function cid.posop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e):Filter(aux.OR(cid.filter,aux.NOT(aux.FilterBoolFunction(Card.IsCanBeSpecialSummoned,e,0,tp,false,false))),nil,e,tp)
 	if sg:GetCount()==0 or (sg:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,id)) then return end
 	if ft>=g:GetCount() then
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
@@ -101,7 +101,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and tc:IsSetCard(0xbb2) and not tc:IsCode(id) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

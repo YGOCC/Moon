@@ -54,7 +54,7 @@ end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsControler(tp)
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsSetCard(0x7c4) and tc:IsControler(tp)
 		and Duel.Destroy(tc,REASON_EFFECT)~=0 and c:IsRelateToEffect(e)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.BreakEffect()
@@ -73,7 +73,7 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and tc:IsSetCard(0x7c4) and not tc:IsCode(id) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

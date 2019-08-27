@@ -72,10 +72,11 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local n=e:IsHasType(EFFECT_TYPE_FIELD) and 1 or 0
 	if n~=0 then
-		if not c:IsRelateToEffect(e) or Duel.Destroy(c,REASON_EFFECT)==0 or not tc:IsRelateToEffect(e) then return end
+		if not c:IsRelateToEffect(e) or not c:IsDestructable() or not tc:IsRelateToEffect(e) or not tc:IsSetCard(0x7c4) or tc:IsCode(id) or not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then return end
+		Duel.Destroy(c,REASON_EFFECT)
 		Duel.BreakEffect()
 	end
-	if (n~=0 or tc:IsRelateToEffect(e)) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) and n~=0 then
+	if (n~=0 or (tc:IsRelateToEffect(e) and tc:IsSetCard(0x7c4) and not tc:IsCode(id))) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) and n~=0 then
 		local fid=c:GetFieldID()
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)

@@ -43,9 +43,10 @@ end
 function cid.op1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.SendtoGrave(c,REASON_EFFECT+REASON_RETURN)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsSetCard,nil,0x285b):Filter(aux.NOT(Card.IsCode),nil,id)
 	if g:GetCount()<2 or not Duel.IsPlayerAffectedByEffect(tp,id) then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)		local tc=g:GetFirst()
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		local tc=g:GetFirst()
 		local ct=0
 		while tc do
 			if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
