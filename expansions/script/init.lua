@@ -45,8 +45,8 @@ function GetID()
 	return scard,s_id
 end
 --overwrite functions
-local is_type, card_remcounter, duel_remcounter, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv, duel_overlay, duel_set_lp, duel_select_target, duel_banish, get_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location, get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, card_check_remove_overlay_card = 
-	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Card.RegisterEffect, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation, Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetLevel, Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.CheckRemoveOverlayCard, Card.IsReason
+local is_type, card_remcounter, duel_remcounter, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv, duel_overlay, duel_set_lp, duel_select_target, duel_banish, get_type, get_orig_type, get_prev_type_field, get_prev_location, is_prev_location, get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_level, get_syn_level, get_rit_level, get_orig_level, is_xyz_level, get_prev_level_field, is_level, is_level_below, is_level_above, change_position, card_is_able_to_extra, card_is_able_to_extra_as_cost, duel_draw, card_check_remove_overlay_card, is_reason, duel_check_tribute, select_tribute = 
+	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Card.RegisterEffect, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Card.GetPreviousLocation, Card.IsPreviousLocation, Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetLevel, Card.GetSynchroLevel, Card.GetRitualLevel, Card.GetOriginalLevel, Card.IsXyzLevel, Card.GetPreviousLevelOnField, Card.IsLevel, Card.IsLevelBelow, Card.IsLevelAbove, Duel.ChangePosition, Card.IsAbleToExtra, Card.IsAbleToExtraAsCost, Duel.Draw, Card.CheckRemoveOverlayCard, Card.IsReason, Duel.CheckTribute, Duel.SelectTribute
 
 dofile("expansions/script/proc_evolute.lua") --Evolutes
 dofile("expansions/script/proc_conjoint.lua") --Conjoints
@@ -250,7 +250,62 @@ Card.CheckRemoveOverlayCard=function(c,tp,ct,r)
 	end
 	return card_check_remove_overlay_card(c,tp,ct,r)
 end
+Duel.CheckTribute=function(c,min,max,mg,p,zone)
+	if not max then max=min end
+	if not p then p=c:GetControler() end
+	if not zone then zone=0x1f001f end
+	local ef={Duel.IsPlayerAffectedByEffect(c:GetControler(),EFFECT_MUST_USE_MZONE)}
+	for _,e in ipairs(ef) do
+		local ev=e:GetValue()
+		if type(ev)=='function' then zone=zone&ev(e) else zone=zone&ev end
+	end
+	zone=zone&(0x1f<<16*p)
+	if zone>0x1f then zone=zone>>16 end
+	return duel_check_tribute(c,min,max,mg,p,zone)
+end
+Duel.SelectTribute=function(sp,c,min,max,mg,p)
+	if not p then p=c:GetControler() end
+	local zone=0x1f001f
+	local ef={Duel.IsPlayerAffectedByEffect(sp,EFFECT_MUST_USE_MZONE)}
+	for _,e in ipairs(ef) do
+		local ev=e:GetValue()
+		if type(ev)=='function' then zone=zone&ev(e) else zone=zone&ev end
+	end
+	zone=zone&(0x1f<<16*p)
+	if zone>0x1f then zone=zone>>16 end
+	local rg=mg~=nil and mg or Duel.GetTributeGroup(c)
+	local sg=Group.CreateGroup()
+	if rg:IsExists(Auxiliary.TribCheckRecursive,1,nil,sp,rg,sg,c,0,min,max,p,zone) then
+		local finish=false
+		while #sg<max do
+			finish=Auxiliary.TributeGoal(sp,sg,c,#sg,min,max,p,zone)
+			local cg=rg:Filter(Auxiliary.TribCheckRecursive,sg,sp,rg,sg,c,#sg,min,max,p,zone)
+			if #cg==0 then break end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TRIBUTE)
+			local tc=cg:SelectUnselect(sg,sp,finish,false,min,max)
+			if not tc then break end
+			if not sg:IsContains(tc) then
+				sg:AddCard(tc)
+				if #sg>=max then finish=true end
+			else sg:RemoveCard(tc) end
+		end
+	end
+	return #sg>0 and sg or select_tribute(sp,c,min,max,rg,p)
+end
+
 --Custom Functions
+function Auxiliary.TribCheckRecursive(c,tp,mg,sg,sc,ct,min,max,p,zone)
+	sg:AddCard(c)
+	ct=ct+1
+	local res=Auxiliary.TributeGoal(tp,sg,sc,ct,min,max,p,zone)
+		or (ct<max and mg:IsExists(Auxiliary.TribCheckRecursive,1,sg,tp,mg,sg,sc,ct,min,max,p,zone))
+	sg:RemoveCard(c)
+	ct=ct-1
+	return res
+end
+function Auxiliary.TributeGoal(tp,sg,sc,ct,min,max,p,zone)
+	return ct>=min and duel_check_tribute(sc,ct,ct,sg,p,zone)
+end
 --add procedure to equip spells equipping by rule
 function Auxiliary.AddEquipProcedure(c,p,f,eqlimit,cost,tg,op,con,ctlimit)
 	--Note: p==0 is check equip spell controler, p==1 for opponent's, PLAYER_ALL for both player's monsters
