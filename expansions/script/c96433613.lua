@@ -35,18 +35,24 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_SZONE)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
+	local first_act=true
 	local g=Duel.GetMatchingGroup(Card.IsType,tp,0,LOCATION_SZONE,e:GetHandler(),TYPE_SPELL+TYPE_TRAP)
 	local chkg=g:Filter(cid.checkfilter,nil,e)
-	while #chkg>0 do
+	while #g>0 do
 		Duel.SetLP(tp,Duel.GetLP(tp)-2000)
 		if Duel.GetLP(tp)<=0 then return end
-		Duel.BreakEffect()
-		if #g<=0 then return end
-		local sg=g:Select(tp,1,1,nil)
-		if #sg>0 then
-			Duel.Destroy(sg,REASON_EFFECT)
-			g=Duel.GetMatchingGroup(Card.IsType,tp,0,LOCATION_SZONE,e:GetHandler(),TYPE_SPELL+TYPE_TRAP)
-			chkg=g:Filter(cid.checkfilter,nil,e)
+		if #chkg>0 or first_act then
+			Duel.BreakEffect()
+			first_act=false
+			if #g<=0 then return end
+			local sg=g:Select(tp,1,1,nil)
+			if #sg>0 then
+				Duel.Destroy(sg,REASON_EFFECT)
+				g=Duel.GetMatchingGroup(Card.IsType,tp,0,LOCATION_SZONE,e:GetHandler(),TYPE_SPELL+TYPE_TRAP)
+				chkg=g:Filter(cid.checkfilter,nil,e)
+			end
+		else
+			return
 		end
 	end
 end
