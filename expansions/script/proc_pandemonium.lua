@@ -73,6 +73,14 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 		regfield=t[#t]
 		table.remove(t)
 	end
+	if not PANDEMONIUM_CHECKLIST then
+		PANDEMONIUM_CHECKLIST=0
+		local ge1=Effect.GlobalEffect()
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_PHASE_START+PHASE_DRAW)
+		ge1:SetOperation(Auxiliary.PandeReset)
+		Duel.RegisterEffect(ge1,0)
+	end
 	--summon
 	local ge6=Effect.CreateEffect(c)
 	ge6:SetType(EFFECT_TYPE_FIELD)
@@ -80,9 +88,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 	ge6:SetCode(EFFECT_SPSUMMON_PROC_G)
 	ge6:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	ge6:SetRange(LOCATION_SZONE)
-	ge6:SetCountLimit(1,10000000)
 	ge6:SetCondition(Auxiliary.PandCondition)
-	ge6:SetCost(Auxiliary.PandCost)
 	ge6:SetOperation(Auxiliary.PandOperation)
 	ge6:SetValue(726)
 	c:RegisterEffect(ge6)
@@ -153,16 +159,8 @@ end
 function Auxiliary.PaCheck(c)
 	return not c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
-function Auxiliary.PandCost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetCustomActivityCount(10000000,tp,ACTIVITY_SPSUMMON)==0 end
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(Auxiliary.PandePendSwitch)
-	Duel.RegisterEffect(e1,tp)
+function Auxiliary.PandeReset(e,tp,eg,ep,ev,re,r,rp)
+	PANDEMONIUM_CHECKLIST=0
 end
 function Auxiliary.PandePendSwitch(e,c,tp,sumtp,sumpos)
 	return sumtp&SUMMON_TYPE_PENDULUM==SUMMON_TYPE_PENDULUM
@@ -181,6 +179,7 @@ end
 function Auxiliary.PandCondition(e,c,og)
 	if c==nil then return true end
 	local tp=c:GetControler()
+	if PANDEMONIUM_CHECKLIST&(0x1<<tp)~=0 or Duel.GetCustomActivityCount(10000000,tp,ACTIVITY_SPSUMMON)~=0 then return false end
 	local lscale=c:GetLeftScale()
 	local rscale=c:GetRightScale()
 	if lscale>rscale then lscale,rscale=rscale,lscale end
@@ -226,9 +225,18 @@ function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	local g=tg:SelectSubGroup(tp,aux.TRUE,true,1,math.min(#tg,ft))
 	Auxiliary.GCheckAdditional=nil
 	if not g then return end
+	PANDEMONIUM_CHECKLIST=PANDEMONIUM_CHECKLIST|(0x1<<tp)
 	sg:Merge(g)
 	if sg:GetCount()>0 then
 		Duel.HintSelection(Group.FromCards(c))
+		local e0=Effect.CreateEffect(e:GetHandler())
+		e0:SetType(EFFECT_TYPE_FIELD)
+		e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+		e0:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e0:SetReset(RESET_PHASE+PHASE_END)
+		e0:SetTargetRange(1,0)
+		e0:SetTarget(Auxiliary.PandePendSwitch)
+		Duel.RegisterEffect(e0,tp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_SPSUMMON)
