@@ -60,7 +60,7 @@ function c52401237.matcheck(e,c)
 	e:SetLabel(c:GetMaterial():FilterCount(aux.FilterEqualFunction(Card.GetVibe,0),nil))
 end
 function c52401237.con1(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+624)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+340)
 end
 function c52401237.tg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end

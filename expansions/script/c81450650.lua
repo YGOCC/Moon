@@ -70,7 +70,7 @@ end
 function c81450650.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetHandler()
 	local mg=tc:GetMaterial()
-	if chk==0 then return tc:IsSummonType(SUMMON_TYPE_SPECIAL+624) and mg:IsExists(c81450650.mgfilter,1,nil,e,tp,tc) end
+	if chk==0 then return tc:IsSummonType(SUMMON_TYPE_SPECIAL+340) and mg:IsExists(c81450650.mgfilter,1,nil,e,tp,tc) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function c81450650.mgfilter(c,e,tp,bc)
