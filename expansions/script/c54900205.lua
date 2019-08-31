@@ -39,7 +39,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function cid.sumlimit(e,c)
-	return not c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_BIGBANG)
+	return c:IsLocation(LOCATION_EXTRA) and not c:IsType(TYPE_BIGBANG)
 end
 function cid.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

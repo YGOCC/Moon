@@ -40,9 +40,10 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_SWAP_AD)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
-		if tc:RegisterEffect(e1) and e:GetHandler():IsRelateToEffect(e) then
+		tc:RegisterEffect(e1)
+		if c:IsRelateToEffect(e) then
 			Duel.BreakEffect()
-			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
