@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	515ff7bb148f9e182c0f4d0e7c89b177
+﻿expansions/Cards-non-QCD.cdb	897c96ad7faa906eb1c285052e6cb244
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -12484,7 +12484,7 @@ expansions/script/c5505.lua	6c7dc60359b6d67ace4c100484ad67f3
 expansions/script/c5506.lua	6871617713628dac50d6515e0f9dcf61
 expansions/script/c5507.lua	089ce58c873152a1ce4ad2cda438fa17
 expansions/script/c5508.lua	db8816fd5e8cf6b360bcc57adf777b9b
-expansions/script/c55112313.lua	01684f3b6e42e5d3ba1c4505ef73684c
+expansions/script/c55112313.lua	8f2bd13c77229d94e10cb0460f8279c3
 expansions/script/c55241609.lua	85924d22dd008a21b2c4776ad100c19c
 expansions/script/c55312487.lua	8b23ffb1e5c780469c9707bd2d896d49
 expansions/script/c555.lua	0bfadd2c37477bae18f601a011b9f77b
@@ -14047,7 +14047,7 @@ expansions/script/json.lua	d41a01cf67c76915b49c57d21ac471ee
 expansions/script/lap.lua	1325997ac4231550048dae57e7eb75b0
 expansions/script/proc_accent.lua	76d7024d863cf581611aa4659c9b90dd
 expansions/script/proc_annotee.lua	27c6005e7a2554f322fa2f46c995021b
-expansions/script/proc_bigbang.lua	5f42717161dd96f72355204260c18f52
+expansions/script/proc_bigbang.lua	d4cf92a9652ab6d6b664f218e16cdc4b
 expansions/script/proc_bypath.lua	0ab4751bef32c1215e457a56e0aaf578
 expansions/script/proc_chroma.lua	dde2e10209e22e6a37c7a798549bccf7
 expansions/script/proc_conjoint.lua	5690f18a1e6cc180cad5f1d5e8900aa7
@@ -14146,6 +14146,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	66a99229ec22cbd3d12732db1d97d41b
+update/filelist.txt	8a22f88e5ef2a850fc93fdacd557ea96
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	79b74bbc11abac2b021d38a11add24bc
+update/version.txt	2974b1d10dae6af0c7fde283a9e9799f
