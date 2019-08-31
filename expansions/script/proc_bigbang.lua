@@ -75,12 +75,6 @@ function Card.GetVibe(c)
 	if stat==0 then return stat
 	else return stat/math.abs(stat) end
 end
-function Card.GetBigbangAttack(c)
-	return c:GetAttack()*c:GetVibe()
-end
-function Card.GetBigbangDefense(c)
-	return c:GetDefense()*c:GetVibe()
-end
 function Auxiliary.AddOrigBigbangType(c,issynchro)
 	table.insert(Auxiliary.Bigbangs,c)
 	Auxiliary.Customs[c]=true
@@ -152,7 +146,7 @@ function Auxiliary.BigbangCheckGoal(tp,sg,bc,ct,...)
 		if not sg:IsExists(funs[i][1],funs[i][2],nil) then return false end
 		min=min+funs[i][2]
 	end
-	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:GetSum(Card.GetBigbangAttack)>=bc:GetAttack() and sg:GetSum(Card.GetBigbangDefense)>=bc:GetDefense()
+	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:GetSum(Card.GetAttack)>=bc:GetAttack() and sg:GetSum(Card.GetDefense)>=bc:GetDefense()
 end
 function Auxiliary.BigbangTarget(...)
 	local funs,min,max={...},0,0
