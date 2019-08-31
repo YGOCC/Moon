@@ -25,7 +25,6 @@ function cid.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(function(e,tp) return Duel.GetTurnPlayer()~=tp or Duel.IsPlayerAffectedByEffect(tp,id) end)
 	e1:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk) if chk==0 then return c:GetFlagEffect(id)==0 end c:RegisterFlagEffect(id,RESET_CHAIN,0,1) end)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.operation)
@@ -42,8 +41,6 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
-	local op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
 	for tc in aux.Next(g) do
 		local lpt,nlpt=tc:GetLinkMarker(),0
 		local j=0
@@ -63,20 +60,10 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 cid.link_table={
-	[0]={
-		[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_BOTTOM_RIGHT,
-		[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_BOTTOM_LEFT,
-		[LINK_MARKER_LEFT]=LINK_MARKER_RIGHT,
-		[LINK_MARKER_RIGHT]=LINK_MARKER_LEFT,
-		[LINK_MARKER_TOP_LEFT]=LINK_MARKER_TOP_RIGHT,
-		[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_TOP_LEFT,
-	},
-	[1]={
-		[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_TOP_LEFT,
-		[LINK_MARKER_BOTTOM]=LINK_MARKER_TOP,
-		[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_TOP_RIGHT,
-		[LINK_MARKER_TOP_LEFT]=LINK_MARKER_BOTTOM_LEFT,
-		[LINK_MARKER_TOP]=LINK_MARKER_BOTTOM,
-		[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_BOTTOM_RIGHT,
-	}
+	[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_BOTTOM_RIGHT,
+	[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_BOTTOM_LEFT,
+	[LINK_MARKER_LEFT]=LINK_MARKER_RIGHT,
+	[LINK_MARKER_RIGHT]=LINK_MARKER_LEFT,
+	[LINK_MARKER_TOP_LEFT]=LINK_MARKER_TOP_RIGHT,
+	[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_TOP_LEFT,
 }
