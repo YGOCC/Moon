@@ -9,7 +9,7 @@ function cid.initial_effect(c)
 	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x85a))
+	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x185a))
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
    
