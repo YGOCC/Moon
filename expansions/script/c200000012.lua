@@ -46,6 +46,7 @@ function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 	end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
+if not e:GetHandler():IsRelateToEffect(e) then return end
 	if Duel.NegateActivation(ev) then
 	if e:GetHandler():IsRelateToEffect(e) then
 		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
