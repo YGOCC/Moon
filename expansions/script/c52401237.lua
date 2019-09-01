@@ -145,8 +145,6 @@ function c52401237.discon(e,tp,eg,ep,ev,re,r,rp)
 			or tc6+tg6:FilterCount(c52401237.cfilter,nil,tp)-tg6:GetCount()>0
 			or tc7+tg7:FilterCount(c52401237.cfilter,nil,tp)-tg7:GetCount()>0)
 end
-function c52401237.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-end
 function c52401237.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return e:GetHandler():GetEquipCount()>0 end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
@@ -169,7 +167,7 @@ end
 function c52401237.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:IsOnField() and c:IsFaceup()
-		and  e:GetHandler():GetEquipGroup():IsExists(Card.IsDestructable,1,nil) end
+		and eg:IsExists(c52401237.repfilter,1,nil,tp) e:GetHandler():GetEquipGroup():IsExists(Card.IsDestructable,1,nil) end
 	if Duel.SelectYesNo(tp,aux.Stringid(52401237,3)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
 		local g=e:GetHandler():GetEquipGroup():FilterSelect(tp,Card.IsDestructable,1,1,nil)
