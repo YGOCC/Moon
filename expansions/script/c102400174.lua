@@ -1,5 +1,5 @@
---created & coded by Lyris, art at ZeroChan
---ニュートリックス・エミー
+--created & coded by Lyris, art on FanPop
+--ニュートリックス・ステーリー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

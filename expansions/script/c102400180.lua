@@ -1,5 +1,5 @@
---created & coded by Lyris, art by florainbloom of DeviantArt
---ニュートリックス・ダルスィー
+--created & coded by Lyris, art by Teca-Blanco of DeviantArt
+--ニュートリックス・ストーミー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()

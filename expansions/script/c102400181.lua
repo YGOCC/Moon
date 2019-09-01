@@ -1,5 +1,5 @@
---created & coded by Lyris, art by wawa3761 of DeviantArt
---ニュートリックス・ギャブリー
+--created & coded by Lyris, art on FanPop
+--ニュートリックス・レイー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()

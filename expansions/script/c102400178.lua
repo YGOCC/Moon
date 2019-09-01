@@ -1,5 +1,5 @@
---created & coded by Lyris, art by Southern-Panda of DeviantArt
---ニュートリックス・キャンディ
+--created & coded by Lyris, art by CoolCatFlora of DeviantArt
+--ニュートリックス・アイスィー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()

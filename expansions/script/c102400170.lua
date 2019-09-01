@@ -1,5 +1,5 @@
---created & coded by Lyris, art at https://78.media.tumblr.com/e349861ac74f1e6d72f42fa7ad8cd8f7/tumblr_p2oxlkOMsG1w0w6bio1_1280.jpg
---ニュートリックス・ホリー
+--created & coded by Lyris, art by Galistar07water of DeviantArt
+--ニュートリックス・テッキー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

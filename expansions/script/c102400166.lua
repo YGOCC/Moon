@@ -1,5 +1,5 @@
---created & coded by Lyris, art by minea-bun of DeviantArt
---ニュートリックス・マリー
+--created & coded by Lyris, art on Galistar07water of DeviantArt
+--ニュートリックス・アイシー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
