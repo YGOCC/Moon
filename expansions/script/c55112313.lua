@@ -36,7 +36,7 @@ function cid.atkfilter(c)
 	return bit.band(c:GetOriginalType(),TYPE_MONSTER+TYPE_CONTINUOUS)~=0
 end
 function cid.filter(c,e,tp)
-	return (c:IsCode(id) or c:IsCode(id) or c:IsCode(id)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsCode(52471658) or c:IsCode(54900205) or c:IsCode(40444917)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -46,14 +46,14 @@ end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	local c=e:GetHandler()
 	local op=0
-	local tc=g:GetFirst()
-	if tc and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) and Duel.SelectYesNo(tp,) then
-	if not c:IsAttackAbove(500) then op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
-		else op=Duel.SelectOption(tp,aux.Stringid(id,1)) end
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+	if not c:IsAttackAbove(500) then op=Duel.SelectOption(tp,aux.Stringid(id,2))+1
+		else op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2)) end
 		e:SetLabel(op)
+		local prev=c:GetAttack()
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -62,7 +62,8 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 		if e:GetLabel()==0 then
 			e1:SetValue(500)
 		else e1:SetValue(-500) end
-		if c:RegisterEffect(e1) then
+		c:RegisterEffect(e1)
+		if math.abs(prev-c:GetAttack())==500 then
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_FIELD)
 			e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
