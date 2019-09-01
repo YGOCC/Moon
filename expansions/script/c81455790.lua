@@ -26,7 +26,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function cid.cfilter(c,tp)
-	return c:IsControler(tp) and c:IsSetCode(0xCF11) and c:IsPreviousLocation(LOCATION_MZONE)
+	return c:IsControler(tp) and c:IsSetCard(0xcf11) and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.cfilter,1,nil,tp)

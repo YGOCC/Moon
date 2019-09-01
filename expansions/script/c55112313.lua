@@ -19,8 +19,8 @@ function cid.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_EQUIP)
 	e4:SetCode(EFFECT_UPDATE_ATTACK)
-	e4:SetCondition(function(e) local ec=e:GetHandler() return ec:IsRace(RACE_DRAGON) and ec:IsType(TYPE_BIGBANG) end)
-	e4:SetValue(function(e,tc) return tc:GetEquipGroup():FilterCount(cid.atkfilter,nil)*500 end)
+	e4:SetCondition(cid.eqatkcon)
+	e4:SetValue(cid.eqval)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
 	e5:SetCode(EFFECT_UPDATE_DEFENSE)
@@ -32,8 +32,15 @@ function cid.initial_effect(c)
 	e6:SetOperation(cid.rdop)
 	c:RegisterEffect(e6)
 end
+function cid.eqatkcon(e) 
+	local ec=e:GetHandler():GetEquipTarget()
+	return ec and ec:IsRace(RACE_DRAGON) and ec:IsType(TYPE_BIGBANG) 
+end
+function cid.eqval(e,c) 
+	return e:GetHandler():GetEquipTarget():GetEquipGroup():FilterCount(cid.atkfilter,nil)*500 
+end
 function cid.atkfilter(c)
-	return bit.band(c:GetOriginalType(),TYPE_MONSTER+TYPE_CONTINUOUS)~=0
+	return bit.band(c:GetOriginalType(),TYPE_MONSTER)~=0
 end
 function cid.filter(c,e,tp)
 	return (c:IsCode(52471658) or c:IsCode(54900205) or c:IsCode(40444917)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

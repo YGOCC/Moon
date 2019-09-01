@@ -59,7 +59,8 @@ end
 function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetHandler():GetEquipTarget()
 	local ct=g:GetEquipCount()
-	return ct-c:IsDirectAttacked() and 1 or 0
+	local fixct=((c:IsDirectAttacked() and 1) or 0)
+	return ct-fixct
 end
 function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
