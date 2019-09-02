@@ -16,7 +16,8 @@ function cid.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk) if chk==0 then return c:GetFlagEffect(id)==0 end c:RegisterFlagEffect(id,RESET_CHAIN,0,1) end)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
@@ -27,31 +28,37 @@ end
 function cid.lfilter(c,tp)
 	return Duel.IsExistingMatchingCard(function(tc,lpt) return tc:GetLinkMarker()&lpt>0 end,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetLinkMarker())
 end
+function cid.filter(c,e,tp)
+	return c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsType(TYPE_LINK) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,TYPE_LINK) end
-	Duel.SelectTarget(tp,Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,TYPE_LINK)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and cid.filter(chkc,e,tp) end
+	if chk==0 then return Duel.GetMZoneCount(tp,e:GetHandler())>-1
+		and Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if g:GetCount()==0 then return end
-	for tc in aux.Next(g) do
-		local lpt,nlpt=tc:GetLinkMarker(),0
-		local j=0
-		for i=0,8 do
-			j=0x1<<i&lpt
-			if j>0 and cid.link_table[j] then
-				nlpt=nlpt|j
-			end
+	local tc=Duel.GetFirstTarget()
+	if not tc:IsRelateToEffect(e) or Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
+	local lpt,nlpt=tc:GetLinkMarker(),0
+	local j=0
+	for i=0,8 do
+		j=0x1<<i&lpt
+		if j>0 and cid.link_table[op][j] then
+			nlpt=nlpt|j
 		end
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_CHANGE_LINK_MARKER_KOISHI)
-		e1:SetValue(nlpt)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
 	end
+	if nlpt==lpt then return end
+	Duel.BreakEffect()
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EFFECT_CHANGE_LINK_MARKER_KOISHI)
+	e1:SetValue(nlpt)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	tc:RegisterEffect(e1)
 end
 cid.link_table={
 	[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_TOP_RIGHT,
