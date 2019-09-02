@@ -60,7 +60,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		for i=0,8 do
 			j=0x1<<i&lpt
 			if j>0 and cid.link_table[j] then
-				nlpt=nlpt|j
+				nlpt=nlpt|cid.link_table[j]
 			end
 		end
 		local e1=Effect.CreateEffect(e:GetHandler())

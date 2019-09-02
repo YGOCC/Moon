@@ -13,7 +13,6 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetCountLimit(1,id)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
@@ -58,7 +57,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		for i=0,8 do
 			j=0x1<<i&lpt
 			if j>0 and cid.link_table[j] then
-				nlpt=nlpt|j
+				nlpt=nlpt|cid.link_table[j]
 			end
 		end
 		local e1=Effect.CreateEffect(e:GetHandler())

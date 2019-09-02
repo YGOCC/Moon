@@ -26,11 +26,11 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cid.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0xd10) and c:IsAbleToHand()
+	return (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xd10) and c:IsAbleToHand()
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetFlagEffect(tp,id)~=0 then return end
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_REMOVED,0,nil)
+	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_DECK+LOCATION_REMOVED,0,nil)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
@@ -41,7 +41,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.lfilter(c,tp)
 	return Duel.IsExistingMatchingCard(function(tc,lpt) return tc:GetLinkMarker()&lpt>0 end,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetLinkMarker())
-		or not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,TYPE_LINK)
+		or (c:IsType(TYPE_LINK) and not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,TYPE_LINK))
 end
 function cid.cfilter(c)
 	return c:IsOnField() and c:IsType(TYPE_LINK)

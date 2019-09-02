@@ -31,18 +31,15 @@ function cid.lfilter(c,tp)
 		or (c:IsType(TYPE_LINK) and not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,TYPE_LINK))
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp)
-		and Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,400)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	local ct=#Duel.GetMatchingGroup(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
-	if ct==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,ct,nil)
-	local ct=Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
-	if ct>0 then
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,99,nil)
+	local ct=#Duel.GetMatchingGroup(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
+	if #g>0 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 and ct>0 and Duel.SelectYesNo(tp,1123) then
+		Duel.BreakEffect()
 		Duel.Recover(tp,ct*400,REASON_EFFECT)
 	end
 end
@@ -60,7 +57,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		for i=0,8 do
 			j=0x1<<i&lpt
 			if j>0 and cid.link_table[j] then
-				nlpt=nlpt|j
+				nlpt=nlpt|cid.link_table[j]
 			end
 		end
 		local e1=Effect.CreateEffect(e:GetHandler())
