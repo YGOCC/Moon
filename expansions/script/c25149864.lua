@@ -116,7 +116,7 @@ function cid.eop(e,tp,eg,ep,ev,re,r,rp)
 end
 --spsummon
 function cid.tgfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_PYRO) and c:IsAbleToGrave()
+	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_PYRO) and c:IsAbleToGrave() and c:IsSetCard(0x2595)
 		and (c:IsLocation(LOCATION_DECK) or c:IsFaceup())
 end
 function cid.drytg(e,tp,eg,ep,ev,re,r,rp,chk)

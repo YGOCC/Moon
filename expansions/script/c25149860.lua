@@ -117,7 +117,7 @@ function cid.eop(e,tp,eg,ep,ev,re,r,rp)
 end
 --spsummon
 function cid.tgfilter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_PLANT) and c:IsAbleToGrave()
+	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_PLANT) and c:IsAbleToGrave() and c:IsSetCard(0x2595)
 		and (c:IsLocation(LOCATION_DECK) or c:IsFaceup())
 		and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or (c:IsLocation(LOCATION_MZONE) and c:IsControler(tp)))
 end
