@@ -3,20 +3,20 @@ local m=888741
 local cm=_G["c"..m]
 function cm.initial_effect(c)
     local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_ATKCHANGE)
+    e1:SetCategory(CATEGORY_TOHAND)
+    e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
-    e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
     e1:SetCode(EVENT_FREE_CHAIN)
     e1:SetHintTiming(TIMING_DAMAGE_STEP,TIMINGS_CHECK_MONSTER+TIMING_DAMAGE_STEP)
     e1:SetTarget(cm.target)
     e1:SetOperation(cm.activate)
     c:RegisterEffect(e1)
     --act in hand
-    local e0=Effect.CreateEffect(c)
-    e0:SetType(EFFECT_TYPE_SINGLE)
-    e0:SetCode(EFFECT_TRAP_ACT_IN_HAND)
-    e0:SetCondition(cm.handcon)
-    c:RegisterEffect(e0) 
+--    local e0=Effect.CreateEffect(c)
+--    e0:SetType(EFFECT_TYPE_SINGLE)
+--    e0:SetCode(EFFECT_TRAP_ACT_IN_HAND)
+--    e0:SetCondition(cm.handcon)
+--    c:RegisterEffect(e0) 
     --bfg
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(21501505,0))
@@ -41,29 +41,21 @@ function cm.filter(c)
     return c:IsSetCard(0xff1) and c:IsType(TYPE_MONSTER)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-    if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-    Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+    if chkc then return chkc:GetControler()==tp and chkc:GetLocation()==LOCATION_GRAVE and cm.filter(chkc) end
+    if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_GRAVE,0,2,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local g=Duel.SelectTarget(tp,cm.filter,tp,LOCATION_GRAVE,0,2,2,nil)
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,2,0,0)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local tc=Duel.GetFirstTarget()
-    if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-        local e2=Effect.CreateEffect(c)
-        e2:SetType(EFFECT_TYPE_SINGLE)
-        e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-        e2:SetValue(1)
-        e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-        tc:RegisterEffect(e2)
-        local e3=Effect.CreateEffect(c)
-        e3:SetType(EFFECT_TYPE_SINGLE)
-        e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-        e3:SetValue(1)
-        e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-        tc:RegisterEffect(e3)
+    local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+    local sg=g:Filter(Card.IsRelateToEffect,nil,e)
+    if sg:GetCount()>0 then
+        Duel.SendtoHand(sg,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,sg)
     end
 end
+
 function cm.condition(e,tp,eg,ep,ev,re,r,rp)
     if e==re or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
     local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)

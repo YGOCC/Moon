@@ -4,30 +4,58 @@ local cm=_G["c"..m]
 function cm.initial_effect(c)
     c:EnableReviveLimit()
     aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xff1),2,true)
-    local e4=Effect.CreateEffect(c)
-    e4:SetDescription(aux.Stringid(58811192,1))
-    e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-    e4:SetType(EFFECT_TYPE_QUICK_O)
-    e4:SetCode(EVENT_FREE_CHAIN)
-    e4:SetRange(LOCATION_MZONE)
-    e4:SetHintTiming(0,TIMING_END_PHASE)
-    e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-    e4:SetCost(cm.spcost)
-    e4:SetTarget(cm.sptg)
-    e4:SetOperation(cm.spop)
-    c:RegisterEffect(e4)    
+    local e1=Effect.CreateEffect(c)
+    e1:SetDescription(aux.Stringid(58811192,1))
+    e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e1:SetType(EFFECT_TYPE_QUICK_O)
+    e1:SetCode(EVENT_FREE_CHAIN)
+    e1:SetRange(LOCATION_MZONE)
+    e1:SetHintTiming(0,TIMING_END_PHASE)
+    e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    e1:SetCost(cm.spcost)
+    e1:SetTarget(cm.sptg)
+    e1:SetOperation(cm.spop)
+    c:RegisterEffect(e1)    
     --search
     local e2=Effect.CreateEffect(c)
     e2:SetDescription(aux.Stringid(22499034,1))
     e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-    e2:SetType(EFFECT_TYPE_QUICK_O)
-    e2:SetCode(EVENT_CHAINING)
+    e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
+    e2:SetCode(EVENT_CHAIN_END)
     e2:SetRange(LOCATION_MZONE)
     e2:SetCountLimit(1)
     e2:SetCondition(cm.thcon)
     e2:SetTarget(cm.thtg)
     e2:SetOperation(cm.thop)
     c:RegisterEffect(e2)
+    local e4=Effect.CreateEffect(c)
+    e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e4:SetCode(EVENT_CHAINING)
+    e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+    e4:SetRange(LOCATION_MZONE)
+    e4:SetOperation(cm.reg1)
+    c:RegisterEffect(e4)
+    local e5=Effect.CreateEffect(c)
+    e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e5:SetCode(EVENT_CHAIN_SOLVED)
+    e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+    e5:SetRange(LOCATION_MZONE)
+    e5:SetOperation(cm.reg2)
+    c:RegisterEffect(e5)
+end
+function cm.reg1(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if c:GetFlagEffect(m)>0 then 
+        c:ResetFlagEffect(m)
+    end
+    if c:GetFlagEffect(1)==0 then
+        c:RegisterFlagEffect(1,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_CHAIN,0,1)
+    end
+end
+function cm.reg2(e,tp,eg,ep,ev,re,r,rp)
+    if rp==1-tp and e:GetHandler():GetFlagEffect(1)>0 then
+        e:GetHandler():RegisterFlagEffect(m,RESET_EVENT+RESETS_STANDARD,0,1)
+    end
 end
 function cm.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     local c=e:GetHandler()
@@ -66,10 +94,11 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function cm.thcon(e,tp,eg,ep,ev,re,r,rp)
-    return rp==1-tp
+    return e:GetHandler():GetFlagEffect(m)>0
 end
 function cm.thfilter(c,tp)
-    return c:IsSetCard(0xff1) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+    return c:IsSetCard(0xff1) and c:IsType(TYPE_MONSTER)
+        and c:IsAbleToHand()
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil,tp) end

@@ -31,17 +31,17 @@ function cm.sumsuc(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_FIELD)
-    e2:SetCode(EFFECT_DISABLE)
+    e2:SetCode(EFFECT_CANNOT_ACTIVATE)
     e2:SetTargetRange(0,LOCATION_HAND)
-    e2:SetTarget(cm.disable)
+    e2:SetValue(cm.aclimit)
     e2:SetReset(RESET_PHASE+PHASE_END)
     e2:SetLabel(c:GetFieldID())
     Duel.RegisterEffect(e2,tp)
 end
-function cm.disable(e,c)
-    return c:GetFieldID()~=e:GetLabel() and (not c:IsType(TYPE_MONSTER) or (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT))
+function cm.aclimit(e,re,tp)
+    local rc=re:GetHandler()
+    return rc:IsLocation(LOCATION_HAND) and re:IsActiveType(TYPE_MONSTER)
 end
-
 function cm.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return e:GetHandler():IsDiscardable() end
     Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)

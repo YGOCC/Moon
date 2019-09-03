@@ -25,8 +25,7 @@ function cid.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
     e5:SetCode(EVENT_MOVE)
     e5:SetProperty(EFFECT_FLAG_DELAY)
-	e5:SetCode(EVENT_MOVE)
-	e5:SetRange(LOCATION_SZONE)
+	e5:SetRange(0xff)
 	e5:SetCountLimit(1,id+1000)
 	e5:SetCondition(cid.tfcon)
 	e5:SetOperation(cid.desop)
@@ -34,7 +33,10 @@ function cid.initial_effect(c)
 end
 --if set in back row: move other card to back row
 function cid.tfcon(e,tp,eg,ep,ev,re,r,rp)
-	return not eg:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_SZONE)
+return eg:IsExists(cid.condfilter,1,nil,e:GetHandler())
+end
+function cid.condfilter(c,card)
+    return c==card and c:IsLocation(LOCATION_SZONE) and not c:IsPreviousLocation(LOCATION_SZONE)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 if not e:GetHandler():IsRelateToEffect(e) then return end
