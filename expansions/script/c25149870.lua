@@ -35,7 +35,7 @@ end
 --ACTIVATE
 --filters
 function cid.costfilter(c,e,tp)
-	return c:IsSetCard(0x2595) and c:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_DECK,0,1,nil,c,c:GetCode(),e,tp)
+	return c:IsSetCard(0x2595) and c:IsType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_DECK,0,1,c,c:GetCode(),e,tp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsAbleToGraveAsCost()
 end
 function cid.spfilter(c,code,e,tp)
