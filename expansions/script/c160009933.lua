@@ -51,7 +51,7 @@ function c160009933.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+388
 end
 function c160009933.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,2,REASON_COST)
 end
 function c160009933.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
