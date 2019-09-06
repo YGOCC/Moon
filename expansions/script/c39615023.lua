@@ -128,37 +128,48 @@ function c39615023.cfilter(c)
 end
 function c39615023.hnfilter(c,e,tp,g)
 	local sg=Group.CreateGroup()
-	return c:IsCode(39605510) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and (c:IsLocation(LOCATION_EXTRA) or c:IsFaceup()) and (not g or g:IsExists(c39615023.check,1,c,tp,g,c,sg,0))
+	return c:IsCode(39605510) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and (not c:IsLocation(LOCATION_EXTRA) or c:IsFaceup()) 
+		and (not g or g:IsExists(c39615023.check,1,c,tp,g,c,sg,0))
 end
-function c39615023.check(c,tp,mg,sg,sc,ct)
+function c39615023.hnfilter_zone(c,e,tp)
+	return c:IsCode(39605510) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and ((c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp)>0)
+	or Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
+end
+function c39615023.check(c,tp,mg,sc,sg,ct)
 	sg:AddCard(c)
+	local fixsg=sg:Clone()
+	fixsg:AddCard(sc)
 	ct=ct+1
 	local res=c39615023.goal(tp,sg,sc,ct)
-		or (ct<5 and mg:IsExists(c39615023.check,1,sg,tp,mg,sg,sc,ct))
+		or (ct<4 and mg:IsExists(c39615023.check,1,fixsg,tp,mg,sc,sg,ct))
 	sg:RemoveCard(c)
 	ct=ct-1
 	return res
 end
 function c39615023.goal(tp,sg,sc,ct)
-	return ct>=5 and sg:GetClassCount(Card.GetCode)>=5 and (sc:IsLocation(LOCATION_EXTRA)
-		and Duel.GetLocationCountFromEx(tp,tp,sg)>0 or Duel.GetLocationCount(tp,LOCATION_MZONE)>-sg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE))
+	return ct>=4 and sg:GetClassCount(Card.GetCode)>=4 and ((sc:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,sg)>0) 
+		or (1+Duel.GetLocationCount(tp,LOCATION_MZONE))>-sg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE))
 end
 function c39615023.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local mg=Duel.GetMatchingGroup(c39615023.cfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,c)
+	mg:KeepAlive()
 	if chk==0 then return c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp,mg) end
+		and Duel.IsExistingMatchingCard(c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,nil,e,tp,mg) 
+	end
 	local sc=Duel.SelectMatchingCard(tp,c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp,mg):GetFirst()
-	local sg=Group.FromCards(c,sc)
+	local sg=Group.FromCards(c)
+	local fixsg=Group.FromCards(c,sc)
 	local ct=0
 	while sg:GetCount()<5 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=mg:FilterSelect(tp,c39615023.check,1,1,sg,tp,mg,sg,sc,ct)
+		local g=mg:FilterSelect(tp,c39615023.check,1,1,fixsg,tp,mg,sc,sg,ct)
+		local code=g:GetFirst():GetCode()
 		sg:Merge(g)
-		mg:Remove(Card.IsCode,nil,g:GetFirst():GetCode())
+		fixsg:Merge(g)
+		mg:Remove(Card.IsCode,nil,code)
 		ct=ct+1
 	end
-	sg:RemoveCard(sc)
 	Duel.Remove(sg,POS_FACEUP,REASON_COST)
 end
 function c39615023.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -167,7 +178,7 @@ function c39615023.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c39615023.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c39615023.hnfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c39615023.hnfilter_zone,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end

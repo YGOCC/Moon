@@ -127,14 +127,14 @@ function c39605510.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,c39605510.cfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
-function c41420027.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c39605510.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
-function c41420027.negop(e,tp,eg,ep,ev,re,r,rp)
+function c39605510.negop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
