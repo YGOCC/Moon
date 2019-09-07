@@ -14,7 +14,7 @@ function cid.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
+	e3:SetCountLimit(1,id)
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetCost(cid.cost)
 	e3:SetTarget(cid.tg)
@@ -22,12 +22,12 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 	local s1=Effect.CreateEffect(c)
 	s1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	s1:SetCode(EVENT_SPSUMMON)
+	s1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	s1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	s1:SetOperation(function() Duel.Hint(HINT_SOUND,0,aux.Stringid(id,10)) end)
 	c:RegisterEffect(s1)
 	local s2=s1:Clone()
-	s2:SetCode(EVENT_FLIP_SUMMON)
+	s2:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(s2)
 	local s5=Effect.CreateEffect(c)
 	s5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -43,7 +43,9 @@ function cid.initial_effect(c)
 	c:RegisterEffect(s6)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and #e:GetHandler():GetOverlayGroup()>1 end
+	local c=e:GetHandler()
+	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetOverlayCount()>1 end
+	Duel.Hint(HINT_SOUND,0,aux.Stringid(id,11))
 	c:RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function cid.filter(c,tp)
@@ -52,17 +54,24 @@ end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
-	Duel.Hint(HINT_SOUND,0,aux.Stringid(id,11))
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler():GetOverlayGroup(),1,0,0)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	if Duel.Destroy(e:GetHandler():GetOverlayGroup():Select(tp,1,1,nil),REASON_EFFECT)==0 or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	if Duel.SendtoGrave(c:GetOverlayGroup():Select(tp,1,1,nil),REASON_EFFECT+REASON_DESTROY)==0 or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local sg=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp)
 	local tc=sg:GetFirst()
 	if tc then
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		if not Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then return end
 		Duel.Hint(HINT_SOUND,0,aux.Stringid(tc:GetCode(),10))
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(1000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+		c:RegisterEffect(e1)
 	end
 end
