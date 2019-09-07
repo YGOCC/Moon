@@ -1,6 +1,6 @@
 --D.D. Graviton Dragon
 function c32083042.initial_effect(c)
-	c:EnableUnsummonable()
+	c:EnableReviveLimit()
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
