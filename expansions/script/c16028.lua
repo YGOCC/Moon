@@ -13,7 +13,6 @@ function c16028.initial_effect(c)
 		local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetTarget(c16028.target)
 	e2:SetOperation(c16028.operation)
@@ -51,7 +50,7 @@ function c16028.splimit(e,c)
 	return not c:IsSetCard(0x308)
 end
 function c16028.sfilter(c)
-return c:IsSetCard(0x308) and c:IsAbleToHand() and not c:IsSetCode(16028)
+return c:IsSetCard(0x308) and c:IsAbleToHand() and not c:IsCode(16028)
 end
 function c16028.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c16028.sfilter,tp,LOCATION_DECK,0,1,nil) end
