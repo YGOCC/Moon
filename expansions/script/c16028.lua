@@ -16,7 +16,7 @@ function c16028.initial_effect(c)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetTarget(c16028.target)
 	e2:SetOperation(c16028.operation)
-	c:RegisterEffect(e3)
+	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
@@ -50,7 +50,7 @@ function c16028.splimit(e,c)
 	return not c:IsSetCard(0x308)
 end
 function c16028.sfilter(c)
-return c:IsSetCard(0x308) and c:IsAbleToHand() and not c:IsSetCode(16028)
+return c:IsSetCard(0x308) and c:IsAbleToHand() and not c:IsCode(16028)
 end
 function c16028.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c16028.sfilter,tp,LOCATION_DECK,0,1,nil) end
