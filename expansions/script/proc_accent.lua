@@ -71,7 +71,7 @@ Card.IsPreviousLocation=function(c,loc)
 end
 Card.GetReason=function(c)
 	local rs=get_reason(c)
-	local rc=c:GetReasonCard() or c:GetReasonEffect():GetOwner()
+	local rc=c:GetReasonEffect()~=nil and c:GetReasonEffect():GetOwner() or c:GetReasonCard()
 	if rc and Auxiliary.Accents[rc] then
 		rs=rs|REASON_ACCENT
 	end

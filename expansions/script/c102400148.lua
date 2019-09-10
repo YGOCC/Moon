@@ -34,6 +34,7 @@ function cid.acop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:Filter(cid.cfilter,nil,tp)
 	if #ct>0 then
 		Duel.Hint(HINT_CARD,0,id)
-		Duel.Recover(tp,ct:GetSum(Card.GetTextAttack),REASON_EFFECT)
+		if #ct>1 then ct=ct:RandomSelect(tp,1) end
+		Duel.Recover(tp,ct:GetFirst():GetTextAttack(),REASON_EFFECT)
 	end
 end
