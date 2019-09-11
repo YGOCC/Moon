@@ -86,7 +86,7 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
     if g:GetCount()==0 then return end
     if g:GetCount()<=ft then
-        Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+        Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
         local g2=Duel.SelectMatchingCard(tp,cm.afilter,tp,LOCATION_GRAVE,0,1,1,g)
         Duel.SendtoHand(g2,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g2)        

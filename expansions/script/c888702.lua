@@ -8,7 +8,8 @@ function cm.initial_effect(c)
     e2:SetCode(EVENT_BE_MATERIAL)
     e2:SetProperty(EFFECT_FLAG_DELAY)
     e2:SetCondition(cm.tgcon)
-    e2:SetOperation(cm.sumsuc)
+    e2:SetTarget(cm.target)
+    e2:SetOperation(cm.activate)
     c:RegisterEffect(e2)
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(26674724,0))
@@ -22,25 +23,35 @@ function cm.initial_effect(c)
     e3:SetOperation(cm.thop)
     c:RegisterEffect(e3)
 end
+function cm.filter(c)
+    return c:IsSetCard(0xff1) and c:IsFaceup()
+end
 function cm.tgcon(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local rc=c:GetReasonCard()
     return c:IsLocation(LOCATION_GRAVE) and rc:IsSetCard(0xff1) and r&REASON_FUSION~=0
 end
-function cm.sumsuc(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_FIELD)
-    e2:SetCode(EFFECT_CANNOT_ACTIVATE)
-    e2:SetTargetRange(0,LOCATION_HAND)
-    e2:SetValue(cm.aclimit)
-    e2:SetReset(RESET_PHASE+PHASE_END)
-    e2:SetLabel(c:GetFieldID())
-    Duel.RegisterEffect(e2,tp)
+function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cm.filter(chkc) end
+    if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_MZONE,0,1,nil) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+    Duel.SelectTarget(tp,cm.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function cm.aclimit(e,re,tp)
-    local rc=re:GetHandler()
-    return rc:IsLocation(LOCATION_HAND) and re:IsActiveType(TYPE_MONSTER)
+function cm.activate(e,tp,eg,ep,ev,re,r,rp)
+    local tc=Duel.GetFirstTarget()
+    if tc and tc:IsRelateToEffect(e) then
+        local e1=Effect.CreateEffect(e:GetHandler())
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+        e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+        e1:SetValue(1)
+        e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+        tc:RegisterEffect(e1)
+        local e2=e1:Clone()
+        e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+        e2:SetValue(aux.indoval)
+        tc:RegisterEffect(e2)
+    end
 end
 function cm.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return e:GetHandler():IsDiscardable() end
