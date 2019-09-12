@@ -37,7 +37,7 @@ end
 --SPSUMMON PROC
 --filters
 function c16029.discardfilter(c)
-	return c:IsSetCard(0x308) and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(5) and c:IsDiscardable()
+	return c:IsSetCard(0x208) and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(5) and c:IsDiscardable()
 end
 function c16029.fdownfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsFacedown()
