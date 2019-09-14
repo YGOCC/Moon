@@ -63,7 +63,7 @@ function c50000061.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function c50000061.rmfilter(c)
-	return c:IsAbleToRemove() and (c:IsLocation(LOCATION_SZONE) or aux.SpElimFilter(c,false,true))
+	return c:IsAbleToRemove()
 end
 function c50000061.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c50000061.rmfilter,tp,0,LOCATION_ONFIELD,nil)
@@ -78,7 +78,7 @@ function c50000061.rmop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c50000061.descon(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and e:GetHandler():IsReason(REASON_EFFECT) and e:GetHandler():IsPreviousPosition(POS_FACEUP) and not e:GetHandler():IsLocation(LOCATION_DECK)
+	return rp~=tp and e:GetHandler():IsReason(REASON_EFFECT) and e:GetHandler():IsPreviousPosition(POS_FACEUP)
 end
 function c50000061.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
