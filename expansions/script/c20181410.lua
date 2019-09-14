@@ -9,7 +9,7 @@ function cid.initial_effect(c)
 	e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e4:SetTargetRange(1,0)
-	e4:SetTarget(cid.splimit)
+	e4:SetTarget(cid.pslimit)
 	c:RegisterEffect(e4)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_QUICK_O)
@@ -94,6 +94,10 @@ function cid.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function cid.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
+end
+function cid.pslimit(e,c,sump,sumtype,sumpos,targetp)
+	if c:IsRace(RACE_DINOSAUR) then return false end
+	return bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
 end
 function cid.tgfilter(c,e,tp)
 	return c:IsAbleToGraveAsCost() and c:IsSetCard(0x9b5) and c:IsType(TYPE_MONSTER)

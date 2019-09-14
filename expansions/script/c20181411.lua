@@ -108,8 +108,9 @@ end
 function cid.mfilter(c,fc,sub,mg,sg)
 	return c:IsRace(RACE_DINOSAUR) and c:IsType(TYPE_FUSION)
 end
-function cid.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
+function cid.splimit(e,c,sump,sumtype,sumpos,targetp)
+	if c:IsRace(RACE_DINOSAUR) then return false end
+	return bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
 end
 function cid.efilter(e,te)
 	return te:IsActiveType(TYPE_MONSTER) and te:GetOwner()~=e:GetOwner()
