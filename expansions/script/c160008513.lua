@@ -39,7 +39,7 @@ c:EnableReviveLimit()
 end
 function c160008513.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
-	return ec:IsControler(tp) and ec:IsSetCard(0x285a) and c:IsType(TYPE_MONSTER) and  ec:GetSummonType()==SUMMON_TYPE_SPECIAL and ec:IsPreviousLocation(LOCATION_HAND+LOCATION_GRAVE)
+	return ec:IsControler(tp) and ec:IsSetCard(0x285a) and ec:IsType(TYPE_MONSTER) and  ec:GetSummonType()==SUMMON_TYPE_SPECIAL and ec:IsPreviousLocation(LOCATION_HAND+LOCATION_GRAVE)
 end
 function c160008513.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
