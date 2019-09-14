@@ -33,7 +33,7 @@ function c210216004.etarget(e,c)
 	return c:GetType()==TYPE_TRAP and c:IsSetCard(0x216)
 end
 function c210216004.searchfilter(c)
-	return c:IsSetCard(0x216) and c:IsType(TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0x216) and c:IsAbleToHand()
 end
 function c210216004.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c210216004.searchfilter,tp,LOCATION_DECK,0,1,nil) end
