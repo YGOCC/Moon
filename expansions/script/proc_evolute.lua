@@ -171,7 +171,10 @@ function Card.IsCanBeEvoluteMaterial(c,ec)
 	end
 	local tef2={c:IsHasEffect(EFFECT_CANNOT_BE_EVOLUTE_MATERIAL)}
 	for _,te2 in ipairs(tef2) do
-		if te2:GetValue()(te2,ec) then return false end
+		local tev=te2:GetValue()
+		if type(tev)=='function' then
+			if tev(te2,ec) then return false end
+		elseif tev~=0 then return false end
 	end
 	return true
 end
