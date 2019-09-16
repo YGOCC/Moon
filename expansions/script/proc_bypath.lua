@@ -333,12 +333,8 @@ function Auxiliary.GBypathOp(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp) e0:Reset() e:Reset() end)
+	e2:SetOperation(function() e0:Reset() e2:Reset() end)
 	Duel.RegisterEffect(e2,tp)
-	-----
-	Duel.AdjustInstantly()
-	for tc in aux.Next(g) do Duel.SpecialSummonStep(tc,SUMMON_TYPE_SPECIAL+0x26,tp,tp,true,true,POS_FACEUP,zone) end
-	Duel.SpecialSummonComplete()
 end
 function Auxiliary.GBypathVal(e,c)
 	local seq1=e:GetHandler():GetSequence()
