@@ -37,18 +37,14 @@ function cid.registerop(e)
     if not c:IsDisabled() then
 		if c:GetFlagEffect(id)<=0 then
 			c:RegisterFlagEffect(id,RESET_EVENT+EVENT_CUSTOM+222,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,1)
-			Debug.Message("a")
 		end
 		if c:GetFlagEffectLabel(id)~=100 then
 			c:SetFlagEffectLabel(id,100)
-			Debug.Message("b")
 		end
     else
-		Debug.Message("c")
         local reg=Group.CreateGroup()
 		if c:GetFlagEffect(id)<=0 then
 			c:RegisterFlagEffect(id,RESET_EVENT+EVENT_CUSTOM+222,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,1)
-			Debug.Message("d")
 		end
 		if c:GetFlagEffectLabel(id)~=200 then
 			reg:AddCard(c)
@@ -56,7 +52,6 @@ function cid.registerop(e)
 			Debug.Message("e")
 		end
         if reg:GetCount()>0 then
-			Debug.Message("f")
             Duel.RaiseEvent(reg,EVENT_CUSTOM+id,e,0,0,0,0)
         end
     end
