@@ -35,16 +35,16 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	--DURO!MONSTAH CADO!
 	local e2=Effect.CreateEffect(c)
-	e2:SetProperty(EFFECT_FLAG_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetCode(EVENT_DRAW)
-	e2:SetType(EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCountLimit(1)
 	e2:SetCondition(cid.thcon)
 	e2:SetTarget(cid.thtg)
 	e2:SetOperation(cid.thop)
 	c:RegisterEffect(e2)
-	-:clap: :clap: REVIVE REVIEW :clap: :clap:
+	--:clap: :clap: REVIVE REVIEW :clap: :clap:
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -92,7 +92,10 @@ function cid.sumcon(e,c)
 	local tp=c:GetControler()
 	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0):Filter(Card.IsType,nil,TYPE_MONSTER)
 	local sg=g:Filter(cid.sumconfilter,nil)
-	return #g=1 and sg:GetClassCount(Card.GetRace)==#g
+	return #g>1 and sg:GetClassCount(Card.GetRace)==1 and not g:IsExists(Card.IsFacedown,1,nil)
+end
+function cid.sumconfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
 end
 	function cid.tlfilter(c,e,mg)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:GetLevel()==e:GetHandler():GetFuture()-1
@@ -132,7 +135,7 @@ function cid.spcfilter(c,tp)
 		and bit.band(c:GetPreviousRaceOnField(),RACE_BEAST)>0
 end
 function cid.revcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(cid.spcfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
+	return eg:IsExists(cid.revfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
 end
 function cid.revtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

@@ -26,7 +26,7 @@ function cid.initial_effect(c)
 	e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCategory(CATEGORY_REMOVE)
-	e1:SetType(EFFECT_TYPE_TRIGGER_O)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(cid.bancon)
 	e1:SetTarget(cid.bantg)
@@ -118,7 +118,7 @@ function cid.cairnfilter(c,re,rp,tf,ceg,cep,cev,cre,cr,crp)
 end
 function cid.cairntg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=ev
-	local label=Duel.GetFlagEffectLabel(0,433004)
+	local label=Duel.GetFlagEffectLabel(0,id)
 	if label then
 		if ev==bit.rshift(label,16) then ct=bit.band(label,0xffff) end
 	end
@@ -131,9 +131,9 @@ function cid.cairntg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,cid.cairnfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetLabelObject(),ce,cp,tf,ceg,cep,cev,cre,cr,crp)
 	local val=ct+bit.lshift(ev+1,16)
 	if label then
-		Duel.SetFlagEffectLabel(0,433004,val)
+		Duel.SetFlagEffectLabel(0,id,val)
 	else
-		Duel.RegisterFlagEffect(0,433004,RESET_CHAIN,0,1,val)
+		Duel.RegisterFlagEffect(0,id,RESET_CHAIN,0,1,val)
 	end
 end
 function cid.cairnop(e,tp,eg,ep,ev,re,r,rp)
@@ -148,7 +148,7 @@ function cid.revfilter(c,tp)
 		and bit.band(c:GetPreviousRaceOnField(),RACE_PLANT)>0
 end
 function cid.revcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(cid.spcfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
+	return eg:IsExists(cid.revfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
 end
 function cid.revtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

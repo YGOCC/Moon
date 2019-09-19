@@ -27,7 +27,7 @@ function cid.initial_effect(c)
 		local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SUMMON)
-	e1:SetType(EFFECT_TYPE_TRIGGER_O)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
     e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(cid.harpcon)
 	e1:SetTarget(cid.harptg)
@@ -71,19 +71,20 @@ function cid.armacon(e)
  function cid.harpcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_TIMELEAP)
 end
-function cid.harpfilter(c,e,tp)
+function cid.harpfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsAbleToHand()
-	end
-	function cid.harptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+end
+function cid.harptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and cid.harpfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(cid.harpfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,cid.harpfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_MZONE)
 end
 function cid.danfilter(c,e,tp)
 	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsSummonable(true,nil)
-	end
+end
 	function cid.harpop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 and tc:IsLocation(LOCATION_HAND) then
@@ -127,7 +128,7 @@ function cid.revfilter(c,tp)
 		and bit.band(c:GetPreviousRaceOnField(),RACE_THUNDER)>0
 end
 function cid.revcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(cid.spcfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
+	return eg:IsExists(cid.revfilter,1,nil,tp) and not eg:IsContains(e:GetHandler())
 end
 function cid.revtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
