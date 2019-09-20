@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from Shadowverse's "Whitescale Dragon"
 --ナイトブレイカー・ドラゴン
 local cid,id=GetID()
 function cid.initial_effect(c)
