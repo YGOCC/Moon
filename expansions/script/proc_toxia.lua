@@ -57,6 +57,7 @@ function Auxiliary.AddOrigToxiaType(c,isxyz)
 	Auxiliary.Toxias[c]=function() return isxyz end
 end
 function Auxiliary.AddToxiaProc(c,potency,sac,req,...)
+	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local ge2=Effect.CreateEffect(c)
 	ge2:SetType(EFFECT_TYPE_FIELD)
 	ge2:SetCode(EFFECT_SPSUMMON_PROC_G)

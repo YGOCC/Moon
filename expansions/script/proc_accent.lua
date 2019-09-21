@@ -113,6 +113,7 @@ function Auxiliary.AddOrigAccentType(c,isfusion)
 	Auxiliary.Accents[c]=function() return isfusion end
 end
 function Auxiliary.AddAccentProc(c,f,...)
+	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	--f - method to check Accented Materials
 	local f=f
 	if type(f)=='string' then f=Auxiliary["AddAccentProc"..f] end

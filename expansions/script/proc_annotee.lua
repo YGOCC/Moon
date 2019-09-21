@@ -72,6 +72,7 @@ function Auxiliary.AddOrigAnnoteeType(c,isritual)
 	Auxiliary.Annotees[c]=function() return isritual end
 end
 function Auxiliary.AddAnnoteeProc(c,minc,maxc,alterf,...)
+	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local ge2=Effect.CreateEffect(c)
 	ge2:SetType(EFFECT_TYPE_FIELD)
 	ge2:SetCode(EFFECT_SPSUMMON_PROC)

@@ -68,6 +68,7 @@ function Auxiliary.AddOrigChromaType(c,isritual)
 	Auxiliary.Chromas[c]=function() return isritual end
 end
 function Auxiliary.AddChromaProc(c,f)
+	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local ge2=Effect.CreateEffect(c)
 	ge2:SetType(EFFECT_TYPE_FIELD)
 	ge2:SetCode(EFFECT_SPSUMMON_PROC_G)

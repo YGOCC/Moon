@@ -14257,11 +14257,11 @@ expansions/script/GLShortcuts.lua	6743700bf509cc48d8f596ff4a8fe5c0
 expansions/script/init.lua	a45b3938bb1e64d204cc96842f004893
 expansions/script/json.lua	d41a01cf67c76915b49c57d21ac471ee
 expansions/script/lap.lua	1325997ac4231550048dae57e7eb75b0
-expansions/script/proc_accent.lua	f9414f140a2eac50a610f1623c4ec56f
-expansions/script/proc_annotee.lua	27c6005e7a2554f322fa2f46c995021b
+expansions/script/proc_accent.lua	d96ced6aae15e4780be6f5c588bfefa8
+expansions/script/proc_annotee.lua	fcefc3a8a1db452ff1d66634d0144012
 expansions/script/proc_bigbang.lua	d4cf92a9652ab6d6b664f218e16cdc4b
 expansions/script/proc_bypath.lua	f2dd2fb549f4cb1654b1ee0daf953660
-expansions/script/proc_chroma.lua	dde2e10209e22e6a37c7a798549bccf7
+expansions/script/proc_chroma.lua	497692d76729d2406a17a0dca663f9a3
 expansions/script/proc_conjoint.lua	5690f18a1e6cc180cad5f1d5e8900aa7
 expansions/script/proc_corona.lua	2fa2f91a020530c23f0f8533eb66668e
 expansions/script/proc_deckmaster.lua	9f785df09b4401d9db722a868b40941d
@@ -14269,11 +14269,11 @@ expansions/script/proc_evolute.lua	49d135d29d058d4aaf0d55c538026ea3
 expansions/script/proc_harmony.lua	62ff712bda7636958f400fbdec270147
 expansions/script/proc_pandemonium.lua	734caec8cac744c1e22924a14e3bd7cb
 expansions/script/proc_polarity.lua	47979807ec9c7cdc61896f375e2e672f
-expansions/script/proc_relay.lua	88b397c6fcd871cd9bd477369bc98268
+expansions/script/proc_relay.lua	66b0c53f7c248fad0bd49486703951db
 expansions/script/proc_skill.lua	cbaa68f0971f731a81abf7bd080276b2
 expansions/script/proc_spatial.lua	872193df91b316f902d415745b1d4b55
 expansions/script/proc_timeleap.lua	bb6cbd93de87b3a8cf55fe80ea6f61ee
-expansions/script/proc_toxia.lua	871d914cb3689a557c4444afd832c829
+expansions/script/proc_toxia.lua	a10d0095f34a3e87ae013bc2f973587c
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
 sound/BGM/custom/ASTERIA - Joyful Tea Party.mp3	6534ddde9e7ee1d39bddb4298cd7168a
 sound/BGM/custom/ASTERIA - Queen's Palace.mp3	92fa00f308187011ddd096b1a5ff6ea7
@@ -14364,6 +14364,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	7103a268bdee732ba06ac278472610f0
+update/filelist.txt	8d8a54dffe0e50cc356f6fbcc7bacae0
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	aa8116217539df76b8527e2667ebf87f
+update/version.txt	07ba125c1595443572eea1d5a3ae6941
