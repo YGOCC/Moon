@@ -38,7 +38,8 @@ function cid.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetCode(EVENT_DRAW)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
 	e2:SetCondition(cid.thcon)
 	e2:SetTarget(cid.thtg)
@@ -129,7 +130,7 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
-function cid.spcfilter(c,tp)
+function cid.revfilter(c,tp)
 	return c:GetSummonLocation()==LOCATION_EXTRA and c:GetPreviousControler()==tp
 		and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP)
 		and bit.band(c:GetPreviousRaceOnField(),RACE_BEAST)>0
