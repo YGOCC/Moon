@@ -42,9 +42,10 @@ function cid.initial_effect(c)
 	end
 end
 function cid.resetcount(e,tp,eg,ep,ev,re,r,rp)
-	if cid[2]>0 then cid[0]=0 cid[2]=0 end
-	if cid[3]>0 then cid[1]=0 cid[3]=0 end
-	cid[2+Duel.GetTurnPlayer()]=1
+	local p=2+Duel.GetTurnPlayer()
+	if cid[p]>0 and cid[3-p]>0 then cid[p]=0 cid[3-p]=0 end
+	if cid[p]>1 then cid[p-2]=0 cid[p]=0 end
+	cid[p]=cid[p]+1
 end
 function cid.addcount(e,tp,eg,ep,ev,re,r,rp)
 	cid[ep]=cid[ep]+1
