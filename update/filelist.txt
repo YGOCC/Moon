@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	e2aa0a59f2ce9b660878469df4790f50
+﻿expansions/Cards-non-QCD.cdb	32c9c7d8a1d9c02716919e84feea72e4
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -5895,6 +5895,8 @@ expansions/pics/77709007.jpg	7522c7bb3540d8fef397d4055590db4d
 expansions/pics/77709008.jpg	db17c2cbc3cb6e6f7dccc32e0772c950
 expansions/pics/77709009.jpg	edce13846b945eeb99b98adcd5196782
 expansions/pics/777345112.jpg	54c81d3797aa27f52e01c6778890c1ae
+expansions/pics/77766654.png	14c140c4da77b5bb31b1eea2cc8a8585
+expansions/pics/77766655.png	d0255e6ba62f22dacdfb39b2df0be7fa
 expansions/pics/7778726.jpg	eeedf73c1558a10db869dd1e54e022a6
 expansions/pics/78144171.jpg	683090060b2fe0f6759adb2eeb3ff364
 expansions/pics/7852509.jpg	666766121265bf8a21126de7304c785b
@@ -13071,6 +13073,8 @@ expansions/script/c77709007.lua	5eab53410f029896157c9c764b1b24f8
 expansions/script/c77709008.lua	d95ef7fd8a168262a50af72756861eb0
 expansions/script/c77709009.lua	7e439636ac14b9d6866a6729c9d6efc1
 expansions/script/c777345112.lua	a206ac486c12cc0008e615a6c09f3b40
+expansions/script/c77766654.lua	cd5940375a2fc5cdcf0ba249269dd508
+expansions/script/c77766655.lua	a713c0a85c85dfff634717f7774dbcd3
 expansions/script/c77777777.lua	c3e0541ed43ba49c06d18a4bccaf8127
 expansions/script/c7778726.lua	c6f6ea8dd777767a4a3b575042e9af9d
 expansions/script/c78144171.lua	d9ac972c1cc7884859ec0e44d3322fc9
@@ -14382,6 +14386,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	79fe95888aec8956c37f433782feab38
+update/filelist.txt	f70b84477b6659c6f13ebacf6af31deb
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	8e5e21d7704a52f7a96a1e9da0bcdf87
+update/version.txt	d90d9f6e91a03d4aee402dbb9e90f123
