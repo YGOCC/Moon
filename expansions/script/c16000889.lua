@@ -80,13 +80,12 @@ function  c16000889.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	else return false end
 end
 function  c16000889.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-   if chk==0 then return true end
-	local bc=e:GetLabelObject()
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,bc,1,0,0)
+	 if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetLabelObject(),1,0,0)
 end
 function  c16000889.rmop(e,tp,eg,ep,ev,re,r,rp)
-   local bc=e:GetLabelObject()
-	if bc:IsRelateToBattle() then
+	local bc=e:GetLabelObject()
+	if bc:IsRelateToBattle() and bc:IsAbleToRemove() then
 	Duel.Remove(bc,POS_FACEUP,REASON_EFFECT)
 	Duel.Recover(tp,bc:GetAttack(),REASON_EFFECT)
 end
