@@ -7,7 +7,6 @@ local function getID()
 	return id,cod
 end
 local id,cid=getID()
-local id2=id+1000000
 function cid.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)

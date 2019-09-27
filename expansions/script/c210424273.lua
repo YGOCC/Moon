@@ -38,14 +38,14 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cid.tgfilter(chkc) end
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.tgfilter,tp,LOCATION_MZONE,0,1,nil) 
 	and c:GetFlagEffect(id)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x666,0x666,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND) end
+	and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x666,0x666,1500,1500,3,RACE_BEAST,ATTRIBUTE_WIND) end
 	c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x666,0x666,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND) then
+	if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x666,0x666,1500,1500,3,RACE_BEAST,ATTRIBUTE_WIND) then
 		c:AddMonsterAttribute(TYPE_NORMAL)
 		Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP)
 	--	c:AddMonsterAttributeComplete(c)
@@ -64,7 +64,7 @@ function cid.spfilter(c,e,tp)
 end
 function cid.filter1(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-	and (c:IsType(TYPE_SYNCHRO) or c:IsType(TYPE_LINK))
+	and (c:IsType(TYPE_SYNCHRO) or c:IsType(TYPE_LINK) or c:IsType(TYPE_FUSION))
 end
 function cid.filter2(c)
 	return c:IsAbleToDeck() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and (c:IsFaceup() or not c:IsLocation(LOCATION_EXTRA))

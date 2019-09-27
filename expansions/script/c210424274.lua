@@ -9,19 +9,8 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 --	c:SetUniqueOnField(1,0,id)
-	--synchro summon
-	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
-	c:EnableReviveLimit()
-	--special summon rule
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(4066,12))
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetRange(LOCATION_EXTRA)
-	e1:SetCondition(cid.sprcon)
-	e1:SetOperation(cid.sprop)
-	c:RegisterEffect(e1)
+	aux.AddFusionProcFun2(c,cid.ffilter,cid.ffilter,false)
+	aux.AddContactFusionProcedure(c,Card.IsReleasable,LOCATION_ONFIELD,0,Duel.Release,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 	--equip
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -64,62 +53,17 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 --Filters
+function cid.ffilter(c)
+	return c:IsSetCard(0x666) and not c:IsType(TYPE_FIELD)
+end
 function cid.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:GetBaseAttack()<1501
 end
 function cid.atkfilter2(c)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
 end
-function cid.equipfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x666)
-end
 function cid.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x666) and c:IsType(TYPE_PENDULUM)
-end
-function cid.fcheck(c,sg)
-	return c:IsFaceup() and c:IsSetCard(0x666) and sg:IsExists(cid.fcheck2,1,c)
-end
-function cid.fcheck2(c)
-	return c:IsFaceup() and c:IsSetCard(0x666)
-end
-function cid.cfilter(c)
-	return (c:IsFaceup() and c:IsSetCard(0x666))
-		and (c:IsAbleToGraveAsCost() or c:IsAbleToDeckOrExtraAsCost())
-end
---Alt Summon Method
-function cid.fselect(c,tp,mg,sg)
-	sg:AddCard(c)
-	local res=false
-	if sg:GetCount()<2 then
-		res=mg:IsExists(cid.fselect,1,sg,tp,mg,sg)
-	elseif Duel.GetLocationCountFromEx(tp,tp,sg)>0 then
-		res=sg:IsExists(cid.fcheck,1,nil,sg)
-	end
-	sg:RemoveCard(c)
-	return res
-end
-function cid.sprcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local mg=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_ONFIELD,0,nil)
-	local sg=Group.CreateGroup()
-	return mg:IsExists(cid.fselect,1,nil,tp,mg,sg)
-end
-function cid.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	local c=e:GetHandler()
-	local mg=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_ONFIELD,0,nil)
-	local sg=Group.CreateGroup()
-	while sg:GetCount()<2 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local g=mg:FilterSelect(tp,cid.fselect,1,1,sg,tp,mg,sg)
-		sg:Merge(g)
-	end
-	local cg=sg:Filter(Card.IsFacedown,nil)
-	if cg:GetCount()>0 then
-		Duel.ConfirmCards(1-tp,cg)
-	end
-	Duel.Release(sg,nil,2,REASON_COST)
-		c:CompleteProcedure()
 end
 --Grave Equip
 function cid.playcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -166,7 +110,7 @@ function cid.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local val=Duel.GetMatchingGroupCount(cid.atkfilter2,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,nil)*200
+	local val=Duel.GetMatchingGroupCount(cid.atkfilter2,tp,LOCATION_ONFIELD+LOCATION_EXTRA+LOCATION_GRAVE,0,nil)*200
 	if val>0 and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)

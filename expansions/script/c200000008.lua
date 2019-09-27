@@ -49,7 +49,7 @@ function cid.initial_effect(c)
 		end
 end
 function cid.lfilter(c)
-    return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x700)
+    return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_MACHINE)
 end
 --atk up
 function cid.atkcon2(e)
