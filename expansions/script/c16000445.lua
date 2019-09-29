@@ -41,7 +41,7 @@ function c16000445.initial_effect(c)
 end
 
 function c16000445.ffilter(c)
-	return  c:IsSetCard(0x885a) and c:IsType(TYPE_MONSTER) 
+	return  c:IsSetCard(0x885a) and c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_MZONE)
 end
 function c16000445.fscondition(e,g,gc)
 	if g==nil then return true end
