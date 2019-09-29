@@ -1,5 +1,5 @@
---created & coded by Lyris, art by JetBlackStare77 of DeviantArt
---ニュートリックス・ベキー
+--created & coded by Lyris, art at https://78.media.tumblr.com/e349861ac74f1e6d72f42fa7ad8cd8f7/tumblr_p2oxlkOMsG1w0w6bio1_1280.jpg
+--ニュートリックス・ホリー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -12,10 +12,9 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-	e2:SetCountLimit(1,id)
+	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetTarget(cid.tg)
 	e2:SetOperation(cid.op)
@@ -27,30 +26,29 @@ function cid.initial_effect(c)
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-function cid.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xd10) and not c:IsCode(id)
+function cid.lfilter(c,tp)
+	return Duel.IsExistingMatchingCard(function(tc,lpt) return tc:GetLinkMarker()&lpt>0 end,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetLinkMarker())
+		or (c:IsType(TYPE_LINK) and not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,TYPE_LINK))
 end
-function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and chkc:IsAbleToDeck() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,2,nil)
-		and Duel.IsPlayerCanDraw(tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,2,2,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,2,0,0)
-	local ct=#g:Filter(cid.filter,nil)
-	if ct>0 then Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct) end
+function cid.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0xd10)
+end
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp)
+		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_MZONE,0,1,nil) end
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if #tg==0 then return end
-	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup()
-	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	local cg=g:Filter(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-	local nc=#cg:Filter(cid.filter,nil)
-	if #cg==#tg and nc>0 then
-		Duel.BreakEffect()
-		Duel.Draw(tp,nc,REASON_EFFECT)
+	local ct=#Duel.GetMatchingGroup(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
+	if ct==0 then return end
+	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,nil)
+	for tc in aux.Next(g) do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetValue(ct*400)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
 	end
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -80,12 +78,12 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 cid.link_table={
-	[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_LEFT,
-	[LINK_MARKER_BOTTOM]=LINK_MARKER_BOTTOM_LEFT,
-	[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_BOTTOM,
-	[LINK_MARKER_LEFT]=LINK_MARKER_TOP_LEFT,
-	[LINK_MARKER_RIGHT]=LINK_MARKER_BOTTOM_RIGHT,
-	[LINK_MARKER_TOP_LEFT]=LINK_MARKER_TOP,
-	[LINK_MARKER_TOP]=LINK_MARKER_TOP_RIGHT,
-	[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_RIGHT,
+	[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_TOP,
+	[LINK_MARKER_BOTTOM]=LINK_MARKER_TOP_LEFT,
+	[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_LEFT,
+	[LINK_MARKER_LEFT]=LINK_MARKER_TOP_RIGHT,
+	[LINK_MARKER_RIGHT]=LINK_MARKER_BOTTOM_LEFT,
+	[LINK_MARKER_TOP_LEFT]=LINK_MARKER_RIGHT,
+	[LINK_MARKER_TOP]=LINK_MARKER_BOTTOM_RIGHT,
+	[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_BOTTOM,
 }

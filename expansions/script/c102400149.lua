@@ -33,6 +33,6 @@ end
 function cid.acop(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsExists(cid.cfilter,1,nil) then
 		Duel.Hint(HINT_CARD,0,id)
-		e:GetHandler():AddCounter(0x1,ct,true)
+		Duel.Damage(1-tp,800,REASON_EFFECT)
 	end
 end

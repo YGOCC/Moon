@@ -1,5 +1,5 @@
---created & coded by Lyris, art by Galistar07water of DeviantArt
---ニュートリックス・テッキー
+--created & coded by Lyris, art at ZeroChan
+--ニュートリックス・エミー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -12,9 +12,9 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetTarget(cid.tg)
 	e2:SetOperation(cid.op)
@@ -26,24 +26,21 @@ function cid.initial_effect(c)
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-function cid.lfilter(c,tp)
-	return Duel.IsExistingMatchingCard(function(tc,lpt) return tc:GetLinkMarker()&lpt>0 end,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetLinkMarker())
-		or (c:IsType(TYPE_LINK) and not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,TYPE_LINK))
+function cid.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0xd10) and c:IsAbleToHand() and not c:IsCode(id)
 end
-function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(Card.IsType,tp,0,LOCATION_ONFIELD,nil,TYPE_SPELL+TYPE_TRAP)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp)
-		and #g>0 end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and cid.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_REMOVED,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_REMOVED,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	local ct=#Duel.GetMatchingGroup(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
-	if ct==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,Card.IsType,tp,0,LOCATION_ONFIELD,1,ct,nil,TYPE_SPELL+TYPE_TRAP)
-	if #g>0 then
-		Duel.HintSelection(g)
-		Duel.Destroy(g,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -73,12 +70,12 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 cid.link_table={
-	[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_BOTTOM,
-	[LINK_MARKER_BOTTOM]=LINK_MARKER_TOP_RIGHT,
+	[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_LEFT,
+	[LINK_MARKER_BOTTOM]=LINK_MARKER_TOP,
 	[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_RIGHT,
-	[LINK_MARKER_LEFT]=LINK_MARKER_BOTTOM_RIGHT,
-	[LINK_MARKER_RIGHT]=LINK_MARKER_TOP_LEFT,
-	[LINK_MARKER_TOP_LEFT]=LINK_MARKER_TOP,
-	[LINK_MARKER_TOP]=LINK_MARKER_BOTTOM_LEFT,
-	[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_LEFT,
+	[LINK_MARKER_LEFT]=LINK_MARKER_TOP_LEFT,
+	[LINK_MARKER_RIGHT]=LINK_MARKER_TOP_RIGHT,
+	[LINK_MARKER_TOP_LEFT]=LINK_MARKER_BOTTOM_LEFT,
+	[LINK_MARKER_TOP]=LINK_MARKER_BOTTOM,
+	[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_BOTTOM_RIGHT,
 }

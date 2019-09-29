@@ -1,5 +1,5 @@
---created & coded by Lyris, art by Ebsi of DeviantArt
---ニュートリックス・フラーウィー
+--created & coded by Lyris, art at ZeroChan
+--ニュートリックス・カリー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -12,9 +12,9 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TODECK+CATEGORY_RECOVER)
+	e2:SetCategory(CATEGORY_TOGRAVE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetTarget(cid.tg)
 	e2:SetOperation(cid.op)
@@ -26,21 +26,20 @@ function cid.initial_effect(c)
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-function cid.lfilter(c,tp)
-	return Duel.IsExistingMatchingCard(function(tc,lpt) return tc:GetLinkMarker()&lpt>0 end,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetLinkMarker())
-		or (c:IsType(TYPE_LINK) and not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,TYPE_LINK))
+function cid.filter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xd10) and not c:IsCode(id)
 end
-function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and cid.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_REMOVED,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_REMOVED,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,0)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,99,nil)
-	local ct=#Duel.GetMatchingGroup(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
-	if #g>0 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 and ct>0 and Duel.SelectYesNo(tp,1123) then
-		Duel.BreakEffect()
-		Duel.Recover(tp,ct*400,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoGrave(tc,REASON_EFFECT+REASON_RETURN)
 	end
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -72,10 +71,10 @@ end
 cid.link_table={
 	[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_BOTTOM,
 	[LINK_MARKER_BOTTOM]=LINK_MARKER_BOTTOM_RIGHT,
-	[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_RIGHT,
-	[LINK_MARKER_LEFT]=LINK_MARKER_BOTTOM_LEFT,
-	[LINK_MARKER_RIGHT]=LINK_MARKER_TOP_RIGHT,
-	[LINK_MARKER_TOP_LEFT]=LINK_MARKER_LEFT,
-	[LINK_MARKER_TOP]=LINK_MARKER_TOP_LEFT,
-	[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_TOP,
+	[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_BOTTOM_LEFT,
+	[LINK_MARKER_LEFT]=LINK_MARKER_RIGHT,
+	[LINK_MARKER_RIGHT]=LINK_MARKER_LEFT,
+	[LINK_MARKER_TOP_LEFT]=LINK_MARKER_TOP,
+	[LINK_MARKER_TOP]=LINK_MARKER_TOP_RIGHT,
+	[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_TOP_LEFT,
 }

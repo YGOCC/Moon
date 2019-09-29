@@ -1,18 +1,12 @@
---created & coded by Lyris, art by Southern-Panda of DeviantArt
---ニュートリックス・キャンディ
+--created & coded by Lyris, art by wawa3761 of DeviantArt
+--ニュートリックス・ギャブリー
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,function(tc) return tc:IsLinkType(TYPE_EFFECT) and not tc:IsLinkType(TYPE_LINK) end,1,1)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e3:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-	e3:SetValue(1)
-	c:RegisterEffect(e3)
+	aux.AddLinkProcedure(c,nil,2,2,cid.lcheck)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetCondition(function(e,tp) return Duel.IsExistingMatchingCard(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp) end)
@@ -28,6 +22,9 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
+end
+function cid.lcheck(g)
+	return g:GetClassCount(Card.GetLinkAttribute)==1 and g:GetClassCount(Card.GetLinkRace)==1 and g:GetClassCount(Card.GetLinkCode)==g:GetCount()
 end
 function cid.lfilter(c,tp)
 	return Duel.IsExistingMatchingCard(function(tc,lpt) return tc:GetLinkMarker()&lpt>0 end,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetLinkMarker())
@@ -51,12 +48,13 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) or Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 or not tc:IsType(TYPE_LINK) then return end
+	local op=Duel.AnnounceNumber(tp,1,1,2,3)
 	local lpt,nlpt=tc:GetLinkMarker(),0
 	local j=0
 	for i=0,8 do
 		j=0x1<<i&lpt
-		if j>0 and cid.link_table[j] then
-			nlpt=nlpt|cid.link_table[j]
+		if j>0 and cid.link_table[op][j] then
+			nlpt=nlpt|cid.link_table[op][j]
 		end
 	end
 	if nlpt==lpt then return end
@@ -70,10 +68,34 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	tc:RegisterEffect(e1)
 end
 cid.link_table={
-	[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_BOTTOM_RIGHT,
-	[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_BOTTOM_LEFT,
-	[LINK_MARKER_LEFT]=LINK_MARKER_RIGHT,
-	[LINK_MARKER_RIGHT]=LINK_MARKER_LEFT,
-	[LINK_MARKER_TOP_LEFT]=LINK_MARKER_TOP_RIGHT,
-	[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_TOP_LEFT,
+	[1]={
+		[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_BOTTOM,
+		[LINK_MARKER_BOTTOM]=LINK_MARKER_BOTTOM_RIGHT,
+		[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_RIGHT,
+		[LINK_MARKER_LEFT]=LINK_MARKER_BOTTOM_LEFT,
+		[LINK_MARKER_RIGHT]=LINK_MARKER_TOP_RIGHT,
+		[LINK_MARKER_TOP_LEFT]=LINK_MARKER_LEFT,
+		[LINK_MARKER_TOP]=LINK_MARKER_TOP_LEFT,
+		[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_TOP,
+	},
+	[2]={
+		[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_BOTTOM_RIGHT,
+		[LINK_MARKER_BOTTOM]=LINK_MARKER_RIGHT,
+		[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_TOP_RIGHT,
+		[LINK_MARKER_LEFT]=LINK_MARKER_BOTTOM,
+		[LINK_MARKER_RIGHT]=LINK_MARKER_TOP,
+		[LINK_MARKER_TOP_LEFT]=LINK_MARKER_BOTTOM_LEFT,
+		[LINK_MARKER_TOP]=LINK_MARKER_LEFT,
+		[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_TOP_LEFT,
+	},
+	[3]={
+		[LINK_MARKER_BOTTOM_LEFT]=LINK_MARKER_BOTTOM,
+		[LINK_MARKER_BOTTOM]=LINK_MARKER_TOP_RIGHT,
+		[LINK_MARKER_BOTTOM_RIGHT]=LINK_MARKER_RIGHT,
+		[LINK_MARKER_LEFT]=LINK_MARKER_BOTTOM_RIGHT,
+		[LINK_MARKER_RIGHT]=LINK_MARKER_TOP_LEFT,
+		[LINK_MARKER_TOP_LEFT]=LINK_MARKER_TOP,
+		[LINK_MARKER_TOP]=LINK_MARKER_BOTTOM_LEFT,
+		[LINK_MARKER_TOP_RIGHT]=LINK_MARKER_LEFT,
+	},
 }
