@@ -2,7 +2,8 @@
 function c67864653.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,false,true,aux.FilterBoolFunction(Card.IsFusionCode,67864641),aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE))
+	aux.AddFusionProcCode3(c,c67864653.ffilter1,c67864653.ffilter2,c67864653.ffilter3,false)
+--	aux.AddFusionProcCode3(c,false,true,aux.FilterBoolFunction(Card.IsFusionCode,67864641),aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE))
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(67864653,0))
@@ -39,6 +40,15 @@ function c67864653.initial_effect(c)
 	e3:SetOperation(c67864653.spop)
 	c:RegisterEffect(e3)
 end
+function c67864653.ffilter1(c)
+	return c:IsCode(67864641)
+end
+function c67864653.ffilter2(c)
+	return c:IsRace(RACE_WARRIOR)
+end
+function c67864653.ffilter3(c)
+	return  c:IsRace(RACE_MACHINE)
+	end
 function c67864653.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
