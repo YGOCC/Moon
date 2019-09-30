@@ -48,7 +48,7 @@ function cid.atkval(e,c)
 	return Duel.GetMatchingGroupCount(cid.vfilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)*-200
 end
 function cid.cfilter(c,tp)
-	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp --and c:IsSetCard(0x218)
+	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsSetCard(0x218)
 end
 function cid.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.cfilter,1,nil,tp)

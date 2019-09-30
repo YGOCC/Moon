@@ -19,10 +19,10 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Negated Effect
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_CHAIN_NEGATED+EFFECT_FLAG_DAMAGE_STEP)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_CHAIN_NEGATED)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetRange(LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED)
 	e2:SetCondition(cid.thcon)
 	e2:SetCountLimit(1,id+100)
@@ -35,8 +35,9 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2x)
     --My Custom Effect
     local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DRAW)
     e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-    e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+    e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_PLAYER_TARGET)
     e3:SetCode(EVENT_CUSTOM+id)
     e3:SetRange(LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED)
 	e3:SetCost(cid.thcost)
@@ -107,6 +108,17 @@ function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	
+    if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+    Duel.SetTargetPlayer(1-tp)
+    Duel.SetTargetParam(1)
+    Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,1-tp,1)
+    if
+    Duel.SelectYesNo(1-tp,aux.Stringid(2160,0)) then
+            Duel.BreakEffect()
+    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+    Duel.Draw(p,d,REASON_EFFECT)
+	end
 end
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -135,6 +147,7 @@ function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 	e1:SetValue(0)
 	tc:RegisterEffect(e1)
 end
