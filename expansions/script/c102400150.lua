@@ -1,7 +1,6 @@
-local cid,id=GetID()
+local cid,id=GetID()
 --Destric Joy
 function cid.initial_effect(c)
-	--Target 1 "Destric" card you control and 1 card your opponent controls; destroy them.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

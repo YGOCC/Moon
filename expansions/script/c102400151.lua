@@ -1,7 +1,5 @@
-local cid,id=GetID()
---Destric Shouting
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Target 1 "Destric" monster you control; destroy all your opponent's monsters with less ATK than that target's ATK on the field.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)

@@ -1,7 +1,5 @@
-local cid,id=GetID()
---Destric Butler
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card is Summoned: Target 1 other "Destric" card you control; destroy it, also draw 1 card, then if you drew a "Destric" card, you can destroy it, and if you do that, draw 1 more card.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -16,7 +14,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--If this card is destroyed: You can target 1 "Destric" card in your GY; return it to the hand.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)

@@ -1,7 +1,6 @@
-local cid,id=GetID()
+local cid,id=GetID()
 --Destric Biker
 function cid.initial_effect(c)
-	--If this card is Summoned: Destroy 1 "Destric" monster in your hand, and if you do, Special Summon 1 monster from your hand or Deck with the same name as that destroyed monster. You can only use this effect of "Destric Biker" once per turn.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)

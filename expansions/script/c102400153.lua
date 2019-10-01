@@ -1,7 +1,5 @@
-local cid,id=GetID()
---Destric Richrods
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card is Summoned: Target 1 other "Destric" card you control; destroy it, then add 1 "Destric" card with a different name from your GY to your hand.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -16,7 +14,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--You can discard 1 card; Special Summon 1 "Destric" monster from your Deck or GY. You can only use this effect of "Destric Richrods" once per turn.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
