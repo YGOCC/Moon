@@ -1,4 +1,5 @@
---Mekbuster Engineer
+--VECTOR Engineer Velis
+--Scripted by Keddy, updated by Zerry
 function c67864641.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
@@ -20,7 +21,7 @@ function c67864641.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e2:SetCountLimit(1,67864741)
+	e2:SetCountLimit(1,67864641+100)
 	e2:SetTarget(c67864641.target1)
 	e2:SetOperation(c67864641.operation1)
 	c:RegisterEffect(e2)
@@ -28,7 +29,7 @@ end
 function c67864641.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
-	Duel.PayLPCost(tp,800)
+	Duel.PayLPCost(tp,500)
 end
 function c67864641.filter(c,e,tp)
 	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -46,7 +47,7 @@ function c67864641.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864641.filter1(c)
-	return c:IsSetCard(0x2a6) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0x12a6) and c:IsAbleToHand()
 end
 function c67864641.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864641.filter1,tp,LOCATION_DECK,0,1,nil) end

@@ -1,4 +1,5 @@
---Mekbuster Emperor MS8-Z1
+--VECTOR Mech Emperor MS8-Z1
+--Scripted by Keddy, updated by Zerry
 function c67864648.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -26,16 +27,13 @@ function c67864648.initial_effect(c)
 	e3:SetDescription(aux.Stringid(67864648,1))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetCode(EVENT_LEAVE_FIELD)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_TARGET)
+	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetCountLimit(1,67964648)
 	e3:SetCondition(c67864648.spcon)
 	e3:SetTarget(c67864648.sptg)
 	e3:SetOperation(c67864648.spop)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EVENT_REMOVE)
-	c:RegisterEffect(e4)
 end
 function c67864648.rfilter(c,tp)
 	return c:IsRace(RACE_MACHINE) or c:IsSetCard(0x2a6) and (c:IsControler(tp) or c:IsFaceup())
@@ -92,18 +90,33 @@ function c67864648.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown()
 end
 function c67864648.spfilter(c,e,tp)
-	return c:IsRace(RACE_MACHINE) and not c:IsCode(67864648) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and not c:IsCode(67864648) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c67864648.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-		and Duel.IsExistingMatchingCard(c67864648.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+function c67864648.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc) --chkc isn't necessary since the card does not target
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+		and Duel.IsExistingMatchingCard(c67864648.spfilter,tp,LOCATION_GRAVE,0,2,e:GetHandler(),e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_GRAVE)
 end
 function c67864648.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c67864648.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
+	local g=Duel.SelectMatchingCard(tp,c67864648.spfilter,tp,LOCATION_GRAVE,0,2,2,e:GetHandler(),e,tp)
+	if g:GetCount()>=2 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		local e5=Effect.CreateEffect(e:GetHandler())
+				e5:SetType(EFFECT_TYPE_FIELD)
+				e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)	
+				e5:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+				e5:SetReset(RESET_PHASE+PHASE_END)
+				e5:SetTargetRange(1,0)
+				e5:SetTarget(c67864646.splimit)
+				Duel.RegisterEffect(e5,tp)
 	end
+end
+function c67864646.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not (c:IsSetCard(0x2a6) or (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT)))
+end	
+	
 end

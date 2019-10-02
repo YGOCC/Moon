@@ -1,13 +1,6 @@
---Mekbuster Controller
+--VECTOR Engineer Liana
+--Scripted by Keddy, updated by Zerry
 function c67864642.initial_effect(c)
-	--change name
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetCode(EFFECT_CHANGE_CODE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetValue(67864641)
-	c:RegisterEffect(e1)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(67864642,0))
@@ -25,8 +18,8 @@ function c67864642.initial_effect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_RELEASE)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e3:SetCountLimit(1,67864642)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_TARGET)
+	e3:SetCountLimit(1,67864642+100)
 	e3:SetTarget(c67864642.sptg2)
 	e3:SetOperation(c67864642.spop2)
 	c:RegisterEffect(e3)
@@ -48,7 +41,7 @@ function c67864642.spop1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864642.filter2(c,e,tp)
-	return c:IsCode(67864641) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x12a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(67864642)
 end
 function c67864642.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 

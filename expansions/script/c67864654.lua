@@ -1,4 +1,5 @@
---Mekbuster Activation
+--VECTOR Engineering Initiation
+--Scripted by Keddy, updated by Zerry
 function c67864654.initial_effect(c)
     --Search Lvl 6 or higher Light Machine
     local e1=Effect.CreateEffect(c)
@@ -35,11 +36,10 @@ function c67864654.initial_effect(c)
     c:RegisterEffect(e3)
 end
 function c67864654.cfilter1(c)
-    return c:IsFaceup() and c:IsCode(67864641)
+    return c:IsFaceup() and c:IsSetCard(0x12a6)
 end
 function c67864654.cfilter2(c)
-    return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_MACHINE)
-        and c:IsLevelAbove(6)
+    return c:IsFaceup() and c:IsSetCard(0x22a6)
 end
 function c67864654.thcon1(e,c)
     if c==nil then return true end
@@ -47,8 +47,7 @@ function c67864654.thcon1(e,c)
         and not Duel.IsExistingMatchingCard(c67864654.cfilter2,e:GetHandler(),LOCATION_ONFIELD,0,1,nil)
 end
 function c67864654.thfilter1(c)
-    return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_MACHINE)
-        and c:IsLevelAbove(6) and c:IsAbleToHand()
+    return c:IsSetCard(0x22a6) and c:IsAbleToHand()
 end
 function c67864654.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c67864654.thfilter1,tp,LOCATION_DECK,0,1,nil) end
@@ -68,7 +67,7 @@ function c67864654.thcon2(e,c)
         and not Duel.IsExistingMatchingCard(c67864654.cfilter1,e:GetHandler(),LOCATION_ONFIELD,0,1,nil)
 end
 function c67864654.thfilter2(c)
-    return c:IsCode(67864641) and c:IsAbleToHand()
+    return c:IsCode(0x12a6) and c:IsAbleToHand()
 end
 function c67864654.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c67864654.thfilter2,tp,LOCATION_DECK,0,1,nil) end

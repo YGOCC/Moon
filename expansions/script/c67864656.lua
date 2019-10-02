@@ -1,4 +1,5 @@
---Mekbuster Readiness
+--VECTOR Engineering Readiness
+--Scripted by Keddy, fixed by Zerry
 function c67864656.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -30,7 +31,7 @@ function c67864656.initial_effect(c)
 	c:RegisterEffect(e3) 
 end
 function c67864656.spgfilter(c,tp)
-	return c:IsRace(RACE_MACHINE) and c:IsLevelAbove(6) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsControler(tp)
+	return c:IsSetCard(0x22a6) and c:IsControler(tp)
 end
 function c67864656.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c67864656.spgfilter,1,nil,tp)
@@ -52,7 +53,7 @@ function c67864656.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864656.filter1(c,tp)
-	return c:IsFaceup() and c:IsLevelAbove(6) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_MACHINE)
+	return c:IsFaceup() and c:IsSetCard(0x2a6)
 		and Duel.IsExistingMatchingCard(c67864656.filter2,tp,LOCATION_MZONE,0,1,c)
 end
 function c67864656.filter2(c)

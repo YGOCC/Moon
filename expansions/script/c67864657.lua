@@ -1,4 +1,5 @@
---Mekbuster Engineer's Dream
+--VECTOR City: Velis Station
+--Scripted by Keddy, fixed by Zerry
 function c67864657.initial_effect(c)
     --Activate
     local e1=Effect.CreateEffect(c)
@@ -35,7 +36,7 @@ function c67864657.initial_effect(c)
     c:RegisterEffect(e4)
 end
 function c67864657.filter(c)
-    return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_MACHINE) and c:IsLevelAbove(6) and c:IsType(TYPE_MONSTER)  and c:IsAbleToHand()
+    return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsAttribute(ATTRIBUTE_FIRE) and c:IsSetType(0x2a6)
 end
 function c67864657.activate(e,tp,eg,ep,ev,re,r,rp)
     if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -62,7 +63,7 @@ function c67864657.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.Remove(rg,POS_FACEUP,REASON_COST)
 end
 function c67864657.spfilter(c,e,tp)
-    return c:IsSetCard(0x2a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return c:IsSetCard(0x22a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c67864657.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

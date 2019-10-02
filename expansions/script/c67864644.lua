@@ -1,4 +1,5 @@
---Mekbuster Scavenger
+--VECTOR Knight Ryva
+--Scripted by Keddy, updated by Zerry
 function c67864644.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -44,8 +45,8 @@ function c67864644.atcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
 end
 function c67864644.atcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,Card.IsRace,1,e:GetHandler(),RACE_MACHINE) end
-	local g=Duel.SelectReleaseGroupEx(tp,Card.IsRace,1,1,e:GetHandler(),RACE_MACHINE)
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,Card.IsRace,1,e:GetHandler(),0x2a6) end
+	local g=Duel.SelectReleaseGroupEx(tp,Card.IsRace,1,1,e:GetHandler(),0x2a6)
 	Duel.Release(g,REASON_COST)
 end
 function c67864644.attg(e,tp,eg,ep,ev,re,r,rp,chk)

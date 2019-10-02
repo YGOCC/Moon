@@ -35,7 +35,7 @@ function c67864655.spfilter1(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function c67864655.spfilter2(c,e,tp,m,f,chkf)
-	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_MACHINE+RACE_WARRIOR) and aux.IsMaterialListCode(c,67864641) and (not f or f(c))
+	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_MACHINE+RACE_WARRIOR) and c:IsSetCard(0x12a6) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function c67864655.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

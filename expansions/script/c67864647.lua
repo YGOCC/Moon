@@ -1,4 +1,5 @@
---Mekbuster Fortress GH2-L5
+--VECTOR Mech Fortress GH2-L5
+--Scripted by Keddy, updated by Zerry
 function c67864647.initial_effect(c)
 	c:EnableReviveLimit()
 	--cannot special summon
@@ -58,7 +59,7 @@ function c67864647.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_COST)
 end
 function c67864647.spfilter1(c,e,tp)
-	return c:IsFaceup() and c:IsRace(RACE_MACHINE) or c:IsSetCard(0x2a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) or c:IsSetCard(0x2a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCanBeNormalSummoned(e,0,tp,false,false)
 end
 function c67864647.sptg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and c67864647.spfilter(chkc,e,tp) end

@@ -1,9 +1,9 @@
---Mekbuster Frame LS3-I6
---Keddy was here~
+--VECTOR Frame Omnis
+--Scripted by Keddy, updated by Zerry
 function c67864652.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,67864641,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE),1,true,true)
+	aux.AddFusionProcMix(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x12a6),aux.FilterBoolFunctionEx(Card.IsRace,RACE_MACHINE))
 	--move
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(67864652,0))
@@ -29,8 +29,9 @@ function c67864652.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(67864650,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_LEAVE_FIELD)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCountLimit(1,67864652)
+	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetCondition(c67864652.spcon)
 	e3:SetTarget(c67864652.sptg)
 	e3:SetOperation(c67864652.spop)
@@ -58,7 +59,7 @@ function c67864652.mvop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864652.thfilter(c)
-	return c:IsType(TYPE_SPELL) and (c:IsSetCard(0x2a6) or c:IsSetCard(0x3a6))
+	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x2a6)
 end
 function c67864652.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>=2
@@ -82,40 +83,23 @@ function c67864652.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864652.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown()
+	local c=e:GetHandler()
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown() 
 end
-function c67864652.spfilter(c,e,tp,slv)
-	local lv=c:GetLevel()
-	return (c:IsSetCard(0x2a6) or c:IsRace(RACE_MACHINE)) and lv>0 and (not slv or lv==slv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c67864652.spfilter(c,e,tp)
+  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCanBeNormalSummoned(e,0,tp,false,false)
 end
 function c67864652.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		if ft<=0 then return false end
-		if ft==1 or Duel.IsPlayerAffectedByEffect(tp,59822133) then
-			return Duel.IsExistingMatchingCard(c67864652.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp,8)
-		else
-			local g=Duel.GetMatchingGroup(c67864652.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e,tp)
-			return g:CheckWithSumEqual(Card.GetLevel,8,1,ft)
-		end
-	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c67864652.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function c67864652.spop(e,tp,eg,ep,ev,re,r,rp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft<=0 then return end
-	if ft==1 or Duel.IsPlayerAffectedByEffect(tp,59822133) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,c67864652.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp,8)
-		if g:GetCount()>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		end
-	else
-		local g=Duel.GetMatchingGroup(c67864652.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e,tp)
-		if g:CheckWithSumEqual(Card.GetLevel,8,1,ft) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=g:SelectWithSumEqual(tp,Card.GetLevel,8,1,ft)
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-		end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c67864652.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
