@@ -1,11 +1,10 @@
 --VECTOR Engineer Salvatore
 --Scripted by Zerry
-
 function c67864658.initial_effect(c)
 --link summon
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x22a6),2)
 	c:EnableReviveLimit()
-	Special Summon
+--Special Summon
 local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -17,6 +16,7 @@ local e1=Effect.CreateEffect(c)
 	e1:SetTarget(c67864658.sptg)
 	e1:SetOperation(c67864658.spop)
 	c:RegisterEffect(e1)
+	--negate
 local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(67864656,0))
 	e2:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -50,28 +50,28 @@ function c67864658.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c67864658.cfilter(c,g)
-	return g:IsContains(c) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+function c67864658.cfilter(c)
+	return c:IsAbleToRemoveAsCost() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c67864658.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and ep~=tp and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+		and ep==tp and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end
 function c67864658.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lg=e:GetHandler():GetLinkedGroup()
-	if chk==0 then return Duel.CheckRemoveGroup(tp,c67864658.cfilter,1,nil,lg) end
-	local g=Duel.SelectRemoveGroup(tp,c67864658.cfilter,1,1,nil,lg)
+	if chk==0 then return lg:IsExists(c67864658.cfilter,1,nil) end
+	local g=lg:FilterSelect(tp,c67864658.cfilter,1,1,nil)
 	Duel.Release(g,REASON_COST)
 end
 function c67864658.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
-function c6150044.disop(e,tp,eg,ep,ev,re,r,rp,chk)
-	Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+function c6150044.negop(e,tp,eg,ep,ev,re,r,rp,chk)
+	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

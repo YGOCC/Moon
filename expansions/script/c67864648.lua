@@ -27,7 +27,7 @@ function c67864648.initial_effect(c)
 	e3:SetDescription(aux.Stringid(67864648,1))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_TARGET)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetCountLimit(1,67964648)
 	e3:SetCondition(c67864648.spcon)
@@ -36,7 +36,7 @@ function c67864648.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c67864648.rfilter(c,tp)
-	return c:IsRace(RACE_MACHINE) or c:IsSetCard(0x2a6) and (c:IsControler(tp) or c:IsFaceup())
+	return c:IsSetCard(0x2a6) and (c:IsControler(tp) or c:IsFaceup())
 end
 function c67864648.mzfilter(c,tp)
 	return c:IsControler(tp) and c:GetSequence()<5
@@ -69,7 +69,7 @@ function c67864648.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_COST)
 end
 function c67864648.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsCode(67864641)
+	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0xa2a6)
 end
 function c67864648.tgfilter(c)
 	return c:IsRace(RACE_MACHINE) or c:IsSetCard(0x2a6) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
@@ -92,7 +92,7 @@ end
 function c67864648.spfilter(c,e,tp)
   return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and not c:IsCode(67864648) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c67864648.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc) --chkc isn't necessary since the card does not target
+function c67864648.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsExistingMatchingCard(c67864648.spfilter,tp,LOCATION_GRAVE,0,2,e:GetHandler(),e,tp) end
@@ -115,8 +115,6 @@ function c67864648.spop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.RegisterEffect(e5,tp)
 	end
 end
-function c67864646.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+function c67864648.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not (c:IsSetCard(0x2a6) or (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT)))
 end	
-	
-end

@@ -36,7 +36,7 @@ function c67864657.initial_effect(c)
     c:RegisterEffect(e4)
 end
 function c67864657.filter(c)
-    return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsAttribute(ATTRIBUTE_FIRE) and c:IsSetType(0x2a6)
+    return (c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsAttribute(ATTRIBUTE_FIRE)) and c:IsSetCard(0x2a6)
 end
 function c67864657.activate(e,tp,eg,ep,ev,re,r,rp)
     if not e:GetHandler():IsRelateToEffect(e) then return end

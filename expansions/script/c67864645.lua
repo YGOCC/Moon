@@ -27,7 +27,7 @@ function c67864645.initial_effect(c)
 	e3:SetDescription(aux.Stringid(678646451,1))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_TARGET)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetCountLimit(1,67864645+100)
 	e3:SetCondition(c67864645.spcon)
@@ -36,7 +36,7 @@ function c67864645.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c67864645.hspfilter(c,ft,tp)
-	return c:IsRace(RACE_MACHINE) or c:IsSetCard(0x2a6)
+	return c:IsSetCard(0x2a6)
 		and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
 end
 function c67864645.hspcon(e,c)
@@ -50,11 +50,11 @@ function c67864645.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectReleaseGroup(tp,c67864645.hspfilter,1,1,nil,ft,tp)
 	Duel.Release(g,REASON_COST)
 end
-function c67864645.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsCardSet(0x12a6)
-end
 function c67864645.thfilter(c)
 	return c:IsSetCard(0x2a6) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
+function c67864645.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0xa2a6)
 end
 function c67864645.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864645.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -85,12 +85,13 @@ function c67864645.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c67864645.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
 	local g=Duel.SelectMatchingCard(tp,c67864645.spfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler(),e,tp)
 	if g:GetCount()>=2 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 			local e4=Effect.CreateEffect(e:GetHandler())
 				e4:SetType(EFFECT_TYPE_FIELD)
-				e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)	
+				e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)   
 				e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 				e4:SetReset(RESET_PHASE+PHASE_END)
 				e4:SetTargetRange(1,0)
@@ -100,8 +101,6 @@ function c67864645.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c67864645.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not (c:IsSetCard(0x2a6) or (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT)))
-end	
-	
-end
+end 
 
 --Hope it helped!

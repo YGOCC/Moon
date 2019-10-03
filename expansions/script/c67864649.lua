@@ -3,7 +3,7 @@
 
 function c67864649.initial_effect(c)
 	--Link Summon
-	aux.AddLinkProcedure(c,cod.lmfilter,2,2)
+	aux.AddLinkProcedure(c,c67864649.lmfilter,2,2)
 	c:EnableReviveLimit()
 	--Special Summon
 	local e3=Effect.CreateEffect(c)
@@ -26,7 +26,7 @@ function c67864649.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return g:IsExists(Card.IsLinkCode,1,nil,0x12a6)
 end
 function c67864649.spfilter(c,e,tp)
-	return c:IsSetCard(0x22a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x62a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c67864649.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864649.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
