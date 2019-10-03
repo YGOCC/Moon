@@ -7,7 +7,7 @@ function c67864649.initial_effect(c)
 	c:EnableReviveLimit()
 	--Special Summon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetDescription(aux.Stringid(67864649,0))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -22,8 +22,11 @@ function c67864649.lmfilter(c)
 	return c:IsLinkSetCard(0x2a6)
 end
 function c67864649.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local g=e:GetHandler():GetMaterial()
-	return g:IsExists(Card.IsLinkCode,1,nil,0x12a6)
+	local c=e:GetHandler()
+	return c:IsSummonType(SUMMON_TYPE_LINK) and c:GetMaterial():IsExists(c67864649.stunfilter,1,nil)
+end
+function c67864649.stunfilter(c)
+	return c:IsSetCard(0xa2a6)
 end
 function c67864649.spfilter(c,e,tp)
 	return c:IsSetCard(0x62a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

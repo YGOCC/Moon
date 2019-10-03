@@ -5,14 +5,14 @@ function c67864650.initial_effect(c)
 	aux.AddLinkProcedure(c,c67864650.matfilter,2)
 	--Search
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetDescription(aux.Stringid(67864650,0))
 	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,67864650)
-	e1:SetCondition(aux.zptcon(nil))
+	e1:SetCondition(c67864650.thcon)
 	e1:SetTarget(c67864650.thtg)
 	e1:SetOperation(c67864650.thop)
 	c:RegisterEffect(e1)
@@ -31,17 +31,30 @@ end
 function c67864650.matfilter(c)
 	return c:IsRace(RACE_MACHINE) or c:IsSetCard(0x2a6)
 end
-
+function c67864650.cfilter(c,ec)
+	if c:IsLocation(LOCATION_MZONE) then
+		return ec:GetLinkedGroup():IsContains(c)
+	else
+		return (ec:GetLinkedZone(c:GetPreviousControler())&(1<<c:GetPreviousSequence()))~=0
+	end
+end
 function c67864650.thfilter(c)
 	return c:IsSetCard(0x2a6) and c:IsType(TYPE_SPELL) and c:IsAbleToHand() 
 end
+function c67864650.thcon(e,tp,eg,ep,ev,re,r,rp)
+    if eg:IsContains(e:GetHandler()) then return false end
+    for tc in aux.Next(Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_LINK)) do
+        if eg:IsExists(c67864650.cfilter,1,nil,tc) then return true end
+    end
+    return false
+end
 function c67864650.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c67864650.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c67864650.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function c67864650.operation1(e,tp,eg,ep,ev,re,r,rp)
+function c67864650.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c67864650.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c67864650.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
@@ -49,13 +62,13 @@ function c67864650.operation1(e,tp,eg,ep,ev,re,r,rp)
 end
 --
 function c67864650.desfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x12a6)
+	return c:IsFaceup() and c:IsSetCard(0xa2a6)
 end
 function c67864650.tgcon(e)
 	return not Duel.IsExistingMatchingCard(c67864650.desfilter,e:GetHandler():GetControler(),LOCATION_ONFIELD,0,1,nil)
 end
 function c67864650.spfilter(c,e,tp)
-	return c:IsSetCard(0x12a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(67864641) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c67864650.tgfilter(c,lg)
 	return c:IsAbleToGrave() and lg:IsContains(c)
@@ -63,7 +76,7 @@ end
 function c67864650.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local lg=c:GetLinkedGroup()
-	if chk==0 then return Duel.IsExistingMatchingCard(c67864650.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+	if chk==0 then return Duel.IsExistingMatchingCard(c67864650.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
 		and Duel.IsExistingMatchingCard(c67864650.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,lg) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,lg,lg:GetCount(),0,0)
 end
@@ -71,7 +84,7 @@ function c67864650.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local lg=c:GetLinkedGroup():Filter(Card.IsAbleToGrave,nil)
 	if Duel.SendtoGrave(lg,nil,REASON_EFFECT)~=0 then
-		local g1=Duel.SelectMatchingCard(tp,c67864650.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+		local g1=Duel.SelectMatchingCard(tp,c67864650.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 		if g1:GetCount()>0 then
 			Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)
 		end

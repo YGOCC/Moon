@@ -47,7 +47,7 @@ function c67864641.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864641.filter1(c)
-	return c:IsSetCard(0x12a6) and c:IsAbleToHand()
+	return c:IsSetCard(0xa2a6) and c:IsAbleToHand()
 end
 function c67864641.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864641.filter1,tp,LOCATION_DECK,0,1,nil) end

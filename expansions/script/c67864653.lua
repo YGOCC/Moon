@@ -3,16 +3,16 @@
 function c67864653.initial_effect(c)
 	--xyz material
 	c:EnableReviveLimit()
-	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_MACHINE),9,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE),9,2)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetDescription(aux.Stringid(67864653,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,67864653)
-	e1:SetCondition(c67867653.spcon)
+	e1:SetCondition(c67864653.spcon)
 	e1:SetTarget(c67864653.sptg)
 	e1:SetOperation(c67864653.spop)
 	c:RegisterEffect(e1)
@@ -46,28 +46,30 @@ function c67864653.get_zone(c,seq)
 	if seq==6 and c:IsLinkMarker(LINK_MARKER_TOP_RIGHT) then zone=bit.replace(zone,0x1,2) end
 	return zone
 end
-function c67864653.spfilter(c,e,tp,ec)
+function c67864653.spfilter(c,e,tp,seq)
 	if not c:IsType(TYPE_LINK) then return false end
-	local seq=ec:GetSequence()
 	local zone=c67864653.get_zone(c,seq)
-	return zone~=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
+	return zone~=0 and c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone) and c:IsSetCard(0x2a6)
 end
 function c67864653.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp,e:GetHandler()) end
+	local seq=e:GetHandler():GetSequence()
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c67864653.spfilter(chkc,e,tp,seq) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c67864653.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,e:GetHandler()) end
+		and Duel.IsExistingTarget(c67864653.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,seq) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c67864653.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,e:GetHandler())
+	local g=Duel.SelectTarget(tp,c67864653.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,seq)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c67864653.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and c:IsControler(tp) and tc:IsRelateToEffect(e) then
 		local zone=c67864653.get_zone(tc,c:GetSequence())
-		if zone~=0 and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
+		if zone~=0 and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP,zone) then
+			Duel.SpecialSummonComplete()
 		end
 	end
+end
 function c67864653.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
