@@ -31,7 +31,7 @@ function c67864656.initial_effect(c)
 	c:RegisterEffect(e3) 
 end
 function c67864656.spgfilter(c,tp)
-	return c:IsSetCard(0x22a6) and c:IsControler(tp)
+	return c:IsSetCard(0x62a6) and c:IsControler(tp)
 end
 function c67864656.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c67864656.spgfilter,1,nil,tp)

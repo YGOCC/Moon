@@ -95,7 +95,7 @@ function c67864652.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown() 
 end
 function c67864652.spfilter(c,e,tp)
-  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCanBeNormalSummoned(e,0,tp,false,false)
+  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSummonableCard()
 end
 function c67864652.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
