@@ -2,7 +2,7 @@
 --Scripted by Zerry
 function c67864658.initial_effect(c)
 --link summon
---	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x22a6),2)
+--  aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x22a6),2)
 	aux.AddLinkProcedure(c,c67864658.lfilter,2,4)
 	c:EnableReviveLimit()
 --Special Summon
@@ -53,8 +53,8 @@ function c67864658.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c67864658.cfilter(c,g)
-	return g:IsContains(c) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+function c67864658.cfilter(c)
+	return c:IsAbleToRemoveAsCost() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c67864658.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -62,9 +62,9 @@ function c67864658.negcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c67864658.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local lg=e:GetHandler():GetLinkedGroup()
-	if chk==0 then return Duel.CheckRemoveGroup(tp,c67864658.cfilter,1,nil,lg) end
-	local g=Duel.SelectRemoveGroup(tp,c67864658.cfilter,1,1,nil,lg)
-	Duel.Release(g,REASON_COST)
+	if chk==0 then return lg:IsExists(c67864658.cfilter,1,nil) end
+	local g=lg:FilterSelect(tp,c67864658.cfilter,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c67864658.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
