@@ -19,6 +19,9 @@ Card.GetType=function(c,scard,sumtype,p)
 	local tpe=scard and get_type(c,scard,sumtype,p) or get_type(c)
 	if Auxiliary.Relays[c] then
 		tpe=tpe|TYPE_RELAY
+		if not Auxiliary.Relays[c]() then
+			tpe=tpe&~TYPE_PENDULUM
+		end
 	end
 	return tpe
 end
@@ -26,6 +29,9 @@ Card.GetOriginalType=function(c)
 	local tpe=get_orig_type(c)
 	if Auxiliary.Relays[c] then
 		tpe=tpe|TYPE_RELAY
+		if not Auxiliary.Relays[c]() then
+			tpe=tpe&~TYPE_PENDULUM
+		end
 	end
 	return tpe
 end
@@ -33,21 +39,26 @@ Card.GetPreviousTypeOnField=function(c)
 	local tpe=get_prev_type_field(c)
 	if Auxiliary.Relays[c] then
 		tpe=tpe|TYPE_RELAY
+		if not Auxiliary.Relays[c]() then
+			tpe=tpe&~TYPE_PENDULUM
+		end
 	end
 	return tpe
 end
 Effect.SetReset=function(ef,reset,ct)
 	table.insert(Auxiliary.ResetList,ef)
 	local res=reset
-	Auxiliary.ResetList[ef]=function() return res end
 	if not ct then ct=1 end
+	Auxiliary.ResetList[ef]=res
 	set_reset(ef,reset,ct)
 end
 
 --Custom Functions
-function Auxiliary.AddOrigRelayType(c)
+function Auxiliary.AddOrigRelayType(c,ispendulum)
 	table.insert(Auxiliary.Relays,c)
 	Auxiliary.Customs[c]=true
+	local ispendulum=ispendulum==nil and false or ispendulum
+	Auxiliary.Relays[c]=function() return ispendulum end
 end
 function Auxiliary.AddRelayProc(c)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
@@ -71,7 +82,7 @@ function Auxiliary.RelayPass(fc,tc)
 		if aux.GetValueType(te)=="Effect" and (te:IsHasType(EFFECT_TYPE_CONTINUOUS) or te:GetType()==EFFECT_TYPE_SINGLE)
 			and not te:IsHasProperty(EFFECT_FLAG_INITIAL+EFFECT_FLAG_UNCOPYABLE) then
 			local res=Auxiliary.ResetList[te]
-			if te:GetOwner()~=fc or te:IsHasProperty(EFFECT_FLAG_CANNOT_DISABLE) or (res and res()&RESET_DISABLE==0) then
+			if te:GetOwner()~=fc or te:IsHasProperty(EFFECT_FLAG_CANNOT_DISABLE) or (res and res&RESET_DISABLE==0) then
 				local ef=te:Clone()
 				tc:RegisterEffect(ef,true)
 			end
