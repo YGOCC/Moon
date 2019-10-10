@@ -31,7 +31,7 @@ function cid.cfilter(c,tp)
 	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:GetPreviousControler()==tp
 end
 function cid.acop(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(cid.cfilter,1,nil) then
+	if eg:IsExists(cid.cfilter,1,nil) and Duel.GetLP(1-tp)>=3000 then
 		Duel.Hint(HINT_CARD,0,id)
 		Duel.Damage(1-tp,800,REASON_EFFECT)
 	end
