@@ -79,7 +79,7 @@ function cid.filter(c,e,tp)
 end
 function cid.costfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0xf41) and c:IsType(TYPE_MONSTER)
-		and Duel.IsExistingMatchingCard(cid.clfilter,tp,0,LOCATION_MZONE,1,nil,c,tp)
+		and Duel.IsExistingMatchingCard(cid.clfilter,tp,0,LOCATION_ONFIELD,1,nil,c,tp)
 end
 function cid.clfilter(c,tg,tp)
 	local g=tg:GetColumnGroup()

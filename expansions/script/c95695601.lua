@@ -50,7 +50,7 @@ function cid.lfilter(c)
 	return c:IsLinkSetCard(0xf41) and c:IsLinkType(TYPE_MONSTER)
 end
 function cid.filter(c)
-	return c:IsSetCard(0xf41) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
+	return c:IsSetCard(0xf41) and c:IsType(TYPE_MONSTER) and c:IsFaceup() and not c:IsCode(id)
 end
 function cid.lcfilter(c,lc)
 	return c:IsCanBeLinkMaterial(lc) and c:IsSetCard(0xf41) and c:IsType(TYPE_MONSTER)
