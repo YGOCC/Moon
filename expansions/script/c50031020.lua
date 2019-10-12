@@ -21,7 +21,7 @@ function cid.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_SPSUMMON_PROC)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e3:SetRange(LOCATION_EXTRA)
 	e3:SetCondition(cid.hspcon)
 	e3:SetOperation(cid.hspop)
@@ -43,7 +43,7 @@ function cid.filter2(c,ec,tp)
 	return c:IsRace(RACE_BEASTWARRIOR)
 end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp and Duel.IsChainNegatable(ev)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
    if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) end
@@ -71,16 +71,17 @@ function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SortDecktop(tp,tp,ac)
 end
-
+end
 function cid.spfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EVOLUTE) 
+	return c:IsFaceup() and c:IsSetCard(0xa34) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
 end
 function cid.hspcon(e,c)
+  if c==nil then return true end
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.GetLocationCountFromEx(tp,tp,g,c)>0
+		
 end
 function cid.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_MATERIAL)
