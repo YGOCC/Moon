@@ -1,66 +1,67 @@
 --Sweethard-Powered: Daffa Goose
-function c50031004.initial_effect(c)
+local cid,id=GetID()
+function cid.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,nil,5,c50031004.filter1,c50031004.filter2,2,99)  
+ aux.AddEvoluteProc(c,nil,5,cid.filter1,cid.filter2,2,99)  
 
 --spsummon proc
 	local e0=Effect.CreateEffect(c)
-	e0:SetDescription(aux.Stringid(50031004,0))
+	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetCode(EFFECT_SPSUMMON_PROC)
 	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e0:SetRange(LOCATION_EXTRA)
-	e0:SetCountLimit(1,50031004)
-	e0:SetCondition(c50031004.hspcon)
-	e0:SetOperation(c50031004.hspop)
+	e0:SetCountLimit(1,id)
+	e0:SetCondition(cid.hspcon)
+	e0:SetOperation(cid.hspop)
 	e0:SetValue(SUMMON_TYPE_SPECIAL+388)
 	c:RegisterEffect(e0)
 		--deck check
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(50031004,0))
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetHintTiming(0,0x11e0)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1)
-	e1:SetCost(c50031004.cost)
-	e1:SetTarget(c50031004.target)
-	e1:SetOperation(c50031004.operation)
+	e1:SetCost(cid.cost)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 end
 
-function c50031004.filter1(c,ec,tp)
+function cid.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK)
 end
-function c50031004.filter2(c,ec,tp)
+function cid.filter2(c,ec,tp)
 	return c:IsRace(RACE_BEASTWARRIOR)
 end
-function c50031004.spfilter(c)
-	return c:IsFaceup() and c:IsCode(500310040) and Duel.GetLocationCountFromEx(tp,tp,c)>0
+function cid.spfilter(c)
+	return c:IsFaceup() and c:IsCode(500310040) 
 end
-function c50031004.hspcon(e,c)
+function cid.hspcon(e,c)
   if c==nil then return true end
-	if chk==0 then return Duel.GetFlagEffect(tp,50031004)==0 end
+	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c50031004.spfilter,tp,LOCATION_MZONE,0,1,nil)
+		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_MZONE,0,1,nil)  and Duel.GetLocationCountFromEx(tp,tp,g,c)>0
 end
-function c50031004.hspop(e,tp,eg,ep,ev,re,r,rp)
+function cid.hspop(e,tp,eg,ep,ev,re,r,rp)
 	   Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_MATERIAL)
-	local g=Duel.SelectMatchingCard(tp,c50031004.spfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_MZONE,0,1,1,nil)
    Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
-	Duel.RegisterFlagEffect(tp,50031004,RESET_PHASE+PHASE_END,0,1)
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
-function c50031004.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
-function c50031004.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsPlayerCanDraw(tp,1)
 	if chk==0 then return Duel.GetDecktopGroup(tp,3):GetCount()==3 end
 end
-function c50031004.operation(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not (Duel.GetDecktopGroup(tp,3):GetCount()==3) then return end
 	Duel.ConfirmDecktop(tp,3)
 	local g=Duel.GetDecktopGroup(tp,3)
@@ -70,28 +71,28 @@ function c50031004.operation(e,tp,eg,ep,ev,re,r,rp)
 	if g:IsExists(function(tc) return tc:IsSetCard(0xa34) and tc:IsType(TYPE_TRAP) end,1,nil) then sel=sel+4 end
 	--setting the option
 	if sel==1 then
-		Duel.SelectOption(tp,aux.Stringid(50031004,1))
+		Duel.SelectOption(tp,aux.Stringid(id,1))
 		opt=0
 	elseif sel==2 then
-		Duel.SelectOption(tp,aux.Stringid(50031004,2))
+		Duel.SelectOption(tp,aux.Stringid(id,2))
 		opt=1
 	elseif sel==3 then
-		opt=Duel.SelectOption(tp,aux.Stringid(50031004,1),aux.Stringid(50031004,2))
+		opt=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
 	elseif sel==4 then
-		Duel.SelectOption(tp,aux.Stringid(50031004,3))
+		Duel.SelectOption(tp,aux.Stringid(id,3))
 		opt=2
 	elseif sel==5 then
-		opt=Duel.SelectOption(tp,aux.Stringid(50031004,1),aux.Stringid(50031004,3))
+		opt=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,3))
 		if opt==1 then opt=2 end
 	elseif sel==6 then
-		opt=Duel.SelectOption(tp,aux.Stringid(50031004,2),aux.Stringid(50031004,3))+1
+		opt=Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))+1
 	elseif sel==7 then
-		opt=Duel.SelectOption(tp,aux.Stringid(50031004,1),aux.Stringid(50031004,2),aux.Stringid(50031004,3))
+		opt=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2),aux.Stringid(id,3))
 	end
 	Duel.ShuffleDeck(tp)
 	--getting the option and executing
 	if opt==0 then
- 		g=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1)
+		g=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1)
 		Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
 	end
 	if opt==1 then
