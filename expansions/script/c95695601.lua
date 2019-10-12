@@ -26,13 +26,12 @@ function cid.initial_effect(c)
 	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCondition(cid.thcon)
-	e2:SetTarget(cid.thtg)
-	e2:SetOperation(cid.thop)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCondition(cid.setcon)
+	e2:SetTarget(cid.settg)
+	e2:SetOperation(cid.setop)
 	c:RegisterEffect(e2)
 	--cannot be target
 	local e3=Effect.CreateEffect(c)
@@ -80,7 +79,7 @@ function cid.LCheckGoal(sg,tp,lc,gf,lmat)
 end
 ---------
 function cid.LinkCondition(f,minc,maxc,gf)
-	return	function(e,c,og,lmat,min,max)
+	return  function(e,c,og,lmat,min,max)
 				if c==nil then return true end
 				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 				if #etable>0 then
@@ -135,7 +134,7 @@ function cid.LinkCondition(f,minc,maxc,gf)
 			end
 end
 function cid.LinkTarget(f,minc,maxc,gf)
-	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c,og,lmat,min,max)
+	return  function(e,tp,eg,ep,ev,re,r,rp,chk,c,og,lmat,min,max)
 				local minc=minc
 				local maxc=maxc
 				if min then
@@ -196,7 +195,7 @@ function cid.LinkTarget(f,minc,maxc,gf)
 			end
 end
 function cid.LinkOperation(f,minc,maxc,gf)
-	return	function(e,tp,eg,ep,ev,re,r,rp,c,og,lmat,min,max)
+	return  function(e,tp,eg,ep,ev,re,r,rp,c,og,lmat,min,max)
 				local g=e:GetLabelObject()
 				c:SetMaterial(g)
 				Auxiliary.LExtraMaterialCount(g,c,tp)
@@ -217,25 +216,24 @@ function cid.LinkOperation(f,minc,maxc,gf)
 			end
 end
 --filters
-function cid.thfilter(c)
-	return c:IsCode(95695603) and c:IsAbleToHand()
+function cid.setfilter(c)
+	return c:IsSetCard(0xf41) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
 function cid.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xf41) and c:IsType(TYPE_FUSION)
 end
 --search
-function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
+function cid.setcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
-function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
+function cid.settg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.setfilter,tp,LOCATION_DECK,0,1,nil) end
 end
-function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
+function cid.setop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
+	local g=Duel.SelectMatchingCard(tp,cid.setfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.SSet(tp,g:GetFirst())
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
