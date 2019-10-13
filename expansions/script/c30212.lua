@@ -13,6 +13,7 @@ local scard,s_id=getID()
 function scard.initial_effect(c)
 	--Xyz Summon
 	c:EnableReviveLimit()
+	aux.AddXyzProcedure(c,Card.IsMantra,4,2)
 	--Send
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(s_id,0))
