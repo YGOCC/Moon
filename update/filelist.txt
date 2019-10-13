@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	0
+﻿expansions/Cards-non-QCD.cdb	052424cc00a13018cc36b29663df319d
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -9737,17 +9737,17 @@ expansions/script/c21021901.lua	13c73e17729027084d384b8c3621ef84
 expansions/script/c21021902.lua	9e01f0a3e70cf81da191d76b552514d0
 expansions/script/c21021903.lua	898e923b8e63a4a3ef8ce7001ba28dc1
 expansions/script/c21021904.lua	83b86aa0fb5df89c1f3a08937044b808
-expansions/script/c21021905.lua	ea00c384205f72c5df91cbc84890eb26
-expansions/script/c21021906.lua	14ccc7d57a3d9bdec5241163bd9b78c5
-expansions/script/c21021907.lua	3f704558a2548e1dc2c85ded06ace8bc
+expansions/script/c21021905.lua	67afdf2f55a80a008a16df464f007306
+expansions/script/c21021906.lua	ce208ef02b0e0566707495df435f93bc
+expansions/script/c21021907.lua	7d2cc003a74cafcb48b3de2e31a2c978
 expansions/script/c21021908.lua	0fc66784512eebec191e1748a1715422
 expansions/script/c21021909.lua	7a5415f200163a822ff80096d8cd1fc5
-expansions/script/c21021912.lua	fe5ccdbdad89801e01418da4fb98444a
+expansions/script/c21021912.lua	9833aafddef8f33fa37d1423ba6a4683
 expansions/script/c21021913.lua	a8c5460350ccbda5f71fdf451d5a29e3
 expansions/script/c21021914.lua	45cfb75f16a90651d6ab781a809e8dbc
 expansions/script/c21021915.lua	704ca22c88c41c7e4544dc222e49ccce
 expansions/script/c21021916.lua	cf9f9f4c01866949340d5c3bc75a9402
-expansions/script/c21021917.lua	22f7bb2b2e73a116fbd35053b8893274
+expansions/script/c21021917.lua	eb44b643e32ff0765a0e1c6ba3d10b34
 expansions/script/c210220000.lua	abb01b498aa21f6e791382fb04ac3973
 expansions/script/c210220001.lua	925e4f5466ef637ef9612fb78ffb6520
 expansions/script/c210220002.lua	8c797fcb23d3d84c0e554ea20d4dd40e
@@ -14459,11 +14459,6 @@ expansions/script/proc_skill.lua	cbaa68f0971f731a81abf7bd080276b2
 expansions/script/proc_spatial.lua	872193df91b316f902d415745b1d4b55
 expansions/script/proc_timeleap.lua	bb6cbd93de87b3a8cf55fe80ea6f61ee
 expansions/script/proc_toxia.lua	a10d0095f34a3e87ae013bc2f973587c
-expansions/scripts/c21021905.lua	67afdf2f55a80a008a16df464f007306
-expansions/scripts/c21021906.lua	ce208ef02b0e0566707495df435f93bc
-expansions/scripts/c21021907.lua	7d2cc003a74cafcb48b3de2e31a2c978
-expansions/scripts/c21021912.lua	9833aafddef8f33fa37d1423ba6a4683
-expansions/scripts/c21021917.lua	eb44b643e32ff0765a0e1c6ba3d10b34
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
 sound/BGM/custom/ASTERIA - Joyful Tea Party.mp3	6534ddde9e7ee1d39bddb4298cd7168a
 sound/BGM/custom/ASTERIA - Queen's Palace.mp3	92fa00f308187011ddd096b1a5ff6ea7
@@ -14554,6 +14549,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	61858c231ebfe4d9e5de6204267ae040
+update/filelist.txt	4054f29b317f6e58dc6e78c1845666fd
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	0bea334344512c038619d2a32c071980
+update/version.txt	b6786674fc26d2b183c82ad149fbc424
