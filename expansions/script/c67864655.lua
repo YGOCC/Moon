@@ -107,7 +107,7 @@ function c67864655.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c67864655.tdfilter(c)
-	return c:IsRace(RACE_MACHINE) and c:IsType(TYPE_MONSTER) and c:IsSummonableCard() and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x92a6) and c:IsAbleToRemoveAsCost()
 end
 function c67864655.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864655.tdfilter,tp,LOCATION_GRAVE,0,1,nil) end

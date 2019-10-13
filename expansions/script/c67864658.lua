@@ -2,7 +2,8 @@
 --Scripted by Zerry
 function c67864658.initial_effect(c)
 --link summon
-	aux.AddLinkProcedure(c,c67864658.lfilter,2)
+--	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x22a6),2)
+	aux.AddLinkProcedure(c,c67864658.lfilter,2,4)
 	c:EnableReviveLimit()
 --Special Summon
 local e1=Effect.CreateEffect(c)

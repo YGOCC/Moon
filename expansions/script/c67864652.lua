@@ -27,17 +27,17 @@ function c67864652.initial_effect(c)
 	c:RegisterEffect(e2)
 	--Special Summon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(67864650,2))
+	e3:SetDescription(aux.Stringid(678646452,1))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCountLimit(1,67864652)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetCountLimit(1,67864652+100)
 	e3:SetCondition(c67864652.spcon)
 	e3:SetTarget(c67864652.sptg)
 	e3:SetOperation(c67864652.spop)
 	c:RegisterEffect(e3)
 end
-
 function c67864652.ffilter(c)
 	return c:IsSetCard(0xa2a6)
 end
@@ -91,23 +91,22 @@ function c67864652.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864652.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown() 
+  return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c67864652.spfilter(c,e,tp)
-  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSummonableCard()
+  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c67864652.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c67864652.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c67864652.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c67864652.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
-end
-function c67864652.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		and Duel.IsExistingTarget(c67864652.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c67864652.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
-	if tc then
+	local g=Duel.SelectTarget(tp,c67864652.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function c67864652.spop(e,tp,eg,ep,ev,re,r,rp,chk)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
