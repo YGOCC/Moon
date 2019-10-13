@@ -13,6 +13,7 @@ function cid.initial_effect(c)
 	e7:SetCategory(CATEGORY_DISABLE)
 	e7:SetType(EFFECT_TYPE_ACTIVATE)
 	e7:SetCode(EVENT_FREE_CHAIN)
+	e7:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e7:SetCountLimit(1,id)
 	e7:SetCost(cid.bcost)
 	e7:SetTarget(cid.target2)
@@ -50,10 +51,10 @@ end
 function cid.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-end
-function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectTarget(tp,cid.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
+end
+function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if ((tc:IsFaceup() and not tc:IsDisabled()) or tc:IsType(TYPE_TRAPMONSTER)) and tc:IsRelateToEffect(e) then

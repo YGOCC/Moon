@@ -102,9 +102,9 @@ function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()
 	if tc:GetLevel()>0 then
 		ct=tc:GetLevel() --sets level if has level
-	elseif c:GetRank()>0 then
+	elseif tc:GetRank()>0 then
 		ct=tc:GetRank() --sets rank if has rank
-	elseif c:GetLink()>0 then
+	elseif tc:GetLink()>0 then
 		ct=tc:GetLink() --sets link rating if has link rating
 	else ct=0 --sets 0 if it has none of those (like evolutes) just so you don't get an error if you multiply against a nil value
 	end

@@ -11,7 +11,7 @@ function cid.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,cid.mfilter,2,2,cid.lcheck)
 	c:EnableReviveLimit()
-	--atk def
+	--atk boost
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -141,15 +141,15 @@ function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	tg:Merge(tg1)
 	Duel.SSet(tp,tg)
-	--local tc=tg:GetFirst()
-	--while tc do
-	--	local e1=Effect.CreateEffect(c)
-	--	e1:SetType(EFFECT_TYPE_SINGLE)
-	--	e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-	--	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	--	e1:SetValue(LOCATION_REMOVED)
-	--	e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
-	--	tc:RegisterEffect(e1)
-	--	tc=tg:GetNext()
-	--end
+	local tc=tg:GetFirst()
+	while tc do
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetValue(LOCATION_REMOVED)
+		e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+		tc:RegisterEffect(e1)
+		tc=tg:GetNext()
+	end
 end

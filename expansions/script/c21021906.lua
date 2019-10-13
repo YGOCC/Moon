@@ -13,6 +13,7 @@ function cid.initial_effect(c)
 	e0:SetCategory(CATEGORY_DESTROY)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
+	e0:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e0:SetCountLimit(1,id)
 	e0:SetCost(cid.bcost)
 	e0:SetTarget(cid.drytg)
@@ -51,11 +52,10 @@ function cid.drytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and cid.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-end
-
-function cid.dryop(e,tp,eg,ep,ev,re,r,rp)
 	local c=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,c,1,0,0)
+end
+function cid.dryop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
     local dg=g:Filter(Card.IsRelateToEffect,nil,e)
     Duel.Destroy(dg,POS_FACEUP,REASON_EFFECT)
