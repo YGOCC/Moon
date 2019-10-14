@@ -28,7 +28,7 @@ function c50031516.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
 function c50031516.filter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x385a) and  c:IsLevelBelow(3)  and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x685a) and  c:IsLevelBelow(3)  and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function c50031516.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,50031516)

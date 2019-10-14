@@ -46,7 +46,7 @@ function c16000510.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
    function c16000510.thfilter(c,g)
-	return c:IsFaceup() and c:IsType(CTYPE_EVOLUTE) and g:IsContains(c)
+	return c:IsFaceup() and c:IsSetCard(0x685a) and c:IsType(CTYPE_EVOLUTE) and g:IsContains(c)
 end
 function c16000510.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local lg=e:GetHandler():GetLinkedGroup()

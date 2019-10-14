@@ -42,7 +42,7 @@ function c16000958.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
 function c16000958.thfilter(c)
-	return c:IsSetCard(0x385a) and not c:IsCode(16000958) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x685a) and not c:IsCode(16000958) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c16000958.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c16000958.thfilter,tp,LOCATION_DECK,0,1,nil) end

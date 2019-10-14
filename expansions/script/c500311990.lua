@@ -69,7 +69,7 @@ function c500311990.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c500311990.filter2(c)
-	return c:IsSetCard(0x385a) and c:IsAbleToDeck()
+	return c:IsSetCard(0x685a) and c:IsAbleToDeck()
 end
 function c500311990.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and c500311990.filter2(chkc) end
