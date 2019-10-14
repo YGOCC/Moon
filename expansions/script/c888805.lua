@@ -24,7 +24,7 @@ function cm.initial_effect(c)
 end
 
 function cm.filter(c)
-    return c:IsSetCard(0xffc) and c:IsAbleToHand() and not c:IsCode(m)
+    return c:IsSetCard(0xffc) and c:IsAbleToHand() and c:IsType(TYPE_MONSTER)
 end
 
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)

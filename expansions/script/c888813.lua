@@ -21,8 +21,8 @@ function cm.initial_effect(c)
     e2:SetRange(LOCATION_GRAVE)
     e2:SetCountLimit(1,888213)
     e2:SetCost(aux.bfgcost)
-    e2:SetTarget(cm.tgtg)
-    e2:SetOperation(cm.tgop)
+    e2:SetTarget(cm.target2)
+    e2:SetOperation(cm.operation2)
     c:RegisterEffect(e2)
     local e3=e1:Clone()
     e3:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -43,16 +43,22 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function cm.filter2(c)
-    return c:IsCode(88810101) and c:IsAbleToGrave()
+    return c:IsCode(888809)
 end
-function cm.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.target2(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_DECK,0,1,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+    Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,1,tp,LOCATION_DECK)
 end
-function cm.tgop(e,tp,eg,ep,ev,re,r,rp)
+function cm.operation2(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
     local g=Duel.SelectMatchingCard(tp,cm.filter2,tp,LOCATION_DECK,0,1,1,nil)
+    local tc=g:GetFirst()
     if g:GetCount()>0 then
-        Duel.SendtoGrave(g,REASON_EFFECT)
+        local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+        if fc then
+            Duel.SendtoGrave(fc,REASON_RULE)
+            Duel.BreakEffect()
+        end        
+        Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
     end
 end

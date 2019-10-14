@@ -3,7 +3,7 @@ local m=888809
 local cm=_G["c"..m]
 function cm.initial_effect(c)
     c:EnableCounterPermit(0x1001)
-    c:SetCounterLimit(0x1001,6)
+    c:SetCounterLimit(0x1001,5)
     --add counter
     local e0=Effect.CreateEffect(c)
     e0:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
@@ -46,16 +46,16 @@ function cm.acop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     if c:GetFlagEffect(1)>0 then
         c:AddCounter(0x1001,1)
-        if c:GetCounter(0x1001)==6 then
+        if c:GetCounter(0x1001)==5 then
             Duel.RaiseSingleEvent(c,EVENT_CUSTOM+m,re,0,0,p,0)
         end
     end
 end
 
 function cm.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler() and e:GetHandler():GetCounter(0x1001)==6 end 
+    if chk==0 then return e:GetHandler() and e:GetHandler():GetCounter(0x1001)==5 end 
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-    e:GetHandler():RemoveCounter(tp,0x1001,6,REASON_COST)
+    e:GetHandler():RemoveCounter(tp,0x1001,5,REASON_COST)
 end
 
 function cm.filter(c)

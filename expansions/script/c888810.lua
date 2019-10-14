@@ -28,20 +28,25 @@ function cm.initial_effect(c)
 end
 
 function cm.filter(c)
-    return c:IsCode(88810101) and c:IsAbleToGrave()
+    return c:IsCode(888809)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+    Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,1,tp,LOCATION_DECK)
 end
 function cm.operation(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
     local g=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_DECK,0,1,1,nil)
+    local tc=g:GetFirst()
     if g:GetCount()>0 then
-        Duel.SendtoGrave(g,REASON_EFFECT)
+        local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+        if fc then
+            Duel.SendtoGrave(fc,REASON_RULE)
+            Duel.BreakEffect()
+        end        
+        Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
     end
 end
-
 
 function cm.spcon1(e,tp,eg,ep,ev,re,r,rp)
     return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL)
