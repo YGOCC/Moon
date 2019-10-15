@@ -24,18 +24,6 @@ function c67864651.initial_effect(c)
 	e2:SetCondition(c67864651.indcon)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
-	--spsummon
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(67864651,2))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_CARD_TARGET)
-	e3:SetCode(EVENT_TO_GRAVE)
-	e3:SetCountLimit(1,67964651)
-	e3:SetCondition(c67864651.spcon)
-	e3:SetTarget(c67864651.sptg)
-	e3:SetOperation(c67864651.spop)
-	c:RegisterEffect(e3)
 end
 
 function c67864651.ffilter(c)
@@ -46,7 +34,7 @@ function c67864651.ffilter2(c)
 end
 
 function c67864651.indfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x12a6)
+	return c:IsFaceup() and c:IsSetCard(0xa2a6)
 end
 function c67864651.indcon(e)
 	return Duel.IsExistingMatchingCard(c67864651.indfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
@@ -97,27 +85,5 @@ function c67864651.eqop(e,tp,eg,ep,ev,re,r,rp)
 				tc:RegisterEffect(e2)
 			end
 		else Duel.SendtoGrave(tc,REASON_EFFECT) end
-	end
-end
-
-function c67864651.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown() 
-end
-function c67864651.spfilter(c,e,tp)
-  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCanBeNormalSummoned(e,0,tp,false,false)
-end
-function c67864651.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c67864651.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
-end
-function c67864651.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c67864651.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
-	if tc then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
