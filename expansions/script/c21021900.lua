@@ -61,22 +61,7 @@ function cid.sop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsExistingMatchingCard(cid.lfilter,tp,LOCATION_MZONE,0,1,nil) then
 		Duel.BreakEffect()
 		if Duel.SelectYesNo(tp,aux.Stringid(2190,1)) then
-			local ac1=Duel.AnnounceCard(tp)
-			Duel.SetTargetParam(ac1)
-			Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)
-			Duel.SetChainLimit(aux.FALSE)
-			local ac2=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
-			e:GetHandler():SetHint(CHINT_CARD,ac)
-			--forbidden
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_FIELD)
-			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-			e1:SetCode(EFFECT_FORBIDDEN)
-			e1:SetTargetRange(0,0x7f)
-			e1:SetTarget(cid.bantg)
-			e1:SetLabel(ac2)
-			e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
-			Duel.RegisterEffect(e1,tp)
+			Duel.DiscardDeck(tp,2,REASON_EFFECT)
 		end
 	end
 end
