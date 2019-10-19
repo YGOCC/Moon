@@ -1,3 +1,5 @@
+--created & coded by Lyris, art from Shadowverse's "Servant of Destruction"
+--滅却従者リッチロッド
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

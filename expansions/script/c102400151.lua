@@ -1,3 +1,5 @@
+--created & coded by Lyris, art from Shadowverse's "Destructive Refrain"
+--滅却シャウト
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

@@ -1,7 +1,7 @@
+--created & coded by Lyris, art from Shadowverse's "Puppet"
+--滅却兵ニンギョウ
 local cid,id=GetID()
---Destric Doll
 function cid.initial_effect(c)
-	--If all monsters you control are "Destric" monsters, except "Destric Doll" (min. 1): You can Special Summon this card from your hand.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -10,7 +10,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.sptg)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
-	--Once per turn, during the End Phase: Destroy this card.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_PHASE+PHASE_END)

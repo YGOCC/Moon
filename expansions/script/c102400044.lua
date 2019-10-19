@@ -1,74 +1,75 @@
---created & coded by Lyris
---リダンダンシ－ファントム幻竜ワイアーム
-local cid,id=GetID()
+local cid,id=GetID()
+--Destrick Pixie
 function cid.initial_effect(c)
+	--If this card is Summoned: You can target 2 "Destrick" cards in your GY with different names, except "Destrick Pixie"; shuffle them into the Deck, then draw 2 cards, and if you do that, destroy 1 card in your hand or you control.
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_CHANGE_CODE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetValue(CARD_REDUNDANCY_TOKEN)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e1:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK+CATEGORY_DESTROY)
+	e1:SetTarget(cid.drawtarget)
+	e1:SetOperation(cid.drawop)
 	c:RegisterEffect(e1)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
-	e3:SetCondition(function(e) return Duel.GetAttackTarget()==e:GetHandler() end)
-	e3:SetTarget(cid.target)
-	e3:SetOperation(cid.activate)
-	c:RegisterEffect(e3)
-end
-function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
-end
-function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)<1 then return end
-	local c,tc=e:GetHandler(),e:GetHandler()
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,CARD_REDUNDANCY_TOKEN,0xeeb,0x4011,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute(),POS_FACEUP,1-tp) then return end
-	local token=Duel.CreateToken(tp,CARD_REDUNDANCY_TOKEN)
-	Duel.SpecialSummonStep(token,0,1-tp,1-tp,false,false,POS_FACEUP)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SET_BASE_ATTACK)
-	e1:SetValue(tc:GetAttack())
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	token:RegisterEffect(e1)
 	local e2=e1:Clone()
-	e2:SetCode(EFFECT_SET_BASE_DEFENSE)
-	e2:SetValue(tc:GetDefense())
-	token:RegisterEffect(e2)
+	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	c:RegisterEffect(e2)
 	local e3=e1:Clone()
-	e3:SetCode(EFFECT_CHANGE_LEVEL)
-	e3:SetValue(tc:GetLevel())
-	token:RegisterEffect(e3)
-	local e4=e1:Clone()
-	e4:SetCode(EFFECT_CHANGE_RACE)
-	e4:SetValue(tc:GetRace())
-	token:RegisterEffect(e4)
-	local e5=e1:Clone()
-	e5:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-	e5:SetValue(tc:GetAttribute())
-	token:RegisterEffect(e5)
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_SINGLE)
-	e6:SetCode(EFFECT_UNRELEASABLE_SUM)
-	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e6:SetReset(RESET_EVENT+RESETS_STANDARD)
-	e6:SetValue(1)
-	token:RegisterEffect(e6)
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_SINGLE)
-	e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e7:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-	e7:SetValue(1)
-	token:RegisterEffect(e7)
-	local e8=e7:Clone()
-	e8:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
-	token:RegisterEffect(e8)
-	local ea=e7:Clone()
-	ea:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-	token:RegisterEffect(ea)
-	Duel.SpecialSummonComplete()
+	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+	c:RegisterEffect(e3)
+	--If this card is destroyed: You can target 1 "Destrick" monster in your GY, except "Destrick Pixie"; Special Summon it.
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_DESTROYED)
+	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e4:SetTarget(cid.sptg)
+	e4:SetOperation(cid.spop)
+	c:RegisterEffect(e4)
+end
+function cid.todeckfilter(c,e)
+	return c:IsSetCard(0x5cd) and c:IsAbleToDeck() and not c:IsCode(id) and c:IsCanBeEffectTarget(e)
+end
+function cid.drawtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return false end
+	local g=Duel.GetMatchingGroup(cid.todeckfilter,tp,LOCATION_GRAVE,0,1,nil,e)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) and g:GetClassCount(Card.GetCode)>1 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local sg=g:Select(tp,1,1,nil)
+	g:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
+	Duel.SetTargetCard(sg+g:Select(tp,1,1,nil))
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,tp,LOCATION_HAND+LOCATION_ONFIELD)
+end
+function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)==0 then return end
+	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
+	local g=Duel.GetOperatedGroup()
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
+	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
+	if ct>=1 then
+		Duel.BreakEffect()
+		if Duel.Draw(tp,2,REASON_EFFECT)<2 then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local dg=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
+		Duel.Destroy(dg,REASON_EFFECT)
+	end
+end
+function cid.filter(c,e,tp)
+	return c:IsSetCard(0x5cd) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
+end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.filter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

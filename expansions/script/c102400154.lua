@@ -1,5 +1,6 @@
+--created & coded by Lyris, art from Shadowverse's "Apostle of Destruction"
+--滅却使徒バイカー
 local cid,id=GetID()
---Destric Biker
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)

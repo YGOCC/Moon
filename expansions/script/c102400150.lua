@@ -1,5 +1,6 @@
+--created & coded by Lyris, art from Shadowverse's "Joy of Destruction"
+--滅却ジョイ
 local cid,id=GetID()
---Destric Joy
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)

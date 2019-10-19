@@ -1,5 +1,6 @@
+--created & coded by Lyris, art from Shadowverse's "Maisha, Hero of Purgation"
+--滅却剣闘士マイシャ
 local cid,id=GetID()
---Destric Swordfighter - Masha
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x5cd),4,2,cid.ovfilter,aux.Stringid(id,0),2,cid.xyzop)

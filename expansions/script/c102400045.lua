@@ -1,87 +1,83 @@
---created & coded by Lyris
---リダンダンシ－光の天使フェアリー
-local cid,id=GetID()
+local cid,id=GetID()
+--Destrick Blaster
 function cid.initial_effect(c)
+	--If this card is Summoned: You can declare a number from 1 to 3; return that many of your banished cards to the GY at random, then you can destroy cards on the field, up to the number of "Destrick" cards returned.
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_CHANGE_CODE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetValue(CARD_REDUNDANCY_TOKEN)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetTarget(cid.destg)
+	e1:SetOperation(cid.desop)
 	c:RegisterEffect(e1)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_DISCARD)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN+CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e3:SetTarget(cid.target)
-	e3:SetOperation(cid.activate)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	c:RegisterEffect(e2)
+	local e3=e1:Clone()
+	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EVENT_RELEASE)
+	--If this card is destroyed: You can Special Summon 1 "Destrick" monster from your Deck, except "Destrick Blaster", but banish it when it leaves the field.
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_DESTROYED)
+	e4:SetProperty(EFFECT_FLAG_DELAY)
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e4:SetTarget(cid.sptg)
+	e4:SetOperation(cid.spop)
 	c:RegisterEffect(e4)
 end
-function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_REMOVED,0)>0 end
+	local ct={}
+	for i=3,1,-1 do
+		if Duel.GetFieldCard(tp,LOCATION_REMOVED,i) then
+			table.insert(ct,i)
+		end
+	end
+	if #ct==1 then
+		Duel.AnnounceNumber(tp,1)
+		e:SetLabel(1)
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+		e:SetLabel(Duel.AnnounceNumber(tp,table.unpack(ct)))
+	end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,e:GetLabel(),tp,LOCATION_REMOVED)
 end
-function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)<1 then return end
-	local c,tc=e:GetHandler(),e:GetHandler()
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,CARD_REDUNDANCY_TOKEN,0xeeb,0x4011,c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute(),POS_FACEUP,1-tp) then return end
-	local token=Duel.CreateToken(tp,CARD_REDUNDANCY_TOKEN)
-	Duel.SpecialSummonStep(token,0,tp,1-tp,false,false,POS_FACEUP)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SET_BASE_ATTACK)
-	e1:SetValue(tc:GetAttack())
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	token:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EFFECT_SET_BASE_DEFENSE)
-	e2:SetValue(tc:GetDefense())
-	token:RegisterEffect(e2)
-	local e3=e1:Clone()
-	e3:SetCode(EFFECT_CHANGE_LEVEL)
-	e3:SetValue(tc:GetLevel())
-	token:RegisterEffect(e3)
-	local e4=e1:Clone()
-	e4:SetCode(EFFECT_CHANGE_RACE)
-	e4:SetValue(tc:GetRace())
-	token:RegisterEffect(e4)
-	local e5=e1:Clone()
-	e5:SetCode(EFFECT_CHANGE_ATTRIBUTE)
-	e5:SetValue(tc:GetAttribute())
-	token:RegisterEffect(e5)
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_SINGLE)
-	e6:SetCode(EFFECT_UNRELEASABLE_SUM)
-	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e6:SetReset(RESET_EVENT+RESETS_STANDARD)
-	e6:SetValue(1)
-	token:RegisterEffect(e6)
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_SINGLE)
-	e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e7:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-	e7:SetValue(1)
-	token:RegisterEffect(e7)
-	local e8=e7:Clone()
-	e8:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
-	token:RegisterEffect(e8)
-	local ea=e7:Clone()
-	ea:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-	token:RegisterEffect(ea)
-	Duel.SpecialSummonComplete()
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_DECK,0,nil)
-	if g:GetCount()>0 and Duel.SelectEffectYesNo(tp,c,aux.Stringid(id,0)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local tc=g:Select(tp,1,1,nil)
-		Duel.BreakEffect()
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=e:GetLabel()
+	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0)
+	if #g<ct then return end
+	Duel.SendtoGrave(g:RandomSelect(tp,ct),REASON_EFFECT+REASON_RETURN)
+	local sg=Duel.GetOperatedGroup()
+	if #sg~=ct then return end
+	local dt=sg:FilterCount(Card.IsSetCard,nil,0x5cd)
+	local dg=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
+	if #dg>0 and Duel.SelectYesNo(tp,1124) then
+		local rg=dg:Select(tp,1,dt,nil)
+		Duel.HintSelection(rg)
+		Duel.Destroy(rg,REASON_EFFECT)
 	end
 end
 function cid.filter(c,e,tp)
-	return c:IsSetCard(0xeeb) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x5cd) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+		e1:SetValue(LOCATION_REMOVED)
+		g:GetFirst():RegisterEffect(e1)
+	end
 end

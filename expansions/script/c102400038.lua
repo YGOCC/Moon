@@ -1,5 +1,6 @@
+--created & coded by Lyris, art from Shadowverse's "Automaton Knight"
+--滅却兵トイナイト
 local cid,id=GetID()
---Destric Toyknight
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
