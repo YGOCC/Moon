@@ -1,4 +1,4 @@
---Moon Burst: Child of Light
+--Moon Burst: Child of Night
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -11,26 +11,28 @@ function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,nil,2,2,cid.lcheck)
 	c:SetUniqueOnField(1,0,id)
-	--special summon
+	--Search
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetDescription(aux.Stringid(4066,8))
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_DESTROYED)
-	e1:SetCondition(cid.spcon)
-	e1:SetTarget(cid.sptg)
-	e1:SetOperation(cid.spop)
+	e1:SetCountLimit(1,id)
+	e1:SetCondition(cid.thcon)
+	e1:SetTarget(cid.thtg)
+	e1:SetOperation(cid.thop)
 	c:RegisterEffect(e1)
-	--500 boost
+	--Immune
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(4066,14))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
-	e2:SetDescription(aux.Stringid(4066,15))
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetHintTiming(TIMING_DAMAGE_STEP)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1,id+1000)
 	e2:SetTarget(cid.boosttg)
 	e2:SetOperation(cid.boostop)
 	c:RegisterEffect(e2)
@@ -42,14 +44,18 @@ function cid.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetCountLimit(1,id+1000)
+	e4:SetCountLimit(1,id+2000)
 	e4:SetCondition(cid.condition)
+	e4:SetCost(cid.negcost)
 	e4:SetTarget(cid.target)
 	e4:SetOperation(cid.operation)
 	c:RegisterEffect(e4)
 end
 function cid.lcheck(g,lc)
-	return g:IsExists(Card.IsLinkSetCard,1,nil,0x666)
+	return g:IsExists(Card.IsLinkSetCard,2,nil,0x666)
+end
+function cid.searchfilter(c)
+	return c:IsSetCard(0x666) and c:IsAbleToHand()
 end
 function cid.filter(c,e,tp)
 	return c:IsCode(id+1) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and
@@ -60,6 +66,9 @@ function cid.spfilter(c)
 end
 function cid.ponyfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666)
+end
+function cid.negcostfilter(c)
+	return  c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsAbleToGraveAsCost()
 end
 --500 atk 
 function cid.boosttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -85,6 +94,11 @@ function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return rp==1-tp and re:IsActiveType(TYPE_MONSTER) and not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 end
+function cid.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.negcostfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	local g=Duel.SelectMatchingCard(tp,cid.negcostfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	Duel.SendtoGrave(g,nil,0,REASON_COST)
+end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
@@ -93,26 +107,36 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
+	local c=re:GetHandler()
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetValue(RESET_TURN_SET)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		c:RegisterEffect(e2)
+		Duel.BreakEffect()
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
---Float into other
-function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and e:GetHandler():GetPreviousControler()==tp
+--Search on Death
+function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
 end
-function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp)
-	and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_EXTRA,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_EXTRA)
+function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_EXTRA,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_EFFECT)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
+function cid.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,cid.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,SUMMON_TYPE_LINK,tp,tp,false,false,POS_FACEUP)
-		g:GetFirst():CompleteProcedure()
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
 end
