@@ -1,4 +1,5 @@
-local cid,id=GetID()
+local cid,id=GetID()
+
 --Destrick Chimera
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
@@ -56,7 +57,7 @@ end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local a=c:GetBattleTarget()
-	if chk==0 then a~=nil end
+	if chk==0 then return a~=nil end
 	local g=Group.CreateGroup()
 	if a:IsRelateToBattle() then g:AddCard(a) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
