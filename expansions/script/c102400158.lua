@@ -43,10 +43,8 @@ function cid.initial_effect(c)
 	c:RegisterEffect(s6)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetOverlayCount()>1 end
+	if chk==0 then return e:GetHandler():GetOverlayCount()>1 end
 	Duel.Hint(HINT_SOUND,0,aux.Stringid(id,11))
-	c:RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function cid.filter(c,tp)
 	return (c:IsCode(102400148) or c:IsCode(102400149)) and not c:IsForbidden() and c:CheckUniqueOnField(tp)
@@ -59,7 +57,7 @@ end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	if Duel.SendtoGrave(c:GetOverlayGroup():Select(tp,1,1,nil),REASON_EFFECT+REASON_DESTROY)==0 or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	if Duel.SendtoGrave(c:GetOverlayGroup():Select(tp,2,2,nil),REASON_EFFECT+REASON_DESTROY)==0 or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local sg=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp)
 	local tc=sg:GetFirst()
@@ -70,8 +68,14 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(1000)
+		e1:SetValue(1200)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 		c:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+		e2:SetValue(1)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+		c:RegisterEffect(e2)
 	end
 end
