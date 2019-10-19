@@ -16,12 +16,11 @@ function cid.initial_effect(c)
 	aux.AddTimeleapProc(c,5,cid.sumcon,cid.tlfilter,nil)
 	--Big Milk Draw
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_DRAW_COUNT)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_FUNC_VALUE)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PREDRAW)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetTargetRange(1,0)
-	e1:SetValue(cid.drawval)
+	e1:SetCondition(cid.drawcon)
+	e1:SetOperation(cid.drawct)
 	c:RegisterEffect(e1)
 	--Thicc Thighs protect from damage
 	local e2=Effect.CreateEffect(c)
@@ -56,6 +55,8 @@ function cid.initial_effect(c)
 	e4:SetOperation(cid.spop)
 	c:RegisterEffect(e4)
 end
+cid.drawcount=0
+cid.maxval=0
 --Other Tom Lipsia garbage
 function cid.sumcon(e,c)
 	local tp=c:GetControler()
@@ -70,8 +71,21 @@ function cid.tlfilter(c,e,mg)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:GetLevel()==e:GetHandler():GetFuture()-1
 end
 --BIG MILK DRAW
-function cid.drawval(e)
-	return Duel.GetDrawCount(e:GetHandlerPlayer())+1
+function cid.drawcon(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer() and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
+		and Duel.GetDrawCount(tp)>-1
+end
+function cid.drawct(e,tp,eg,ep,ev,re,r,rp)
+	local dt=Duel.GetDrawCount(tp)
+	Duel.Hint(HINT_CARD,tp,id)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_DRAW_COUNT)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE+PHASE_DRAW)
+	e1:SetValue(dt+1)
+	Duel.RegisterEffect(e1,tp)
 end
 --THICC THIGHS
 function cid.tgcon(e,tp,eg,ep,ev,re,r,rp)
