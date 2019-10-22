@@ -11,7 +11,7 @@ function cid.initial_effect(c)
 	--damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(4066,8))
-	e1:SetCategory(CATEGORY_DAMAGE)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_BECOME_TARGET)
@@ -76,7 +76,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	a:RegisterEffect(e1)
 end
 function cid.filter2(c,tp)
-	return c:IsFaceup() and not c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD)
+	return  not c:IsControler(tp) and c:IsLocation(LOCATION_ONFIELD)
 end
 function cid.betarget(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) or not re:GetHandler():IsSetCard(0x666)  or not re:GetHandler():IsControler(tp) then return false end
