@@ -27,13 +27,11 @@ function cm.initial_effect(c)
 end
 
 function cm.condition2(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local rc=re:GetHandler()
-	return re:IsActiveType(TYPE_MONSTER) and not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
+	return re:IsActiveType(TYPE_MONSTER)
 end
 
 function cm.filter(c)
-	return c:IsSetCard(0xffc) and c:IsAbleToHand() and not c:IsCode(m) and not c:IsFacedown()
+	return c:IsSetCard(0xffc) and c:IsAbleToHand() and c:IsFaceup()
 end
 
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
