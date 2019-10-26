@@ -158,12 +158,12 @@ function Duel.RemoveEC(p,s,o,ct,r)
 end
 function Card.IsCanBeEvoluteMaterial(c,ec)
 	if c:GetLevel()<=0 and c:GetRank()<=0 and not c:IsStatus(STATUS_NO_LEVEL) then return false end
-	if not c:IsLocation(LOCATION_MZONE) then
-		local tef1={c:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL)}
+	if c:IsControler(1-ec:GetControler()) or not c:IsLocation(LOCATION_MZONE) then
+		local tef1={c:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL,tp)}
 		local ValidSubstitute=false
 		for _,te1 in ipairs(tef1) do
 			local con=te1:GetCondition()
-			if con(c,ec,1) then ValidSubstitute=true end
+			if (not con or con(c,ec,1)) then ValidSubstitute=true end
 		end
 		if not ValidSubstitute then return false end
 	else
@@ -331,7 +331,7 @@ function Auxiliary.EvoluteCondition(outdate1,outdate2,min,max,...)
 			end
 end
 function Auxiliary.GetEvoluteMaterials(ec,tp)
-	return Duel.GetMatchingGroup(Card.IsCanBeEvoluteMaterial,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,0,nil,ec)
+	return Duel.GetMatchingGroup(Card.IsCanBeEvoluteMaterial,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,nil,ec)
 end
 function Auxiliary.EvoluteTarget(outdate1,outdate2,minc,maxc,...)
 	local funs={...}

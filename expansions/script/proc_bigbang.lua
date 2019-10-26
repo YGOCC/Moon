@@ -3,10 +3,13 @@
 --Custom constants
 EFFECT_CANNOT_BE_BIGBANG_MATERIAL	=624
 EFFECT_MUST_BE_BIGBANG_MATERIAL		=625
+EFFECT_EXTRA_BIGBANG_MATERIAL		=626
 TYPE_BIGBANG						=0x8000000000
 TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_BIGBANG
 CTYPE_BIGBANG						=0x80
 CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_BIGBANG
+
+SUMMON_TYPE_BIGBANG					=SUMMON_TYPE_SPECIAL+340
 
 REASON_BIGBANG						=0x8000000000
 
@@ -65,7 +68,7 @@ function Card.IsCanBeBigbangMaterial(c,ec)
 	if c:IsType(TYPE_LINK) then return false end
 	local tef={c:IsHasEffect(EFFECT_CANNOT_BE_BIGBANG_MATERIAL)}
 	for _,te in ipairs(tef) do
-		if te:GetValue()(te,ec) then return false end
+		if (type(te:GetValue())=="function" and te:GetValue()(te,ec)) or te:GetValue()==1 then return false end
 	end
 	return true
 end
@@ -126,8 +129,31 @@ function Auxiliary.BigbangCondition(...)
 				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local mg=Duel.GetMatchingGroup(Card.IsCanBeBigbangMaterial,tp,LOCATION_MZONE,0,nil,c)
+				local mg2=Duel.GetMatchingGroup(Auxiliary.BigbangExtraFilter,tp,0xff,0xff,nil,c,tp,table.unpack(funs))
+				if mg2:GetCount()>0 then mg:Merge(mg2) end
+				local fg=aux.GetMustMaterialGroup(tp,EFFECT_MUST_BE_BIGBANG_MATERIAL)
+				if fg:IsExists(aux.MustMaterialCounterFilter,1,nil,mg) then return false end
+				Duel.SetSelectedCard(fg)
 				return mg:IsExists(Auxiliary.BigbangRecursiveFilter,1,nil,tp,Group.CreateGroup(),mg,c,0,table.unpack(funs))
 			end
+end
+function Auxiliary.BigbangExtraFilter(c,lc,tp,...)
+	local flist={...}
+	local check=false
+	for i=1,#flist do
+		if flist[i][1](c) then
+			check=true
+		end
+	end
+	local tef1={c:IsHasEffect(EFFECT_EXTRA_BIGBANG_MATERIAL,tp)}
+	local ValidSubstitute=false
+	for _,te1 in ipairs(tef1) do
+		local con=te1:GetCondition()
+		if (not con or con(c,ec,1)) then ValidSubstitute=true end
+	end
+	if not ValidSubstitute then return false end
+	if c:IsLocation(LOCATION_ONFIELD) and not c:IsFaceup() then return false end
+	return c:IsCanBeBigbangMaterial(lc) and (not flist or #flist<=0 or check)
 end
 function Auxiliary.BigbangRecursiveFilter(c,tp,sg,mg,bc,ct,...)
 	sg:AddCard(c)
@@ -153,6 +179,19 @@ function Auxiliary.BigbangCheckGoal(tp,sg,bc,ct,...)
 		min=min+funs[i][2]
 	end
 	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:GetSum(Card.GetBigbangAttack)>=bc:GetAttack() and sg:GetSum(Card.GetBigbangDefense)>=bc:GetDefense()
+		and not sg:IsExists(Auxiliary.BigbangUncompatibilityFilter,1,nil,sg,bc,tp)
+end
+function Auxiliary.BigbangUncompatibilityFilter(c,sg,lc,tp)
+	local mg=sg:Filter(aux.TRUE,c)
+	return not Auxiliary.BigbangCheckOtherMaterial(c,mg,lc,tp)
+end
+function Auxiliary.BigbangCheckOtherMaterial(c,mg,lc,tp)
+	local le={c:IsHasEffect(EFFECT_EXTRA_BIGBANG_MATERIAL,tp)}
+	for _,te in pairs(le) do
+		local f=te:GetValue()
+		if f and type(f)=="function" and not f(te,lc,mg) then return false end
+	end
+	return true
 end
 function Auxiliary.BigbangTarget(...)
 	local funs,min,max={...},0,0
@@ -160,6 +199,8 @@ function Auxiliary.BigbangTarget(...)
 	if max>99 then max=99 end
 	return  function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 				local mg=Duel.GetMatchingGroup(Card.IsCanBeBigbangMaterial,tp,LOCATION_MZONE,0,nil,c)
+				local mg2=Duel.GetMatchingGroup(Auxiliary.BigbangExtraFilter,tp,0xff,0xff,nil,c,tp,table.unpack(funs))
+				if mg2:GetCount()>0 then mg:Merge(mg2) end
 				local bg=Group.CreateGroup()
 				local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_BIGBANG_MATERIAL)}
 				for _,te in ipairs(ce) do

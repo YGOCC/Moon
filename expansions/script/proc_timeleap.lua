@@ -4,6 +4,7 @@
 EFFECT_CANNOT_BE_TIMELEAP_MATERIAL	=825
 EFFECT_MUST_BE_TIMELEAP_MATERIAL	=826
 EFFECT_FUTURE						=827
+EFFECT_EXTRA_TIMELEAP_MATERIAL	=828
 TYPE_TIMELEAP						=0x10000000000
 TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_TIMELEAP
 CTYPE_TIMELEAP						=0x100
@@ -115,7 +116,7 @@ function Card.IsCanBeTimeleapMaterial(c,ec,...)
 	end
 	local tef={c:IsHasEffect(EFFECT_CANNOT_BE_TIMELEAP_MATERIAL)}
 	for _,te in ipairs(tef) do
-		if te:GetValue()(te,ec) then return false end
+		if (type(te:GetValue())=="function" and te:GetValue()(te,ec)) or te:GetValue()==1 then return false end
 	end
 	return true
 end
@@ -172,10 +173,34 @@ function Auxiliary.TimeleapCondition(sumcon,filter,...)
 				if c==nil then return true end
 				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
-				local mg=Duel.GetMatchingGroup(Card.IsCanBeTimeleapMaterialMaterial,tp,LOCATION_MZONE,0,nil,c)
+				local mg=Duel.GetMatchingGroup(Card.IsCanBeTimeleapMaterial,tp,LOCATION_MZONE,0,nil,c)
+				local mg2=Duel.GetMatchingGroup(Auxiliary.TimeleapExtraFilter,tp,0xff,0xff,nil,f,c,tp,table.unpack(funs))
+				if mg2:GetCount()>0 then mg:Merge(mg2) end
+				local fg=aux.GetMustMaterialGroup(tp,EFFECT_MUST_BE_TIMELEAP_MATERIAL)
+				if fg:IsExists(aux.MustMaterialCounterFilter,1,nil,mg) then return false end
+				Duel.SetSelectedCard(fg)
 				return (not sumcon or sumcon(e,c))
 					and mg:IsExists(Auxiliary.TimeleapMaterialFilter,1,nil,filter,e,tp,Group.CreateGroup(),mg,c,0,table.unpack(funs))
 			end
+end
+function Auxiliary.TimeleapExtraFilter(c,f,lc,tp,...)
+	local flist={...}
+	local check=false
+	if (not f or f(c)) then check=true end
+	for i=1,#flist do
+		if flist[i][1]~=999 and flist[i][1](c) then
+			check=true
+		end
+	end
+	local tef1={c:IsHasEffect(EFFECT_EXTRA_TIMELEAP_MATERIAL,tp)}
+	local ValidSubstitute=false
+	for _,te1 in ipairs(tef1) do
+		local con=te1:GetCondition()
+		if (not con or con(c,ec,1)) then ValidSubstitute=true end
+	end
+	if not ValidSubstitute then return false end
+	if c:IsLocation(LOCATION_ONFIELD) and not c:IsFaceup() then return false end
+	return c:IsCanBeTimeleapMaterial(lc) and check
 end
 function Auxiliary.TimeleapMaterialFilter(c,filter,e,tp,sg,mg,bc,ct,...)
 	sg:AddCard(c)
@@ -215,7 +240,19 @@ function Auxiliary.TimeleapCheckGoal(tp,sg,bc,ct,...)
 			end
 		end
 	end
-	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0
+	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and not sg:IsExists(Auxiliary.TimeleapUncompatibilityFilter,1,nil,sg,bc,tp)
+end
+function Auxiliary.TimeleapUncompatibilityFilter(c,sg,lc,tp)
+	local mg=sg:Filter(aux.TRUE,c)
+	return not Auxiliary.TimeleapCheckOtherMaterial(c,mg,lc,tp)
+end
+function Auxiliary.TimeleapCheckOtherMaterial(c,mg,lc,tp)
+	local le={c:IsHasEffect(EFFECT_EXTRA_TIMELEAP_MATERIAL,tp)}
+	for _,te in pairs(le) do
+		local f=te:GetValue()
+		if f and type(f)=="function" and not f(te,lc,mg) then return false end
+	end
+	return true
 end
 function Auxiliary.TimeleapTarget(filter,...)
 	local funs,min,max={...},1,1
@@ -231,6 +268,8 @@ function Auxiliary.TimeleapTarget(filter,...)
 	if max>99 then max=99 end
 	return  function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 				local mg=Duel.GetMatchingGroup(Card.IsCanBeTimeleapMaterial,tp,LOCATION_MZONE,0,nil,c)
+				local mg2=Duel.GetMatchingGroup(Auxiliary.TimeleapExtraFilter,tp,0xff,0xff,nil,f,c,tp,table.unpack(funs))
+				if mg2:GetCount()>0 then mg:Merge(mg2) end
 				local bg=Group.CreateGroup()
 				local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_TIMELEAP_MATERIAL)}
 				for _,te in ipairs(ce) do
