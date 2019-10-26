@@ -44,8 +44,10 @@ function cid.desfilter(c,e,tp)
 end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetMZoneCount(tp,c)>0
-		and Duel.IsExistingMatchingCard(cid.desfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) and Duel.GetTurnPlayer()~=tp end
+	local ch=Duel.GetCurrentChain()
+	if chk==0 then return Duel.GetMZoneCount(tp,c)>0 and (ch==0
+		or Duel.GetChainInfo(ch,CHAININFO_TRIGGERING_PLAYER)~=tp) and Duel.GetTurnPlayer()~=tp
+		and Duel.IsExistingMatchingCard(cid.desfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
