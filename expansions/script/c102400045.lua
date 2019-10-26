@@ -45,7 +45,7 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=e:GetLabel()
-	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0)
+	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):Filter(aux.NOT(Card.IsImmuneToEffect),nil,e)
 	if #g<ct then return end
 	Duel.SendtoGrave(g:RandomSelect(tp,ct),REASON_EFFECT+REASON_RETURN)
 	local sg=Duel.GetOperatedGroup()
