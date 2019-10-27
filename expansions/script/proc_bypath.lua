@@ -4,10 +4,13 @@
 --Custom constants
 EFFECT_CELL							=686
 EFFECT_CANNOT_BE_BYPATH_MATERIAL	=687
+EFFECT_MUST_BE_BYPATH_MATERIAL		=688
+EFFECT_EXTRA_BYPATH_MATERIAL		=689
 TYPE_BYPATH							=0x200000000000
 TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_BYPATH
 CTYPE_BYPATH						=0x2000
 CTYPE_CUSTOM						=CTYPE_CUSTOM|CTYPE_BYPATH
+SUMMON_TYPE_BYPATH					=SUMMON_TYPE_SPECIAL|0x26
 
 --Custom Type Table
 Auxiliary.Bypaths={} --number as index = card, card as index = function() is_xyz
@@ -94,7 +97,7 @@ function Card.IsCanBeBypathMaterial(c,bc)
 	if c:IsFacedown() then return false end
 	local tef2={bc:IsHasEffect(EFFECT_CANNOT_BE_BYPATH_MATERIAL)}
 	for _,te2 in ipairs(tef2) do
-		if te2:GetValue()(te2,c) then return false end
+		if (type(te:GetValue())=="function" and te:GetValue()(te2,bc)) or te:GetValue()==1 then return false end
 	end
 	return true
 end
@@ -105,8 +108,30 @@ function Auxiliary.AddOrigBypathType(c,isxyz)
 	Auxiliary.Bypaths[c]=function() return isxyz end
 	Auxiliary.BypathSeqs[c]={}
 end
-function Auxiliary.AddBypathProc(c,cell,minc,maxc,...)
+function Auxiliary.AddBypathProc(c,cell,altcheck,...)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
+	local t={...}
+	local list={}
+	local min,max
+	for i=1,#t do
+		if type(t[#t])=='number' then
+			max=t[#t]
+			table.remove(t)
+			if type(t[#t])=='number' then
+				min=t[#t]
+				table.remove(t)
+			else
+				min=max
+				max=99
+			end
+			table.insert(list,{t[#t],min,max})
+			table.remove(t)
+		elseif type(t[#t])=='function' then
+			table.insert(list,{t[#t],1,1})
+			table.remove(t)
+		end
+		if #t<2 then break end
+	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -118,8 +143,8 @@ function Auxiliary.AddBypathProc(c,cell,minc,maxc,...)
 	ge2:SetCode(EFFECT_SPSUMMON_PROC)
 	ge2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 	ge2:SetRange(LOCATION_EXTRA)
-	ge2:SetCondition(Auxiliary.BypathCondition(minc,maxc,...))
-	ge2:SetTarget(Auxiliary.BypathTarget(minc,maxc,...))
+	ge2:SetCondition(Auxiliary.BypathCondition(altcheck,table.unpack(list)))
+	ge2:SetTarget(Auxiliary.BypathTarget(altcheck,table.unpack(list)))
 	ge2:SetOperation(Auxiliary.BypathOperation)
 	ge2:SetValue(0x26)
 	c:RegisterEffect(ge2)
@@ -148,21 +173,44 @@ function Auxiliary.CellVal(cell)
 				return ce
 			end
 end
-function Auxiliary.ByCheckRecursive(c,tp,sg,mg,bc,min,max,ct,...)
+function Auxiliary.ByCheckRecursive(c,tp,sg,mg,bc,ct,altcheck,...)
 	sg:AddCard(c)
 	ct=ct+1
-	local res=Auxiliary.ByCheckGoal(tp,sg,bc,min,ct,...)
-		or (ct<max and mg:IsExists(Auxiliary.ByCheckRecursive,1,sg,tp,sg,mg,bc,min,max,ct,...))
+	local funs,max,chk={...},0
+	for i=1,#funs do
+		max=max+funs[i][3]
+		if funs[i][1](c) then
+			chk=true
+		end
+	end
+	if max>99 then max=99 end
+	local res=Auxiliary.ByCheckGoal(tp,sg,bc,ct,altcheck,...)
+		or (ct<max and mg:IsExists(Auxiliary.ByCheckRecursive,1,sg,tp,sg,mg,bc,ct,altcheck,...))
 	sg:RemoveCard(c)
 	ct=ct-1
 	return res
 end
-function Auxiliary.ByCheckGoal(tp,sg,bc,min,ct,...)
-	local funs={...}
+function Auxiliary.ByCheckGoal(tp,sg,bc,ct,altcheck,...)
+	local funs,min={...},0
 	for i=1,#funs do
-		if not sg:IsExists(funs[i],ct,nil) then return false end
+		if not sg:IsExists(funs[i][1],funs[i][2],nil) then return false end
+		min=min+funs[i][2]
 	end
-	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:IsExists(Card.IsCanBeBypathMaterial,ct,nil,bc) and sg:IsExists(Auxiliary.ByGoalCheck,1,nil,sg,Group.CreateGroup())
+	return ct>=min and Duel.GetLocationCountFromEx(tp,tp,sg,bc)>0 and sg:IsExists(Card.IsCanBeBypathMaterial,ct,nil,bc) 
+		and (sg:IsExists(Auxiliary.ByGoalCheck,1,nil,sg:Filter(Card.IsLocation,nil,LOCATION_MZONE),Group.CreateGroup()) and (not altcheck or altcheck(tp,sg,bc,min,ct)))
+		and not sg:IsExists(Auxiliary.ByUncompatibilityFilter,1,nil,sg,bc,tp)
+end
+function Auxiliary.ByUncompatibilityFilter(c,sg,spct,tp)
+	local mg=sg:Filter(aux.TRUE,c)
+	return not Auxiliary.ByCheckOtherMaterial(c,mg,spct,tp)
+end
+function Auxiliary.ByCheckOtherMaterial(c,mg,spct,tp)
+	local le={c:IsHasEffect(EFFECT_EXTRA_BYPATH_MATERIAL,tp)}
+	for _,te in pairs(le) do
+		local f=te:GetValue()
+		if f and type(f)=="function" and not f(te,spct,mg) then return false end
+	end
+	return true
 end
 function Auxiliary.ByGoalCheck(c,mg,sg,fc)
 	sg:AddCard(c)
@@ -171,37 +219,74 @@ function Auxiliary.ByGoalCheck(c,mg,sg,fc)
 	if fc then
 		if seq<5 then
 			res=math.abs(seq-fc:GetSequence())==1
-		else res=fc:GetColumnGroup():IsContains(c) end
-	else res=mg:IsExists(Auxiliary.ByGoalCheck,1,sg,mg,sg,c) end
+		else 
+			res=fc:GetColumnGroup():IsContains(c) 
+		end
+	else 
+		res=mg:IsExists(Auxiliary.ByGoalCheck,1,sg,mg,sg,c) 
+	end
 	sg:RemoveCard(c)
 	return not res
 end
-function Auxiliary.BypathCondition(min,max,...)
+function Auxiliary.BypathExtraFilter(c,lc,tp,...)
+	local flist={...}
+	local check=false
+	for i=1,#flist do
+		if flist[i][1](c) then
+			check=true
+		end
+	end
+	local tef1={c:IsHasEffect(EFFECT_EXTRA_BYPATH_MATERIAL,tp)}
+	local ValidSubstitute=false
+	for _,te1 in ipairs(tef1) do
+		local con=te1:GetCondition()
+		if (not con or con(c,lc,1)) then ValidSubstitute=true end
+	end
+	if not ValidSubstitute then return false end
+	return c:IsCanBeBypathMaterial(lc) and (not flist or #flist<=0 or check)
+end
+function Auxiliary.BypathCondition(altcheck,...)
 	local funs={...}
-	if not min then min=2 end
-	if not max then max=99 end
 	return	function(e,c)
 				if c==nil then return true end
 				if c:IsType(TYPE_PENDULUM+TYPE_PANDEMONIUM+TYPE_RELAY) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
-				local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)
+				local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
+				local mg2=Duel.GetMatchingGroup(Auxiliary.BypathExtraFilter,tp,0xff,0xff,nil,c,tp,table.unpack(funs))
+				if mg2:GetCount()>0 then g:Merge(mg2) end
+				local fg=aux.GetMustMaterialGroup(tp,EFFECT_MUST_BE_BYPATH_MATERIAL)
+				if fg:IsExists(aux.MustMaterialCounterFilter,1,nil,mg) then return false end
+				Duel.SetSelectedCard(fg)
 				local sg=Group.CreateGroup()
-				return g:IsExists(Auxiliary.ByCheckRecursive,1,nil,tp,sg,g,c,min,max,0,table.unpack(funs))
+				return g:IsExists(Auxiliary.ByCheckRecursive,1,nil,tp,sg,g,c,0,altcheck,table.unpack(funs))
 			end
 end
-function Auxiliary.BypathTarget(min,max,...)
-	local funs={...}
-	if not min then min=2 end
-	if not max then max=99 end
+function Auxiliary.BypathTarget(altcheck,...)
+	local funs,min,max={...},0,0
+	for i=1,#funs do min=min+funs[i][2] max=max+funs[i][3] end
+	if max>99 then max=99 end
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 				local t=Auxiliary.BypathSeqs[c]
 				while #t>0 do table.remove(t) end
 				local mg=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
+				local mg2=Duel.GetMatchingGroup(Auxiliary.BypathExtraFilter,tp,0xff,0xff,nil,c,tp,table.unpack(funs))
+				if mg2:GetCount()>0 then mg:Merge(mg2) end
+				local bg=Group.CreateGroup()
+				local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_BYPATH_MATERIAL)}
+				for _,te in ipairs(ce) do
+					local tc=te:GetHandler()
+					if tc then bg:AddCard(tc) end
+				end
+				if #bg>0 then
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
+					bg:Select(tp,#bg,#bg,nil)
+				end
 				local sg=Group.CreateGroup()
+				sg:Merge(bg)
 				local finish=false
 				while not (sg:GetCount()>=max) do
-					finish=Auxiliary.ByCheckGoal(tp,sg,c,min,#sg,table.unpack(funs))
-					local cg=mg:Filter(Auxiliary.ByCheckRecursive,sg,tp,sg,mg,c,min,max,#sg,table.unpack(funs))
+					finish=Auxiliary.ByCheckGoal(tp,sg,c,#sg,altcheck,table.unpack(funs))
+					local cg=mg:Filter(Auxiliary.ByCheckRecursive,sg,tp,sg,mg,c,#sg,altcheck,table.unpack(funs))
 					if #cg==0 then break end
 					local cancel=not finish
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
@@ -234,8 +319,27 @@ function Auxiliary.BypathOperation(e,tp,eg,ep,ev,re,r,rp,c)
 	end
 	Duel.SendtoGrave(sg,REASON_RULE)
 	c:SetMaterial(mg)
-	Duel.Overlay(c,mg)
+	local overlay=Group.CreateGroup()
+	local tc=mg:GetFirst()
+	while tc do
+		if c:IsHasEffect(EFFECT_EXTRA_BYPATH_MATERIAL) then
+			local tef={tc:IsHasEffect(EFFECT_EXTRA_BYPATH_MATERIAL)}
+			for _,te in ipairs(tef) do
+				local op=te:GetOperation()
+				if op then
+					op(tc,tp)
+				else
+					overlay:AddCard(tc)
+				end
+			end
+		else
+			overlay:AddCard(tc)
+		end
+		tc=mg:GetNext()
+	end
+	Duel.Overlay(c,overlay)
 	mg:DeleteGroup()
+	overlay:DeleteGroup()
 	local e1=Effect.GlobalEffect()
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
