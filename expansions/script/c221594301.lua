@@ -24,16 +24,16 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterFlagEffect(id,RESET_CHAIN,0,1)
 end
 function cid.xfilter1(c)
-	return c:IsLevel(4) and c:IsSetCard(0x9c7)
+	return c:IsLevel(4) and c:IsSetCard(0xc97)
 end
 function cid.xfilter2(c,e,tp)
 	local mc=e:GetHandler()
-	return c:IsRank(4) and c:IsSetCard(0x9c7) and mc:IsCanBeXyzMaterial(c)
+	return c:IsRank(4) and c:IsSetCard(0xc97) and mc:IsCanBeXyzMaterial(c)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 		and Duel.IsExistingMatchingCard(cid.xfilter1,tp,LOCATION_HAND,0,1,mc)
 end
 function cid.xtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.xfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.xfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp) and Duel.GetLocationCountFromEx(tp)>0 end
 end
 function cid.xop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCountFromEx(tp)<=0 then return end
