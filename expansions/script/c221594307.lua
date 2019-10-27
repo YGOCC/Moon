@@ -60,11 +60,13 @@ function cid.eqlimit(e,c)
 	return e:GetOwner()==c
 end
 function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
-	local ex1,cc=Duel.GetOperationInfo(0,CATEGORY_TODECK)
+	local ex1,cg=Duel.GetOperationInfo(0,CATEGORY_TODECK)
+	local cc=cg:GetFirst()
 	if not cc:IsRelateToEffect(e) or Duel.SendtoDeck(cc,nil,2,REASON_EFFECT)==0 or not cc:IsLocation(LOCATION_DECK) then return end
 	Duel.ShuffleDeck(tp)
 	local c=e:GetHandler()
-	local ex2,tc=Duel.GetOperationInfo(0,CATEGORY_EQUIP)
+	local ex2,tg=Duel.GetOperationInfo(0,CATEGORY_EQUIP)
+	local tc=tg:GetFirst()
 	if tc:IsRelateToEffect(e) then
 		Duel.BreakEffect()
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
@@ -85,7 +87,7 @@ function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
 				e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
 				e2:SetCode(EFFECT_UPDATE_ATTACK)
 				e2:SetReset(RESET_EVENT+0x1fe0000)
-				e2:SetValue(atk/2)
+				e2:SetValue(atk)
 				tc:RegisterEffect(e2)
 			end
 			local e3=Effect.CreateEffect(c)
