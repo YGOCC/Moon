@@ -21,10 +21,10 @@ end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,1,nil)
 	if #g==1 then
-		e:SetLabel(g:GetFirst():GetType())
+		e:SetLabel(g:GetFirst():GetType()&TYPE_EXTRA)
 		return true
 	else return false end
 end
 function cid.disable(e,c)
-	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and c:GetType()==e:GetLabel()
+	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and c:GetType()&e:GetLabel()~=0
 end
