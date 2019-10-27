@@ -58,20 +58,21 @@ function cid.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0xc97) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
-function cid.PConditionFilter(c,e,tp,seq,eset)
-	local tc,rpz=e:GetHandler(),Duel.GetFieldCard(tp,LOCATION_PZONE,1-seq)
+function cid.PConditionFilter(c,e,tp,tc,eset)
+	local seq=tc:GetSequence()
+	local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,seq==4 and 0 or 1)
 	local lscale=seq==0 and tc:GetLeftScale() or tc:GetLeftScale()
 	local rscale=1-seq==1 and rpz:GetRightScale() or rpz:GetLeftScale()
 	if lscale>rscale then lscale,rscale=rscale,lscale end
-	return c:IsLocation(LOCATION_REMOVED) or aux.PConditionFilter(c,e,tp,lscale,rscale,eset)
+	return c:IsLocation(LOCATION_REMOVED) and c:IsFaceup() or aux.PConditionFilter(c,e,tp,lscale,rscale,eset)
 end
 function cid.PendCondition(e,c,og)
 	if c==nil then return true end
-	if aux.PendCondition()(e,c,og) then return true end
 	local tp=c:GetControler()
-	if PENDULUM_CHECKLIST&(0x1<<tp)~=0 then return false end
+	local eset={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}
+	if PENDULUM_CHECKLIST&(0x1<<tp)~=0 and #eset==0 then return false end
 	local seq=c:GetSequence()
-	local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,1-seq)
+	local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,seq==4 and 0 or 1)
 	if rpz==nil then return false end
 	local lscale=seq==0 and c:GetLeftScale() or c:GetLeftScale()
 	local rscale=1-seq==1 and rpz:GetRightScale() or rpz:GetLeftScale()
@@ -90,11 +91,12 @@ function cid.PendCondition(e,c,og)
 	else
 		g=Duel.GetFieldGroup(tp,loc,0)
 	end
-	return g:IsExists(cid.PConditionFilter,1,nil,e,tp,seq,{})
+	if aux.PendCondition()(e,c,og) then return true end
+	return g:IsExists(cid.PConditionFilter,1,nil,e,tp,c,{})
 end
 function cid.PendOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	local seq=c:GetSequence()
-	local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,1-seq)
+	local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,seq==4 and 0 or 1)
 	local lscale=seq==0 and c:GetLeftScale() or c:GetLeftScale()
 	local rscale=1-seq==1 and rpz:GetRightScale() or rpz:GetLeftScale()
 	if lscale>rscale then lscale,rscale=rscale,lscale end
@@ -118,9 +120,9 @@ function cid.PendOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	end
 	if ft2>0 then loc=loc|LOCATION_EXTRA end
 	if og then
-		tg=og:Filter(Card.IsLocation,nil,loc):Filter(cid.PConditionFilter,nil,e,tp,lscale,rscale,eset)
+		tg=og:Filter(Card.IsLocation,nil,loc):Filter(cid.PConditionFilter,nil,e,tp,c,eset)
 	else
-		tg=Duel.GetMatchingGroup(cid.PConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale,eset)
+		tg=Duel.GetMatchingGroup(cid.PConditionFilter,tp,loc,0,nil,e,tp,c,eset)
 	end
 	local ce=nil
 	local b1=PENDULUM_CHECKLIST&(0x1<<tp)==0

@@ -59,7 +59,7 @@ function cid.lfilter2(c,e,tp)
 	local mg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	return c:IsSetCard(0xc97) and c:IsType(TYPE_LINK)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false)
-		and mg:IsExists(cid.lfilter1,c:GetLink()-1,nil,c) and aux.MustMaterialCheck(mg,tp,EFFECT_MUST_BE_LMATERIAL)
+		and mg:IsExists(cid.lfilter1,c:GetLink()-1,e:GetHandler(),c) and aux.MustMaterialCheck(mg,tp,EFFECT_MUST_BE_LMATERIAL)
 end
 function cid.ltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.lfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp)
