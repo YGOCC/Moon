@@ -1,3 +1,4 @@
+--Moon's Dream, Healing
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -63,10 +64,10 @@ function cid.ritualop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 		tc:CompleteProcedure()
-		
-		local dg=Duel.GetMatchingGroupCount(cid.lpfilter,tp,LOCATION_ONFIELD,0,nil)
+		Duel.BreakEffect()
+		local dg=Duel.GetMatchingGroupCount(cid.lpfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
 		Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,dg*300)
-		
+		Duel.Recover(tp,dg*300,REASON_EFFECT)
 	end
 end
 --Send to deck; draw 1

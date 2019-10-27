@@ -1,3 +1,4 @@
+--Moon's Dream, Wrath
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -66,7 +67,7 @@ function cid.ritualop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(tc)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetValue(500)
 		tc:RegisterEffect(e1)
 		

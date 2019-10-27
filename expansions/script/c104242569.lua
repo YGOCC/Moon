@@ -1,3 +1,4 @@
+--Moon's Dreamscape
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -62,7 +63,7 @@ function cid.initial_effect(c)
 	e6:SetCondition(cid.condition)
 	e6:SetOperation(cid.fragment)
 	c:RegisterEffect(e6)
-	 local e7=Effect.CreateEffect(c)
+	local e7=Effect.CreateEffect(c)
     e7:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
     e7:SetCode(EVENT_CHAIN_SOLVED)
     e7:SetRange(LOCATION_FZONE)
@@ -135,5 +136,6 @@ function cid.searchop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.SelectMatchingCard(tp,cid.ritualsearchfilter,tp,LOCATION_DECK,0,1,1,nil)
     if g:GetCount()>0 then
         Duel.SendtoHand(g,REASON_EFFECT,nil)
+		Duel.ConfirmCards(1-tp,g)
     end
 end

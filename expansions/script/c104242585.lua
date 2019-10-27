@@ -1,3 +1,4 @@
+--Fragment of a Memory
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -31,12 +32,19 @@ function cid.initial_effect(c)
 	e3:SetCode(EFFECT_IMMUNE_EFFECT)
 	e3:SetValue(cid.efilter)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e4:SetRange(LOCATION_REMOVED)
+	e4:SetValue(1)
+	c:RegisterEffect(e4)
 end
 function cid.bossfilter(c)
 	return c:IsFaceup() and c:IsCode(id)
 end
 function cid.boss(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetMatchingGroupCount(cid.bossfilter,tp,LOCATION_REMOVED,0,nil)==3 then
+	if Duel.GetMatchingGroupCount(cid.bossfilter,tp,LOCATION_REMOVED,0,nil)==7 then
 	end
 	Duel.BreakEffect()
 	local g=Duel.GetMatchingGroup(cid.bossfilter,tp,LOCATION_REMOVED,0,nil)
@@ -48,7 +56,7 @@ function cid.boss(e,tp,eg,ep,ev,re,r,rp)
 
 end
 function cid.raisevent(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetMatchingGroupCount(cid.bossfilter,tp,LOCATION_REMOVED,0,nil)==3 then
+	if Duel.GetMatchingGroupCount(cid.bossfilter,tp,LOCATION_REMOVED,0,nil)==7 then
 		Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+id,e,0,0,0,0)
 	end
 end
