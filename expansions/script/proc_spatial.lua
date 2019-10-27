@@ -370,11 +370,11 @@ function Auxiliary.SpatialOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 				if op then
 					op(tc,tp)
 				else
-					Duel.SendtoGrave(tc,REASON_MATERIAL+REASON_SPATIAL)
+					Duel.Remove(tc,POS_FACEUP,REASON_MATERIAL+REASON_SPATIAL)
 				end
 			end
 		else
-			Duel.SendtoGrave(tc,REASON_MATERIAL+REASON_SPATIAL)
+			Duel.Remove(tc,POS_FACEUP,REASON_MATERIAL+REASON_SPATIAL)
 		end
 		tc=g:GetNext()
 	end
