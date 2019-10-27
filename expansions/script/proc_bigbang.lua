@@ -66,6 +66,7 @@ end
 --Custom Functions
 function Card.IsCanBeBigbangMaterial(c,ec)
 	if c:IsType(TYPE_LINK) then return false end
+	if c:IsOnField() and not c:IsFaceup() then return false end
 	local tef={c:IsHasEffect(EFFECT_CANNOT_BE_BIGBANG_MATERIAL)}
 	for _,te in ipairs(tef) do
 		if (type(te:GetValue())=="function" and te:GetValue()(te,ec)) or te:GetValue()==1 then return false end
@@ -149,7 +150,7 @@ function Auxiliary.BigbangExtraFilter(c,lc,tp,...)
 	local ValidSubstitute=false
 	for _,te1 in ipairs(tef1) do
 		local con=te1:GetCondition()
-		if (not con or con(c,ec,1)) then ValidSubstitute=true end
+		if (not con or con(c,lc,1)) then ValidSubstitute=true end
 	end
 	if not ValidSubstitute then return false end
 	if c:IsLocation(LOCATION_ONFIELD) and not c:IsFaceup() then return false end
@@ -243,6 +244,22 @@ end
 function Auxiliary.BigbangOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	local g=e:GetLabelObject()
 	c:SetMaterial(g)
-	Duel.SendtoGrave(g,REASON_DESTROY+REASON_MATERIAL+REASON_BIGBANG)
+	local tc=g:GetFirst()
+	while tc do
+		if c:IsHasEffect(EFFECT_EXTRA_BIGBANG_MATERIAL) then
+			local tef={tc:IsHasEffect(EFFECT_EXTRA_BIGBANG_MATERIAL)}
+			for _,te in ipairs(tef) do
+				local op=te:GetOperation()
+				if op then
+					op(tc,tp)
+				else
+					Duel.SendtoGrave(tc,REASON_DESTROY+REASON_MATERIAL+REASON_BIGBANG)
+				end
+			end
+		else
+			Duel.SendtoGrave(tc,REASON_DESTROY+REASON_MATERIAL+REASON_BIGBANG)
+		end
+		tc=g:GetNext()
+	end
 	g:DeleteGroup()
 end
