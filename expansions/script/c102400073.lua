@@ -18,7 +18,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function cid.filter(c)
-	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0xbb2) or c:IsSetCard(0xbb3)) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xbb2) and c:IsAbleToHand()
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -32,7 +32,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=Duel.GetAttacker()
-	return ec and ec:GetControler()==tp and (ec:IsSetCard(0xbb2) or ec:IsSetCard(0xbb3)) and ec:GetBattleTarget()
+	return ec and ec:GetControler()==tp and ec:IsSetCard(0xbb2) and ec:GetBattleTarget()
 end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()

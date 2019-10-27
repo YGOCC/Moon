@@ -18,11 +18,11 @@ function cid.initial_effect(c)
 	c:RegisterEffect(ae3)
 end
 function cid.mfilter(c)
-	return (c:IsSetCard(0x85a) or c:IsSetCard(0x85b)) and c:IsAttribute(ATTRIBUTE_WATER)
+	return c:IsSetCard(0x85a,0x85b) and c:IsAttribute(ATTRIBUTE_WATER)
 end
 function cid.mcheck(sg)
 	local sg=sg:Clone()
-	local vg=sg:Filter(function(c) return c:IsSetCard(0x85a) or c:IsSetCard(0x85b) end,nil)
+	local vg=sg:Filter(function(c) return c:IsSetCard(0x85a,0x85b) end,nil)
 	if vg:GetCount()==sg:GetCount() then return true end
 	sg:Sub(vg)
 	return vg:GetFirst():GetAttack()>sg:GetFirst():GetAttack()

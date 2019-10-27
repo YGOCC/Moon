@@ -28,7 +28,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.mfilter(c)
-	return c:IsSetCard(0x85a) or c:IsSetCard(0x85b)
+	return c:IsSetCard(0x85a,0x85b)
 end
 function cid.mcheck(sg)
 	local sg=sg:Clone()
@@ -38,7 +38,7 @@ function cid.mcheck(sg)
 	return vg:GetFirst():GetAttack()>sg:GetFirst():GetAttack()
 end
 function cid.costfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x85a) or c:IsSetCard(0x85b)) and c:IsAbleToRemoveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0x85a,0x85b) and c:IsAbleToRemoveAsCost()
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_MZONE,0,1,nil) end
@@ -60,7 +60,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.filter(c,n)
-	if not (c:IsType(TYPE_MONSTER) and c:IsSetCard(0x285b)) then return false end
+	if not c:IsType(TYPE_MONSTER) or not c:IsSetCard(0x285b) then return false end
 	return n~=0 and c:IsAbleToHand() or c:IsAbleToRemoveAsCost()
 end
 function cid.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
