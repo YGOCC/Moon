@@ -26,5 +26,5 @@ function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	else return false end
 end
 function cid.disable(e,c)
-	return c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT and c:GetType()==e:GetLabel()
+	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and c:GetType()==e:GetLabel()
 end
