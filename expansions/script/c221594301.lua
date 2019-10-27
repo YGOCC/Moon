@@ -32,7 +32,7 @@ function cid.xfilter2(c,e,tp)
 end
 function cid.xtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
-		and Duel.IsExistingMatchingCard(cid.xfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp)
+		and Duel.IsExistingMatchingCard(cid.xfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 end
 function cid.xop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCountFromEx(tp)<=0 then return end

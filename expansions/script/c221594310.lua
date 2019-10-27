@@ -77,7 +77,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetClassCount(Card.GetCode)>2 then
 		local sg=Group.CreateGroup()
 		for i=0,2 do
-			sc=g:Select(tp,1,1,nil):GetFirst
+			sc=g:Select(tp,1,1,nil):GetFirst()
 			sg:AddCard(sc)
 			g:Remove(Card.IsCode,nil,sc:GetCode())
 		end
