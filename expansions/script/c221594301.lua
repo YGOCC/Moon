@@ -3,6 +3,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.CannotBeEDMaterial(c,nil,LOCATION_ONFIELD)
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(1165)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
@@ -12,6 +13,7 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.xop)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
+	e2:SetDescription(1166)
 	e2:SetTarget(cid.ltg)
 	e2:SetOperation(cid.lop)
 	c:RegisterEffect(e2)
@@ -31,8 +33,7 @@ function cid.xfilter2(c,e,tp)
 		and Duel.IsExistingMatchingCard(cid.xfilter1,tp,LOCATION_HAND,0,1,mc)
 end
 function cid.xtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
-		and Duel.IsExistingMatchingCard(cid.xfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.xfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 end
 function cid.xop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCountFromEx(tp)<=0 then return end
@@ -51,14 +52,14 @@ function cid.xop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function cid.lfilter1(c,tp,lc)
+function cid.lfilter1(c,lc)
 	return c:IsSetCard(0xc97) and c:IsAbleToRemove() and c:IsCanBeLinkMaterial(lc)
 end
 function cid.lfilter2(c,e,tp)
 	local mg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	return c:IsSetCard(0xc97) and c:IsType(TYPE_LINK)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_LINK,tp,false,false)
-		and mg:IsExists(cid.lfilter1,c:GetLink()-1,nil,tp,c) and aux.MustMaterialCheck(mg,tp,EFFECT_MUST_BE_LMATERIAL)
+		and mg:IsExists(cid.lfilter1,c:GetLink()-1,nil,c) and aux.MustMaterialCheck(mg,tp,EFFECT_MUST_BE_LMATERIAL)
 end
 function cid.ltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.lfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp)
@@ -73,7 +74,7 @@ function cid.lop(e,tp,eg,ep,ev,re,r,rp)
 	local sc=g:GetFirst()
 	if sc then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LMATERIAL)
-		local tc=Duel.SelectMatchingCard(tp,cid.lfilter1,tp,LOCATION_HAND,0,sc:GetLink()-1,sc:GetLink()-1,nil,tp,sc)+c
+		local tc=Duel.SelectMatchingCard(tp,cid.lfilter1,tp,LOCATION_HAND,0,sc:GetLink()-1,sc:GetLink()-1,c,sc)+c
 		sc:SetMaterial(tc)
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_LINK)
 		Duel.BreakEffect()

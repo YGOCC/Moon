@@ -59,11 +59,11 @@ function cid.splimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function cid.PConditionFilter(c,e,tp,seq,eset)
-	if c:IsLocation(LOCATION_REMOVED) and not c:IsSetCard(0xc97) then return false end
 	local tc,rpz=e:GetHandler(),Duel.GetFieldCard(tp,LOCATION_PZONE,1-seq)
 	local lscale=seq==0 and tc:GetLeftScale() or tc:GetLeftScale()
 	local rscale=1-seq==1 and rpz:GetRightScale() or rpz:GetLeftScale()
-	return aux.PConditionFilter(c,e,tp,lscale,rscale,eset)
+	if lscale>rscale then lscale,rscale=rscale,lscale end
+	return c:IsLocation(LOCATION_REMOVED) or aux.PConditionFilter(c,e,tp,lscale,rscale,eset)
 end
 function cid.PendCondition(e,c,og)
 	if c==nil then return true end
@@ -93,6 +93,7 @@ function cid.PendCondition(e,c,og)
 	return g:IsExists(cid.PConditionFilter,1,nil,e,tp,seq,{})
 end
 function cid.PendOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
+	local seq=c:GetSequence()
 	local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,1-seq)
 	local lscale=seq==0 and c:GetLeftScale() or c:GetLeftScale()
 	local rscale=1-seq==1 and rpz:GetRightScale() or rpz:GetLeftScale()
