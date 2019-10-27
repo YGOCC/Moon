@@ -25,7 +25,7 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local ct=(tc:IsSetCard(0x4c97) or tc:IsSetCard(0x2c97)) and 2 or 1
-	if not tc:IsRelateToEffect(e) or Duel.Remove(tc,REASON_EFFECT)==0 then return end
+	if not tc:IsRelateToEffect(e) or Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,ct,nil)
 	if #g>0 then

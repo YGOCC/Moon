@@ -160,7 +160,7 @@ function cid.PendOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	Duel.HintSelection(Group.FromCards(rpz))
 end
 function cid.filter(c)
-	return c:IsSetCard(0xc97) (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
+	return c:IsSetCard(0xc97) and (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,2,nil) end
