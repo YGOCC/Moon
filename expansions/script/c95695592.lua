@@ -61,51 +61,51 @@ function cid.initial_effect(c)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_FLIPSUMMON,cid.counterfilter)
 end
 --GLOBAL VARIABLES AND GENERIC FILTERS
-cid.chaintyp=0
-cid.chaincount={0,0,0}
-cid.regulate_negated_activation=false
+cid.chaintyp={[0]=0,[1]=0}
+cid.chaincount={[0]={0,0,0},[1]={0,0,0}}
+cid.regulate_negated_activation={[0]=false,[1]=false}
 
 function cid.counterfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsRace(RACE_MACHINE)
 end
 --REGISTER PREVIOUS CHAINS
 function cid.chainreg(e,tp,eg,ep,ev,re,r,rp)
-	if ep==tp or not re:IsActiveType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) then return end
-	if cid.chaintyp==0 or bit.band(cid.chaintyp,bit.band(re:GetActiveType(),TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP))==0 then
-		if bit.band(cid.chaintyp,TYPE_SPELL)==0 then
-			cid.regulate_negated_activation=TYPE_SPELL
-		elseif bit.band(cid.chaintyp,TYPE_TRAP)==0 then
-			cid.regulate_negated_activation=TYPE_TRAP
+	local p=e:GetHandler():GetControler()
+	if rp==p or not re:IsActiveType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) then return end
+	if cid.chaintyp[rp]==0 or bit.band(cid.chaintyp[rp],bit.band(re:GetActiveType(),TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP))==0 then
+		if bit.band(cid.chaintyp[rp],TYPE_SPELL)==0 then
+			cid.regulate_negated_activation[rp]=TYPE_SPELL
+		elseif bit.band(cid.chaintyp[rp],TYPE_TRAP)==0 then
+			cid.regulate_negated_activation[rp]=TYPE_TRAP
 		end
 	end
-	cid.chaintyp=bit.bor(cid.chaintyp,bit.band(re:GetActiveType(),TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP))
-	if bit.band(cid.chaintyp,TYPE_MONSTER)>0 then
-		cid.chaincount[1]=cid.chaincount[1]+1
+	cid.chaintyp[rp]=bit.bor(cid.chaintyp[rp],bit.band(re:GetActiveType(),TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP))
+	if bit.band(cid.chaintyp[rp],TYPE_MONSTER)>0 then
+		cid.chaincount[rp][0]=cid.chaincount[rp][0]+1
 	end
-	if bit.band(cid.chaintyp,TYPE_SPELL)>0 then
-		cid.chaincount[2]=cid.chaincount[2]+1
+	if bit.band(cid.chaintyp[rp],TYPE_SPELL)>0 then
+		cid.chaincount[rp][1]=cid.chaincount[rp][1]+1
 	end
-	if bit.band(cid.chaintyp,TYPE_TRAP)>0 then
-		cid.chaincount[3]=cid.chaincount[3]+1
+	if bit.band(cid.chaintyp[rp],TYPE_TRAP)>0 then
+		cid.chaincount[rp][2]=cid.chaincount[rp][2]+1
 	end
 end
 function cid.negatedchainreg(e,tp,eg,ep,ev,re,r,rp)
-	if ep==tp or not re:IsHasType(EFFECT_TYPE_ACTIVATE) or cid.regulate_negated_activation==false then return end
-	cid.chaintyp=bit.band(cid.chaintyp,bit.bnot(cid.regulate_negated_activation))
-	if cid.regulate_negated_activation==TYPE_SPELL then
-		cid.chaincount[2]=cid.chaincount[2]-1
-	elseif cid.regulate_negated_activation==TYPE_TRAP then
-		cid.chaincount[3]=cid.chaincount[3]-1
+	local p=e:GetHandler():GetControler()
+	if rp==p or not re:IsHasType(EFFECT_TYPE_ACTIVATE) or not cid.regulate_negated_activation[rp] then return end
+	cid.chaintyp[rp]=bit.band(cid.chaintyp[rp],bit.bnot(cid.regulate_negated_activation[rp]))
+	if cid.regulate_negated_activation[rp]==TYPE_SPELL then
+		cid.chaincount[rp][1]=cid.chaincount[rp][1]-1
+	elseif cid.regulate_negated_activation[rp]==TYPE_TRAP then
+		cid.chaincount[rp][2]=cid.chaincount[rp][2]-1
 	end
-	cid.regulate_negated_activation=false
+	cid.regulate_negated_activation[rp]=false
 end
 --RESET FOR TURN
 function cid.resetchainreg(e,tp,eg,ep,ev,re,r,rp)
-	cid.chaintyp=0
-	cid.regulate_negated_activation=false
-	for i=1,3 do
-		cid.chaincount[i]=0
-	end
+	cid.chaintyp={[0]=0,[1]=0}
+	cid.regulate_negated_activation={[0]=false,[1]=false}
+	cid.chaincount={[0]={0,0,0},[1]={0,0,0}}
 end
 --SPSUMMON
 --filters
@@ -117,8 +117,8 @@ function cid.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 end
 ---------
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return cid.chaintyp~=0 and rp==1-tp 
-		and ((re:IsActiveType(TYPE_MONSTER) and cid.chaincount[1]>1) or (re:IsActiveType(TYPE_SPELL) and cid.chaincount[2]>1) or (re:IsActiveType(TYPE_TRAP) and cid.chaincount[3]>1))
+	return rp~=tp and cid.chaintyp[rp]~=0
+		and ((re:IsActiveType(TYPE_MONSTER) and cid.chaincount[rp][0]>1) or (re:IsActiveType(TYPE_SPELL) and cid.chaincount[rp][1]>1) or (re:IsActiveType(TYPE_TRAP) and cid.chaincount[rp][2]>1))
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SUMMON)==0
