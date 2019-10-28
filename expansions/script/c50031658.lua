@@ -89,6 +89,9 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		 local e19=e1:Clone()
 		e19:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
 		tc:RegisterEffect(e19)
+		   local e20=e1:Clone()
+		e20:SetCode(EFFECT_CANNOT_ACTIVATE)
+		tc:RegisterEffect(e20)
 		tc=eg:GetNext()
 	end
 end
