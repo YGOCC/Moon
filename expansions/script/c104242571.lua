@@ -15,6 +15,7 @@ function cid.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetCountLimit(1,id)
 	e1:SetCondition(cid.ritualcondition)
 	e1:SetTarget(cid.remtg)
 	e1:SetOperation(cid.remop)
@@ -26,19 +27,18 @@ function cid.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e2:SetTargetRange(0,1)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	--e2:SetCountLimit(1,id+1000)
+	e2:SetCountLimit(1,id+1000)
 	e2:SetCost(cid.bouncecost)
 	e2:SetTarget(cid.seatchtg)
 	e2:SetOperation(cid.searchop)
 	c:RegisterEffect(e2)
 end
 --filters
-function cid.searchfilter1(c,tp)
-	return bit.band(c:GetType(),0x82)==0x82 and c:IsAbleToHand() and c:IsSetCard(0x666)
-		and Duel.IsExistingMatchingCard(cid.searchfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c)
+function cid.searchfilter1(c)
+	return c:IsType(TYPE_RITUAL) and c:IsType(TYPE_SPELL) and c:IsAbleToHand() and c:IsSetCard(0x666)
 end
-function cid.searchfilter2(c,mc)
-	return bit.band(c:GetType(),0x81)==0x81 and c:IsAbleToHand() and c:IsSetCard(0x666)
+function cid.searchfilter2(c)
+	return c:IsType(TYPE_RITUAL) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsSetCard(0x666)
 end
 --bounce and search
 function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -46,7 +46,9 @@ function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_COST)
 end
 function cid.seatchtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter1,tp,LOCATION_DECK,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter1,tp,LOCATION_DECK+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp)
+					  and Duel.IsExistingMatchingCard(cid.searchfilter2,tp,LOCATION_DECK+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function cid.searchop(e,tp,eg,ep,ev,re,r,rp)

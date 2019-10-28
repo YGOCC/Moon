@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	71ae6b04621c6f7e215f7c8910782a83
+﻿expansions/Cards-non-QCD.cdb	4495ea9fa36e7394d7cd80fe2abb3503
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -8325,7 +8325,7 @@ expansions/script/c104242567.lua	7c3b965a4ff3ba3858880086a58654ac
 expansions/script/c104242568.lua	3d311ae8ca5df1f9db25bf0a187a4b2a
 expansions/script/c104242569.lua	49bbef25f9dba729982646530f70dc33
 expansions/script/c104242570.lua	ce1a3767ce84de20827adc3d1154b3f4
-expansions/script/c104242571.lua	df5f8fb8717104329cc5842817e915d8
+expansions/script/c104242571.lua	a6c441d19cc3f1e0becc075652a81412
 expansions/script/c104242572.lua	0b7f12f65d99327b76be6cd3c1c14069
 expansions/script/c104242573.lua	2cc0d21a156288f05bcd7756991f91f2
 expansions/script/c104242574.lua	dba36de2f818e6b2b03733369725c3ab
@@ -10043,7 +10043,7 @@ expansions/script/c21730510.lua	fd1e3de0cd51ec214ab8bc1783299ad2
 expansions/script/c21730511.lua	190bd799c47e39f6c926677446884b44
 expansions/script/c21730513.lua	50156354ab0cf4f0bd47baeb620e5ebd
 expansions/script/c21730514.lua	813897d705b8347c0855dc686b023f4f
-expansions/script/c21730601.lua	0edc27b4df5bea1f045067ef27e262d4
+expansions/script/c21730601.lua	19123b34b50a0eae2ca6d6f57a5d6094
 expansions/script/c21730602.lua	5cfa5c550866d00910ed497ea75ccc7e
 expansions/script/c21730603.lua	da7f00963c4cd3e962b676514decbca7
 expansions/script/c21730604.lua	b81e26c9c9a8259e666cc7cdca706586
@@ -14765,6 +14765,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	c0516453eb0047064902905cbc3028b5
+update/filelist.txt	9cafeccf82f733b4720ce26f777d98db
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	521065bc2c7569a46300f28ab0465803
+update/version.txt	18b245b2f6a66e75519a8a9455b29061
