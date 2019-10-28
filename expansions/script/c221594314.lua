@@ -20,6 +20,7 @@ end
 function cid.disable(e,c)
 	local tp=e:GetHandler():GetControler()
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,nil)
-	local typ=g:GetFirst():GetType()&TYPE_EXTRA
+	local typ=0
+	for tc in aux.Next(g) do typ=typ|tc:GetType()&TYPE_EXTRA end
 	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and #g==1 and c:GetType()&typ~=0
 end

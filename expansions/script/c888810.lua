@@ -28,7 +28,7 @@ function cm.initial_effect(c)
 end
 
 function cm.filter(c)
-    return c:IsCode(888809)
+    return c:IsCode(8888809)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end

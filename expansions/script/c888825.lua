@@ -1,5 +1,5 @@
---Tombs of the Magium
-local m=8888809
+--Shadow of the Magium
+local m=888825
 local cm=_G["c"..m]
 function cm.initial_effect(c)
     c:EnableCounterPermit(0x1001)
@@ -23,6 +23,7 @@ function cm.initial_effect(c)
     e2:SetCode(EVENT_FREE_CHAIN)
     c:RegisterEffect(e2)
     local e3=Effect.CreateEffect(c)
+    e3:SetDescription(aux.Stringid(m,0))
     e3:SetCategory(CATEGORY_TOGRAVE)
     e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
     e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
@@ -32,6 +33,10 @@ function cm.initial_effect(c)
     e3:SetTarget(cm.tgtg)
     e3:SetOperation(cm.tgop)
     c:RegisterEffect(e3)
+    local e4=e3:Clone()
+    e4:SetDescription(aux.Stringid(m,1))
+    e4:SetOperation(cm.ssop)
+    c:RegisterEffect(e4)
     local e5=Effect.CreateEffect(c)
     e5:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
     e5:SetCode(EFFECT_DESTROY_REPLACE)
@@ -73,6 +78,20 @@ function cm.tgop(e,tp,eg,ep,ev,re,r,rp)
     if g:GetCount()>0 then
         Duel.SendtoGrave(g,REASON_EFFECT)
     end
+end
+
+function cm.ssop(e,tp,eg,ep,ev,re,r,rp)
+    if not e:GetHandler():IsRelateToEffect(e) then return end
+    if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+    local g=Duel.SelectMatchingCard(tp,cm.filter2,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+    if g:GetCount()>0 then
+        Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+    end
+end
+
+function cm.filter2(c,e,tp)
+    return c:IsSetCard(0xffc) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 
 function cm.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)

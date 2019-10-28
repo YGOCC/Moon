@@ -43,15 +43,15 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function cm.filter2(c)
-    return c:IsCode(888809)
+    return c:IsCode(8888809) and c:IsPosition(POS_FACEUP)
 end
 function cm.target2(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_DECK,0,1,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,1,tp,LOCATION_DECK)
+    Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED)
 end
 function cm.operation2(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-    local g=Duel.SelectMatchingCard(tp,cm.filter2,tp,LOCATION_DECK,0,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,cm.filter2,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
     local tc=g:GetFirst()
     if g:GetCount()>0 then
         local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
