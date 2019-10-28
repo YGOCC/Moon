@@ -29,8 +29,7 @@ function cid.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	--e3:SetCountLimit(1,id+1000)
 	e3:SetCost(cid.bouncecost)
-	e3:SetValue(cid.targetlimit)
-	e3:SetReset(RESET_PHASE+PHASE_END)
+	e3:SetOperation(cid.notarget)
 	c:RegisterEffect(e3)
 end
 --bounce and limit targets
@@ -38,8 +37,19 @@ function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHandAsCost() end
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_COST)
 end
-function cid.targetlimit(e,c)
-	return c:IsFaceup() and c:IsSetCard(0x666)
+function cid.notarget(e,tp,eg,ep,ev,re,r,rp)
+    local e1=Effect.CreateEffect(e:GetHandler())
+    e1:SetType(EFFECT_TYPE_FIELD)
+    e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+    e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+    e1:SetTarget(cid.efilter)
+    e1:SetTargetRange(LOCATION_MZONE,0)
+    e1:SetValue(aux.tgoval)
+    e1:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e1,tp)
+end
+function cid.efilter(e,c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
 end
 --ritual summon, banish card from opp's grave and draw
 function cid.ritualcondition(e,tp,eg,ep,ev,re,r,rp)

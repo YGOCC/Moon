@@ -107,8 +107,7 @@ end
 --addcounter
 function cid.addcounter(e,tp,eg,ep,ev,re,r,rp)
 	local c=re:GetHandler()
-	local rc=re:GetHandler()
-	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and rc:IsSetCard(0x666)  then
+	if re:IsHasType(EFFECT_TYPE_ACTIVATE+EFFECT_TYPE_IGNITION+EFFECT_TYPE_TRIGGER_F+EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_QUICK_O) and re:GetHandler():IsSetCard(0x666) then
 		e:GetHandler():AddCounter(0x666,1)
 	end
 end
