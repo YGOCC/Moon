@@ -8,23 +8,18 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_DISABLE)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(0,LOCATION_MZONE+LOCATION_GRAVE)
-	e2:SetCondition(cid.discon)
 	e2:SetTarget(cid.disable)
-	e2:SetCode(EFFECT_DISABLE)
 	c:RegisterEffect(e2)
 end
 function cid.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc97) and c:GetSummonLocation()==LOCATION_EXTRA
 end
-function cid.discon(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,1,nil)
-	if #g==1 then
-		e:SetLabel(g:GetFirst():GetType()&TYPE_EXTRA)
-		return true
-	else return false end
-end
 function cid.disable(e,c)
-	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and c:GetType()&e:GetLabel()~=0
+	local tp=e:GetHandler():GetControler()
+	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,nil)
+	local typ=g:GetFirst():GetType()&TYPE_EXTRA
+	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and #g==1 and c:GetType()&typ~=0
 end
