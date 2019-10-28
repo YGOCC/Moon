@@ -29,12 +29,14 @@ function cid.initial_effect(c)
 	e3:SetDescription(aux.Stringid(88301833,0))
 	e3:SetCategory(CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_FZONE)
-	e3:SetCountLimit(1)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCountLimit(1)
 	e3:SetCondition(cid.drawcon)
 	e3:SetTarget(cid.drawtarget)
 	e3:SetOperation(cid.drawop)
+	c:RegisterEffect(e3)
 	--Add counter
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
@@ -88,9 +90,8 @@ end
 --filters
 function cid.ritualfilter(c,tp)
     return  (c:IsSummonType(SUMMON_TYPE_RITUAL) and c:IsControler(tp) and c:IsSetCard(0x666))
-	or
-	(c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
-		and c:IsPreviousSetCard(0x666) and c:IsPreviousPosition(POS_FACEUP))
+	or (c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousSetCard(0x666) and c:IsPreviousPosition(POS_FACEUP))
+		
 end
 function cid.ritualsearchfilter(c)
     return bit.band(c:GetType(),0x82)==0x82 and c:IsAbleToHand() and c:IsSetCard(0x666)
@@ -122,6 +123,7 @@ function cid.drawtarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
