@@ -42,19 +42,17 @@ end
 function s.reg_op(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetCode(EVENT_TURN_END)
 	e1:SetCountLimit(1)
 	e1:SetCondition(s.search_con)
 	e1:SetOperation(s.search_op)
-	e1:SetReset(RESET_PHASE+PHASE_END,2)
-	e1:SetValue(Duel.GetTurnCount())
+	e1:SetReset(RESET_PHASE+EVENT_TURN_END)
 	Duel.RegisterEffect(e1,tp)
 end
 function s.search_filter(c)
 	return c:IsSetCard(0x195) and c:IsAbleToHand()
 end
 function s.search_con(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnCount()==e:GetValue() then return false end
 	return Duel.IsExistingMatchingCard(s.search_filter,tp,LOCATION_DECK,0,1,nil)
 end
 function s.search_op(e,tp,eg,ep,ev,re,r,rp)

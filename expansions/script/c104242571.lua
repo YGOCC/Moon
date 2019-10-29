@@ -53,7 +53,7 @@ function cid.seatchtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.searchop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.searchfilter1,tp,LOCATION_DECK,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,cid.searchfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp)
 	if g:GetCount()>0 then
 		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.searchfilter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,nil,g:GetFirst())
 		if mg:GetCount()>0 then

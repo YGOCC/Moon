@@ -28,36 +28,29 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.searchop)
 end
 --searchfilter1s
-function cid.dessearchfilter1(c)
+function cid.ctfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666)
 end
-function cid.searchfilter1(c,tp)
-	return bit.band(c:GetType(),0x82)==0x82 and c:IsAbleToHand() and c:IsSetCard(0x666)
-		and Duel.IsExistingMatchingCard(cid.searchfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c)
+function cid.searchfilter1(c)
+	return c:IsType(TYPE_RITUAL) and c:IsType(TYPE_SPELL) and c:IsAbleToHand() and c:IsSetCard(0x666)
 end
-function cid.searchfilter2(c,mc)
-	return bit.band(c:GetType(),0x81)==0x81 and c:IsAbleToHand() and c:IsSetCard(0x666)
+function cid.searchfilter2(c)
+	return c:IsType(TYPE_RITUAL) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsSetCard(0x666)
 end
 --destroy cards equal to pony monsters
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then
-		local ct=Duel.GetMatchingGroupCount(cid.dessearchfilter1,tp,LOCATION_MZONE,0,nil)
-		e:SetLabel(ct)
-		return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,ct,c)
-	end
-	local ct=e:GetLabel()
-	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,c)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,ct,0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.ctfilter,tp,LOCATION_MZONE,0,1,nil) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=Duel.GetMatchingGroupCount(cid.dessearchfilter1,tp,LOCATION_MZONE,0,nil)
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,aux.ExceptThisCard(e))
-	if g:GetCount()>=ct then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local sg=g:Select(tp,1,ct,nil)
-		Duel.HintSelection(sg)
-		Duel.Destroy(sg,REASON_EFFECT)
+	local ct=Duel.GetMatchingGroupCount(cid.cfilter,tp,LOCATION_MZONE,0,nil)
+	if ct==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,ct,nil)
+	if g:GetCount()>0 then
+		Duel.HintSelection(g)
+		Duel.Destroy(g,REASON_EFFECT)
 	end
 end
 --search ritual monster+spell 
@@ -69,7 +62,7 @@ function cid.searchop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.searchfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp)
 	if g:GetCount()>0 then
-		local mg=Duel.GetMatchingGroup(aux.NecroValleysearchfilter1(cid.searchfilter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,nil,g:GetFirst())
+		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.searchfilter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,nil,g:GetFirst())
 		if mg:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local sg=mg:Select(tp,1,1,nil)
@@ -78,18 +71,4 @@ function cid.searchop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
-end
-function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-    local g1=Duel.GetMatchingGroup(cid.mfilter,p,LOCATION_MZONE,0,nil)
-            if g1:GetCount()>=1 then
-            Duel.Hint(HINT_SELECTMSG,p,HINTMSG_GRAVE)
-    local sg=g1:Select(p,tp,1,3,nil)
-    local g2=Duel.GetMatchingGroup(cid.mfilter2,p,LOCATION_SZONE,0,nil)
-            if g:GetCount()>=0 then
-            Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TOGRAVE)
-    local sg=g2:Select(p,tp,1,2,nil)
-    g:Merge(sg)
-     Duel.SendtoGrave(sg,nil,1,REASON_COST)
-        end
-    end
 end
