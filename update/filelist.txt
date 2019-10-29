@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	9ac6e6d9c832b05969da47d34d093c35
+﻿expansions/Cards-non-QCD.cdb	1ccc7117d21a369445360b47c58b33fd
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -2653,6 +2653,8 @@ expansions/pics/21730605.png	c360931f5625e36e09403cf514c5bc7b
 expansions/pics/21730606.png	6b6e34dd7ba271a19fc036e540f4dd1c
 expansions/pics/21730607.png	9e5585d21eb8ec853f98ceb40ce78f76
 expansions/pics/21730608.png	7d7a5089d72c33d7785dc735314af00d
+expansions/pics/21730609.png	5b9969f3c91f7a0e07cc0c2ed5bbafb5
+expansions/pics/21730610.png	e65888c08a131039874d228cc213d760
 expansions/pics/21770839.jpg	f51ce888bc38520dfa087af2d0386c60
 expansions/pics/218201900.jpg	1a446c1e6e9039486145f28e4089753f
 expansions/pics/218201901.jpg	2ffe3775e645d3400f477c277eefcdd6
@@ -10052,6 +10054,8 @@ expansions/script/c21730605.lua	8979b8f02c499162e93cd8551409eaab
 expansions/script/c21730606.lua	be00d9d0cd7696ecc4f5d31e6d88e4df
 expansions/script/c21730607.lua	d1d2a4a082d0951684d600fdbafc4c16
 expansions/script/c21730608.lua	59cd2ffd4fdc4342681be7e4226b9b01
+expansions/script/c21730609.lua	c593b40757a724a664b63223037d7459
+expansions/script/c21730610.lua	92ae10dc0e1efc1ea62ac7ce940d01a3
 expansions/script/c21770839.lua	fd71dbaca9515641be90b66ff0e87d60
 expansions/script/c218201900.lua	80c1eec28be7608a282b8aa5185af5ad
 expansions/script/c218201901.lua	81134ea93c61453e4fa20ef32e8c1061
@@ -14766,6 +14770,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	045fa2b037501c7e20667099c666bc72
+update/filelist.txt	101262b85f23d8b6df3f52d82cea7e21
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	6d297784596ef13f9ef2d25d89b67007
+update/version.txt	9201e4f835c79c04a59a832ca9c780bb
