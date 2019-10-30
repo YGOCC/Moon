@@ -44,7 +44,7 @@ function s.initial_effect(c)
 end
 --link procedure
 function s.material_filter(c)
-	return c:IsLinkSetCard(0x195) and not c:IsLinkCode(id)
+	return c:IsLinkSetCard(0x195) and not c:IsLinkType(TYPE_LINK)
 end
 --mill
 function s.reg_con(e,tp,eg,ep,ev,re,r,rp)

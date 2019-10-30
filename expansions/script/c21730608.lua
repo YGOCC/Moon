@@ -44,7 +44,7 @@ function s.initial_effect(c)
 end
 --link procedure
 function s.link_check(g,lc)
-	return g:GetClassCount(Card.GetLinkCode)==g:GetCount()
+	return g:IsExists(Card.IsLinkType,1,nil,TYPE_LINK)
 end
 --search
 function s.reg_con(e,tp,eg,ep,ev,re,r,rp)
