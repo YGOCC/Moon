@@ -10,7 +10,7 @@ function c63553467.initial_effect(c)
 	tuner:SetCondition(c63553467.tunerfix)
 	tuner:SetValue(TYPE_TUNER)
 	c:RegisterEffect(tuner)
-	aux.EnablePandemoniumAttribute(c,tuner)
+	aux.EnablePandemoniumAttribute(c,tuner,true,TYPE_EFFECT+TYPE_TUNER)
 	--set
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(63553467,0))
@@ -60,24 +60,17 @@ function c63553467.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c63553467.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and aux.PandSSetCon(cid.setfilter,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(c63553467.setfilter,tp,LOCATION_DECK,0,1,nil)
 	end
 end
 function c63553467.setop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not aux.PandSSetCon(cid.setfilter,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectMatchingCard(tp,c63553467.setfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
-	if g then
-		Card.SetCardData(g,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
-		Duel.SSet(tp,g)
+	local g=Duel.SelectMatchingCard(tp,aux.PandSSetFilter(c63553467.setfilter),tp,LOCATION_DECK,0,1,1,nil):GetFirst()
+	if #g>0 then
+		aux.PandSSet(g,REASON_EFFECT,aux.GetOriginalPandemoniumType(g:GetFirst()))(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
-		if not g:IsLocation(LOCATION_SZONE) then
-			if g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
-				Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
-			elseif g:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or g:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
-				Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
-			end
-		end
 	end
 end
 --special summon

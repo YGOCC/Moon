@@ -23,7 +23,7 @@ function cid.initial_effect(c)
 	e0:SetTarget(cid.destg)
 	e0:SetOperation(cid.activate)
 	c:RegisterEffect(e0)
-	aux.EnablePandemoniumAttribute(c,e0,TYPE_EFFECT+TYPE_FUSION)
+	aux.EnablePandemoniumAttribute(c,e0,true,TYPE_EFFECT+TYPE_FUSION)
 	aux.AddFusionProcFunFun(c,cid.mfilter,aux.FilterBoolFunction(Card.IsSetCard,0x9b5),2,true,true)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -127,12 +127,14 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
+		and aux.PandSSetCon(e:GetHandler(),e:GetHandler():GetLocation(),e:GetHandler():GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp) end
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1500)
 end
 function cid.penop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.Damage(1-tp,1500,REASON_EFFECT)>0 and c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
+	if Duel.Damage(1-tp,1500,REASON_EFFECT)>0 and c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 
+	and aux.PandSSetCon(e:GetHandler(),e:GetHandler():GetLocation(),e:GetHandler():GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp) then
 		aux.PandSSet(c,REASON_EFFECT,TYPE_EFFECT+TYPE_FUSION)(e,tp,eg,ep,ev,re,r,rp)
+		Duel.ConfirmCards(1-tp,c)
 	end
 end

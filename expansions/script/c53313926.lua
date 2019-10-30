@@ -129,13 +129,14 @@ function c53313926.atkop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
-function c53313926.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET) end
+		and aux.PandSSetCon(e:GetHandler(),e:GetHandler():GetLocation(),e:GetHandler():GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp) end
 end
-function c53313926.penop(e,tp,eg,ep,ev,re,r,rp)
+function cid.penop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
+	if c:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and aux.PandSSetCon(e:GetHandler(),e:GetHandler():GetLocation(),e:GetHandler():GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp) then
 		aux.PandSSet(c,REASON_EFFECT,TYPE_EFFECT+TYPE_XYZ)(e,tp,eg,ep,ev,re,r,rp)
+		Duel.ConfirmCards(1-tp,c)
 	end
 end

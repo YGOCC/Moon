@@ -76,8 +76,12 @@ end
 function c63553470.drcfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_PZONE) and c:GetPreviousControler()==tp
 end
-function c63553470.drcfilter2(c,tp)
+function c63553470.drcfilter2(c,e,tp,eg,ep,ev,re,r,rp)
 	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsPreviousLocation(LOCATION_SZONE) and c:GetPreviousControler()==tp and c:IsPreviousPosition(POS_FACEUP_ATTACK)
+		and aux.PandSSetCon(c,c:GetLocation(),c:GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp)
+end
+function c63553470.checksetfilter(c,e,tp,eg,ep,ev,re,r,rp)
+	return aux.PandSSetCon(c,c:GetLocation(),c:GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp)
 end
 function c63553470.excfilter(c)
 	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsFaceup()
@@ -143,11 +147,9 @@ function c63553470.actop(e,tp,eg,ep,ev,re,r,rp)
 		Card.SetCardData(tc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		if not tc:IsLocation(LOCATION_SZONE) then
-			if tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
-				Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
-			elseif tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or tc:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
-				Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
-			end
+			local edcheck=0
+			if tc:IsLocation(LOCATION_EXTRA) then edcheck=TYPE_PENDULUM end
+			Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+edcheck+aux.GetOriginalPandemoniumType(tc))
 		else
 			tc:RegisterFlagEffect(726,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CANNOT_DISABLE,1)
 		end
@@ -175,28 +177,25 @@ function c63553470.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 --set
 function c63553470.setcon(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(c63553470.drcfilter2,1,nil,tp) then
+	if eg:IsExists(c63553470.drcfilter2,1,nil,e,tp,eg,ep,ev,re,r,rp) then
 		return true
 	else return false end
 end
 function c63553470.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	if chk==0 then return true end
 end
 function c63553470.setop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not eg:IsExists(cid.checksetfilter,1,nil,e,tp,eg,ep,ev,re,r,rp) then return end
 	local tc=nil
 	if eg:GetCount()>1 then
-		tc=eg:Select(tp,1,1,nil):GetFirst()
+		local fg=eg:Filter(cid.checksetfilter,nil,e,tp,eg,ep,ev,re,r,rp)
+		tc=fg:Select(tp,1,1,nil):GetFirst()
 	else
-		tc=eg:GetFirst()
+		local fg=eg:Filter(cid.checksetfilter,nil,e,tp,eg,ep,ev,re,r,rp)
+		tc=fg:GetFirst()
 	end
-	Card.SetCardData(tc,CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
-	Duel.SSet(tp,tc)
-	if not tc:IsLocation(LOCATION_SZONE) then
-		if tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT then
-			Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT)
-		elseif tc:GetOriginalType()==TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER or tc:GetOriginalType()==TYPE_MONSTER+TYPE_TUNER then
-			Card.SetCardData(g,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+TYPE_TUNER)
-		end
+	if tc then
+		aux.PandSSet(tc,REASON_EFFECT,aux.GetOriginalPandemoniumType(tc))(e,tp,eg,ep,ev,re,r,rp)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end

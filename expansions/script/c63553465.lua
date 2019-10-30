@@ -110,7 +110,13 @@ function c63553465.fdop(e,tp,eg,ep,ev,re,r,rp)
 		else
 			tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-			tc:RegisterFlagEffect(726,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CANNOT_DISABLE,1)
+			if not tc:IsLocation(LOCATION_SZONE) then
+				local edcheck=0
+				if tc:IsLocation(LOCATION_EXTRA) then edcheck=TYPE_PENDULUM end
+				Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+TYPE_EFFECT+edcheck+aux.GetOriginalPandemoniumType(tc))
+			else
+				tc:RegisterFlagEffect(726,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CANNOT_DISABLE,1)
+			end
 		end
 	end
 end
