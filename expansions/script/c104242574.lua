@@ -1,4 +1,4 @@
---Moon's Dream, Rest
+--Moon's Dream, Wish Maker
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -11,67 +11,38 @@ function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	--half damage
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	--e1:SetCountLimit(1,id)
 	e1:SetCondition(cid.ritualcondition)
-	e1:SetOperation(cid.halfdamage)
+	e1:SetTarget(cid.gravetg)
+	e1:SetOperation(cid.graveop)
 	c:RegisterEffect(e1)
-	--Nerf opp 800
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	--e2:SetCountLimit(1,id+1000)
-	e2:SetCost(cid.bouncecost)
-	e2:SetTarget(cid.nerftg)
-	e2:SetOperation(cid.nerfop)
-	c:RegisterEffect(e2)
+
+end
+--Filters
+function cid.searchfilter(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_RITUAL)  and c:IsAbleToGrave()
 end
 --Bounce and nerf
 function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHandAsCost() end
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_COST)
 end
-function cid.filter(c)
-	return c:IsFaceup() and (c:GetAttack()>0 or c:GetDefense()>0)
-end
-function cid.nerftg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,0,LOCATION_MZONE,1,nil) end
-end
-function cid.nerfop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(-800)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENSE)
-		tc:RegisterEffect(e2)
-		tc=g:GetNext()
-	end
-end
 --ritual summon half damage
 function cid.ritualcondition(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():IsSummonType(SUMMON_TYPE_RITUAL)
 end
-function cid.halfdamage(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CHANGE_DAMAGE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetTargetRange(1,0)
-	e1:SetValue(cid.val)
-	e1:SetReset(RESET_PHASE+PHASE_END,2)
-	Duel.RegisterEffect(e1,tp)
+function cid.gravetg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
-function cid.val(e,re,dam,r,rp,rc)
-	return dam/2
+function cid.graveop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,cid.searchfilter,tp,LOCATION_DECK,0,1,2,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoGrave(g,REASON_EFFECT)
+	end
 end

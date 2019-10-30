@@ -89,9 +89,7 @@ function cid.fragment(e,tp,eg,ep,ev,re,r,rp)
 end
 --filters
 function cid.ritualfilter(c,tp)
-    return  (c:IsSummonType(SUMMON_TYPE_RITUAL) and c:IsControler(tp) and c:IsSetCard(0x666))
-	or (c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousSetCard(0x666) and c:IsPreviousPosition(POS_FACEUP))
-		
+    return  c:IsSummonType(SUMMON_TYPE_RITUAL) and c:IsControler(tp) and c:IsSetCard(0x666)		
 end
 function cid.ritualsearchfilter(c)
     return bit.band(c:GetType(),0x82)==0x82 and c:IsAbleToHand() and c:IsSetCard(0x666)

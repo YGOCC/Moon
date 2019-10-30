@@ -24,7 +24,6 @@ function cid.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
-	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(cid.searchtg)
 	e2:SetOperation(cid.searchop)
 	c:RegisterEffect(e2)
@@ -58,11 +57,18 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 --search ritual monster+spell 
 function cid.searchtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp)
-	and 				  Duel.IsExistingMatchingCard(cid.searchfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
+	if chk==0 then return e:GetHandler():IsAbleToDeck()
+	and Duel.IsExistingMatchingCard(cid.searchfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp)
+	and Duel.IsExistingMatchingCard(cid.searchfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function cid.searchop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0 and c:IsLocation(LOCATION_DECK) then
+		Duel.ShuffleDeck(tp)
+		Duel.BreakEffect()
+		
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.searchfilter1),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp)
 	if g:GetCount()>0 then
@@ -75,4 +81,5 @@ function cid.searchop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
+end
 end

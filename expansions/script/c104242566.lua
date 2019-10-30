@@ -28,30 +28,34 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 --Filters
-function cid.filter(c,e,tp)
-	return c:IsSetCard(0x666)
-end
-function cid.lpfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
-end
 function cid.excavatefilter(c)
 	return c:IsAbleToHand() and c:IsSetCard(0x666)
 end
---Ritual Summon, then gain lp
+function cid.filter(c,e,tp)
+	return c:IsSetCard(0x666)
+end
+function cid.mfilter(c)
+	return c:GetLevel()>0 and c:IsSetCard(0x666) and c:IsAbleToDeck()
+end
+
+--Ritual Summon, then check top 3
 function cid.ritualtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local mg=Duel.GetRitualMaterial(tp)
-		return Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,nil,cid.filter,e,tp,mg,nil,Card.GetLevel,"Greater")
+		local mg1=Duel.GetRitualMaterial(tp)
+		local mg2=Duel.GetMatchingGroup(cid.mfilter,tp,LOCATION_GRAVE,0,nil)
+		return Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,nil,cid.filter,e,tp,mg1,mg2,Card.GetLevel,"Greater")
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function cid.ritualop(e,tp,eg,ep,ev,re,r,rp)
-	local mg=Duel.GetRitualMaterial(tp)
+	local mg1=Duel.GetRitualMaterial(tp)
+	local mg2=Duel.GetMatchingGroup(cid.mfilter,tp,LOCATION_GRAVE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tg=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,1,nil,cid.filter,e,tp,mg,nil,Card.GetLevel,"Greater")
-	local tc=tg:GetFirst()
+	local g=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_HAND,0,1,1,nil,cid.filter,e,tp,mg1,mg2,Card.GetLevel,"Greater")
+	local tc=g:GetFirst()
 	if tc then
-		mg=mg:Filter(Card.IsCanBeRitualMaterial,tc,tc)
+		local mg=mg1:Filter(Card.IsCanBeRitualMaterial,tc,tc)
+		mg:Merge(mg2)
 		if tc.mat_filter then
 			mg=mg:Filter(tc.mat_filter,tc,tp)
 		else
@@ -63,7 +67,10 @@ function cid.ritualop(e,tp,eg,ep,ev,re,r,rp)
 		aux.GCheckAdditional=nil
 		if not mat or mat:GetCount()==0 then return end
 		tc:SetMaterial(mat)
+		local mat2=mat:Filter(Card.IsLocation,nil,LOCATION_GRAVE):Filter(Card.IsSetCard,nil,0x666)
+		mat:Sub(mat2)
 		Duel.ReleaseRitualMaterial(mat)
+		Duel.SendtoDeck(mat2,nil,2,REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)
 		Duel.BreakEffect()
 		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 		tc:CompleteProcedure()
