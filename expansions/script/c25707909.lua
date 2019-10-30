@@ -51,7 +51,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 --set
 function cid.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(cid.rccfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.GetTurnPlayer()~=tp and Duel.IsExistingMatchingCard(cid.rccfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsSSetable() end

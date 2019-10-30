@@ -21,15 +21,17 @@ function cid.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
 	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(cid.searchtg)
 	e2:SetOperation(cid.searchop)
+	c:RegisterEffect(e2)
 end
---searchfilter1s
+--filters
 function cid.ctfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x666)
+	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
 end
 function cid.searchfilter1(c)
 	return c:IsType(TYPE_RITUAL) and c:IsType(TYPE_SPELL) and c:IsAbleToHand() and c:IsSetCard(0x666)
@@ -55,12 +57,13 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 --search ritual monster+spell 
 function cid.searchtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp)
+	and 				  Duel.IsExistingMatchingCard(cid.searchfilter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,2,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function cid.searchop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.searchfilter1,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.searchfilter1),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp)
 	if g:GetCount()>0 then
 		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.searchfilter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,nil,g:GetFirst())
 		if mg:GetCount()>0 then

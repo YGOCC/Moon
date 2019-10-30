@@ -10,12 +10,12 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-    e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-    e1:SetTarget(cid.regtg)
-    e1:SetOperation(cid.regop)
-    c:RegisterEffect(e1)
+	e1:SetTarget(cid.regtg)
+	e1:SetOperation(cid.regop)
+	c:RegisterEffect(e1)
 	--set
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
@@ -30,43 +30,43 @@ function cid.initial_effect(c)
 end
 --filters
 function cid.thfilter(c)
-    return c:IsSetCard(0xd2e) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xd2e) and c:IsType(TYPE_MONSTER)
 end
 function cid.thfilter2(c)
-    return cid.thfilter(c) and c:IsAbleToHand()
+	return cid.thfilter(c) and c:IsAbleToHand()
 end
 function cid.rccfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xd2e)
 end
 --Activate
 function cid.regtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil) end
 end
 function cid.regop(e,tp,eg,ep,ev,re,r,rp)
-    local e1=Effect.CreateEffect(e:GetHandler())
-    e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-    e1:SetCode(EVENT_PHASE+PHASE_END)
-    e1:SetCountLimit(1)
-    e1:SetCondition(cid.thcon)
-    e1:SetOperation(cid.thop)
-    e1:SetReset(RESET_PHASE+PHASE_END)
-    Duel.RegisterEffect(e1,tp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetCountLimit(1)
+	e1:SetCondition(cid.thcon)
+	e1:SetOperation(cid.thop)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end
 function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.IsExistingMatchingCard(cid.thfilter2,tp,LOCATION_DECK,0,1,nil)
+	return Duel.IsExistingMatchingCard(cid.thfilter2,tp,LOCATION_DECK,0,1,nil)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_CARD,0,id)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local g=Duel.SelectMatchingCard(tp,cid.thfilter2,tp,LOCATION_DECK,0,1,1,nil)
-    if g:GetCount()>0 then
-        Duel.SendtoHand(g,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,g)
-    end
+	Duel.Hint(HINT_CARD,0,id)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,cid.thfilter2,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
 end
 --set
 function cid.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(cid.rccfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.GetTurnPlayer()~=tp and Duel.IsExistingMatchingCard(cid.rccfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsSSetable() end
