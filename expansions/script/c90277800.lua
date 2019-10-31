@@ -61,11 +61,11 @@ function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.ConfirmDecktop(p,3)
-	local g=Duel.GetDecktopGroup(p,3)
+	Duel.ConfirmDecktop(tp,3)
+	local g=Duel.GetDecktopGroup(tp,3)
 	if g:GetCount()>0 then
 		if g:IsExists(cid.cfilter,1,nil) then
-			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local sg=g:Select(tp,1,1,nil)
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)
