@@ -35,7 +35,7 @@ function cid.initial_effect(c)
 end
 --filters
 function cid.searchfilter(c)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER+TYPE_SPELL) and c:IsType(TYPE_RITUAL) and c:IsAbleToHand()
+	return c:IsSetCard(0x666) and c:IsType(TYPE_SPELL) and c:IsType(TYPE_RITUAL) and c:IsAbleToHand()
 end
 --bounce and search
 function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -44,9 +44,9 @@ function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.remtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function cid.remop(e,tp,eg,ep,ev,re,r,rp)

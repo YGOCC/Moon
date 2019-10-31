@@ -35,7 +35,7 @@ function cid.initial_effect(c)
 end
 --Filters
 function cid.searchfilter(c)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_RITUAL)  and c:IsAbleToHand()
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER+TYPE_SPELL) and c:IsType(TYPE_RITUAL) and c:IsAbleToHand()
 end
 --bounce and destroy
 function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -46,14 +46,13 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_SZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_SZONE,1,2,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_SZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if tg:GetCount()>0 then
-		Duel.Destroy(tg,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
 --ritual summon search
