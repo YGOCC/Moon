@@ -61,7 +61,7 @@ function c500311550.cost(e,tp,eg,ep,ev,re,r,rp,chk)
    -- Duel.RegisterEffect(e1,tp)
 end
 function c500311550.tgfilter(c)
-	 return c:IsLevelBelow(4) and c:IsSetCard(0x185a) and c:IsAbleToGrave()
+	 return c:IsSetCard(0x185a) and c:IsAbleToGrave()
 		and Duel.IsExistingMatchingCard(c500311550.thfilter,tp,LOCATION_DECK,0,1,c,c:GetCode())
 end
 function c500311550.thfilter(c,code)
