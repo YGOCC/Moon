@@ -38,12 +38,12 @@ function cid.setfilter(c)
 end
 function cid.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and aux.PandSSetCon(cid.setfilter,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp)
+		and aux.PandSSetCon(cid.setfilter,nil,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(cid.setfilter,tp,LOCATION_DECK,0,1,nil) 
 	end
 end
 function cid.setop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not aux.PandSSetCon(cid.setfilter,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp) then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not aux.PandSSetCon(cid.setfilter,nil,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 	local g=Duel.SelectMatchingCard(tp,aux.PandSSetFilter(cid.setfilter),tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then

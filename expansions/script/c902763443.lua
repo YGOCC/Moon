@@ -39,12 +39,12 @@ function cid.thfilter(c)
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and aux.PandSSetCon(cid.thfilter,LOCATION_EXTRA)(nil,e,tp,eg,ep,ev,re,r,rp) 
+		and aux.PandSSetCon(cid.thfilter,nil,LOCATION_EXTRA)(nil,e,tp,eg,ep,ev,re,r,rp) 
 		and Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_EXTRA,0,1,nil) 
 	end
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not aux.PandSSetCon(cid.thfilter,LOCATION_EXTRA)(nil,e,tp,eg,ep,ev,re,r,rp) then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not aux.PandSSetCon(cid.thfilter,nil,LOCATION_EXTRA)(nil,e,tp,eg,ep,ev,re,r,rp) then return end
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,1601)

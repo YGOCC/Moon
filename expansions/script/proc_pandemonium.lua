@@ -188,7 +188,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 		set:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 		set:SetCode(EFFECT_SPSUMMON_PROC_G)
 		set:SetRange(LOCATION_HAND)
-		set:SetCondition(Auxiliary.PandSSetCon(c))
+		set:SetCondition(Auxiliary.PandSSetCon(c,-1))
 		set:SetOperation(Auxiliary.PandSSet(c,REASON_RULE,typ))
 		c:RegisterEffect(set)
 	end
@@ -464,7 +464,7 @@ function Auxiliary.PandDisableFUInED(tc,tpe)
 				tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+tpe)
 			end
 end
-function Auxiliary.PandSSetCon(tc,...)
+function Auxiliary.PandSSetCon(tc,player,...)
 	local params,loc1,loc2={...},0xff,0xff
 	if type(params[#params])=='number' then
 		loc1=params[#params]
@@ -477,10 +477,12 @@ function Auxiliary.PandSSetCon(tc,...)
 	end
 	return	function(c,e,tp,eg,ep,ev,re,r,rp)
 				local eparams={}
+				local ttp
+				if (player==nil or not player) then ttp=tp else if player<0 then ttp=tc:GetControler() end end
 				if #params>0 then
 					for pc=1,#params do
 						if params[pc]=="e" then eparams[pc]=e
-						elseif params[pc]=="tp" then eparams[pc]=tp
+						elseif params[pc]=="tp" then eparams[pc]=ttp
 						elseif params[pc]=="eg" then eparams[pc]=eg
 						elseif params[pc]=="ep" then eparams[pc]=ep
 						elseif params[pc]=="ev" then eparams[pc]=ev
@@ -491,14 +493,14 @@ function Auxiliary.PandSSetCon(tc,...)
 					end
 				end
 				local check=true
-				local egroup={Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_SSET)}
+				local egroup={Duel.IsPlayerAffectedByEffect(ttp,EFFECT_CANNOT_SSET)}
 				for _,te in ipairs(egroup) do
 					local tg=te:GetTarget()
 					if not tg then
 						check=false
 					elseif tc and type(tc)=="function" then
 						local ct=0
-						local sg=Duel.GetMatchingGroup(tc,tp,loc1,loc2,nil,table.unpack(eparams))
+						local sg=Duel.GetMatchingGroup(tc,ttp,loc1,loc2,nil,table.unpack(eparams))
 						local tsg=sg:GetFirst()
 						while tsg do
 							if tg(te,tsg) then
@@ -515,7 +517,7 @@ function Auxiliary.PandSSetCon(tc,...)
 						end
 					end
 				end
-				return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and check
+				return Duel.GetLocationCount(ttp,LOCATION_SZONE)>0 and check
 			end
 end	
 function Auxiliary.PandSSetFilter(tc,...)
@@ -535,7 +537,7 @@ function Auxiliary.PandSSetFilter(tc,...)
 						end
 					end
 				end
-				return (not tc or tc(c,e,tp,eg,ep,ev,re,r,rp)) and Auxiliary.PandSSetCon(c,table.unpack(eparams))(nil,e,tp,eg,ep,ev,re,r,rp)
+				return (not tc or tc(c,e,tp,eg,ep,ev,re,r,rp)) and Auxiliary.PandSSetCon(c,nil,table.unpack(eparams))(nil,e,tp,eg,ep,ev,re,r,rp)
 			end
 end
 function Auxiliary.PandSSet(tc,reason,tpe)

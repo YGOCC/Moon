@@ -126,7 +126,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local g=Duel.GetMatchingGroup(aux.AND(aux.FilterBoolFunction(Card.IsFaceup),aux.FilterBoolFunction(Card.IsType,TYPE_PANDEMONIUM)),tp,LOCATION_EXTRA,0,nil)
-		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and aux.PandSSetCon(cid.setfilter,LOCATION_EXTRA)(nil,e,tp,eg,ep,ev,re,r,rp) and Duel.SelectYesNo(tp,1159) then
+		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and aux.PandSSetCon(cid.setfilter,nil,LOCATION_EXTRA)(nil,e,tp,eg,ep,ev,re,r,rp) and Duel.SelectYesNo(tp,1159) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 			local sg=g:FilterSelect(tp,aux.PandSSetFilter(aux.TRUE),1,1,nil)

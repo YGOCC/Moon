@@ -78,10 +78,10 @@ function c63553470.drcfilter(c,tp)
 end
 function c63553470.drcfilter2(c,e,tp,eg,ep,ev,re,r,rp)
 	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsPreviousLocation(LOCATION_SZONE) and c:GetPreviousControler()==tp and c:IsPreviousPosition(POS_FACEUP_ATTACK)
-		and aux.PandSSetCon(c,c:GetLocation(),c:GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp)
+		and aux.PandSSetCon(c,nil,c:GetLocation(),c:GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp)
 end
 function c63553470.checksetfilter(c,e,tp,eg,ep,ev,re,r,rp)
-	return aux.PandSSetCon(c,c:GetLocation(),c:GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp)
+	return aux.PandSSetCon(c,nil,c:GetLocation(),c:GetLocation())(nil,e,tp,eg,ep,ev,re,r,rp)
 end
 function c63553470.excfilter(c)
 	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsFaceup()
@@ -185,13 +185,13 @@ function c63553470.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function c63553470.setop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not eg:IsExists(cid.checksetfilter,1,nil,e,tp,eg,ep,ev,re,r,rp) then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not eg:IsExists(c63553470.checksetfilter,1,nil,e,tp,eg,ep,ev,re,r,rp) then return end
 	local tc=nil
 	if eg:GetCount()>1 then
-		local fg=eg:Filter(cid.checksetfilter,nil,e,tp,eg,ep,ev,re,r,rp)
+		local fg=eg:Filter(c63553470.checksetfilter,nil,e,tp,eg,ep,ev,re,r,rp)
 		tc=fg:Select(tp,1,1,nil):GetFirst()
 	else
-		local fg=eg:Filter(cid.checksetfilter,nil,e,tp,eg,ep,ev,re,r,rp)
+		local fg=eg:Filter(c63553470.checksetfilter,nil,e,tp,eg,ep,ev,re,r,rp)
 		tc=fg:GetFirst()
 	end
 	if tc then

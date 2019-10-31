@@ -124,11 +124,11 @@ function c63553464.con(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c63553464.cfilter,1,nil,tp)
 end
 function c63553464.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 aux.PandSSetCon(e:GetHandler(),LOCATION_HAND)(nil,e,tp,eg,ep,ev,re,r,rp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 aux.PandSSetCon(e:GetHandler(),nil,LOCATION_HAND)(nil,e,tp,eg,ep,ev,re,r,rp) end
 end
 function c63553464.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler()
-	if tc:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and aux.PandSSetCon(e:GetHandler(),LOCATION_HAND)(nil,e,tp,eg,ep,ev,re,r,rp) then
+	if tc:IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and aux.PandSSetCon(e:GetHandler(),nil,LOCATION_HAND)(nil,e,tp,eg,ep,ev,re,r,rp) then
 		aux.PandSSet(tc,REASON_EFFECT,TYPE_EFFECT)(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,tc)
 	end
