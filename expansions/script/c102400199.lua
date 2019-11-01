@@ -20,8 +20,9 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.spfilter(c,e,tp,mc1,mc2)
-	return c:IsSetCard(0xf7a) and (bit.band(c:GetType(),0x81)==0x81 or c:IsLocation(LOCATION_SZONE)) and (not c.mat_filter or c.mat_filter(mc,tp))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true)
+	local trap=c:IsLocation(LOCATION_SZONE)
+	return c:IsSetCard(0xf7a) and (bit.band(c:GetType(),0x81)==0x81 or trap) and (not c.mat_filter or c.mat_filter(mc,tp))
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,trap,true)
 		and mc1:IsCanBeRitualMaterial(c) and mc2:IsCanBeRitualMaterial(c)
 end
 function cid.rfilter(c,mc1,mc2)
@@ -43,7 +44,6 @@ function cid.filter2(c,e,tp,mc)
 	else i1,i2=Duel.ReadCard(c,CARDDATA_LEVEL),mc:GetLevel() end
 	local sg=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_HAND+LOCATION_SZONE,0,c,e,tp,c,mc)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if c:IsLocation(LOCATION_MZONE) then ft=ft+1 end
 	if Duel.IsPlayerAffectedByEffect(tp,id) then ft=1 end
 	return sg:IsExists(cid.rfilter,1,nil,c,mc) or sg:CheckWithSumGreater(cid.levelf,i1+i2,1,ft)
 end

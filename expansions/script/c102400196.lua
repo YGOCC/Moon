@@ -14,6 +14,7 @@ function cid.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetTarget(cid.RitualUltimateTarget)
 	e1:SetOperation(cid.RitualUltimateOperation)
 	c:RegisterEffect(e1)
@@ -30,7 +31,10 @@ end
 function cid.matfilter(c)
 	return c:GetOriginalLevel()>0
 end
-function Auxiliary.RitualUltimateFilter(c,filter,e,tp,m1,m2,level_function,greater_or_equal,gc)
+function cid.mfilter(c)
+	return c:GetLevel()>0 and c:IsSetCard(0xf7a) and c:IsAbleToDeck()
+end
+function cid.RitualUltimateFilter(c,filter,e,tp,m1,m2,level_function,greater_or_equal,gc)
 	local trap=c:IsLocation(LOCATION_SZONE)
 	if (bit.band(c:GetType(),0x81)~=0x81 and not trap) or (filter and not filter(c,e,tp)) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,trap,true) then return false end
 	local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)
@@ -48,9 +52,9 @@ function Auxiliary.RitualUltimateFilter(c,filter,e,tp,m1,m2,level_function,great
 	end
 	local lv=level_function(c)
 	if trap then lv=c:GetOriginalLevel() end
-	Auxiliary.GCheckAdditional=Auxiliary.RitualCheckAdditional(c,lv,greater_or_equal)
-	local res=mg:CheckSubGroup(Auxiliary.RitualCheck,1,lv,tp,c,lv,greater_or_equal)
-	Auxiliary.GCheckAdditional=nil
+	aux.GCheckAdditional=aux.RitualCheckAdditional(c,lv,greater_or_equal)
+	local res=mg:CheckSubGroup(aux.RitualCheck,1,lv,tp,c,lv,greater_or_equal)
+	aux.GCheckAdditional=nil
 	return res
 end
 function cid.RitualUltimateTarget(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -65,7 +69,7 @@ function cid.RitualUltimateOperation(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetRitualMaterial(tp)
 	local exg=Duel.GetMatchingGroup(cid.matfilter,tp,LOCATION_SZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(aux.RitualUltimateFilter),tp,LOCATION_HAND+LOCATION_SZONE,0,1,1,nil,aux.FilterBoolFunction(Card.IsSetCard,0xf7a),e,tp,mg,exg,Card.GetLevel,"Greater")
+	local tg=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,1,nil,aux.FilterBoolFunction(Card.IsSetCard,0xf7a),e,tp,mg,exg,Card.GetLevel,"Greater")
 	local tc=tg:GetFirst()
 	if tc then
 		local trap=tc:IsLocation(LOCATION_SZONE)
