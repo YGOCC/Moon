@@ -6,10 +6,15 @@ function cid.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_TOGRAVE)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetTarget(cid.target)
 	e2:SetOperation(cid.activate)
 	c:RegisterEffect(e2)
+	local e0=e2:Clone()
+	e0:SetType(EFFECT_TYPE_QUICK_O)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetCost(cid.cost)
+	c:RegisterEffect(e0)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC_G)
@@ -36,27 +41,36 @@ function cid.initial_effect(c)
 	e3:SetCode(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	c:RegisterEffect(e3)
 end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) end
+	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
+	Duel.SSet(c:GetControler(),c)
+end
 function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 	Duel.SSet(c:GetControler(),c)
 end
-function cid.filter1(c)
-	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemove()
-end
-function cid.filter2(c)
-	return c:IsFaceup() and c:IsSetCard(0xf7a)
+function cid.rfilter(c,e,tp)
+	local trap=c:IsLocation(LOCATION_SZONE)
+	if (trap and bit.band(c:GetType(),0x81)~=0x81) or not c:IsSetCard(0xf7a)
+		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,trap,true) then return false end
+	local lv=c:GetLevel()
+	if trap then lv=c:GetOriginalLevel() end
+	return lv<=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g1=Duel.GetMatchingGroup(cid.filter1,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
-	local g2=Duel.GetMatchingGroup(cid.filter2,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil)
-	if chk==0 then return #g1>0 and #g2>0 end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g1,g1:GetCount(),0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g2,g2:GetCount(),0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.rfilter,tp,0x1a,0,1,e:GetHandler(),e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0x1a)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g1=Duel.GetMatchingGroup(cid.filter1,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
-	local g2=Duel.GetMatchingGroup(cid.filter2,tp,LOCATION_REMOVED,LOCATION_REMOVED,nil)
-	if Duel.Remove(g1,POS_FACEUP,REASON_EFFECT)>0 then
-		Duel.SendtoGrave(g2,REASON_EFFECT+REASON_RETURN)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local tg=Duel.SelectMatchingCard(tp,cid.rfilter,tp,0x1a,0,1,1,e:GetHandler(),e,tp)
+	local tc=tg:GetFirst()
+	if tc then
+		tc:SetMaterial(nil)
+		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,true,false,POS_FACEUP)
+		tc:CompleteProcedure()
 	end
 end

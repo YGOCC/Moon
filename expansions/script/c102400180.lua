@@ -35,11 +35,22 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.target)
 	e2:SetOperation(cid.activate)
 	c:RegisterEffect(e2)
+	local e0=e2:Clone()
+	e0:SetType(EFFECT_TYPE_QUICK_O)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetCost(cid.cost)
+	c:RegisterEffect(e0)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_RITUAL_LEVEL)
 	e3:SetValue(cid.rlevel)
 	c:RegisterEffect(e3)
+end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) end
+	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
+	Duel.SSet(c:GetControler(),c)
 end
 function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
@@ -58,7 +69,7 @@ function cid.filter(c,e,tp,eg,ep,ev,re,r,rp)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xf7a) and (aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) or c:IsAbleToHand())
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>(e:IsHasType(EFFECT_TYPE_QUICK_O) and 1 or 0)
 		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,tp,LOCATION_GRAVE)
 end

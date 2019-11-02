@@ -1,5 +1,6 @@
-local cid,id=GetID()
---Destrick Defender
+--created & coded by Lyris, art from Shadowverse's "Iron Staff Mechanic"
+--滅却守護兵ディフェンダー
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -17,7 +18,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.tglimit)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
-	--If this card is destroyed: You can reveal 3 "Destrick" monsters with different names from your Deck, have your opponent randomly add 1 of them to your hand, and destroy the rest.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
@@ -52,7 +52,6 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 			g:Remove(Card.IsCode,nil,sc:GetCode())
 		end
 		Duel.ConfirmCards(1-tp,sg)
-		Duel.ShuffleDeck(tp)
 		local tg=sg:RandomSelect(1-tp,1)
 		local tc=tg:GetFirst()
 		if tc:IsAbleToHand() then
