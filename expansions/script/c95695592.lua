@@ -81,13 +81,13 @@ function cid.chainreg(e,tp,eg,ep,ev,re,r,rp)
 	end
 	cid.chaintyp[rp]=bit.bor(cid.chaintyp[rp],bit.band(re:GetActiveType(),TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP))
 	if bit.band(cid.chaintyp[rp],TYPE_MONSTER)>0 then
-		cid.chaincount[rp][0]=cid.chaincount[rp][0]+1
-	end
-	if bit.band(cid.chaintyp[rp],TYPE_SPELL)>0 then
 		cid.chaincount[rp][1]=cid.chaincount[rp][1]+1
 	end
-	if bit.band(cid.chaintyp[rp],TYPE_TRAP)>0 then
+	if bit.band(cid.chaintyp[rp],TYPE_SPELL)>0 then
 		cid.chaincount[rp][2]=cid.chaincount[rp][2]+1
+	end
+	if bit.band(cid.chaintyp[rp],TYPE_TRAP)>0 then
+		cid.chaincount[rp][3]=cid.chaincount[rp][3]+1
 	end
 end
 function cid.negatedchainreg(e,tp,eg,ep,ev,re,r,rp)
@@ -95,9 +95,9 @@ function cid.negatedchainreg(e,tp,eg,ep,ev,re,r,rp)
 	if rp==p or not re:IsHasType(EFFECT_TYPE_ACTIVATE) or not cid.regulate_negated_activation[rp] then return end
 	cid.chaintyp[rp]=bit.band(cid.chaintyp[rp],bit.bnot(cid.regulate_negated_activation[rp]))
 	if cid.regulate_negated_activation[rp]==TYPE_SPELL then
-		cid.chaincount[rp][1]=cid.chaincount[rp][1]-1
-	elseif cid.regulate_negated_activation[rp]==TYPE_TRAP then
 		cid.chaincount[rp][2]=cid.chaincount[rp][2]-1
+	elseif cid.regulate_negated_activation[rp]==TYPE_TRAP then
+		cid.chaincount[rp][3]=cid.chaincount[rp][3]-1
 	end
 	cid.regulate_negated_activation[rp]=false
 end
@@ -118,7 +118,7 @@ end
 ---------
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and cid.chaintyp[rp]~=0
-		and ((re:IsActiveType(TYPE_MONSTER) and cid.chaincount[rp][0]>1) or (re:IsActiveType(TYPE_SPELL) and cid.chaincount[rp][1]>1) or (re:IsActiveType(TYPE_TRAP) and cid.chaincount[rp][2]>1))
+		and ((re:IsActiveType(TYPE_MONSTER) and cid.chaincount[rp][1]>1) or (re:IsActiveType(TYPE_SPELL) and cid.chaincount[rp][2]>1) or (re:IsActiveType(TYPE_TRAP) and cid.chaincount[rp][3]>1))
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SUMMON)==0
