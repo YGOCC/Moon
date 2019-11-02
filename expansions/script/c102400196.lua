@@ -60,8 +60,8 @@ end
 function cid.RitualUltimateTarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg=Duel.GetRitualMaterial(tp)
-		local exg=Duel.GetMatchingGroup(cid.matfilter,tp,LOCATION_SZONE,0,nil)
-		return Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,nil,aux.FilterBoolFunction(Card.IsSetCard,0xf7a),e,tp,mg,exg,Card.GetLevel,"Greater")
+		local exg=Duel.GetMatchingGroup(cid.matfilter,tp,LOCATION_SZONE,0,nil)+Duel.GetMatchingGroup(cid.mfilter,tp,LOCATION_GRAVE,0,nil)
+		return Duel.IsExistingMatchingCard(cid.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,nil,aux.FilterBoolFunction(Card.IsSetCard,0xf7a),e,tp,mg,exg,Card.GetLevel,"Greater")
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
@@ -69,7 +69,7 @@ function cid.RitualUltimateOperation(e,tp,eg,ep,ev,re,r,rp)
 	local mg=Duel.GetRitualMaterial(tp)
 	local exg=Duel.GetMatchingGroup(cid.matfilter,tp,LOCATION_SZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tg=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,1,nil,aux.FilterBoolFunction(Card.IsSetCard,0xf7a),e,tp,mg,exg,Card.GetLevel,"Greater")
+	local tg=Duel.SelectMatchingCard(tp,cid.RitualUltimateFilter,tp,LOCATION_HAND+LOCATION_SZONE,0,1,1,nil,aux.FilterBoolFunction(Card.IsSetCard,0xf7a),e,tp,mg,exg,Card.GetLevel,"Greater")
 	local tc=tg:GetFirst()
 	if tc then
 		local trap=tc:IsLocation(LOCATION_SZONE)

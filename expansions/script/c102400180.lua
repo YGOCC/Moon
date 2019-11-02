@@ -50,6 +50,7 @@ function cid.rlevel(e,c)
 	if e:GetHandler():IsLocation(LOCATION_SZONE) then lv=e:GetHandler():GetOriginalLevel() end
 	if c:IsSetCard(0xf7a) and not c:IsCode(id) then
 		local clv=c:GetLevel()
+		if c:IsLocation(LOCATION_SZONE) then clv=c:GetOriginalLevel() end
 		return lv*(0x1<<16)+clv
 	else return lv end
 end

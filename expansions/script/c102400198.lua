@@ -15,15 +15,16 @@ function cid.discardfilter(c)
 	return c:IsFacedown() and c:IsSetCard(0xf7a) and c:IsAbleToGrave()
 end
 function cid.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) and Duel.IsExistingMatchingCard(cid.discardfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) and Duel.IsExistingMatchingCard(cid.discardfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(2)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_ONFIELD)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.discardfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
-	if Duel.SendtoGrave(g,REASON_EFFECT)==0 or g:GetFirst():GetOriginalType()&TYPE_MONSTER==0 then return end
+	if Duel.SendtoGrave(g,REASON_EFFECT)==0 then return end
+	Duel.RaiseEvent(Group.CreateGroup(),EVENT_ADJUST,Effect.GlobalEffect(),0,0,0,0)
+	if g:GetFirst():GetOriginalType()&TYPE_MONSTER==0 then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.BreakEffect()
 	Duel.Draw(p,d,REASON_EFFECT)

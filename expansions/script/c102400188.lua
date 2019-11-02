@@ -13,8 +13,6 @@ function cid.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_RITUAL_LEVEL)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetValue(cid.rlevel)
 	c:RegisterEffect(e3)
 	local e1=Effect.CreateEffect(c)
@@ -52,6 +50,7 @@ function cid.rlevel(e,c)
 	if e:GetHandler():IsLocation(LOCATION_SZONE) then lv=e:GetHandler():GetOriginalLevel() end
 	if c:IsSetCard(0xf7a) and not c:IsCode(id) then
 		local clv=c:GetLevel()
+		if c:IsLocation(LOCATION_SZONE) then clv=c:GetOriginalLevel() end
 		return lv*(0x1<<16)+clv
 	else return lv end
 end
