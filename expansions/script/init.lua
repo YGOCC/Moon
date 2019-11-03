@@ -65,6 +65,7 @@ dofile("expansions/script/proc_bypath.lua") --Bypaths
 dofile("expansions/script/proc_toxia.lua") --Toxias
 dofile("expansions/script/proc_annotee.lua") --Annotees
 dofile("expansions/script/proc_chroma.lua") --Chromas
+dofile("expansions/script/proc_perdition.lua") --Perditions
 
 Card.IsReason=function(c,rs)
 	local cusrs=rs>>32
