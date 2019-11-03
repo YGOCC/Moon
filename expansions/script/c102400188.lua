@@ -70,7 +70,7 @@ function cid.filter(c,e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>(e:IsHasType(EFFECT_TYPE_QUICK_O) and 1 or 0)
-		Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_REMOVED,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
+		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_REMOVED,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
