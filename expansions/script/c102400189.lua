@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris, art from Cardfight!! Vanguard's "Dancing Princess of the Night Sky"
 --フェイツ・トワイライトガル
 local cid,id=GetID()
 function cid.initial_effect(c)

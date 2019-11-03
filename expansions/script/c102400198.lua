@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris, art by flightless-angel
 --フェイツ施し
 local cid,id=GetID()
 function cid.initial_effect(c)

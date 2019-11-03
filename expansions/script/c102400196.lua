@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris, art from Yu-Gi-Oh! Duel Monsters GX Episode 101
 --フェイツ儀式
 local cid,id=GetID()
 function cid.initial_effect(c)

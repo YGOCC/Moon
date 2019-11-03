@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris, art from "Dark Contract with Renewal"
 --フェイツ・オーガナイゼーション
 local cid,id=GetID()
 function cid.initial_effect(c)

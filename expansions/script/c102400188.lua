@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris, art from "Queen's Knight"
 --フェイツ・ジョーカーガル
 local cid,id=GetID()
 function cid.initial_effect(c)

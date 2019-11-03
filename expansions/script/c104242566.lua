@@ -32,13 +32,15 @@ end
 function cid.excavatefilter(c)
 	return c:IsAbleToHand() and c:IsSetCard(0x666)
 end
+function cid.overpay(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsAbleToDeck()
+end
 function cid.filter(c,e,tp)
 	return c:IsSetCard(0x666)
 end
 function cid.mfilter(c)
 	return c:GetLevel()>0 and c:IsSetCard(0x666) and c:IsAbleToDeck()
 end
-
 --Ritual Summon, then check top 3
 function cid.ritualtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -90,9 +92,29 @@ function cid.ritualop(e,tp,eg,ep,ev,re,r,rp)
 			g:Sub(sg)
 		end
 			Duel.SendtoGrave(g,REASON_EFFECT+REASON_REVEAL)
+		
+		Duel.BreakEffect()
+		if Duel.SelectYesNo(tp,aux.Stringid(3567660,2)) then
+			Duel.BreakEffect()
+				local g=Duel.SelectMatchingCard(tp,cid.overpay,tp,LOCATION_GRAVE,0,2,2,nil)
+				if g:GetCount()>0 then
+					if Duel.SendtoDeck(g,nil,0,REASON_EFFECT)~=0 then
+					Duel.BreakEffect()
+					
+		local e1=Effect.CreateEffect(tc)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+		e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetValue(aux.tgsval)
+		tc:RegisterEffect(e1)
 		end
 	end
 end
+end
+end
+end
+
 --Send to deck; draw 1
 function cid.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() and Duel.IsPlayerCanDraw(tp,1) end

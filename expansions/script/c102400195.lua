@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris, art from "Destiny HERO - Dystopia"
 --フェイツ・絶ライト望ガイ
 local cid,id=GetID()
 function cid.initial_effect(c)

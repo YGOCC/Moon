@@ -32,6 +32,9 @@ end
 function cid.filter(c,e,tp)
 	return c:IsSetCard(0x666)
 end
+function cid.overpay(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsAbleToDeck()
+end
 function cid.mfilter(c)
 	return c:GetLevel()>0 and c:IsSetCard(0x666) and c:IsAbleToDeck()
 end
@@ -78,7 +81,23 @@ function cid.ritualop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(500)
 		tc:RegisterEffect(e1)
 		
+		Duel.BreakEffect()
+		if Duel.SelectYesNo(tp,aux.Stringid(3567660,2)) then
+			Duel.BreakEffect()
+		local g=Duel.SelectMatchingCard(tp,cid.overpay,tp,LOCATION_GRAVE,0,2,2,nil)
+				if g:GetCount()>0 then
+					if Duel.SendtoDeck(g,nil,0,REASON_EFFECT)~=0 then
+					Duel.BreakEffect()
+		local e1=Effect.CreateEffect(tc)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetValue(500)
+		tc:RegisterEffect(e1)
 	end
+end
+end
+end
 end
 --Send to deck; draw 1
 function cid.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)

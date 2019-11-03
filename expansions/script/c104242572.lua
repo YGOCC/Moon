@@ -52,7 +52,7 @@ end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+		Duel.Destroy(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
 --ritual summon search

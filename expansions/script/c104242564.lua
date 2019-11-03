@@ -35,6 +35,9 @@ end
 function cid.filter(c,e,tp)
 	return c:IsSetCard(0x666)
 end
+function cid.overpay(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsAbleToDeck()
+end
 function cid.mfilter(c)
 	return c:GetLevel()>0 and c:IsSetCard(0x666) and c:IsAbleToDeck()
 end
@@ -77,12 +80,28 @@ function cid.ritualop(e,tp,eg,ep,ev,re,r,rp)
 				local dg=Duel.GetMatchingGroupCount(cid.lpfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
 		Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,dg*300)
 		Duel.Recover(tp,dg*300,REASON_EFFECT)
+		
+				Duel.BreakEffect()
+		
+		if Duel.SelectYesNo(tp,aux.Stringid(3567660,2)) then
+			Duel.BreakEffect()
+			
+			local g=Duel.SelectMatchingCard(tp,cid.overpay,tp,LOCATION_GRAVE,0,2,2,nil)
+				if g:GetCount()>0 then
+					if Duel.SendtoDeck(g,nil,0,REASON_EFFECT)~=0 then
+					Duel.BreakEffect()
+					Duel.ShuffleDeck(tp)
+				local e1=Effect.CreateEffect(tc)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+				e1:SetValue(1)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				tc:RegisterEffect(e1)
+		end
+	end
+		end
 	end
 end
-
-
-
-
 --Send to deck; draw 1
 function cid.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() and Duel.IsPlayerCanDraw(tp,1) end

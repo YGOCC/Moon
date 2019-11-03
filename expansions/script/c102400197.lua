@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris, art from "Dramatic Crossroads"
 --フェイツ・ディシジョン
 local cid,id=GetID()
 function cid.initial_effect(c)

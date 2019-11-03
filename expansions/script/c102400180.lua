@@ -1,4 +1,4 @@
---created & coded by Lyris, art at
+--created & coded by Lyris, art by Bloo-DKai12 of DeviantArt
 --フェイツ・デスガイ
 local cid,id=GetID()
 function cid.initial_effect(c)

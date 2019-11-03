@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris
 --フェイツ・ダイハーガル
 local cid,id=GetID()
 function cid.initial_effect(c)

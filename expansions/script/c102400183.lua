@@ -1,4 +1,4 @@
---created & coded by Lyris, art
+--created & coded by Lyris, art from "Arcana Force I - The Magician"
 --フェイツ・マジガイ
 local cid,id=GetID()
 function cid.initial_effect(c)
