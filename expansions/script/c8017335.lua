@@ -63,7 +63,7 @@ end
 function cid.regcheck(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	while tc do
-		if tc:IsControler(tp) and tc:GetFlagEffect(id+100)<=0 then
+		if tc:GetFlagEffect(id+100)<=0 then
 			tc:RegisterFlagEffect(id+100,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE,1)
 		end
 		tc=eg:GetNext()

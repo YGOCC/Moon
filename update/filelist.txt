@@ -1,6 +1,6 @@
 ﻿expansions/Cards-non-QCD.cdb	38887299bf0dbf3d1cb619fbaf22de22
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
-expansions/lflist.conf	e7e171e8fb18d1459182d265fb41c69a
+expansions/lflist.conf	bc8b40176890d8480f99f4a3b5f3938c
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
 expansions/strings.conf	8aa329233ad8dc180d2f880ecef130b6
 expansions/pics/100000710.jpg	fdd67c2ea75532d08fb94a98d28067aa
@@ -13537,7 +13537,7 @@ expansions/script/c80003.lua	b1e3daed5692561e70a9747b5f780464
 expansions/script/c80004.lua	4ea147be044b0828af214afff2ce307a
 expansions/script/c80009.lua	f59bb1091081201be061181d1ae21117
 expansions/script/c80010.lua	e2d243856257a73ea3e8b4d3fdd375e1
-expansions/script/c8017335.lua	f148a8286a6b37c93d58ae8bd2fc24c6
+expansions/script/c8017335.lua	ec29bc66dfa86af6c2f30bffde51cd3d
 expansions/script/c8017336.lua	72291e5585a644e729972923e3902794
 expansions/script/c80347321.lua	041211663d035119f96665dc65b53dc0
 expansions/script/c80347322.lua	1118b7af24719c814b11e382442cfdab
@@ -14738,7 +14738,7 @@ expansions/script/proc_corona.lua	2fa2f91a020530c23f0f8533eb66668e
 expansions/script/proc_deckmaster.lua	9f785df09b4401d9db722a868b40941d
 expansions/script/proc_evolute.lua	0efeb033899b13651c1f258231f5e254
 expansions/script/proc_harmony.lua	09fc1ef23202e30c5c957ac293745602
-expansions/script/proc_pandemonium.lua	6dfb50fdef1bace4a23ba89f89a4b1e0
+expansions/script/proc_pandemonium.lua	72bc0b62a539dc2b2d84745add2184fe
 expansions/script/proc_polarity.lua	47979807ec9c7cdc61896f375e2e672f
 expansions/script/proc_relay.lua	df687147c3cf32a9586af94c35898eb7
 expansions/script/proc_skill.lua	cbaa68f0971f731a81abf7bd080276b2
@@ -14835,6 +14835,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	c1c2dc5c02deae3113a8e9b7d6e033de
+update/filelist.txt	342c29ef78192e3419bb1f6ee97a904a
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	7e4b9bcfaa4a32c75228be38e0053db7
+update/version.txt	f470abe7f5ba01be102a4982799ef0a8
