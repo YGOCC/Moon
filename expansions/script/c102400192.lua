@@ -69,7 +69,8 @@ function cid.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0xf7a)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_MZONE,0,1,nil) end
+	local c=e:IsHasType(EFFECT_TYPE_QUICK_O) and e:GetHandler() or nil
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_MZONE,0,1,c) end
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,nil)

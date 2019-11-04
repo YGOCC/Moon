@@ -79,7 +79,7 @@ function cid.initial_effect(c)
 	e8:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e8:SetRange(LOCATION_FZONE)
 	e8:SetCode(EFFECT_SEND_REPLACE)
-	e8:SetTarget(cid.desreptg)
+	e8:SetTarget(cid.desreptg2)
 	e8:SetOperation(cid.desrepop)
 	c:RegisterEffect(e8)
 end
@@ -114,6 +114,11 @@ end
 function cid.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsReason(REASON_RULE)
 		and e:GetHandler():GetCounter(0x666)>=3 end
+	return true
+end
+function cid.desreptg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return not e:GetHandler():IsReason(REASON_RULE)
+		and e:GetHandler():GetCounter(0x666)>=3 and  e:GetHandler():GetDestination()==LOCATION_REMOVED end
 	return true
 end
 function cid.desrepop(e,tp,eg,ep,ev,re,r,rp)

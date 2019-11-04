@@ -94,7 +94,7 @@ function cid.ritualop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoGrave(g,REASON_EFFECT+REASON_REVEAL)
 		
 		Duel.BreakEffect()
-		if Duel.SelectYesNo(tp,aux.Stringid(3567660,2)) then
+		if Duel.SelectYesNo(tp,aux.Stringid(id,0)) and Duel.IsExistingMatchingCard(cid.overpay,tp,LOCATION_GRAVE,0,2,nil) then
 			Duel.BreakEffect()
 				local g=Duel.SelectMatchingCard(tp,cid.overpay,tp,LOCATION_GRAVE,0,2,2,nil)
 				if g:GetCount()>0 then

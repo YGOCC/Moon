@@ -70,7 +70,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=tg:GetFirst()
 	if tc then
 		tc:SetMaterial(nil)
-		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,true,false,POS_FACEUP)
+		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,tc:IsLocation(LOCATION_SZONE),true,POS_FACEUP)
 		tc:CompleteProcedure()
 	end
 end
