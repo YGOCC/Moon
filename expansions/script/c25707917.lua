@@ -25,7 +25,7 @@ function cid.mfilter(c)
 	return c:IsRace(RACE_FAIRY)
 end
 function cid.tdfilter(c)
-	return c:IsSetCard(0x168) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return c:IsSetCard(0x26c) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 --to deck
 function cid.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

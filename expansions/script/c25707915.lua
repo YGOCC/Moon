@@ -48,7 +48,7 @@ function cid.costfilter(c)
 	return bit.band(c:GetType(),0x82)==0x82 and not c:IsPublic()
 end
 function cid.thfilter(c)
-	return c:IsSetCard(0x168) and c:IsAbleToHand() and not c:IsCode(id)
+	return c:IsSetCard(0x26c) and c:IsAbleToHand() and not c:IsCode(id)
 end
 function cid.repfilter(c)
 	return c:IsRace(RACE_FAIRY) and c:IsAbleToRemove()
@@ -105,7 +105,7 @@ function cid.mtcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=eg:Filter(Card.IsSetCard,nil,0x168)
+	local g=eg:Filter(Card.IsSetCard,nil,0x26c)
 	local rc=g:GetFirst()
 	if not rc then return end
 	local e1=Effect.CreateEffect(c)

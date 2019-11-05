@@ -52,7 +52,7 @@ function cid.thfilter(c)
 		and c:IsRace(RACE_FAIRY) and c:IsAbleToHand()
 end
 function cid.tgfilter(c)
-	return c:IsSetCard(0x168) and c:IsAbleToGrave()
+	return c:IsSetCard(0x26c) and c:IsAbleToGrave()
 end
 function cid.cfilter(c)
 	return c:IsRace(RACE_FAIRY) and c:IsAbleToRemoveAsCost()
@@ -104,7 +104,7 @@ function cid.mtcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=eg:Filter(Card.IsSetCard,nil,0x168)
+	local g=eg:Filter(Card.IsSetCard,nil,0x26c)
 	local rc=g:GetFirst()
 	if not rc then return end
 	local e1=Effect.CreateEffect(c)

@@ -8,6 +8,7 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
+	c:SetSPSummonOnce(id)
 	c:EnableReviveLimit()
 	--tohand
 	local e1=Effect.CreateEffect(c)
@@ -41,7 +42,7 @@ function cid.cfilter(c)
 	return c:IsRace(RACE_FAIRY) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function cid.thfilter1(c)
-	return (c:IsLocation(LOCATION_GRAVE) or c:IsLocation(LOCATION_DECK) or c:IsFaceup()) and c:IsSetCard(0x168) and c:IsAbleToHand()
+	return (c:IsLocation(LOCATION_GRAVE) or c:IsLocation(LOCATION_DECK) or c:IsFaceup()) and c:IsSetCard(0x26c) and c:IsAbleToHand()
 end
 --tohand
 function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -8,7 +8,8 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	 c:EnableReviveLimit()
+	c:SetSPSummonOnce(id)
+	c:EnableReviveLimit()
 	--tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))

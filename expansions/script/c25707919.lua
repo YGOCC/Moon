@@ -74,12 +74,13 @@ function cid.addcount(e,tp,eg,ep,ev,re,r,rp)
 			local p=tc:GetPreviousControler()
 			cid[p]=cid[p]+1
 		end
+		if #cid[p]>=2 then cid[p]=cid[p]-cid[p]:GetFirst() end
 		tc=eg:GetNext()
 	end
 end
 --filters
 function cid.cfilter(c)
-	return c:IsSetCard(0x168) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x26c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 --to hand
 function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)

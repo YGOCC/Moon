@@ -33,10 +33,10 @@ function cid.initial_effect(c)
 end
 --filters
 function cid.thfilter(c)
-	return c:IsSetCard(0x168) and c:IsAbleToHand()
+	return c:IsSetCard(0x26c) and c:IsAbleToHand()
 end
 function cid.spfilter(c,e,tp)
-	return c:IsSetCard(0x168) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x26c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --excavate
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -54,7 +54,7 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmDecktop(tp,3)
 	local g=Duel.GetDecktopGroup(tp,3)
 	if g:GetCount()>0 then
-		if g:IsExists(Card.IsSetCard,1,nil,0x168) then
+		if g:IsExists(Card.IsSetCard,1,nil,0x26c) then
 			if g:IsExists(cid.thfilter,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
 				local sg=g:FilterSelect(tp,cid.thfilter,1,1,nil)
