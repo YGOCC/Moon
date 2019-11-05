@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from Shadowverse's "Wood of Brambles" & "Siren's Tears"
 --RUM－ワンドラス・フォース
 local cid,id=GetID()
 function cid.initial_effect(c)
