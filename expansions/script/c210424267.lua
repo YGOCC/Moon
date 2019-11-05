@@ -52,17 +52,19 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		local a=Duel.GetAttacker()
-		local ag=a:GetAttackableTarget()
-		if a:IsAttackable() and not a:IsImmuneToEffect(e) and ag:IsContains(tc) then
-			Duel.BreakEffect()
-			Duel.ChangeAttackTarget(tc)
-			local e1=Effect.CreateEffect(e:GetHandler())
+	Duel.BreakEffect()
+	local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_BATTLE)
 			e1:SetValue(math.ceil(tc:GetBaseAttack()*1))
 			tc:RegisterEffect(e1)
+			Duel.BreakEffect()
+		local a=Duel.GetAttacker()
+		local ag=a:GetAttackableTarget()
+		if a:IsAttackable() and not a:IsImmuneToEffect(e) and ag:IsContains(tc) then
+			Duel.BreakEffect()
+			Duel.ChangeAttackTarget(tc)
 		end
 	end
 end
