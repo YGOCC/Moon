@@ -39,7 +39,7 @@ function cid.initial_effect(c)
 	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e8:SetRange(LOCATION_MZONE)
 	e8:SetCountLimit(1)
-	e8:SetCode(EVENT_SUMMON_SUCCESS)
+	e8:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e8:SetCondition(cid.atkcon)
 	e8:SetCost(cid.cost2)
 	e8:SetTarget(cid.atktg)
@@ -135,13 +135,13 @@ function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 --function cid.condition2(e,tp,eg,ep,ev,re,r,rp)
-	--	 return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+	--   return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 	----		and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
 	--end
 	--function cid.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	--	if chk==0 then return true end
+	--  if chk==0 then return true end
 	--   Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	--end
 	--function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
-	--	   Duel.NegateActivation(ev)
+	--	 Duel.NegateActivation(ev)
 	--   end

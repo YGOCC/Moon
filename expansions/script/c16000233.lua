@@ -41,7 +41,7 @@ function c16000233.rmfilter(c,e,tp)
 		and Duel.IsExistingTarget(c16000233.filterx,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,c,e,tp)
 end
 function c16000233.filterx(c)
-	return c:IsFaceup() and not c:IsType(TYPE_EFFECT) and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_EFFECT) and c:IsAbleToHand()
 end
 function c16000233.thcost(e,tp,eg,ep,ev,re,r,rp,chk)	
 if chk==0 then return Duel.IsExistingMatchingCard(c16000233.rmfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
