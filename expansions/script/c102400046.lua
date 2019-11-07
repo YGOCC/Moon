@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Android
+--created & coded by Lyris, art from Shadowverse's "Prototype Warrior"
+--滅却人アンドロイド
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card is Summoned: You can have all your "Destrick" monsters gain 500 ATK/DEF.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -15,7 +15,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--If this card is destroyed: You can Special Summon it, and if you do, "Destrick" cards you currently control cannot be destroyed by card effects until the end of the next turn. (HOpT)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)

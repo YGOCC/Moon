@@ -1,11 +1,9 @@
+--created & coded by Lyris, art from Shadowverse's "Avatar of Desecration"
+--滅却獣キマイラ
 local cid,id=GetID()
-
---Destrick Chimera
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--You can also Xyz Summon this card by using 1 Rank 4 "Destrick" monster you control as material. (Transfer its materials to this card.) mat=3 Level 5 Machine monsters
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE),5,3,cid.ovfilter,aux.Stringid(id,0))
-	--Cannot be destroyed by card effects.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -13,7 +11,6 @@ function cid.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
-	--Once per turn, during the Standby Phase: Detach 1 material from this card; Special Summon 1 "Destrick" monster from your Deck.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -23,7 +20,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e2)
-	--After damage calculation, when this card battles a monster: Destroy that monster.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)

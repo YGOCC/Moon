@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Pixie
+--created & coded by Lyris, art from Shadowverse's "L'ange Miriam"
+--滅却精ピクシー
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card is Summoned: You can target 2 "Destrick" cards in your GY with different names, except "Destrick Pixie"; shuffle them into the Deck, then draw 2 cards, and if you do that, destroy 1 card in your hand or you control.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -16,7 +16,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--If this card is destroyed: You can target 1 "Destrick" monster in your GY, except "Destrick Pixie"; Special Summon it.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)

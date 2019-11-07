@@ -1,10 +1,9 @@
-local cid,id=GetID()
---Destrick Mystery - Spharia
+--created & coded by Lyris, art from Shadowverse's "Spinaria, Keeper of Enigmas"
+--滅却謎スフィネ
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--mat=2 Level 4 LIGHT monsters
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),4,2)
-	--Cannot be destroyed by card effects.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -12,7 +11,6 @@ function cid.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--You can detach 1 material from this card, then target 1 of your banished "Destrick" monsters; Special Summon it.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
@@ -22,7 +20,6 @@ function cid.initial_effect(c)
 	e4:SetTarget(cid.sptg)
 	e4:SetOperation(cid.spop)
 	c:RegisterEffect(e4)
-	--Once per turn, during your End Phase: Destroy monsters your opponent controls, up to the number of "Destrick" monsters you control.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)

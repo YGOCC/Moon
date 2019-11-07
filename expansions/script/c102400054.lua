@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Barrier
+--created & coded by Lyris, art from Shadowverse's "Nilpotent Entity"
+--滅却バリア
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--All "Destrick" cards you currently control cannot be destroyed by card effects this turn.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)

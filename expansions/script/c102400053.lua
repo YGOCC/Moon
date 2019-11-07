@@ -1,13 +1,12 @@
-local cid,id=GetID()
---Destrick Spaceship
+--created & coded by Lyris, art from Shadowverse's "Acceleratium"
+--滅却スペースシップ
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--When this card is activated: Destroy 1 other card you control.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	e0:SetCategory(CATEGORY_DESTROY)
 	c:RegisterEffect(e0)
-	--All your "Destrick" monsters gain 500 ATK/DEF.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
@@ -19,7 +18,6 @@ function cid.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
-	--Once per turn: You can destroy 1 monster you control or in your hand, also destroy 1 card on the field after that, and if you do that, for the rest of this turn, "Destrick" cards you control are unaffected by other card effects, except cards and effects activated by the controller of the second card destroyed by this effect.
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_DESTROY)
 	e5:SetType(EFFECT_TYPE_IGNITION)

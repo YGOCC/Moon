@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Research
+--created & coded by Lyris, art from Shadowverse's "Metadivision"
+--滅却リサーチ
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Add 1 "Destrick" monster from your Deck to your hand.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

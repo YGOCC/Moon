@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created & coded by Lyris, art from "Neo Space" & Cardfight!! Vanguard's "Barrier Star-vader, Promethium"
 --ネオスペース・バリアー
 local cid,id=GetID()
 function cid.initial_effect(c)

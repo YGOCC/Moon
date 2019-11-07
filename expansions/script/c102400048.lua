@@ -1,10 +1,9 @@
-local cid,id=GetID()
---Destrick Relic - Kiba
+--created & coded by Lyris, art from Shadowverse's "Shion, Mercurial Aegis"
+--滅却遺物キバ
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--2 monsters, including at least 1 "Destrick" monster
 	aux.AddLinkProcedure(c,nil,2,2,cid.lcheck)
-	--Cannot be destroyed by card effects.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -12,7 +11,6 @@ function cid.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
-	--All your Machine monsters gain 200 ATK.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
@@ -21,7 +19,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_MACHINE))
 	e2:SetValue(200)
 	c:RegisterEffect(e2)
-	--Your "Destrick" monsters gain 300 ATK and cannot be destroyed by card effects, while this Link Summoned card is on the field.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -36,7 +33,6 @@ function cid.initial_effect(c)
 	e4:SetCode(EFFECT_UPDATE_ATTACK)
 	e4:SetValue(300)
 	c:RegisterEffect(e4)
-	--You never take damage if the amount is 400 or more.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetCode(EFFECT_CHANGE_DAMAGE)

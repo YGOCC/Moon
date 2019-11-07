@@ -1,10 +1,9 @@
-local cid,id=GetID()
---Destrick Princess - Deux
+--created & coded by Lyris, art from Shadowverse's "Deus Ex Machinia"
+--滅却姫ドゥ
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--mat=2 "Destrick" monsters
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x5cd),2)
-	--Cannot be destroyed by card effects.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -12,7 +11,6 @@ function cid.initial_effect(c)
 	e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e0:SetValue(1)
 	c:RegisterEffect(e0)
-	--If this card is Link Summoned: You can shuffle your hand into the Deck, then draw the same number of cards. You can only use this effect of "Destrick Princess - Deux" once per turn.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -23,7 +21,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.sptg)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
-	--If this card is destroyed: You can destroy as many cards as possible in your hand, and if you do, destroy the same number of "Destrick" cards in your Deck.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)

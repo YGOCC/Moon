@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Soldjat
+--created & coded by Lyris, art from Shadowverse's "Fervent Machine Soldier"
+--滅却兵ソルジャー
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card is Summoned: You can add 1 "Destrick" Spell/Trap from your Deck to your hand.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -16,7 +16,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--If this card is destroyed: You can Link Summon 1 Link Monster by banishing materials listed on it from your field or GY. Only "Destrick" monsters can be used as material for a Link Summon using this card's effect.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)

@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Neko
+--created & coded by Lyris, art from Shadowverse's "Cat Cannoneer"
+--滅却獣ネコ
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card attacks, your opponent cannot activate cards or effects until the end of the Damage Step.
 	local e1=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -11,7 +11,6 @@ function cid.initial_effect(c)
 	e3:SetValue(1)
 	e3:SetCondition(cid.actcon)
 	c:RegisterEffect(e3)
-	--If this card is destroyed: You can target 2 "Destrick" monsters in your GY; immediately after this effect resolves, Xyz Summon 1 "Destrick" Xyz Monster using both targets only.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)

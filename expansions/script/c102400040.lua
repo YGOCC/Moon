@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Leo
+--created & coded by Lyris, art from Shadowverse's "Magisteel Lion"
+--滅却獣レオ
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card is Summoned: You can draw 2 cards, then destroy 1 "Destrick" monster in your hand, or, if you do not have any in your hand, shuffle your entire hand into the Deck.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -16,7 +16,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--If this card is destroyed: You can destroy 1 "Destrick" monster in your Deck, except "Destrick Leo".
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)

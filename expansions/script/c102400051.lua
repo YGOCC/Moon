@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Descent
+--created & coded by Lyris, art from Shadowverse's "Augmentation Bestowal"
+--滅却ディセント
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Activate this card by targeting 1 "Destrick" monster in your GY; Special Summon it, then equip it with this card.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -10,14 +10,12 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
-	--Each time a "Destrick" card(s) is destroyed, place 1 counter on this card for each of those cards.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetOperation(cid.acop)
 	c:RegisterEffect(e2)
-	--You can remove 5 counters from this card; add 1 "Destrick" card from your Deck to your hand.
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e3:SetType(EFFECT_TYPE_IGNITION)
@@ -26,7 +24,6 @@ function cid.initial_effect(c)
 	e3:SetTarget(cid.thtg)
 	e3:SetOperation(cid.thop)
 	c:RegisterEffect(e3)
-	--When this card leaves the field, banish the equipped monster.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	e2:SetCode(EVENT_LEAVE_FIELD)
@@ -55,7 +52,6 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		if c:IsRelateToEffect(e) and not c:IsStatus(STATUS_LEAVE_CONFIRMED) then
 			Duel.BreakEffect()
 			Duel.Equip(tp,c,tc)
-			--Add Equip limit
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_EQUIP_LIMIT)

@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Repairing
+--created & coded by Lyris, art from Shadowverse's "Biofabrication"
+--滅却リペアリング
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Target 3 of your banished cards and 2 "Destrick" monsters with different names in your GY; shuffle them into the Deck, then draw 2 cards. You can only activate 1 "Destrick Repairing" per turn.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)

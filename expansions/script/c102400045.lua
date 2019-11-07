@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Destrick Blaster
+--created & coded by Lyris, art from Shadowverse's "Mechagun Wielder"
+--滅却砲兵ブラスター
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card is Summoned: You can declare a number from 1 to 3; return that many of your banished cards to the GY at random, then you can destroy cards on the field, up to the number of "Destrick" cards returned.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -16,7 +16,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--If this card is destroyed: You can Special Summon 1 "Destrick" monster from your Deck, except "Destrick Blaster", but banish it when it leaves the field.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_DESTROYED)
