@@ -111,29 +111,41 @@ end
 function Auxiliary.EnablePandemoniumAttribute(c,...)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local t={...}
-	local regfield,typ,actcon,actcost,hoptnum,acthopt=nil,TYPE_EFFECT,nil,nil,1,nil
-	if type(t[#t])=='number' then
-		acthopt=t[#t]
+	local tclone={}
+	local regfield,typ,actcon,actcost,hoptnum,acthopt,forced=nil,TYPE_PANDEMONIUM+TYPE_EFFECT,nil,nil,1,nil,false
+	for tt=1,#t do
+		if type(t[tt])~='userdata' then
+			table.insert(tclone,t[tt])
+		end
+	end
+	if #tclone>=7 and type(t[#t])=='boolean' then
+		forced=t[#t]
 		table.remove(t)
 	end
-	if type(t[#t])=='number' then
+	if #tclone>=6 and type(t[#t])=='number' then
+		acthopt=t[#t]
+		table.remove(t)
+	elseif #tclone>=6 and type(t[#t])=='boolean' then
+		table.remove(t)
+	end
+	if #tclone>=5 and type(t[#t])=='number' then
 		hoptnum=t[#t]
 		table.remove(t)
 	end
-	if type(t[#t])=='function' then
+	if #tclone>=4 and type(t[#t])=='function' then
 		actcost=t[#t]
 		table.remove(t)
-	elseif type(t[#t])=='boolean' then
+	elseif #tclone>=4 and type(t[#t])=='boolean' then
 		table.remove(t)
 	end
-	if type(t[#t])=='function' then
+	if #tclone>=3 and type(t[#t])=='function' then
 		actcon=t[#t]
 		table.remove(t)
-	elseif type(t[#t])=='boolean' then
+	elseif #tclone>=3 and type(t[#t])=='boolean' then
 		table.remove(t)
 	end
-	if type(t[#t])=='number' then
-		typ=t[#t]
+	if #tclone>=2 and type(t[#t])=='number' then
+		typ=t[#t]|TYPE_PANDEMONIUM
 		table.remove(t)
 	end
 	if type(t[#t])=='boolean' then
@@ -214,7 +226,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 		e1:SetProperty(flags)
 		e1:SetHintTiming(TIMING_DAMAGE_CAL+TIMING_DAMAGE_STEP)
 	end
-	e1:SetTarget(Auxiliary.PandActTarget(table.unpack(t)))
+	e1:SetTarget(Auxiliary.PandActTarget(forced,table.unpack(t)))
 	e1:SetOperation(Auxiliary.PandActOperation(table.unpack(t)))
 	c:RegisterEffect(e1)
 	--register by default
@@ -447,8 +459,22 @@ function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 								local c=e:GetHandler()
 								if c:IsHasEffect(EFFECT_PANDEMONIUM_SUMMON_AFTERMATH) then
 									local pgroup={c:IsHasEffect(EFFECT_PANDEMONIUM_SUMMON_AFTERMATH)}
+									local list,echeck={},{}
 									for _,pte in ipairs(pgroup) do
-										local op=pte:GetOperation()
+										local desc=pte:GetDescription()
+										table.insert(list,desc)
+										table.insert(echeck,pte)
+									end
+									if #list>1 then
+										local opt=Duel.SelectOption(tp,table.unpack(list))+1
+										local effect=echeck[opt]
+										local op=effect:GetOperation()
+										if op then
+											op(e,tp,eg,ep,ev,re,r,rp)
+										end
+									else
+										local effect=echeck[1]
+										local op=effect:GetOperation()
 										if op then
 											op(e,tp,eg,ep,ev,re,r,rp)
 										end
@@ -470,12 +496,8 @@ function Auxiliary.PandActCon(actcon,card)
 				local c=e:GetHandler()
 				if card then c=card end
 				local check=false
-				local egroup={Duel.IsPlayerAffectedByEffect(tp,EFFECT_ALLOW_EXTRA_PANDEMONIUM_ZONE)}
-				for _,te in ipairs(egroup) do
-					local tg=te:GetTarget()
-					if not tg or (type(tg)=='function' and tg(te,card)) then
-						check=true
-					end
+				if c:IsHasEffect(EFFECT_ALLOW_EXTRA_PANDEMONIUM_ZONE) then
+					check=true
 				end
 				return (not Duel.IsExistingMatchingCard(Auxiliary.PaCheckFilter,tp,LOCATION_SZONE,0,1,card) or check)
 					and (not actcon or actcon(e,tp,eg,ep,ev,re,r,rp))
@@ -493,19 +515,25 @@ function Auxiliary.PandEnConFUInED(tpe)
 	end
 end
 function Auxiliary.PandEnableFUInED(tc,reason,tpe)
-	if not tpe then tpe=TYPE_EFFECT end
+	if not tpe then tpe=TYPE_EFFECT|TYPE_PANDEMONIUM end
 	return  function(e,tp,eg,ep,ev,re,r,rp)
 				if pcall(Group.GetFirst,tc) then
 					local tg=tc:Clone()
 					for cc in aux.Next(tg) do
 						Card.SetCardData(cc,CARDDATA_TYPE,TYPE_MONSTER+tpe+TYPE_PENDULUM)
 						if not cc:IsOnField() or cc:GetDestination()==0 then
+							if (cc:GetFlagEffect(706)>0 or cc:GetFlagEffect(726)>0) then
+								cc:RegisterFlagEffect(716,RESET_EVENT+RESETS_STANDARD-RESET_TODECK,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,1)
+							end
 							Duel.SendtoExtraP(cc,nil,reason)
 						end
 					end
 				else
 					Card.SetCardData(tc,CARDDATA_TYPE,TYPE_MONSTER+tpe+TYPE_PENDULUM)
 					if not tc:IsOnField() or tc:GetDestination()==0 then
+						if (tc:GetFlagEffect(706)>0 or tc:GetFlagEffect(726)>0) then
+							tc:RegisterFlagEffect(716,RESET_EVENT+RESETS_STANDARD-RESET_TODECK,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE,1)
+						end
 						Duel.SendtoExtraP(tc,nil,reason)
 					end
 				end
@@ -515,7 +543,7 @@ function Auxiliary.PandDisConFUInED(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_EXTRA)
 end
 function Auxiliary.PandDisableFUInED(tc,tpe)
-	if not tpe then tpe=TYPE_EFFECT end
+	if not tpe then tpe=TYPE_EFFECT|TYPE_PANDEMONIUM end
 	return  function(e,tp,eg,ep,ev,re,r,rp)
 				tc:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+tpe)
 			end
@@ -604,11 +632,11 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 					for cc in aux.Next(tg) do
 						cc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 						if cc:IsLocation(LOCATION_SZONE) then
-							if cc:IsCanTurnSet() then
+							--if cc:IsCanTurnSet() then
 								Duel.ChangePosition(cc,POS_FACEDOWN_ATTACK)
 								Duel.RaiseEvent(cc,EVENT_SSET,e,reason,cc:GetControler(),cc:GetControler(),0)
 								cc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1)
-							end
+							--end
 						else Duel.SSet(cc:GetControler(),cc) cc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
 						if not cc:IsLocation(LOCATION_SZONE) then
 							local edcheck=0
@@ -637,7 +665,7 @@ function Auxiliary.PandActCheck(e)
 	local c=e:GetHandler()
 	return e:IsHasType(EFFECT_TYPE_ACTIVATE) or c:GetFlagEffect(726)>0
 end
-function Auxiliary.PandActTarget(...)
+function Auxiliary.PandActTarget(forced,...)
 	local fx={...}
 	return  function(e,tp,eg,ep,ev,re,r,rp,chk)
 				if chk==0 then return true end
@@ -678,9 +706,21 @@ function Auxiliary.PandActTarget(...)
 				end
 				local op=0
 				if #ops>1 then
-					op=Duel.SelectOption(tp,1214,table.unpack(ops))
+					if forced then
+						op=Duel.SelectOption(tp,table.unpack(ops))
+					else
+						op=Duel.SelectOption(tp,1214,table.unpack(ops))
+					end
 					if ops[op]==1214 then op=0 end
-				elseif ops[1]~=1214 and Duel.SelectYesNo(tp,94) then op=1 end
+				elseif ops[1]~=1214 then
+					if forced then 
+						op=1
+					else 
+						if Duel.SelectYesNo(tp,94) then 
+							op=1 
+						end
+					end
+				end
 				if op>0 then
 					local xe=t[op]
 					xe:UseCountLimit(tp)
