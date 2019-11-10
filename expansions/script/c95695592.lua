@@ -43,11 +43,6 @@ function cid.initial_effect(c)
 		ge1:SetCode(EVENT_CHAINING)
 		ge1:SetOperation(cid.chainreg)
 		Duel.RegisterEffect(ge1,0)
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-		ge2:SetCode(EVENT_CHAIN_NEGATED)
-		ge2:SetOperation(cid.negatedchainreg)
-		Duel.RegisterEffect(ge2,0)
 		--reset for turn
 		local ge3=Effect.CreateEffect(c)
 		ge3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
@@ -63,7 +58,6 @@ end
 --GLOBAL VARIABLES AND GENERIC FILTERS
 cid.chaintyp={[0]=0,[1]=0}
 cid.chaincount={[0]={0,0,0},[1]={0,0,0}}
-cid.regulate_negated_activation={[0]=false,[1]=false}
 
 function cid.counterfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WIND) and c:IsRace(RACE_MACHINE)
@@ -72,13 +66,6 @@ end
 function cid.chainreg(e,tp,eg,ep,ev,re,r,rp)
 	local p=e:GetHandler():GetControler()
 	if rp==p or not re:IsActiveType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) then return end
-	if cid.chaintyp[rp]==0 or bit.band(cid.chaintyp[rp],bit.band(re:GetActiveType(),TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP))==0 then
-		if bit.band(cid.chaintyp[rp],TYPE_SPELL)==0 then
-			cid.regulate_negated_activation[rp]=TYPE_SPELL
-		elseif bit.band(cid.chaintyp[rp],TYPE_TRAP)==0 then
-			cid.regulate_negated_activation[rp]=TYPE_TRAP
-		end
-	end
 	cid.chaintyp[rp]=bit.bor(cid.chaintyp[rp],bit.band(re:GetActiveType(),TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP))
 	if bit.band(cid.chaintyp[rp],TYPE_MONSTER)>0 then
 		cid.chaincount[rp][1]=cid.chaincount[rp][1]+1
@@ -90,21 +77,9 @@ function cid.chainreg(e,tp,eg,ep,ev,re,r,rp)
 		cid.chaincount[rp][3]=cid.chaincount[rp][3]+1
 	end
 end
-function cid.negatedchainreg(e,tp,eg,ep,ev,re,r,rp)
-	local p=e:GetHandler():GetControler()
-	if rp==p or not re:IsHasType(EFFECT_TYPE_ACTIVATE) or not cid.regulate_negated_activation[rp] then return end
-	cid.chaintyp[rp]=bit.band(cid.chaintyp[rp],bit.bnot(cid.regulate_negated_activation[rp]))
-	if cid.regulate_negated_activation[rp]==TYPE_SPELL then
-		cid.chaincount[rp][2]=cid.chaincount[rp][2]-1
-	elseif cid.regulate_negated_activation[rp]==TYPE_TRAP then
-		cid.chaincount[rp][3]=cid.chaincount[rp][3]-1
-	end
-	cid.regulate_negated_activation[rp]=false
-end
 --RESET FOR TURN
 function cid.resetchainreg(e,tp,eg,ep,ev,re,r,rp)
 	cid.chaintyp={[0]=0,[1]=0}
-	cid.regulate_negated_activation={[0]=false,[1]=false}
 	cid.chaincount={[0]={0,0,0},[1]={0,0,0}}
 end
 --SPSUMMON

@@ -33,9 +33,9 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.sptg)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
-	--special summon
+	--shuffle and draw
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCost(cid.spcost)
@@ -84,6 +84,9 @@ end
 function cid.clfilter(c,tg,tp)
 	local g=tg:GetColumnGroup()
 	return g:IsContains(c) and c:GetControler()~=tp 
+end
+function cid.tdfilter(c)
+	return c:IsSetCard(0xf41) and c:IsAbleToDeck()
 end
 --spsummon condition
 function cid.splimit(e,se,sp,st)
@@ -145,26 +148,35 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 		tc:CompleteProcedure()
 	end
 end
---special summon
+--SHUFFLE AND DRAW
+function cid.checkloc(c,p)
+	return c:IsLocation(LOCATION_DECK) and c:IsControler(p)
+end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToExtraAsCost() end
 	Duel.SendtoDeck(e:GetHandler(),nil,0,REASON_COST)
 end
 function cid.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetMZoneCount(tp,e:GetHandler())>0 
-		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
+		and Duel.IsExistingMatchingCard(cid.tdfilter,tp,LOCATION_GRAVE,0,5,nil) 
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,5,tp,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.spop1(e,tp,eg,ep,ev,re,r,rp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft<=0 then return end
-	if ft>3 then ft=3 end
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.filter),tp,LOCATION_GRAVE,0,1,ft,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.tdfilter),tp,LOCATION_GRAVE,0,5,5,nil)
+	if tg:GetCount()<=0 then return end
+	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
+	local g=Duel.GetOperatedGroup()
+	for p=0,1 do
+		if g:IsExists(cid.checkloc,1,nil,p) then 
+			Duel.ShuffleDeck(p) 
+		end
+	end
+	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
+	if ct>0 then
+		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
 --destroy
