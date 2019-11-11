@@ -54,7 +54,7 @@ function cid.filter(c,sg)
 	return check
 end
 function cid.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:GetLevel()>-99
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:GetLevel()>0
 end
 ----------
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)

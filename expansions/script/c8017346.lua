@@ -36,7 +36,7 @@ function cid.dfilter(c,e)
 	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM) and c:IsType(TYPE_MONSTER) and c:IsDestructable(e)
 end
 function cid.filter(c,e,tp,m)
-	if (c:IsLocation(LOCATION_SZONE) and (not c:IsFaceup() or c:GetFlagEffect(726)<=0)) or (not c:IsCode(8017345) or not c:IsLevel(7)) 
+	if (c:IsLocation(LOCATION_SZONE) and (not c:IsFaceup() or c:GetFlagEffect(726)<=0)) or (not c:IsCode(8017345) and not c:IsLevel(7)) 
 	or ((c:IsLocation(LOCATION_SZONE) and bit.band(aux.GetOriginalPandemoniumType(c),TYPE_MONSTER+TYPE_RITUAL+TYPE_EFFECT+TYPE_PANDEMONIUM)~=TYPE_MONSTER+TYPE_RITUAL+TYPE_EFFECT+TYPE_PANDEMONIUM)
 	or bit.band(c:GetType(),TYPE_MONSTER+TYPE_RITUAL+TYPE_EFFECT+TYPE_PANDEMONIUM)~=TYPE_MONSTER+TYPE_RITUAL+TYPE_EFFECT+TYPE_PANDEMONIUM)
 	or ((c:IsLocation(LOCATION_SZONE) and (not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,true) or not Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetCode(),0,aux.GetOriginalPandemoniumType(c)|TYPE_PANDEMONIUM,c:GetTextAttack(),c:GetTextDefense(),c:GetOriginalLevel(),c:GetOriginalRace(),c:GetOriginalAttribute()))) 
