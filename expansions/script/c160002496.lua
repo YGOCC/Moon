@@ -50,7 +50,7 @@ c:RegisterEffect(e2)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCode(160002496)
 	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e5:SetCondition(c160002496.con)
+--	e5:SetCondition(c160002496.con)
 	e5:SetTargetRange(0,1)
 	c:RegisterEffect(e5)
 	if c160002496.global_check==nil then
@@ -126,7 +126,7 @@ function c160002496.descon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
 function c160002496.filter(c,atk)
-return	not c:IsAbleToHandAsCost()
+return  not c:IsAbleToHandAsCost()
 	and not c:IsType(TYPE_SYNCHRO)
 	and c:IsAbleToRemove()
 	and not c:IsType(TYPE_TOKEN)

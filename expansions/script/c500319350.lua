@@ -17,7 +17,8 @@ function c500319350.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	--e2:SetCost(c500319350.spcost)
+	 e2:SetCountLimit(1,500319350)
+	e2:SetCost(c500319350.spcost)
 	e2:SetCountLimit(1,500319350)
 	e2:SetTarget(c500319350.sptg)
 	e2:SetOperation(c500319350.spop)
@@ -44,7 +45,11 @@ function c500319350.initial_effect(c)
 	e4:SetTargetRange(1,0)
 	e4:SetTarget(c500319350.sumlimit)
 	c:RegisterEffect(e4)
+  Duel.AddCustomActivityCounter(500319350,ACTIVITY_SPSUMMON,c500319350.counterfilter)
 
+end
+function c500319350.counterfilter(c)
+	return c:IsSetCard(0x485a)
 end
 function c500319350.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp

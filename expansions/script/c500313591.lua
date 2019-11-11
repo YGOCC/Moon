@@ -67,7 +67,7 @@ end
 end
 
 function c500313591.synfilter(c,syncard,tuner,f)
-	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsSetCard(0x485a) and c:IsNotTuner()
+	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsSetCard(0x485a) and  c:IsNotTuner(syncard)
 		and c:IsCanBeSynchroMaterial(syncard,tuner) and (f==nil or f(c))
 end
 function c500313591.syntg(e,syncard,f,minc,maxc)
