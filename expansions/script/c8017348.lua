@@ -23,6 +23,14 @@ function cid.initial_effect(c)
 	p1:SetOperation(cid.thop)
 	c:RegisterEffect(p1)
 	aux.EnablePandemoniumAttribute(c,p1)
+	--atk debuff
+	local p2=Effect.CreateEffect(c)
+	p2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	p2:SetRange(LOCATION_SZONE)
+	p2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	p2:SetCondition(aux.PandActCheck)
+	p2:SetOperation(cid.atop)
+	c:RegisterEffect(p2)
 	--MONSTER EFFECTS
 	--special summon rule
 	local e1=Effect.CreateEffect(c)
@@ -79,6 +87,26 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+--ATK DEBUFF
+function cid.atop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,e:GetHandlerPlayer(),0,LOCATION_MZONE,nil)
+	if #g==0 then return end
+	local tc=g:GetFirst()
+	while tc do
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(-300)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		tc:RegisterEffect(e2)
+		tc=g:GetNext()
+	end
+end
 --SPECIAL SUMMON RULE
 --filters
 function cid.cfilter(c)
@@ -110,7 +138,8 @@ end
 function cid.atkcon(e)
 	local ph=Duel.GetCurrentPhase()
 	local tp=Duel.GetTurnPlayer()
-	return not Duel.IsExistingMatchingCard(cid.dbfilter,tp,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,e:GetHandler()) and tp==e:GetHandler():GetControler() and ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
+	return not Duel.IsExistingMatchingCard(cid.dbfilter,e:GetHandler():GetControler(),LOCATION_MZONE,0,1,e:GetHandler()) 
+		and tp==e:GetHandler():GetControler() and ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE
 end
 --SEARCH
 --filters
@@ -128,7 +157,6 @@ end
 function cid.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.scfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function cid.scop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -137,7 +165,9 @@ function cid.scop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 then
 			Duel.ConfirmCards(1-tp,g)
-			Duel.Destroy(c,REASON_EFFECT)
+			if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+				Duel.Destroy(c,REASON_EFFECT)
+			end
 		end
 	end
 end

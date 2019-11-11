@@ -46,7 +46,7 @@ function cid.dfilter(c)
 end
 function cid.spfilter(c,e,tp,m)
 	if bit.band(c:GetType(),TYPE_MONSTER+TYPE_RITUAL+TYPE_EFFECT+TYPE_PANDEMONIUM)~=TYPE_MONSTER+TYPE_RITUAL+TYPE_EFFECT+TYPE_PANDEMONIUM
-	or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then 
+	or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) or (c:IsLocation(LOCATION_HAND) and c:IsPublic()) then 
 		return false 
 	end
 	local dg=Duel.GetMatchingGroup(cid.dfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,nil)
@@ -66,7 +66,7 @@ end
 -----------
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	if Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+	if Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		e:SetOperation(cid.activate)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
@@ -80,7 +80,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.ConfirmCards(1-tp,tc)
@@ -98,7 +98,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:SetMaterial(mat)
 		if Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)==0 then return end
 		Duel.BreakEffect()
-		if not tc:IsLocation(LOCATION_HAND) then return end
+		if not tc:IsLocation(LOCATION_HAND+LOCATION_DECK) then return end
 		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 		tc:CompleteProcedure()
 		if (tc:IsSetCard(0xf78) or tc:IsSetCard(0xf79)) and c:IsCanTurnSet() then
@@ -153,10 +153,10 @@ end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
-		return #g>0 and g:FilterCount(Card.IsAbleToRemoveAsCost(),nil)==#g
+		return #g>0 and g:FilterCount(Card.IsAbleToRemoveAsCost,nil)==#g
 	end
 	local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
-	local g2=g:Filter(Card.IsAbleToRemoveAsCost(),nil)
+	local g2=g:Filter(Card.IsAbleToRemoveAsCost,nil)
 	if #g2>=#g then
 		Duel.Remove(g2,POS_FACEUP,REASON_COST)
 	end
