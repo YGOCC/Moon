@@ -61,7 +61,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local field=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_DECK,0,nil,field)
-	if Duel.GetFlagEffect(tp,id)<=0 and g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	if Duel.GetFlagEffect(tp,id)<=0 and g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 		local field2=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local tc=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,field2):GetFirst()

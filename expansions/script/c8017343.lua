@@ -11,7 +11,7 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	c:SetSPSummonOnce(id)
 	--link summon
-	aux.AddLinkProcedure(c,cid.mfilter,2,2,cid.lcheck)
+	aux.AddLinkProcedure(c,cid.mfilter,2,2)
 	c:EnableReviveLimit()
 	--extra pande summon
 	local e1=Effect.CreateEffect(c)
@@ -50,9 +50,6 @@ end
 --GENERIC FILTERS
 function cid.mfilter(c)
 	return c:IsSummonType(SUMMON_TYPE_PANDEMONIUM)
-end
-function cid.lcheck(g,lc)
-	return g:GetClassCount(Card.GetLevel)==1
 end
 --EXTRA PANDE SUMMON
 function cid.sumcon(e,tp,eg,ep,ev,re,r,rp)

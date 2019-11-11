@@ -74,6 +74,9 @@ end
 function cid.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
+function cid.prevfilter(c,tp)
+	return c:GetPreviousControler()==tp
+end
 -----------
 function cid.actcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:IsHasType(EFFECT_TYPE_ACTIVATE) and aux.PandActCheck(e)
@@ -82,8 +85,8 @@ function cid.acttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,1-tp,1)
+	local ct=math.min(2,#g)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct)
 	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		Duel.SetChainLimit(cid.chainlm)
 	end
@@ -94,10 +97,12 @@ end
 function cid.actop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,aux.ExceptThisCard(e))
 	if #g>0 then
-		Duel.Destroy(g,REASON_EFFECT)
-		Duel.BreakEffect()
-		Duel.Draw(tp,1,REASON_EFFECT)
-		Duel.Draw(1-tp,1,REASON_EFFECT)
+		if Duel.Destroy(g,REASON_EFFECT)==0 then return end
+		local ct=Duel.GetOperatedGroup():FilterCount(cid.prevfilter,nil,tp)
+		if ct>0 then
+			Duel.BreakEffect()
+			Duel.Draw(tp,ct,REASON_EFFECT)
+		end
 	end
 end
 --ATK UP
