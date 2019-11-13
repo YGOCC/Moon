@@ -50,7 +50,7 @@ function cid.tgop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and chkc:IsAbleToDeck() and cid.filter(chkc)
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and chkc:IsAbleToDeck() and cid.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(aux.AND(cid.filter,Card.IsAbleToDeck),tp,LOCATION_REMOVED,0,1,nil)
 		and Duel.IsExistingMatchingCard(aux.AND(aux.FilterBoolFunction(Card.IsCode,3659803),Card.IsAbleToHand),tp,LOCATION_DECK,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
@@ -79,14 +79,14 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVEXYZ)
-	local g=c:GetOverlayGroup():FilterSelect(tp,aux.nzatk,1,1,nil)
-	if #g==0 or Duel.SendtoGrave(g,REASON_EFFECT) then return end
-	Duel.RaiseEvent(g,EVENT_DETACH_MATERIAL,e,REASON_EFFECT,tp,tp,0)
+	local tc=c:GetOverlayGroup():FilterSelect(tp,aux.nzatk,1,1,nil):GetFirst()
+	if not tc or Duel.SendtoGrave(tc,REASON_EFFECT)==0 then return end
+	Duel.RaiseEvent(tc,EVENT_DETACH_MATERIAL,e,REASON_EFFECT,tp,tp,0)
 	if c:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(g:GetFirst():GetBaseAttack())
+		e1:SetValue(tc:GetAttack())
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 		c:RegisterEffect(e1)
 	end

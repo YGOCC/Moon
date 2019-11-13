@@ -124,9 +124,10 @@ end
 Card.IsXyzLevel=function(c,xyz,lv)
 	if Auxiliary.Impures[c] and not Auxiliary.Impures[c]() then
 		if c:IsStatus(STATUS_NO_LEVEL) then return false end
+		if lv==c:GetLevel() then return true end
 		local xle={c:IsHasEffect(EFFECT_XYZ_LEVEL)}
-		if #xle==0 and lv==c:GetLevel() then return true end
-		local lev=xle[0]:GetValue()
+		if #xle==0 then return false end
+		local lev=xle[1]:GetValue()
 		return lev&0xffff==lv or lev>>16==lv
 	end
 	return is_xyz_level(c,xyz,lv)
@@ -290,7 +291,7 @@ end
 function Auxiliary.ImpureCheckGoal(tp,sg,ec,minc,ct,...)
 	local funs={...}
 	for _,f in pairs(funs) do
-		if not sg:IsExists(f,1,nil) then return false end
+		if not sg:IsExists(f[1],f[2],nil) then return false end
 	end
 	return ct>=minc and sg:CheckWithSumEqual(Card.GetLevel,-ec:GetLevel(),ct,ct,ec) and Duel.GetLocationCountFromEx(tp,tp,sg,ec)>0
 end
@@ -301,7 +302,7 @@ function Auxiliary.ImpureCondition(min,max,...)
 				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local mg=Duel.GetMatchingGroup(Card.IsCanBeImpureMaterial,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE+LOCATION_FZONE,nil,c)
-				local fg=aux.GetMustMaterialGroup(tp,EFFECT_MUST_BE_SPACE_MATERIAL)
+				local fg=aux.GetMustMaterialGroup(tp,EFFECT_MUST_BE_IMPURE_MATERIAL)
 				if fg:IsExists(aux.MustMaterialCounterFilter,1,nil,mg) then return false end
 				Duel.SetSelectedCard(fg)
 				return mg:IsExists(Auxiliary.ImpureRecursiveFilter,1,nil,tp,Group.CreateGroup(),mg,c,0,min,max,table.unpack(funs))
