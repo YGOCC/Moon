@@ -82,6 +82,7 @@ function Auxiliary.RelayPass(fc,tc)
 		if aux.GetValueType(te)=="Effect" and (te:IsHasType(EFFECT_TYPE_CONTINUOUS) or te:GetType()==EFFECT_TYPE_SINGLE)
 			and not te:IsHasProperty(EFFECT_FLAG_INITIAL+EFFECT_FLAG_UNCOPYABLE) then
 			local res=Auxiliary.ResetList[te]
+			if Effect.GetReset then res=te:GetReset() end
 			if te:GetOwner()~=fc or te:IsHasProperty(EFFECT_FLAG_CANNOT_DISABLE) or (res and res&RESET_DISABLE==0) then
 				local ef=te:Clone()
 				tc:RegisterEffect(ef,true)
