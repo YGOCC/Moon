@@ -56,7 +56,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.filter(c)
 	return c:IsType(TYPE_PENDULUM) 
-		and (c:IsLocation(LOCATION_GRAVE+LOCATION_HAND) or (c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_PENDULUM)) and c:IsFaceup())) c:IsAbleToRemove()
+		and (c:IsLocation(LOCATION_GRAVE+LOCATION_HAND) or (c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_PENDULUM)) and c:IsFaceup()) and c:IsAbleToRemove()
 end
 function cid.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
