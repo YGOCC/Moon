@@ -1,4 +1,5 @@
 --created & coded by Lyris, art from "Amnesia" in Yu-Gi-Oh! Arc-V Episode 32
+--アノニマイズ
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
