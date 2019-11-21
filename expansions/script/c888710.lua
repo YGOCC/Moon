@@ -97,8 +97,7 @@ function cm.thcon(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():GetFlagEffect(m)>0
 end
 function cm.thfilter(c,tp)
-    return c:IsSetCard(0xff1) and c:IsType(TYPE_SPELL)
-        and c:IsAbleToHand()
+    return c:IsSetCard(0xff1) and c:IsAbleToHand()
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil,tp) end
