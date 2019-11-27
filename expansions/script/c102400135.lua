@@ -30,12 +30,7 @@ function cid.resetcount(e,tp,eg,ep,ev,re,r,rp)
 	cid[0]:Clear()
 end
 function cid.addcount(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	while tc do
-		cid[0]=cid[0]+tc
-		if #cid[0]>=2 then cid[0]=cid[0]-cid[0]:GetFirst() end
-		tc=eg:GetNext()
-	end
+	for tc in aux.Next(eg) do cid[0]=cid[0]+tc end
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -48,5 +43,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.droperation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
-	Duel.Draw(tp,cid[0]:GetClassCount(Card.GetCode),REASON_EFFECT)
+	local ct=cid[0]:GetClassCount(Card.GetCode)
+	if ct>2 then ct=2 end
+	Duel.Draw(tp,ct,REASON_EFFECT)
 end

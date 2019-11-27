@@ -21,9 +21,8 @@ function cid.drawtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) and g:GetClassCount(Card.GetCode)>1
 		and Duel.IsExistingTarget(nil,tp,LOCATION_REMOVED,0,3,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local sg=g:Select(tp,1,1,nil)
-	g:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
-	Duel.SetTargetCard(sg+g:Select(tp,1,1,nil)+Duel.SelectMatchingCard(tp,Card.IsCanBeEffectTarget,tp,LOCATION_REMOVED,0,3,3,nil,e))
+	local sg=g:SelectSubGroup(tp,aux.dncheck,false,2,2)
+	Duel.SetTargetCard(sg+Duel.SelectMatchingCard(tp,Card.IsCanBeEffectTarget,tp,LOCATION_REMOVED,0,3,3,nil,e))
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
@@ -34,7 +33,7 @@ function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetOperatedGroup()
 	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
 	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-	if ct>=1 then
+	if ct>0 then
 		Duel.BreakEffect()
 		Duel.Draw(tp,2,REASON_EFFECT)
 	end

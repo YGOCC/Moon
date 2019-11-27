@@ -43,17 +43,11 @@ function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.thfilter,tp,LOCATION_DECK,0,nil)
-	if g:GetClassCount(Card.GetCode)>2 then
-		local sg=Group.CreateGroup()
-		for i=0,2 do
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sc=g:Select(tp,1,1,nil):GetFirst()
-			sg:AddCard(sc)
-			g:Remove(Card.IsCode,nil,sc:GetCode())
-		end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local sg=g:SelectSubGroup(tp,aux.dncheck,false,3,3)
+	if sg then
 		Duel.ConfirmCards(1-tp,sg)
-		local tg=sg:RandomSelect(1-tp,1)
-		local tc=tg:GetFirst()
+		local tc=sg:RandomSelect(1-tp,1):GetFirst()
 		if tc:IsAbleToHand() then
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			sg:RemoveCard(tc)
