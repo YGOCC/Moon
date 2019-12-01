@@ -29,8 +29,11 @@ end
 function cid.resetcount(e,tp,eg,ep,ev,re,r,rp)
 	cid[0]:Clear()
 end
+function cid.filter(c)
+	return c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
+end
 function cid.addcount(e,tp,eg,ep,ev,re,r,rp)
-	for tc in aux.Next(eg) do cid[0]=cid[0]+tc end
+	for tc in aux.Next(eg:Filter(cid.filter,nil)) do cid[0]=cid[0]+tc end
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())

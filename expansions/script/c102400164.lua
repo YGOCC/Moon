@@ -1,4 +1,4 @@
---created & coded by Lyris
+--created by Inti of Discord, coded by Lyris
 --ワールウィンド・ストライク
 local cid,id=GetID()
 function cid.initial_effect(c)
