@@ -25,7 +25,7 @@ function ref.initial_effect(c)
 	e4:SetTargetRange(LOCATION_MZONE,0)
 	e4:SetTarget(ref.etarget)
 	e4:SetValue(ref.efilter)
-	
+	c:RegisterEffect(e4)
 end
 
 --ATK
@@ -36,13 +36,13 @@ function ref.atktg(e,c)
 	return c==Duel.GetAttacker() and c:IsSetCard(1856)
 end
 function ref.atkval(e,c)
-	return Duel.GetMatchingGroupCount(nil,c:GetControler(),0,LOCATION_MZONE,nil)*200
+	return Duel.GetMatchingGroupCount(Card.IsType,c:GetControler(),0,LOCATION_MZONE,nil,TYPE_MONSTER)*200
 end
 
 --Immune
 function ref.etarget(e,c)
 	return c:IsSetCard(1856) and c:IsPosition(POS_ATTACK)
 end
-function ref.efilter(e,re)
-	return re:GetOwnerPlayer()~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_TRAP)
+function ref.efilter(e,te)
+	return te:IsActiveType(TYPE_TRAP)
 end
