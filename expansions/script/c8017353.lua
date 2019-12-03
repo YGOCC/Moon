@@ -72,6 +72,7 @@ function cid.flipop(e,tp,eg,ep,ev,re,r,rp)
 		local pos=POS_FACEDOWN
 		if tc:IsLocation(LOCATION_MZONE) then pos=POS_FACEDOWN_DEFENSE end
 		Duel.ChangePosition(tc,pos)
+		tc=g:GetNext()
 	end
 end
 --PIERCE FACEDOWN
