@@ -15,8 +15,8 @@ function cid.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_EXTRA)
-	e1:SetCondition(cid.spcon)
-	e1:SetOperation(cid.spop)
+	e1:SetCondition(cid.spcon2)
+	e1:SetOperation(cid.spop3)
 	c:RegisterEffect(e1)
 		--remove
 	local e2=Effect.CreateEffect(c)
@@ -92,11 +92,36 @@ function cid.spcfilter2(c)
 	return c:IsCode(104242585) and c:IsFaceup()
 end
 function cid.spcon2(e,c)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,1,nil) 
-	and Duel.GetLocationCountFromEx(tp,LOCATION_MZONE)>0 end
+	if c==nil then return true end
+	return Duel.GetLocationCountFromEx(tp,LOCATION_MZONE)>0
+	and Duel.IsExistingMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,5,nil)
+end
+
+function cid.spop3(e,tp,eg,ep,ev,re,r,rp,c)
+	if Duel.GetLocationCountFromEx(tp,LOCATION_MZONE)<=0 then return end
+	local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+		local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+		local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+		local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+		local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+end
+end
+end
+end
+end
 end
 function cid.spop2(e,tp,eg,ep,ev,re,r,rp,c)
-local g=Duel.SelectMatchingCard(tp,spcfilter2,tp,LOCATION_REMOVED,0,1,1,nil)
+local g=Duel.SelectMatchingCard(tp,cid.spcfilter2,tp,LOCATION_REMOVED,0,2,2,nil)
 	local tc=g:GetFirst()
 	if g:GetCount()>0 then
 		Duel.Exile(g,REASON_RULE)
