@@ -61,5 +61,5 @@ function cid.raisevent(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.efilter(e,te)
-	return te:IsCode(id)
+	return te:GetOwner()~=e:GetOwner()
 end

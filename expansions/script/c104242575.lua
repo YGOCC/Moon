@@ -61,8 +61,8 @@ function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.spcfilter2,tp,LOCATION_REMOVED,0,2,2,nil)
-	if g:GetCount()=2 then
-	if Duel.Exile(g,REASON_EFFECT) then
+	if g:GetCount()==2 then
+	if Duel.Exile(g,REASON_RULE) then
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
