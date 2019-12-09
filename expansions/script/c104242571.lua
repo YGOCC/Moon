@@ -23,6 +23,9 @@ function cid.initial_effect(c)
 	e2:SetCondition(cid.atkcon)
 	e2:SetValue(500)
 	c:RegisterEffect(e2)
+	local e2x=e2:Clone()
+	e2x:SetCode(EFFECT_UPDATE_DEFENSE)
+	c:RegisterEffect(e2x)
 		--chk
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -49,7 +52,7 @@ function cid.initial_effect(c)
 	e5:SetTarget(cid.sptg)
 	e5:SetOperation(cid.spop)
 	c:RegisterEffect(e5)
-		--cannot remove
+	--cannot remove
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD)
 	e6:SetCode(EFFECT_CANNOT_REMOVE)

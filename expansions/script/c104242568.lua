@@ -17,8 +17,9 @@ function cid.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(cid.sprcon)
 	c:RegisterEffect(e1)
-		--bounce and limit targets
+		--bounce and pop
 	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -51,12 +52,10 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,POS_FACEUP,REASON_EFFECT)
-			Duel.BreakEffect()
-			Duel.Hint(HINT_CARD,0,104242585)
-	local sc=Duel.CreateToken(tp,104242585)
-	sc:SetCardData(CARDDATA_TYPE, sc:GetType()-TYPE_TOKEN)
-  Duel.Remove(sc,POS_FACEUP,REASON_RULE)
---	sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
---	Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end

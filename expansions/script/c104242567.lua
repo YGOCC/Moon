@@ -17,8 +17,9 @@ function cid.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(cid.sprcon)
 	c:RegisterEffect(e1)
-		--bounce and limit targets
+		--bounce and search
 	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -41,7 +42,7 @@ function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_COST)
 end
 function cid.thfilter(c)
-	return c:IsLevel(3) and c:IsAttribute(ATTRIBUTE_DARK) and not c:IsCode(id) and c:IsAbleToHand()
+	return c:IsLevel(3) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_BEAST) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -53,12 +54,10 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-			Duel.BreakEffect()
-			Duel.Hint(HINT_CARD,0,104242585)
-	local sc=Duel.CreateToken(tp,104242585)
-	sc:SetCardData(CARDDATA_TYPE, sc:GetType()-TYPE_TOKEN)
-  Duel.Remove(sc,POS_FACEUP,REASON_RULE)
---	sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
---	Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end

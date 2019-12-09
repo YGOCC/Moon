@@ -17,8 +17,9 @@ function cid.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(cid.sprcon)
 	c:RegisterEffect(e1)
-		--bounce and limit targets
+		--bounce and negate
 	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_DISABLE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -42,9 +43,9 @@ function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.negtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and aux.disfilter1(chkc) and chkc~=e:GetHandler() end
-	if chk==0 then return Duel.IsExistingTarget(aux.disfilter1,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingTarget(aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,aux.disfilter1,tp,0,LOCATION_ONFIELD,1,1,e:GetHandler())
+	local g=Duel.SelectTarget(tp,aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
 function cid.negop(e,tp,eg,ep,ev,re,r,rp)
@@ -72,13 +73,11 @@ function cid.negop(e,tp,eg,ep,ev,re,r,rp)
 			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
 			e3:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e3)
-				Duel.BreakEffect()
-			Duel.Hint(HINT_CARD,0,104242585)
-	local sc=Duel.CreateToken(tp,104242585)
-	sc:SetCardData(CARDDATA_TYPE, sc:GetType()-TYPE_TOKEN)
-  Duel.Remove(sc,POS_FACEUP,REASON_RULE)
---	sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
---	Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		end
 	end
+	local sc=Duel.CreateToken(tp,104242585)
+	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+	Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--	sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--	Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end

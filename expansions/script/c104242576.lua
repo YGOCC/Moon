@@ -25,7 +25,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.drawtarget)
 	e1:SetOperation(cid.drawop)
 	c:RegisterEffect(e1)
-
 end
 --2 to deck, draw 1
 function cid.todeckfilter(c)
@@ -64,12 +63,9 @@ function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
-	if tc then
-	if Duel.Exile(tc,REASON_RULE) then
-	tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
-	if tc then
-	if Duel.Exile(tc,REASON_RULE) then
+	local g=Duel.SelectMatchingCard(tp,cid.spcfilter2,tp,LOCATION_REMOVED,0,2,2,nil)
+	if g:GetCount()=2 then
+	if Duel.Exile(g,REASON_EFFECT) then
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
@@ -77,6 +73,4 @@ local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp
 	end
 	end
 	end
-end
-end
 end
