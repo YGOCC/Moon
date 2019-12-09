@@ -28,7 +28,12 @@ e2:SetCondition(c500314216.condition)
 	e2:SetCost(c500314216.cost)
 	e2:SetOperation(c500314216.operation)
 	c:RegisterEffect(e2)
-	end
+	
+   Duel.AddCustomActivityCounter(500314216,ACTIVITY_SPSUMMON,c500314216.counterfilter)
+end
+function c500314216.counterfilter(c)
+	return c:GetSummonLocation()~=LOCATION_EXTRA or  ( c:IsSetCard(0xc50) or  c:IsType(TYPE_EFFECT))
+end
 function c500314216.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
@@ -36,9 +41,21 @@ function c500314216.filter1(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c500314216.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,6,REASON_COST) end
+	   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,6,REASON_COST) and Duel.GetCustomActivityCount(500314216,tp,ACTIVITY_SPSUMMON)==0  end
 	e:GetHandler():RemoveEC(tp,6,REASON_COST)
+   local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c500314216.splimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end
+function c500314216.splimit(e,c,sump,sumtype,sumpos,targetp)
+	return c:IsLocation(LOCATION_EXTRA) and not ( c:IsSetCard(0xc50) or not c:IsType(TYPE_EFFECT))
+end
+
 function c500314216.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end

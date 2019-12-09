@@ -86,4 +86,5 @@ function c160009999.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 	Duel.SpecialSummonComplete()
+
 end
