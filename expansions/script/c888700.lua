@@ -52,6 +52,7 @@ function cm.operation1(e,tp,eg,ep,ev,re,r,rp)
     local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
     if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=3 then return end
     Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
+    Duel.Draw(tp,1,REASON_EFFECT)
 end
 function cm.cfilter(c)
     return c:IsSetCard(0xff1) and c:IsDiscardable()

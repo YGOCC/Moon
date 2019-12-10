@@ -40,9 +40,20 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
     if g:GetCount()>0 then
         Duel.SendtoHand(g,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g)
-        Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
     end
+    local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+    local e3=Effect.CreateEffect(e:GetHandler())
+    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e3:SetCode(EVENT_PHASE+PHASE_END)
+    e3:SetCountLimit(1)
+    e3:SetReset(RESET_PHASE+PHASE_END)
+    e3:SetOperation(cm.tgop)
+    Duel.RegisterEffect(e3,p)   
 end
+function cm.tgop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+end
+
 
 function cm.tgcon(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()

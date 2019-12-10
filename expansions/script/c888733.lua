@@ -19,7 +19,7 @@ function cm.exfilter0(c)
     return c:IsSetCard(0xff1) and c:IsCanBeFusionMaterial() and c:IsAbleToGrave() and c:IsType(TYPE_MONSTER)
 end
 function cm.exfilter1(c,e)
-    return c:IsSetCard(0xff1) and c:IsCanBeFusionMaterial() and c:IsAbleToGrave() and not c:IsImmuneToEffect(e)
+    return c:IsSetCard(0xff1) and c:IsCanBeFusionMaterial() and c:IsAbleToGrave() and not c:IsImmuneToEffect(e) and c:IsType(TYPE_MONSTER)
 end
 function cm.filter2(c,e,tp,m,f,chkf)
     return c:IsType(TYPE_FUSION) and c:IsSetCard(0xff1) and (not f or f(c))

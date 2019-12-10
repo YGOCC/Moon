@@ -6,7 +6,7 @@ function cm.initial_effect(c)
     e0:SetType(EFFECT_TYPE_SINGLE)
     e0:SetCode(EFFECT_TRAP_ACT_IN_HAND)
     e0:SetCondition(cm.handcon)
-    c:RegisterEffect(e0) 
+--    c:RegisterEffect(e0) 
         --Activate
     local e1=Effect.CreateEffect(c)
     e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)

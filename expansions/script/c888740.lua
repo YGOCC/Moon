@@ -18,7 +18,7 @@ function cm.initial_effect(c)
     e2:SetType(EFFECT_TYPE_SINGLE)
     e2:SetCode(EFFECT_TRAP_ACT_IN_HAND)
     e2:SetCondition(cm.handcon)
---    c:RegisterEffect(e2) 
+    c:RegisterEffect(e2) 
 end
 function cm.filter(c)
     return c:IsSetCard(0xff1) and c:IsAbleToRemove() 

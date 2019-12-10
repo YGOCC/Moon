@@ -94,8 +94,9 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function cm.thcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetFlagEffect(m)>0
+    return e:GetHandler():GetFlagEffect(m)>0 and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0,nil)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE,nil)
 end
+
 function cm.thfilter(c,tp)
     return c:IsSetCard(0xff1) and c:IsType(TYPE_TRAP)
         and c:IsAbleToHand()
