@@ -30,28 +30,20 @@ function c1020098.initial_effect(c)
 	e3:SetDescription(aux.Stringid(1020098,1))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_LEAVE_FIELD)
 	e3:SetCountLimit(1,1220098)
 	e3:SetCondition(c1020098.spcon)
 	e3:SetTarget(c1020098.sptg)
 	e3:SetOperation(c1020098.spop)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EVENT_REMOVE)
-	c:RegisterEffect(e4)
-	local e5=e3:Clone()
-	e5:SetCode(EVENT_TO_DECK)
-	c:RegisterEffect(e5)
-	local e6=e3:Clone()
-	e6:SetCode(EVENT_TO_HAND)
-	c:RegisterEffect(e6)
 end
 --filters
 function c1020098.matfilter(c)
 	return c:IsLinkRace(RACE_CYBERSE) and c:IsLinkType(TYPE_LINK)
 end
-function c1020098.spfilter(c,e,tp)
-	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c1020098.spfilter(c,e,tp,zone)
+	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function c1020098.lkfilter(c,e,tp)
 	return c:IsRace(RACE_CYBERSE) and c:IsLinkBelow(3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -62,17 +54,18 @@ function c1020098.lkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function c1020098.lktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local zone=e:GetHandler():GetLinkedZone(tp)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c1020098.spfilter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(c1020098.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	local zone=bit.band(e:GetHandler():GetLinkedZone(tp),0x1f)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c1020098.spfilter(chkc,e,tp,zone) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(c1020098.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c1020098.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,aux.NecroValleyFilter(c1020098.spfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp,zone)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c1020098.lkop(e,tp,eg,ep,ev,re,r,rp)
-	local zone=e:GetHandler():GetLinkedZone(tp)
+	local zone=bit.band(e:GetHandler():GetLinkedZone(tp),0x1f)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP,zone) then
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -94,7 +87,7 @@ function c1020098.untg(e,c)
 end
 --spsummon LINK
 function c1020098.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+	return e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 		and e:GetHandler():GetPreviousSequence()>4
 end
 function c1020098.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

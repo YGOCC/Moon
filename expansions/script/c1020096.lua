@@ -32,34 +32,26 @@ function c1020096.initial_effect(c)
 	e3:SetDescription(aux.Stringid(1020096,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_LEAVE_FIELD)
 	e3:SetCountLimit(1,1220096)
 	e3:SetCondition(c1020096.spcon)
 	e3:SetTarget(c1020096.sptg)
 	e3:SetOperation(c1020096.spop)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EVENT_REMOVE)
-	c:RegisterEffect(e4)
-	local e5=e3:Clone()
-	e5:SetCode(EVENT_TO_DECK)
-	c:RegisterEffect(e5)
-	local e6=e3:Clone()
-	e6:SetCode(EVENT_TO_HAND)
-	c:RegisterEffect(e6)
 end
 --filters
 function c1020096.matfilter(c)
 	return c:IsLinkRace(RACE_CYBERSE) and c:IsLinkType(TYPE_LINK)
 end
 function c1020096.spfilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x39c) and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x39c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c1020096.batk(c,atk)
 	return c:IsFaceup() and c:IsSetCard(0x39c) and c:GetAttack()>atk
 end
 function c1020096.costfilter(c,atk)
-	return c:IsFaceup() and c:IsSetCard(0x39c) and c:GetAttack()<atk
+	return c:IsFaceup() and c:IsSetCard(0x39c) and c:GetAttack()<atk and c:IsReleasable()
 end
 function c1020096.negfilter(c,atk)
 	return aux.disfilter1(c) and c:GetAttack()>atk
@@ -82,7 +74,7 @@ function c1020096.lkop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c1020096.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
-	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,true,POS_FACEUP) then
+	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
@@ -98,8 +90,8 @@ function c1020096.lkop(e,tp,eg,ep,ev,re,r,rp)
 end
 --negate
 function c1020096.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
-		and Duel.IsExistingMatchingCard(c1020096.batk,tp,LOCATION_MZONE,0,1,nil,e:GetHandler():GetAttack())
+	return (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
+		and Duel.IsExistingMatchingCard(c1020096.batk,tp,LOCATION_MZONE,0,1,e:GetHandler(),e:GetHandler():GetAttack())
 end
 function c1020096.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local atk=e:GetHandler():GetAttack()
@@ -116,6 +108,7 @@ function c1020096.negop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c1020096.negfilter,tp,0,LOCATION_MZONE,nil,c:GetAttack())
 	local tc=g:GetFirst()
 	while tc do
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
@@ -124,16 +117,21 @@ function c1020096.negop(e,tp,eg,ep,ev,re,r,rp)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetValue(RESET_TURN_SET)
 		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e2)
-		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+		if tc:IsType(TYPE_TRAPMONSTER) then
+			local e3=Effect.CreateEffect(c)
+			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+			e3:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e3)
+		end
 		tc=g:GetNext()
 	end
 end
 --spsummon LINK
 function c1020096.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+	return e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 		and e:GetHandler():GetPreviousSequence()>4
 end
 function c1020096.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

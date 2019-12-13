@@ -9,8 +9,8 @@ function c1020094.initial_effect(c)
 	e1:SetDescription(aux.Stringid(1020094,0))
 	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetCountLimit(1)
 	e1:SetCondition(c1020094.lkcon)
 	e1:SetOperation(c1020094.lkop)
 	c:RegisterEffect(e1)
@@ -38,13 +38,13 @@ function c1020094.initial_effect(c)
 end
 --filters
 function c1020094.atkfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_CYBERSE)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsRace(RACE_CYBERSE)
 end
 function c1020094.costfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x39c) and c:IsType(TYPE_MONSTER)
 end
 function c1020094.spfilter(c,e,tp)
-	return c:IsRace(RACE_CYBERSE) and c:GetLevel()<=4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_MONSTER) and c:GetLevel()<=4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --boost
 function c1020094.lkcon(e,tp,eg,ep,ev,re,r,rp)
@@ -52,15 +52,14 @@ function c1020094.lkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c1020094.lkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c1020094.atkfilter,tp,LOCATION_MZONE,0,nil)
-	local gval=Duel.GetMatchingGroup(c1020094.atkfilter,tp,LOCATION_MZONE,0,e:GetHandler())
+	local gval=Duel.GetMatchingGroup(c1020094.atkfilter,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
 	local atk=gval:GetCount()*400
 	local tc=g:GetFirst()
 	while tc do
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		e1:SetValue(atk)
 		tc:RegisterEffect(e1)
 		tc=g:GetNext()
@@ -76,27 +75,33 @@ function c1020094.imcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(cg,REASON_COST)
 end
 function c1020094.imop(e,tp,eg,ep,ev,re,r,rp)
+	local phase=0
+	if Duel.GetTurnPlayer()==tp then
+		phase=RESET_OPPO_TURN
+	else
+		phase=RESET_SELF_TURN
+	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_IMMUNE_EFFECT)
 	e1:SetTarget(c1020094.imtg)
 	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetReset(RESET_PHASE+PHASE_END,2)
+	e1:SetReset(RESET_PHASE+PHASE_END+phase)
 	e1:SetValue(c1020094.imval)
+	e1:SetOwnerPlayer(tp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c1020094.imtg(e,c)
 	return c:IsSetCard(0x39c) and c:IsType(TYPE_MONSTER)
 end
-function c1020094.imval(e,re)
-	return e:GetOwnerPlayer()~=re:GetOwnerPlayer() and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
+function c1020094.imval(e,te)
+	return te:IsActiveType(TYPE_SPELL+TYPE_TRAP) and te:GetOwnerPlayer()~=e:GetOwnerPlayer() 
 end
 --spsummon
 function c1020094.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsReason(REASON_DESTROY) and c:IsPreviousLocation(LOCATION_ONFIELD)
+	return c:IsReason(REASON_DESTROY) and c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_ONFIELD)
 		and c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousControler()==tp
-		and Duel.IsExistingMatchingCard(c1020094.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
 end
 function c1020094.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

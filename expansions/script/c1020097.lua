@@ -32,31 +32,23 @@ function c1020097.initial_effect(c)
 	e3:SetDescription(aux.Stringid(1020097,2))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_LEAVE_FIELD)
 	e3:SetCountLimit(1,1220097)
 	e3:SetCondition(c1020097.spcon)
 	e3:SetTarget(c1020097.sptg)
 	e3:SetOperation(c1020097.spop)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EVENT_REMOVE)
-	c:RegisterEffect(e4)
-	local e5=e3:Clone()
-	e5:SetCode(EVENT_TO_DECK)
-	c:RegisterEffect(e5)
-	local e6=e3:Clone()
-	e6:SetCode(EVENT_TO_HAND)
-	c:RegisterEffect(e6)
 end
 --filters
 function c1020097.matfilter(c)
 	return c:IsLinkRace(RACE_CYBERSE) and c:IsLinkType(TYPE_LINK)
 end
 function c1020097.atkfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_CYBERSE)
+	return c:IsFaceup() and c:IsRace(RACE_CYBERSE) and c:IsType(TYPE_MONSTER)
 end
 function c1020097.costfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x39c)
+	return c:IsFaceup() and c:IsSetCard(0x39c) and c:IsType(TYPE_MONSTER)
 end
 function c1020097.lkfilter(c,e,tp)
 	return c:IsRace(RACE_CYBERSE) and c:IsLinkBelow(3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -68,8 +60,9 @@ function c1020097.lkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c1020097.lkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c1020097.atkfilter,tp,LOCATION_MZONE,0,nil)
-	local gval=Duel.GetMatchingGroup(c1020097.atkfilter,tp,LOCATION_MZONE,0,e:GetHandler())
+	local gval=Duel.GetMatchingGroup(c1020097.atkfilter,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
 	local atk=gval:GetCount()*400
+	if atk<=0 then return end
 	local tc=g:GetFirst()
 	while tc do
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -85,7 +78,8 @@ end
 --negate
 function c1020097.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetAttackAnnouncedCount()==0
-		and Duel.CheckReleaseGroup(tp,c1020097.costfilter,1,e:GetHandler()) end
+		and Duel.CheckReleaseGroup(tp,c1020097.costfilter,1,e:GetHandler()) 
+	end
 	local cg=Duel.SelectReleaseGroup(tp,c1020097.costfilter,1,1,e:GetHandler())
 	Duel.Release(cg,REASON_COST)
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -104,13 +98,13 @@ function c1020097.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c1020097.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
 --spsummon LINK
-function c1020097.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+function c1020096.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 		and e:GetHandler():GetPreviousSequence()>4
 end
 function c1020097.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

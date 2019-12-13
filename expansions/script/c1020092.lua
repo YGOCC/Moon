@@ -41,7 +41,7 @@ function c1020092.initial_effect(c)
 end
 --filters
 function c1020092.tkfilter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsSetCard(0x39c)
+	return bit.band(c:GetPreviousTypeOnField(),TYPE_MONSTER)>0 and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsPreviousSetCard(0x39c)
 end
 function c1020092.cfilter(c,e,tp)
 	return c:IsType(TYPE_PENDULUM) and c:IsRace(RACE_CYBERSE) and c:IsFaceup()
@@ -50,10 +50,10 @@ function c1020092.cfilter(c,e,tp)
 end
 function c1020092.spfilter(c,code,e,tp)
 	return c:IsType(TYPE_PENDULUM) and c:IsRace(RACE_CYBERSE)
-		and c:GetCode()~=code and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c1020092.tgfilter(c)
-	return c:IsFaceup() and c:GetAttack()>0
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:GetAttack()>0
 end
 --pendulum
 function c1020092.tkcon(e,tp,eg,ep,ev,re,r,rp)
@@ -92,25 +92,25 @@ end
 function c1020092.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c1020092.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e:GetLabel(),e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c1020092.spfilter),tp,LOCATION_GRAVE,0,1,1,nil,e:GetLabel(),e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 --destroy
 function c1020092.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x39c) and re:IsHasType(0x7f0) and e:GetHandler():IsReason(REASON_COST)
+	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x39c) and re:IsHasType(0x7f0) and e:GetHandler():IsReason(REASON_COST)
 end
 function c1020092.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and c1020092.tgfilter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c1020092.tgfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c1020092.tgfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,c1020092.tgfilter,tp,0,LOCATION_MZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,math.floor(g:GetFirst():GetAttack()/2))
 end
 function c1020092.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		Duel.Damage(1-tp,tc:GetAttack()/2,REASON_EFFECT)
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.Damage(1-tp,math.floor(tc:GetAttack()/2),REASON_EFFECT)
 	end
 end

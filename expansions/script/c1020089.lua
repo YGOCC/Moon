@@ -10,7 +10,6 @@ function c1020089.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_RELEASE)
 	e1:SetRange(LOCATION_PZONE)
-	e1:SetLabel(0)
 	e1:SetCountLimit(1,1020089)
 	e1:SetCondition(c1020089.tkcon)
 	e1:SetTarget(c1020089.tktg)
@@ -42,7 +41,7 @@ function c1020089.initial_effect(c)
 end
 --filters
 function c1020089.tkfilter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsSetCard(0x39c)
+	return bit.band(c:GetPreviousTypeOnField(),TYPE_MONSTER)>0 and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsPreviousSetCard(0x39c)
 end
 function c1020089.cfilter(c,e,tp)
 	return c:IsType(TYPE_PENDULUM) and c:IsRace(RACE_CYBERSE) and c:IsFaceup()
@@ -51,7 +50,7 @@ function c1020089.cfilter(c,e,tp)
 end
 function c1020089.spfilter(c,code,e,tp)
 	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsRace(RACE_CYBERSE)
-		and c:GetCode()~=code and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --pendulum
 function c1020089.tkcon(e,tp,eg,ep,ev,re,r,rp)
@@ -96,7 +95,7 @@ function c1020089.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 --return to hand
 function c1020089.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x39c) and re:IsHasType(0x7f0) and e:GetHandler():IsReason(REASON_COST)
+	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x39c) and re:IsHasType(0x7f0) and e:GetHandler():IsReason(REASON_COST)
 end
 function c1020089.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsAbleToHand() end
@@ -107,7 +106,7 @@ function c1020089.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c1020089.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
