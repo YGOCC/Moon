@@ -8,14 +8,26 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--special summon
+		--Gy effect
+	local exxx=Effect.CreateEffect(c)
+	exxx:SetDescription(aux.Stringid(33731070,0))
+	exxx:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	exxx:SetCode(EVENT_TO_GRAVE)
+	exxx:SetProperty(EFFECT_FLAG_DELAY)
+	exxx:SetCondition(cid.exxxcon)
+	exxx:SetCountLimit(1,id+2000)
+	exxx:SetTarget(cid.exxxtg)
+	exxx:SetOperation(cid.exxxop)
+	c:RegisterEffect(exxx)
+	--recursion
 	local exx=Effect.CreateEffect(c)
 	exx:SetCategory(CATEGORY_TOHAND)
 	exx:SetType(EFFECT_TYPE_IGNITION)
 	exx:SetRange(LOCATION_GRAVE)
-	exx:SetCondition(cid.spcon2)
-	exx:SetTarget(cid.thtg)
-	exx:SetOperation(cid.thop)
+	exx:SetCountLimit(1,id+1000)
+	exx:SetCondition(cid.recurcon)
+	exx:SetTarget(cid.recurtg)
+	exx:SetOperation(cid.recurop)
 	c:RegisterEffect(exx)
 		--on death search 2
 	local e1=Effect.CreateEffect(c)
@@ -29,15 +41,39 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 end
---on death search 2
+--Filters
+function cid.exxxfilter(c)
+	return c:IsSetCard(0x666) and c:IsDiscardable()
+end
+
 function cid.cfilter(c,tp)
 	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp
+end
+function cid.thfilter(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.cfilter,1,nil,tp)
 end
-function cid.thfilter(c)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+--Gy effect
+function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
+	return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666)
+end
+function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsSSetable() end
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
+end
+function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and c:IsSSetable() then
+		Duel.SSet(tp,c)
+		Duel.ConfirmCards(1-tp,c)
+	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -50,22 +86,27 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)	
 end
 --recursion
-function cid.spcfilter2(c)
+function cid.recurfilter(c)
 	return c:IsCode(104242585) and c:IsFaceup()
 end
-function cid.spcon2(e,c)
+function cid.recurcon(e,c)
 	if c==nil then return true end
-	return Duel.IsExistingMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,2,nil)
+	return Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,3,nil)
 end
-function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.recurtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
-function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,cid.spcfilter2,tp,LOCATION_REMOVED,0,2,2,nil)
-	if g:GetCount()==2 then
+function cid.recurop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.SelectMatchingCard(tp,cid.recurfilter,tp,LOCATION_REMOVED,0,3,3,nil)
+	if g:GetCount()==3 then
 	if Duel.Exile(g,REASON_RULE) then
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then

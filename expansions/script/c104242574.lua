@@ -8,36 +8,125 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--special summon
+		--Gy effect
+	local exxx=Effect.CreateEffect(c)
+	exxx:SetDescription(aux.Stringid(33731070,0))
+	exxx:SetCategory(CATEGORY_TOHAND)
+	exxx:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	exxx:SetCode(EVENT_TO_GRAVE)
+	exxx:SetProperty(EFFECT_FLAG_DELAY)
+	exxx:SetCountLimit(1,id+2000)
+	exxx:SetCondition(cid.exxxcon)
+	exxx:SetTarget(cid.exxxtg)
+	exxx:SetOperation(cid.exxxop)
+	c:RegisterEffect(exxx)
+	--recursion
 	local exx=Effect.CreateEffect(c)
 	exx:SetCategory(CATEGORY_TOHAND)
 	exx:SetType(EFFECT_TYPE_IGNITION)
 	exx:SetRange(LOCATION_GRAVE)
-	exx:SetCondition(cid.spcon2)
-	exx:SetTarget(cid.thtg)
-	exx:SetOperation(cid.thop)
+	exx:SetCountLimit(1,id+1000)
+	exx:SetCondition(cid.recurcon)
+	exx:SetTarget(cid.recurtg)
+	exx:SetOperation(cid.recurop)
 	c:RegisterEffect(exx)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetTarget(cid.rmtg)
-	e1:SetOperation(cid.rmop)
+	e1:SetTarget(cid.target)
 	c:RegisterEffect(e1)
 end
---Banish till chain end
+--Filters
+function cid.exxxfilter(c)
+	return c:IsSetCard(0x666) and c:IsDiscardable()
+end
+function cid.spfilter(c,e,tp)
+    return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 function cid.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666)
 end
-function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsAbleToRemove() end
-	if chk==0 then return Duel.IsExistingTarget(cid.cfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE,0,nil)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+--Gy effect
+function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
+	return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666)
 end
-function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
+function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+end
+function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SendtoHand(c,nil,REASON_EFFECT)
+	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+end
+--Activate
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsOnField() end
+    local b1=Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)
+    local b2=Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
+    if chk==0 then return b1 or b2 end
+    local op=0
+    if b1 and b2 then
+        op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
+    elseif b1 then
+        op=Duel.SelectOption(tp,aux.Stringid(id,0))
+    else
+        op=Duel.SelectOption(tp,aux.Stringid(id,1))+1
+    end
+	
+	
+	
+	
+    if op==0 then
+        e:SetCategory(CATEGORY_REMOVE)
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE,0,nil)
+		e:SetOperation(cid.remop)
+		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+    else
+        e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+        e:SetOperation(cid.spop)
+        Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
+    end
+end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)	
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function cid.remop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	if g:GetCount()>0 then
@@ -53,26 +142,31 @@ function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.RegisterEffect(e1,tp)
 		end
 	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end
 function cid.retop(e,tp,eg,ep,ev,re,r,rp)
     Duel.ReturnToField(e:GetLabelObject())
 	e:Reset()
 end
 --recursion
-function cid.spcfilter2(c)
+function cid.recurfilter(c)
 	return c:IsCode(104242585) and c:IsFaceup()
 end
-function cid.spcon2(e,c)
+function cid.recurcon(e,c)
 	if c==nil then return true end
-	return Duel.IsExistingMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,2,nil)
+	return Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,3,nil)
 end
-function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.recurtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
-function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,cid.spcfilter2,tp,LOCATION_REMOVED,0,2,2,nil)
-	if g:GetCount()==2 then
+function cid.recurop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.SelectMatchingCard(tp,cid.recurfilter,tp,LOCATION_REMOVED,0,3,3,nil)
+	if g:GetCount()==3 then
 	if Duel.Exile(g,REASON_RULE) then
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then

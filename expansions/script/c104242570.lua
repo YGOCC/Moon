@@ -8,6 +8,18 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
+		--Gy effect
+	local exxx=Effect.CreateEffect(c)
+	exxx:SetDescription(aux.Stringid(33731070,0))
+	exxx:SetCategory(CATEGORY_DESTROY)
+	exxx:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	exxx:SetCode(EVENT_TO_GRAVE)
+	exxx:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	exxx:SetCountLimit(1,id+2000)
+	exxx:SetCondition(cid.exxxcon)
+	exxx:SetTarget(cid.exxxtg)
+	exxx:SetOperation(cid.exxxop)
+	c:RegisterEffect(exxx)
 		--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -30,19 +42,46 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
 end
-function cid.sprcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0,nil)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE,nil)) or (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0)
+--Filters
+function cid.exxxfilter(c)
+	return c:IsSetCard(0x666) and c:IsDiscardable()
 end
---bounce and limit targets
+function cid.tokenfilter(c)
+	return c:IsFaceup() and c:IsCode(104242592)
+end
+function cid.locfilter(c)
+	return c:GetSequence()<5
+end
+--Gy effect effect
+function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
+	return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666)
+end
+function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc~=e:GetHandler() end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,e:GetHandler())
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+end
+function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,POS_FACEUP,REASON_EFFECT)
+	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+end
+function cid.sprcon(e,tp,eg,ep,ev,re,r,rp)
+return not Duel.IsExistingMatchingCard(cid.locfilter,tp,LOCATION_MZONE,0,1,nil)
+end
+--bounce effect
 function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHandAsCost() end
+	if chk==0 then return e:GetHandler():IsAbleToHandAsCost() and Duel.IsExistingMatchingCard(cid.exxxfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,cid.exxxfilter,1,1,REASON_COST+REASON_DISCARD) 
 	Duel.SendtoHand(e:GetHandler(),nil,REASON_COST)
-end
-function cid.spfilter(c,e,tp)
-return c:IsLevel(3) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_BEAST) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.filter(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)  
