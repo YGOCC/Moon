@@ -34,6 +34,7 @@ function cid.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DISABLE+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
+	e1:SetCountLimit(1,id)
 	e1:SetCondition(cid.condition)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
@@ -119,7 +120,7 @@ function cid.recurtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
-function cid.recurcop(e,tp,eg,ep,ev,re,r,rp)
+function cid.recurop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.recurfilter,tp,LOCATION_REMOVED,0,3,3,nil)
 	if g:GetCount()==3 then
 	if Duel.Exile(g,REASON_RULE) then
