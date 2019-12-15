@@ -32,7 +32,7 @@ e2:SetCondition(c500314216.condition)
    Duel.AddCustomActivityCounter(500314216,ACTIVITY_SPSUMMON,c500314216.counterfilter)
 end
 function c500314216.counterfilter(c)
-	return c:GetSummonLocation()~=LOCATION_EXTRA or  ( c:IsSetCard(0xc50) or  c:IsType(TYPE_EFFECT))
+	return c:GetSummonLocation()~=LOCATION_EXTRA or  ( c:IsSetCard(0xc50) or not c:IsType(TYPE_EFFECT))
 end
 function c500314216.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
