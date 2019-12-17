@@ -792,8 +792,8 @@ Auxiliary.PendCondition=function()
 				if c==nil then return true end
 				local tp=c:GetControler()
 				local eset={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_PENDULUM_SUMMON)}
-				if PENDULUM_CHECKLIST&(0x1<<tp)~=0 and #eset==0 then return false end
-				--if Auxiliary.PendulumChecklist&(0x1<<tp)~=0 and #eset==0 then return false end
+				--if PENDULUM_CHECKLIST&(0x1<<tp)~=0 and #eset==0 then return false end
+				if Auxiliary.PendulumChecklist&(0x1<<tp)~=0 and #eset==0 then return false end
 				local rpz=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
 				if (rpz==nil or rpz:IsType(TYPE_PANDEMONIUM)) and Duel.IsExistingMatchingCard(Auxiliary.PandePendScale,tp,LOCATION_SZONE,0,1,c,c:GetSequence()) then
 					rpz=Duel.GetMatchingGroup(Auxiliary.PandePendScale,tp,LOCATION_SZONE,0,c,c:GetSequence()):GetFirst()
@@ -877,8 +877,8 @@ Auxiliary.PendOperation=function()
 					tg=Duel.GetMatchingGroup(Auxiliary.PConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale,eset)
 				end
 				local ce=nil
-				local b1=PENDULUM_CHECKLIST&(0x1<<tp)==0
-				--local b1=Auxiliary.PendulumChecklist&(0x1<<tp)==0
+				--local b1=PENDULUM_CHECKLIST&(0x1<<tp)==0
+				local b1=Auxiliary.PendulumChecklist&(0x1<<tp)==0
 				local b2=#eset>0
 				if b1 and b2 then
 					local options={1163}
@@ -909,8 +909,8 @@ Auxiliary.PendOperation=function()
 					Duel.Hint(HINT_CARD,0,ce:GetOwner():GetOriginalCode())
 					ce:Reset()
 				else
-					PENDULUM_CHECKLIST=PENDULUM_CHECKLIST|(0x1<<tp)
-					--Auxiliary.PendulumChecklist=Auxiliary.PendulumChecklist|(0x1<<tp)
+					--PENDULUM_CHECKLIST=PENDULUM_CHECKLIST|(0x1<<tp)
+					Auxiliary.PendulumChecklist=Auxiliary.PendulumChecklist|(0x1<<tp)
 				end
 				sg:Merge(g)
 				Duel.HintSelection(Group.FromCards(c))
