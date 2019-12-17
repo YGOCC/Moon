@@ -2,7 +2,7 @@
 function c160002525.initial_effect(c)
 		   aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,6,c160002525.filter1,c160002525.filter1,1,99)
+  aux.AddEvoluteProc(c,nil,6,c160002525.filter1,c160002525.filter1,2,99)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetDescription(aux.Stringid(160002525,0))
@@ -15,6 +15,14 @@ function c160002525.initial_effect(c)
 	e1:SetTarget(c160002525.target)
 	e1:SetOperation(c160002525.operation)
 	c:RegisterEffect(e1)
+ --atkup
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EFFECT_UPDATE_ATTACK)
+	e2:SetValue(c160002525.val)
+	c:RegisterEffect(e2)
 	--destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(160002525,1))
@@ -35,7 +43,12 @@ end
 function c160002525.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK) or c:IsRace(RACE_PLANT)
 end
-
+function c160002525.atkfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x185a) and (c:IsType(TYPE_RITUAL) or c:IsType(TYPE_EVOLUTE) )
+end
+function c160002525.val(e,c)
+	return Duel.GetMatchingGroupCount(c160002525.atkfilter,0,LOCATION_MZONE,LOCATION_MZONE,c)*300
+end
 function c160002525.filter(c,e,tp)
 	return not  c:IsType(TYPE_EVOLUTE) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)
 end
