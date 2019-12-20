@@ -21,7 +21,7 @@ function c171000127.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c171000127.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0xfef)
+	return c:IsFaceup() and c:IsSetCard(0xfef) and c:IsType(TYPE_MONSTER)
 end
 function c171000127.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c171000127.filter(chkc) end
@@ -32,12 +32,13 @@ end
 function c171000127.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 		e1:SetCondition(c171000127.ddcon)
 		e1:SetOperation(c171000127.ddop)
+		e1:SetOwnerPlayer(tp)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 	end
@@ -61,7 +62,7 @@ end
 function c171000127.indop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)

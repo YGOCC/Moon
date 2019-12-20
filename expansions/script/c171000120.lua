@@ -14,7 +14,6 @@ function c171000120.initial_effect(c)
 	c:RegisterEffect(e1)
 	--pendulum set
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -37,9 +36,8 @@ function c171000120.initial_effect(c)
 	--cannot be used as material
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-	e4:SetRange(LOCATION_MZONE)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
@@ -53,7 +51,7 @@ function c171000120.initial_effect(c)
 	e7:SetCategory(CATEGORY_TOHAND)
 	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e7:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e7:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e7:SetCondition(c171000120.thcon2)
 	e7:SetTarget(c171000120.thtg2)
 	e7:SetOperation(c171000120.thop2)
@@ -64,15 +62,18 @@ function c171000120.splimit(e,c,sump,sumtype,sumpos,targetp)
 end
 function c171000120.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_PZONE)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_PZONE)
 end
 function c171000120.penfilter(c)
 	return c:IsSetCard(0xfef) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 end
 function c171000120.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c171000120.penfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
+		and Duel.IsExistingMatchingCard(c171000112.penfilter,tp,LOCATION_DECK,0,1,nil) 
+	end
 end
 function c171000120.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local g=Duel.SelectMatchingCard(tp,c171000120.penfilter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=g:GetFirst()
@@ -80,12 +81,12 @@ function c171000120.penop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
 end
-function c171000120.cfilter(c,e,tp)
-	return c:IsSetCard(0xfef) and c:GetSummonPlayer()==tp and c:GetSummonType()==SUMMON_TYPE_PENDULUM
-		and c:GetPreviousLocation()==LOCATION_EXTRA
+function c171000120.cfilter(c,tp)
+	return c:IsSetCard(0xfef) and c:GetSummonPlayer()==tp and bit.band(c:GetSummonType(),SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
+		and c:GetSummonLocation()==LOCATION_EXTRA
 end
 function c171000120.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(ref.cfilter,1,nil,nil,tp)
+	return eg:IsExists(ref.cfilter,1,nil,tp)
 end
 function c171000120.thfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
@@ -93,7 +94,7 @@ end
 function c171000120.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and c171000120.thfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c171000120.thfilter,tp,0,LOCATION_ONFIELD,1,nil) end
-	local ct=eg:Filter(c171000120.cfilter,nil,e,tp):GetCount()
+	local ct=eg:Filter(c171000120.cfilter,nil,tp):GetCount()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,c171000120.thfilter,tp,0,LOCATION_ONFIELD,1,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
@@ -105,7 +106,7 @@ function c171000120.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c171000120.thcon2(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_PENDULUM
+	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function c171000120.thtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and c171000120.thfilter(chkc) end
@@ -116,7 +117,7 @@ function c171000120.thtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c171000120.thop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end

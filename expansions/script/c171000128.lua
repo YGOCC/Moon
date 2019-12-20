@@ -14,7 +14,7 @@ function ref.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function ref.cfilter(c)
-	return c:IsSetCard(0xfef) and c:IsDestructable()
+	return c:IsFaceup() and c:IsSetCard(0xfef) and c:IsDestructable()
 end
 function ref.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(ref.cfilter,tp,LOCATION_PZONE,0,1,nil) end

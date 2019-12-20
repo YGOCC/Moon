@@ -13,7 +13,6 @@ function c171000114.initial_effect(c)
 	c:RegisterEffect(e1)
 	--pendulum set
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -23,29 +22,28 @@ function c171000114.initial_effect(c)
 	e2:SetOperation(c171000114.penop)
 	c:RegisterEffect(e2)
 	--atk
-	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_ATKCHANGE)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_BE_BATTLE_TARGET)
-	e3:SetRange(LOCATION_PZONE)
-	e3:SetCountLimit(1,171000115)
-	e3:SetCondition(c171000114.atkcon)
-	e3:SetOperation(c171000114.atkop)
-	c:RegisterEffect(e3)
+	local e2x=Effect.CreateEffect(c)
+	e2x:SetCategory(CATEGORY_ATKCHANGE)
+	e2x:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2x:SetCode(EVENT_BE_BATTLE_TARGET)
+	e2x:SetRange(LOCATION_PZONE)
+	e2x:SetCountLimit(1,171000115)
+	e2x:SetCondition(c171000114.atkcon)
+	e2x:SetOperation(c171000114.atkop)
+	c:RegisterEffect(e2x)
 	--cannot be used as material
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e4:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetValue(1)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e3:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
+	local e4=e3:Clone()
+	e4:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
 	c:RegisterEffect(e4)
-	local e5=e4:Clone()
-	e5:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+	local e5=e3:Clone()
+	e5:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
 	c:RegisterEffect(e5)
-	local e6=e4:Clone()
-	e6:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
-	c:RegisterEffect(e6)
 	--atkup
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_SINGLE)
@@ -65,15 +63,18 @@ function c171000114.splimit(e,c,sump,sumtype,sumpos,targetp)
 end
 function c171000114.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_PZONE)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_PZONE)
 end
 function c171000114.penfilter(c)
 	return c:IsSetCard(0xfef) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 end
 function c171000114.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c171000114.penfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
+		and Duel.IsExistingMatchingCard(c171000112.penfilter,tp,LOCATION_DECK,0,1,nil) 
+	end
 end
 function c171000114.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local g=Duel.SelectMatchingCard(tp,c171000114.penfilter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=g:GetFirst()
@@ -83,13 +84,12 @@ function c171000114.penop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c171000114.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=eg:GetFirst()
-	return at:IsFaceup() and at:IsControler(tp) and at:IsSetCard(0xfef) 
-		and at:GetDefense()>0
+	return at and at:IsFaceup() and at:IsControler(tp) and at:IsSetCard(0xfef) and at:GetDefense()>0
 end
 function c171000114.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local atk=eg:GetFirst()
-	if atk:IsRelateToBattle() then
+	if atk and atk:IsFaceup() and atk:GetDefense()>0 and atk:IsRelateToBattle() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -99,7 +99,7 @@ function c171000114.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c171000114.atkfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xfef)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xfef)
 end
 function c171000114.atkval(e,c)
 	return Duel.GetMatchingGroupCount(c171000114.atkfilter,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())*500
