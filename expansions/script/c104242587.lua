@@ -31,7 +31,7 @@ function cid.initial_effect(c)
 end
 --Unicore
 function cid.distg(e,c)
-	return c:GetSummonLocation()==LOCATION_EXTRA
+	return c:GetSummonLocation()==LOCATION_EXTRA and not c:IsSetCard(0x666)
 end
 --summon condition
 function cid.spcfilter2(c)

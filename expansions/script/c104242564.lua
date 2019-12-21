@@ -8,13 +8,12 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-		--Gy effect
+		--Back Row effect
 	local exxx=Effect.CreateEffect(c)
 	exxx:SetDescription(aux.Stringid(33731070,0))
-	exxx:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	exxx:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	exxx:SetCode(EVENT_TO_GRAVE)
-	exxx:SetProperty(EFFECT_FLAG_DELAY)
+	exxx:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	exxx:SetType(EFFECT_TYPE_IGNITION)
+	exxx:SetRange(LOCATION_SZONE)
 	exxx:SetCountLimit(1,id+2000)
 	exxx:SetCondition(cid.exxxcon)
 	exxx:SetTarget(cid.exxxtg)
@@ -31,13 +30,13 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 		--bounce and sp summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCountLimit(1,id+1000)
-	e2:SetCost(cid.bouncecost)
+	e2:SetCost(cid.backcost)
 	e2:SetTarget(cid.sptg)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
@@ -59,36 +58,43 @@ end
 function cid.locfilter(c)
 	return c:GetSequence()<5
 end
---Gy effect effect
+--Back Row Summon
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
-	return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666)
+	return e:GetHandler():GetFlagEffect(e:GetHandler():IsSetCard(0x666))>0
 end
 function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
+		if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.searchfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+	if e:GetHandler():IsRelateToEffect(e) then
+		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 	end
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
 --		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
---		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)	
 end
 --Sp summon condition
 function cid.sprcon(e,tp,eg,ep,ev,re,r,rp)
 return not Duel.IsExistingMatchingCard(cid.locfilter,tp,LOCATION_MZONE,0,1,nil)
 end
---bounce effect
-function cid.bouncecost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHandAsCost() and Duel.IsExistingMatchingCard(cid.exxxfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
-	Duel.DiscardHand(tp,cid.exxxfilter,1,1,REASON_COST+REASON_DISCARD) 
-	Duel.SendtoHand(e:GetHandler(),nil,REASON_COST)
+--Back Row Cost
+function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+		c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	if Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetCode(EFFECT_CHANGE_TYPE)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetReset(RESET_EVENT+0x1fc0000)
+	e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+	c:RegisterEffect(e1)
+	c:RegisterFlagEffect(c:IsSetCard(0x666),RESET_EVENT+RESETS_STANDARD,0,1)
+end
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.filter(chkc,e,tp) end
