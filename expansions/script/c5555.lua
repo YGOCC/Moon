@@ -20,6 +20,10 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e0)
 end
 function cid.preset(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():IsLocation(LOCATION_HAND) then
+		Duel.SendtoDeck(e:GetHandler(),nil,1,REASON_RULE)
+		Duel.Draw(tp,1,REASON_RULE)
+	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE)
