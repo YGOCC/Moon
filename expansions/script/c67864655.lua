@@ -12,7 +12,7 @@ function c67864655.initial_effect(c)
 	--to deck
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(67864655,1))
-	e2:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,67864655)
@@ -35,7 +35,7 @@ function c67864655.spfilter1(c,e,tp,m,f,chkf)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function c67864655.spfilter2(c,e,tp,m,f,chkf)
-	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_MACHINE+RACE_WARRIOR) and c:IsSetCard(0x92a6) and (not f or f(c))
+	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_MACHINE+RACE_WARRIOR) and c:IsSetCard(0x2a6) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function c67864655.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -107,7 +107,7 @@ function c67864655.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c67864655.tdfilter(c)
-	return c:IsSetCard(0x92a6) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x2a6) and c:IsAbleToRemoveAsCost()
 end
 function c67864655.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864655.tdfilter,tp,LOCATION_GRAVE,0,1,nil) end
@@ -117,11 +117,11 @@ function c67864655.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c67864655.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function c67864655.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
+		Duel.SendtoHand(c,nil,2,REASON_EFFECT)
 	end
 end

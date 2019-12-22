@@ -15,29 +15,13 @@ function c67864651.initial_effect(c)
 	e1:SetTarget(c67864651.eqtg)
 	e1:SetOperation(c67864651.eqop)
 	c:RegisterEffect(e1)
-	--indes
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e2:SetCondition(c67864651.indcon)
-	e2:SetValue(1)
-	c:RegisterEffect(e2)
 end
 
 function c67864651.ffilter(c)
-	return c:IsSetCard(0xa2a6)
+	return c:IsSetCard(0x2a6) and c:IsRace(RACE_CYBERSE)
 end
 function c67864651.ffilter2(c)
 	return c:IsRace(RACE_WARRIOR)
-end
-
-function c67864651.indfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa2a6)
-end
-function c67864651.indcon(e)
-	return Duel.IsExistingMatchingCard(c67864651.indfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function c67864651.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)

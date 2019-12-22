@@ -52,11 +52,9 @@ function cid.tokenfilter(c)
 	return c:IsFaceup() and c:IsCode(104242592)
 end
 function cid.sprcon(e,tp,eg,ep,ev,re,r,rp)
-return not Duel.IsExistingMatchingCard(cid.locfilter,tp,LOCATION_MZONE,0,1,nil)
+return Duel.GetLocationCount(tp,LOCATION_MZONE)>=5
 end
-function cid.locfilter(c)
-	return c:GetSequence()<5
-end
+
 --Back Row Summon
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(e:GetHandler():IsSetCard(0x666))>0

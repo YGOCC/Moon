@@ -54,7 +54,7 @@ function c67864645.thfilter(c)
 	return c:IsSetCard(0x2a6) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c67864645.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0xa2a6)
+	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x62a6) and re:IsActiveRace(RACE_CYBERSE)
 end
 function c67864645.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864645.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -72,7 +72,7 @@ function c67864645.spcon(e,tp,eg,ep,ev,re,r,rp)
   return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c67864645.spfilter(c,e,tp)
-  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and not c:IsCode(67864645) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+  return c:IsSetCard(0x2a6)) and not c:IsCode(67864645) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c67864645.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c67864645.spfilter(chkc,e,tp) end
@@ -86,19 +86,8 @@ function c67864645.spop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-			local e4=Effect.CreateEffect(e:GetHandler())
-				e4:SetType(EFFECT_TYPE_FIELD)
-				e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)	
-				e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-				e4:SetReset(RESET_PHASE+PHASE_END)
-				e4:SetTargetRange(1,0)
-				e4:SetTarget(c67864645.splimit)
-				Duel.RegisterEffect(e4,tp)
 	end
 end
-function c67864645.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not (c:IsSetCard(0x2a6) or (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT)))
-end	
 
 
 --Hope it helped!

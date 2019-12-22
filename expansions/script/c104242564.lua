@@ -55,9 +55,6 @@ end
 function cid.filter(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function cid.locfilter(c)
-	return c:GetSequence()<5
-end
 --Back Row Summon
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(e:GetHandler():IsSetCard(0x666))>0
@@ -78,7 +75,7 @@ function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Sp summon condition
 function cid.sprcon(e,tp,eg,ep,ev,re,r,rp)
-return not Duel.IsExistingMatchingCard(cid.locfilter,tp,LOCATION_MZONE,0,1,nil)
+return Duel.GetLocationCount(tp,LOCATION_MZONE)>=5
 end
 --Back Row Cost
 function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)

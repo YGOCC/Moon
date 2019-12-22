@@ -1,4 +1,4 @@
---VECTOR MECH General Z3-R0
+--VECTOR MECH Swordbreaker Z3-R0
 --Scripted by Keddy, fixed by Zerry
 function c67864646.initial_effect(c)
 	--spsummon from hand
@@ -50,15 +50,23 @@ function c67864646.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectReleaseGroup(tp,c67864646.hspfilter,1,1,nil,ft,tp)
 	Duel.Release(g,REASON_COST)
 end
+function c67864646.desfilter1(c,e,tp)
+	return c:IsFaceUp() and c:IsSetCard(0x2a6)
+end
+function c67864646.desfilter2(c,e,tp)
+	return c:IsType(TYPE_MONSTER)
+end
 function c67864646.descon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0xa2a6)
+	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x62a6) and re:IsActiveRace(RACE_CYBERSE)
 end
 function c67864646.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c67864646.desfilter1,tp,LOCATION_MZONE,0,1,nil))
+		and Duel.IsExistingTarget(c67864646.desfilter2,tp,0,LOCATION_ONFIELD,1,nil) end
+	local ct=Duel.GetMatchingGroupCount(c67864646.desfilter1,tp,LOCATION_MZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	local g=Duel.SelectTarget(tp,c67864646.desfilter2,tp,0,LOCATION_ONFIELD,1,ct,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c67864646.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -70,7 +78,7 @@ function c67864646.spcon(e,tp,eg,ep,ev,re,r,rp)
   return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c67864646.spfilter(c,e,tp)
-  return ((c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsLevelAbove(6)) or c:IsSetCard(0x2a6)) and not c:IsCode(67864646) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+  return c:IsSetCard(0x2a6) and not c:IsCode(67864646) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c67864646.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c67864646.spfilter(chkc,e,tp) end
@@ -84,16 +92,5 @@ function c67864646.spop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-			local e4=Effect.CreateEffect(e:GetHandler())
-				e4:SetType(EFFECT_TYPE_FIELD)
-				e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)	
-				e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-				e4:SetReset(RESET_PHASE+PHASE_END)
-				e4:SetTargetRange(1,0)
-				e4:SetTarget(c67864646.splimit)
-				Duel.RegisterEffect(e4,tp)
 	end
 end
-function c67864646.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not (c:IsSetCard(0x2a6) or (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT)))
-end	
