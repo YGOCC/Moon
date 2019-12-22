@@ -1,50 +1,42 @@
---VECTOR Mech Fortress GH2-L5
---Scripted by Keddy, updated by Zerry
+--VECTOR MECH Spellbreaker ALVAREZ
+--Scripted by Keddy, fixed by Zerry
 function c67864647.initial_effect(c)
-	c:EnableReviveLimit()
-	--cannot special summon
+	--spsummon from hand
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetCondition(c67864647.hspcon)
+	e1:SetOperation(c67864647.hspop)
 	c:RegisterEffect(e1)
-	--special summon
+	--destroy
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_SPSUMMON_PROC)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCondition(c67864647.hspcon)
-	e2:SetOperation(c67864647.hspop)
+	e2:SetDescription(aux.Stringid(67864647,0))
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCountLimit(1,67864647)
+	e2:SetCondition(c67864647.descon)
+	e2:SetTarget(c67864647.destg)
+	e2:SetOperation(c67864647.desop)
 	c:RegisterEffect(e2)
-	--spsummon
-	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetCountLimit(1,67864647)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetTarget(c67864647.sptg1)
-	e3:SetOperation(c67864647.spop1)
-	c:RegisterEffect(e3)
-	--spsummon
+	--special summon
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(67864647,1))
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetDescription(aux.Stringid(67864647,2)) 
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e4:SetCode(EVENT_LEAVE_FIELD)
-	e4:SetCountLimit(1,67964647)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCountLimit(1,68964647)
 	e4:SetCondition(c67864647.spcon)
 	e4:SetTarget(c67864647.sptg)
 	e4:SetOperation(c67864647.spop)
 	c:RegisterEffect(e4)
-	local e5=e4:Clone()
-	e5:SetCode(EVENT_REMOVE)
-	c:RegisterEffect(e5)
 end
 function c67864647.hspfilter(c,ft,tp)
-	return c:IsRace(RACE_MACHINE) and c:IsType(TYPE_FUSION+TYPE_LINK+TYPE_SYNCHRO+TYPE_XYZ)
+	return c:IsSetCard(0x2a6)
 		and (ft>0 or (c:IsControler(tp) and c:GetSequence()<5)) and (c:IsControler(tp) or c:IsFaceup())
 end
 function c67864647.hspcon(e,c)
@@ -58,41 +50,47 @@ function c67864647.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectReleaseGroup(tp,c67864647.hspfilter,1,1,nil,ft,tp)
 	Duel.Release(g,REASON_COST)
 end
-function c67864647.spfilter1(c,e,tp)
-	return c:IsFaceup() and (c:IsRace(RACE_MACHINE) or c:IsSetCard(0x2a6)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSummonableCard()
+function c67864647.desfilter1(c,e,tp)
+	return c:IsFaceUp() and c:IsSetCard(0x2a6)
 end
-function c67864647.sptg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and c67864647.spfilter1(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c67864647.spfilter1,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c67864647.spfilter1,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+function c67864647.desfilter2(c,e,tp)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
-function c67864647.spop1(e,tp,eg,ep,ev,re,r,rp)
+function c67864647.descon(e,tp,eg,ep,ev,re,r,rp)
+	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x62a6) and re:IsActiveRace(RACE_CYBERSE)
+end
+function c67864646.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+    if chk==0 then return Duel.IsExistingMatchingCard(c67864646.desfilter1,tp,LOCATION_MZONE,0,1,nil)
+        and Duel.IsExistingTarget(c67864646.desfilter2,tp,0,LOCATION_ONFIELD,1,nil) end
+    local ct=Duel.GetMatchingGroupCount(c67864646.desfilter1,tp,LOCATION_MZONE,0,nil)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+    local g=Duel.SelectTarget(tp,c67864646.desfilter2,tp,0,LOCATION_ONFIELD,1,ct,nil)
+    Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+end
+function c67864647.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
 function c67864647.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD) and not c:IsFacedown()
+  return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c67864647.spfilter(c,e,tp)
-	return c:IsCode(67864641) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+  return c:IsSetCard(0x2a6) and not c:IsCode(67864647) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c67864647.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c67864647.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c67864647.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c67864647.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND)
-end
-function c67864647.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		and Duel.IsExistingTarget(c67864647.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c67864647.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
-	if tc then
+	local g=Duel.SelectTarget(tp,c67864647.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function c67864647.spop(e,tp,eg,ep,ev,re,r,rp,chk)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

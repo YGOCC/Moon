@@ -60,13 +60,13 @@ function c67864646.descon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x62a6) and re:IsActiveRace(RACE_CYBERSE)
 end
 function c67864646.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingMatchingCard(c67864646.desfilter1,tp,LOCATION_MZONE,0,1,nil))
-		and Duel.IsExistingTarget(c67864646.desfilter2,tp,0,LOCATION_ONFIELD,1,nil) end
-	local ct=Duel.GetMatchingGroupCount(c67864646.desfilter1,tp,LOCATION_MZONE,0,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c67864646.desfilter2,tp,0,LOCATION_ONFIELD,1,ct,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+    if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+    if chk==0 then return Duel.IsExistingMatchingCard(c67864646.desfilter1,tp,LOCATION_MZONE,0,1,nil)
+        and Duel.IsExistingTarget(c67864646.desfilter2,tp,0,LOCATION_ONFIELD,1,nil) end
+    local ct=Duel.GetMatchingGroupCount(c67864646.desfilter1,tp,LOCATION_MZONE,0,nil)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+    local g=Duel.SelectTarget(tp,c67864646.desfilter2,tp,0,LOCATION_ONFIELD,1,ct,nil)
+    Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c67864646.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
