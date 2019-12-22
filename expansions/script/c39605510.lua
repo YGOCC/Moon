@@ -10,7 +10,6 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	aux.AddOrigPandemoniumType(c)
 	aux.EnablePandemoniumAttribute(c,true,TYPE_EFFECT+TYPE_SPSUMMON,false,cid.actcost)
-	c:EnableReviveLimit()
 	--You can only Pandemonium Summon Pandemonium Monsters. This effect cannot be negated.
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD)

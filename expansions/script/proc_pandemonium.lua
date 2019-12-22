@@ -637,7 +637,7 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 								Duel.RaiseEvent(cc,EVENT_SSET,e,reason,cc:GetControler(),cc:GetControler(),0)
 								cc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1)
 							--end
-						else Duel.SSet(cc:GetControler(),cc) cc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
+						else Duel.SSet(cc:GetControler(),cc,cc:GetControler(),false) cc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
 						if not cc:IsLocation(LOCATION_SZONE) then
 							local edcheck=0
 							if cc:IsLocation(LOCATION_EXTRA) then edcheck=TYPE_PENDULUM end
@@ -652,7 +652,7 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 							Duel.RaiseEvent(tc,EVENT_SSET,e,reason,tc:GetControler(),tc:GetControler(),0)
 							tc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1)
 						end
-					else Duel.SSet(tc:GetControler(),tc) tc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
+					else Duel.SSet(tc:GetControler(),tc,tc:GetControler(),false) tc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
 					if not tc:IsLocation(LOCATION_SZONE) then
 						local edcheck=0
 						if tc:IsLocation(LOCATION_EXTRA) then edcheck=TYPE_PENDULUM end
