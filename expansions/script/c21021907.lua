@@ -24,7 +24,7 @@ function cid.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_REMOVE)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)	
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,id+1000)
 	e2:SetTarget(cid.rmtg)
 	e2:SetOperation(cid.rmop)
@@ -58,19 +58,24 @@ function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if ((tc:IsFaceup() and not tc:IsDisabled()) or tc:IsType(TYPE_TRAPMONSTER)) and tc:IsRelateToEffect(e) then
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetCode(EFFECT_DISABLE)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetValue(RESET_TURN_SET)
 		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e2)
 		if tc:IsType(TYPE_TRAPMONSTER) then
 			local e3=Effect.CreateEffect(c)
 			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
 			e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e3)
@@ -79,9 +84,9 @@ function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsExistingMatchingCard(cid.lfilter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsExistingMatchingCard(cid.bfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) then
 		Duel.BreakEffect()
 		if Duel.SelectYesNo(tp,aux.Stringid(2190,6)) then
-            local c1=Duel.SelectMatchingCard(tp,cid.bfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil)
-            Duel.SetOperationInfo(0,CATEGORY_REMOVE,c1,1,0,0)
-            Duel.Remove(c1,POS_FACEUP,REASON_EFFECT)
+			local c1=Duel.SelectMatchingCard(tp,cid.bfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil)
+			Duel.SetOperationInfo(0,CATEGORY_REMOVE,c1,1,0,0)
+			Duel.Remove(c1,POS_FACEUP,REASON_EFFECT)
 		end
 	end
 end
@@ -91,12 +96,12 @@ function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-    local c=e:GetHandler()
-    if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x219,0x219,1000,800,8,RACE_WARRIOR,ATTRIBUTE_LIGHT) then
-        c:AddMonsterAttribute(TYPE_NORMAL)
-        Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP)
-    --    c:AddMonsterAttributeComplete(c)
-        Duel.SpecialSummonComplete()
-    end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x219,0x219,1000,800,8,RACE_WARRIOR,ATTRIBUTE_LIGHT) then
+		c:AddMonsterAttribute(TYPE_NORMAL)
+		Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP)
+	--	c:AddMonsterAttributeComplete(c)
+		Duel.SpecialSummonComplete()
+	end
 end

@@ -49,7 +49,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x7c4))
+	e1:SetTarget(aux.TargetBoolFunction(aux.NOT(Card.IsSetCard),0x7c4))
 	Duel.RegisterEffect(e1,tp)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
