@@ -48,9 +48,12 @@ end
 function cid.cfilter2(c)
 	return c:IsSetCard(0x666) and c:IsDiscardable()
 end
+function cid.ponybackfilter(c)
+    return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x666) and c:IsAbleToGrave()
+end
 --Gy effect
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
-	return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666)
+	   return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666) and re:GetLabel()~=999
 end
 function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
@@ -80,13 +83,29 @@ function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
 --	Duel.DiscardHand(g,nil,2,REASON_EFFECT+REASON_DISCARD)
 	if Duel.DiscardHand(tp,cid.exxxfilter,1,1,REASON_COST+REASON_DISCARD) then
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	if	Duel.Draw(p,d,REASON_EFFECT) then end
+		Duel.Draw(p,d,REASON_EFFECT)  
+		if Duel.IsExistingMatchingCard(cid.ponybackfilter,tp,LOCATION_DECK,0,1,nil,e,tp) and 
+		Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,nil) and
+		Duel.SelectEffectYesNo(tp,e:GetHandler(),nil) then
+		local g=Duel.GetFirstMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+		--if g:GetCount()==1 then
+		if Duel.Exile(g,REASON_RULE)>=0 then
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,cid.ponybackfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+		if Duel.SendtoGrave(g,REASON_EFFECT)>=0 then
+		
+		end 
+		end
+		end
+		end
+		end
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
 --		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
 --		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-end
 end
 --Activate
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -112,7 +131,8 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetTargetPlayer(tp)
 		Duel.SetTargetParam(2)
 		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
-		 e:SetOperation(cid.drawop)
+		e:SetOperation(cid.drawop)
+		e:SetLabel(999)
     else
         e:SetCategory(CATEGORY_SPECIAL_SUMMON)
         e:SetOperation(cid.spop)

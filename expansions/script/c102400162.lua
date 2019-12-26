@@ -22,7 +22,7 @@ function cid.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCountLimit(1,id-1)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e2:SetTarget(cid.tg)
 	e2:SetOperation(cid.op)
@@ -85,5 +85,5 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.tdcon(e,tp,eg,ep,ev,re,r,rp)
-	return c:IsPreviousPosition(POS_FACEUP)
+	return e:GetHandler():IsPreviousPosition(POS_FACEUP)
 end

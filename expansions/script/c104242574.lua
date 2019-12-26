@@ -48,9 +48,12 @@ end
 function cid.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666)
 end
+function cid.ponybackfilter(c)
+    return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x666) and c:IsAbleToGrave()
+end
 --Gy effect
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
-	return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666)
+	   return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666) and re:GetLabel()~=999
 end
 function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
@@ -90,6 +93,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE,0,nil)
 		e:SetOperation(cid.remop)
+		e:SetLabel(999)
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
     else
         e:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -141,6 +145,21 @@ function cid.remop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCountLimit(1)
 			e1:SetOperation(cid.retop)
 			Duel.RegisterEffect(e1,tp)
+			if Duel.IsExistingMatchingCard(cid.ponybackfilter,tp,LOCATION_DECK,0,1,nil,e,tp) and 
+		Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,nil) and
+		Duel.SelectEffectYesNo(tp,e:GetHandler(),nil) then
+		local g=Duel.GetFirstMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+		--if g:GetCount()==1 then
+		if Duel.Exile(g,REASON_RULE)>=0 then
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,cid.ponybackfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+		if Duel.SendtoGrave(g,REASON_EFFECT)>=0 then
+		end 
+		end
+		end
+		end
 		end
 	end
 		local sc=Duel.CreateToken(tp,104242585)

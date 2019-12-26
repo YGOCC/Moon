@@ -16,6 +16,7 @@ function cid.initial_effect(c)
 	exxx:SetRange(LOCATION_SZONE)
 	exxx:SetCountLimit(1,id+2000)
 	exxx:SetCondition(cid.exxxcon)
+	exxx:SetCondition(aux.exccon)
 	exxx:SetTarget(cid.exxxtg)
 	exxx:SetOperation(cid.exxxop)
 	c:RegisterEffect(exxx)
@@ -67,8 +68,8 @@ function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
 --		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
 --		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)	
 end
-function cid.sprcon(e,tp,eg,ep,ev,re,r,rp)
-return Duel.GetLocationCount(tp,LOCATION_MZONE)>=5
+function cid.sprcon(e)
+    return Duel.GetLocationCount(1-e:GetHandlerPlayer(),LOCATION_MZONE)>=5
 end
 --Back Row Cost
 function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -1,4 +1,4 @@
---Moon's Dream: Be Gone Caster!
+--Moon's Dream: You're Gone!
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -48,12 +48,15 @@ end
 function cid.remfilter(c)
     return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
+function cid.ponybackfilter(c)
+    return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x666) and c:IsAbleToGrave()
+end
 function cid.spfilter(c,e,tp)
     return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --Gy effect
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
-	return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666)
+       return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666) and re:GetLabel()~=999 and re:GetLabel()~=999
 end
 function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
@@ -91,6 +94,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
         local g=Duel.SelectTarget(tp,cid.remfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 		e:SetOperation(cid.remop)
+		e:SetLabel(999)
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
     else
         e:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -102,6 +106,22 @@ function cid.remop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+		if Duel.IsExistingMatchingCard(cid.ponybackfilter,tp,LOCATION_DECK,0,1,nil,e,tp) and 
+		Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,nil) and
+		Duel.SelectEffectYesNo(tp,e:GetHandler(),nil) then
+		local g=Duel.GetFirstMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+		--if g:GetCount()==1 then
+		if Duel.Exile(g,REASON_RULE)>=0 then
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,cid.ponybackfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+		if Duel.SendtoGrave(g,REASON_EFFECT)>=0 then
+		
+		end 
+		end
+		end
+		end
 	end
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
@@ -109,12 +129,17 @@ function cid.remop(e,tp,eg,ep,ev,re,r,rp)
 --		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
 --		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end
+function cid.etarg(e,c)
+    return e:GetLabelObject()==c
+end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	end
+		
+		end
+		
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 		Duel.Remove(sc,POS_FACEUP,REASON_RULE)

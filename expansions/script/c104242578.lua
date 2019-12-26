@@ -55,7 +55,7 @@ function cid.spfilter(c,e,tp)
 end
 --Gy effect
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
-	return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666)
+	   return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666) and re:GetLabel()~=999
 end
 function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return  chkc:IsLocation(LOCATION_HAND) and cid.spfilter(chkc,e,tp) end
