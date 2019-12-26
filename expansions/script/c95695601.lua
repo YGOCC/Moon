@@ -32,6 +32,7 @@ function cid.initial_effect(c)
 	e2:SetCondition(cid.setcon)
 	e2:SetTarget(cid.settg)
 	e2:SetOperation(cid.setop)
+	e2:SetCountLimit(1,id)
 	c:RegisterEffect(e2)
 	--cannot be target
 	local e3=Effect.CreateEffect(c)
