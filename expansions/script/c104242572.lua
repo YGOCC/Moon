@@ -56,7 +56,7 @@ function cid.spfilter(c,e,tp)
 end
 --Gy effect
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
-       return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666) and re:GetLabel()~=999 and re:GetLabel()~=999
+       return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666) and re:GetLabel()~=999
 end
 function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
@@ -166,7 +166,7 @@ function cid.recurop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,c)
+		Duel.ConfirmCards(1-tp,Group.FromCards(c))
 	end
 	end
 	end

@@ -48,9 +48,6 @@ end
 function cid.todeckfilter(c)
 	return c:IsAbleToDeck() and c:IsSetCard(0x666)
 end
-function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
-	   return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666) and re:GetLabel()~=999
-end
 function cid.ponybackfilter(c)
     return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x666) and c:IsAbleToGrave()
 end
@@ -200,7 +197,7 @@ function cid.recurop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,c)
+		Duel.ConfirmCards(1-tp,Group.FromCards(c))
 	end
 	end
 	end

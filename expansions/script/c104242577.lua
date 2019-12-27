@@ -67,7 +67,7 @@ function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsSSetable() then
 		Duel.SSet(tp,c)
-		Duel.ConfirmCards(1-tp,c)
+		Duel.ConfirmCards(1-tp,Group.FromCards(c))
 	end
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
@@ -111,7 +111,7 @@ function cid.recurop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,c)
+		Duel.ConfirmCards(1-tp,Group.FromCards(c))
 	end
 	end
 	end

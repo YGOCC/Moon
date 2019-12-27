@@ -55,7 +55,7 @@ end
 
 --Sp summon condition
 function cid.sprcon(e)
-    return Duel.GetLocationCount(1-e:GetHandlerPlayer(),LOCATION_MZONE)>=5
+    return Duel.GetLocationCount(e:GetHandlerPlayer(),LOCATION_MZONE)>=5
 end
 --Back Row Summon
 function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)

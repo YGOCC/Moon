@@ -69,7 +69,7 @@ function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
 --		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)	
 end
 function cid.sprcon(e)
-    return Duel.GetLocationCount(1-e:GetHandlerPlayer(),LOCATION_MZONE)>=5
+    return Duel.GetLocationCount(e:GetHandlerPlayer(),LOCATION_MZONE)>=5
 end
 --Back Row Cost
 function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)

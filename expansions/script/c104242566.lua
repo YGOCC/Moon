@@ -53,7 +53,7 @@ function cid.tokenfilter(c)
 	return c:IsFaceup() and c:IsCode(104242592)
 end
 function cid.sprcon(e)
-    return Duel.GetLocationCount(1-e:GetHandlerPlayer(),LOCATION_MZONE)>=5
+    return Duel.GetLocationCount(e:GetHandlerPlayer(),LOCATION_MZONE)>=5
 end
 
 --Back Row Summon

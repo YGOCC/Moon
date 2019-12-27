@@ -76,7 +76,7 @@ function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Sp summon condition
 function cid.sprcon(e)
-    return Duel.GetLocationCount(1-e:GetHandlerPlayer(),LOCATION_MZONE)>=5
+    return Duel.GetLocationCount(e:GetHandlerPlayer(),LOCATION_MZONE)>=5
 end
 --Back Row Cost
 function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)

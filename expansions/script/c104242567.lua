@@ -53,7 +53,7 @@ function cid.spfilter(c,e,tp)
     return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.sprcon(e)
-    return Duel.GetLocationCount(1-e:GetHandlerPlayer(),LOCATION_MZONE)>=5
+    return Duel.GetLocationCount(e:GetHandlerPlayer(),LOCATION_MZONE)>=5
 end
 
 --Back Row Summon
