@@ -18,6 +18,15 @@ function cid.initial_effect(c)
 	e1:SetCode(EVENT_REMOVE)
 	c:RegisterEffect(e1)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,aux.FilterBoolFunction(Card.IsSetCard,0x7c4))
+	local e0=Effect.CreateEffect(c)
+	e0:SetCategory(CATEGORY_DESTROY)
+	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e0:SetCondition(cid.descon)
+	e0:SetTarget(cid.destg)
+	e0:SetOperation(cid.desop)
+	c:RegisterEffect(e0)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -34,6 +43,26 @@ function cid.initial_effect(c)
 	local e4=e3:Clone()
 	e4:SetCode(EVENT_REMOVE)
 	c:RegisterEffect(e4)
+end
+function cid.descon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return Duel.GetTurnPlayer()~=tp and c:IsFaceup() and Duel.GetAttackTarget()==c
+end
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+end
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Duel.NegateAttack()
+	if c:IsRelateToEffect(e) and Duel.Destroy(c,REASON_EFFECT)~=0 then
+		local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_MZONE,1,1,nil)
+		if #g>0 then
+			Duel.HintSelection(g)
+			Duel.BreakEffect()
+			Duel.Destroy(g,REASON_EFFECT)
+		end
+	end
 end
 function cid.cfilter(c,tp)
 	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x7c4)
