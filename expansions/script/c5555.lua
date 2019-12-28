@@ -20,7 +20,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e0)
 end
 function cid.preset(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroupCount(aux.NOT(Card.IsCode),tp,LOCATION_DECK+LOCATION_HAND,0,nil,5555)
+	local g=Duel.GetMatchingGroupCount(function (c) return not c:IsCode(5555) end,tp,LOCATION_DECK+LOCATION_HAND,0,nil)
 	if g<40 then
 		Debug.ShowHint("There are less than 40 cards in a player's Deck")
 		local WIN_REASON_GUARDIAN_GOD_EXODIA=0x1f
