@@ -20,6 +20,12 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e0)
 end
 function cid.preset(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroupCount(aux.NOT(Card.IsCode),tp,LOCATION_DECK+LOCATION_HAND,0,nil,5555)
+	if g<40 then
+		Debug.ShowHint("There are less than 40 cards in a player's Deck")
+		local WIN_REASON_GUARDIAN_GOD_EXODIA=0x1f
+		Duel.Win(1-tp,WIN_REASON_GUARDIAN_GOD_EXODIA)
+	end
 	if e:GetHandler():IsLocation(LOCATION_HAND) then
 		Duel.SendtoDeck(e:GetHandler(),nil,1,REASON_RULE)
 		Duel.Draw(tp,1,REASON_RULE)
@@ -34,5 +40,5 @@ function cid.preset(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Exile(e:GetHandler(),REASON_RULE)
 end
 function cid.val(e,c)
-	return c:IsLocation(LOCATION_EXTRA) and ((c:IsFacedown() and bit.band(c:GetType(),TYPE_LINK)<=0) or (c:IsFaceup() and not c:IsType(TYPE_PENDULUM)))
+	return c:IsLocation(LOCATION_EXTRA) and ((c:IsFacedown() and bit.band(c:GetType(),TYPE_LINK)<=0) or (c:IsFaceup() and not c:IsType(TYPE_PENDULUM) and not c:IsType(TYPE_PANDEMONIUM)))
 end
