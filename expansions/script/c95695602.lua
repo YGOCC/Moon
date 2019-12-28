@@ -29,12 +29,15 @@ end
 function cid.counterfilter(c)
 	return (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_WIND))
 end
+function cid.cfilter(c)
+	return c:GetSequence()<5
+end
 function cid.filter(c,e,tp)
 	return c:IsSetCard(0xf41) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return (Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 or Duel.IsEnvironment(95695603))
+	return not Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil) or Duel.IsEnvironment(95695603)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SUMMON)==0
