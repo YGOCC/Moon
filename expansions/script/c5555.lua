@@ -20,15 +20,15 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e0)
 end
 function cid.preset(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroupCount(function (c) return not c:IsCode(5555) end,tp,LOCATION_DECK+LOCATION_HAND,0,nil)
-	if g<40 then
-		Debug.ShowHint("There are less than 40 cards in a player's Deck")
-		local WIN_REASON_GUARDIAN_GOD_EXODIA=0x1f
-		Duel.Win(1-tp,WIN_REASON_GUARDIAN_GOD_EXODIA)
-	end
 	if e:GetHandler():IsLocation(LOCATION_HAND) then
 		Duel.SendtoDeck(e:GetHandler(),nil,1,REASON_RULE)
 		Duel.Draw(tp,1,REASON_RULE)
+	end
+	local g=Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_DECK+LOCATION_HAND,0,e:GetHandler())
+	if g<40 then
+		Debug.Message("There are less than 40 cards in a player's Deck")
+		local WIN_REASON_GUARDIAN_GOD_EXODIA=0x1f
+		Duel.Win(1-tp,WIN_REASON_GUARDIAN_GOD_EXODIA)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
