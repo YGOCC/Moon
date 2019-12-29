@@ -38,12 +38,16 @@ function s.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_TODECK+CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetCode(EVENT_SUMMON_SUCCESS)
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
+	e4:SetCountLimit(1,id+1000)
 	e4:SetCost(s.cost)
 	e4:SetTarget(s.trg)   
 	e4:SetOperation(s.ope)
 	c:RegisterEffect(e4)
+	local e4x=e4:Clone()
+	e4x:SetCode(EVENT_SUMMON_SUCCESS)
+	c:RegisterEffect(e4x)
 	--hakai
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -67,7 +71,7 @@ end
 end
 	function s.filt(c,tp)
 	return c:IsSetCard(0x10ec) and c:IsFaceup() and c:IsAbleToDeck() and c:IsType(TYPE_PENDULUM)
-	  and Duel.IsExistingMatchingCard(s.filt2,tp,LOCATION_DECK,0,1,nil,c:GetCode())
+		and Duel.IsExistingMatchingCard(s.filt2,tp,LOCATION_DECK,0,1,nil,c:GetCode())
 end
 	function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filt,tp,LOCATION_EXTRA,0,1,nil,tp) end
@@ -79,7 +83,7 @@ end
 	function s.filt2(c,code)
 	return c:IsSetCard(0x10ec) and c:IsAbleToHand() and not c:IsCode(code)
 end
-	function s.trg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	function s.trg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filt2,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end

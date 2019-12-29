@@ -1,4 +1,5 @@
 --Abyss Actor - Midnight Wolf
+--scripted by Rawstone
 local s,id=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -9,7 +10,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_PZONE)
-	e1:SetCountLimit(1,id)
+	e1:SetCountLimit(1,id+200)
 	e1:SetCondition(s.conditionfilter)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
