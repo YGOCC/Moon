@@ -181,7 +181,10 @@ function cid.spop1(e,tp,eg,ep,ev,re,r,rp)
 end
 --destroy
 function cid.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
+	local lg1=Duel.GetLinkedGroup(tp,1,1)
+	local lg2=Duel.GetLinkedGroup(1-tp,1,1)
+	lg1:Merge(lg2)
+	return Duel.GetTurnPlayer()~=tp and (e:GetHandler():GetSequence()>4 or lg1 and lg1:IsContains(e:GetHandler()))
 end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cid.costfilter(chkc,tp) end

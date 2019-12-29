@@ -2,12 +2,23 @@
 function c99998876.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCountLimit(1,99998876)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c99998876.target)
 	e1:SetOperation(c99998876.activate)
 	c:RegisterEffect(e1)
+	--Banished?
+	local e2=Effect.CreateEffect(c)
+	e2:SetCountLimit(1,99998876+1000)
+	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_REMOVE)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetTarget(c99998876.target)
+	e2:SetOperation(c99998876.activate)
+	c:RegisterEffect(e2)
 end
 function c99998876.filter(c)
 	return c:IsSetCard(0x1c97) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
