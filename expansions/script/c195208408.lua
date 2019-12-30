@@ -24,7 +24,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetTargetRange(LOCATION_MZONE,0)
 	e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
 	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1)
+	Duel.RegisterEffect(e1,tp)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,nil,0x83e)
