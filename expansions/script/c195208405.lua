@@ -33,7 +33,7 @@ end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,cid.cfilter),tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	Duel.Remove(Duel.SelectMatchingCard(aux.AND(Card.IsFaceup,cid.cfilter),tp,LOCATION_MZONE,0,1,1,nil),POS_FACEUP,REASON_COST)
+	Duel.Remove(Duel.SelectMatchingCard(tp,aux.AND(Card.IsFaceup,cid.cfilter),tp,LOCATION_MZONE,0,1,1,nil),POS_FACEUP,REASON_COST)
 end
 function cid.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

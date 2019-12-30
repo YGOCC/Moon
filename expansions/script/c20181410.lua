@@ -197,4 +197,3 @@ function cid.penop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,c)
 	end
 end
-

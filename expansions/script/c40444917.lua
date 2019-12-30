@@ -67,7 +67,7 @@ function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK)
 end
 function cid.thfilter(c)
-	return c:IsCode(id) and c:IsAbleToHand()
+	return c:IsCode(55112313) and c:IsAbleToHand()
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil) end

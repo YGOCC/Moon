@@ -1,7 +1,7 @@
 --created by Swag, coded by Lyris
 local cid,id=GetID()
 function cid.initial_effect(c)
- c:SetSPSummonOnce(20181411)
+	 c:SetSPSummonOnce(id)
 	c:EnableReviveLimit()
 	aux.AddOrigPandemoniumType(c)
 	local e4=Effect.CreateEffect(c)
