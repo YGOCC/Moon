@@ -45,10 +45,10 @@ function cid.hdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.hdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_HAND,1,1,nil)
 	local tc=g:GetFirst()
 	if tc and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_REMOVED) then
-		local sg=Duel.GetMatchingGroup(aus.AND(Card.IsFaceup,Card.IsSetCard,Card.IsAbleToHand),tp,LOCATION_REMOVED,0,nil,0x83e)
+		local sg=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsSetCard,Card.IsAbleToHand),tp,LOCATION_REMOVED,0,nil,0x83e)
 		if #sg==0 or Duel.GetFlagEffect(tp,id)~=0 or not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sc=sg:Select(tp,1,1,nil)
