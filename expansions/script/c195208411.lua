@@ -5,7 +5,6 @@ function cid.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCondition(cid.condition)
-	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 end
