@@ -1,3 +1,5 @@
+--created by Zolanark, coded by Lyris
+local cid,id=GetID()
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -6,8 +8,6 @@ local function getID()
 	return id,cod
 end
 local id,cid=getID()
---created by Zolanark, coded by Lyris
---Seal of the Arthro-Lords
 function cid.initial_effect(c)
 	aux.AddRitualProcEqual2(c,aux.FilterBoolFunction(Card.IsSetCard,0x89f),LOCATION_HAND,nil,nil)
 	local e1=Effect.CreateEffect(c)

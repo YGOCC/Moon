@@ -1,5 +1,5 @@
---Artro-Sovrano, Pyrozanna
---Script by XGlitchy30
+--created by Zolanark, coded by XGlitchy30
+local cid,id=GetID()
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -9,10 +9,8 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--pendulum
 	aux.EnablePendulumAttribute(c)
 	c:EnableReviveLimit()
-	--inflict damage
 	local p1=Effect.CreateEffect(c)
 	p1:SetDescription(aux.Stringid(id,0))
 	p1:SetCategory(CATEGORY_DAMAGE)
@@ -25,7 +23,6 @@ function cid.initial_effect(c)
 	p1:SetTarget(cid.damtg)
 	p1:SetOperation(cid.damop)
 	c:RegisterEffect(p1)
-	--selfdestroy + damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,4))
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
@@ -35,7 +32,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.drytg)
 	e1:SetOperation(cid.dryop)
 	c:RegisterEffect(e1)
-	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,5))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -46,11 +42,9 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.thop)
 	c:RegisterEffect(e2)
 end
---filters
 function cid.thfilter(c)
 	return c:IsSetCard(0x89f) and c:IsAbleToHand()
 end
---inflict damage
 function cid.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local des=eg:GetFirst()
 	if des:IsReason(REASON_BATTLE) then
@@ -84,7 +78,6 @@ function cid.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
---selfdestroy + damage
 function cid.drytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDestructable() end
 	local dam=Duel.GetMatchingGroupCount(Card.IsType,tp,LOCATION_MZONE,0,e:GetHandler(),TYPE_MONSTER)*200
@@ -102,7 +95,6 @@ function cid.dryop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---search
 function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_BATTLE+REASON_EFFECT)
 end

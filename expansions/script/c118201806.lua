@@ -1,5 +1,5 @@
---Oksizz, Sovrano Divino dell'Artro-Roccaforte
---Script by XGlitchy30
+--created by Zolanark, coded by XGlitchy30
+local cid,id=GetID()
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -9,12 +9,9 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--pendulum
 	aux.EnablePendulumAttribute(c,false)
 	c:EnableReviveLimit()
-	--xyz
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_RITUAL),12,3,nil,nil,99)
-	--alternative draw
 	local p1=Effect.CreateEffect(c)
 	p1:SetDescription(aux.Stringid(id,0))
 	p1:SetCategory(CATEGORY_TOHAND)
@@ -25,7 +22,6 @@ function cid.initial_effect(c)
 	p1:SetTarget(cid.thtg)
 	p1:SetOperation(cid.thop)
 	c:RegisterEffect(p1)
-	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
@@ -33,7 +29,6 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetValue(cid.splimit)
 	c:RegisterEffect(e1)
-	--leave
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -44,7 +39,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.sptg)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
-	--gain effect
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
@@ -55,7 +49,6 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 cid.pendulum_level=12
---filters
 function cid.thfilter(c)
 	return c:IsSetCard(0x89f) and c:IsAbleToHand() and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
 end
@@ -75,7 +68,6 @@ end
 function cid.checkshf(c,tp)
 	return c:IsLocation(LOCATION_DECK) and c:IsControler(tp)
 end
---alternative draw
 function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer() and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0
 		and Duel.GetDrawCount(tp)>0
@@ -126,11 +118,9 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
 end
---spsummon condition
 function cid.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or bit.band(st,SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ or bit.band(st,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
---leave
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_MZONE)
@@ -150,7 +140,6 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
 end
---gain effect
 function cid.adjcon(e)
 	return e:GetHandler():GetOverlayCount()>0 and not e:GetHandler():GetOverlayGroup():IsExists(cid.excfilter,1,nil)
 end
@@ -181,7 +170,6 @@ function cid.adjop(e,tp,eg,ep,ev,re,r,rp)
 	e3x:SetReset(RESET_EVENT+RESETS_STANDARD)
 	c:RegisterEffect(e3x)
 end
---gained effect
 function cid.poscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)
 	if chk==0 then return true end
@@ -224,7 +212,6 @@ function cid.posop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---reset gained effect
 function cid.resetcon(e)
 	return Duel.GetFlagEffect(e:GetHandlerPlayer(),id)>0 and e:GetHandler():GetOverlayCount()<=0 or e:GetHandler():GetOverlayGroup():IsExists(cid.excfilter,1,nil)
 end

@@ -1,5 +1,5 @@
---Artro-Paladino, Oscuro Rinato
---Script by XGlitchy30
+--created by Zolanark, coded by XGlitchy30
+local cid,id=GetID()
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -9,10 +9,8 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--pendulum
 	aux.EnablePendulumAttribute(c)
 	c:EnableReviveLimit()
-	--search
 	local p1=Effect.CreateEffect(c)
 	p1:SetDescription(aux.Stringid(id,0))
 	p1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -23,7 +21,6 @@ function cid.initial_effect(c)
 	p1:SetTarget(cid.thtg)
 	p1:SetOperation(cid.thop)
 	c:RegisterEffect(p1)
-	--attribute effect
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -34,7 +31,6 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 end
---filters
 function cid.thcfilter(c)
 	return c:IsSetCard(0x89f) and c:IsAbleToGraveAsCost() and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
 end
@@ -51,7 +47,6 @@ end
 function cid.checkshf(c,tp)
 	return c:IsLocation(LOCATION_DECK) and c:IsControler(tp)
 end
---search
 function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.thcfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
@@ -70,18 +65,15 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
---attribute effect
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)
 	if chk==0 then return true end
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	--check activation conditions
 	local chk1=Duel.CheckReleaseGroup(tp,cid.choicefilter,1,e:GetHandler(),0,ATTRIBUTE_FIRE) and Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,0,1,nil,TYPE_MONSTER)
 	local chk2=Duel.CheckReleaseGroup(tp,cid.choicefilter,1,e:GetHandler(),0,ATTRIBUTE_WATER) and Duel.GetMatchingGroupCount(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,nil)>0
 	local chk3=Duel.CheckReleaseGroup(tp,cid.choicefilter,1,e:GetHandler(),0,ATTRIBUTE_EARTH) and Duel.IsExistingMatchingCard(cid.posfilter,tp,0,LOCATION_MZONE,1,nil)
 	local chk4=Duel.CheckReleaseGroup(tp,cid.choicefilter,1,e:GetHandler(),0,ATTRIBUTE_WIND) and Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)>0
-	--
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		e:SetLabel(0)

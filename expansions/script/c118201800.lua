@@ -1,5 +1,5 @@
---Artro-Sovrano, Ultrartiglio
---Script by XGlitchy30
+--created by Zolanark, coded by XGlitchy30
+local cid,id=GetID()
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -9,10 +9,8 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--pendulum
 	aux.EnablePendulumAttribute(c)
 	c:EnableReviveLimit()
-	--ritual summon
 	local p1=Effect.CreateEffect(c)
 	p1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	p1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -24,7 +22,6 @@ function cid.initial_effect(c)
 	p1:SetTarget(cid.rttg)
 	p1:SetOperation(cid.rtop)
 	c:RegisterEffect(p1)
-	--boost atk
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetRange(LOCATION_MZONE)
@@ -34,7 +31,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(aux.TargetBoolFunction(Card.IsType,0x81))
 	e1:SetValue(500)
 	c:RegisterEffect(e1)
-	--pierce
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_PIERCE)
@@ -43,7 +39,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsType,0x81))
 	c:RegisterEffect(e2)
 end
---filters
 function cid.cfilter(c,tp)
 	return (c:IsSetCard(0x89f) or c:IsPreviousSetCard(0x89f)) and c:GetPreviousControler()==tp and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
@@ -73,7 +68,6 @@ end
 function cid.atkfilter(c)
 	return c:IsFaceup() and bit.band(c:GetType(),0x81)==0x81
 end
---ritual summon
 function cid.rtcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.cfilter,1,nil,tp)
 end
@@ -119,7 +113,6 @@ function cid.rtop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---boost atk
 function cid.atkcon(e)
 	return Duel.IsExistingMatchingCard(cid.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end

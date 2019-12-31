@@ -1,5 +1,5 @@
---Artro-Guardiano, Caduta Brillante
---Script by XGlitchy30
+--created by Zolanark, coded by XGlitchy30
+local cid,id=GetID()
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -9,10 +9,8 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--pendulum
 	aux.EnablePendulumAttribute(c)
 	c:EnableReviveLimit()
-	--protection
 	local p1=Effect.CreateEffect(c)
 	p1:SetType(EFFECT_TYPE_FIELD)
 	p1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -21,7 +19,6 @@ function cid.initial_effect(c)
 	p1:SetTarget(aux.TargetBoolFunction(Card.IsType,TYPE_PENDULUM))
 	p1:SetValue(1)
 	c:RegisterEffect(p1)
-	--shuffle
 	local p2=Effect.CreateEffect(c)
 	p2:SetDescription(aux.Stringid(id,0))
 	p2:SetCategory(CATEGORY_TODECK)
@@ -34,7 +31,6 @@ function cid.initial_effect(c)
 	p2:SetTarget(cid.tdtg)
 	p2:SetOperation(cid.tdop)
 	c:RegisterEffect(p2)
-	--destroy replace
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_DESTROY_REPLACE)
@@ -44,7 +40,6 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.desrepop)
 	c:RegisterEffect(e1)
 end
---filters
 function cid.cfilter(c,tp)
 	return (c:IsSetCard(0x89f) or c:IsPreviousSetCard(0x89f)) and c:GetPreviousControler()==tp and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
@@ -58,7 +53,6 @@ function cid.repfilter(c,tp)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x89f) and bit.band(c:GetType(),0x81)==0x81
 		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE)
 end
---shuffle
 function cid.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.cfilter,1,nil,tp)
 end
@@ -89,7 +83,6 @@ function cid.tdop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---destroy replace
 function cid.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return eg:IsExists(cid.repfilter,1,nil,tp)

@@ -1,15 +1,7 @@
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
 --created by Zolanark, coded by Lyris
---Arthro-Paladin War Cry
+local cid,id=GetID()
 function cid.initial_effect(c)
-	aux.AddRitualProcGreaterCode(c,118201805)
+	aux.AddRitualProcGreaterCode(c,id-3)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_IGNITION)
 	e0:SetRange(LOCATION_GRAVE)
@@ -20,7 +12,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e0)
 end
 function cid.filter(c)
-	return c:IsCode(118201805) and c:IsPosition(POS_FACEUP_ATTACK)
+	return c:IsCode(id-3) and c:IsPosition(POS_FACEUP_ATTACK)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_MZONE,0,1,nil)
