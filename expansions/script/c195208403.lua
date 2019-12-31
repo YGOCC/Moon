@@ -27,6 +27,7 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SelectTarget(tp,function(tc) return c:GetLinkedGroup():IsContains(tc) and tc:IsFaceup() and not tc:IsType(TYPE_TUNER) end,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		c:SetCardTarget(tc)
