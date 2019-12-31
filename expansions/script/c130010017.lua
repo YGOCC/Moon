@@ -17,6 +17,7 @@ function s.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(s.cost1)
 	e1:SetOperation(s.activate)
+	e1:SetCountLimit(1,id+2000)
 	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
@@ -47,9 +48,7 @@ end
 function s.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE,0,1,nil) and Duel.IsPlayerCanDiscardDeck(tp,3)
-		and (Duel.GetFlagEffect(tp,id)==0) and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil)
-		and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 		e:SetCategory(CATEGORY_DECKDES+CATEGORY_TOHAND)
 		e:SetOperation(s.activate)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
@@ -94,9 +93,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	if Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyspfilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then Duel.DiscardDeck(tp,1,REASON_EFFECT) end
 	end

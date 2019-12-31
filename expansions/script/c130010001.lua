@@ -12,7 +12,7 @@ local s,id=getID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--synchro summon
-	aux.AddSynchroMixProcedure(c,s.matfilter1,nil,nil,aux.NonTuner(Card.IsType,TYPE_SYNCHRO),1,99)
+	aux.AddSynchroMixProcedure(c,s.matfilter1,nil,nil,aux.NonTuner(Card.IsSetCard,0x301),1,99)
 	--
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)

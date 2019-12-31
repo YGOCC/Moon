@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetOperation(s.activate)
+	e1:SetCountLimit(1,id+2000)
 	c:RegisterEffect(e1)
 	--direct
 	local e3=Effect.CreateEffect(c)
@@ -44,7 +45,9 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	if Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler(),REASON_EFFECT)
+		and Duel.GetFlagEffect(tp,id)==0
 		and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		if Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT,nil,REASON_EFFECT)>0 then
 			Duel.BreakEffect()
 			Duel.DiscardDeck(tp,3,REASON_EFFECT)
