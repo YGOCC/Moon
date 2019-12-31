@@ -36,7 +36,7 @@ function s.counterfilter(c)
 	return c:IsSetCard(0x301)
 end
 function s.condtion(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0x301) and (r&REASON_EFFECT~=0)
+	return re and re:GetHandler():IsSetCard(0x301)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x301) and c:IsAbleToHand()

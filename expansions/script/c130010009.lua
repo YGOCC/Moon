@@ -37,19 +37,16 @@ function s.gspcfilter(c,tp)
 		and ((Duel.GetLocationCount(tp,LOCATION_MZONE)>0) or (c:GetSequence()<5))
 end
 function s.gspcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.gspcfilter,tp,LOCATION_SZONE,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.gspcfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
 end
 function s.gsptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>-1
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.gspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.gspcfilter,tp,LOCATION_SZONE,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,s.gspcfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
 	if Duel.SendtoGrave(g,REASON_EFFECT)==0 then return end
 	if c:IsRelateToEffect(e) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)

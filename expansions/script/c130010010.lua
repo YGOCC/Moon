@@ -57,6 +57,7 @@ function s.gspop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x301) and not re:GetHandler():IsCode(id)
+		and r&REASON_EFFECT==REASON_EFFECT
 end
 function s.filter1(c)
 	return c:IsSetCard(0x301) and c:IsAbleToGrave()

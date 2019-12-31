@@ -53,6 +53,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x301) and not re:GetHandler():IsCode(id)
+		and r&REASON_EFFECT==REASON_EFFECT
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) and e:GetHandler():IsAbleToHand() end
