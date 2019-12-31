@@ -13,7 +13,7 @@ function cid.filter(c)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_REMOVED,0,1,nil)
-		and eg:GetFirst():IsControler(1-tp) and Duel.GetAttackTarget()==nil and Duel.GetAttacker()~=nil
+		and Duel.GetAttackTarget()==nil and Duel.GetAttacker()~=nil and Duel.GetAttacker():IsControler(1-tp)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
