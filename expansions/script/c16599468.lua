@@ -112,7 +112,7 @@ function c16599468.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
-		Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT)
+		Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 	end
 end
 --reflect damage
