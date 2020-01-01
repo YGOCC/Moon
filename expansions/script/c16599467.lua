@@ -43,7 +43,7 @@ function c16599467.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCondition(c16599467.drycon)
 	e1:SetCost(c16599467.drycost)
 	e1:SetTarget(c16599467.drytg)
@@ -51,11 +51,10 @@ function c16599467.initial_effect(c)
 	c:RegisterEffect(e1)
 	--field effect
 	local e1x=Effect.CreateEffect(c)
-	e1x:SetType(EFFECT_TYPE_FIELD)
-	e1x:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e1x:SetType(EFFECT_TYPE_SINGLE)
+	e1x:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1x:SetRange(LOCATION_MZONE)
-	e1x:SetTargetRange(LOCATION_MZONE,0)
-	e1x:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_FAIRY))
+	e1x:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e1x:SetValue(1)
 	c:RegisterEffect(e1x)
 	--token
@@ -160,13 +159,17 @@ function c16599467.drycost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c16599467.drytg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16599467.wpfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	local sg=Duel.GetMatchingGroup(c16599467.wpfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local sg=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
 end
 function c16599467.dryop(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(c16599467.wpfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.Destroy(sg,REASON_EFFECT)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local sg=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	if #sg>0 then
+		Duel.HintSelection(sg)
+		Duel.Destroy(sg,REASON_EFFECT)
+	end
 end
 --gain atk
 function c16599467.tkcon(e,tp,eg,ep,ev,re,r,rp)
