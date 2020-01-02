@@ -55,7 +55,7 @@ end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local seq=c:IsHasEffect(id+3) and 0 or 2
-	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,tp,ceq,REASON_EFFECT) and c:IsLocation(LOCATION_DECK) then
+	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,tp,seq,REASON_EFFECT) and c:IsLocation(LOCATION_DECK) then
 		c:ReverseInDeck()
 		Duel.Draw(1-tp,2,REASON_EFFECT)
 	end

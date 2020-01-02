@@ -27,9 +27,8 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(1-tp,1)
 	local tc=g:GetFirst()
 	if not tc then return end
-	if tc:IsSetCard(0x70b) and tc:GetOwner()==tp and Duel.NegateActivation(ev)
-		and re:GetHandler():IsRelateToEffect(e) then
-		Duel.Destroy(eg,REASON_EFFECT)
+	if tc:IsSetCard(0x70b) and tc:GetOwner()==tp then
+		if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(e) then Duel.Destroy(eg,REASON_EFFECT) end
 	elseif tc:IsAbleToHand() then
 		Duel.DisableShuffleCheck()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
