@@ -2317,6 +2317,12 @@ expansions/pics/19182017.jpg	129cc86dceed336caa812d1b8e722e4f
 expansions/pics/19182018.jpg	0f19911aa24c190e18fe7e4a333b48cf
 expansions/pics/19182019.jpg	cb8dbbfa4dfb04eaf827687ac6a1964c
 expansions/pics/19182020.jpg	9819b71f7bbaa6fb502b0d66cd6b8daa
+expansions/pics/19182021.jpg	1e897671dc606e73d1e3d1163a991c0a
+expansions/pics/19182022.jpg	e61acb0908cd8ddbc4639d1bcd09c0b8
+expansions/pics/19182023.jpg	7d0e8e76b8c08e4336a5520fe123c88d
+expansions/pics/19182024.jpg	1652d867fbde64f24e82f9fe79229a71
+expansions/pics/19182025.jpg	5dec09f79d4fc9440a2ed018670083a9
+expansions/pics/19182026.jpg	211d35722cda0f5d4792ceea8f28ccbe
 expansions/pics/192051201.jpg	52bdc1a3f5fa88969c2527f643ce2067
 expansions/pics/192051202.jpg	4e8da2f05ae8a109f92f2ac29441edaf
 expansions/pics/192051204.jpg	fe8d694f5bdcc5e730b9b7b8b4a60753
@@ -15198,6 +15204,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	d4e71904af41e2c82152db1a5b8cee12
+update/filelist.txt	d2b4ec6a179ab258705be41926a537b3
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	d3b43812eaaa16986407b830043445d3
+update/version.txt	2a073c471f61dee1ad80ce6297d73516
