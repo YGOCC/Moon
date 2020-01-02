@@ -24,30 +24,14 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetType(EFFECT_TYPE_TRIGGER_F+EFFECT_TYPE_FIELD)
 	e3:SetCode(EVENT_TO_DECK)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(function(e,tp,eg) return eg:IsExists(cid.cfilter,1,e:GetHandler(),1-tp) and (not re:IsHasType(EFFECT_TYPE_ACTIONS) or re:IsHasType(EFFECT_TYPE_CONTINUOUS)) end)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetCondition(function(e,tp,eg) return eg:IsExists(cid.cfilter,1,e:GetHandler(),1-tp) end)
+	e3:SetTarget(cid.tg)
 	e3:SetOperation(cid.op)
 	c:RegisterEffect(e3)
-	local g=Group.CreateGroup()
-	g:KeepAlive()
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetLabelObject(g)
-	e5:SetCondition(function(e,tp,eg) return eg:IsExists(cid.cfilter,1,e:GetHandler(),1-tp) and re:IsHasType(EFFECT_TYPE_ACTIONS) and not re:IsHasType(EFFECT_TYPE_CONTINUOUS) end)
-	e5:SetOperation(function(e) e:GetLabelObject():Merge(eg) end)
-	c:RegisterEffect(e5)
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e6:SetCode(EVENT_CHAIN_SOLVED)
-	e6:SetLabelObject(e5)
-	e6:SetOperation(cid.op2)
-	e6:SetRange(LOCATION_MZONE)
-	c:RegisterEffect(e6)
 end
 function cid.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x70b) and not c:IsPublic()
@@ -94,17 +78,17 @@ end
 function cid.spfilter(c,e,tp,t)
 	return not t[c:GetCode()] and c:IsSetCard(0x70b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local t={}
 	for ec in aux.Next(eg) do t[ec:GetCode()]=true end
-	local g=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_DECK,0,nil,e,tp,t)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,t)
 	if #g>0 then
-		Duel.Hint(HINT_CARD,0,id)
-		Duel.SpecialSummon(g:Select(tp,1,1,nil),0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
-end
-function cid.op2(e,tp,eg,ep,ev,re,r,rp)
-	local g=e:GetLabelObject():GetLabelObject()
-	cid.op(e,tp,g,ep,ev,re,r,rp)
-	g:Clear()
 end
