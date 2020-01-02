@@ -35,7 +35,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not tc then return end
 	if tc:IsSetCard(0x70b) and tc:GetOwner()==tp then
 		local c=e:GetHandler()
-		local seq=c:IsHasEffect(id+3) and 0 or 2
+		local seq=c:IsHasEffect(id+2) and 0 or 2
 		Duel.SendtoDeck(c,1-tp,seq,REASON_EFFECT)
 		if not c:IsLocation(LOCATION_DECK) then return end
 		if seq>0 then Duel.ShuffleDeck(1-tp) end
