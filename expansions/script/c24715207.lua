@@ -55,14 +55,14 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local seq=c:IsHasEffect(id+3) and 0 or 2
-	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,tp,seq,REASON_EFFECT) and c:IsLocation(LOCATION_DECK) then
+	if c:IsRelateToEffect(e) and Duel.SendtoDeck(c,tp,2,REASON_EFFECT) and c:IsLocation(LOCATION_DECK) then
+		Duel.ShuffleDeck(tp)
 		c:ReverseInDeck()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_ONFIELD,0,1,1,nil)
 		if #g>0 and Duel.SendtoGrave(g,REASON_EFFECT)~=0 then
 			Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_ATOHAND)
-			local sg=Duel.SelectMatchingCard(1-tp,cid.filter,tp,0,LOCATION_DECK,1,nil)
+			local sg=Duel.SelectMatchingCard(1-tp,cid.filter,tp,0,LOCATION_DECK,1,1,nil)
 			if #sg>0 then
 				Duel.SendtoHand(sg,nil,REASON_EFFECT)
 				Duel.ConfirmCards(tp,sg)
