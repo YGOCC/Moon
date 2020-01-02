@@ -52,20 +52,21 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,0,tp,LOCATION_DECK)
 end
-function cid.filter(c,e,tp)
-	return c:IsSetCard(0x70b)
+function cid.filter(c)
+	return c:IsSetCard(0x70b) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0 then return end
 	Duel.ConfirmDecktop(tp,3)
-	local g=Duel.GetDecktopGroup(tp,3):Filter(cid.filter,nil,e,tp)
+	local g=Duel.GetDecktopGroup(tp,3):Filter(cid.filter,nil)
 	if #g>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.DisableShuffleCheck()
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
-		Duel.SortDecktop(tp,tp,3)
+		Duel.ShuffleHand(tp)
+		Duel.SortDecktop(tp,tp,2)
 		return
 	end
 	Duel.ShuffleDeck(tp)

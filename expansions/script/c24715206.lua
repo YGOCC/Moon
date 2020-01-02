@@ -73,7 +73,7 @@ function cid.chainop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,p)
-	return c:IsFaceup() and c:IsSetCard(0x70b) and c:IsControler(p)
+	return c:IsSetCard(0x70b) and c:IsControler(p) and c:GetOwner()~=p
 end
 function cid.spfilter(c,e,tp,t)
 	return not t[c:GetCode()] and c:IsSetCard(0x70b) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
