@@ -34,8 +34,8 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)~=0 end
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ConfirmDecktop(tp,1)
-	local g=Duel.GetDecktopGroup(tp,1)
+	Duel.ConfirmDecktop(1-tp,1)
+	local g=Duel.GetDecktopGroup(1-tp,1)
 	local tc=g:GetFirst()
 	if not tc then return end
 	if tc:IsSetCard(0x70b) and tc:GetOwner()==tp then
