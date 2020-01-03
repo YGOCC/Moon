@@ -50,11 +50,11 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) end
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
-	Duel.SSet(c:GetControler(),c)
+	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
 end
 function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
-	Duel.SSet(c:GetControler(),c)
+	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
 end
 function cid.rlevel(e,c)
 	local lv=e:GetHandler():GetLevel()

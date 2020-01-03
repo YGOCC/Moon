@@ -52,11 +52,11 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) end
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
-	Duel.SSet(c:GetControler(),c)
+	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
 end
 function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
-	Duel.SSet(c:GetControler(),c)
+	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
 end
 function cid.filter(c)
 	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsSetCard(0xf7a) and c:GetType()&0x82==0x82 and c:IsSSetable()
@@ -70,10 +70,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	local tc=g:GetFirst()
-	if tc then
-		Duel.SSet(tp,tc)
-		Duel.ConfirmCards(1-tp,tc)
-	end
+	if tc then Duel.SSet(tp,tc) end
 end
 function cid.indct(e,re,r,rp)
 	if r&REASON_BATTLE+REASON_EFFECT~=0 then

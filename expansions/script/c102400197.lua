@@ -35,7 +35,6 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc2:IsRelateToEffect(e) and tc2:IsSSetable() then
 		tc2:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 		Duel.SSet(tp,tc2)
-		Duel.ConfirmCards(1-tp,tc)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)

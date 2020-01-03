@@ -50,11 +50,11 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) end
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
-	Duel.SSet(c:GetControler(),c)
+	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
 end
 function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
-	Duel.SSet(c:GetControler(),c)
+	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
 end
 function cid.rlevel(e,c)
 	local lv=e:GetHandler():GetLevel()
@@ -71,7 +71,7 @@ end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>(e:IsHasType(EFFECT_TYPE_QUICK_O) and 1 or 0)
 		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,tp,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,tp,0)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
@@ -84,6 +84,5 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	elseif b2 then
 		tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 		Duel.SSet(tp,tc)
-	else return end
-	Duel.ConfirmCards(1-tp,tc)
+	end
 end
