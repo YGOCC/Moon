@@ -28,10 +28,9 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_EQUIP)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
-	e2:SetCondition(cid.eqcon)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetTarget(cid.eqtg)
 	e2:SetOperation(cid.eqop)
 	c:RegisterEffect(e2)
@@ -59,9 +58,6 @@ end
 function cid.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
-function cid.eqcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
-end
 function cid.eqcfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc97) and c:IsAbleToDeck()
 end
@@ -83,7 +79,7 @@ end
 function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local ex1,cg=Duel.GetOperationInfo(0,CATEGORY_TODECK)
 	local cc=cg:GetFirst()
-	if not cc:IsRelateToEffect(e) or Duel.SendtoDeck(cc,nil,2,REASON_EFFECT)==0 or not cc:IsLocation(LOCATION_DECK) then return end
+	if not cc:IsRelateToEffect(e) or Duel.SendtoDeck(cc,nil,2,REASON_EFFECT)==0 or not cc:IsLocation(LOCATION_DECK+LOCATION_EXTRA) then return end
 	Duel.ShuffleDeck(tp)
 	local c=e:GetHandler()
 	local ex2,tg=Duel.GetOperationInfo(0,CATEGORY_EQUIP)
