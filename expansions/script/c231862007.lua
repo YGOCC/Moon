@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(2318620,0))
+	e1:SetDescription(aux.Stringid(math.floor(id/100),0))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)

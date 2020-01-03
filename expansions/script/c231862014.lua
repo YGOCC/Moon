@@ -12,7 +12,7 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.op)
 	c:RegisterEffect(e2)
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(2318620,1))
+	e4:SetDescription(aux.Stringid(math.floor(id/100),1))
 	e4:SetCategory(CATEGORY_DAMAGE+CATEGORY_DICE+CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_FZONE)
@@ -87,7 +87,7 @@ function cid.acttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.actop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Damage(tp,100,REASON_EFFECT)==0 or Duel.GetLP(tp)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(2318620,0))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(math.floor(id/100),0))
 	if e:GetLabel()==1 then Duel.RegisterFlagEffect(tp,id,RESET_CHAIN,0,1) end
 	local tc=Duel.SelectMatchingCard(tp,cid.actfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 	Duel.ResetFlagEffect(tp,id)

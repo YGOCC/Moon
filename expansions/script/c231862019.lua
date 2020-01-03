@@ -98,7 +98,7 @@ end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and (chkc:IsLocation(LOCATION_REMOVED) or chkc:IsControler(tp)) and cid.filter1(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(cid.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(2318620,3))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(math.floor(id/100),3))
 	local g=Duel.SelectTarget(tp,cid.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
 	local te,ceg,cep,cev,cre,cr,crp=g:GetFirst():CheckActivateEffect(false,true,true)
 	e:SetCategory(te:GetCategory())
@@ -133,7 +133,7 @@ end
 function cid.tg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and (chkc:IsLocation(LOCATION_REMOVED) or chkc:IsControler(tp)) and cid.filter1(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(cid.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(2318620,3))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(math.floor(id/100),3))
 	local g=Duel.SelectTarget(tp,cid.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
 	local tc=g:GetFirst()
 	local te,ceg,cep,cev,cre,cr,crp

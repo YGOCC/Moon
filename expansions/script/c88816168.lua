@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFunRep(c,88816165,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE),1,63,false,false)
+	aux.AddFusionProcCodeFunRep(c,id-3,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE),1,63,false,false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -91,7 +91,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.filter(c,e,tp)
-	return c:IsCode(88816165) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(id-3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
