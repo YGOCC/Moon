@@ -4,14 +4,12 @@ local s,id=GetID()
 function s.initial_effect(c)
 --pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--change effect
+	--no responding
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_PZONE)
-	e1:SetCode(EVENT_CHAIN_SOLVING)
-	e1:SetCountLimit(1,id)
-	e1:SetCondition(s.chcon1)
-	e1:SetOperation(s.chop1)
+	e1:SetCondition(s.chainop)
 	c:RegisterEffect(e1)
 	--cannot be target
 	local e2=Effect.CreateEffect(c)
@@ -51,7 +49,16 @@ function s.initial_effect(c)
 	e5:SetOperation(s.teop)
 	c:RegisterEffect(e5)
 end
-	function s.name(c,e)
+	function s.chainop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and rc:IsSetCard(0x20ec) then
+		Duel.SetChainLimit(s.chainlm)
+	end
+end
+	function s.chainlm(e,rp,tp)
+	return tp==rp
+end
+function s.name(c,e)
 	return c:GetSummonLocation()==LOCATION_EXTRA
 end
 	function s.chcon1(e,tp,eg,ep,ev,re,r,rp)
