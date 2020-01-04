@@ -107,15 +107,16 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	if opt==2 then
-		local c=e:GetHandler()
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD)
-		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e2:SetCode(EFFECT_CANNOT_ACTIVATE)
-		e2:SetTargetRange(0,1)
-		e2:SetValue(cid.aclimit)
-		e2:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e2,tp)
+		g=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1)
+	   Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+   --	 local e2=Effect.CreateEffect(c)
+   --	 e2:SetType(EFFECT_TYPE_FIELD)
+  --	  e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+  --	  e2:SetCode(EFFECT_CANNOT_ACTIVATE)
+   --	 e2:SetTargetRange(0,1)
+   --	 e2:SetValue(cid.aclimit)
+	  --  e2:SetReset(RESET_PHASE+PHASE_END)
+  --	  Duel.RegisterEffect(e2,tp)
 	end
 end
 

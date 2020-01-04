@@ -94,11 +94,11 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	--getting the option and executing
 	if opt==0 then
 		 local g=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
-		Duel.ConfirmCards(tp,g)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local sg=g:FilterSelect(tp,Card.IsAbleToRemove,1,1,nil)
+	 if g:GetCount()>0 then
+		local sg=g:RandomSelect(tp,1)
 		Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT)
 	end
+end
 	if opt==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local dg=Duel.SelectMatchingCard(tp,cid.rmfilter,tp,0,LOCATION_GRAVE,1,1,nil)

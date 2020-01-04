@@ -45,8 +45,8 @@ end
 function cid.spfilter(c,e,tp)
     return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function cid.todeckfilter(c)
-	return c:IsAbleToDeck() and c:IsSetCard(0x666)
+function cid.cfilter2(c)
+	return c:IsSetCard(0x666) and c:IsDiscardable()
 end
 function cid.ponybackfilter(c)
     return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x666) and c:IsAbleToGrave()
@@ -70,18 +70,47 @@ function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
 --		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
 --		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end
-function cid.drawtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.todeckfilter(chkc) end
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingTarget(cid.todeckfilter,tp,LOCATION_GRAVE,0,5,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,cid.todeckfilter,tp,LOCATION_GRAVE,0,5,5,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,5,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) and Duel.IsExistingMatchingCard(cid.cfilter2,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(2)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
+end
+
+function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
+--	local g=Duel.SelectMatchingCard(tp,cid.cfilter2,tp,LOCATION_HAND,0,1,1,e:GetHandler())
+--	Duel.DiscardHand(g,nil,2,REASON_EFFECT+REASON_DISCARD)
+	if Duel.DiscardHand(tp,cid.exxxfilter,1,1,REASON_COST+REASON_DISCARD) then
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+		Duel.Draw(p,d,REASON_EFFECT)  
+		if Duel.IsExistingMatchingCard(cid.ponybackfilter,tp,LOCATION_DECK,0,1,nil,e,tp) and 
+		Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,nil) and
+		Duel.SelectEffectYesNo(tp,e:GetHandler(),nil) then
+		local g=Duel.GetFirstMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+		--if g:GetCount()==1 then
+		if Duel.Exile(g,REASON_RULE)>=0 then
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,cid.ponybackfilter,tp,LOCATION_DECK,0,1,1,nil)
+		if g:GetCount()>0 then
+		if Duel.SendtoGrave(g,REASON_EFFECT)>=0 then
+		
+		end 
+		end
+		end
+		end
+		end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end
 --Activate
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsOnField() end
-    local b1=Duel.IsPlayerCanDraw(tp,1) and Duel.IsExistingTarget(cid.todeckfilter,tp,LOCATION_GRAVE,0,5,nil)
+    local b1=Duel.IsPlayerCanDraw(tp,2) and Duel.IsExistingMatchingCard(cid.cfilter2,tp,LOCATION_HAND,0,1,e:GetHandler()) 
     local b2=Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
     if chk==0 then return b1 or b2 end
     local op=0
@@ -96,14 +125,14 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	
 	
     if op==0 then
-        e:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
+        e:SetCategory(CATEGORY_DRAW)
 		e:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local g=Duel.SelectTarget(tp,cid.todeckfilter,tp,LOCATION_GRAVE,0,5,5,nil)
+      	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		Duel.SetTargetPlayer(tp)
+		Duel.SetTargetParam(2)
+		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 		e:SetOperation(cid.drawop)
 		e:SetLabel(999)
-		Duel.SetOperationInfo(0,CATEGORY_TODECK,g,5,0,0)
-		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
     else
         e:SetCategory(CATEGORY_SPECIAL_SUMMON)
         e:SetOperation(cid.spop)
@@ -120,64 +149,9 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
 --		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
---		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)	
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)==0 then return end
-	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup()
-	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-	if ct>=1 then
-	Duel.BreakEffect()
-	Duel.Draw(tp,1,REASON_EFFECT)
-	if Duel.IsExistingMatchingCard(cid.ponybackfilter,tp,LOCATION_DECK,0,1,nil,e,tp) and 
-		Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,nil) and
-		Duel.SelectEffectYesNo(tp,e:GetHandler(),nil) then
-		local g=Duel.GetFirstMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,1,nil)
-		--if g:GetCount()==1 then
-		if Duel.Exile(g,REASON_RULE)>=0 then
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local g=Duel.SelectMatchingCard(tp,cid.ponybackfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
-		if Duel.SendtoGrave(g,REASON_EFFECT)>=0 then
-		end 
-		end
-		end
-		end
-end
-		local sc=Duel.CreateToken(tp,104242585)
-		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
---		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
 --		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end
+
 --recursion
 function cid.recurfilter(c)
 	return c:IsCode(104242585) and c:IsFaceup()

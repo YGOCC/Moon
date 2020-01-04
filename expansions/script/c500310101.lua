@@ -8,12 +8,17 @@ function c500310101.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCountLimit(1,500310101)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCost(c500310101.cost)
 	e1:SetTarget(c500310101.target)
 	e1:SetOperation(c500310101.activate)
 	c:RegisterEffect(e1) 
 end
 function c500310101.filter(c,e)
 	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)and c:GetEC() --c:GetStage()>c:GetCounter(0x1088) --c:GetCounter(0x1088)<=0
+end
+function c500310101.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c500310101.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c500310101.filter(chkc) end

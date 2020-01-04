@@ -92,9 +92,17 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ShuffleDeck(tp)
 	--getting the option and executing
 	if opt==0 then
-		g=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1)
-		Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
+ local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	if Duel.Draw(p,d,REASON_EFFECT)==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.BreakEffect()
+		Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
 	end
+end
+
+
 	if opt==1 then
 		local c=e:GetHandler()
 		local e1=Effect.CreateEffect(c)

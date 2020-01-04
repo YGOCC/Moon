@@ -41,6 +41,10 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.negtg)
 	e2:SetOperation(cid.negop)
 	c:RegisterEffect(e2)
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,cid.counterfilter)
+end
+function cid.counterfilter(c)
+	return c:IsSetCard(0x666)
 end
 --Filters
 function cid.exxxfilter(c)
@@ -48,6 +52,9 @@ function cid.exxxfilter(c)
 end
 function cid.tokenfilter(c)
 	return c:IsFaceup() and c:IsCode(104242592)
+end
+function cid.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsSetCard(0x666)
 end
 
 --Back Row Summon
@@ -73,7 +80,7 @@ function cid.sprcon(e)
 end
 --Back Row Cost
 function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0  and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
 		c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	if Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
@@ -85,6 +92,15 @@ function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
 	c:RegisterEffect(e1)
 	c:RegisterFlagEffect(c:IsSetCard(0x666),RESET_EVENT+RESETS_STANDARD,0,1)
+	local ex=Effect.CreateEffect(e:GetHandler())
+	ex:SetType(EFFECT_TYPE_FIELD)
+	ex:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	ex:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	ex:SetReset(RESET_PHASE+PHASE_END)
+	ex:SetTargetRange(1,0)
+	ex:SetLabelObject(e)
+	ex:SetTarget(cid.splimit)
+	Duel.RegisterEffect(ex,tp)
 end
 end
 function cid.negtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

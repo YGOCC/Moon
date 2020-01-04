@@ -26,13 +26,17 @@ function c500310100.cfilter(c)
 	return c:IsRace(RACE_BEASTWARRIOR) and c:IsAttribute(ATTRIBUTE_DARK)
 		and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
+function c500310100.cfilter(c)
+	return c:IsFaceup()  and c:IsRace(RACE_BEASTWARRIOR) and c:IsAttribute(ATTRIBUTE_DARK)
+end
 function c500310100.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,c500310100.cfilter,1,nil) end
 	local g=Duel.SelectReleaseGroup(tp,c500310100.cfilter,1,1,nil)
 	Duel.Release(g,REASON_COST)
 end
 function c500310100.condition1(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0
+	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
+	return Duel.GetCurrentChain()==0 and g:GetCount()>0 and g:FilterCount(c500310100.cfilter,nil)==g:GetCount()
 end
 function c500310100.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -44,7 +48,8 @@ function c500310100.activate1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(eg,REASON_EFFECT)
 end
 function c500310100.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+		local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
+	return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev) and g:GetCount()>0 and g:FilterCount(c500310100.cfilter,nil)==g:GetCount()
 end
 function c500310100.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

@@ -27,12 +27,19 @@ function c500310990.initial_effect(c)
 	e2:SetTarget(c500310990.target)
 	e2:SetOperation(c500310990.operation)
 	c:RegisterEffect(e2)
+	--cannot be link material
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e3:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
 end
 function c500310990.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function c500310990.matfilter(c)
-	return c:IsLinkRace(RACE_BEASTWARRIOR) or c:IsLinkAttribute(ATTRIBUTE_DARK)
+	return c:IsSetCard(0xa34) 
 end
 
 function c500310990.thfilter(c)
@@ -60,11 +67,11 @@ function c500310990.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c500310990.filter(c,e,tp,zone)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
+	return c:IsSetCard(0xa34) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function c500310990.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	  local zone=e:GetHandler():GetLinkedZone(tp)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c500310990.filter(chkc,e,tp,zone) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c500310990.filter(chkc,e,tp,zone) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c500310990.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -72,10 +79,29 @@ function c500310990.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c500310990.operation(e,tp,eg,ep,ev,re,r,rp)
+	 local ct=math.min(3,Duel.GetFieldGroupCount(tp,LOCATION_DECK,0))
 		local c=e:GetHandler()
 	local zone=c:GetLinkedZone(tp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone) 
-  end
+	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)  then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetValue(1)
+		tc:RegisterEffect(e1)
+		if Duel.SpecialSummonComplete() ~=0 and tc:IsType(TYPE_EVOLUTE) then
+	if ct==0 then return end
+	local t={}
+	for i=1,ct do
+		t[i]=i
+	end
+	local ac=1
+	if ct>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(16768387,1))
+		ac=Duel.AnnounceNumber(tp,table.unpack(t))
+	end
+	Duel.SortDecktop(tp,tp,ac)
 end
-
+	end
+end

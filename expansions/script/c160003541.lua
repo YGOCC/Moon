@@ -114,7 +114,7 @@ end
 
 function c160003541.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetBattleTarget()
-	return tc and tc:IsFaceup() and tc:GetAttack()>0 and tc:IsSummonType(SUMMON_TYPE_SPECIAL) and not tc:IsType(TYPE_RITUAL) and not tc:IsType(TYPE_EVOLUTE)
+	return tc and tc:IsFaceup() and tc:GetAttack()>0 and tc:IsSummonType(SUMMON_TYPE_SPECIAL) 
 end
 function c160003541.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return true end
