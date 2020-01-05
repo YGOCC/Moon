@@ -1,4 +1,4 @@
-﻿expansions/Cards-non-QCD.cdb	71fd033844437fa38b949c73e760e609
+﻿expansions/Cards-non-QCD.cdb	69bf9ba88e518ec66ee1c8128224e78b
 expansions/fix.cdb	e5d57ee2db710071fdec55bc6d7796d9
 expansions/lflist.conf	bc8b40176890d8480f99f4a3b5f3938c
 expansions/pre-release.cdb	9d21ac8d98ad532ebd1f8100c03a1da7
@@ -7534,6 +7534,9 @@ expansions/pics/99998774.jpg	d6e3a0f9f8c029c4c19dcc11a0a893ad
 expansions/pics/99998775.jpg	2c9ccb098ee89d3d367d8688000c79c2
 expansions/pics/99998875.jpg	9c214443df4e215310948699e96939d4
 expansions/pics/99998876.jpg	033a966d6afd5954b3939cfba53507ed
+expansions/pics/99998878.jpg	122ed90b2cf83b928ef57ce3bf20a494
+expansions/pics/99998879.jpg	4ea954a4a291af47e43113a0fd149f1e
+expansions/pics/99998880.jpg	c21d3a1c58c62207bdd4acf6fd5f5798
 expansions/pics/c210216000.png	665bc0e8bef4d9a7a01445cb7a573e01
 expansions/pics/c210216001.png	832c56864b6b9bd0d579ebbb536bb9c4
 expansions/pics/c210216002.png	95f5299dd801757d52559f17b8405d1e
@@ -15135,6 +15138,9 @@ expansions/script/c99998774.lua	5b49e2419e974df8c9eb5d1a5610e1a6
 expansions/script/c99998775.lua	042b3d2df9852e77cca56a8d43530018
 expansions/script/c99998875.lua	44134e4e51d4d32ad11a829a3133d5b0
 expansions/script/c99998876.lua	32e7723dca5a0cbadb73ebc9ccc7b1eb
+expansions/script/c99998878.lua	daf731811d1173f90e8b3fd358a35b76
+expansions/script/c99998879.lua	11d45c62607f4c7145040919ef213306
+expansions/script/c99998880.lua	035b616c2a14afb2307e29af3e11ff02
 expansions/script/GLShortcuts.lua	6743700bf509cc48d8f596ff4a8fe5c0
 expansions/script/init.lua	70dd781d4675e3e537da01e7b7664a9a
 expansions/script/json.lua	d41a01cf67c76915b49c57d21ac471ee
@@ -15248,6 +15254,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	785f5a5417e99be26001c8f4a9845b4a
+update/filelist.txt	85815089741f6edc87c035c096fb316a
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	3d9bf1dad4bf80fb4af894764f474394
+update/version.txt	ff68587ddfb699ef99215242b2e4c93f
