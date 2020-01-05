@@ -157,7 +157,6 @@ function Duel.RemoveEC(p,s,o,ct,r)
 	if ct>0 then Duel.RemoveCounter(p,s,o,0x1088,ct,r) end
 end
 function Card.IsCanBeEvoluteMaterial(c,ec)
-	if c:GetLevel()<=0 and c:GetRank()<=0 and not c:IsStatus(STATUS_NO_LEVEL) then return false end
 	if c:IsControler(1-ec:GetControler()) or not c:IsLocation(LOCATION_MZONE) then
 		local tef1={c:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL,tp)}
 		local ValidSubstitute=false
@@ -176,6 +175,7 @@ function Card.IsCanBeEvoluteMaterial(c,ec)
 			if tev(te2,ec) then return false end
 		elseif tev~=0 then return false end
 	end
+	if not c:IsHasEffect(EFFECT_EVOLUTE_LEVEL) and c:GetLevel()<=0 and c:GetRank()<=0 and not c:IsStatus(STATUS_NO_LEVEL) then return false end
 	return true
 end
 function Auxiliary.AddOrigEvoluteType(c,isxyz)

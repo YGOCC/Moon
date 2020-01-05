@@ -58,7 +58,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 	--leave replace
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_SEND_REPLACE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTarget(cid.reptg)
@@ -127,7 +127,7 @@ end
 --LEAVE REPLACE
 --filters
 function cid.repfilter(c,e)
-	return c:IsLocation(LOCATION_ONFIELD) and c==e:GetHandler() and not c:IsReason(REASON_REPLACE)
+	return c:IsLocation(LOCATION_ONFIELD) and not c:IsReason(REASON_REPLACE)
 		and bit.band(c:GetDestination(),LOCATION_MZONE)==0 and bit.band(c:GetDestination(),LOCATION_SZONE)==0
 		and bit.band(c:GetDestination(),LOCATION_FZONE)==0 and bit.band(c:GetDestination(),LOCATION_PZONE)==0
 end
@@ -136,14 +136,10 @@ function cid.rmfilter(c)
 end
 ---------
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return bit.band(r,REASON_EFFECT)~=0 and re and rp~=tp and eg:IsExists(cid.repfilter,1,nil,e)
+	if chk==0 then return r&REASON_EFFECT~=0 and re and rp~=tp and cid.repfilter(e:GetHandler(),e)
 		and Duel.IsExistingMatchingCard(cid.rmfilter,tp,LOCATION_DECK,0,2,nil) 
 	end
 	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-		local g=Duel.SelectMatchingCard(tp,cid.rmfilter,tp,LOCATION_DECK,0,2,2,nil)
-		e:SetLabelObject(g:GetFirst())
-		g:GetFirst():SetStatus(STATUS_LEAVE_CONFIRMED,true)
 		return true
 	end
 	return false
@@ -152,7 +148,7 @@ function cid.repval(e,c)
 	return cid.repfilter(c,e)
 end
 function cid.repop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	tc:SetStatus(STATUS_LEAVE_CONFIRMED,false)
-	Duel.Remove(tc,POS_FACEUP,REASON_EFFECT+REASON_REPLACE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
+	local g=Duel.SelectMatchingCard(tp,cid.rmfilter,tp,LOCATION_DECK,0,2,2,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT+REASON_REPLACE)
 end
