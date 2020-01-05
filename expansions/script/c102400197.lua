@@ -19,7 +19,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,Card.IsType,1,1,REASON_COST+REASON_DISCARD,nil,TYPE_SPELL+TYPE_TRAP)
 end
 function cid.filter(c)
-	return c:IsSetCard(0xf7a) and c:IsType(TYPE_MONSTER) and c:IsSSetable(true)
+	return c:IsSetCard(0xf7a) and c:IsType(TYPE_MONSTER) and aux.PandSSetCon(c,nil)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cid.filter(chkc) end
@@ -32,9 +32,16 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc2=Duel.GetFirstTarget()
-	if tc2:IsRelateToEffect(e) and tc2:IsSSetable() then
-		tc2:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
+	if tc2:IsRelateToEffect(e) and aux.PandSSetCon(tc2,tp) then
+		local e1=Effect.CreateEffect(tc2)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_MONSTER_SSET)
+		e1:SetValue(TYPE_TRAP)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+		tc2:RegisterEffect(e1,true)
 		Duel.SSet(tp,tc2)
+		e1:Reset()
+		tc2:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)

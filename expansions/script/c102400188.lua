@@ -49,12 +49,18 @@ end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) end
-	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
-	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
+	cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
-	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_MONSTER_SSET)
+	e1:SetValue(TYPE_TRAP)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+	c:RegisterEffect(e1,true)
 	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
+	e1:Reset()
+	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 end
 function cid.rlevel(e,c)
 	local lv=e:GetHandler():GetLevel()
@@ -81,7 +87,14 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local b1,b2=tc:IsAbleToHand(),aux.PandSSetCon(tc,-1)(tc,e,tp,eg,ep,ev,re,r,rp)
 	if b1 and (not b2 or Duel.SelectOption(tp,1190,1159)==0) then Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	elseif b2 then
-		tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
+		local e1=Effect.CreateEffect(tc)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_MONSTER_SSET)
+		e1:SetValue(TYPE_TRAP)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+		tc:RegisterEffect(e1,true)
 		Duel.SSet(tp,tc)
+		e1:Reset()
+		tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 	end
 end
