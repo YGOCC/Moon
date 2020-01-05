@@ -43,7 +43,7 @@ function cid.filter2(c,ec,tp)
 	return c:IsRace(RACE_BEASTWARRIOR)
 end
 function cid.cfilter(c)
-	return c:IsFaceup() c:IsSetCard(0xa34) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)
 end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp and Duel.IsChainNegatable(ev) and g:GetCount()>0 and g:FilterCount(cid.cfilter,nil)==g:GetCount()
