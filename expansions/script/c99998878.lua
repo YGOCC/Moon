@@ -11,7 +11,7 @@ function c99998878.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Banished?
 	local e2=Effect.CreateEffect(c)
-	e1:SetCountLimit(1,99998878+1000)
+	e2:SetCountLimit(1,99998878+1000)
 	e2:SetDescription(aux.Stringid(99998878,1))
 	e2:SetCategory(CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)

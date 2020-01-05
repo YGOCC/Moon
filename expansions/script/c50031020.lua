@@ -42,8 +42,11 @@ end
 function cid.filter2(c,ec,tp)
 	return c:IsRace(RACE_BEASTWARRIOR)
 end
+function cid.cfilter(c)
+	return c:IsFaceup() c:IsSetCard(0xa34) and c:IsType(TYPE_MONSTER)
+end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp and Duel.IsChainNegatable(ev)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp and Duel.IsChainNegatable(ev) and g:GetCount()>0 and g:FilterCount(cid.cfilter,nil)==g:GetCount()
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
    if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) end
@@ -73,7 +76,7 @@ function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function cid.spfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa34) and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0
+	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)
 end
 function cid.hspcon(e,c)
   if c==nil then return true end
