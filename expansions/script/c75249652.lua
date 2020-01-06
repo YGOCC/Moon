@@ -36,9 +36,10 @@ function c75249652.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		local dam=Duel.GetLP(tp)
 		Duel.Damage(tp,atk/2,REASON_EFFECT)
-		if Duel.GetLP(tp)>0 and dam>Duel.GetLP(tp) then
+		local dam2=dam-Duel.GetLP(tp)
+		if Duel.GetLP(tp)>0 and dam2>0 then
 			Duel.BreakEffect()
-			Duel.Damage(1-tp,atk/2,REASON_EFFECT)
+			Duel.Damage(1-tp,dam2,REASON_EFFECT)
 		end
 	end
 end
