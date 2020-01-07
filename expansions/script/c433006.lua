@@ -112,7 +112,10 @@ function cid.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
+	if Duel.Draw(p,d,REASON_EFFECT)>0 then
+		Duel.BreakEffect()
+		Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT)
+	end
 end
 function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return not (r==REASON_RULE)
