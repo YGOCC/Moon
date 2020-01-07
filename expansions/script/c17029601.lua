@@ -124,7 +124,7 @@ function c17029601.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and Duel.IsPlayerCanSpecialSummonMonster(tp,tc:GetCode(),0x720,0x11,1000,1000,4,RACE_FAIRY,ATTRIBUTE_LIGHT) then
 		tc:AddMonsterAttribute(TYPE_NORMAL)
 		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP_ATTACK)
-		tc:AddMonsterAttributeComplete()
+--		tc:AddMonsterAttributeComplete()
 		local e1=Effect.CreateEffect(tc)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_TYPE)
@@ -176,8 +176,8 @@ function c17029601.revtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c17029601.revop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
-	c17029611.announce_filter={TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT}
-	local ac=Duel.AnnounceCardFilter(tp,table.unpack(c17029611.announce_filter))
+	c17029601.announce_filter={TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK,OPCODE_ISTYPE,OPCODE_NOT}
+	local ac=Duel.AnnounceCardFilter(tp,table.unpack(c17029601.announce_filter))
 	Duel.SetTargetParam(ac)
 	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_HAND,nil,ac)
