@@ -59,7 +59,7 @@ function c212550.drop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c212550.spfilter(c,e,tp)
-	return c:IsSetCard(0x2609) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsSetCard(0x2609) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c212550.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c212550.spfilter(chkc,e,tp) end
