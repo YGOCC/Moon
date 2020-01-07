@@ -43,11 +43,6 @@ function GetID()
 	local s_id=tonumber(string.sub(str,2))
 	return scard,s_id
 end
-function Card.IsCanOverlay(c,rp) --Placeholder
-	if not rp then rp=c:GetReasonPlayer() end
-	return not c:IsType(TYPE_TOKEN) and (c:IsOnField() or not c:IsForbidden()) and (c:IsControler(rp) or c:IsAbleToChangeControler())
-end
-
 --overwrite functions
 local is_type, card_remcounter, duel_remcounter, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv, duel_overlay, duel_set_lp, duel_select_target, duel_banish, card_check_remove_overlay_card, is_reason, duel_check_tribute, select_tribute = 
 	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Card.RegisterEffect, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.CheckRemoveOverlayCard, Card.IsReason, Duel.CheckTribute, Duel.SelectTribute
