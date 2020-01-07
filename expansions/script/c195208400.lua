@@ -1,5 +1,5 @@
-local cid,id=GetID()
---Spectre Magician & Dark Light
+--created by Seth, coded by Lyris
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DISABLE)

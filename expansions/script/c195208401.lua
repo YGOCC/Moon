@@ -1,14 +1,12 @@
-local cid,id=GetID()
---Ghastly Franne & Horror Show
+--created by Seth, coded by Lyris
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	c:RegisterEffect(e1)
-	--Must be Special Summoned by shuffling 3 Tuners with 0 ATK and 1800 DEF from your GY into your Deck.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
@@ -17,14 +15,12 @@ function cid.initial_effect(c)
 	e2:SetCondition(cid.spcon)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
-	--You can only Special Summon "Ghastly Franne & Horror Show(s)" once per turn.
 	c:SetSPSummonOnce(id)
-	--(Quick Effect): You can banish 1 card you control; add 1 Tuner monster with 0 ATK and 1800 DEF from your Deck to your hand. You cannot conduct your Battle Phase the turn you activate this effect. You can only activate this effect of "Ghastly Franne & Horror Show" once per turn.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	e3:SetCountLimit(1,id)
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e3:SetCost(cid.cost)
 	e3:SetTarget(cid.tg)
