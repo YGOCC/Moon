@@ -64,7 +64,8 @@ function cid.PConditionFilter(c,e,tp,tc,eset)
 	local lscale=seq==0 and tc:GetLeftScale() or tc:GetLeftScale()
 	local rscale=1-seq==1 and rpz:GetRightScale() or rpz:GetLeftScale()
 	if lscale>rscale then lscale,rscale=rscale,lscale end
-	return c:IsLocation(LOCATION_REMOVED) and c:IsFaceup() or aux.PConditionFilter(c,e,tp,lscale,rscale,eset)
+	return c:IsLocation(LOCATION_REMOVED) and c:IsFaceup() and c:IsSetCard(0xc97)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false) or aux.PConditionFilter(c,e,tp,lscale,rscale,eset)
 end
 function cid.PendCondition(e,c,og)
 	if c==nil then return true end
