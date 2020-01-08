@@ -71,6 +71,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		sg:Merge(sg1)
 	end
 	local ct=Duel.Destroy(sg,REASON_EFFECT)
+	Duel.ShuffleHand(1-tp)
 	Duel.Damage(1-tp,ct*1000,REASON_EFFECT)
 end
 --act in hand
