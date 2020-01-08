@@ -31,7 +31,7 @@ function c212715.fcheck(tp,sg,fc)
 	return true
 end
 function c212715.filterchk(c)
-	return c:IsCode(40418351) and c:IsOnField()
+	return c:IsFusionCode(40418351) and c:IsOnField()
 end
 function c212715.filter0(c)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToGrave()
