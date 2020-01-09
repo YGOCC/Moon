@@ -68,9 +68,7 @@ end
 function c60643553.lpop1(e,tp,eg,ep,ev,re,r,rp)
 	local lg=eg:Filter(c60643553.cfilter,nil,1-tp)
 	local rnum=lg:GetSum(Card.GetAttack)
-	local lp=Duel.GetLP(tp)
-	Duel.Recover(tp,rnum,REASON_EFFECT)
-	if Duel.GetLP(tp)<lp then return end
+	if Duel.Recover(tp,rnum,REASON_EFFECT)<1 then return end
 	Duel.RegisterFlagEffect(tp,60643553,RESET_PHASE+PHASE_END,0,1)
 end
 function c60643553.regcon(e,tp,eg,ep,ev,re,r,rp)
@@ -101,9 +99,7 @@ function c60643553.lpop2(e,tp,eg,ep,ev,re,r,rp)
 	g:KeepAlive()
 	e:GetLabelObject():SetLabelObject(g)
 	lg:DeleteGroup()
-	local lp=Duel.GetLP(tp)
-	Duel.Recover(tp,rnum,REASON_EFFECT)
-	if Duel.GetLP(tp)<lp then return end
+	if Duel.Recover(tp,rnum,REASON_EFFECT)<1 then return end
 	Duel.RegisterFlagEffect(tp,60643553,RESET_PHASE+PHASE_END,0,1)
 end
 function c60643553.damcon(e,tp,eg,ep,ev,re,r,rp)
