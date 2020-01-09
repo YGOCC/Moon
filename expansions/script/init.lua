@@ -21,6 +21,7 @@ CARD_CYBER_DRAGON					=70095154
 CARD_PYRO_CLOCK						=1082946
 CARD_INLIGHTENED_PSYCHIC_HELMET		=102400006
 CARD_NEBULA_TOKEN					=218201917
+CARD_DRAGON_EGG_TOKEN				=20157305
 
 --Custom Type Tables
 Auxiliary.Customs={} --check if card uses custom type, indexing card
