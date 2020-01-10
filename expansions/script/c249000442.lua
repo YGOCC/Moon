@@ -27,7 +27,7 @@ function c249000442.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0,nil)<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE,nil)
 end
 function c249000442.filter(c)
-	return c:IsSetCard(0x1BE) and c:IsAbleToGrave()
+	return c:IsSetCard(0x1BE) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c249000442.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2)

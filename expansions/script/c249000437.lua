@@ -12,9 +12,9 @@ function c249000437.initial_effect(c)
 					mt.tuner_filter=function(mc) return true end
 				end
 				if f2 then
-					mt.nontuner_filter=function(mc) return mc and f2(mc) end
+					mt.nontuner_filter=function(mc,c) return mc and f2(mc,c) end
 				else
-					mt.nontuner_filter=function(mc) return true end
+					mt.nontuner_filter=function(mc,c) return true end
 				end
 				mt.minntct=minc
 				if maxc==nil then mt.maxntct=99 else mt.maxntct=maxc end
@@ -30,7 +30,6 @@ function c249000437.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCountLimit(1,249000437)
-	e1:SetCondition(aux.exccon)
 	e1:SetCost(c249000437.cost)
 	e1:SetTarget(c249000437.target)
 	e1:SetOperation(c249000437.operation)
@@ -57,8 +56,8 @@ end
 function c249000437.matfilter(c,lv,syncard,mclv)
 	local code=syncard:GetOriginalCode()
 	local mt=_G["c" .. code]
-	return c:GetSynchroLevel(syncard)==lv-mclv and c:IsNotTuner() and c:IsAbleToRemove() 
-		and mt.nontuner_filter and mt.nontuner_filter(c)
+	return c:GetSynchroLevel(syncard)==lv-mclv and c:IsNotTuner(syncard) and c:IsAbleToRemove() 
+		and mt.nontuner_filter and mt.nontuner_filter(c,syncard)
 end
 function c249000437.filter(c,e,tp,mc)
 	local code=c:GetOriginalCode()
@@ -69,12 +68,11 @@ function c249000437.filter(c,e,tp,mc)
 		and mt.sync and mt.minntct and mt.minntct==1 and mt.tuner_filter and mt.tuner_filter(mc)
 end
 function c249000437.tgfilter(c)
-	return c:IsNotTuner() and c:IsAbleToRemove()
+	return c:IsAbleToRemove() and not c:IsType(TYPE_TUNER)
 end
 function c249000437.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and c:IsAbleToRemove() 
-	--	and Duel.IsExistingMatchingCard(c249000437.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c) end
 		and Duel.IsExistingMatchingCard(c249000437.tgfilter,tp,LOCATION_GRAVE,0,1,c) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
@@ -90,9 +88,6 @@ function c249000437.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc=Duel.CreateToken(tp,ac)
 		if tc:IsCode(249000437) then return end
 	end
---	local g=Duel.GetMatchingGroup(c249000437.filter,tp,LOCATION_EXTRA,0,nil,e,tp,c)
---		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
---		local tc=g:Select(tp,1,1,nil):GetFirst()
 	local code=tc:GetOriginalCode()
 	local mt=_G["c" .. code]
 	local mclv=c:GetSynchroLevel(tc)

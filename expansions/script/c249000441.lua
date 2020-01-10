@@ -21,6 +21,18 @@ function c249000441.initial_effect(c)
 	e2:SetTarget(c249000441.target)
 	e2:SetOperation(c249000441.operation)
 	c:RegisterEffect(e2)
+	--disable attack
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(96427353,0))
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCondition(c249000441.condition3)
+	e3:SetCost(aux.bfgcost)
+	e3:SetTarget(c249000441.target3)
+	e3:SetOperation(c249000441.operation3)
+	c:RegisterEffect(e3)
 end
 function c249000441.filter(c)
 	return c:IsSetCard(0x1BE) and c:IsAbleToHand() and not c:IsCode(249000423)
@@ -54,4 +66,20 @@ function c249000441.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
+end
+function c249000441.cfilter(c)
+	return c:IsSetCard(0x1BE) and c:IsType(TYPE_MONSTER)
+end
+function c249000441.condition3(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()~=tp and Duel.GetAttackTarget()==nil
+		and Duel.IsExistingMatchingCard(c249000441.cfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler())
+end
+function c249000441.target3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local tg=Duel.GetAttacker()
+	if chkc then return chkc==tg end
+	if chk==0 then return tg:IsOnField() and tg:IsCanBeEffectTarget(e) end
+	Duel.SetTargetCard(tg)
+end
+function c249000441.operation3(e,tp,eg,ep,ev,re,r,rp)
+	Duel.NegateAttack()
 end
