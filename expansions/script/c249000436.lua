@@ -1,4 +1,5 @@
 --Heterochromic Mysterious Fuser
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000436.initial_effect(c)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
@@ -139,15 +140,16 @@ function c249000436.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	local ac=Duel.AnnounceCardFilter(tp,TYPE_FUSION,OPCODE_ISTYPE,c:GetOriginalCode(),OPCODE_ISCODE,OPCODE_OR)
 	local cc=Duel.CreateToken(tp,ac)
-	while not (cc.material and tc:IsCode(table.unpack(cc.material)) and cc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false))
+	while not (cc.material and tc:IsCode(table.unpack(cc.material)) and cc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and not banned_list_table[ac])
 	do
-		ac=Duel.AnnounceCard(tp)
+		ac=Duel.AnnounceCardFilter(tp,TYPE_FUSION,OPCODE_ISTYPE,c:GetOriginalCode(),OPCODE_ISCODE,OPCODE_OR)
 		cc=Duel.CreateToken(tp,ac)
 		if cc:IsCode(249000436) then return end
 	end
 	Duel.SendtoGrave(tc,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 	cc:SetMaterial(Group.FromCards(tc))
 	Duel.SpecialSummon(cc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+	cc:CompleteProcedure()
 	if cc:GetBaseAttack() >= 2800 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)

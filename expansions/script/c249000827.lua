@@ -1,4 +1,5 @@
 --Cyber-Realm Gatekeeper
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000827.initial_effect(c)
 	--tohand
 	local e1=Effect.CreateEffect(c)
@@ -102,6 +103,9 @@ function c249000827.operation2(e,tp,eg,ep,ev,re,r,rp)
 	for i2=1,4 do
 		local announce_filter={TYPE_LINK,OPCODE_ISTYPE,OPCODE_AND,table.unpack(code_table)}
 		local ac=Duel.AnnounceCardFilter(tp,table.unpack(announce_filter))
+		while banned_list_table[ac] do
+			ac=Duel.AnnounceCardFilter(tp,table.unpack(announce_filter))
+		end
 		link_table[i2]=ac
 		code_table[i]=ac
 		i=i+1

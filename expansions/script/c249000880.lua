@@ -1,4 +1,5 @@
 --Data Creator
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000880.initial_effect(c)
 	c:EnableReviveLimit()
 	--special summon other
@@ -35,7 +36,7 @@ function c249000880.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c249000880.condition(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE+LOCATION_REMOVED,0,nil,TYPE_MONSTER)
+	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,TYPE_MONSTER)
 	local ct=g:GetClassCount(Card.GetRace)
 	return ct > 2
 end
@@ -79,7 +80,7 @@ function c249000880.operation(e,tp,eg,ep,ev,re,r,rp)
 		if sc:IsType(TYPE_RITUAL) then sumtype=SUMMON_TYPE_RITUAL elseif sc:IsType(TYPE_SYNCHRO) then sumtype=SUMMON_TYPE_SYNCHRO else sumtype=SUMMON_TYPE_XYZ end
 		if sc:IsType(TYPE_XYZ) then lvrk=sc:GetRank() else lvrk=sc:GetLevel() end
 	until g:CheckWithSumGreater(c249000880.getlevelorrank,lvrk,1,99,e:GetHandler()) and lvrk >=4 and lvrk <=9
-		and sc:IsCanBeSpecialSummoned(e,sumtype,tp,true,false)
+		and sc:IsCanBeSpecialSummoned(e,sumtype,tp,true,false) and not banned_list_table[ac]
 	local sg=g:SelectWithSumGreater(tp,c249000880.getlevelorrank,lvrk,1,99,nil)
 	Duel.Release(sg,REASON_EFFECT)
 	Duel.SendtoDeck(sc,nil,2,REASON_RULE)
