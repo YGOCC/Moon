@@ -102,17 +102,5 @@ function c249000027.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c249000027.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
-		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0 then return end
-		Duel.ConfirmDecktop(tp,1)
-		local g=Duel.GetDecktopGroup(tp,1)
-		local tc2=g:GetFirst()	
-		if tc2:IsSetCard(0x1FE) and tc2:IsAbleToHand() then
-			Duel.DisableShuffleCheck()
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
-			Duel.ShuffleHand(tp)
-		else
-			Duel.MoveSequence(tc,1)
-		end	
-	end
+	if tc and tc:IsRelateToEffect(e) then Duel.Destroy(tc,REASON_EFFECT) then
 end

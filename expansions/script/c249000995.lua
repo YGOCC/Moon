@@ -22,6 +22,7 @@ function c249000995.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCondition(c249000995.discon)
+	e2:SetTarget(c249000995.distg)
 	e2:SetOperation(c249000995.disop)
 	c:RegisterEffect(e2)
 	--extra attack
@@ -103,7 +104,14 @@ function c249000995.cfilter(c)
 	return c:IsSetCard(0x200) and c:IsType(TYPE_MONSTER)
 end
 function c249000995.discon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and e:GetHandler():GetOverlayGroup():IsExists(c249000993.cfilter,1,nil)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and e:GetHandler():GetOverlayGroup():IsExists(c249000995.cfilter,1,nil)
+end
+function c249000995.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return true end
+	Duel.SetChainLimit(c249000995.chlimit)
+end
+function c249000995.chlimit(e,ep,tp)
+	return tp==ep
 end
 function c249000995.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

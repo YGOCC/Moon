@@ -25,6 +25,14 @@ function c212705.initial_effect(c)
 	e2:SetTarget(c212705.thtgi)
 	e2:SetOperation(c212705.thopi)
 	c:RegisterEffect(e2)
+	--atk
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_UPDATE_ATTACK)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetValue(c212705.atkval)
+	c:RegisterEffect(e3)
 end
 function c212705.mfilter(c)
 	return c:IsLevelBelow(4) and c:IsLinkSetCard(0x4093)
@@ -61,4 +69,11 @@ function c212705.thopi(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+end
+function c212705.atkfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x4093) and c:GetBaseAttack()>=0
+end
+function c212705.atkval(e,c)
+	local lg=c:GetLinkedGroup():Filter(c212705.atkfilter,nil)
+	return lg:GetSum(Card.GetBaseAttack)
 end
