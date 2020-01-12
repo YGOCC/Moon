@@ -129,14 +129,14 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)*500
 	if chk==0 then return ct>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ct)
-	local g=Duel.GetMatchingGroup(cid.desfilter,tp,0x47,0x47,nil,ct)
+	local g=Duel.GetMatchingGroup(cid.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,ct)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	local d=Duel.Damage(1-tp,ct*500,REASON_EFFECT)
 	if d==0 then return end
-	local g=Duel.GetMatchingGroup(cid.desfilter,tp,0x47,0x47,nil,d)
+	local g=Duel.GetMatchingGroup(cid.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,d)
 	Duel.Destroy(g,REASON_EFFECT)
 end
 function cid.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
