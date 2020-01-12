@@ -75,7 +75,7 @@ function s.atkval(e,c)
 end
 function s.indcon(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
-	return (ph>=PHASE_MAIN) or (ph<=PHASE_MAIN2)
+	return (ph>=PHASE_MAIN1) or (ph<=PHASE_MAIN2)
 end
 function s.indcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST) end
