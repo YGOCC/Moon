@@ -11,7 +11,7 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
 end
-function cid.cfilter(c)
+function cid.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc97) and c:IsAbleToRemove()
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
