@@ -110,7 +110,7 @@ function c16599457.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c16599457.tgfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c16599457.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,c16599457.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,c16599457.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c16599457.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -149,8 +149,8 @@ function c16599457.dryop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil)
 	local tc=g:GetFirst()
-	Duel.HintSelection(g)
 	if tc then
+		Duel.HintSelection(g)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
