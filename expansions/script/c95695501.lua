@@ -17,6 +17,7 @@ function cid.initial_effect(c)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,id)
+	e1:SetCost(cid.setcost)
 	e1:SetTarget(cid.settg)
 	e1:SetOperation(cid.setop)
 	c:RegisterEffect(e1)
@@ -46,6 +47,9 @@ function cid.cfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x3ff) and c:IsType(TYPE_SPELL)
 		and Duel.IsExistingMatchingCard(cid.cfilter2,tp,LOCATION_ONFIELD,0,1,nil,c:GetCode())
 end
+function cid.cfilter1(c,tp)
+	return c:IsFaceup() and c:IsType(TYPE_LINK)
+end
 function cid.cfilter2(c,code)
 	return c:IsFaceup() and c:IsSetCard(0x3ff) and c:IsType(TYPE_SPELL) and not c:IsCode(code)
 end
@@ -59,6 +63,10 @@ function cid.thfilter(c)
 	return c:IsSetCard(0x3ff) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
 --set
+function cid.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
 function cid.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.setfilter,tp,LOCATION_DECK,0,1,nil) end
 end
@@ -72,7 +80,7 @@ function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 --spsummon
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_ONFIELD,0,1,nil,tp)
+	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_ONFIELD,0,1,nil,tp) and not Duel.IsExistingMatchingCard(cid.cfilter1,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_ONFIELD,0,1,nil,tp) end
