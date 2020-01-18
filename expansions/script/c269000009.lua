@@ -1,4 +1,4 @@
---Elemental HERO Bubbleman (retrain)
+--Elemental HERO Neo New Bubbleman
 function c269000009.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -25,6 +25,23 @@ function c269000009.initial_effect(c)
 	local e4=e2:Clone()
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
+	--change name
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetCode(EFFECT_CHANGE_CODE)
+	e5:SetRange(LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND)
+	e5:SetValue(79979666)
+	c:RegisterEffect(e5)
+	--destroy
+	local e6=Effect.CreateEffect(c)
+	e6:SetDescription(aux.Stringid(5285665,0))
+	e6:SetCategory(CATEGORY_DESTROY)
+	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e6:SetCode(EVENT_DAMAGE_STEP_END)
+	e6:SetTarget(c269000009.destg)
+	e6:SetOperation(c269000009.desop)
+	c:RegisterEffect(e6)
 end
 function c269000009.spcon(e,c)
 	if c==nil then return true end
@@ -54,5 +71,16 @@ function c269000009.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetTargetRange(1,0)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e1,tp)
+	end
+end
+function c269000009.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local bc=e:GetHandler():GetBattleTarget()
+	if chk==0 then return bc and bc:IsRelateToBattle() end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,bc,1,0,0)
+end
+function c269000009.desop(e,tp,eg,ep,ev,re,r,rp)
+	local bc=e:GetHandler():GetBattleTarget()
+	if bc:IsRelateToBattle() then
+		Duel.Destroy(bc,REASON_EFFECT)
 	end
 end
