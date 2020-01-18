@@ -16,6 +16,7 @@ function c212530.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,212530)
+	e2:SetCondition(c212530.dmgcon)
 	e2:SetCost(c212530.cost)
 	e2:SetOperation(c212530.operation)
 	c:RegisterEffect(e2)
@@ -29,6 +30,12 @@ function c212530.initial_effect(c)
 	e4:SetTarget(c212530.sumtg)
 	e4:SetOperation(c212530.sumop)
 	c:RegisterEffect(e4)
+end
+function c212530.cfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x2609)
+end
+function c212530.dmgcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c212530.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function c212530.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) and e:GetHandler():IsAbleToGraveAsCost() end

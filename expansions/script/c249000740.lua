@@ -3,6 +3,7 @@ function c249000740.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1ED),3,true)
+	aux.AddContactFusionProcedure(c,Card.IsReleasable,LOCATION_MZONE,0,Duel.Release,REASON_COST+REASON_MATERIAL)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -10,15 +11,6 @@ function c249000740.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetValue(c249000740.splimit)
 	c:RegisterEffect(e1)
-	--special summon rule
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_SPSUMMON_PROC)
-	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(LOCATION_EXTRA)
-	e2:SetCondition(c249000740.sprcon)
-	e2:SetOperation(c249000740.sprop)
-	c:RegisterEffect(e2)
 	--discard deck
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
@@ -40,31 +32,6 @@ end
 function c249000740.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
-function c249000740.spfilter(c)
-	return c:IsFusionSetCard(0x1ED) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
-end
-function c249000740.spfilter1(c,tp,g)
-	return g:IsExists(c249000740.spfilter2,2,c,tp,c)
-end
-function c249000740.spfilter2(c,tp,mc)
-	return Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,mc))>0
-end
-function c249000740.sprcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(c249000740.spfilter,tp,LOCATION_MZONE,0,nil)
-	return g:IsExists(c249000740.spfilter1,1,nil,tp,g)
-end
-function c249000740.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.GetMatchingGroup(c249000740.spfilter,tp,LOCATION_MZONE,0,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g1=g:FilterSelect(tp,c249000740.spfilter1,1,1,nil,tp,g)
-	local mc=g1:GetFirst()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g2=g:FilterSelect(tp,c249000740.spfilter2,2,2,mc,tp,mc)
-	g1:Merge(g2)
-	Duel.SendtoGrave(g1,nil,2,REASON_COST)
-end
 function c249000740.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,3) end
 	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,3)
@@ -72,16 +39,17 @@ end
 function c249000740.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.DiscardDeck(tp,3,REASON_EFFECT)
 	local g=Duel.GetOperatedGroup()
-	local sg=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
+	local sg=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE+LOCATION_REMOVED)
 	if sg:GetCount()==0 then return end
 	local tc=sg:GetFirst() 
 	while tc do
 		if tc:IsType(TYPE_MONSTER) then
 			local e1=Effect.CreateEffect(tc)
-			e1:SetDescription(95)
-			e1:SetType(EFFECT_TYPE_QUICK_O+EFFECT_TYPE_FIELD)
+			e1:SetDescription(aux.Stringid(115000261,3))
+			e1:SetType(EFFECT_TYPE_QUICK_O)
 			e1:SetCode(EVENT_FREE_CHAIN)
-			e1:SetReset(RESET_EVENT)
+			e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOGRAVE-RESET_REMOVE)
 			e1:SetHintTiming(0,TIMING_MAIN_END)
 			e1:SetCountLimit(1,2490007401)
 			e1:SetCondition(c249000740.atkcon)
@@ -93,11 +61,11 @@ function c249000740.operation(e,tp,eg,ep,ev,re,r,rp)
 			if not (tc:GetType()==TYPE_SPELL or tc:GetType()==TYPE_SPELL+TYPE_QUICKPLAY or tc:GetType()==TYPE_TRAP) then return end
 			local te=tc:GetActivateEffect()
 			local e2=Effect.CreateEffect(tc)
-			e2:SetDescription(95)
+			e2:SetDescription(aux.Stringid(115000261,3))
 			if tc:GetType()==TYPE_SPELL then
 				e2:SetType(EFFECT_TYPE_IGNITION)
 			else
-				e2:SetType(EFFECT_TYPE_QUICK_O+EFFECT_TYPE_FIELD)
+				e2:SetType(EFFECT_TYPE_QUICK_O)
 				e2:SetCode(te:GetCode())
 			end
 			if tc:IsType(TYPE_SPELL) then
@@ -106,9 +74,12 @@ function c249000740.operation(e,tp,eg,ep,ev,re,r,rp)
 				e2:SetCountLimit(1,2490007403)
 			end
 			e2:SetCategory(te:GetCategory())
-			e2:SetProperty(te:GetProperty())
-			e2:SetReset(RESET_EVENT)
-			e2:SetLabel(Duel.GetTurnCount())
+			if bit.band(e2:GetProperty(),EFFECT_FLAG_UNCOPYABLE)~=EFFECT_FLAG_UNCOPYABLE then
+				e2:SetProperty(te:GetProperty()+EFFECT_FLAG_UNCOPYABLE)
+			else
+				e2:SetProperty(te:GetProperty())
+			end
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOGRAVE-RESET_REMOVE)
 			e2:SetCondition(c249000740.accon)
 			e2:SetCost(c249000740.accost)
 			e2:SetTarget(c249000740.actg)
@@ -146,7 +117,16 @@ function c249000740.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		e1:SetValue(c:GetOriginalLevel()*100)
 		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_EXTRA_ATTACK)
+		e2:SetValue(1)
+		e2:SetCondition(c249000740.exatkcon)
+		c:RegisterEffect(e2)
 	end
+end
+function c249000740.exatkcon(e)
+	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_MZONE)>0
 end
 function c249000740.accon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetOwner()

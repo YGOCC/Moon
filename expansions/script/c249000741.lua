@@ -1,40 +1,5 @@
 --Oracle Tuning
 function c249000741.initial_effect(c)
-	--Synchro monster, 1 tuner + n or more monsters
-	if aux.AddSynchroProcedure then
-		if not c249000437_AddSynchroProcedure then
-			c249000437_AddSynchroProcedure=aux.AddSynchroProcedure
-			aux.AddSynchroProcedure = function (c,f1,f2,minc,maxc)
-				local code=c:GetOriginalCode()
-				local mt=_G["c" .. code]
-				if f1 then
-					mt.tuner_filter=function(mc) return mc and f1(mc) end
-				else
-					mt.tuner_filter=function(mc) return true end
-				end
-				if f2 then
-					mt.nontuner_filter=function(mc) return mc and f2(mc) end
-				else
-					mt.nontuner_filter=function(mc) return true end
-				end
-				mt.minntct=minc
-				if maxc==nil then mt.maxntct=99 else mt.maxntct=maxc end
-				mt.sync=true
-				c249000437_AddSynchroProcedure(c,f1,f2,minc,maxc)
-			end
-		end
-	end
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_SPSUMMON_PROC)
-		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetRange(LOCATION_EXTRA)
-		e1:SetCondition(Auxiliary.SynCondition(f1,f2,ct,99))
-		e1:SetTarget(Auxiliary.SynTarget(f1,f2,ct,99))
-		e1:SetOperation(Auxiliary.SynOperation(f1,f2,ct,99))
-		e1:SetValue(SUMMON_TYPE_SYNCHRO)
-		c:RegisterEffect(e1)
-	end
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -50,45 +15,33 @@ function c249000741.confilter(c)
 	return c:IsSetCard(0x1ED) and c:IsFaceup() and c:IsType(TYPE_MONSTER)
 end
 function c249000741.condition(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c249000740.confilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+	local g=Duel.GetMatchingGroup(c249000741.confilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	local ct=g:GetClassCount(Card.GetCode)
 	return ct>1
 end
 function c249000741.filter1(c,e,tp)
-	return c:IsType(TYPE_TUNER) and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
+	return c:IsType(TYPE_TUNER) and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and Duel.IsExistingMatchingCard(c249000741.filter2,tp,LOCATION_GRAVE,0,1,nil,e,tp,c) 
 end
-function c249000741.filter2(c,e,tp)
-	return c:IsNotTuner() and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
+function c249000741.filter2(c,e,tp,tuner)
+	return (not c:IsType(TYPE_TUNER)) and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and Duel.IsExistingMatchingCard(c249000741.synfilter,tp,LOCATION_EXTRA,0,1,nil,tuner,Group.FromCards(tuner,c))
 end
-function c249000741.synfilter(c,mg)
-	local code=c:GetOriginalCode()
-	local mt=_G["c" .. code]
-	return mt.minntct==1 and c:IsSynchroSummonable(nil,mg)
-end
-function c249000741.mfilter1(c,mg2)
-	return mg2:IsExists(c249000741.mfilter2,1,nil,c)
-end
-function c249000741.mfilter2(c,t)
-	local g=Group.FromCards(c)
-	g:AddCard(t)
-	return Duel.IsExistingMatchingCard(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,1,nil,nil,g)
+function c249000741.synfilter(c,tuner,nontuner)
+	return c:IsSynchroSummonable(tuner,nontuner)
 end
 function c249000741.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	local mg1=Duel.GetMatchingGroup(c249000741.filter1,tp,LOCATION_GRAVE,0,nil,e,tp)
-	local mg2=Duel.GetMatchingGroup(c249000741.filter2,tp,LOCATION_GRAVE,0,nil,e,tp)
-	local mg3=Duel.GetMatchingGroup(c249000741.filter1,tp,LOCATION_GRAVE,0,nil,e,tp)
-	mg3:Merge(mg2)
 	if chk==0 then return Duel.IsPlayerCanSpecialSummonCount(tp,2)
 		and not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.GetLocationCountFromEx(tp)>0
-		and Duel.IsExistingMatchingCard(c249000741.synfilter,tp,LOCATION_EXTRA,0,1,nil,mg3) end
+		and Duel.IsExistingMatchingCard(c249000741.filter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg1=mg1:FilterSelect(tp,c249000741.mfilter1,1,1,nil,mg2)
+	local sg1=Duel.SelectMatchingCard(tp,c249000741.filter1,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local tc1=sg1:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg2=mg2:FilterSelect(tp,c249000741.mfilter2,1,1,tc1,tc1)
+	local sg2=Duel.SelectMatchingCard(tp,c249000741.filter2,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,tc1)
 	sg1:Merge(sg2)
 	Duel.SetTargetCard(sg1)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,sg1,2,0,0)
@@ -101,13 +54,29 @@ function c249000741.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(c249000741.filter3,nil,e,tp)
 	if g:GetCount()<2 then return end
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	local tc=g:GetFirst()
+	while tc do
+		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1,true)
+		local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e2,true)
+		tc=g:GetNext()
+	end
+	Duel.SpecialSummonComplete()
 	if Duel.GetLocationCountFromEx(tp,tp,g)<=0 then return end
 	Duel.BreakEffect()
-	local syng=Duel.GetMatchingGroup(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,nil,nil,g)
+	local tuner=g:GetFirst()
+	local syng=Duel.GetMatchingGroup(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,nil,tuner,g)
 	if syng:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sync=syng:Select(tp,1,1,nil)
-		Duel.SynchroSummon(tp,sync:GetFirst(),nil,g)
+		Duel.SynchroSummon(tp,sync:GetFirst(),tuner,g)
 	end
 end
