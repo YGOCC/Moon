@@ -3704,6 +3704,7 @@ expansions/pics/249001005.jpg	39eb039ed475b6748a6df711b224426d
 expansions/pics/249001006.jpg	2dc59cf52938a08e0c9bcb14e47b92df
 expansions/pics/249001008.jpg	32dcdfafbbd3ebc5590221cd95680393
 expansions/pics/249001009.jpg	587584e17a21a48a0ddf6a60510157ad
+expansions/pics/249001010.jpg	4944f9ae43c764d636f39047f6d578a4
 expansions/pics/24951000.jpg	6d381a765027330f945657b7599bc131
 expansions/pics/24951001.jpg	275f734593d5a47495aed9c356bb1fa2
 expansions/pics/24951002.jpg	e9c0fa84e79fd8b77c5ca6b9724e5583
@@ -10736,8 +10737,8 @@ expansions/script/c249000374.lua	1850c99f595bc5c14b6817ee86c9b419
 expansions/script/c249000375.lua	5fe2b5af546020cb6138568d7ce92ce5
 expansions/script/c249000376.lua	b3ced116e768f3213bd6d1ae086da49a
 expansions/script/c249000377.lua	4bd321eb6e9379c7b616db208163f82c
-expansions/script/c249000378.lua	d0bd2fcbe795a3ab225c76540b96fc16
-expansions/script/c249000379.lua	0b1ef66d5ee112af4cdec14278f0bd58
+expansions/script/c249000378.lua	abce70fd9f2de726cd3f48a37b509660
+expansions/script/c249000379.lua	ac9671267a8f19e6b9444ce09f84fcbf
 expansions/script/c249000380.lua	9fc34985d81006f26f0b4d2efe65923d
 expansions/script/c249000381.lua	49aa444ed817e613b26a00aa54522df6
 expansions/script/c249000382.lua	135ee2776897631de01587a23e12ea77
@@ -11275,8 +11276,9 @@ expansions/script/c249001003.lua	b54e681c07e93defd2573c0d53fc89dd
 expansions/script/c249001004.lua	fbe9d22f25cd463ec304dcf0b6e0f87d
 expansions/script/c249001005.lua	0897a6814fc8a3d6481e039dd6f86a72
 expansions/script/c249001006.lua	e4cd1e345f54fcb8a2205700fcc30b89
-expansions/script/c249001008.lua	6aa27d44801fd080276822b3bcc6f9dd
+expansions/script/c249001008.lua	ad470f07696d80f5af05fc76ca4ecaf4
 expansions/script/c249001009.lua	19cde67bd107f220205e0c7853995607
+expansions/script/c249001010.lua	5feb24f3be86476893e3740ce967bd5f
 expansions/script/c24951000.lua	96d718f23952f8674c24f6bfb21fd4a5
 expansions/script/c24951001.lua	9ddcee89f4f646426274fdb35dc7a74d
 expansions/script/c24951002.lua	660a2d7f2068caaa524fc53a72062503
@@ -15176,6 +15178,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	233ee089f17feaa6e9c5a863c72dbad1
+update/filelist.txt	742b1eef6641ad9a68483e8e5961a921
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	7a8fc8519f8e73ec40e968a4cbac1547
+update/version.txt	13617d698df6f14749e6f36ddc9a6f0e
