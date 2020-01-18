@@ -1,7 +1,7 @@
 --created & coded by Lyris, art at http://static3.bigstockphoto.com/thumbs/6/5/1/large1500/156160115.jpg
 --S・VINEの姫オサ
 local cid,id=GetID()
-cid.spt_other_space=102400097
+cid.spt_other_space=id+75
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)

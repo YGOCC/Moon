@@ -1,4 +1,5 @@
 --created by LeonDuvall of Discord, coded by Lyris
+--YC.Orgの襲雷タクティシャン・ライリス
 local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
@@ -17,7 +18,7 @@ function cid.initial_effect(c)
 	local e1=e0:Clone()
 	e1:SetCode(EVENT_REMOVE)
 	c:RegisterEffect(e1)
-	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,aux.FilterBoolFunction(Card.IsSetCard,0x7c4))
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,aux.FilterBoolFunction(Card.IsSetCard,0x7c4,0x96b))
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_DESTROY)
 	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -65,7 +66,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x7c4)
+	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE) and c:GetPreviousControler()==tp and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x7c4,0x96b)
 end
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.cfilter,1,nil,tp)
@@ -78,7 +79,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(aux.TargetBoolFunction(aux.NOT(Card.IsSetCard),0x7c4))
+	e1:SetTarget(aux.TargetBoolFunction(aux.NOT(Card.IsSetCard),0x7c4,0x96b))
 	Duel.RegisterEffect(e1,tp)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -93,7 +94,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.filter(c)
-	return c:IsSetCard(0x7c4) and c:IsAbleToDeck()
+	return c:IsSetCard(0x7c4,0x96b) and c:IsAbleToDeck()
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,3,nil) end

@@ -1,7 +1,7 @@
 --created & coded by Lyris
 --S・VINEの零天使ラグナクライッシャ
 local cid,id=GetID()
-cid.spt_other_space=102400096
+cid.spt_other_space=id+69
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c,false,true)

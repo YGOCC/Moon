@@ -1,7 +1,7 @@
 --created & coded by Lyris
 --S－VINEの騎士クライッシャ
 local cid,id=GetID()
-cid.spt_other_space=102400099
+cid.spt_other_space=id+75
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c,false,true)

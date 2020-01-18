@@ -161,8 +161,7 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 		Duel.RegisterEffect(ge1,0)
 	end
 	--register og type
-	c:RegisterFlagEffect(1074,0,0,0)
-	c:SetFlagEffectLabel(1074,typ)
+	c:RegisterFlagEffect(1074,0,0,0,typ)
 	--summon
 	local ge6=Effect.CreateEffect(c)
 	ge6:SetType(EFFECT_TYPE_FIELD)
@@ -202,6 +201,9 @@ function Auxiliary.EnablePandemoniumAttribute(c,...)
 	local rem=th:Clone()
 	rem:SetCode(EVENT_REMOVE)
 	c:RegisterEffect(rem)
+	local tg=th:Clone()
+	tg:SetCode(EVENT_TO_GRAVE)
+	c:RegisterEffect(tg)
 	--keep on field
 	local kp=Effect.CreateEffect(c)
 	kp:SetType(EFFECT_TYPE_SINGLE)

@@ -23,12 +23,12 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cid.cfilter(c,tp)
-	return c:IsSetCard(0xc97) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xc97) and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp)
 end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
-	if rp==tp or not Duel.IsChainDisablable(ev) then return false end
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
-	return ex and tg~=nil and tc+tg:FilterCount(cid.cfilter,nil,tp)-tg:GetCount()>0
+	if rp==tp or e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) or not Duel.IsChainDisablable(ev) then return false end
+	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	return tg and tg:IsExists(cid.cfilter,1,nil,tp)
 end
 function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rc=re:GetHandler()

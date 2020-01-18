@@ -37,6 +37,7 @@ function cid.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SUMMON_SUCCESS)
+	e3:SetCountLimit(1,id)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e3:SetTarget(cid.tg)
@@ -79,11 +80,7 @@ function cid.PendCondition(e,c,og)
 	local rscale=1-seq==1 and rpz:GetRightScale() or rpz:GetLeftScale()
 	if lscale>rscale then lscale,rscale=rscale,lscale end
 	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-		loc=loc+LOCATION_HAND
-		local fct=Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)
-		if fct==0 or fct<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE) then loc=loc+LOCATION_REMOVED end
-	end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 and LOCATION_REMOVED or 0 end
 	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
 	if loc==0 then return false end
 	local g=nil
@@ -114,11 +111,7 @@ function cid.PendOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 		if ft2>0 then ft2=1 end
 		ft=1
 	end
-	if ft1>0 then
-		loc=loc|LOCATION_HAND
-		local fct=Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)
-		if fct==0 or fct<Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE) then loc=loc|LOCATION_REMOVED end
-	end
+	if ft1>0 then loc=loc|LOCATION_HAND|Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0) and LOCATION_REMOVED or 0 end
 	if ft2>0 then loc=loc|LOCATION_EXTRA end
 	if og then
 		tg=og:Filter(Card.IsLocation,nil,loc):Filter(cid.PConditionFilter,nil,e,tp,c,eset)
@@ -164,7 +157,7 @@ function cid.PendOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	Duel.HintSelection(Group.FromCards(rpz))
 end
 function cid.filter(c)
-	return c:IsSetCard(0xc97) and (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsType(TYPE_PENDULUM) and c:IsAbleToHand()
+	return c:IsSetCard(0xc97) and (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsType(TYPE_PENDULUM+TYPE_PANDEMONIUM) and c:IsAbleToHand()
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK+LOCATION_EXTRA,0,2,nil) end

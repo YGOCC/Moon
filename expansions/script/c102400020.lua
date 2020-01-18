@@ -1,7 +1,7 @@
 --created & coded by Lyris, art by Chahine Sfar
 --S・VINEの女王クライッシャ
 local cid,id=GetID()
-cid.spt_other_space=102400095
+cid.spt_other_space=id+75
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)

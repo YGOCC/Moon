@@ -47,7 +47,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SOUND,0,aux.Stringid(id,11))
 end
 function cid.filter(c,tp)
-	return (c:IsCode(102400148) or c:IsCode(102400149)) and not c:IsForbidden() and c:CheckUniqueOnField(tp)
+	return (c:IsCode(id-10) or c:IsCode(id-9)) and not c:IsForbidden() and c:CheckUniqueOnField(tp)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0

@@ -30,7 +30,7 @@ function cid.spfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xda6) and c:IsAbleToGraveAsCost()
 end
 function cid.cfilter(c)
-	return c:IsCode(102400008)
+	return c:IsCode(id-9)
 end
 function cid.spcon(e,c)
 	if c==nil then return true end

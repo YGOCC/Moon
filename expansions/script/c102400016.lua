@@ -36,7 +36,7 @@ function cid.initial_effect(c)
 end
 function cid.spfilter(c,g,ft,tp)
 	if c:IsControler(tp) and c:GetSequence()<5 then ft=ft+1 end
-	return c:IsCode(102400007) and (c:IsControler(tp) or c:IsFaceup())
+	return c:IsCode(id-9) and (c:IsControler(tp) or c:IsFaceup())
 		and (ft>0 or g:IsExists(cid.mzfilter,1,c,tp))
 end
 function cid.mzfilter(c,tp)
