@@ -90,6 +90,7 @@ function cid.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	 local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsAbleToHand() and chkc~=c end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
