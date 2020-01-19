@@ -2,7 +2,7 @@
 function c160002424.initial_effect(c)
 	  --evolute procedure
 	aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,nil,6,c160002424.filter1,c160002424.filter1,1,99)
+	aux.AddEvoluteProc(c,nil,6,c160002424.filter1,c160002424.filter1,2,99)
 	c:EnableReviveLimit()
 	  --atk down
 --to deck

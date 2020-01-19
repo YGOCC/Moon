@@ -37,7 +37,7 @@ function cid.filter1(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function cid.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsSetCard(0xc50)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()

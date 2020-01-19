@@ -1,7 +1,9 @@
 --Paintress EX - Da Vinca
-function c160002239.initial_effect(c)
+local cid,id=GetID()
+function cid.initial_effect(c)
+
 	 aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,nil,7,c160002239.filter1,c160002239.filter2,1,99)
+  aux.AddEvoluteProc(c,nil,7,cid.filter1,cid.filter2,1,99)
 	c:EnableReviveLimit()
 		--extra summon
 	local e1=Effect.CreateEffect(c)
@@ -30,45 +32,45 @@ function c160002239.initial_effect(c)
 	c:RegisterEffect(e3)
 	  --destroy
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(160002239,1))
+	e3:SetDescription(aux.Stringid(id,1))
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,160002239)
+	e3:SetCountLimit(1,id)
 	e3:SetHintTiming(0,0x1e0)
-	e3:SetCost(c160002239.pscost)
-	e3:SetTarget(c160002239.pstg)
-	e3:SetOperation(c160002239.psop)
+	e3:SetCost(cid.pscost)
+	e3:SetTarget(cid.pstg)
+	e3:SetOperation(cid.psop)
 	c:RegisterEffect(e3)
 end
 
-function c160002239.checku(sg,ec,tp)
+function cid.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
-function c160002239.filter1(c,ec,tp)
+function cid.filter1(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
-function c160002239.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
+function cid.filter2(c,ec,tp)
+	return not c:IsType(TYPE_EFFECT)
 end
-function c160002239.psfilter(c)
+function cid.psfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc50) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 end
-function c160002239.pscost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.pscost(e,tp,eg,ep,ev,re,r,rp,chk)
   if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST)  end
 	 e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
-function c160002239.pstg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.pstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
-		and Duel.IsExistingMatchingCard(c160002239.psfilter,tp,LOCATION_EXTRA,0,1,nil) end
+		and Duel.IsExistingMatchingCard(cid.psfilter,tp,LOCATION_EXTRA,0,1,nil) end
 end
-function c160002239.psop(e,tp,eg,ep,ev,re,r,rp)
-	if chkc then return chkc:IsLocation(LOCATION_EXTRA) and chkc:IsControler(tp) and c160002239.psfilter(chkc) end
+function cid.psop(e,tp,eg,ep,ev,re,r,rp)
+	if chkc then return chkc:IsLocation(LOCATION_EXTRA) and chkc:IsControler(tp) and cid.psfilter(chkc) end
 		if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
 	if not (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local c=e:GetHandler()
-	local g=Duel.SelectMatchingCard(tp,c160002239.psfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.psfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	local tc=g:GetFirst()
 	if g:GetCount()>0 then
 		Duel.MoveToField(g:GetFirst(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)

@@ -3,7 +3,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
 	 aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,7,cid.filter1,cid.filter2,cid.filter3,2,99)  
+  aux.AddEvoluteProc(c,nil,7,cid.filter1,aux.TRUE,2,99)  
    --remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(500316141,0))
@@ -143,5 +143,5 @@ end
 	--   Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	--end
 	--function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
-	--	 Duel.NegateActivation(ev)
+	--   Duel.NegateActivation(ev)
 	--   end

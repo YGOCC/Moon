@@ -1,18 +1,19 @@
 --Neo Paintress Goghi
-function c500314819.initial_effect(c)
+local cid,id=GetID()
+function cid.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,nil,8,c500314819.filter1,c500314819.filter2)
+ aux.AddEvoluteProc(c,nil,8,cid.filter1,cid.filter1)
  local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
+	e1:SetCountLimit(1,id)
 	e1:SetCategory(CATEGORY_SEARCH)
-	e1:SetCondition(c500314819.chcon)
-	e1:SetTarget(c500314819.chtg)
-	e1:SetCost(c500314819.chcost)
-	e1:SetOperation(c500314819.chop)
+	e1:SetCondition(cid.chcon)
+	e1:SetTarget(cid.chtg)
+	e1:SetCost(cid.chcost)
+	e1:SetOperation(cid.chop)
 	c:RegisterEffect(e1)
 	 --atk down
 	 local e2=Effect.CreateEffect(c)
@@ -20,8 +21,8 @@ function c500314819.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(0,LOCATION_MZONE)
-	e2:SetTarget(c500314819.atktg)
-	e2:SetValue(c500314819.val)
+	e2:SetTarget(cid.atktg)
+	e2:SetValue(cid.val)
 	c:RegisterEffect(e2)
 	 --handes
 	local e4=Effect.CreateEffect(c)
@@ -33,84 +34,84 @@ function c500314819.initial_effect(c)
 	e4:SetOperation(aux.chainreg)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(500314819,1))
+	e5:SetDescription(aux.Stringid(id,1))
 	e5:SetCategory(CATEGORY_REMOVE)
 	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_CHAIN_SOLVING)
 	e5:SetProperty(EFFECT_FLAG_DELAY)
-	e5:SetCountLimit(1)
+	e5:SetCountLimit(1,id+1000)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetCondition(c500314819.hdcon)
-	e5:SetCost(c500314819.hdcost)
-	e5:SetTarget(c500314819.hdtg)
-	e5:SetOperation(c500314819.hdop)
+	e5:SetCondition(cid.hdcon)
+	e5:SetCost(cid.hdcost)
+	e5:SetTarget(cid.hdtg)
+	e5:SetOperation(cid.hdop)
 	c:RegisterEffect(e5)
 end
 
-function c500314819.filter1(c,ec,tp)
+function cid.filter1(c,ec,tp)
+	return  c:IsSetCard(0xc50)
+end
+function cid.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
-function c500314819.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
-end
-function c500314819.filter(c)
+function cid.filter(c)
 	return  not c:IsType(TYPE_EFFECT) and not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
-function c500314819.chcon(e,tp,eg,ep,ev,re,r,rp)
+function cid.chcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if ep==tp or c:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
 	return re:IsActiveType(TYPE_MONSTER) 
 end
-function c500314819.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return 
-		Duel.IsExistingMatchingCard(c500314819.filter,tp,LOCATION_DECK,0,1,nil) end
+		Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil) end
 end
-function c500314819.chop(e,tp,eg,ep,ev,re,r,rp)
+function cid.chop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Group.CreateGroup()
 	Duel.ChangeTargetCard(ev,g)
-	Duel.ChangeChainOperation(ev,c500314819.repop)
+	Duel.ChangeChainOperation(ev,cid.repop)
 end
-function c500314819.repop(e,tp,eg,ep,ev,re,r,rp)
+function cid.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g1=Duel.SelectMatchingCard(tp,c500314819.filter,tp,LOCATION_DECK,0,1,1,nil)
+	local g1=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil)
 	local tc1=g1:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_ATOHAND)
-	local g2=Duel.SelectMatchingCard(1-tp,c500314819.filter,tp,0,LOCATION_DECK,1,1,nil)
+	local g2=Duel.SelectMatchingCard(1-tp,cid.filter,tp,0,LOCATION_DECK,1,1,nil)
 	local tc2=g2:GetFirst()
 	g1:Merge(g2)
 	Duel.SendtoHand(g1,nil,REASON_EFFECT)
 	if tc1 then Duel.ConfirmCards(1-tp,tc1) end
 	if tc2 then Duel.ConfirmCards(tp,tc2) end
 end
-function c500314819.atktg(e,c)
+function cid.atktg(e,c)
 	return c:IsType(TYPE_EFFECT)
 end
-function c500314819.val(e,c)
-	 return Duel.GetMatchingGroupCount(c500314819.ctfilter,e:GetHandler():GetControler(),LOCATION_REMOVED,0,nil)*-100
+function cid.val(e,c)
+	 return Duel.GetMatchingGroupCount(cid.ctfilter,e:GetHandler():GetControler(),LOCATION_REMOVED,0,nil)*-100
 end
-function c500314819.ctfilter(c)
+function cid.ctfilter(c)
 	return not c:IsType(TYPE_EFFECT)
 end
-function c500314819.hdcon(e,tp,eg,ep,ev,re,r,rp)
+function cid.hdcon(e,tp,eg,ep,ev,re,r,rp)
    return rp==1-tp and Duel.GetCurrentPhase()~=PHASE_DRAW and Duel.GetCurrentPhase()~=PHASE_DAMAGE and re:IsActiveType(TYPE_MONSTER) and e:GetHandler():GetFlagEffect(1)>0
 end
-function c500314819.hdcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.hdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
-function c500314819.hdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.hdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_HAND,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_HAND)
 end
-function c500314819.hdop(e,tp,eg,ep,ev,re,r,rp)
+function cid.hdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil)
 	if g:GetCount()>0 then
 		local sg=g:RandomSelect(tp,1)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 	end
 end
-function c500314819.chcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.chcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,5,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,5,REASON_COST)
 end

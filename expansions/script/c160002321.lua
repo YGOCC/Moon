@@ -1,11 +1,12 @@
 --Lovely Paintress Goghi
-function c160002321.initial_effect(c)
+local cid,id=GetID()
+function cid.initial_effect(c)
  aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,nil,5,c160002321.filter1,c160002321.filter2)
+  aux.AddEvoluteProc(c,nil,5,cid.filter1,cid.filter1)
 	c:EnableReviveLimit()
 		--atk
 	local e99=Effect.CreateEffect(c)
-	e99:SetDescription(aux.Stringid(160002321,1))
+	e99:SetDescription(aux.Stringid(id,1))
 	e99:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DISABLE)
 	e99:SetType(EFFECT_TYPE_QUICK_O)
 	e99:SetCode(EVENT_FREE_CHAIN)
@@ -13,21 +14,21 @@ function c160002321.initial_effect(c)
 	e99:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e99:SetHintTiming(0,0x1e0)
 	e99:SetCountLimit(1)
-	e99:SetCost(c160002321.cost)
-	e99:SetTarget(c160002321.target)
-	e99:SetOperation(c160002321.operation)
+	e99:SetCost(cid.cost)
+	e99:SetTarget(cid.target)
+	e99:SetOperation(cid.operation)
 	c:RegisterEffect(e99)
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(160002321,0))
+	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_DISABLE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCondition(c160002321.sscon)
-	e2:SetCost(c160002321.cost2)
-	e2:SetTarget(c160002321.target2)
-	e2:SetOperation(c160002321.operation2)
+	e2:SetCondition(cid.sscon)
+	e2:SetCost(cid.cost2)
+	e2:SetTarget(cid.target2)
+	e2:SetOperation(cid.operation2)
 	c:RegisterEffect(e2)
 	  -- if not c50031668.global_check then
 	   -- c50031668.global_check=true
@@ -50,41 +51,41 @@ end
 --c50031668.stage=c50031668.stage_o
 --end
 
-function c160002321.checku(sg,ec,tp)
+function cid.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
-function c160002321.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsRace(RACE_FAIRY)
+function cid.filter1(c,ec,tp)
+	return c:TYPE(TYPE_NORMAL)
 end
-function c160002321.filter2(c,ec,tp)
+function cid.filter2(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsRace(RACE_FAIRY) 
 end
-function c160002321.costfilter(c)
+function cid.costfilter(c)
 	return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_NORMAL) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
-function c160002321.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST)  and Duel.IsExistingMatchingCard(c160002321.costfilter,tp,LOCATION_EXTRA,0,1,c) end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST)  and Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_EXTRA,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c160002321.costfilter,tp,LOCATION_EXTRA,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,cid.costfilter,tp,LOCATION_EXTRA,0,1,1,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	 e:GetHandler():RemoveEC(tp,2,REASON_COST)
 end
-function c160002321.filter(c)
+function cid.filter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsDisabled()
 end
-function c160002321.filtersex(c)
+function cid.filtersex(c)
 	return c:IsFaceup()  and not c:IsDisabled()
 end
-function c160002321.sscon(e,tp,eg,ep,ev,re,r,rp)
-return aux.exccon(e) and Duel.GetTurnPlayer()~=tp
+function cid.sscon(e,tp,eg,ep,ev,re,r,rp)
+return aux.exccon(e) and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
-function c160002321.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c160002321.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c160002321.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and cid.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c160002321.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,cid.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
-function c160002321.operation(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsDisabled()  then
@@ -103,19 +104,19 @@ function c160002321.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function c160002321.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
-function c160002321.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c160002321.filtersex(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c160002321.filtersex,tp,0,LOCATION_ONFIELD,1,nil) end
+function cid.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and cid.filtersex(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filtersex,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c160002321.filtersex,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SelectTarget(tp,cid.filtersex,tp,0,LOCATION_ONFIELD,1,1,nil)
 end
 
 
-function c160002321.operation2(e,tp,eg,ep,ev,re,r,rp)
+function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsDisabled() and tc:IsControler(1-tp) then
