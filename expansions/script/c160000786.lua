@@ -71,7 +71,9 @@ function c160000786.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c160000786.ohmycon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_BATTLE+REASON_EFFECT)
+   local c=e:GetHandler()   return
+e:GetHandler():IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousLocation(LOCATION_MZONE)
+		and rp==1-tp and c:GetPreviousControler()==tp
 end
 function c160000786.ohmytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
