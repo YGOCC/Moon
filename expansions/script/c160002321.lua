@@ -55,7 +55,7 @@ function cid.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function cid.filter1(c,ec,tp)
-	return c:TYPE(TYPE_NORMAL)
+	return c:IsType(TYPE_NORMAL)
 end
 function cid.filter2(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsRace(RACE_FAIRY) 
