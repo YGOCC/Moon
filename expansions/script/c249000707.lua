@@ -69,7 +69,7 @@ function c249000707.hspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e2,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local sg1=g1:Select(tp,1,1,nil)
-	if not g1:GetFirst():IsAttribute(ATTRIBUTE_DARK) then
+	if not sg1:GetFirst():IsAttribute(ATTRIBUTE_DARK) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local sg2=g2:Select(tp,1,1,sg1:GetFirst())
 		sg1:Merge(sg2)

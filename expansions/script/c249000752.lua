@@ -11,12 +11,12 @@ function c249000752.initial_effect(c)
 	--to hand 
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(92826944,0))
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_REMOVE)
+	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCondition(aux.exccon)
-	e2:SetCost(c249000752.cost2)
+	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(c249000752.target2)
 	e2:SetOperation(c249000752.operation2)
 	c:RegisterEffect(e2)
@@ -35,10 +35,6 @@ function c249000752.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
-end
-function c249000752.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c249000752.filter2(c)
 	return c:IsSetCard(0x1ED) and c:IsAbleToHand()
