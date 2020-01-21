@@ -17,6 +17,7 @@ function cid.initial_effect(c)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(cid.condition)
+	e1:SetCost(cid.cost)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
@@ -44,6 +45,10 @@ end
 function cid.cfilter(c,rtype)
 	return c:IsFaceup() and c:IsType(rtype) and c:IsSetCard(0x3ff)
 end
+function cid.clfilter(c)
+	return c:IsSetCard(0x3ff)
+		and c:IsType(TYPE_SPELL) and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsAbleToGraveAsCost()
+end
 function cid.cfilter1(c)
 	return c:IsFaceup() and c:IsSetCard(0x3ff)
 end
@@ -55,6 +60,12 @@ function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	local rtype=bit.band(re:GetActiveType(),0x7)
 	if ep==tp or not Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_ONFIELD,0,1,nil,rtype) then return false end
 	return Duel.IsChainNegatable(ev)
+end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.clfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,cid.clfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,e:GetHandler())
+	Duel.SendtoGrave(g,REASON_COST)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
