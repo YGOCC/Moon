@@ -83,7 +83,7 @@ function c160009933.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c160009933.cfilter,1,nil,1-tp)
 end
 function c160009933.filter(c)
-	return c:IsSetCard(0x885a) and  (c:IsAbleToHand() or c:IsAbleToGrave())
+	return c:IsSetCard(0x885a) and c:IsType(TYPE_MONSTER) and  (c:IsAbleToHand() or c:IsAbleToGrave())
 end
 function c160009933.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c160009933.filter,tp,LOCATION_DECK,0,1,nil) end
