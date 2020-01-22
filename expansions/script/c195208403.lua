@@ -21,7 +21,7 @@ function cid.initial_effect(c)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c:GetLinkedGroup():IsContains(chkc) and tc:IsFaceup() and not chkc:IsType(TYPE_TUNER) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c:GetLinkedGroup():IsContains(chkc) and chkc:IsFaceup() and not chkc:IsType(TYPE_TUNER) end
 	if chk==0 then return Duel.IsExistingTarget(function(tc) return c:GetLinkedGroup():IsContains(tc) and tc:IsFaceup() and not tc:IsType(TYPE_TUNER) end,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,function(tc) return c:GetLinkedGroup():IsContains(tc) and tc:IsFaceup() and not tc:IsType(TYPE_TUNER) end,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
