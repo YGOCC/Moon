@@ -68,6 +68,7 @@ dofile("expansions/script/proc_annotee.lua") --Annotees
 dofile("expansions/script/proc_chroma.lua") --Chromas
 dofile("expansions/script/proc_perdition.lua") --Perditions
 dofile("expansions/script/proc_impure.lua") --Impures
+dofile("expansions/script/proc_runic.lua") --Runic
 
 Card.IsReason=function(c,rs)
 	local cusrs=rs>>32

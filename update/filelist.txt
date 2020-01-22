@@ -15059,7 +15059,7 @@ expansions/script/c99998878.lua	29432bfdf4c92e7520d09a000ee834c1
 expansions/script/c99998879.lua	11d45c62607f4c7145040919ef213306
 expansions/script/c99998880.lua	035b616c2a14afb2307e29af3e11ff02
 expansions/script/GLShortcuts.lua	6743700bf509cc48d8f596ff4a8fe5c0
-expansions/script/init.lua	d15c29d09735d71b6ccade7bdb392197
+expansions/script/init.lua	e98ea72d979fc171c559d00eda6374c7
 expansions/script/json.lua	d41a01cf67c76915b49c57d21ac471ee
 expansions/script/lap.lua	1325997ac4231550048dae57e7eb75b0
 expansions/script/proc_accent.lua	d96ced6aae15e4780be6f5c588bfefa8
@@ -15077,6 +15077,7 @@ expansions/script/proc_pandemonium.lua	285c1758f7377425f583582c5171c6fb
 expansions/script/proc_perdition.lua	0ff4a9bc5b275192100449c8c3206987
 expansions/script/proc_polarity.lua	47979807ec9c7cdc61896f375e2e672f
 expansions/script/proc_relay.lua	3c7693eb5f8220d4f8341a62ea650e13
+expansions/script/proc_runic.lua	c66fb6c98ecf7bfa64d95a7230b96ed8
 expansions/script/proc_skill.lua	cbaa68f0971f731a81abf7bd080276b2
 expansions/script/proc_spatial.lua	29fb43cfb382a67531632c88b335c647
 expansions/script/proc_timeleap.lua	15c3d34939d8c97c63f10582b4118900
@@ -15197,6 +15198,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	85b351d5e18e2e889cdae9c2265d839b
+update/filelist.txt	4d29017cffb5b154e36e7bfa1e3d04a3
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	a503521b0f3358f1e0453d3025b0d93c
+update/version.txt	94c85662285dfc66470360b8df24536c
