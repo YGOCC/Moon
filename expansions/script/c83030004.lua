@@ -32,7 +32,7 @@ function c83030004.splimit(e,se,sp,st)
 	return bit.band(sp,POS_FACEUP_DEFENSE)>0
 end
 function c83030004.filter(c)
-	return c:IsAbleToHand() and c:IsCode(83030004)
+	return c:IsAbleToHand() and c:IsCode(83030019)
 end
 function c83030004.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

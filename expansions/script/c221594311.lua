@@ -44,7 +44,7 @@ function cid.rmtarget(e,c)
 	return not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0xc97)
 end
 function cid.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x6c97)
+	return c:IsFaceup() and c:IsSetCard(0x2c97,0x4c97)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
