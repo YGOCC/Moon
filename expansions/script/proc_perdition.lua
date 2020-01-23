@@ -150,7 +150,7 @@ function Auxiliary.AddPerditionProc(c,...)
 	ge2:SetCondition(Auxiliary.PerditionCondition(table.unpack(list)))
 	ge2:SetTarget(Auxiliary.PerditionTarget(table.unpack(list)))
 	ge2:SetOperation(Auxiliary.PerditionOperation)
-	ge2:SetValue(472)
+	ge2:SetValue(SUMMON_TYPE_PERDITION)
 	c:RegisterEffect(ge2)
 end
 

@@ -1,6 +1,6 @@
 if not banned_list_table then banned_list_table={} end
 local io,string=require('io'),require('string')
-local l=io.popen("dir /B /S .\\*lflist.conf")
+local l=io.popen("dir /B /S ..\\*lflist.conf")
 for lf in l:lines() do
 	local f=io.open(lf:gsub(debug.getinfo(3,'S')['source'],""),"r")
 	local ls=f:read("a*")
