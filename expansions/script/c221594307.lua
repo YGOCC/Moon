@@ -31,6 +31,7 @@ function cid.initial_effect(c)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_EQUIP)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetTarget(cid.eqtg)
 	e2:SetOperation(cid.eqop)
@@ -62,10 +63,13 @@ end
 function cid.eqcfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc97) and c:IsAbleToDeck()
 end
+function cid.eqfilter(c)
+	return c:GetFlagEffect(id)~=0
+end
 function cid.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(cid.eqcfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil)
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and not e:GetHandler():GetEquipGroup():IsExists(cid.eqfilter,1,nil)
 		and Duel.IsExistingTarget(Card.IsAbleToChangeControler,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local cg=Duel.SelectTarget(tp,cid.eqcfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
@@ -85,13 +89,14 @@ function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ex2,tg=Duel.GetOperationInfo(0,CATEGORY_EQUIP)
 	local tc=tg:GetFirst()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and tc:IsControler(1-tp) then
 		Duel.BreakEffect()
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
 			local atk=tc:GetTextAttack()/2
 			if tc:IsFacedown() then atk=0 end
 			if atk<0 then atk=0 end
 			if not Duel.Equip(tp,tc,c,false) then return end
+			tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_OWNER_RELATE)
