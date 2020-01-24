@@ -1,6 +1,6 @@
 if not banned_list_table then banned_list_table={} end
 local io,string=require('io'),require('string')
-local l=io.open("expansions/lflist.conf")
+local l=io.open("expansions\\lflist.conf")
 for lf in l:lines() do
 	local fd=lf:find("expansions")
 	if fd then
