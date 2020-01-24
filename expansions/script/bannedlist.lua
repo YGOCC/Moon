@@ -3,8 +3,8 @@ if not banned_list_table then banned_list_table={} end
 local f=debug.getinfo(1,'S')['source']
 local e1=Effect.GlobalEffect()
 e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-e1:SetCode(EVENT_PHASE_START+PHASE_DRAW)
-e1:SetOperation(function() Debug.ShowHint(f) end)
+e1:SetCode(EVENT_PHASE_START+PHASE_STANDBY)
+e1:SetOperation(function() Debug.ShowHint(debug.getinfo(1,'S')['source']) end)
 Duel.RegisterEffect(e1,0)
 -- local l=io.open(f:sub(f:find("expansions"),-22).."lflist.conf","r")
 -- if not l then return end
