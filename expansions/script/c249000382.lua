@@ -14,7 +14,6 @@ function c249000382.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_TO_GRAVE)
-	e2:SetCondition(c249000382.condition)
 	e2:SetTarget(c249000382.target)
 	e2:SetOperation(c249000382.operation)
 	c:RegisterEffect(e2)
@@ -39,9 +38,6 @@ function c249000382.posop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsAttackPos() then
 		Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
 	end
-end
-function c249000382.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c249000382.filter2(c)
 	return c:IsSetCard(0x1B7) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(249000382)
