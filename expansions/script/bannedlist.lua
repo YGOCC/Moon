@@ -1,7 +1,7 @@
 if not banned_list_table then banned_list_table={} end
 -- local string,io=require('string'),require('io')
 local f=debug.getinfo(1,'S')['source']
-Debug.Message(f)
+Debug.ShowHint(f)
 -- local l=io.open(f:sub(f:find("expansions"),-22).."lflist.conf","r")
 -- if not l then return end
 -- local ls=l:read("*a")

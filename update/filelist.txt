@@ -7670,7 +7670,7 @@ expansions/pics/pics small/104242572.png	94d968cac7f92cef7a504102b3322815
 expansions/pics/pics small/104242573.png	671690704c9eab38be72a0d42ea59ef4
 expansions/pics/pics small/104242574.png	93f4feba721d16ed9c0fdb6d08928b5a
 expansions/pics/pics small/104242585.png	575fd49d8a2bff7ff456489bf42b7338
-expansions/script/bannedlist.lua	0c887bbe4955dfa45d49ef06641fdfe9
+expansions/script/bannedlist.lua	64d398e75c79af01bc6479d2abdaad0f
 expansions/script/c100000710.lua	8dc7a8fa1b09f27c30bf0bcf200c892c
 expansions/script/c100000711.lua	99922ff6d53fec5346678f1a05564ba1
 expansions/script/c100000712.lua	64a41474df4b09976c1a2bcc9995ff17
@@ -15219,6 +15219,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	53dfb347fc9cfec14fd5ee8023400600
+update/filelist.txt	947891c9d9269737aa88e5e3c22909be
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	5b60961a5d8398e4278c09ded75d69ea
+update/version.txt	e778a2e1c7c48bb65b612ce3b9cc7ab7
