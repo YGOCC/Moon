@@ -27,7 +27,7 @@ end
 function c249001027.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(c249001027.filter1,tp,LOCATION_DECK,0,1,nil,e,tp) then return false end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g1=Duel.SelectMatchingCard(tp,c249001027.filter1,tp,LOCATION_DECK,0,1,1,nil)
+	local g1=Duel.SelectMatchingCard(tp,c249001027.filter1,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local g2=Duel.SelectMatchingCard(tp,c249001027.filter2,tp,LOCATION_DECK,0,1,1,nil,e,tp,g1:GetFirst():GetCode())
 	g1:Merge(g2)
