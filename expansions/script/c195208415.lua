@@ -61,7 +61,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(Duel.CreateToken(tp,id+1),0,tp,tp,false,false,POS_FACEUP)
 end
 function cid.filter(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x83e) and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x83e) and c:IsPreviousLocation(LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

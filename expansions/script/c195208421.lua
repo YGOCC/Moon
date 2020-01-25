@@ -26,7 +26,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_BATTLE_DESTROYED)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1,id)
@@ -53,9 +53,12 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function cid.costfilter(c)
+	return c:IsSetCard(0x83e) and c:IsAbleToRemoveAsCost()
+end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsSetCard,Card.IsAbleToRemoveAsCost),tp,LOCATION_HAND,0,1,nil,0x83e) end
-	Duel.Remove(Duel.SelectMatchingCard(tp,aux.AND(Card.IsSetCard,Card.IsAbleToRemoveAsCost),tp,LOCATION_HAND,0,1,1,nil,0x83e),POS_FACEUP,REASON_COST)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Remove(Duel.SelectMatchingCard(tp,cid.costfilter,tp,LOCATION_HAND,0,1,1,nil),POS_FACEUP,REASON_COST)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
