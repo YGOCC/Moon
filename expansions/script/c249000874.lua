@@ -10,15 +10,16 @@ function c249000874.initial_effect(c)
 	e1:SetTarget(c249000874.target)
 	e1:SetOperation(c249000874.activate)
 	c:RegisterEffect(e1)
-	--move zone
+	--to deck
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(74335036,1))
+	e2:SetCategory(CATEGORY_TOEXTRA+CATEGORY_DRAW)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(aux.exccon)
 	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(c249000874.seqtg)
-	e2:SetOperation(c249000874.seqop)
+	e2:SetTarget(c249000874.tdtg)
+	e2:SetOperation(c249000874.tdop)
 	c:RegisterEffect(e2)
 end
 function c249000874.cfilter(c)
@@ -55,21 +56,21 @@ function c249000874.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2,true)
 	end
 end
-function c249000874.seqfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x162)
+function c249000874.tdfilter(c)
+	return c:IsType(TYPE_FUSION) and c:IsAbleToExtra()
 end
-function c249000874.seqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c249000874.seqfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c249000874.seqfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(92204263,1))
-	Duel.SelectTarget(tp,c249000874.seqfilter,tp,LOCATION_MZONE,0,1,1,nil)
+function c249000874.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c249000874.tdfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c249000874.tdfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectTarget(tp,c249000874.tdfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c249000874.seqop(e,tp,eg,ep,ev,re,r,rp)
+function c249000874.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,571)
-	local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
-	local nseq=math.log(s,2)
-	Duel.MoveSequence(tc,nseq)
+	if tc:IsRelateToEffect(e) and Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)~=0 then
+		Duel.BreakEffect()
+		Duel.Draw(tp,1,REASON_EFFECT)
+	end
 end

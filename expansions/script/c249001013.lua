@@ -1,5 +1,5 @@
 --Alchemy-Mage Polymorph
-xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
+--xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249001013.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -65,7 +65,8 @@ function c249001013.operation(e,tp,eg,ep,ev,re,r,rp)
 		for key,value in pairs(global_card_effect_table[e:GetHandler()]) do
 			if value:IsHasType(EFFECT_SPSUMMON_CONDITION) then sumrestrictions=true	 end
 		end
-	until not (c249001013.declared_table[tp][ac]~=true and banned_list_table[ac]~=true and token:IsSummonableCard() and not sumrestrictions)
+	until not (c249001013.declared_table[tp][ac]~=true -- and banned_list_table[ac]~=true
+	and token:IsSummonableCard() and not sumrestrictions)
 	c249001013.declared_table[tp][ac]=true
 	Duel.SendtoHand(c,nil,REASON_EFFECT)
 	if not c:IsLocation(LOCATION_HAND) then return end

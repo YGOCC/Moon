@@ -33,13 +33,12 @@ function c249000765.initial_effect(c)
 	e2:SetTarget(c249000765.target2)
 	e2:SetOperation(c249000765.operation2)
 	c:RegisterEffect(e2)
-	--cannot be link material
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e3:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-	e3:SetValue(1)
-	c:RegisterEffect(e3)
+	--material limit
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetOperation(c249000765.matlimit)
+	c:RegisterEffect(e2)
 end
 function c249000765.matfilter(c)
 	return c:IsRace(RACE_SPELLCASTER) and not c:IsType(TYPE_TOKEN)
@@ -117,4 +116,15 @@ function c249000765.operation2(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e1,true)
 	end
+end
+function c249000765.matlimit(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsSummonType(SUMMON_TYPE_LINK) then return end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e1:SetReset(RESETS_STANDARD+RESET_PHASE+PHASE_END)
+	e1:SetValue(1)
+	c:RegisterEffect(e1)
 end
