@@ -36,16 +36,19 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsSetCard,Card.IsAbleToRemoveAsCost),tp,LOCATION_HAND,0,1,nil,0x83e) end
 	Duel.Remove(Duel.SelectMatchingCard(tp,aux.AND(Card.IsSetCard,Card.IsAbleToRemoveAsCost),tp,LOCATION_HAND,0,1,1,nil,0x83e),POS_FACEUP,REASON_COST)
 end
+function cid.filter(tc)
+	return tc:IsSetCard(0x83e) and tc:IsFaceup() and not tc:IsType(TYPE_TUNER)
+end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsSetCard(0x83e) and chkc:IsFaceup() and not chkc:IsType(TYPE_TUNER) end
-	if chk==0 then return Duel.IsExistingTarget(function(tc) return tc:IsSetCard(0x83e) and tc:IsFaceup() and not tc:IsType(TYPE_TUNER) end,tp,LOCATION_MZONE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,function(tc) return tc:IsSetCard(0x83e) and tc:IsFaceup() and not tc:IsType(TYPE_TUNER) end,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,cid.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local e1=Effect.CreateEffect(c)
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_ADD_TYPE)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
