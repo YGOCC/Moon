@@ -104,6 +104,7 @@ function c249000045.spop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 and g:GetFirst():IsCanAddCounter(0x25,1) then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	else
+		local c=e:GetHandler()
 		local tc=g:GetFirst()
 		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 			local e1=Effect.CreateEffect(c)
@@ -116,9 +117,9 @@ function c249000045.spop(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetCode(EFFECT_DISABLE_EFFECT)
 			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e2)
+			Duel.SpecialSummonComplete()
 		end
 	end
-	Duel.SpecialSummonComplete()
 end
 function c249000045.acop2(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x25,2)
