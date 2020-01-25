@@ -22,16 +22,16 @@ function c500319612.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c500319612.filter(c,e,tp)
-	return c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return  c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c500319612.xyzfilter(c,mg)
-	return  c:IsSetCard(0x285a) and c:IsXyzSummonable(mg,2,2)
+	return c:IsSetCard(0x285a) and c:IsXyzSummonable(mg,2,2)
 end
 function c500319612.mfilter1(c,mg,exg)
 	return mg:IsExists(c500319612.mfilter2,1,c,c,exg)
 end
 function c500319612.mfilter2(c,mc,exg)
-	return  c:IsSetCard(0x285a) and exg:IsExists(Card.IsXyzSummonable,1,nil,Group.FromCards(c,mc))
+	return exg:IsExists(Card.IsXyzSummonable,1,nil,Group.FromCards(c,mc))
 end
 function c500319612.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -40,7 +40,8 @@ function c500319612.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsPlayerCanSpecialSummonCount(tp,2)
 		and not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and exg:GetCount()>0 end
+		and Duel.GetLocationCountFromEx(tp)>0
+		and mg:IsExists(c500319612.mfilter1,1,nil,mg,exg) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sg1=mg:FilterSelect(tp,c500319612.mfilter1,1,1,nil,mg,exg)
 	local tc1=sg1:GetFirst()
@@ -59,7 +60,7 @@ function c500319612.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(c500319612.filter2,nil,e,tp)
 	if g:GetCount()<2 then return end
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	Duel.BreakEffect()
+	if Duel.GetLocationCountFromEx(tp,tp,g)<=0 then return end
 	local xyzg=Duel.GetMatchingGroup(c500319612.xyzfilter,tp,LOCATION_EXTRA,0,nil,g)
 	if xyzg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -67,6 +68,7 @@ function c500319612.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.XyzSummon(tp,xyz,g)
 	end
 end
+
 
 function c500319612.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
