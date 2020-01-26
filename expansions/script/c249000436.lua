@@ -1,5 +1,5 @@
 --Heterochromic Mysterious Fuser
---xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000436.initial_effect(c)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
@@ -153,7 +153,7 @@ function c249000436.operation(e,tp,eg,ep,ev,re,r,rp)
 			i=i+1
 		end
 		if ac==249000436 then return end
-	until (cc.material and material_table and tc:IsCode(table.unpack(material_table)) and cc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)) -- and not banned_list_table[ac])
+	until (cc.material and material_table and tc:IsCode(table.unpack(material_table)) and cc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)) and not banned_list_table[ac])
 	Duel.SendtoGrave(tc,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION) --
 	cc:SetMaterial(Group.FromCards(tc))
 	Duel.SpecialSummon(cc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)

@@ -1,4 +1,5 @@
 --Spell-Disciple Xyz Sage
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000625.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -69,7 +70,7 @@ function c249000625.operation(e,tp,eg,ep,ev,re,r,rp)
 		local ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,OPCODE_AND,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,249000625,OPCODE_ISCODE,OPCODE_OR)
 		if ac==249000625 then return end
 		local cc=Duel.CreateToken(tp,ac)
-		while not (cc:IsType(TYPE_XYZ) and (cc:GetRank()-lvrk <=2 or cc:GetRank()-lvrk >=-2) and
+		while not (cc:IsType(TYPE_XYZ) and (cc:GetRank()-lvrk <=2 or cc:GetRank()-lvrk >=-2) and not banned_list_table[ac] and
 		cc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)	and cc:IsRace(tc:GetRace()) and cc:IsAttribute(tc:GetAttribute()) and not Duel.IsExistingMatchingCard(c249000625.codefilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,ac))
 		do
 			ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalRace(),OPCODE_ISRACE,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,OPCODE_AND,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,249000625,OPCODE_ISCODE,OPCODE_OR)

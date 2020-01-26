@@ -1,5 +1,5 @@
 --Heterochromic Rank Enhancer
---xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000438.initial_effect(c)
 	--summon success
 	local e1=Effect.CreateEffect(c)
@@ -101,7 +101,7 @@ function c249000438.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,c:GetOriginalCode(),OPCODE_ISCODE,OPCODE_OR)
 	local sc=Duel.CreateToken(tp,ac)
-	while not (sc:IsType(TYPE_XYZ) and sc:GetRank() == rk +2 and sc:IsAttribute(att) and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)) -- and not banned_list_table[ac])
+	while not (sc:IsType(TYPE_XYZ) and sc:GetRank() == rk +2 and sc:IsAttribute(att) and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)) and not banned_list_table[ac])
 	do
 		ac=Duel.AnnounceCardFilter(tp,tc:GetOriginalAttribute(),OPCODE_ISATTRIBUTE,TYPE_XYZ,OPCODE_ISTYPE,OPCODE_AND,c:GetOriginalCode(),OPCODE_ISCODE,OPCODE_OR)
 		sc=Duel.CreateToken(tp,ac)

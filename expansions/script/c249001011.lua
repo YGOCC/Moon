@@ -1,5 +1,5 @@
 --Alchemy-Mage's Sage Stone
---xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249001011.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -84,7 +84,7 @@ function c249001011.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ac=Duel.AnnounceCard(tp,TYPE_SPELL)
 	local token=Duel.CreateToken(tp,ac)
-	while not (c249001011.declared_table[tp][ac]~=true -- and banned_list_table[ac]~=true
+	while not (c249001011.declared_table[tp][ac]~=true and banned_list_table[ac]~=true
 		and (bit.band(token:GetActivateEffect():GetCategory(),CATEGORY_SPECIAL_SUMMON)~=0) or (bit.band(token:GetActivateEffect():GetCategory(),CATEGORY_DESTROY)~=0))
 	do
 		ac=Duel.AnnounceCard(tp,TYPE_SPELL)

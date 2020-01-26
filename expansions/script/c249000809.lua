@@ -1,4 +1,5 @@
 --Dream-Summoner Adept Mage
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000809.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -26,7 +27,10 @@ function c249000809.ctfilter(c)
 	return c:IsSetCard(0x1F2) and c:IsType(TYPE_MONSTER) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
 end
 function c249000809.operation(e,tp,eg,ep,ev,re,r,rp)
-	local ac=Duel.AnnounceCardFilter(tp,TYPE_XYZ,OPCODE_ISTYPE,TYPE_SYNCHRO,OPCODE_ISTYPE,OPCODE_OR)
+	local ac
+	repeat
+		ac=Duel.AnnounceCardFilter(tp,TYPE_XYZ,OPCODE_ISTYPE,TYPE_SYNCHRO,OPCODE_ISTYPE,OPCODE_OR)
+	until not banned_list_table[ac]
 	local sc=Duel.CreateToken(tp,ac)
 	Duel.SendtoDeck(sc,nil,2,REASON_RULE)
 	local g=Duel.GetMatchingGroup(c249000809.rmfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil)

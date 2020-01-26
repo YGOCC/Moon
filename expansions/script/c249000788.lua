@@ -1,4 +1,5 @@
 --Chaos Mage's Creation Ritual
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000788.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
@@ -108,7 +109,7 @@ function c249000788.activate(e,tp,eg,ep,ev,re,r,rp)
 		local ac=Duel.AnnounceCardFilter(tp,table.unpack(announce_filter))
 		sc=Duel.CreateToken(tp,ac)
 		g=Duel.GetMatchingGroup(c249000788.rmfilter,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_GRAVE,0,nil)
-	until (g:CheckWithSumEqual(Card.GetLevel,sc:GetLevel(),1,99,nil) and sc:IsCanBeSpecialSummoned(e,0,tp,false,false))
+	until (g:CheckWithSumEqual(Card.GetLevel,sc:GetLevel(),1,99,nil) and sc:IsCanBeSpecialSummoned(e,0,tp,false,false) and not banned_list_table[ac])
 	local sg=g:SelectWithSumEqual(tp,Card.GetLevel,sc:GetLevel(),1,99,nil)
 	Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 	if Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)~=0 then

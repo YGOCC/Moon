@@ -1,5 +1,5 @@
 --Heterochromic Neo Tuner
---xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000437.initial_effect(c)
 	if aux.AddSynchroProcedure then
 		if not c249000437_AddSynchroProcedure then
@@ -62,6 +62,7 @@ function c249000437.matfilter(c,lv,syncard,mclv)
 end
 function c249000437.filter(c,e,tp,mc)
 	local code=c:GetOriginalCode()
+	if banned_list_table[code] then return false end
 	local mt=_G["c" .. code]
 	local mclv=mc:GetSynchroLevel(c)
 	return c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,true,false)
@@ -83,8 +84,7 @@ function c249000437.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) then return end
 	local ac=Duel.AnnounceCardFilter(tp,TYPE_SYNCHRO,OPCODE_ISTYPE,c:GetOriginalCode(),OPCODE_ISCODE,OPCODE_OR)
 	local tc=Duel.CreateToken(tp,ac)
-	while not -- ((not banned_list_table[ac])) and 
-	c249000437.filter(tc,e,tp,c) --)
+	while not c249000437.filter(tc,e,tp,c)
 	do
 		ac=Duel.AnnounceCardFilter(tp,TYPE_SYNCHRO,OPCODE_ISTYPE,c:GetOriginalCode(),OPCODE_ISCODE,OPCODE_OR)
 		tc=Duel.CreateToken(tp,ac)

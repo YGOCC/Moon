@@ -1,4 +1,5 @@
 --Creation Ritual of Knowledge
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000914.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -82,7 +83,7 @@ function c249000914.activate(e,tp,eg,ep,ev,re,r,rp)
 		sc=Duel.CreateToken(tp,ac)
 		g=Duel.GetRitualMaterial(tp)
 		g=g:Filter(Card.IsCanBeRitualMaterial,sc,sc)
-	until (g:CheckWithSumGreater(Card.GetRitualLevel,sc:GetOriginalLevel(),sc,sc) and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,false) and sc:IsLevelAbove(5))	
+	until (g:CheckWithSumGreater(Card.GetRitualLevel,sc:GetOriginalLevel(),sc,sc) and sc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,false) and sc:IsLevelAbove(5) and not banned_list_table[ac])	
 	if sc then
 		local mg=Duel.GetRitualMaterial(tp)
 		mg=mg:Filter(Card.IsCanBeRitualMaterial,sc,sc)

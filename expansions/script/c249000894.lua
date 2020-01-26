@@ -1,4 +1,5 @@
 --Effect-Magician Archer
+xpcall(function() require("expansions/script/bannedlist") end,function() require("script/bannedlist") end)
 function c249000894.initial_effect(c)
 	if not c249000894_CopyEffect then
 		c249000894_CopyEffect=Card.CopyEffect
@@ -94,7 +95,7 @@ function c249000894.operation(e,tp,eg,ep,ev,re,r,rp)
 		cc=Duel.CreateToken(tp,ac)
 		if ac==3027001 then return end
 	until (cc:IsSummonableCard()
-		and (cc:GetLevel()==tc:GetLevel() or cc:GetLevel()+1==tc:GetLevel()))
+		and (cc:GetLevel()==tc:GetLevel() or cc:GetLevel()+1==tc:GetLevel()) and not banned_list_table[ac])
 	Duel.ConfirmCards(1-tp,Group.FromCards(cc))
 	local e1=Effect.CreateEffect(tc2)
 	e1:SetType(EFFECT_TYPE_SINGLE)
