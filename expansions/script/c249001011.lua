@@ -113,7 +113,6 @@ function c249001011.activate(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e3)
 end
 function c249001011.revertop(e,tp,eg,ep,ev,re,r,rp)
-	Debug.Message("Line 116")
 	local c=e:GetHandler()
 	if not (c:GetFlagEffect(249001011)~=0 and c249001011.ogformcodetable[c]) then return end
 	local code=c249001011.ogformcodetable[c]
