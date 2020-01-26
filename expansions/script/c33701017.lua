@@ -58,16 +58,13 @@ end
 --    end
 --end
 function s.spcost(e, tp, eg, ep, ev, re, r, rp, chk)
-    local rg = Duel.GetMatchingGroup(s.spfilter, tp, LOCATION_HAND + LOCATION_GRAVE, 0, e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,2,nil) end
 --    if chk == 0 then
 --        return Duel.GetLocationCount(tp, LOCATION_MZONE) > -2 and #rg > 1 and
 --            rg:CheckSubGroup(s.ChkfMMZ(1), 2, 2, tp) 
 --    end
-	if rg:GetCount()>1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=rg:Select(tp,2,2,nil)
-		Duel.Remove(g, POS_FACEUP, REASON_COST)
-	end
+	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,2,2,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.sptg(e, tp, eg, ep, ev, re, r, rp, chk)
     local c = e:GetHandler()
