@@ -25,7 +25,8 @@ function s.initial_effect(c)
 end
 	function s.sprfilter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_MACHINE)
-end 
+end
+	c40005.toss_coin=true
 	function s.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()

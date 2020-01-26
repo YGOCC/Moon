@@ -1,4 +1,4 @@
---Firewall Balanced Dragon
+--Firewall Dragon Recoded
 function c269000014.initial_effect(c)
 	--link summon
 	aux.AddLinkProcedure(c,nil,2)
@@ -48,6 +48,19 @@ function c269000014.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
 	e5:SetValue(5043010)
 	c:RegisterEffect(e5)
+	--draw
+	local e6=Effect.CreateEffect(c)
+	e6:SetCategory(CATEGORY_REMOVE)
+	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e6:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_PLAYER_TARGET)
+	e6:SetCode(EVENT_TO_HAND)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCountLimit(1)
+	e6:SetCondition(c269000014.drcon)
+	e6:SetCost(c269000014.drcost)
+	e6:SetTarget(c269000014.drtg)
+	e6:SetOperation(c269000014.drop)
+	c:RegisterEffect(e6)	
 end
 function c269000014.thfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -95,4 +108,21 @@ function c269000014.spop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
+end
+function c269000014.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()~=PHASE_DRAW and eg:IsExists(Card.IsControler,1,nil,tp)
+end
+function c269000014.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
+function c269000014.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(2)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
+end
+function c269000014.drop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
