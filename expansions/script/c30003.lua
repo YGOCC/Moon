@@ -4,6 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--banish GY
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -13,6 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--SSummon
 	local e2=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
@@ -22,8 +24,8 @@ function s.initial_effect(c)
 	e2:SetOperation(s.summon)
 	c:RegisterEffect(e2)
 end
-	function s.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10ec)
+	function s.filter(c,tp)
+	return c:IsFaceup() and c:IsSetCard(0x10ec) and c:IsType(TYPE_PENDULUM)
 end
 	function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
@@ -40,17 +42,17 @@ end
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
-	local sg=Duel.GetMatchingGroup(s.filter2,tp,0,LOCATION_MZONE,nil)
+	local sg=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_MZONE,0,nil,tp)
 	if sg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(30003,1)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
-		local tg=sg:Select(tp,1,1,nil)
 		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
+		local tg=sg:Select(tp,1,1,nil):GetFirst()
 		local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_IMMUNE_EFFECT)
 			e1:SetValue(s.efilter)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e1)
+			tg:RegisterEffect(e1)
 	end
 end
 	function s.efilter(e,re)
