@@ -1,23 +1,26 @@
 --I scripted this Loli, then lewded her.
 function c160001142.initial_effect(c)
-  c:EnableReviveLimit()
-		   --spsummon
+	c:EnableReviveLimit()
+	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160001142,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_GRAVE)
-	 e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
-	  e1:SetCountLimit(1,160001142)
+	e1:SetCountLimit(1,160001142)
 	e1:SetCondition(c160001142.spcon)
 	e1:SetTarget(c160001142.sptg)
 	e1:SetOperation(c160001142.spop)
 	c:RegisterEffect(e1)
-  local e2=e1:Clone()
+	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
- --atk
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+	c:RegisterEffect(e2)
+	--atk
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(160001142,1))
 	e3:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DISABLE)
@@ -40,12 +43,15 @@ function c160001142.initial_effect(c)
 	e4:SetCode(EVENT_TO_GRAVE)
 	e4:SetOperation(c160001142.hbdop)
 	c:RegisterEffect(e4)
-	
+
 end
 
+function c160001142.cfilter(c,tp)
+	return c:IsFaceup() and c:IsLevelAbove(4) and c:IsSetCard(0x185a) and not c:IsCode(160001142)
+		and c:GetReasonPlayer()==tp
+end
 function c160001142.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local ec=eg:GetFirst()
-	return ep==tp and ec:IsLevelAbove(4)  and not ec:IsCode(160001142)
+	return eg:IsExists(c160001142.cfilter,1,nil,tp)
 end
 function c160001142.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
