@@ -1,6 +1,7 @@
 --Cascadmiral Fleet Formation
 --Script by XGlitchy30
 function c31231309.initial_effect(c)
+	aux.AddCodeList(c,31231300)
 	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -32,7 +33,7 @@ function c31231309.initial_effect(c)
 	e3:SetOperation(c31231309.spop)
 	c:RegisterEffect(e3)
 end
-c31231309.card_code_list={31231300}
+--c31231309.card_code_list={31231300}
 --filters
 function c31231309.filter(c)
 	return c:IsSetCard(0x3233) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

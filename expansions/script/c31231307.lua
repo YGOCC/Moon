@@ -1,6 +1,7 @@
 --RUM Triton Force
 --Script by XGlitchy30
 function c31231307.initial_effect(c)
+	aux.AddCodeList(c,31231300)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -30,7 +31,7 @@ function c31231307.initial_effect(c)
 	e3:SetOperation(c31231307.tdop)
 	c:RegisterEffect(e3)
 end
-c31231307.card_code_list={31231300}
+--c31231307.card_code_list={31231300}
 --filters
 function c31231307.filter1(c,e,tp)
 	local rk=c:GetRank()

@@ -61,7 +61,7 @@ end
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_MACHINE)
 end
 	function s.cond(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.filt,1,nil,tp)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(s.filt,1,nil,tp)
 end
 	function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

@@ -1,6 +1,7 @@
 --Crashing Cascadmirals
 --Script by XGlitchy30
 function c31231310.initial_effect(c)
+	aux.AddCodeList(c,31231300)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -31,7 +32,7 @@ function c31231310.initial_effect(c)
 	e3:SetOperation(c31231310.spop)
 	c:RegisterEffect(e3)
 end
-c31231310.card_code_list={31231300}
+--c31231310.card_code_list={31231300}
 --filters
 function c31231310.cfilter(c)
 	return c:IsSetCard(0x95) and c:IsType(TYPE_SPELL) and c:IsAbleToRemoveAsCost()

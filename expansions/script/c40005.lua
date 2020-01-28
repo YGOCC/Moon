@@ -53,8 +53,8 @@ end
 		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1-tp,ct,nil)
 		if g:GetCount()>0 and g:IsExists(Card.IsAbleToRemove,1,1-tp) then
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-		local tc=Duel.SelectMatchingCard(tp,s.bfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
 			if c1+c2+c3==3 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT) and Duel.SelectYesNo(tp,aux.Stringid(40005,1)) then
+			local tc=Duel.SelectMatchingCard(tp,s.bfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end

@@ -44,8 +44,8 @@ end
 		Duel.ConfirmCards(1-tp,tg)
 	end
 end
-	function refilter(c)
-	return (c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_MACHINE) and c:IsType(TYPE_MONSTER) or c:IsType(TYPE_SPELL+TYPE_TRAP) and c.toss_coin) and c:IsAbleToHand()
+	function s.refilter(c)
+	return (c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_MACHINE) and c:IsAbleToHand() and not c:IsCode(40004)) or (c.toss_coin and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand())
 end
 	function s.trg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -61,10 +61,5 @@ end
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
-	
-
-
-
-
 
 		

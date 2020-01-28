@@ -64,7 +64,7 @@ end
 end
 	function s.coincon1(e,tp,eg,ep,ev,re,r,rp)
 	local ex,eg,et,cp,ct=Duel.GetOperationInfo(ev,CATEGORY_COIN)
-	if ex and ct>0 then
+	if ex and ct>0 and re:IsActiveType(TYPE_MONSTER) then
 		e:SetLabelObject(re)
 		return true
 	else return false end
