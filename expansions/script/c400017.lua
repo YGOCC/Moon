@@ -29,7 +29,7 @@ function c400017.initial_effect(c)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(400001,0))
-	e5:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
+	e5:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e5:SetType(EFFECT_TYPE_QUICK_O)
 	e5:SetCode(EVENT_CHAINING)
 	e5:SetRange(LOCATION_FZONE)
@@ -55,7 +55,7 @@ function c400017.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
 end
 function c400017.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c400017.filter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
@@ -71,17 +71,24 @@ function c400017.filter1(c)
 end
 function c400017.filter2(c,code)
 	return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToHand()
-		and c:GetCode()~=code
+		and not c:IsCode(code)
 end
-function c400017.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingTarget(c400017.filter1,tp,LOCATION_DECK,0,1,nil) end
+function c400017.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c400017.filter1,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c400017.operation(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(c400017.filter1,tp,LOCATION_DECK,0,1,nil)
-	if Duel.SendtoGrave(g,REASON_EFFECT)==0 then return end
-	Duel.BreakEffect()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g0=Duel.SelectMatchingCard(c400017.filter2,tp,LOCATION_DECK,0,1,nil,g:GetFirst():GetCode())
-	Duel.SendtoHand(g0,nil,REASON_EFFECT)
+	local g=Duel.SelectMatchingCard(tp,c400017.filter1,tp,LOCATION_DECK,0,1,1,nil)
+	if #g>0 then
+		if Duel.SendtoGrave(g,REASON_EFFECT)~=0 then
+			Duel.BreakEffect()
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			local g0=Duel.SelectMatchingCard(tp,c400017.filter2,tp,LOCATION_DECK,0,1,1,g:GetFirst(),g:GetFirst():GetCode())
+			Duel.SendtoHand(g0,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,g0)
+		end
+	end
 end
