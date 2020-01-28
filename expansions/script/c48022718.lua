@@ -33,9 +33,12 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.repop)
 	c:RegisterEffect(e3)
 end
+function cid.eqfilter(c,tp)
+	return c:IsType(TYPE_MONSTER) and c:CheckUniqueOnField(tp) and not c:IsForbidden()
+end
 function cid.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingMatchingCard(aux.AND(Card.CheckUniqueOnField,aux.NOT(Card.IsForbidden)),tp,LOCATION_HAND,0,1,nil,tp) end
+		and Duel.IsExistingMatchingCard(cid.eqfilter,tp,LOCATION_HAND,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_HAND)
 end
 function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
