@@ -1,7 +1,304 @@
 if not banned_list_table then banned_list_table={} end
 local string=require'string'
 local ls=[[
-#[2019.7 YGOCC+2019.10 TCG]
+#[2020.1 YGOCC+2019.10 TCG]
+
+!2020.1 YGOCC
+#Forbidden YGOCC
+	--							MAIN DECK MONSTERS
+33700750 0 -- Anifriend
+33700181 0 -- Anifriend
+33700072 0 -- Anifriend
+33700093 0 -- Anifriend
+33700186 0 -- Anifriend
+33700079 0 -- Anifriend
+33700058 0 -- Anifriend
+33700747 0 -- Anifriend
+33700745 0 -- Anifriend
+	--							EXTRA DECK MONSTERS
+33700083 0 -- Anifriend
+33700085 0 -- Anifriend
+33700082 0 -- Anifriend
+91672800 0 -- Percival, Paladawn Light
+28915253 0 -- Shadowflame Calvary (New, was semi-limited)
+195208400 0 -- Spectre Magician & Dark Light
+
+	--							SPELLS CARDS
+	--							TRAPS CARDS
+
+#Limited YGOCC
+171000121 1 --Amethyst-Winged Kuriboh				MAIN DECK MONSTERS
+160005445 1 -- Paintress Di Vica
+11000533 1 -- Shya Shadowlord
+16000233 1 -- Paintress Gorgia
+33700054 1 -- Anifriend Red Fox
+33700304 1 -- GearGal Veno 
+33700065 1 -- Anifriend 
+17029601 1 -- Psychether Dreamer 
+79854524 1 -- Woodland Wing 
+33700746 1 -- Anifriends Sky Impulse 
+33700744 1 -- Anifriends Gentoo
+53313934 1 -- Mysterious Luster 
+500311592 1 -- Power Portrait's Cursed Portait Trap 
+	--							EXTRA DECK MONSTERS
+#16000045 3 -- ESPergear Knight : Gladiator 
+33700311 1 -- NEXTGal G
+80347321 1 -- Metalfoes Mercuryrider
+210424272 1 -- Moon Burst: The Bad Dream
+19772604 1 -- Flaric Ebona (new, was banned)
+	--							SPELL CARDS
+23251031 0 -- Pharaohnic Papyrus of Patience
+#23251004 3 -- Moon Over the Desert 
+33700316 1 -- GearGal Abort
+63553459 1 -- Nethergear Unit
+#84607229 3 -- Spiritualist Calling (new, unlimited)
+160004532 1 -- The Miscomposition of Power Portrait
+#28915261 3 -- Shadows Ablaze (new, unlimited)
+	--							TRAP CARDS
+
+#Semi-limited YGOCC
+	--							MAIN DECK MONSTERS				
+53313907 2 -- Mysterious Starquid
+32904921 2 -- Aeonbreaker's Bow (new, was limited)
+32904923 2 -- Aeonbreaker's Sword (new, was limited)
+#84607234 3 -- Spiritualist Thalia (new, was limited)
+	--							EXTRA DECK MONSTERS
+--
+	--							SPELL CARDS
+53313927 2 -- Mysterious Dimension
+210424266 2 -- Battle in the Storm
+
+	--							TRAP CARDS
+
+--NEW
+63553469 0  -- Atom marshal
+19772590 0  -- Advocate of Justice - Ivoric
+500316971 0 -- Buttercup of Fiber VINE
+16000969 0  -- Cybersian Judgeman
+56642464 0  -- Holy Noble Knight Crusader, Artorgius
+75977701 0  -- Infected knight of Ivory
+32904930 0  -- Jaden the Aeonbreaker’s Alchemist
+16000231 0  -- Leaf Private of Fiber VINE
+80347321 0  -- Metalfoes Mercuryrider
+79854546 0  -- Numbing Winter jewel
+56642463 0  -- Noble Knight Mordred
+16000130 0  -- Oak Gardna of Fiber Vine
+23251031 0  -- Pharaohnic Papyrus of patience
+17029608 0  -- Psychether priestess, Joan
+37564902 0  -- Sayuri - GRAZE
+16599458 0  -- Telum of the Angel Organization, Zagar
+20181405 0  -- Terradication Geryonarsenal
+19772596 0  -- The Advocate of Justice’s Summoning 
+500316972 0 -- Twin-Venuses Fiber VINE Dragon
+63553466 0  -- Universe marshal
+79854547 0  -- Verdant illusion
+500311692 0 -- VINE Sunflower of Greed
+160000786 0 -- Yuzu, guardian of magnificent VINE
+32904931 1  -- Serene, the Aeonbreaker's Sword
+32904936 1  -- Arisa, the Aeonbreaker's Defender
+102400102 1 -- Aeonbreaker Fusion
+102400133 1 -- Blitzkrieg Meklight - Dawn
+50031786 1  -- Blitzkrieg Sky
+50031699 1  -- Lana, whiptail girl of Magnificient VINE
+15747847 1  -- Mana, Cactunner of Fiber VINE
+63553468 1  -- Mythos Valor
+32904923 1  -- Proxima Marshall
+16000128 1  -- Serpenterfly of Fiber VINE
+20181413 1  -- Terradication living fortress
+19772610 1  -- The Advocate of Justice’s Door
+15747835 2  -- Mythos paradox
+#23251004 3 -- Moon Over the Desert
+#84607234 3 -- Spiritualist Thalia
+
+#FORBIDDEN TCG					===Forbidden===
+76794549 0 --Astrograph Sorcerer
+09929398 0 --Blackwing - Gofu the Vague Shadow
+53804307 0 --Blaster, Dragon Ruler of Infernos
+34124316 0 --Cyber Jar
+15341821 0 --Dandylion
+08903700 0 --Djinn Releaser of Rituals
+49684352 0 --Double Iris Magician
+51858306 0 --Eclipse Wyvern
+55623480 0 --Fairy Tail - Snow
+78706415 0 --Fiber Jar
+93369354 0 --Fishborg Blaster
+75732622 0 --Grinder Golem
+57421866 0 --Level Eater
+34206604 0 --Magical Scientist
+31178212 0 --Majespecter Unicorn - Kirin
+21593977 0 --Makyura the Destructor
+21377582 0 --Master Peace, the True Dracoslaying King
+23434538 0 --Maxx "C"
+96782886 0 --Mind Master
+57835716 0 --Orcust Harp Horror
+07563579 0 --Performage Plushfire
+17330916 0 --Performapal Monkeyboard
+40318957 0 --Performapal Skullcrobat Joker
+23558733 0 --Phoenixian Cluster Amaryllis
+90411554 0 --Redox, Dragon Ruler of Boulders
+05592689 0 --Samsara Lotus
+20663556 0 --Substitoad
+88071625 0 --The Tyrant Neptune
+26400609 0 --Tidal, Dragon Ruler of Waterfalls
+44910027 0 --Victory Dragon
+03078576 0 --Yata-Garasu
+17412721 0 --Elder Entity Norden
+43387895 0 --Supreme King Dragon Starving Venom
+15291624 0 --Thunder Dragon Colossus
+05043010 0 --Firewall Dragon
+59537380 0 --Guardragon Agarpain
+24094258 0 --Heavymetalfoes Electrumite
+39064822 0 --Knightmare Goblin
+03679218 0 --Knightmare Mermaid
+61665245 0 --Summon Sorceress
+26692769 0 --The Phantom Knights of Rusty Bardiche
+22593417 0 --Topologic Gumblar Dragon
+25862681 0 --Ancient Fairy Dragon
+65536818 0 --Denglong, First of the Yang Zing
+94677445 0 --Ib the World Chalice Justiciar
+63101919 0 --Tempest Magician
+34086406 0 --Lavalval Chain
+04423206 0 --M-X-Saber Invoker
+54719828 0 --Number 16: Shock Master
+10389142 0 --Number 42: Galaxy Tomahawk
+63504681 0 --Number 86: Heroic Champion - Rhongomyniad
+58820923 0 --Number 95: Galaxy-Eyes Dark Matter Dragon
+34945480 0 --Outer Entity Azathot
+87327776 0 --Salamangreat Miragestallio
+18326736 0 --Tellarknight Ptolemaeus
+81122844 0 --Wind-Up Carrier Zenmaity
+85115440 0 --Zoodiac Broadbull
+48905153 0 --Zoodiac Drident
+07394770 0 --Brilliant Fusion
+69243953 0 --Butterfly Dagger - Elma
+57953380 0 --Card of Safe Return
+04031928 0 --Change of Heart
+67616300 0 --Chicken Game
+60682203 0 --Cold Wave
+17375316 0 --Confiscation
+44763025 0 --Delinquent Duo
+23557835 0 --Dimension Fusion
+42703248 0 --Giant Trunade
+79571449 0 --Graceful Charity
+18144506 0 --Harpie's Feather Duster
+19613556 0 --Heavy Storm
+35059553 0 --Kaiser Colosseum
+85602018 0 --Last Will
+34906152 0 --Mass Driver
+46411259 0 --Metamorphosis
+41482598 0 --Mirage of Nightmare
+74191942 0 --Painful Choice
+55144522 0 --Pot of Greed
+70828912 0 --Premature Burial
+94220427 0 --Rank-Up-Magic Argent Chaos Force
+63166095 0 --Sky Striker Mobilize - Engage!
+45986603 0 --Snatch Steal
+54447022 0 --Soul Charge
+46448938 0 --Spellbook of Judgment
+11110587 0 --That Grass Looks Greener
+42829885 0 --The Forceful Sentry
+28566710 0 --Last Turn
+27174286 0 --Return from the Different Dimension
+93016201 0 --Royal Oppression
+57585212 0 --Self-Destruct Button
+03280747 0 --Sixth Sense
+35316708 0 --Time Seal
+64697231 0 --Trap Dustshoot
+80604091 0 --Ultimate Offering
+05851097 0 --Vanity's Emptiness
+#LIMITED TCG						====Limited===
+07902349 1 --Left Arm of the Forbidden One
+44519536 1 --Left Leg of the Forbidden One
+70903634 1 --Right Arm of the Forbidden One
+08124921 1 --Right Leg of the Forbidden One
+42790071 1 --Altergeist Multifaker
+28985331 1 --Armageddon Knight
+61901281 1 --Black Dragon Collapserpent
+57143342 1 --Cir, Malebranche of the Burning Abyss
+69015963 1 --Cyber-Stein
+70711847 1 --Danger! Nessie!
+14536035 1 --Dark Grepher
+58984738 1 --Dinomight Knight, the True Dracofighter
+82385847 1 --Dinowrestler Pankratops
+33396948 1 --Exodia the Forbidden One
+64034255 1 --Genex Ally Birdman
+20758643 1 --Graff, Malebranche of the Burning Abyss
+99177923 1 --Infernity Archfiend
+33508719 1 --Morphing Jar
+16226786 1 --Night Assailant
+12958919 1 --Phantom Skyblaster
+88264978 1 --Red-Eyes Darkness Metal Dragon
+26889158 1 --Salamangreat Gazelle
+92559258 1 --Servant of Endymion
+81275020 1 --Speedroid Terrortop
+04474060 1 --SPYRAL GEAR - Drone
+78080961 1 --SPYRAL Quik-Fix
+89399912 1 --Tempest, Dragon Ruler of Storms
+30539496 1 --True King Lithosagym, the Disaster
+99234526 1 --White Dragon Wyverburster
+78872731 1 --Zoodiac Ratpier
+45222299 1 --Evigishki Gustkraken
+11877465 1 --Evigishki Mind Augus
+89463537 1 --Nekroz of Unicore
+39512984 1 --Gem-Knight Master Diamond
+48063985 1 --Ritual Beast Ulti-Cannahawk
+70583986 1 --Dewloren, Tiger King of the Ice Barrier
+18239909 1 --Ignister Prominence, the Blasting Dracoslayer
+74586817 1 --PSY-Framelord Omega
+27552504 1 --Beatrice, Lady of the Eternal
+00581014 1 --Daigusto Emeral
+08949584 1 --A Hero Lives
+72892473 1 --Card Destruction
+59750328 1 --Card of Demise
+91623717 1 --Chain Strike
+81674782 1 --Dimensional Fissure
+15854426 1 --Divine Wind of Mist Valley
+14733538 1 --Draco Face-Off
+13035077 1 --Dragonic Diagram
+67723438 1 --Emergency Teleport
+95308449 1 --Final Countdown
+81439173 1 --Foolish Burial
+27970830 1 --Gateway of the Six
+75500286 1 --Gold Sarcophagus
+66957584 1 --Infernity Launcher
+93946239 1 --Into the Void
+71650854 1 --Magical Mid-Breaker Field
+83764718 1 --Monster Reborn
+33782437 1 --One Day of Peace
+02295440 1 --One for One
+22842126 1 --Pantheism of the Monarchs
+67169062 1 --Pot of Avarice
+12580477 1 --Raigeki
+58577036 1 --Reasoning
+32807846 1 --Reinforcement of the Army
+52155219 1 --Salamangreat Circle
+73915051 1 --Scapegoat
+24940422 1 --Sekka's Light
+73468603 1 --Set Rotation
+52340444 1 --Sky Striker Mecha - Hornet Drones
+98338152 1 --Sky Striker Mecha - Widow Anchor
+24010609 1 --Sky Striker Mecha Modules - Multirole
+71344451 1 --Slash Draw
+54631665 1 --SPYRAL Resort
+45305419 1 --Symbol of Heritage
+73628505 1 --Terraforming
+35371948 1 --Trickstar Light Stage
+70368879 1 --Upstart Goblin
+61740673 1 --Imperial Order
+30241314 1 --Macro Cosmos
+32723153 1 --Magical Explosion
+89208725 1 --Metaverse
+23002292 1 --Red Reboot
+82732705 1 --Skill Drain
+35125879 1 --True King's Return
+17078030 1 --Wall of Revealing Light
+#SEMI LIMITED TCG					===Semi Limited===
+43694650 2 --Danger!? Jackalope?
+99745551 2 --Danger!? Tsuchinoko?
+78868119 2 --Deep Sea Diva
+28297833 2 --Necroface
+10802915 2 --Tour Guide From the Underworld
+37520316 2 --Mind Control
 
 !2019.7 YGOCC
 #Forbidden YGOCC
@@ -50,7 +347,6 @@ local ls=[[
 19772604 1 -- Flaric Ebona (new, was banned)
 	--							SPELL CARDS
 23251031 1 -- Pharaohnic Papyrus of Patience
-23251004 1 -- Moon Over the Desert 
 33700316 1 -- GearGal Abort
 63553459 1 -- Nethergear Unit
 #84607229 3 -- Spiritualist Calling (new, unlimited)
@@ -63,7 +359,6 @@ local ls=[[
 53313907 2 -- Mysterious Starquid
 32904921 2 -- Aeonbreaker's Bow (new, was limited)
 32904923 2 -- Aeonbreaker's Sword (new, was limited)
-84607234 2 -- Spiritualist Thalia (new, was limited)
 	--							EXTRA DECK MONSTERS
 --
 	--							SPELL CARDS
