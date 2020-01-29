@@ -22,12 +22,12 @@ end
 function cid.check_arcarums(c,start)
 	if not start then return false end
 	local check=1
-	for i=1,22 do
+	for i=1,21 do
 		if Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,start+i) then
 			check=check+1
 		end
 	end
-	return c:IsCode(start) and check==23
+	return c:IsCode(start) and check==22
 end
 --Activate
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
