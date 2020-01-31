@@ -48,7 +48,7 @@ function cid.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0) and Duel.IsExistingMatchingCard(cid.cpfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,cid.cpfilter,tp,LOCATION_GRAVE,0,1,1,nil):GetFirst()
-	Duel.Remove(Group.FromCards(g,c),POS_FACEUP,REASON_COST)
+	Duel.Remove(Group.FromCards(g,e:GetHandler()),POS_FACEUP,REASON_COST)
 	local te,ceg,cep,cev,cre,cr,crp=g:CheckActivateEffect(false,true,true)
 	local tg=te:GetTarget()
 	if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end

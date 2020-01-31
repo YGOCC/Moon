@@ -29,7 +29,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if #g>0 then
 		Duel.HintSelection(g)
-		if Duel.SendtoDeck(g,POS_FACEUP,REASON_EFFECT)==0 then return end
+		if Duel.SendtoDeck(g,nil,2,REASON_EFFECT)==0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local tg=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if #tg>0 then
