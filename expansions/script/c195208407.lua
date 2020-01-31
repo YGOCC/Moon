@@ -15,7 +15,7 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetCategory(CATEGORY_DRAW)
-	e1:SetCondition(function(e,tp) return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0) and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_REMOVED,0,1,nil) end)
+	e1:SetCondition(cid.drcon)
 	e1:SetTarget(cid.tg)
 	e1:SetOperation(cid.op)
 	c:RegisterEffect(e1)
@@ -31,6 +31,11 @@ function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
+end
+function cid.drcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+		and Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)<Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE,nil)
 end
 function cid.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x83e) and c:IsType(TYPE_MONSTER)
