@@ -125,8 +125,7 @@ function cod.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,cod.costfilter,1,1,REASON_COST,nil)
 end
 function cod.descon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return (c:IsReason(REASON_EFFECT) or c:IsReason(REASON_COST)) and c:GetPreviousControler()==tp 
+	return e:GetHandler():IsReason(REASON_COST)
 		and re:GetHandler():IsSetCard(0x33F) and re:IsActiveType(TYPE_MONSTER)
 end
 function cod.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

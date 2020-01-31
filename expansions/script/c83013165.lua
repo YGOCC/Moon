@@ -118,8 +118,7 @@ end
 
 --Send 1 "Seatector" 
 function cod.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return (c:IsReason(REASON_EFFECT) or c:IsReason(REASON_COST)) and c:GetPreviousControler()==tp 
+	return e:GetHandler():IsReason(REASON_COST)
 		and re:GetHandler():IsSetCard(0x33F) and re:IsActiveType(TYPE_MONSTER)
 end
 function cod.cfilter(c)

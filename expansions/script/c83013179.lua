@@ -32,7 +32,7 @@ function cod.initial_effect(c)
     e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1,id)
+    e2:SetCountLimit(1,83013279)
     e2:SetTarget(cod.target)
     e2:SetOperation(cod.operation)
     c:RegisterEffect(e2)
@@ -40,10 +40,10 @@ end
 
 --Equip
 function cod.eqcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
+    return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function cod.cfilter(c,tc)
-	return c:IsType(TYPE_UNION) and c:CheckEquipTarget(tc) and aux.CheckUnionEquip(c,tc) and aux.nvfilter(c)
+	return c:IsType(TYPE_UNION) and c:CheckEquipTarget(tc) and aux.CheckUnionEquip(c,tc)
 end
 function cod.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cod.cfilter(chkc,e:GetHandler()) end
@@ -77,7 +77,7 @@ function cod.eqop(e,tp,eg,ep,ev,re,r,rp)
 		if not eqc then return end
 		local mg=Duel.GetMatchingGroup(cod.mfilter,tp,LOCATION_MZONE,0,nil,eqc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local mc=mg:Select(tp,1,1,nil):GetFirst()
+		local mc=mg:Select(tp,1,1,e:GetHandler()):GetFirst()
 		if not mc then return end
 		if not Duel.Equip(tp,eqc,mc,false) then return end
 		aux.SetUnionState(eqc)

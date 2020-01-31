@@ -31,7 +31,7 @@ function cod.initial_effect(c)
     e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
     e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1,id)
+    e2:SetCountLimit(1,83013278)
     e2:SetTarget(cod.target)
     e2:SetOperation(cod.operation)
     c:RegisterEffect(e2)
@@ -39,10 +39,10 @@ end
 
 --Equip
 function cod.eqcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
+    return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function cod.cfilter(c,tc)
-	return c:IsType(TYPE_UNION) and c:CheckEquipTarget(tc) and aux.CheckUnionEquip(c,tc) and aux.nvfilter(c)
+	return c:IsType(TYPE_UNION) and c:CheckEquipTarget(tc) and aux.CheckUnionEquip(c,tc)
 end
 function cod.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cod.cfilter(chkc,e:GetHandler()) end
