@@ -53,7 +53,8 @@ end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) end
-	cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
+	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
+	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
 end
 function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	local e1=Effect.CreateEffect(c)
@@ -62,7 +63,6 @@ function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	e1:SetValue(TYPE_TRAP)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
 	c:RegisterEffect(e1,true)
-	Duel.AdjustInstantly()
 	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
 	e1:Reset()
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
