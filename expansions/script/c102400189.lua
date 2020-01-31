@@ -6,6 +6,7 @@ function cid.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetTarget(cid.target)
 	e2:SetOperation(cid.activate)
 	c:RegisterEffect(e2)
@@ -56,35 +57,16 @@ function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	e1:Reset()
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 end
-function cid.filter(c)
-	return c:IsLevelBelow(4) and c:IsSetCard(0xf7a)
+function cid.filter(c,e,tp)
+	return c:IsLevelBelow(4) and c:IsSetCard(0xf7a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>(e:IsHasType(EFFECT_TYPE_QUICK_O) and 1 or 0)
-		and aux.PandSSetCon(cid.filter,nil,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp)
-		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or e:IsHasType(EFFECT_TYPE_ACTIVATE))
+		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not aux.PandSSetCon(cid.filter,nil,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp) then return end
-	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	local g=Duel.SelectMatchingCard(tp,aux.PandSSetFilter(cid.filter),tp,LOCATION_DECK,0,1,1,nil)
-	local tc=g:GetFirst()
-	if tc then
-		local e1=Effect.CreateEffect(tc)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_MONSTER_SSET)
-		e1:SetValue(TYPE_TRAP)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
-		tc:RegisterEffect(e1,true)
-		Duel.SSet(tp,tc)
-		e1:Reset()
-		tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
-		e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
-	end
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	if #g>0 then Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) end
 end
