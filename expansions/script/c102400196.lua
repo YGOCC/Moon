@@ -20,8 +20,7 @@ function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_GRAVE)
-	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-	e1:SetCategory(CATEGORY_TODECK+CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TODECK)
 	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(cid.tg)
 	e1:SetOperation(cid.op)
@@ -98,20 +97,11 @@ function cid.filter2(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0xf7a) and c:IsAbleToHand()
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE,0,2,nil)
-		and Duel.IsExistingMatchingCard(cid.filter2,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_GRAVE,0,2,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,2,tp,LOCATION_GRAVE)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE,0,2,2,nil)
-	if #g~=2 or Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=2 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local tg=Duel.SelectMatchingCard(tp,cid.filter2,tp,LOCATION_DECK,0,1,1,nil)
-	if #tg>0 then
-		Duel.BreakEffect()
-		Duel.SendtoHand(tg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tg)
-	end
+	if #g==2 then Duel.SendtoDeck(g,nil,2,REASON_EFFECT) end
 end

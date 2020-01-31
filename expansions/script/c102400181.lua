@@ -2,81 +2,34 @@
 --フェイツ・ネクロガイ
 local cid,id=GetID()
 function cid.initial_effect(c)
-	c:EnableReviveLimit()
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_ACTIVATE)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCategory(CATEGORY_REMOVE)
-	e2:SetTarget(cid.target)
-	e2:SetOperation(cid.activate)
-	c:RegisterEffect(e2)
-	local e0=e2:Clone()
-	e0:SetType(EFFECT_TYPE_QUICK_O)
-	e0:SetRange(LOCATION_MZONE)
-	e0:SetCountLimit(0)
-	e0:SetCost(cid.cost)
-	c:RegisterEffect(e0)
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e1:SetCode(EVENT_TO_GRAVE)
-	e1:SetTarget(cid.thtg)
-	e1:SetOperation(cid.thop)
-	c:RegisterEffect(e1)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC_G)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(aux.PandSSetCon(c,0))
-	e1:SetOperation(cid.ssetop)
-	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_ADJUST)
-	e2:SetRange(LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_HAND+LOCATION_EXTRA+LOCATION_OVERLAY+LOCATION_MZONE)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
-	e2:SetOperation(function(e)
-		local c=e:GetHandler()
-		if c:GetOriginalType()==TYPE_TRAP then
-			c:AddMonsterAttribute(TYPE_MONSTER+TYPE_RITUAL+TYPE_EFFECT)
-			c:SetCardData(CARDDATA_TYPE,TYPE_MONSTER+TYPE_RITUAL+TYPE_EFFECT)
-		end
-	end)
-	c:RegisterEffect(e2)
-	local e3=e2:Clone()
-	e3:SetRange(0)
-	e3:SetCode(EVENT_LEAVE_FIELD)
-	e3:SetCode(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_RITUAL_LEVEL)
+	e3:SetValue(cid.rlevel)
 	c:RegisterEffect(e3)
-end
-function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return aux.PandSSetCon(c,-1)(c,e,tp,eg,ep,ev,re,r,rp) end
-	cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
-end
-function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_MONSTER_SSET)
-	e1:SetValue(TYPE_TRAP)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
-	c:RegisterEffect(e1,true)
-	Duel.SSet(c:GetControler(),c,c:GetControler(),false)
-	e1:Reset()
-	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_CHAIN_SOLVING)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetOperation(cid.activate)
+	c:RegisterEffect(e1)
 end
-function cid.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xf7a) and (c:IsSSetable(true) or c:IsAbleToHand())
-end
-function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_ONFIELD)
+function cid.tfilter(c)
+	return (c:IsFaceup() or not c:IsLocation(LOCATION_ONFIELD+LOCATION_REMOVED)) and c:IsSetCard(0xf7a)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
-	if #g>0 then
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
+	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	if not g or not g:IsExists(cid.tfilter,1,e:GetHandler()) or not g:IsExists(Card.IsAbleToHand,1,nil)
+		or not Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then return end
+	Duel.Hint(HINT_CARD,0,id)
+	if Duel.SendtoHand(g,nil,REASON_EFFECT)==0 then return end
+	local g1=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
+	local g2=Duel.GetMatchingGroup(cid.thfilter,tp,LOCATION_DECK,0,nil)
+	local b1,b2=#g1>0,#g2>0
+	if b1 and (not b2 or Duel.SelectOption(tp,1102,1109)==0) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=g1:Select(tp,1,1,nil)
 		Duel.HintSelection(g)
 		local tc=g:GetFirst()
 		if Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
@@ -88,30 +41,33 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetLabelObject(tc)
 			e1:SetCountLimit(1)
 			e1:SetCondition(cid.retcon)
-			e1:SetOperation(cid.retop)
+			e1:SetOperation(function(te) Duel.ReturnToField(te:GetLabelObject()) end)
 			Duel.RegisterEffect(e1,tp)
 		end
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local g=g2:Select(tp,1,1,nil)
+		if #g>0 then
+			Duel.SendtoHand(g,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,g)
+		end
 	end
+end
+function cid.filter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xf7a) and (c:IsSSetable(true) or c:IsAbleToHand())
 end
 function cid.retcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	return Duel.GetTurnCount()~=e:GetLabel() and tc:GetFlagEffect(id)~=0
 end
-function cid.retop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ReturnToField(e:GetLabelObject())
-end
-function cid.filter(c)
+function cid.thfilter(c)
 	return c:IsSetCard(0xf7a) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
-function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+function cid.rlevel(e,c)
+	local lv=e:GetHandler():GetLevel()
+	if e:GetHandler():IsLocation(LOCATION_SZONE) then lv=e:GetHandler():GetOriginalLevel() end
+	if c:IsSetCard(0xf7a) and not c:IsCode(id) then
+		local clv=c:GetLevel()
+		return lv*(0x1<<16)+clv
+	else return lv end
 end
