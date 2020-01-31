@@ -26,3 +26,6 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+function cid.filter(c)
+	return c:GetType()&0x82==0x82 and (c:IsFaceup() and c:IsLocation(LOCATION_REMOVED) or c:IsSetCard(0xf7a)) and c:IsAbleToHand()
+end
