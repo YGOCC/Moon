@@ -119,10 +119,8 @@ end
 --To Hand
 function cod.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local eqc=c:GetEquipTarget()
-	if chk==0 then return c:IsAbleToGraveAsCost() and eqc:IsAbleToGraveAsCost() end
-	local g=Group.FromCards(c,eqc)
-	Duel.SendtoGrave(g,REASON_EFFECT)
+	if chk==0 then return c:IsAbleToGraveAsCost() end
+	Duel.SendtoGrave(c,REASON_COST)
 end
 function cod.cfilter(c)
 	return c:IsSetCard(0x33F) and c:IsAbleToHand()

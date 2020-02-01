@@ -71,11 +71,12 @@ function cod.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.Equip(tp,tc,c,false) then return end
 	aux.SetUnionState(tc)
 	local eg=Duel.GetMatchingGroup(cod.cfilter2,tp,LOCATION_GRAVE,0,nil)
-	if eg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+	if eg:GetCount()>0 and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_MZONE,0)>1
+		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 		local eqc=eg:Select(tp,1,1,nil):GetFirst()
 		if not eqc then return end
-		local mg=Duel.GetMatchingGroup(cod.mfilter,tp,LOCATION_MZONE,0,nil,eqc)
+		local mg=Duel.GetMatchingGroup(cod.mfilter,tp,LOCATION_MZONE,0,e:GetHandler(),eqc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 		local mc=mg:Select(tp,1,1,e:GetHandler()):GetFirst()
 		if not mc then return end

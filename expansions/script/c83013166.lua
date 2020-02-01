@@ -125,8 +125,9 @@ function cod.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,cod.costfilter,1,1,REASON_COST,nil)
 end
 function cod.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_COST)
-		and re:GetHandler():IsSetCard(0x33F) and re:IsActiveType(TYPE_MONSTER)
+	return (e:GetHandler():IsReason(REASON_COST) and re:GetHandler():IsSetCard(0x33f))
+		or (re:GetHandler():IsSetCard(0x33f) and bit.band(r,REASON_EFFECT)~=0)
+		and re:GetHandler():IsType(TYPE_MONSTER)
 end
 function cod.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsDestructable() end

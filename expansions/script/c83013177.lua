@@ -66,10 +66,9 @@ function c83013177.seqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	local eqg=Duel.SelectMatchingCard(tp,c83013177.eqfilter,tp,LOCATION_DECK,0,1,1,nil,c)
-	local eqc=eqg:GetFirst()
-	if eqc and c:IsFaceup() and c:IsRelateToEffect(e) 
-		and aux.CheckUnionEquip(eqc,c) and Duel.Equip(tp,eqc,c,false) then
-		aux.SetUnionState(eqc)
+	local ec=eqg:GetFirst()
+	if ec and c:IsFaceup() and aux.CheckUnionEquip(ec,c) and Duel.Equip(tp,ec,c) then
+		aux.SetUnionState(ec)
 --		local e1=Effect.CreateEffect(c)
 --		e1:SetType(EFFECT_TYPE_SINGLE)
 --		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
@@ -104,7 +103,7 @@ function c83013177.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		local g=Duel.SelectMatchingCard(tp,c83013177.eqfilter2,tp,LOCATION_MZONE,0,1,1,nil,tc)
 		local gc=g:GetFirst()
-		if gc:IsFaceup() and Duel.Equip(tp,tc,gc,false) then
+		if gc:IsFaceup() and Duel.Equip(tp,tc,gc) then
 			local c=e:GetHandler()
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)

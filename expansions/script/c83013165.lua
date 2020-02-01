@@ -118,8 +118,9 @@ end
 
 --Send 1 "Seatector" 
 function cod.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsReason(REASON_COST)
-		and re:GetHandler():IsSetCard(0x33F) and re:IsActiveType(TYPE_MONSTER)
+	return (e:GetHandler():IsReason(REASON_COST) and re:GetHandler():IsSetCard(0x33f))
+		or (re:GetHandler():IsSetCard(0x33f) and bit.band(r,REASON_EFFECT)~=0)
+		and re:GetHandler():IsType(TYPE_MONSTER)
 end
 function cod.cfilter(c)
 	return c:IsSetCard(0x33F) and c:IsAbleToGrave()
