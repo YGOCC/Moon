@@ -67,7 +67,7 @@ function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 end
 function cid.filter(c)
-	return not c:IsCode(id) and c:IsSetCard(0xf7a) and c:IsType(TYPE_MONSTER)
+	return not c:IsCode(id) and c:IsSetCard(0xf7a) and c:GetType()&0x81==0x81
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>(e:IsHasType(EFFECT_TYPE_QUICK_O) and 1 or 0)

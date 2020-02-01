@@ -38,8 +38,7 @@ function cid.RitualUltimateFilter(c,filter,e,tp,m1,m2,level_function,greater_or_
 		if not mg:IsContains(gc) then return false end
 		Duel.SetSelectedCard(gc)
 	end
-	local lv=level_function(c)
-	if trap then lv=c:GetOriginalLevel() end
+	local lv=trap and c:GetOriginalLevel() or level_function(c)
 	aux.GCheckAdditional=aux.RitualCheckAdditional(c,lv,greater_or_equal)
 	local res=mg:CheckSubGroup(aux.RitualCheck,1,lv,tp,c,lv,greater_or_equal)
 	aux.GCheckAdditional=nil

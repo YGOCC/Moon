@@ -67,7 +67,7 @@ function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetCardData(CARDDATA_TYPE,TYPE_TRAP)
 end
 function cid.cpfilter(c)
-	return c:IsSetCard(0xf7a) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and not c:IsCode(id) and c:CheckActivateEffect(false,true,false)~=nil
+	return c:IsSetCard(0xf7a) and c:GetType()&0x81==0x81 and c:IsAbleToDeck() and not c:IsCode(id) and c:CheckActivateEffect(false,true,false)~=nil
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cpfilter,tp,LOCATION_GRAVE,0,1,nil) end

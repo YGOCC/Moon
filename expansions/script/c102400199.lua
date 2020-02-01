@@ -47,7 +47,7 @@ function cid.filter2(c,e,tp,mc)
 	else i1,i2=Duel.ReadCard(c,CARDDATA_LEVEL),mc:GetLevel() end
 	local sg=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_HAND+LOCATION_SZONE,0,c,e,tp,c,mc)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if Duel.IsPlayerAffectedByEffect(tp,id) then ft=1 end
+	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	return sg:CheckWithSumGreater(cid.levelf,i1+i2,1,ft)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -71,7 +71,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	mat:AddCard(mc2)
 	local sg=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_HAND+LOCATION_SZONE,0,mc,e,tp,mc,mc2)
 	if mc:IsLocation(LOCATION_MZONE) then ft=ft+1 end
-	if Duel.IsPlayerAffectedByEffect(tp,id) then ft=1 end
+	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	local i1,i2
 	if mc:GetLevel()>0 then i1,i2=mc:GetLevel(),Duel.ReadCard(mc2,CARDDATA_LEVEL)
 	else i1,i2=Duel.ReadCard(mc,CARDDATA_LEVEL),mc2:GetLevel() end

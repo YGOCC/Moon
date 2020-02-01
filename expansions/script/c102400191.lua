@@ -60,11 +60,9 @@ function cid.ssetop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function cid.rfilter(c,e,tp)
 	local trap=c:IsLocation(LOCATION_SZONE)
-	if (trap and bit.band(c:GetType(),0x81)~=0x81) or not c:IsSetCard(0xf7a)
+	if (not trap and bit.band(c:GetType(),0x81)~=0x81) or not c:IsSetCard(0xf7a)
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,trap,true) then return false end
-	local lv=c:GetLevel()
-	if trap then lv=c:GetOriginalLevel() end
-	return lv<=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
+	return trap and c:GetOriginalLevel() or c:GetLevel()<=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.rfilter,tp,0x1a,0,1,e:GetHandler(),e,tp) end
