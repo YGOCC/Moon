@@ -1,5 +1,6 @@
 --Seatector Commander
 --Keddy was here~
+--senpai, too :pac:
 local function ID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -62,8 +63,8 @@ function cod.initial_effect(c)
     e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e2:SetRange(LOCATION_MZONE)
     e2:SetCountLimit(1)
-    e2:SetTarget(cod.eqtg)
-    e2:SetOperation(cod.eqop)
+    e2:SetTarget(cod.eqtg2)
+    e2:SetOperation(cod.eqop2)
     c:RegisterEffect(e2)
 	--Special Summon
 	local e7=Effect.CreateEffect(c)
@@ -144,26 +145,26 @@ function cod.ecfilter2(ec,mc)
 	local ct1,ct2=mc:GetUnionCount()
 	return mc:IsFaceup() and mc:IsSetCard(0x33F) and ec:CheckEquipTarget(mc) and ec:GetCode()~=mc:GetCode() and ct2==0
 end
-function cod.mfilter(c)
+function cod.mfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x33F) 
 		and Duel.IsExistingMatchingCard(cod.ecfilter1,tp,LOCATION_DECK,0,1,nil,c)
 end
-function cod.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cod.eqtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cod.ecfilter1(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 
-		and Duel.IsExistingTarget(cod.mfilter,tp,LOCATION_MZONE,0,1,nil) end
+		and Duel.IsExistingTarget(cod.mfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,cod.mfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.SetOperaionInfo(0,CATEGORY_EQUIP,g,1,0,0)
+	local g=Duel.SelectTarget(tp,cod.mfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
-function cod.eqop(e,tp,eg,ep,ev,re,r,rp)
+function cod.eqop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local eg=Duel.GetMatchingGroup(cod.ecfilter1,tp,LOCATION_DECK,0,nil,tc)
 	if tc and tc:IsRelateToEffect(e) and eg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
 		local eqc=eg:FilterSelect(tp,cod.ecfilter1,1,1,nil,tc):GetFirst()
 		if not eqc then return end
-		if not Duel.Equip(tp,eqc,tc,false) then return end
+		if not Duel.Equip(tp,eqc,tc) then return end
 		eqc:RegisterFlagEffect(eqc:GetCode(),RESET_EVENT+0x7e0000+RESET_PHASE+PHASE_END,0,1)
 		aux.SetUnionState(eqc)
 	end
