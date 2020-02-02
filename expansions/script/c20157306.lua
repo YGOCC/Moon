@@ -17,7 +17,8 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.damop)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1)
 	e3:SetCategory(CATEGORY_TOKEN+CATEGORY_SPECIAL_SUMMON)
@@ -27,7 +28,7 @@ function cid.initial_effect(c)
 	c:SetUniqueOnField(1,0,id)
 end
 function cid.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(aux.FilterEqualFunction(Card.GetSummonLocation,LOCATION_EXTRA),1,nil)
+	return eg:IsExists(aux.AND(aux.FilterEqualFunction(Card.GetSummonLocation,LOCATION_EXTRA),aux.NOT(aux.FilterEqualFunction(Card.GetSummonPlayer,tp))),1,nil)
 end
 function cid.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

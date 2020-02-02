@@ -83,7 +83,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsCode,2,nil,CARD_DRAGON_EGG_TOKEN) end
-	Duel.Release(Duel.SelectReleaseGroup(tp,nil,2,2,nil),REASON_COST)
+	Duel.Release(Duel.SelectReleaseGroup(tp,Card.IsCode,2,2,nil,CARD_DRAGON_EGG_TOKEN),REASON_COST)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
