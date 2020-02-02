@@ -77,7 +77,7 @@ end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local ct=Duel.GetMatchingGroupCount(Card.IsCode,tp,LOCATION_ONFIELD,0,1,nil,CARD_DRAGON_EGG_TOKEN)
-		return ct>0 and Duel.GetFieldGroup(tp,LOCATION_DECK,0)>=ct
+		return ct>0 and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=ct
 	end
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
