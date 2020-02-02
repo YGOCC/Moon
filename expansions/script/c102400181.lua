@@ -13,6 +13,9 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetOperation(cid.op)
+	c:RegisterEffect(e2)
 end
 function cid.tfilter(c)
 	return (c:IsFaceup() or not c:IsLocation(LOCATION_ONFIELD+LOCATION_REMOVED)) and c:IsSetCard(0xf7a)
@@ -23,34 +26,27 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not g or not g:IsExists(cid.tfilter,1,e:GetHandler()) or not g:IsExists(Card.IsAbleToHand,1,nil)
 		or not Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then return end
 	Duel.Hint(HINT_CARD,0,id)
-	if Duel.SendtoHand(g,nil,REASON_EFFECT)==0 then return end
-	local g1=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
-	local g2=Duel.GetMatchingGroup(cid.thfilter,tp,LOCATION_DECK,0,nil)
-	local b1,b2=#g1>0,#g2>0
-	if b1 and (not b2 or Duel.SelectOption(tp,1102,1109)==0) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=g1:Select(tp,1,1,nil)
-		Duel.HintSelection(g)
-		local tc=g:GetFirst()
-		if Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e1:SetCode(EVENT_PHASE+PHASE_END)
-			e1:SetReset(RESET_PHASE+PHASE_END,2)
-			e1:SetLabel(Duel.GetTurnCount())
-			e1:SetLabelObject(tc)
-			e1:SetCountLimit(1)
-			e1:SetCondition(cid.retcon)
-			e1:SetOperation(function(te) Duel.ReturnToField(te:GetLabelObject()) end)
-			Duel.RegisterEffect(e1,tp)
-		end
-	else
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=g2:Select(tp,1,1,nil)
-		if #g>0 then
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,g)
-		end
+	Duel.Hint(HINT_OPSELECTED,0,1104)
+	Duel.SendtoHand(g,nil,REASON_EFFECT)
+end
+function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	if rc:IsControler(tp) or not re:IsActiveType(TYPE_MONSTER) or not rc:IsLevelAbove(5) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.HintSelection(g)
+	local tc=g:GetFirst()
+	if Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_END)
+		e1:SetReset(RESET_PHASE+PHASE_END,2)
+		e1:SetLabel(Duel.GetTurnCount())
+		e1:SetLabelObject(tc)
+		e1:SetCountLimit(1)
+		e1:SetCondition(cid.retcon)
+		e1:SetOperation(function(te) Duel.ReturnToField(te:GetLabelObject()) end)
+		Duel.RegisterEffect(e1,tp)
 	end
 end
 function cid.filter(c)

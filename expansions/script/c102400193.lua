@@ -13,6 +13,9 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetOperation(cid.op)
+	c:RegisterEffect(e2)
 end
 function cid.tfilter(c)
 	return (c:IsFaceup() or not c:IsLocation(LOCATION_ONFIELD+LOCATION_REMOVED)) and c:IsSetCard(0xf7a)
@@ -23,7 +26,14 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not g or not g:IsExists(cid.tfilter,1,e:GetHandler()) or not g:IsExists(Card.IsAbleToHand,1,nil)
 		or not Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then return end
 	Duel.Hint(HINT_CARD,0,id)
-	if Duel.SendtoHand(g,nil,REASON_EFFECT)==0 then return end
+	Duel.Hint(HINT_OPSELECTED,0,1104)
+	Duel.SendtoHand(g,nil,REASON_EFFECT)
+end
+function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	if rc:IsControler(tp) or not re:IsActiveType(TYPE_MONSTER) or not rc:IsLevelAbove(5) then return end
+	Duel.Hint(HINT_CARD,0,id)
+	Duel.Hint(HINT_OPSELECTED,0,aux.Stringid(id,1))
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_MZONE,0,nil)
 	local c=e:GetHandler()
 	for tc in aux.Next(g) do
