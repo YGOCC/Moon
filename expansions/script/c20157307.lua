@@ -29,7 +29,7 @@ function cid.initial_effect(c)
 	e3:SetDescription(1109)
 	e3:SetCost(cid.hcost)
 	e3:SetTarget(cid.target)
-	e3:SetOperation(cid,operation)
+	e3:SetOperation(cid.operation)
 	c:RegisterEffect(e3)
 end
 function cid.hcost(e,tp,eg,ep,ev,re,r,rp,chk)

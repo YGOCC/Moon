@@ -81,7 +81,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsCode,1,nil,CARD_DRAGON_EGG_TOKEN) end
-	Duel.Release(Duel.SelectReleaseGroup(tp,nil,1,1,nil),REASON_COST)
+	Duel.Release(Duel.SelectReleaseGroup(tp,Card.IsCode,1,1,nil,CARD_DRAGON_EGG_TOKEN),REASON_COST)
 end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end
