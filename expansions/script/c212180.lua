@@ -1,5 +1,6 @@
 --Alternative Dark Magician Girl
 function c212180.initial_effect(c)
+	aux.AddCodeList(c,38033121)
 	--spsummon proc
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
