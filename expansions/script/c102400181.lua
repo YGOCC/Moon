@@ -31,7 +31,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
-	if rc:IsControler(tp) or not re:IsActiveType(TYPE_MONSTER) or not rc:IsLevelAbove(5) then return end
+	if rc:IsControler(tp) or not re:IsActiveType(TYPE_MONSTER) or not rc:IsLevelBelow(4) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.HintSelection(g)
