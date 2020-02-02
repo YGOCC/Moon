@@ -25,7 +25,7 @@ end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) end
-	c:RemoveOverlayCard(c,1,1,REASON_COST)
+	c:RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,3) end

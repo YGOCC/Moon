@@ -58,9 +58,9 @@ function cid.cfilter(c)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_ONFIELD,0,nil)
-	if chk==0 then return g:CheckSubGroup(function() return g:IsExists(Card.IsType,1,nil,TYPE_PENDULUM) end,3,3) end
+	if chk==0 then return g:CheckSubGroup(function(sg) return sg:IsExists(Card.IsType,1,nil,TYPE_PENDULUM) end,3,3) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	Duel.SendtoDeck(g:SelectSubGroup(tp,function() return g:IsExists(Card.IsType,1,nil,TYPE_PENDULUM) end,false,3,3),nil,2,REASON_COST)
+	Duel.SendtoDeck(g:SelectSubGroup(tp,function(sg) return sg:IsExists(Card.IsType,1,nil,TYPE_PENDULUM) end,false,3,3),nil,2,REASON_COST)
 end
 function cid.spfilter(c,e,tp)
 	local lv=c:GetLevel()
