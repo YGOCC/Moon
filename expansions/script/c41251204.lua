@@ -23,7 +23,7 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
 	aux.AddFusionProcFunRep(c,cid.cfilter2,2,false)
-	local e4=aux.AddContactFusionProcedure(c,cid.cfilter,LOCATION_ONFIELD,LOCATION_ONFIELD,cid.sprop,c)
+	local e4=aux.AddContactFusionProcedure(c,cid.cfilter,LOCATION_ONFIELD,LOCATION_ONFIELD,cid.sprop(c))
 	e4:SetCondition(function(e,tc)
 		if tc==nil then return true end
 		return aux.ContactFusionCondition(cid.cfilter,LOCATION_ONFIELD,LOCATION_ONFIELD)(e,tc)
