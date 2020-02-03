@@ -80,7 +80,8 @@ function cid.PendCondition(e,c,og)
 	local rscale=1-seq==1 and rpz:GetRightScale() or rpz:GetLeftScale()
 	if lscale>rscale then lscale,rscale=rscale,lscale end
 	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 and LOCATION_REMOVED or 0 end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
+	if Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 then loc=loc+LOCATION_REMOVED end
 	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
 	if loc==0 then return false end
 	local g=nil
@@ -111,7 +112,8 @@ function cid.PendOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 		if ft2>0 then ft2=1 end
 		ft=1
 	end
-	if ft1>0 then loc=loc|LOCATION_HAND|Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0) and LOCATION_REMOVED or 0 end
+	if ft1>0 then loc=loc|LOCATION_HAND end
+	if Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0 then loc=loc|LOCATION_REMOVED end
 	if ft2>0 then loc=loc|LOCATION_EXTRA end
 	if og then
 		tg=og:Filter(Card.IsLocation,nil,loc):Filter(cid.PConditionFilter,nil,e,tp,c,eset)
