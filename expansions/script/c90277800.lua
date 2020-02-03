@@ -55,18 +55,23 @@ function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return aux.PandActCheck(e) and Duel.GetTurnPlayer()==tp and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 end
+	if chk==0 then 
+		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return false end
+		local g=Duel.GetDecktopGroup(tp,3)
+		local result=g:FilterCount(Card.IsAbleToHand,nil)>0
+		return result
+	end
+	Duel.SetTargetPlayer(tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,LOCATION_DECK)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.ConfirmDecktop(tp,3)
-	local g=Duel.GetDecktopGroup(tp,3)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	Duel.ConfirmDecktop(p,3)
+	local g=Duel.GetDecktopGroup(p,3)
 	if g:GetCount()>0 then
 		if g:IsExists(cid.cfilter,1,nil) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sg=g:Select(tp,1,1,nil)
+			local sg=g:FilterSelect(tp,cid.cfilter,1,1,nil)
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)
 			Duel.ShuffleHand(tp)

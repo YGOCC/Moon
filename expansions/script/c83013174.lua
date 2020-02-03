@@ -162,12 +162,12 @@ function cod.mfilter(c,ec)
 	return c:IsFaceup() and ec:CheckEquipTarget(c) and ct2==0
 end
 function cod.eqtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsFaceup() and cod.ecfilter1(chkc) end
+	if chkc then return false end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 
-		and Duel.IsExistingTarget(cod.ecfilter1,tp,LOCATION_SZONE,0,1,nil) 
+		and Duel.IsExistingTarget(cod.ecfilter1,tp,LOCATION_SZONE,0,1,nil,tp)
 		and Duel.IsExistingMatchingCard(cod.ecfilter2,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,cod.ecfilter1,tp,LOCATION_SZONE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,cod.ecfilter1,tp,LOCATION_SZONE,0,1,1,nil,tp)
 end
 function cod.eqop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -178,9 +178,9 @@ function cod.eqop2(e,tp,eg,ep,ev,re,r,rp)
 		if not eqc then return end
 		local g=Duel.GetMatchingGroup(cod.mfilter,tp,LOCATION_MZONE,0,nil,eqc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local sc=eg:Select(tp,1,1,nil):GetFirst()
+		local sc=g:Select(tp,1,1,nil):GetFirst()
 		if not sc then return end
-		if not Duel.Equip(tp,eqc,sc,false) then return end
+		if not Duel.Equip(tp,eqc,sc) then return end
 		aux.SetUnionState(eqc)
 	end
 end

@@ -1,4 +1,4 @@
---Pandemoniumgraph of Supermacy
+--Pandemoniumgraph of Supremacy
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)

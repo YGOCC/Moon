@@ -54,18 +54,17 @@ function cod.initial_effect(c)
 	e5:SetValue(LOCATION_REMOVED)
 	e5:SetTarget(cod.rmtg)
 	c:RegisterEffect(e5)
-	
-	  --Equip
-    local e2=Effect.CreateEffect(c)
-    e2:SetDescription(aux.Stringid(id,2))
-    e2:SetCategory(CATEGORY_EQUIP)
-    e2:SetType(EFFECT_TYPE_IGNITION)
-    e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-    e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1)
-    e2:SetTarget(cod.eqtg2)
-    e2:SetOperation(cod.eqop2)
-    c:RegisterEffect(e2)
+	--Equip
+    local e6=Effect.CreateEffect(c)
+    e6:SetDescription(aux.Stringid(id,2))
+    e6:SetCategory(CATEGORY_EQUIP)
+    e6:SetType(EFFECT_TYPE_IGNITION)
+    e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
+    e6:SetRange(LOCATION_MZONE)
+    e6:SetCountLimit(1)
+    e6:SetTarget(cod.eqtg2)
+    e6:SetOperation(cod.eqop2)
+    c:RegisterEffect(e6)
 	--Special Summon
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(id,5))
@@ -165,7 +164,7 @@ function cod.eqop2(e,tp,eg,ep,ev,re,r,rp)
 		local eqc=eg:FilterSelect(tp,cod.ecfilter1,1,1,nil,tc):GetFirst()
 		if not eqc then return end
 		if not Duel.Equip(tp,eqc,tc) then return end
-		eqc:RegisterFlagEffect(eqc:GetCode(),RESET_EVENT+0x7e0000+RESET_PHASE+PHASE_END,0,1)
+		eqc:RegisterFlagEffect(eqc:GetCode(),RESET_EVENT+RESETS_STANDARD,0,1)
 		aux.SetUnionState(eqc)
 	end
 end

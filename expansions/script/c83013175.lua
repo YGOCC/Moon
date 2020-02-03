@@ -50,13 +50,13 @@ function cod.initial_effect(c)
     e5:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
     e5:SetRange(LOCATION_SZONE)
     e5:SetCountLimit(1)
-    e5:SetTarget(cod.reptg)
-    e5:SetValue(cod.repval)
-    e5:SetOperation(cod.repop)
+	e5:SetTarget(cod.reptg)
+	e5:SetValue(cod.repval)
+	e5:SetOperation(cod.repop)
     c:RegisterEffect(e5)
     --Special Summon
     local e6=Effect.CreateEffect(c)
-    e6:SetDescription(aux.Stringid(id,2))
+    e6:SetDescription(aux.Stringid(id,3))
     e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
     e6:SetType(EFFECT_TYPE_IGNITION)
     e6:SetRange(LOCATION_HAND)
@@ -123,19 +123,30 @@ end
 function cod.repfilter(c,tp)
     return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_SZONE) and c:IsSetCard(0x33F) and c:GetEquipTarget()
 end
+function cod.desfilter(c,e,tp)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_HAND) and c:IsAttributed(ATTRIBUTE_WATER)
+		and c:IsDestructable(e) and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED)
+end
 function cod.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return eg:IsExists(cod.repfilter,1,nil,tp) end
-    return Duel.SelectYesNo(tp,aux.Stringid(id,2))
+	if chk==0 then return eg:IsExists(cod.repfilter,1,nil,tp)
+		and Duel.IsExistingMatchingCard(cod.desfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	if Duel.SelectEffectYesNo(tp,e:GetHandler(),2) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
+		local g=Duel.SelectMatchingCard(tp,cod.desfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+		e:SetLabelObject(g:GetFirst())
+		g:GetFirst():SetStatus(STATUS_DESTROY_CONFIRMED,true)
+		return true
+	end
+	return false
 end
 function cod.repval(e,c)
-    return cod.repfilter(c,e:GetHandlerPlayer())
+	return cod.repfilter(c,e:GetHandlerPlayer())
 end
 function cod.repop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(Card.IsAttribute,tp,LOCATION_HAND,0,nil,ATTRIBUTE_WATER)
-	local sg=g:Select(tp,1,1,nil)
-	if sg:GetCount()>0 then
-		Duel.Destroy(sg,REASON_EFFECT+REASON_REPLACE)
-	end
+	Duel.Hint(HINT_CARD,2,83013175)
+	local tc=e:GetLabelObject()
+	tc:SetStatus(STATUS_DESTROY_CONFIRMED,false)
+	Duel.Destroy(tc,REASON_EFFECT+REASON_REPLACE)
 end
 
 --Special Summon
