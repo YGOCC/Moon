@@ -18,16 +18,7 @@ function c500310066.initial_effect(c)
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
 	 --destroy
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(500310066,0))
-	e4:SetCategory(CATEGORY_DESTROY)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e4:SetCost(c500310066.descost)
-	e4:SetTarget(c500310066.destg)
-	e4:SetOperation(c500310066.desop)
-	c:RegisterEffect(e4)
+	--*But nobody came.
 		 --disable
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD)
@@ -75,12 +66,12 @@ end
 function c500310066.icop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	while tc do
-		if tc:IsFaceup() and tc:IsControler(1-tp) then tc:AddCounter(0x1015,1) end
+		if tc:IsFaceup() and tc:IsControler(1-tp) then tc:AddCounter(0xa911,1) end
 		tc=eg:GetNext()
 	end
 end
 function c500310066.distg(e,c)
-	return c:GetCounter(0x1015)>0  
+	return c:GetCounter(0xa911)>0  
 end
 function c500310066.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
