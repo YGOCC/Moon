@@ -2,7 +2,7 @@
 function c221812209.initial_effect(c)
 	c:EnableReviveLimit()
 	--Matrials: 3 Level 1 Cyberse monsters
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERS),1,3)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERSE),1,3)
 	--When this card is targeted for an attack or by an opponent's card effect: You can detach 1 material from this card; negate the activation or attack, and if you do, destroy it, and if you do that, Special Summon 1 "Viravolve Pervading Animal" from your Extra Deck.
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
@@ -10,6 +10,7 @@ function c221812209.initial_effect(c)
 	e2:SetCode(EVENT_BE_BATTLE_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetCountLimit(1,221812209)
 	e2:SetCost(c221812209.descost)
 	e2:SetTarget(c221812209.destg)
 	e2:SetOperation(c221812209.operation)

@@ -2,7 +2,7 @@
 function c221812206.initial_effect(c)
 	c:EnableReviveLimit()
 	--Materials: 2 Cyberse monsters
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERS),2,2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERSE),2,2)
 	--Once per turn (Quick Effect): You can target 1 of your "Viravolve" monsters; destroy it, then negate the effects of all other cards in the same column as that monster, until the End Phase.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)

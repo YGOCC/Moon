@@ -2,7 +2,7 @@
 function c221812208.initial_effect(c)
 	c:EnableReviveLimit()
 	--Materials: 3 Level 1 Cyberse monsters
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERS),1,3)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERSE),1,3)
 	--(Quick Effect): You can detach 1 material from this card; inflict 800 points of damage to your opponent.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DAMAGE)
@@ -10,6 +10,7 @@ function c221812208.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCountLimit(1)
 	e1:SetCost(c221812208.cost)
 	e1:SetTarget(c221812208.target)
 	e1:SetOperation(c221812208.operation)

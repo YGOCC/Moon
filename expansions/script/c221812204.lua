@@ -35,7 +35,7 @@ function c221812204.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c221812204.cfilter(c)
-	return c:GetRank()==1 and c:IsRace(RACE_CYBERS)
+	return c:GetRank()==1 and c:IsRace(RACE_CYBERSE)
 end
 function c221812204.condition(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabelObject(eg:GetFirst())

@@ -58,7 +58,7 @@ function c221812205.desrepop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(c:GetBattleTarget(),REASON_EFFECT)
 end
 function c221812205.efcon(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_XYZ and e:GetHandler():GetReasonCard():IsRace(RACE_CYBERS)
+	return r==REASON_XYZ and e:GetHandler():GetReasonCard():IsRace(RACE_CYBERSE)
 end
 function c221812205.efop(e,tp,eg,ep,ev,re,r,rp)
 	--if not Duel.SelectYesNo(tp,aux.Stringid(221812205,0)) then return end

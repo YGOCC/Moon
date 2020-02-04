@@ -2,7 +2,7 @@
 function c221812210.initial_effect(c)
 	c:EnableReviveLimit()
 	--Materials: 3 Level 2 Cyberse monsters. You can also Xyz Summon this card by using any number of Rank 1 or 2 Cyberse Xyz Monsters you control as materials. (Transfer its materials to this card.)
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERS),2,3,c221812210.ovfilter,aux.Stringid(221812210,0),nil,c221812210.ovoperation)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_CYBERSE),2,3,c221812210.ovfilter,aux.Stringid(221812210,0),nil,c221812210.ovoperation)
 	--You can only Xyz Summon "Viravolve Reaper(s)" once per turn.
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -54,7 +54,7 @@ function c221812210.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 function c221812210.ovfilter(c)
-	return c:IsFaceup() and c:IsRankAbove(1) and c:GetRank()<=2 and c:IsRace(RACE_CYBERS)
+	return c:IsFaceup() and c:IsRankAbove(1) and c:GetRank()<=2 and c:IsRace(RACE_CYBERSE)
 end
 function c221812210.xyzop(e,tp,chk,mc)
 	if chk==0 then return true end
