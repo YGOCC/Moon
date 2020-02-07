@@ -30,7 +30,7 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
-	local sg=g:RandomSelect(tp,1)
+	local sg=g:Select(1-tp,1,1,nil)
 	Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
 	if c:IsRelateToEffect(e) and c:IsCanTurnSet() and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		Duel.BreakEffect()
