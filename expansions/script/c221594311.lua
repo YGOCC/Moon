@@ -27,7 +27,7 @@ function cid.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_IMMUNE_EFFECT)
 	e4:SetRange(LOCATION_FZONE)
-	e4:SetCondition(function(e) return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil) end)
+	e4:SetCondition(function(e,tp) return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x2c97,0x4c97) end)
 	e4:SetValue(function(e,re) return e:GetOwnerPlayer()~=re:GetOwnerPlayer() end)
 	c:RegisterEffect(e4)
 	local e3=Effect.CreateEffect(c)
@@ -42,9 +42,6 @@ function cid.initial_effect(c)
 end
 function cid.rmtarget(e,c)
 	return not c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0xc97)
-end
-function cid.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x2c97,0x4c97)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

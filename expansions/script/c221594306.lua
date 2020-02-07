@@ -39,7 +39,7 @@ function cid.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_REMOVE)
 	e3:SetCountLimit(1,id)
-	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
+	e3:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 	e3:SetTarget(cid.target)
 	e3:SetOperation(cid.operation)
 	c:RegisterEffect(e3)
@@ -73,32 +73,21 @@ function cid.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
 function cid.filter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x1c97) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_REMOVED,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
-end
-function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-	local ft=math.min((Duel.GetLocationCount(tp,LOCATION_MZONE)),3)
-	if ft<1 then return end
-	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_REMOVED,0,1,ft,nil,e,tp)
-	if #g>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	end
+	return (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsSetCard(0x1c97) and c:IsType(TYPE_PANDEMONIUM+TYPE_PENDULUM) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA+LOCATION_DECK)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or Duel.SendtoDeck(c,nil,0,REASON_EFFECT)==0
-		or not c:IsLocation(LOCATION_EXTRA) then return end
-	Duel.BreakEffect()
-	Duel.Draw(tp,1,REASON_EFFECT)
+		or not c:IsLocation(LOCATION_EXTRA) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,1,nil,e,tp)
+	if #g>0 then
+		Duel.BreakEffect()
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

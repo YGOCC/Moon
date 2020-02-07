@@ -1,7 +1,7 @@
 --created by Walrus, coded by Lyris
 local cid,id=GetID()
 function cid.initial_effect(c)
-	aux.CannotBeEDMaterial(c,nil,LOCATION_ONFIELD)
+	aux.CannotBeEDMaterial(c,nil,LOCATION_MZONE)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_HAND)

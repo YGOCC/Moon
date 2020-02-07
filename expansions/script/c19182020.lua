@@ -41,7 +41,6 @@ function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 			e1:SetCode(EFFECT_EQUIP_LIMIT)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			e1:SetValue(cid.eqlimit)
-			e1:SetLabelObject(c)
 			tc:RegisterEffect(e1)
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_EQUIP)
@@ -55,7 +54,7 @@ function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	return true
 end
 function cid.eqlimit(e,c)
-	return c==e:GetLabelObject()
+	return c==e:GetOwner()
 end
 function cid.cfilter(c,tc)
 	return c:GetEquipTarget()==tc and c:IsAbleToGraveAsCost()

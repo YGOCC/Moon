@@ -45,7 +45,7 @@ function cid.initial_effect(c)
 end
 function cid.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsRace(RACE_DINOSAUR) then return false end
-	return bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
+	return bit.band(sumtype,SUMMON_TYPE_PANDEMONIUM)==SUMMON_TYPE_PANDEMONIUM
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)

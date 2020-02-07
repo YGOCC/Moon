@@ -56,7 +56,7 @@ function cid.initial_effect(c)
 end
 function cid.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsRace(RACE_DINOSAUR) then return false end
-	return bit.band(sumtype,SUMMON_TYPE_SPECIAL+726)==SUMMON_TYPE_SPECIAL+726
+	return bit.band(sumtype,SUMMON_TYPE_PANDEMONIUM)==SUMMON_TYPE_PANDEMONIUM
 end
 function cid.cfilter(c)
 	return c:IsAbleToGraveAsCost() and c:IsSetCard(0x9b5) and c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM+TYPE_PENDULUM)
