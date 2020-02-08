@@ -94,7 +94,7 @@ function cid.fop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.sfilter0(rg,c,lv)
-	return rg:CheckWithSumEqual(Card.GetLevel,lv,#rg,#rg) and rg:IsExists(function(tc) return tc:IsSetCard(0xc97) and tc:IsNotTuner(c) end,1,nil)
+	return rg:CheckWithSumEqual(Card.GetLevel,lv,#rg,#rg) and rg:IsExists(function(tc) return tc:IsAttribute(ATTRIBUTE_DARK) and tc:IsNotTuner(c) end,1,nil)
 end
 function cid.sfilter1(c,e,tp)
 	local lv=c:GetLevel()-e:GetHandler():GetLevel()
