@@ -93,11 +93,17 @@ function cid.fop(e,tp,eg,ep,ev,re,r,rp)
 		tc:CompleteProcedure()
 	end
 end
+function cid.sfilter0(rg,c,lv)
+	return rg:CheckWithSumEqual(Card.GetLevel,lv,#rg,#rg) and rg:IsExists(function(tc) return tc:IsSetCard(0xc97) and tc:IsNotTuner(c) end,1,nil)
+end
 function cid.sfilter1(c,e,tp)
 	local lv=c:GetLevel()-e:GetHandler():GetLevel()
 	local rg=Duel.GetMatchingGroup(cid.sfilter2,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil)
-	return c:IsType(TYPE_SYNCHRO) and lv>0 and c:IsSetCard(0xc97) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false)
-		and rg:CheckWithSumEqual(Card.GetLevel,lv,1,63)
+	aux.GCheckAdditional=function(g) return g:GetSum(Card.GetLevel)<=lv end
+	local res=c:IsType(TYPE_SYNCHRO) and lv>0 and c:IsSetCard(0xc97) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false)
+		and rg:CheckSubGroup(cid.sfilter0,1,lv,c,lv)
+	aux.GCheckAdditional=nil
+	return res
 end
 function cid.sfilter2(c)
 	return c:GetLevel()>0 and not c:IsType(TYPE_TUNER) and c:IsAbleToRemove()
