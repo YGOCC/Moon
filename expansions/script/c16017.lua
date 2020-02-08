@@ -14,17 +14,7 @@ function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,s.matfilter,3,true)
-	--special summon rule
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_FIELD)
-	e0:SetCode(EFFECT_SPSUMMON_PROC)
-	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e0:SetRange(LOCATION_EXTRA)
-	e0:SetCondition(s.sprcon)
-	e0:SetOperation(s.sprop)
-	e0:SetValue(SUMMON_TYPE_FUSION)
-	e0:SetCountLimit(1,id)
-	c:RegisterEffect(e0)
+	aux.AddContactFusionProcedure(c,Card.IsAbleToRemoveAsCost,LOCATION_ONFIELD,0,Duel.Remove,POS_FACEUP,REASON_COST)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
@@ -39,7 +29,7 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetCode(LOCATION_MZONE)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetCost(s.thcost)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
@@ -49,38 +39,6 @@ end
 s.material_setcode=0x308
 function s.matfilter(c)
 	return c:IsFusionSetCard(0x308) and c:GetLevel()>=3
-end
-function s.spfilter(c)
-	return c:IsFusionSetCard(0x308) and c:IsCanBeFusionMaterial() and c:IsAbleToRemoveAsCost()
-		and c:GetLevel()>=3
-end
-function s.spfilter1(c,tp,g)
-	return g:IsExists(s.spfilter2,1,c,tp,c,g)
-end
-function s.spfilter2(c,tp,mc,g)
-	return Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,mc))>0
-		and g:IsExists(s.spfilter3,1,Group.FromCards(c,mc),tp,c,g)
-end
-function s.spfilter3(c,tp,mc,g)
-	return Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,mc))>0
-end
-function s.sprcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_MZONE,0,nil)
-	return g:IsExists(s.spfilter1,1,nil,tp,g)
-end
-function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_MZONE,0,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g1=g:FilterSelect(tp,s.spfilter1,1,1,nil,tp,g)
-	local mc=g1:GetFirst()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g2=g:FilterSelect(tp,s.spfilter2,1,1,mc,tp,mc)
-	g1:Merge(g2)
-	local g3=g:FilterSelect(tp,s.spfilter3,1,1,g1,tp,mc)
-	g1:Merge(g3)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 end
 function s.bancon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)

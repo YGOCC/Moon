@@ -65,7 +65,6 @@ function s.cfilter(c,tp)
 	return c:GetSummonLocation()==LOCATION_EXTRA and c:GetPreviousControler()==1-tp
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	Debug.Message(eg and #eg>1 and re and re:GetHandler():IsSetCard(0x308))
 	return eg and #eg>1 and re and re:GetHandler():IsSetCard(0x308)
 end
 function s.settg(e,tp,eg,ep,ev,re,r,rp,chk)

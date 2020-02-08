@@ -29,19 +29,20 @@ function s.initial_effect(c)
 	e1:SetDescription(aux.Stringid(16229315,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_FZONE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
+	e2:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
-	e2:SetRange(LOCATION_PZONE)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCountLimit(1)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetCondition(s.descon)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
+	e2:SetCountLimit(1,id+100+EFFECT_COUNT_CODE_OATH)
 	c:RegisterEffect(e2)
 end
 function s.val(e,c)
@@ -50,11 +51,14 @@ end
 function s.sfilter(c,e)
 	return c:IsFaceup() and c:IsSetCard(0x308) and c:IsCanBeEffectTarget(e)
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return false end
 	if chk==0 then return Duel.IsExistingMatchingCard(s.sfilter,tp,LOCATION_MZONE,0,1,nil,e) end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	local g=Duel.SelectMatchingCard(tp,s.sfilter,tp,LOCATION_MZONE,0,1,1,nil,e):GetFirst()
 	if tc then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -66,7 +70,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.dircon(e,tp)
-	local ct=#Duel.GetMatchingGroupCount(Card.IsPosition,tp,0,LOCATION_MZONE,nil,POS_FACEDOWN_DEFENSE)
+	local ct=#Duel.GetMatchingGroup(Card.IsPosition,tp,0,LOCATION_MZONE,nil,POS_FACEDOWN_DEFENSE)
 	return Duel.IsExistingMatchingCard(Card.IsPosition,tp,0,LOCATION_MZONE,ct,nil,POS_FACEDOWN_DEFENSE)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)

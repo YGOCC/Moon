@@ -70,7 +70,6 @@ end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.CheckLPCost(tp,2000)
 	local b=Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,2,nil)
-	Debug.Message(a or b)
 	if chk==0 then return a or b end
 	if a and b then
 		opt=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
