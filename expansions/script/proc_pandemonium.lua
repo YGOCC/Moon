@@ -632,6 +632,7 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 				if pcall(Group.GetFirst,tc) then
 					local tg=tc:Clone()
 					for cc in aux.Next(tg) do
+						cc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 						local e1=Effect.CreateEffect(cc)
 						e1:SetType(EFFECT_TYPE_SINGLE)
 						e1:SetCode(EFFECT_MONSTER_SSET)
@@ -646,7 +647,6 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 							--end
 						else Duel.SSet(cc:GetControler(),cc,cc:GetControler(),false) cc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
 						e1:Reset()
-						cc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 						if not cc:IsLocation(LOCATION_SZONE) then
 							local edcheck=0
 							if cc:IsLocation(LOCATION_EXTRA) then edcheck=TYPE_PENDULUM end
@@ -654,6 +654,7 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 						end
 					end
 				else
+					tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 					local e1=Effect.CreateEffect(tc)
 					e1:SetType(EFFECT_TYPE_SINGLE)
 					e1:SetCode(EFFECT_MONSTER_SSET)
@@ -668,7 +669,6 @@ function Auxiliary.PandSSet(tc,reason,tpe)
 						end
 					else Duel.SSet(tc:GetControler(),tc,tc:GetControler(),false) tc:RegisterFlagEffect(706,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE,1) end
 					e1:Reset()
-					tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)
 					if not tc:IsLocation(LOCATION_SZONE) then
 						local edcheck=0
 						if tc:IsLocation(LOCATION_EXTRA) then edcheck=TYPE_PENDULUM end
