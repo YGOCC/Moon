@@ -97,7 +97,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or Duel.SendtoDeck(c,nil,0,REASON_EFFECT)==0
 		or not c:IsLocation(LOCATION_EXTRA) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,566)
-	local sg=Duel.SelectMatchingCard(tp,cid.filter1,tp,LOCATION_DECK,0,1,nil)
+	local sg=Duel.SelectMatchingCard(tp,cid.filter1,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=sg:GetFirst()
 	if not tc then return end
 	Duel.BreakEffect()
