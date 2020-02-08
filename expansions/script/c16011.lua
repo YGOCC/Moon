@@ -18,6 +18,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCondition(s.condition)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
@@ -38,10 +39,16 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetHandler():GetLinkedGroup()
+	local bool
 	if g:IsExists(Card.IsControler,1,nil,tp) then bool=true end
-	if chk==0 then return #g>0 and (bool and Duel.IsPlayerCanDraw(tp,1)) end
-	if #g>0 then Duel.Destroy(g,REASON_COST) if bool then e:SetLabel(1) end end
-	if bool then Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1) end
+	if chk==0 then return #g>0 and (not bool or (bool and Duel.IsPlayerCanDraw(tp,1))) end
+	Duel.Destroy(g,REASON_COST)
+	if bool then
+		e:SetLabel(1)
+		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	else
+		e:SetLabel(0)
+	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then Duel.Draw(tp,1,REASON_EFFECT) end	
