@@ -49,7 +49,7 @@ function s.initial_effect(c)
 end
 s.material_setcode=0x308
 function s.matfilter(c)
-	return c:IsFusionSetCard(0x308) and c:GetLevel()<=5
+	return c:IsFusionSetCard(0x308) and c:IsLevelBelow(5)
 end
 function s.spfilter(c)
 	return c:IsFusionSetCard(0x308) and c:IsCanBeFusionMaterial() and c:IsAbleToGraveAsCost()
@@ -95,7 +95,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetRange(LOCATION_MZONE)
 		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		e2:SetReset(RESET_PHASE+PHASE_DAMAGE+RESET_EVENT+RESETS_STANDARD)
-		e2:SetValue(math.ceil(tc:GetDefense()/2))
+		e2:SetValue(math.floor(tc:GetDefense()/2))
 		tc:RegisterEffect(e2)
 	end
 end
