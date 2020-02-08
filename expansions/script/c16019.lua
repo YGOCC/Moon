@@ -85,7 +85,7 @@ function s.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	end
 	Duel.SendtoDeck(g1,nil,2,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 end
-function s.desop(e)
+function s.desop(e,tp)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_MZONE):Filter(Card.IsFaceup,nil)
 	Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 	local tg=Duel.GetOperatedGroup()
