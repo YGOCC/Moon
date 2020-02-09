@@ -68,7 +68,7 @@ end
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_TIMELEAP)
 end
 	function cid.buffop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsAttribute,tp,LOCATION_MZONE,0,nil,ATTRIBUTE_WATER)
+	local g=Duel.GetMatchingGroup(function (c) return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER) end,tp,LOCATION_MZONE,0,nil,)
 	local tc=g:GetFirst()
 	while tc do
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -84,7 +84,7 @@ end
 	end
 end
 function cid.lpfilter(c,tp)
-	return c:GetSummonPlayer()==tp and c:IsAttribute(ATTRIBUTE_WATER)
+	return c:GetSummonPlayer()==tp and c:IsAttribute(ATTRIBUTE_WATER) and c:IsFaceup()
 end
 function cid.lpcon(e,tp,eg,ev,re,r,rp)
 return eg:IsExists(cid.lpfilter,1,nil,tp)
@@ -105,6 +105,7 @@ function cid.lpop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(500)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
+		tc=g:GetNext()
 	end
 end
 function cid.revfilter(c,tp)
