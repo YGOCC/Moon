@@ -78,7 +78,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmDecktop(tp,1)
 	local g=Duel.GetDecktopGroup(tp,1)
 	local tc=g:GetFirst()
-	if tc:IsSetCard(0xc97) and c:IsLevel(4) then
+	if tc:IsSetCard(0xc97) and tc:IsLevel(4) then
 		Duel.DisableShuffleCheck()
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	else Duel.MoveSequence(tc,1) end
