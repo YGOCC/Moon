@@ -3,7 +3,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,nil,8,aux.FilterBoolFunction(Card.IsSetCard,0xc97),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),aux.FilterBoolFunction(Card.IsCode,id-25,id-24))
+	aux.AddEvoluteProc(c,nil,8,aux.OR(aux.FilterBoolFunction(Card.IsSetCard,0xc97),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK)),aux.FilterBoolFunction(Card.IsCode,id-25,id-24),1)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
 	e0:SetCode(EFFECT_EXTRA_EVOLUTE_MATERIAL)
@@ -120,16 +120,8 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tg then tg(te,tp,eg,ep,ev,re,r,rp,1) end
 	Duel.BreakEffect()
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local etc=g:GetFirst()
-	while etc do
-		etc:CreateEffectRelation(te)
-		etc=g:GetNext()
-	end
+	if g then for etc in aux.Next(g) do etc:CreateEffectRelation(te) end end
 	if op then op(te,tp,eg,ep,ev,re,r,rp) end
 	tc:ReleaseEffectRelation(te)
-	etc=g:GetFirst()
-	while etc do
-		etc:ReleaseEffectRelation(te)
-		etc=g:GetNext()
-	end
+	if g then for etc in aux.Next(g) do etc:ReleaseEffectRelation(te) end end
 end
