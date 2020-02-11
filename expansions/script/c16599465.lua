@@ -2,7 +2,7 @@
 --Script by XGlitchy30
 function c16599465.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.NonTuner(Card.IsRace,RACE_FAIRY),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.NonTuner(Card.IsSetCard,0x1559),1)
 	c:EnableReviveLimit()
 	--target protection
 	local e0=Effect.CreateEffect(c)
@@ -12,12 +12,12 @@ function c16599465.initial_effect(c)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetValue(c16599465.efilter)
 	c:RegisterEffect(e0)
-	--bounce set cards
+	--bounce
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCondition(c16599465.thcon)
 	e1:SetCost(c16599465.thcost)
 	e1:SetTarget(c16599465.thtg)
@@ -36,9 +36,9 @@ function c16599465.initial_effect(c)
 	-- c:RegisterEffect(e2)
 	--search
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_REMOVE)
 	e3:SetCountLimit(1,16599465)
 	e3:SetCondition(c16599465.sccon)
@@ -52,8 +52,9 @@ function c16599465.mfilter(c,sync)
 		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
 		and c:IsAbleToRemoveAsCost()
 end
-function c16599465.thfilter(c)
-	return c:IsFacedown() and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+function c16599465.tdfilter(c,tp)
+	return c:IsSetCard(0x1559) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and (c:IsFaceup() or not c:IsLocation(LOCATION_REMOVED))
+		and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil)
 end
 function c16599465.costfilter(c)
 	return c:IsRace(RACE_FAIRY) and c:IsAbleToRemoveAsCost()
@@ -66,6 +67,9 @@ function c16599465.scfilter(c)
 end
 function c16599465.exclude(c,card)
 	return c==card
+end
+function c16599465.spfilter(c,e,tp)
+	return c:IsFaceup() and c:IsSetCard(0x1559) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --target protection
 function c16599465.efilter(e,re,rp)
@@ -88,13 +92,24 @@ function c16599465.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c16599465.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(c16599465.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
-	local sg=Duel.GetMatchingGroup(c16599465.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,sg:GetCount(),0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(c16599465.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,1-tp,LOCATION_ONFIELD)
 end
 function c16599465.thop(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(c16599465.thfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	Duel.SendtoHand(sg,nil,REASON_EFFECT)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectMatchingCard(tp,c16599465.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,tp)
+	if #g>0 then
+		Duel.HintSelection(g)
+		if Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 and Duel.GetOperatedGroup():GetFirst():IsLocation(LOCATION_DECK) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+			local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,1,nil)
+			if #sg>0 then
+				Duel.HintSelection(sg)
+				Duel.SendtoHand(g,nil,REASON_EFFECT)
+			end
+		end
+	end
 end
 --draw
 -- function c16599465.damcon(e,tp,eg,ep,ev,re,r,rp)
@@ -120,35 +135,19 @@ function c16599465.sccon(e,tp,eg,ep,ev,re,r,rp)
 		and re:GetHandler():IsRace(RACE_FAIRY) and re:GetHandler():IsType(TYPE_SYNCHRO)
 end
 function c16599465.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16599465.tgfilter,tp,LOCATION_HAND,0,1,e:GetHandler())
-		and Duel.IsExistingMatchingCard(c16599465.scfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c16599465.spfilter,tp,LOCATION_REMOVED,0,1,nil,e,tp) 
 	end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_HAND)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_REMOVED)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
 end
 function c16599465.scop(e,tp,eg,ep,ev,re,r,rp)
-	local dg=Duel.GetMatchingGroup(c16599465.scfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,nil)
-	if dg:GetCount()<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c16599465.tgfilter,tp,LOCATION_HAND,0,1,dg:GetCount(),e:GetHandler())
+	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c16599465.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		if Duel.SendtoGrave(g,REASON_EFFECT)~=0 then
-			local sc=Group.CreateGroup()
-			local op=Duel.GetOperatedGroup()
-			local check=op:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
-			if check>0 then
-				for i=1,check do
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-					local tc=dg:Select(tp,1,1,nil):GetFirst()
-					sc:AddCard(tc)
-					dg:Remove(c16599465.exclude,nil,tc)
-				end
-			end
-			if sc:GetCount()==check then
-				Duel.SendtoHand(sc,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,sc)
-			end
-		end
+		Duel.HintSelection(g)
+		Duel.SpecialSummon(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP)
 	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)

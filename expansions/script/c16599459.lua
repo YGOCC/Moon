@@ -22,7 +22,7 @@ function c16599459.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EVENT_PHASE+PHASE_END)
-	e2:SetRange(LOCATION_HAND)
+	e2:SetRange(LOCATION_HAND+LOCATION_GRAVE)
 	e2:SetCountLimit(1,16599459)
 	e2:SetLabel(0)
 	e2:SetCondition(c16599459.drawcon)
@@ -30,9 +30,9 @@ function c16599459.initial_effect(c)
 	e2:SetTarget(c16599459.drawtg)
 	e2:SetOperation(c16599459.drawop)
 	c:RegisterEffect(e2)
-	--equip
+	--atk
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_EQUIP)
+	e3:SetCategory(CATEGORY_ATKCHANGE)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_REMOVE)
@@ -82,17 +82,19 @@ function c16599459.reset(e,tp,eg,ep,ev,re,r,rp)
 	e:GetLabelObject():SetLabel(0)
 end
 --filters
-function c16599459.cfilter(c,lv)
-	return c:IsSetCard(0x1559) and c:GetLevel()>lv and c:IsAbleToRemoveAsCost()
+function c16599459.cfilter(c)
+	return c:IsSetCard(0x1559) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost()
+		and (c:IsFaceup() or not c:IsLocation(LOCATION_REMOVED))
 end
 function c16599459.eqfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and c:GetAttack()==0 and c:GetLevel()>0
+	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and c:GetAttack()==0
 end
 function c16599459.eqlimit(e,c)
 	return c==e:GetLabelObject()
 end
 function c16599459.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x1559) and re:GetHandler():GetLevel()==e:GetHandler():GetLevel() and not re:GetHandler():IsType(TYPE_SYNCHRO)
+		and not re:GetHandler():IsCode(16599459)
 end
 function c16599459.eq(c,card)
 	return c==card
@@ -113,23 +115,21 @@ end
 function c16599459.drawcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(c16599459.cfilter,tp,LOCATION_DECK,0,1,c,c:GetLevel())
-		and Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_DECK,0,nil)-1>0
+		and Duel.IsExistingMatchingCard(c16599459.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil)
 	end
-	local rg=Group.CreateGroup()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c16599459.cfilter,tp,LOCATION_DECK,0,1,1,c,c:GetLevel())
-	rg:AddCard(c)
-	rg:AddCard(g:GetFirst())
-	if rg:GetCount()==2 then
-		Duel.Remove(rg,POS_FACEUP,REASON_COST)
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectMatchingCard(tp,c16599459.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+	if #g>0 then
+		Duel.HintSelection(g)
+		Duel.SendtoDeck(g,nil,2,REASON_COST)
 	end
 end
 function c16599459.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
 	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	Duel.SetTargetParam(2)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 function c16599459.drawop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
@@ -138,48 +138,27 @@ end
 --equip
 function c16599459.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_COST) and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_MONSTER)
-		and re:GetHandler():IsRace(RACE_FAIRY) and e:GetHandler():IsPreviousLocation(LOCATION_DECK)
+		and re:GetHandler():IsRace(RACE_FAIRY) and e:GetHandler():IsPreviousLocation(LOCATION_DECK+LOCATION_GRAVE)
 end
 function c16599459.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() and c16599459.eqfilter(chkc) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingTarget(c16599459.eqfilter,tp,LOCATION_MZONE,0,1,e:GetHandler())
+	if chk==0 then return Duel.IsExistingTarget(c16599459.eqfilter,tp,LOCATION_MZONE,0,1,nil)
 	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	Duel.SelectTarget(tp,c16599459.eqfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	Duel.SelectTarget(tp,c16599459.eqfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c16599459.thop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
 	if not tc then return end
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or not tc:IsRelateToEffect(e) or c:IsFacedown() or tc:IsFacedown() then return end
-	Duel.Equip(tp,c,tc)
-	--equip limit
-	local e1=Effect.CreateEffect(c)
+	if not tc:IsRelateToEffect(e) or tc:IsFacedown() then return end
+	--update atk
+	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_EQUIP_LIMIT)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetValue(c16599459.eqlimit)
-	e1:SetLabelObject(tc)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
-	c:RegisterEffect(e1)
-	--tuner state
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_EQUIP)
-	e2:SetCode(EFFECT_ADD_TYPE)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetValue(TYPE_TUNER)
-	e2:SetReset(RESET_EVENT+0x1fe0000)
-	c:RegisterEffect(e2)
-	--update level
-	local e2x=Effect.CreateEffect(c)
-	e2x:SetType(EFFECT_TYPE_EQUIP)
-	e2x:SetCode(EFFECT_CHANGE_LEVEL)
-	e2x:SetRange(LOCATION_SZONE)
-	e2x:SetValue(4)
-	e2x:SetReset(RESET_EVENT+0x1fe0000)
-	c:RegisterEffect(e2x)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(tc:GetTextDefense())
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	tc:RegisterEffect(e1)
 	--activation limit
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
@@ -189,11 +168,4 @@ function c16599459.thop(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetValue(c16599459.aclimit)
 	e3:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e3,tp)
-end
---tuner state
-function c16599459.tunercon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c16599459.eq,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,e:GetHandler():GetEquipTarget())
-end
-function c16599459.tunertg(e,c)
-	return c==e:GetHandler():GetEquipTarget()
 end

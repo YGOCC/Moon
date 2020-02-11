@@ -118,6 +118,9 @@ end
 function c16599467.nontunermat(c)
 	return not c:IsType(TYPE_TUNER) and c:IsRace(RACE_FAIRY)
 end
+function c16599467.dfilter(c)
+	return c:IsFacedown() or not c:IsRace(RACE_FAIRY)
+end
 function c16599467.mfilter(c,sync)
 	return c:IsLocation(LOCATION_GRAVE)
 		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
@@ -159,15 +162,13 @@ function c16599467.drycost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c16599467.drytg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	local sg=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(c16599467.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local sg=Duel.GetMatchingGroup(c16599467.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,#sg,0,0)
 end
 function c16599467.dryop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local sg=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local sg=Duel.GetMatchingGroup(c16599467.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if #sg>0 then
-		Duel.HintSelection(sg)
 		Duel.Destroy(sg,REASON_EFFECT)
 	end
 end
@@ -212,9 +213,9 @@ function c16599467.sccon(e,tp,eg,ep,ev,re,r,rp)
 		and re:GetHandler():IsRace(RACE_FAIRY) and re:GetHandler():IsType(TYPE_SYNCHRO)
 end
 function c16599467.sccost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c16599467.costfilter,tp,LOCATION_DECK,0,2,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c16599467.costfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c16599467.costfilter,tp,LOCATION_DECK,0,2,2,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,c16599467.costfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,e:GetHandler())
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
@@ -228,9 +229,7 @@ function c16599467.scop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SINGLE_RANGE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetRange(LOCATION_MZONE)
 		e1:SetValue(tc:GetDefense())
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
 		tc:RegisterEffect(e1)

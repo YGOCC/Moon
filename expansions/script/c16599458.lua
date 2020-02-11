@@ -45,6 +45,7 @@ end
 --filters
 function c16599458.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x1559) and re:GetHandler():GetLevel()==e:GetHandler():GetLevel() and not re:GetHandler():IsType(TYPE_SYNCHRO)
+		and not re:GetHandler():IsCode(16599458)
 end
 function c16599458.spfilter(c,e,tp)
 	return c:IsRace(RACE_FAIRY) and c:GetAttack()==0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

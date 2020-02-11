@@ -12,7 +12,7 @@ function c16599463.initial_effect(c)
 	e0:SetRange(LOCATION_MZONE)
 	e0:SetValue(c16599463.efilter)
 	c:RegisterEffect(e0)
-	--battle protection
+	--protection
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -33,8 +33,9 @@ function c16599463.initial_effect(c)
 	-- e2:SetTarget(c16599463.damtg)
 	-- e2:SetOperation(c16599463.damop)
 	-- c:RegisterEffect(e2)
-	--battle protection (synchro)
+	--protection (synchro)
 	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DISABLE)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_REMOVE)
@@ -51,7 +52,7 @@ function c16599463.mfilter(c,sync)
 		and c:IsAbleToRemoveAsCost()
 end
 function c16599463.lvfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x1559) and c:GetLevel()>0 and c:GetLevel()<=7
+	return c:IsFaceup() and (not c:IsType(TYPE_EFFECT) or not c:IsDisabled())
 end
 --target protection
 function c16599463.efilter(e,re,rp)
@@ -82,6 +83,9 @@ function c16599463.bpop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(1)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	c:RegisterEffect(e2)
 	c:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16599463,0))
 end
 --inflict damage
@@ -110,13 +114,28 @@ function c16599463.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c16599463.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c16599463.lvfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c16599463.lvfilter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c16599463.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c16599463.lvfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,c16599463.lvfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
 function c16599463.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
+		if tc:IsType(TYPE_EFFECT) and not tc:IsDisabled() then
+			Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_DISABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_DISABLE_EFFECT)
+			e2:SetValue(RESET_TURN_SET)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e2)
+		end
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -124,6 +143,9 @@ function c16599463.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(1)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+		c:RegisterEffect(e2)
 		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16599463,0))
 	end
 end

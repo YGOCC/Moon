@@ -46,14 +46,16 @@ function c16599457.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 --filters
-function c16599457.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x1559) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_TUNER)
+function c16599457.cfilter(c,tp)
+	return c:IsFaceup() and c:IsSetCard(0x1559) and c:IsType(TYPE_MONSTER)
+		and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or c:IsLocation(LOCATION_MZONE))
 end
 function c16599457.costfilter(c,lv)
 	return c:IsSetCard(0x1559) and c:IsType(TYPE_MONSTER) and c:GetLevel()<lv and c:IsAbleToRemoveAsCost()
 end
 function c16599457.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x1559) and re:GetHandler():GetLevel()==e:GetHandler():GetLevel() and not re:GetHandler():IsType(TYPE_SYNCHRO)
+		and not re:GetHandler():IsCode(16599457)
 end
 function c16599457.costfilter2(c)
 	return c:IsSetCard(0x1559) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemoveAsCost()
@@ -65,18 +67,16 @@ end
 --spsummon
 function c16599457.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return not c:IsPublic() and Duel.IsExistingMatchingCard(c16599457.cfilter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return not c:IsPublic() and Duel.IsExistingMatchingCard(c16599457.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c16599457.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c16599457.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
 end
 function c16599457.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	end
+	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c16599457.spop(e,tp,eg,ep,ev,re,r,rp)

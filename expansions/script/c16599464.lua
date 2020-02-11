@@ -54,7 +54,7 @@ function c16599464.mfilter(c,sync)
 		and c:IsAbleToRemoveAsCost()
 end
 function c16599464.spfilter(c,e,tp)
-	return c:IsRace(RACE_FAIRY) and not c:IsType(TYPE_TUNER) and c:GetAttack()==0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_FAIRY) and c:GetAttack()==0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c16599464.costfilter(c)
 	return c:IsRace(RACE_FAIRY) and c:IsAbleToRemoveAsCost()
@@ -96,15 +96,7 @@ function c16599464.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c16599464.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
-		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_ADD_TYPE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			e1:SetValue(TYPE_TUNER)
-			tc:RegisterEffect(e1)
-		end
-		Duel.SpecialSummonComplete()
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 --resource gain

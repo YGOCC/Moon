@@ -38,6 +38,7 @@ function c16599452.spfilter(c,lv,e,tp)
 end
 function c16599452.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x1559) and re:GetHandler():GetLevel()==e:GetHandler():GetLevel() and not re:GetHandler():IsType(TYPE_SYNCHRO)
+		and not re:GetHandler():IsCode(16599452)
 end
 function c16599452.tunerfilter(c)
 	return c:IsFaceup() and not c:IsType(TYPE_TUNER) and c:GetLevel()>1

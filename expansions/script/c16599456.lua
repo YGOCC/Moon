@@ -2,12 +2,12 @@
 --Script by XGlitchy30
 function c16599456.initial_effect(c)
 	--battle protection
-	local e1x=Effect.CreateEffect(c)
-	e1x:SetType(EFFECT_TYPE_SINGLE)
-	e1x:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e1x:SetCondition(c16599456.battleprotection)
-	e1x:SetValue(1)
-	c:RegisterEffect(e1x)
+	-- local e1x=Effect.CreateEffect(c)
+	-- e1x:SetType(EFFECT_TYPE_SINGLE)
+	-- e1x:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	-- e1x:SetCondition(c16599456.battleprotection)
+	-- e1x:SetValue(1)
+	-- c:RegisterEffect(e1x)
 	--target protection
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -109,6 +109,7 @@ function c16599456.battled(c)
 end
 function c16599456.aclimit(e,re,tp)
 	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x1559) and re:GetHandler():GetLevel()==e:GetHandler():GetLevel() and not re:GetHandler():IsType(TYPE_SYNCHRO)
+		and not re:GetHandler():IsCode(16599456)
 end
 function c16599456.thfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_FAIRY) and c:IsAbleToHand()
@@ -120,6 +121,7 @@ end
 --target protection
 function c16599456.efilter(e,re,rp)
 	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(9)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=9)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
+		and bit.band(re:GetHandler():GetSummonLocation(),LOCATION_DECK+LOCATION_EXTRA)>0
 end
 --act limit
 function c16599456.limcon(e)

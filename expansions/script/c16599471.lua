@@ -32,15 +32,15 @@ function c16599471.initial_effect(c)
 	e2:SetOperation(c16599471.rmop)
 	c:RegisterEffect(e2)
 	--enable protection
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e3:SetCode(EVENT_BATTLE_DAMAGE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,10599471)
-	e3:SetCondition(c16599471.damcon)
-	e3:SetOperation(c16599471.damop)
-	c:RegisterEffect(e3)
+	-- local e3=Effect.CreateEffect(c)
+	-- e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	-- e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	-- e3:SetCode(EVENT_BATTLE_DAMAGE)
+	-- e3:SetRange(LOCATION_MZONE)
+	-- e3:SetCountLimit(1,10599471)
+	-- e3:SetCondition(c16599471.damcon)
+	-- e3:SetOperation(c16599471.damop)
+	-- c:RegisterEffect(e3)
 	--gain LP
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(16599471,2))
@@ -86,8 +86,8 @@ function c16599471.valop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_UPDATE_DEFENSE)
-	e1:SetValue(val*1000)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(val*2500)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE)
 	c:RegisterEffect(e1)
 end
@@ -107,16 +107,21 @@ function c16599471.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c16599471.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) and Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_HAND,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_ONFIELD)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_HAND)
 end
 function c16599471.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
-	if g:GetCount()>0 then
+	local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_HAND,nil)
+	if g:GetCount()>0 and #sg>0 then
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_REMOVE)
-		local sg=g:Select(1-tp,1,1,nil)
-		Duel.HintSelection(sg)
-		Duel.Remove(sg,POS_FACEUP,REASON_RULE)
+		local rg=g:Select(1-tp,1,1,nil)
+		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_REMOVE)
+		local rg2=sg:Select(1-tp,1,1,nil)
+		rg:Merge(rg2)
+		Duel.HintSelection(rg)
+		Duel.Remove(rg,POS_FACEUP,REASON_RULE)
 	end
 end
 --enable protection
