@@ -95,8 +95,8 @@ function c160009541.discon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsChainNegatable(ev)
 end
 function c160009541.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
-	e:GetHandler():RemoveEC(tp,3,REASON_COST)
+	 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
 end
 
 function c160009541.distg(e,tp,eg,ep,ev,re,r,rp,chk)
