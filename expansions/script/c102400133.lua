@@ -63,14 +63,11 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.repfilter(c,e)
-	return c:IsFaceup() and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER)
-		and c:IsDestructable(e) and not c:IsReason(REASON_REPLACE)
+	return c:IsFaceup() and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER) and not c:IsReason(REASON_REPLACE)
 end
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(cid.repfilter,1,nil,e) end
-	if Duel.IsExistingMatchingCard(aux.AND(cid.filter1,aux.FilterBoolFunction(Card.IsDestructable,e)),tp,LOCATION_DECK,0,1,nil) then
-		return true
-	else return false end
+	return Duel.IsExistingMatchingCard(aux.AND(cid.filter1,aux.FilterBoolFunction(Card.IsDestructable,e)),tp,LOCATION_DECK,0,1,nil)
 end
 function cid.repval(e,c)
 	return cid.repfilter(c,e)
