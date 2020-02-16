@@ -57,6 +57,9 @@ end
 function cid.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0xc97)
 end
+function cid.tgfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0xc97)
+end
 function cid.tgcon(e)
 	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end
