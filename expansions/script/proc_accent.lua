@@ -62,7 +62,7 @@ Card.GetPreviousLocation=function(c)
 	end
 	if lc==LOCATION_SZONE then
 		if c:GetPreviousSequence()==5 then lc=LOCATION_FZONE
-		elseif c:IsType(TYPE_PENDULUM) and (c:GetPreviousSequence()==0 or c:GetPreviousSequence()==4) and not c:GetPreviousEquipTarget() then lc=LOCATION_PZONE end
+		elseif c:IsType(TYPE_PENDULUM) and (c:GetPreviousSequence()==0 or c:GetPreviousSequence()==4) and not c:GetPreviousEquipTarget() then lc=lc|LOCATION_PZONE end
 	end
 	return lc
 end
