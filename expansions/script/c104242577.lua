@@ -45,6 +45,7 @@ function cid.initial_effect(c)
 	e5:SetOperation(cid.fragop)
 	c:RegisterEffect(e5)
 end
+
 function cid.fragop(e,tp,eg,ep,ev,re,r,rp,chk)	
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
@@ -71,7 +72,8 @@ function cid.gop(e,tp,eg,ep,ev,re,r,rp)
 function cid.indfilter(c)
 	return c:IsFaceup() and c:IsCode(104242571)
 end
-function cid.indcon(c,e,tp)
+function cid.indcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cid.indfilter,tp,LOCATION_FZONE,0,1,nil)
 end
+
 
