@@ -61,9 +61,9 @@ function cid.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeckAsCost,tp,LOCATION_REMOVED,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	Duel.SendtoDeck(Duel.SelectMatchingCard(tp,Card.IsAbleToDeckAsCost,tp,LOCATION_REMOVED,0,1,1,nil),nil,2,REASON_COST)
+	Duel.SendtoDeck(Duel.SelectMatchingCard(tp,Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_REMOVED,0,1,1,nil),nil,2,REASON_COST)
 end
 function cid.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
