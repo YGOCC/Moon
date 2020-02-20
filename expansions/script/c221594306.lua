@@ -64,10 +64,10 @@ function cid.nsop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then Duel.Summon(tp,tc,true,nil) end
 end
 function cid.tgfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xc97)
+	return c:IsFaceup() and c:IsSetCard(0x1c97)
 end
 function cid.tgcon(e)
-	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
+	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function cid.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
