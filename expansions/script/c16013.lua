@@ -66,7 +66,7 @@ function s.atkcon(e)
 end
 function s.desop(e)
 	local g=e:GetHandler():GetLinkedGroup():Filter(Card.IsCanTurnSet,nil)
-	Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
+	Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 	local tg=Duel.GetOperatedGroup()
 	for tc in aux.Next(tg) do
 		local e1=Effect.CreateEffect(e:GetHandler())
