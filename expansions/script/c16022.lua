@@ -47,6 +47,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	e5:SetCode(EVENT_CHAIN_SOLVING)
 	e5:SetCondition(s.discon)
 	e5:SetOperation(s.disop)
+	e5:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e5,tp)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
