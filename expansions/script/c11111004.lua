@@ -1,39 +1,39 @@
+--Arming the Skydian
 function c11111004.initial_effect(c)
---Activate
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c11111004.target)
 	e1:SetOperation(c11111004.activate)
 	c:RegisterEffect(e1)
---recycle
+	--recycle
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(11111004,0))
 	e2:SetCategory(CATEGORY_TODECK)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCondition(aux.exccon)
-	e2:SetCost(c11111004.tdcost)
+	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(c11111004.tdtg)
 	e2:SetOperation(c11111004.tdop)
 	c:RegisterEffect(e2)
 end
+function c11111004.tdfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x223) and c:IsAbleToDeck() and c:IsFaceup()
+end
 function c11111004.filter1(c,e)
-	return c:IsCanBeFusionMaterial() and c:IsAbleToGrave() and not c:IsImmuneToEffect(e)
+	return not c:IsImmuneToEffect(e)
 end
 function c11111004.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_WARRIOR) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
-function c11111004.tdfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x223) and c:IsAbleToDeck()
-end
 function c11111004.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+		local chkf=tp
+		local mg1=Duel.GetFusionMaterial(tp)
 		local res=Duel.IsExistingMatchingCard(c11111004.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -49,8 +49,8 @@ function c11111004.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c11111004.activate(e,tp,eg,ep,ev,re,r,rp)
-	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=Duel.GetMatchingGroup(c11111004.filter1,tp,LOCATION_HAND+LOCATION_MZONE,0,nil,e)
+	local chkf=tp
+	local mg1=Duel.GetFusionMaterial(tp):Filter(c11111004.filter1,nil,e)
 	local sg1=Duel.GetMatchingGroup(c11111004.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg2=nil
 	local sg2=nil
@@ -81,20 +81,14 @@ function c11111004.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:CompleteProcedure()
 	end
 end
-function c11111004.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
 function c11111004.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
- if chk==0 then return Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):FilterCount(c11111004.dfilter,nil)>0 end
- Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
-end
-function c11111004.dfilter(c)
-	return c:IsSetCard(0x223) and c:IsType(TYPE_MONSTER)
+	if chk==0 then return Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):FilterCount(c11111004.tdfilter,nil)>0 end
+	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):Filter(c11111004.tdfilter,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,#g,0,0)
 end
 function c11111004.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):Filter(c11111004.dfilter,nil)
+	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,0):Filter(c11111004.tdfilter,nil)
 	if g:GetCount()>0 then
-	local ct=Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	end
 end

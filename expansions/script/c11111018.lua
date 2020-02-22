@@ -1,80 +1,119 @@
---The Skydian's Verdict
-function c11111018.initial_effect(c)
-	--Target 1 "Skydian" monster in your GY; Special Summon that target to a zone a "Skydian" Link Monster points to, then discard 1 card.
+--Esmera, the Skydian's Dark Glory
+--Scripted by: XGlitchy30
+local function getID()
+	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
+	str=string.sub(str,1,string.len(str)-4)
+	local cod=_G[str]
+	local id=tonumber(string.sub(str,2))
+	return id,cod
+end
+local id,cid=getID()
+function cid.initial_effect(c)
+	--search
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,11111018)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetTarget(c11111018.target)
-	e1:SetOperation(c11111018.activate)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCountLimit(1,id)
+	e1:SetCondition(cid.thcon)
+	e1:SetTarget(cid.thtg)
+	e1:SetOperation(cid.thop)
 	c:RegisterEffect(e1)
-	--You can banish this card from your GY, then target 1 "Skydian" Link Monster in your GY; Special Summon that card, then you can switch the placements of it and 1 monsters in your Extra Monster Zone.
+	--special summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,11111018)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(0,TIMING_END_PHASE+TIMINGS_CHECK_MONSTER)
+	e2:SetCountLimit(1,id)
 	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(c11111018.sptg)
-	e2:SetOperation(c11111018.spop)
+	e2:SetTarget(cid.sptg)
+	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
 end
-function c11111018.filter(c,e,tp,zone)
-	return c:IsSetCard(0x223) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
+--SEARCH
+--filters
+function cid.filter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x223) and c:IsAbleToHand()
 end
-function c11111018.lfilter(c)
-	return c:IsType(TYPE_LINK) and c:IsSetCard(0x223)
+---------
+function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return re and re:GetHandler():IsSetCard(0x223)
 end
-function c11111018.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local zone=0
-	local g=Duel.GetMatchingGroup(c11111018.lfilter,tp,LOCATION_MZONE,0,nil)
-	local tc=g:GetFirst()
-	while tc do
-		zone=bit.bor(zone,tc:GetLinkedZone())
-		tc=g:GetNext()
+function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function cid.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c11111018.filter(chkc,e,tp,zone) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(c11111018.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone)
-		and Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_HAND,0,e:GetHandler())>0 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c11111018.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,zone)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
 end
-function c11111018.activate(e,tp,eg,ep,ev,re,r,rp)
-	local zone=0
-	local g=Duel.GetMatchingGroup(c11111018.lfilter,tp,LOCATION_MZONE,0,nil)
-	local tc=g:GetFirst()
-	while tc do
-		zone=bit.bor(zone,tc:GetLinkedZone())
-		tc=g:GetNext()
+--SPECIAL SUMMON
+--filters
+function cid.exfilter(c,mg)
+	if not c:IsType(TYPE_MONSTER) or not c:IsSetCard(0x223) or (c:IsType(TYPE_PENDULUM) and c:IsFaceup()) then return false end
+	return c:IsSynchroSummonable(nil,mg) or c:IsXyzSummonable(nil,mg) or c:IsLinkSummonable(nil,mg)
+end
+---------
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		local mg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+		return Duel.IsExistingMatchingCard(cid.exfilter,tp,LOCATION_EXTRA,0,1,nil,mg)
 	end
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP,zone)
-		if Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0 then
-			Duel.BreakEffect()
-			Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	local mg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(cid.exfilter,tp,LOCATION_EXTRA,0,nil,mg)
+	if #g>0 then
+		local opt,ct=0,0
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=g:Select(tp,1,1,nil):GetFirst()
+		if sg:IsSynchroSummonable(nil,mg) then opt=opt|TYPE_SYNCHRO ct=ct+1 end
+		if sg:IsXyzSummonable(nil,mg) then opt=opt|TYPE_XYZ ct=ct+1 end
+		if sg:IsLinkSummonable(nil,mg) then opt=opt|TYPE_LINK ct=ct+1 end
+		if ct>1 then
+			local ok=true
+			while ok do
+				if opt&TYPE_SYNCHRO>0 then
+					if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+						opt=TYPE_SYNCHRO
+						ok=false
+						break
+					end
+				end
+				if opt&TYPE_XYZ>0 then
+					if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+						opt=TYPE_XYZ
+						ok=false
+						break
+					end
+				end
+				if opt&TYPE_LINK>0 then
+					if Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+						opt=TYPE_LINK
+						ok=false
+						break
+					end
+				end
+			end
 		end
-	end
-end
-function c11111018.spfilter(c,e,tp)
-	return c:IsType(TYPE_LINK) and c:IsSetCard(0x223) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function c11111018.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c11111018.spfilter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(c11111018.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPS1UMMON)
-	local g=Duel.SelectTarget(tp,c11111018.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
-end
-function c11111018.spop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	local g=Group.FromCards(Duel.GetFieldCard(tp,LOCATION_MZONE,5),Duel.GetFieldCard(tp,LOCATION_MZONE,6)):GetFirst()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 and g and Duel.SelectYesNo(tp,aux.Stringid(11111018,0)) then
-		Duel.SwapSequence(tc,g)
+		if opt&TYPE_SYNCHRO>0 then
+			Duel.SynchroSummon(tp,sg,nil,mg)
+		elseif opt&TYPE_XYZ>0 then
+			Duel.XyzSummon(tp,sg,nil,mg)
+		elseif opt&TYPE_LINK>0 then
+			Duel.LinkSummon(tp,sg,nil,mg)
+		else
+			return
+		end
 	end
 end

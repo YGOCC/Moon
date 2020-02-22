@@ -1,24 +1,24 @@
 --Ratha
 function c11111007.initial_effect(c)
---Flip
-local e1=Effect.CreateEffect(c)
+	--Flip
+	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,11111007)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e1:SetCondition(c11111007.descon)
 	e1:SetTarget(c11111007.destg)
 	e1:SetOperation(c11111007.desop)
 	c:RegisterEffect(e1)
- local e2=Effect.CreateEffect(c)
+	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(11111005,0))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(11111007)
-	e2:SetCost(c11111007.cost)
+	e2:SetCountLimit(1,11111007)
+	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(c11111007.target)
 	e2:SetOperation(c11111007.operation)
 	c:RegisterEffect(e2)
@@ -27,7 +27,7 @@ function c11111007.filter(c)
 	return c:IsSetCard(0x223) and c:IsType(TYPE_TRAP) and c:IsAbleToHand()
 end
 function c11111007.descon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0x223) and re:GetHandler():IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
+	return re and re:GetHandler():IsSetCard(0x223)
 end
 function c11111007.dfilter(c)
 	return c:IsFaceup() and c:IsCanTurnSet()
@@ -41,7 +41,7 @@ function c11111007.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c11111007.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsLocation(LOCATION_MZONE) and tc:IsFaceup() then
 		Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 	end
 end

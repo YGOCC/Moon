@@ -1,6 +1,7 @@
+--Darivia, the Skydian of the Past
 function c11111001.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,nil,aux.FilterBoolFunction(c11111001.filter),1)
+	aux.AddSynchroProcedure(c,nil,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),1)
 	c:EnableReviveLimit()
 	--tohand
 	local e1=Effect.CreateEffect(c)
@@ -8,7 +9,7 @@ function c11111001.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_REMOVE)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,11111001)
 	e1:SetTarget(c11111001.target)
 	e1:SetOperation(c11111001.operation)
@@ -20,9 +21,8 @@ function c11111001.initial_effect(c)
 	--specialsummon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(11111001,1))
-	e3:SetCategory(CATEGORY_REMOVE+CATEGORY_SPECIAL_SUMMON)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,11111001)
 	e3:SetCost(c11111001.rmcost)
@@ -37,16 +37,16 @@ function c11111001.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c11111001.filter(c)
-	return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK+ATTRIBUTE_EARTH) and c:IsRace(RACE_WARRIOR)
+	return c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c11111001.filter2(c,e,tp)
-    return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK+ATTRIBUTE_EARTH) and c:IsRace(RACE_WARRIOR) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+    return c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c11111001.rmfil(c)
 	return c:IsSetCard(0x223) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c11111001.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
+	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_SYNCHRO)>0
 end
 function c11111001.valcheck(e,c)
 	local g=c:GetMaterial()
@@ -82,10 +82,22 @@ function c11111001.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c11111001.rmop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c11111001.filter2,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,c11111001.filter2,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+		if g:GetCount()>0 then
+			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		end
 	end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c11111001.splimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function c11111001.splimit(e,c)
+	return not c:IsRace(RACE_WARRIOR)
 end

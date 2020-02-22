@@ -23,8 +23,11 @@ end
 function c11111010.filter(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x223) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function c11111010.costfilter(c)
+	return c:IsSetCard(0x223) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+end
 function c11111010.tgfilter(c)
-	return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK+ATTRIBUTE_EARTH) and c:IsRace(RACE_WARRIOR) and c:IsAbleToGrave()
+	return c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c11111010.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c11111010.filter(chkc,e,tp) end
@@ -39,8 +42,13 @@ function c11111010.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) end
 end
 function c11111010.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(c11111010.costfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c11111010.costfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+	if #g>0 then
+		g:AddCard(e:GetHandler())
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
+	end
 end
 function c11111010.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11111010.tgfilter,tp,LOCATION_DECK,0,1,nil) end

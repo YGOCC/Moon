@@ -28,22 +28,24 @@ function c11111015.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c11111015.mfilter(c)
-	return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK+ATTRIBUTE_EARTH) and c:IsRace(RACE_WARRIOR)
+	return c:IsLinkAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK+ATTRIBUTE_EARTH) and c:IsLinkRace(RACE_WARRIOR)
+end
+function c11111015.mfilter2(c)
+	return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK+ATTRIBUTE_EARTH) and c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsReleasableByEffect()
 end
 function c11111015.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c11111015.mfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c11111015.mfilter2,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_RELEASE,nil,1,tp,LOCATION_DECK)
 end
 function c11111015.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectMatchingCard(tp,c11111015.mfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c11111015.mfilter2,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.SendtoGrave(g,REASON_EFFECT+REASON_RELEASE)
-		Duel.RaiseEvent(g,EVENT_RELEASE,e,r,rp,tp,0)
+		Duel.Release(g:GetFirst(),REASON_EFFECT)
 	end
 end
 function c11111015.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_LINK
+	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_LINK)>0
 end
 function c11111015.rmfil(c)
 	return c:IsSetCard(0x223) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
@@ -58,16 +60,17 @@ function c11111015.spfilter(c,e,tp,zone)
 	return c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK+ATTRIBUTE_EARTH) and c:IsType(TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function c11111015.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local zone=e:GetHandler():GetLinkedZone()
+	local c=e:GetHandler()
+	local zone=bit.band(c:GetLinkedZone(tp),0x1f)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c11111015.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,zone) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function c11111015.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local zone=c:GetLinkedZone()
-	if c:IsRelateToEffect(e) and zone~=0 then
+	local zone=bit.band(c:GetLinkedZone(tp),0x1f)
+	if zone~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,c11111015.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,zone)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c11111015.spfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp,zone)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP,zone)
 		end
