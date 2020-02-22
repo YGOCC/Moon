@@ -6,7 +6,7 @@ function c11111015.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_REMOVE)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,11111015)
 	e1:SetCategory(CATEGORY_RELEASE)
 	e1:SetTarget(c11111015.target)
@@ -39,9 +39,9 @@ function c11111015.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c11111015.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	local g=Duel.SelectMatchingCard(tp,c11111015.mfilter2,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.Release(g:GetFirst(),REASON_EFFECT)
+	local sg=Duel.SelectMatchingCard(tp,c11111015.mfilter2,tp,LOCATION_DECK,0,1,1,nil)
+	if #sg>0 then
+		Duel.SendtoGrave(sg:GetFirst(),REASON_EFFECT+REASON_RELEASE)
 	end
 end
 function c11111015.thcon(e,tp,eg,ep,ev,re,r,rp)
