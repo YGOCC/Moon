@@ -27,7 +27,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.cfilter(c,tp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsSetCard(0x83e)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsSetCard(0x83e) and c:IsType(TYPE_MONSTER)
 		and (c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()==tp or c:IsReason(REASON_BATTLE))
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)

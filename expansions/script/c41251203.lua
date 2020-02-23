@@ -25,7 +25,7 @@ function cid.initial_effect(c)
 	local e4=aux.AddContactFusionProcedure(c,cid.cfilter,LOCATION_ONFIELD,LOCATION_ONFIELD,cid.sprop(c))
 	e4:SetCondition(function(e,tc)
 		if tc==nil then return true end
-		return aux.ContactFusionCondition(cid.cfilter,LOCATION_ONFIELD,LOCATION_ONFIELD)
+		return aux.ContactFusionCondition(cid.cfilter,LOCATION_ONFIELD,LOCATION_ONFIELD)(e,tc)
 			and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsCode),tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,CARD_BLACK_GARDEN)
 	end)
 	local e3=e1:Clone()

@@ -10,7 +10,7 @@ local id,cid=getID()
 --Bright Star Blue Hyper Giant
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,id,cid.mfilter,2,true,true)
+	aux.AddFusionProcCodeFun(c,id-3,cid.mfilter,2,true,true)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
