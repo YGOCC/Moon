@@ -52,7 +52,7 @@ end
 function cid.cncon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.cncfilter,1,nil)
 end
-function cid.cntg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.cntg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsFaceup() end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
