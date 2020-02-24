@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	99f37649a7b313b19e40a37edf92c75e
+﻿expansions/cards-new.cdb	2207b6e39ceda2f014b83c59be56f113
 expansions/lflist.conf	6904edd7f1d1c6a4d98653c95c9f432b
 expansions/strings.conf	1cf191537472f11fcba72f15dd46c196
 expansions/pics/10130500.jpg	4288a07fb917d204bc49a28c5d87596c
@@ -595,6 +595,8 @@ expansions/pics/118201808.jpg	eab40508d6e2cee7574135bc3cf08634
 expansions/pics/118201809.jpg	85b019021c248761535ec4ef6ad02ad0
 expansions/pics/118201810.jpg	a597a4586d1873edfe3350c861f9fda3
 expansions/pics/12014495.jpg	f52e97bfe697f4c6cea3c4722b92dc97
+expansions/pics/121200115.jpg	74109c7fb38baec52d0b0d8be7efc656
+expansions/pics/121200116.jpg	0204a8b0bccfe0eb87d35449b3000b49
 expansions/pics/121200132.jpg	1a28984dca60ca068df7275af7ed2f3f
 expansions/pics/121200133.jpg	5220086d8db5b0e6946ed37d4157feb7
 expansions/pics/121200134.jpg	b73f3fe0fb1fb5b628cdd0a754def7d0
@@ -3748,6 +3750,8 @@ expansions/script/c118201808.lua	cbc2b628e152e7e1b52f9df2951d4822
 expansions/script/c118201809.lua	7436fbab9d7624ef26af4aeff41775b6
 expansions/script/c118201810.lua	249311f16846e6bfc1887f2064fd5865
 expansions/script/c12014495.lua	a162847f1a7562f08fb263532f87c6cb
+expansions/script/c121200115.lua	f5b55d918cf894cd89f0bd82f8da979c
+expansions/script/c121200116.lua	49095c9c5e0dc34b9b75586a1385697b
 expansions/script/c121200132.lua	300b693b76435b46a7014fceb9c9f63c
 expansions/script/c121200133.lua	ee38ab4bff1d30ccae7b7578c6d69d65
 expansions/script/c121200134.lua	4bdd9b359c6ed5bd69210f4f8369dd56
@@ -6243,6 +6247,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	4e7c85814a8dc88343b936d2391721c3
+update/filelist.txt	d6068b9d48e4014cde2f8ee385455b44
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	4120f081f521a1b8436470b83cdc7fc7
+update/version.txt	78521113f995951a30aecdb1c9b7dd42
