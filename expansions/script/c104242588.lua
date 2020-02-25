@@ -1,4 +1,4 @@
---Moon's Dream: Power MAX
+--Moon's Dream: KeyBlade's Chosen
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -9,8 +9,8 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),3,true)
-	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_EXTRA,0,Duel.Exile,REASON_MATERIAL)
+		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),5,true)
+	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_REMOVED,0,Duel.Exile,REASON_COST)
 	--cannot target
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -38,10 +38,6 @@ function cid.initial_effect(c)
 	e5:SetCondition(cid.damcon)
 	e5:SetOperation(cid.damop)
 	c:RegisterEffect(e5)
-end
---summon condition
-function cid.spcfilter2(c)
-	return c:IsCode(104242585) and c:IsFaceup()
 end
 function cid.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

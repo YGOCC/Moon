@@ -8,113 +8,130 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--Fusion
+	--Back Row effect
+	local exxx=Effect.CreateEffect(c)
+	exxx:SetDescription(aux.Stringid(33731070,0))
+	exxx:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	exxx:SetType(EFFECT_TYPE_IGNITION)
+	exxx:SetRange(LOCATION_SZONE)
+	exxx:SetCountLimit(1,id+2000)
+	exxx:SetCondition(cid.exxxcon)
+	exxx:SetCondition(aux.exccon)
+	exxx:SetTarget(cid.exxxtg)
+	exxx:SetOperation(cid.exxxop)
+	c:RegisterEffect(exxx)
+		--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
-	e1:SetTarget(cid.sptg)
-	e1:SetOperation(cid.spop)
+	e1:SetCondition(cid.sprcon)
 	c:RegisterEffect(e1)
-	local e1x=e1:Clone()
-	e1x:SetRange(LOCATION_GRAVE)
-	c:RegisterEffect(e1x)
-	--draw
+		--bounce and sp summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(7736719,1))
-	e2:SetCategory(CATEGORY_DRAW)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCountLimit(1,id+1000)
-	e2:SetCode(EVENT_DESTROYED)
-	e2:SetTarget(cid.drtg)
-	e2:SetOperation(cid.drop)
+	e2:SetCost(cid.backcost)
+	e2:SetTarget(cid.sptg)
+	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,cid.counterfilter)
 end
 --Filters
-function cid.mfilter0(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial()
+function cid.exxxfilter(c)
+	return c:IsSetCard(0x666) and c:IsDiscardable()
 end
-function cid.mfilter00(c)
-	return c:IsCanBeFusionMaterial() and c:IsCode(104242585)
+function cid.searchfilter(c)
+	return c:IsSetCard(0x666)
 end
-function cid.mfilter2(c,e)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
+function cid.tokenfilter(c)
+	return c:IsFaceup() and c:IsCode(104242592)
 end
-function cid.spfilter2(c,e,tp,m,f)
-	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x666) and (not f or f(c))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,tp)
+function cid.sprcon(e)
+    return Duel.GetLocationCount(e:GetHandlerPlayer(),LOCATION_MZONE)>=5
+end
+function cid.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsSetCard(0x666)
+end
+function cid.counterfilter(c)
+	return c:IsSetCard(0x666)
+end
+--Back Row Summon
+function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(e:GetHandler():IsSetCard(0x666))>0
+end
+function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():IsRelateToEffect(e) then
+		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
+	end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)	
+end
+--Back Row Cost
+function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0  and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
+		c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	if Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetCode(EFFECT_CHANGE_TYPE)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetReset(RESET_EVENT+0x1fc0000)
+	e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+	c:RegisterEffect(e1)
+	c:RegisterFlagEffect(c:IsSetCard(0x666),RESET_EVENT+RESETS_STANDARD,0,1)
+	local ex=Effect.CreateEffect(e:GetHandler())
+	ex:SetType(EFFECT_TYPE_FIELD)
+	ex:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	ex:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	ex:SetReset(RESET_PHASE+PHASE_END)
+	ex:SetTargetRange(1,0)
+	ex:SetLabelObject(e)
+	ex:SetTarget(cid.splimit)
+	Duel.RegisterEffect(ex,tp)
+end
+end
+function cid.filter(c,e,tp)
+	return c:IsSetCard(0x666) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		local mg1=Duel.GetMatchingGroup(cid.mfilter00,tp,LOCATION_EXTRA,0,nil)
-		local res=Duel.IsExistingMatchingCard(cid.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil)
-		if res then return true end
-		local mg2=Duel.GetMatchingGroup(cid.mfilter0,tp,LOCATION_REMOVED,0,nil)
-		mg2:Merge(mg1)
-		res=Duel.IsExistingMatchingCard(cid.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,nil)
-		if not res then
-			local ce=Duel.GetChainMaterial(tp)
-			if ce~=nil then
-				local fgroup=ce:GetTarget()
-				local mg3=fgroup(ce,e,tp)
-				local mf=ce:GetValue()
-				res=Duel.IsExistingMatchingCard(cid.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg3,mf)
-			end
-		end
-		return res
-	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-	local mg0=Duel.GetMatchingGroup(cid.mfilter00,tp,LOCATION_EXTRA,0,nil)
-	local mg2=Duel.GetMatchingGroup(cid.mfilter2,tp,LOCATION_REMOVED,0,nil,e)
-	mg2:Merge(mg0)
-	local sg1=Duel.GetMatchingGroup(cid.spfilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,nil)
-	local mg3=nil
-	local sg3=nil
-	local ce=Duel.GetChainMaterial(tp)
-	if ce~=nil then
-		local fgroup=ce:GetTarget()
-		mg3=fgroup(ce,e,tp)
-		local mf=ce:GetValue()
-		sg3=Duel.GetMatchingGroup(cid.spfilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg3,mf)
-	end
-	if sg1:GetCount()>0 or (sg3~=nil and sg3:GetCount()>0) then
-		local sg=sg1:Clone()
-		if sg3 then sg:Merge(sg3) end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tg=sg:Select(tp,1,1,nil)
-		local tc=tg:GetFirst()
-		if sg1:IsContains(tc) and (sg3==nil or not sg3:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
-			local mat1=Duel.SelectFusionMaterial(tp,tc,mg2,nil,tp)
-			tc:SetMaterial(mat1)
-			local mat2=mat1:Filter(Card.IsLocation,nil,LOCATION_REMOVED)
-			mat1:Sub(mat2)
-			Duel.SendtoGrave(mat2,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
-			Duel.Exile(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
-			Duel.BreakEffect()
-			if Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP) and e:GetHandler():IsRelateToEffect(e) then
-				Duel.SpecialSummonStep(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
-			end
-			Duel.SpecialSummonComplete()
-		else
-			local mat=Duel.SelectFusionMaterial(tp,tc,mg3,nil,tp)
-			local fop=ce:GetOperation()
-			fop(ce,e,tp,tc,mat)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+	local tc=g:GetFirst()
+	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CANNOT_TRIGGER)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
 		end
-		tc:CompleteProcedure()
-	end
-end
-function cid.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-end
-function cid.drop(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
+		Duel.SpecialSummonComplete()
+		end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
+--		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
+--		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+
 end

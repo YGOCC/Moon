@@ -20,57 +20,93 @@ function cid.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x666))
+	e2:SetCondition(cid.atkcon)
 	e2:SetValue(500)
 	c:RegisterEffect(e2)
 	local e2x=e2:Clone()
 	e2x:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e2x)
-		--excavate
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(50005218,0))
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetRange(LOCATION_FZONE)
-	e2:SetCountLimit(1)
-	e2:SetTarget(cid.thtg)
-	e2:SetOperation(cid.thop)
-	c:RegisterEffect(e2)
+		--chk
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_CHAINING)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetRange(LOCATION_FZONE)
+	e3:SetOperation(cid.reg1)
+	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_CHAIN_SOLVED)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e4:SetRange(LOCATION_FZONE)
-	e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
-	e4:SetCountLimit(1)
-	e4:SetValue(cid.valcon)
+	e4:SetOperation(cid.reg2)
 	c:RegisterEffect(e4)
-	
+	--token
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,1))
+	e5:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e5:SetCode(EVENT_CHAIN_END)
+	e5:SetRange(LOCATION_FZONE)
+	e5:SetCondition(cid.spcon)
+	e5:SetTarget(cid.sptg)
+	e5:SetOperation(cid.spop)
+	c:RegisterEffect(e5)
+	--cannot remove
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_FIELD)
+	e6:SetCode(EFFECT_CANNOT_REMOVE)
+	e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e6:SetRange(LOCATION_FZONE)
+	e6:SetTargetRange(1,1)
+	e6:SetCondition(cid.rmcon)
+	e6:SetTarget(cid.rmlimit)
+	c:RegisterEffect(e6)
 end
-function cid.valcon(e,re,r,rp)
-	return bit.band(r,REASON_EFFECT)~=0
+--stat boost timing
+function cid.atkcon(e)
+	return Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL
 end
-function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+--cannot remove
+function cid.spfilter(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) --c:IsLevel(3) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FIEND) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function cid.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	 return Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_ONFIELD,0,1,nil,e,tp) 
+end
+function cid.rmlimit(e,c,p)
+	return c:IsLocation(LOCATION_GRAVE)
+end
+-- token effect
+function cid.reg1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,LOCATION_DECK)
-end
-function cid.thfilter(c)
-	return c:IsSetCard(0x666) and c:IsAbleToHand()
-end
-function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.ConfirmDecktop(tp,3)
-	local g=Duel.GetDecktopGroup(tp,3)
-	if g:GetCount()>0 then
-		if g:IsExists(Card.IsSetCard,1,nil,0x666) then
-			if g:IsExists(cid.thfilter,1,nil) then
-				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
-				local sg=g:FilterSelect(tp,cid.thfilter,1,1,nil)
-				Duel.SendtoHand(sg,nil,REASON_EFFECT)
-				Duel.ConfirmCards(1-tp,sg)
-				Duel.ShuffleHand(tp)
-			end
-		end
-		Duel.ShuffleDeck(tp)
+	if c:GetFlagEffect(id)>0 then 
+		c:ResetFlagEffect(id)
+	end
+	if c:GetFlagEffect(1)==0 then
+		c:RegisterFlagEffect(1,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET+RESET_CHAIN,0,1)
 	end
 end
+function cid.reg2(e,tp,eg,ep,ev,re,r,rp)
+	if rp==1-tp and e:GetHandler():GetFlagEffect(1)>0 then
+		e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+	end
+end
+function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return not Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_MZONE,0,1,nil,TYPE_TOKEN)
+		and e:GetHandler():GetFlagEffect(id)>0
+end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,104242592,0xfa,0x4011,1500,1500,3,RACE_BEAST,ATTRIBUTE_DARK) end
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if not Duel.IsPlayerCanSpecialSummonMonster(tp,104242592,0xfa,0x4011,2000,2000,6,RACE_BEAST,ATTRIBUTE_DARK) then return end
+	local token=Duel.CreateToken(tp,104242592)
+	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
+end
+--

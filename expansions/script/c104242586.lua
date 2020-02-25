@@ -9,60 +9,110 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),2,true)
-	aux.AddContactFusionProcedure(c,cid.fragment,LOCATION_EXTRA,0,Duel.Exile,REASON_MATERIAL)
-			--Activate
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),5,true)
+	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_REMOVED,0,Duel.Exile,REASON_COST)
+		--special summon
+--	local e1=Effect.CreateEffect(c)
+--	e1:SetType(EFFECT_TYPE_FIELD)
+--	e1:SetCode(EFFECT_SPSUMMON_PROC)
+--	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+--	e1:SetRange(LOCATION_EXTRA)
+--	e1:SetCondition(cid.spcon2)
+--	e1:SetOperation(cid.spop3)
+--	c:RegisterEffect(e1)
+	--Immune
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DESTORY)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1,id)
-	e1:SetCost(cid.cost)
-	e1:SetTarget(cid.target)
-	e1:SetOperation(cid.activate)
+	e1:SetValue(aux.indoval)
 	c:RegisterEffect(e1)
+	--Multiple attacks
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(97165977,0))
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetCountLimit(1)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCondition(cid.condition)
+	e3:SetOperation(cid.operation)
+	c:RegisterEffect(e3)
+	--ATK Up
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(97165977,1))
+	e4:SetCategory(CATEGORY_ATKCHANGE)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e4:SetCode(EVENT_BATTLE_DESTROYING)
+	e4:SetCondition(aux.bdocon)
+	e4:SetOperation(cid.atkop)
+	c:RegisterEffect(e4)
 end
-
----Filters
-function cid.fragment(c)
-	return c:IsCode(104242585) and c:IsFaceup()
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsAbleToEnterBP()
 end
-function cid.moondream(c)
-	return c:IsSetCard(0x666) and c:IsFaceup()
-end
-function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(44335251,2))
-		local a=Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_EXTRA,0,1,nil)
-		local b=Duel.IsExistingMatchingCard(cid.moondream,tp,LOCATION_ONFIELD,0,1,nil)
-if chk==0 then return a or b end
-if a and b then
-    op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
-elseif a then
-    op=0
-elseif b then
-    op=1
-end
-if op==0 then
-    local tc=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_EXTRA,0,nil,e,tp)
-    if tc then
-        Duel.Exile(tc,REASON_COST)
-    end
-end
-if op==1 then
-    local sg=Duel.SelectReleaseGroup(tp,cid.moondream,1,1,nil)
-    Duel.Release(sg,REASON_COST)
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e1:SetTargetRange(0,LOCATION_MZONE)
+	e1:SetValue(cid.indct)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	if c:IsRelateToEffect(e) then
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_ATTACK_ALL)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e2:SetValue(2)
+		c:RegisterEffect(e2)
 	end
 end
-function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,2,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
+function cid.indct(e,re,r,rp)
+	if bit.band(r,REASON_BATTLE)~=0 then
+		return 1
+	else return 0 end
 end
-function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	Duel.Destroy(g,REASON_EFFECT)
+function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) and c:IsFaceup() then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(200)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_PHASE+PHASE_BATTLE)
+		c:RegisterEffect(e1)
+	end
+end
+--summon condition
+function cid.spcfilter2(c)
+	return c:IsCode(104242585) and c:IsFaceup()
+end
+function cid.spcon2(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCountFromEx(tp,LOCATION_MZONE)>0
+	and Duel.IsExistingMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,5,nil)
+end
+function cid.spop3(e,tp,eg,ep,ev,re,r,rp,c)
+	if Duel.GetLocationCountFromEx(tp,LOCATION_MZONE)<=0 then return end
+	local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+		local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+		local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+		local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+		local tc=Duel.GetFirstMatchingCard(cid.spcfilter2,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_RULE)
+end
+end
+end
+end
+end
 end
