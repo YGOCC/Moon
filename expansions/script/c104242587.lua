@@ -9,8 +9,8 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),5,true)
-	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_REMOVED,0,Duel.Exile,REASON_COST)
+		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x666),2,true)
+	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
 	--special summon
 --	local e1=Effect.CreateEffect(c)
 --	e1:SetType(EFFECT_TYPE_FIELD)
@@ -35,7 +35,7 @@ function cid.distg(e,c)
 end
 --summon condition
 function cid.spcfilter2(c)
-	return c:IsCode(104242585) and c:IsFaceup()
+	return c:IsSetCard(0x666) and c:IsFaceup()
 end
 function cid.spcon2(e,c)
 	if c==nil then return true end
