@@ -31,7 +31,7 @@ function s.initial_effect(c)
 		c:RegisterEffect(e3)
 end
 	function s.thfilter(c,e,tp)
-	return c:IsSetCard(0x3b) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp) and c:IsLevelBelow(7)
+	return c:IsSetCard(0x3b) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK,1-tp) and c:IsLevelBelow(7)
 end
 	function s.filter(c)
 	return c:IsSetCard(0x3b) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
@@ -47,12 +47,12 @@ end
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_ONFIELD,nil,1,1,nil)
 	if g:GetFirst():IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,g)
+	end
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 		if g:GetCount()>0 and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,e,tp) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local k=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,tc)
-			Duel.SpecialSummon(k,0,tp,1-tp,false,false,POS_FACEUP)
-		end
+			Duel.SpecialSummon(k,0,tp,1-tp,false,false,POS_FACEUP_ATTACK)
 	end
 end
 	function s.spfilter(c,tp)

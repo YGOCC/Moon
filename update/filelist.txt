@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	4028436ab580249bee33f63aebfe8f66
+﻿expansions/cards-new.cdb	f68a5b1913dcf4dca7be13274039f0ee
 expansions/lflist.conf	6904edd7f1d1c6a4d98653c95c9f432b
 expansions/strings.conf	1cf191537472f11fcba72f15dd46c196
 expansions/pics/10130500.jpg	4288a07fb917d204bc49a28c5d87596c
@@ -4598,7 +4598,7 @@ expansions/script/c23251031.lua	452c3e7e4027cdb29a1050313651d77d
 expansions/script/c23251032.lua	ed281cdda7030b4da071edc6e3ac26de
 expansions/script/c23251033.lua	6d1288dd6b5e2867f570e27c9e406a6e
 expansions/script/c23251034.lua	34a9f81161714a1336a7090da69e40f0
-expansions/script/c2445521.lua	cffbccaa37fe892a9e5154630864ff59
+expansions/script/c2445521.lua	8d34b97e5654d73c8753cac79f056787
 expansions/script/c24715200.lua	f34347d50609115b4f00bfb5a3ff2def
 expansions/script/c24715201.lua	91015b6faba0311e48b5f848e6019380
 expansions/script/c24715202.lua	4b1f3a6d7001ffbe12dc860aaf440a78
@@ -5345,7 +5345,7 @@ expansions/script/c40001.lua	7ca36082adf8028a9a53220ec402b76d
 expansions/script/c400010.lua	19059c1066ca26f54d52aa89bfa2cfb0
 expansions/script/c400011.lua	6d9b1043d8349611f8fb8364870e960d
 expansions/script/c400012.lua	8ed4115c4308dfe492b82c80503f8003
-expansions/script/c400013.lua	82bb947f698c2f5570b2ea5a20058413
+expansions/script/c400013.lua	a3980abf91869e217c097762026cd1d1
 expansions/script/c400014.lua	bc9097d5a43dbbd34ec17a6625b3b0a8
 expansions/script/c400015.lua	609db66ccb6773459065a4d53c70fb73
 expansions/script/c400016.lua	4b1b38b9ec2c90bd5536de4acd9c1bef
@@ -6297,6 +6297,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	abff8142eb1330ec6cdf85fa31beccd1
+update/filelist.txt	15fb316fc3630b37dfe5b3ee3d39cd64
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	0795d71ea4c08818749006b0e3110ad5
+update/version.txt	6a21802dba198215b54fae86aa475e22

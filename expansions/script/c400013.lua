@@ -11,7 +11,7 @@ function c400013.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c400013.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(function(c)return c:IsFaceup() and c:IsSetCard(0x146) end,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(function(c)return c:IsFaceup() and c:IsSetCard(0x146) end,tp,LOCATION_MZONE,0,1,nil) and Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,0,LOCATION_MZONE,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,1-tp,LOCATION_MZONE)
 end
 function c400013.filter(c)
