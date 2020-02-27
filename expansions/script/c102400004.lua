@@ -63,14 +63,14 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.spfilter(c,e,tp)
-	return c:GetOriginalType()&TYPE_MONSTER==TYPE_MONSTER and c:GetOwner()==tp and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
+	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:GetOwner()==tp and c:IsCanBeSpecialSummoned(e,0,tp,false,true) and c:GetEquipTarget()~=nil
 end
 function cid.sttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE+LOCATION_PZONE) and cid.spfilter(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_SZONE) and cid.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_SZONE+LOCATION_PZONE,LOCATION_SZONE+LOCATION_PZONE,1,nil,e,tp) end
+		and Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_SZONE+LOCATION_PZONE,LOCATION_SZONE+LOCATION_PZONE,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function cid.stop(e,tp,eg,ep,ev,re,r,rp)

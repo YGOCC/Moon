@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	eed473b46617634026d3590bbfa4476c
+﻿expansions/cards-new.cdb	4028436ab580249bee33f63aebfe8f66
 expansions/lflist.conf	6904edd7f1d1c6a4d98653c95c9f432b
 expansions/strings.conf	1cf191537472f11fcba72f15dd46c196
 expansions/pics/10130500.jpg	4288a07fb917d204bc49a28c5d87596c
@@ -96,7 +96,7 @@ expansions/pics/102400000.png	a9d4c6b45048d981be24b0d87bce8faf
 expansions/pics/102400001.png	f15f09cf8c20ad42dc55c6647f3aad74
 expansions/pics/102400002.png	bbef27b2738d2de7f7cd6d81e7770cc8
 expansions/pics/102400003.png	90479e8770105babb3a1330ae74b3823
-expansions/pics/102400004.png	7a1ea63fa108d7f947b9c2cc6868107e
+expansions/pics/102400004.png	11e4c14ef26952174e88ebda6001358c
 expansions/pics/102400005.png	f922995a2b5ae177e98d5fd1a4fdbd06
 expansions/pics/102400006.png	c38033838c88f0f3c6fb5202c0d3e90a
 expansions/pics/102400007.png	d304565ce5048ea7ed05d5fc554db75b
@@ -3344,7 +3344,7 @@ expansions/script/c102400000.lua	0ca52b9cc859b80d0bda5498bfb6bc10
 expansions/script/c102400001.lua	25c483bc50bc1b2409ac68d48f566257
 expansions/script/c102400002.lua	c31c7254897764c2b2ab55bc7fd7b92c
 expansions/script/c102400003.lua	3b917181c913e6bd684d62aa98310245
-expansions/script/c102400004.lua	4475d08acd0761de211163e09d12ca58
+expansions/script/c102400004.lua	01f20be7830928dc700cfbb352b892c8
 expansions/script/c102400005.lua	a4d85ed648f5b981182bd9bc2ee68d10
 expansions/script/c102400006.lua	b6f738a5ff6b462d3fc373a1e5adcc0b
 expansions/script/c102400007.lua	82156dc727ea68ee68b4fc554e34b1e3
@@ -6297,6 +6297,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	788a88518e8eb9e5f34cf69cdbc06794
+update/filelist.txt	abff8142eb1330ec6cdf85fa31beccd1
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	fe08a7e72b782e7aca3a9c2aa797d02a
+update/version.txt	0795d71ea4c08818749006b0e3110ad5
