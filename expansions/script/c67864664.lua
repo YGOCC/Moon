@@ -4,40 +4,41 @@ function c67864664.initial_effect(c)
 	--fusion material
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x2a6),aux.NonTuner(c67864664.sfilter),1)
 	c:EnableReviveLimit()
---Equip
-local e1=Effect.CreateEffect(c)
+	--Equip
+	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(67864664,0))
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(c67864664.condition)
 	e1:SetTarget(c67864664.target)
 	e1:SetOperation(c67864664.operation)
 	c:RegisterEffect(e1)
---Destroy
-local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(67864664,1))
-	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,67864664)
-	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
-	e3:SetCost(c67864664.descost)
-	e3:SetTarget(c67864664.destg)
-	e3:SetOperation(c67864664.desop)
-	c:RegisterEffect(e3)
+	--Destroy
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(67864664,1))
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,67864664)
+	e2:SetHintTiming(0,TIMING_MAIN_END+TIMING_BATTLE_START+TIMING_BATTLE_END)
+	e2:SetCondition(c67864664.spcon)
+	e2:SetCost(c67864664.descost)
+	e2:SetTarget(c67864664.destg)
+	e2:SetOperation(c67864664.desop)
+	c:RegisterEffect(e2)
 end
 function c67864664.sfilter(c)
 	return c:IsRace(RACE_WARRIOR+RACE_MACHINE)
 end
-function c67864664.eqfilter(c,e,tp,ec)
-	return c:IsType(TYPE_UNION)
-end
 function c67864664.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
+end
+function c67864664.eqfilter(c,e,tp,ec)
+	return c:IsType(TYPE_UNION)
 end
 function c67864664.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c67864664.eqfilter(chkc,tp) end
@@ -55,6 +56,10 @@ function c67864664.operation(e,tp,eg,ep,ev,re,r,rp)
    	 	aux.SetUnionState(tc)
 		end
 	end
+end
+function c67864664.descon(e,tp,eg,ep,ev,re,r,rp)
+	local ph=Duel.GetCurrentPhase()
+	return (ph==PHASE_MAIN1 or (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE) or ph==PHASE_MAIN2)
 end
 function c67864664.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetEquipGroup():IsExists(Card.IsAbleToGraveAsCost,1,nil) end

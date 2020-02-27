@@ -1,6 +1,7 @@
 --VECTOR Engineering Initiation
 --Scripted by Keddy, updated by Zerry
 function c67864654.initial_effect(c)
+	--Add to hand
     local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(67864654,0))
     e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -10,8 +11,9 @@ function c67864654.initial_effect(c)
     e1:SetTarget(c67864654.thtg1)
     e1:SetOperation(c67864654.thop1)
     c:RegisterEffect(e1)
+    --Special Summon from hand
     local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(94046012,0))
+	e2:SetDescription(aux.Stringid(67864654,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
@@ -22,7 +24,7 @@ function c67864654.initial_effect(c)
 	c:RegisterEffect(e2)
  end
 function c67864654.thfilter1(c)
-    return c:IsSetCard(0x62a6) and c:IsType(TYPE_MONSTER) c:IsAbleToHand()
+    return c:IsSetCard(0x62a6) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c67864654.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c67864654.thfilter1,tp,LOCATION_DECK,0,1,nil) end

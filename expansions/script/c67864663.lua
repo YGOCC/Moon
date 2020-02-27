@@ -18,14 +18,16 @@ function c67864663.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCountLimit(1,67864663+100)
 	e2:SetTarget(c67864663.tg1)
+	e2:SetOperation(c67864663.op1)
 	c:RegisterEffect(e2)
     --lv change
     local e3=Effect.CreateEffect(c)
     e3:SetDescription(aux.Stringid(67864663,2))
     e3:SetType(EFFECT_TYPE_IGNITION)
-    e3:SetCountLimit(1,67864663+100)
     e3:SetRange(LOCATION_MZONE)
+    e3:SetCountLimit(1,67864663+200)
 	e3:SetCondition(c67864663.con)
     e3:SetTarget(c67864663.tg)
     e3:SetOperation(c67864663.op)
@@ -36,7 +38,7 @@ function c67864663.spfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x52a6) and c:GetOriginalType()&TYPE_UNION==TYPE_UNION
 end
 function c67864663.spfilter1(c,e)
-    return c:IsType(TYPE_UNION) and c:IsSetCard(0x52a6) and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or not c:IsForbidden())
+    return c:IsType(TYPE_UNION) and c:IsSetCard(0x52a6) and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsAbleToHand())
 end
 --spsummon
 function c67864663.spcon(e,tp,eg,ep,ev,re,r,rp)
@@ -78,13 +80,13 @@ function c67864663.op1(e,tp,eg,ep,ev,re,r,rp)
 			and not tc:IsHasEffect(EFFECT_NECRO_VALLEY)
 			and (not tc:IsAbleToHand() or Duel.SelectOption(tp,1190,1152)==1) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-		else
-		if aux.CheckUnionEquip(tc,e:GetHandler()) and Duel.Equip(tp,tc,e:GetHandler()) then
-   	 	aux.SetUnionState(tc)
+			else
+			if aux.CheckUnionEquip(tc,e:GetHandler()) and Duel.Equip(tp,tc,e:GetHandler()) then
+   	 		aux.SetUnionState(tc)
+			end
 		end
 	end
 end
-		end
 --lv change
 function c67864663.con(e)
     local c=e:GetHandler()

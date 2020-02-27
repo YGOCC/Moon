@@ -2,7 +2,7 @@
 --Scripted by Zerry
 function c67864670.initial_effect(c)
 local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(67864670,1))
+	e1:SetDescription(aux.Stringid(67864670,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -40,5 +40,16 @@ function c67864670.activate2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g1=g:Select(tp,1,1,nil)
 		Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)	
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(c67864670.splimit)
+		Duel.RegisterEffect(e1,tp)
 	end
 end
+function c67864670.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsSetCard(0x2a6)
+end	

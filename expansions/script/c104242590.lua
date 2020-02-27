@@ -11,7 +11,7 @@ function cid.initial_effect(c)
 	c:EnableReviveLimit()
 		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x666),2,true)
 	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
-		--negate
+	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2956282,0))
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -31,7 +31,7 @@ function cid.negcostfilter(c)
 end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and rp==1-tp
-		and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+		and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end
 function cid.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.negcostfilter,tp,LOCATION_GRAVE,0,1,nil) end

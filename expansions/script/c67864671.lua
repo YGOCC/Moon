@@ -1,16 +1,16 @@
 --VECTOR Legion HQ Command
 --Scripted by Zerry
 function c67864671.initial_effect(c)
---Activate
-local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(67864671,1))
-	e2:SetType(EFFECT_TYPE_ACTIVATE)
-	e2:SetCountLimit(1,67864671)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
-	e2:SetTarget(c67864671.eqtg)
-	e2:SetOperation(c67864671.eqop)
-	c:RegisterEffect(e2)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(67864671,0))
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCountLimit(1,67864671)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetTarget(c67864671.eqtg)
+	e1:SetOperation(c67864671.eqop)
+	c:RegisterEffect(e1)
 end
 function c67864671.tgfilter(c,e,tp,chk)
 	return (not c:GetEquipGroup() or not c:GetEquipGroup():IsExists(function(cc) return cc:GetOriginalType()&TYPE_UNION~=0 end,1,nil)) and c:IsSetCard(0x2a6)
@@ -42,5 +42,16 @@ function c67864671.eqop(e,eg,tp,ep,ev,re,r,rp)
 		if ec and aux.CheckUnionEquip(ec,tc) and Duel.Equip(tp,ec,tc) then
 			aux.SetUnionState(ec)
 		end
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)	
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(c67864671.splimit)
+		Duel.RegisterEffect(e1,tp)
 	end
 end
+function c67864671.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsSetCard(0x2a6)
+end	

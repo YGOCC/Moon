@@ -6,16 +6,17 @@ function c67864655.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,67864655)
 	e1:SetTarget(c67864655.sptg)
 	e1:SetOperation(c67864655.spop)
 	c:RegisterEffect(e1)
-	--to deck
+	--tadd to hand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(67864655,1))
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,67864655)
+	e2:SetCountLimit(1,67864655+100)
 	e2:SetCost(c67864655.tdcost)
 	e2:SetTarget(c67864655.tdtg)
 	e2:SetOperation(c67864655.tdop)
@@ -107,7 +108,7 @@ function c67864655.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c67864655.tdfilter(c)
-	return c:IsSetCard(0x2a6) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x2a6) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c67864655.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864655.tdfilter,tp,LOCATION_GRAVE,0,1,nil) end
@@ -123,5 +124,8 @@ function c67864655.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,2,REASON_EFFECT)
+		Duel.ShuffleHand(tp)
+		Duel.BreakEffect()
+		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
 	end
 end

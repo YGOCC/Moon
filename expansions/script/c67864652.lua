@@ -1,12 +1,13 @@
 --VECTOR Frame Omnis
 --Scripted by Keddy, updated by Zerry
 function c67864652.initial_effect(c)
+	c:SetUniqueOnField(1,0,67864652)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFun2(c,c67864652.ffilter,c67864652.ffilter2,false)
---Equip
-local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(67864664,0))
+	--Equip
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(67864652,0))
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -15,8 +16,8 @@ local e1=Effect.CreateEffect(c)
 	e1:SetTarget(c67864652.target)
 	e1:SetOperation(c67864652.operation)
 	c:RegisterEffect(e1)
---ATK Gain
-local e2=Effect.CreateEffect(c)
+	--ATK Gain
+	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetRange(LOCATION_MZONE)
@@ -34,9 +35,6 @@ function c67864652.eqfilter(c,e,tp,ec)
 end
 function c67864652.vfilter(c)
 	return c:IsSetCard(0x2a6) and c:IsFaceup()
-end
-function c67864652.spfilter(c,e,tp)
-	return (c:IsSetCard(0x2a6) or c:IsRace(RACE_WARRIOR)) and not c:IsCode(67864667) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 --Equip
 function c67864652.condition(e,tp,eg,ep,ev,re,r,rp)
@@ -61,5 +59,5 @@ function c67864652.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 --Atk Gain
 function c67864652.value(e,c)
-	return Duel.GetMatchingGroupCount(c67864667.vfilter,c:GetControler(),LOCATION_SZONE,0,nil)*500
+	return Duel.GetMatchingGroupCount(c67864652.vfilter,c:GetControler(),LOCATION_SZONE,0,nil)*500
 end
