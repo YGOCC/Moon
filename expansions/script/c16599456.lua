@@ -121,7 +121,6 @@ end
 --target protection
 function c16599456.efilter(e,re,rp)
 	return ((re:GetHandler():GetLevel()>0 and re:GetHandler():IsLevelBelow(9)) or (re:GetHandler():GetRank()>0 and re:GetHandler():GetRank()<=9)) and rp==1-e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER)
-		and bit.band(re:GetHandler():GetSummonLocation(),LOCATION_DECK+LOCATION_EXTRA)>0
 end
 --act limit
 function c16599456.limcon(e)
@@ -131,6 +130,7 @@ function c16599456.limval(e,re,rp)
 	local rc=re:GetHandler()
 	return rc:IsLocation(LOCATION_MZONE) and re:IsActiveType(TYPE_MONSTER)
 		and rc:IsSummonType(SUMMON_TYPE_SPECIAL) and not rc:IsImmuneToEffect(e)
+		and bit.band(rc:GetSummonLocation(),LOCATION_DECK+LOCATION_EXTRA)>0
 end
 --spsummon
 -- function c16599456.spcon(e,tp,eg,ep,ev,re,r,rp)

@@ -10,7 +10,7 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),3,true)
-	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_REMOVED,0,Duel.Exile,REASON_MATERIAL)
+	aux.AddContactFusionProcedure(c,cid.fragment,LOCATION_REMOVED,0,Duel.Exile,REASON_RULE)
 	--cannot target
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -40,7 +40,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 --summon condition
-function cid.spcfilter2(c)
+function cid.fragment(c)
 	return c:IsCode(104242585) and c:IsFaceup()
 end
 function cid.damcon(e,tp,eg,ep,ev,re,r,rp)

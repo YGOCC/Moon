@@ -38,7 +38,7 @@ function cid.mfilter0(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial()
 end
 function cid.mfilter00(c)
-	return c:IsCanBeFusionMaterial() and c:IsCode(104242585)
+	return c:IsCode(104242585)
 end
 function cid.mfilter2(c,e)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
@@ -94,7 +94,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 			local mat2=mat1:Filter(Card.IsLocation,nil,LOCATION_REMOVED)
 			mat1:Sub(mat2)
 			Duel.SendtoGrave(mat2,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
-			Duel.Exile(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+			Duel.Exile(mat1,REASON_RULE)
 			Duel.BreakEffect()
 			if Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP) and e:GetHandler():IsRelateToEffect(e) then
 				Duel.SpecialSummonStep(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
