@@ -77,5 +77,5 @@ function c67864642.spop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864642.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not (c:IsSetCard(0x2a6) or (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT)))
+	return not c:IsSetCard(0x2a6)
 end	

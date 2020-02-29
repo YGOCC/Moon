@@ -1,8 +1,9 @@
 --VECTOR Mechanization: Reconstruction
 --Scripted by Zerry
 function c67864657.initial_effect(c)
-   local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_ATKCHANGE)
+	--Special Summon
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -10,6 +11,7 @@ function c67864657.initial_effect(c)
 	e1:SetTarget(c67864657.target)
 	e1:SetOperation(c67864657.activate)
 	c:RegisterEffect(e1)
+	--Add to hand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(67864657,1))
 	e2:SetCategory(CATEGORY_TOHAND)
@@ -55,5 +57,8 @@ function c67864657.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,2,REASON_EFFECT)
+		Duel.ShuffleHand(tp)
+		Duel.BreakEffect()
+		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
 	end
 end
