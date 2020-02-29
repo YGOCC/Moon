@@ -12,7 +12,7 @@ function c67864656.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(67864656,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetRange(LOCATION_SZONE)
@@ -30,23 +30,24 @@ function c67864656.drop(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
 	end
 end
-function c67864656.spgfilter(c,tp)
-	return c:IsSetCard(0x62a6) and c:IsControler(tp)
-		and Duel.IsExistingTarget(c67864656.spgfilter2,tp,LOCATION_GRAVE,0,1,nil,c:GetLevel(),e,tp)
+function c67864656.spgfilter(c,e,tp)
+	local lv=c:GetLevel()
+	return lv>1 and c:IsSetCard(0x62a6) and c:IsControler(tp) and c:IsFaceup()
+		and Duel.IsExistingTarget(c67864656.spgfilter2,tp,LOCATION_GRAVE,0,1,nil,e,tp,lv)
 end
-function c67864656.spgfilter2(c,lv,e,tp)
-	return c:GetLevel()>0 and c:GetLevel()<lv and c:IsSetCard(0x2a6)
+function c67864656.spgfilter2(c,e,tp,lv)
+	return c:GetLevel()>0 and c:IsLevelBelow(lv-1) and c:IsSetCard(0x2a6)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c67864656.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c67864656.spgfilter,1,nil,tp)
+	return eg:IsExists(c67864656.spgfilter,1,nil,e,tp)
 end
 function c67864656.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c67864656.spgfilter2(chkc,eg:GetFirst():GetLevel(),e,tp) end
+--	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c67864656.spgfilter(chkc,e,tp) end
 	if chk==0 then return eg:IsExists(c67864656.spgfilter,1,nil,e,tp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c67864656.spgfilter2,tp,LOCATION_GRAVE,0,1,1,nil,eg:GetFirst():GetLevel(),e,tp)
+	local g=Duel.SelectTarget(tp,c67864656.spgfilter2,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,eg:GetFirst():GetLevel())
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c67864656.spop(e,tp,eg,ep,ev,re,r,rp)
