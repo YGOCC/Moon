@@ -1,10 +1,10 @@
 --Sinnamon-Flavored: Quick Foxxie
 local cid,id=GetID()
 function cid.initial_effect(c)
-	  aux.AddOrigEvoluteType(c)
+	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,nil,8,cid.filter1,cid.filter2,3,99)
-	 --negate
+	aux.AddEvoluteProc(c,nil,8,cid.filter1,cid.filter2,3,99)
+	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -13,21 +13,22 @@ function cid.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(cid.discon)
-	  e1:SetCost(cid.cost)
+	e1:SetCost(cid.cost)
 	e1:SetTarget(cid.distg)
 	e1:SetOperation(cid.disop)
 	c:RegisterEffect(e1)
- --special summon
+	--special summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_SPSUMMON_PROC)
 	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e3:SetRange(LOCATION_EXTRA)
+	e3:SetCountLimit(1,id)
 	e3:SetCondition(cid.hspcon)
 	e3:SetOperation(cid.hspop)
 	e3:SetValue(SUMMON_TYPE_SPECIAL+388)
 	c:RegisterEffect(e3) 
- --attack all
+	--attack all
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_ATTACK_ALL)
@@ -43,10 +44,15 @@ function cid.filter2(c,ec,tp)
 	return c:IsRace(RACE_BEASTWARRIOR)
 end
 function cid.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)
+	return c:IsFaceup() and c:IsSetCard(0xa34)
+end
+function cid.cfilter2(c)
+	return c:IsFaceup() and not c:IsSetCard(0xa34)
 end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp and Duel.IsChainNegatable(ev) and g:GetCount()>0 and g:FilterCount(cid.cfilter,nil)==g:GetCount()
+	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+		and not Duel.IsExistingMatchingCard(cid.cfilter2,tp,LOCATION_MZONE,0,1,nil)
+		and ep~=tp and Duel.IsChainNegatable(ev)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
    if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) end

@@ -58,7 +58,8 @@ function c50031841.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c50031841.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_FUSION or r==REASON_EVOLUTE 
+	local res=r&(REASON_FUSION+REASON_EVOLUTE)
+	return res==REASON_FUSION or res==REASON_EVOLUTE
 end
 function c50031841.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

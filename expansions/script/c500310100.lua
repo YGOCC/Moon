@@ -76,7 +76,7 @@ local c=e:GetHandler()
 		e2:SetCode(EVENT_CHAIN_SOLVING)
 		e2:SetCondition(c500310100.discon)
 		e2:SetOperation(c500310100.disop)
-		e1:SetLabel(re:GetHandler():GetCode())
+		e2:SetLabel(re:GetHandler():GetCode())
 		e2:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e2,tp)
 end

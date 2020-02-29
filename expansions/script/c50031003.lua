@@ -1,10 +1,10 @@
 --Sweethard-Powered: Sagi Rabbit
+local cid,id=GetID()
 function cid.initial_effect(c)
- aux.AddOrigEvoluteType(c)
+	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,nil,4,cid.filter1,cid.filter2,2,99)  
-
---spsummon proc
+	aux.AddEvoluteProc(c,nil,4,cid.filter1,cid.filter2,2,99)  
+	--spsummon proc
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -16,7 +16,7 @@ function cid.initial_effect(c)
 	e0:SetOperation(cid.hspop)
 	e0:SetValue(SUMMON_TYPE_SPECIAL+388)
 	c:RegisterEffect(e0)
-		--deck check
+	--deck check
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -28,7 +28,7 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
-	   --to deck
+	--to deck
 end
 function cid.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK)
@@ -109,12 +109,12 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if opt==2 then
 		g=Duel.GetFieldGroup(tp,0,LOCATION_HAND):RandomSelect(tp,1)
 	   Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
-   --	 local e2=Effect.CreateEffect(c)
-   --	 e2:SetType(EFFECT_TYPE_FIELD)
+   --	local e2=Effect.CreateEffect(c)
+   --	e2:SetType(EFFECT_TYPE_FIELD)
   --	  e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
   --	  e2:SetCode(EFFECT_CANNOT_ACTIVATE)
-   --	 e2:SetTargetRange(0,1)
-   --	 e2:SetValue(cid.aclimit)
+   --	e2:SetTargetRange(0,1)
+   --	e2:SetValue(cid.aclimit)
 	  --  e2:SetReset(RESET_PHASE+PHASE_END)
   --	  Duel.RegisterEffect(e2,tp)
 	end
