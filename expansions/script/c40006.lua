@@ -46,7 +46,7 @@ end
 	local dg=g:Select(tp,1,ct,nil)
 	Duel.HintSelection(dg)
 	Duel.Destroy(dg,REASON_EFFECT)
-		if Duel.Destroy(dg,REASON_EFFECT) and c1+c2+c3==3 and Duel.SelectYesNo(tp,aux.Stringid(40006,1)) then
+		if c1+c2+c3==3 and Duel.SelectYesNo(tp,aux.Stringid(40006,1)) then
 		Duel.BreakEffect()
 		local cg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,0,1-tp,nil)
 			if cg:IsExists(Card.IsAbleToRemove,1,1-tp) then

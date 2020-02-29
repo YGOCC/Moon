@@ -27,7 +27,7 @@ function s.initial_effect(c)
 		c:RegisterEffect(e2)  
 end
 	function s.cfilter(c,tp)
-	return c:IsReason(REASON_DESTROY) and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetPreviousControler()==1-tp
+	return c:IsReason(REASON_DESTROY) and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 	function s.cond(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
