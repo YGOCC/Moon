@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	06102ca225200f2cfcdc6750902f3405
+﻿expansions/cards-new.cdb	1235716498ed325c626af09941d55bad
 expansions/lflist.conf	6904edd7f1d1c6a4d98653c95c9f432b
 expansions/strings.conf	1cf191537472f11fcba72f15dd46c196
 expansions/pics/10130500.jpg	4288a07fb917d204bc49a28c5d87596c
@@ -574,7 +574,8 @@ expansions/pics/111765878.jpg	fff78ab54b3ad0f9f9539717fa53c6ca
 expansions/pics/111765879.jpg	7f09ca9737b1f36020b8bd1fb717c049
 expansions/pics/111765880.jpg	381e4d33f30adcfec945478d47341c0b
 expansions/pics/111765881.jpg	9ab1ad39deff4fc4a113a45352af8dde
-expansions/pics/11223344.png	aac017df537e4a88ca6d3f1e995a2081
+expansions/pics/11223344.jpg	fc488d1f9ff198a5aac97e328e18814c
+expansions/pics/11223344.png	8b0ed6c73419591ce7d63a40d9a542c1
 expansions/pics/11606000.jpg	dccbdabb4c12fc4dbc2e53eb6d8d46bb
 expansions/pics/11606001.jpg	793ce907ba69838b2a8847c55ac72339
 expansions/pics/11606002.jpg	10c9efba1af9886f764f02d171676a8d
@@ -1411,6 +1412,7 @@ expansions/pics/218201914.jpg	4fdb008c9d26050fe703e5611ec9d15e
 expansions/pics/218201915.jpg	13b2a703b3ef3e830e1d9eaf99b8e94c
 expansions/pics/218201916.jpg	d5351ea0892bcb9f34767e08c3b100bb
 expansions/pics/221594300.jpg	629c2d67d08f60cece1462a8d4387938
+expansions/pics/221594300.png	eceda964fd876ae0ccb9cf2c356350d4
 expansions/pics/221594301.jpg	280bd6800798f7b8702f241641bcb7e0
 expansions/pics/221594302.jpg	92f21c03dc81e9cdf7624b32dcf87317
 expansions/pics/221594303.jpg	8debc4987a06a6984a67a43238d98706
@@ -3754,7 +3756,7 @@ expansions/script/c111765878.lua	18cbdc321eaf835253623fcdda76c209
 expansions/script/c111765879.lua	7f8c6b535dcadddaf3bd1b759b2bea1c
 expansions/script/c111765880.lua	8ce97975a68f31ff2b3c1830c662fd8d
 expansions/script/c111765881.lua	86b8a6b97e896194a1f53c4aff4e487e
-expansions/script/c11223344.lua	8c82e07750c732f87127d38269b3c018
+expansions/script/c11223344.lua	fcd9b6f7140176fc790ca01442450bfd
 expansions/script/c11606000.lua	195272fca4bc589079cbeb4bad8cc675
 expansions/script/c11606001.lua	efd6fcc3a85676a378c7fe6995b5bf4b
 expansions/script/c11606002.lua	6f24c5d622c78de326ecbade4e142d02
@@ -6299,6 +6301,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	62d86aaf5b57a0cb6bbac05a0c6c12aa
+update/filelist.txt	21b1f2d83a976a65b43fd20507cb7ba5
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	0f57983c0a7eb5abbc7eb1624c4a58ae
+update/version.txt	d0796bebf5719cb9e72e0306e4036cc0
