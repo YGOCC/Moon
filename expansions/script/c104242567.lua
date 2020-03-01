@@ -21,11 +21,12 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Fragment creation
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+1000)
-	e2:SetCost(cid.backcost)
-	e2:SetOperation(cid.spop)
+	e2:SetCost(cid.selflock)
+	e2:SetOperation(cid.fragment)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetRange(LOCATION_HAND)
@@ -65,7 +66,7 @@ end
 end
 end
 --Back Row Cost
-function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.selflock(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return  Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
 		if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
@@ -79,7 +80,7 @@ function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	ex:SetTarget(cid.splimit)
 	Duel.RegisterEffect(ex,tp)
 end
-function cid.spop(e,tp,eg,ep,ev,re,r,rp,chk)	
+function cid.fragment(e,tp,eg,ep,ev,re,r,rp,chk)	
 	--	local sc=Duel.CreateToken(tp,104242585)
 	--	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 	--	Duel.SendtoExtraP(sc,tp,REASON_RULE)

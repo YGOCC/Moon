@@ -21,11 +21,12 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Fragment creation
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+1000)
-	e2:SetCost(cid.backcost)
-	e2:SetOperation(cid.spop)
+	e2:SetCost(cid.selflock)
+	e2:SetOperation(cid.fragment)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetRange(LOCATION_HAND)
@@ -45,12 +46,10 @@ function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc~=e:GetHandler() end
-	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) 
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	
 end
@@ -58,16 +57,19 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
 	Duel.SpecialSummonComplete()
-		local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.Destroy(tc,POS_FACEUP,REASON_EFFECT)
-	end
+	local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
+	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(21502796,1)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local sg=g:Select(tp,1,1,nil)
+		Duel.HintSelection(sg)
+		Duel.Destroy(sg,REASON_EFFECT)
 	
+end
 end
 end
 
 --Back Row Cost
-function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.selflock(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return  Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
 		if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
@@ -81,7 +83,7 @@ function cid.backcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	ex:SetTarget(cid.splimit)
 	Duel.RegisterEffect(ex,tp)
 end
-function cid.spop(e,tp,eg,ep,ev,re,r,rp,chk)	
+function cid.fragment(e,tp,eg,ep,ev,re,r,rp,chk)	
 	--	local sc=Duel.CreateToken(tp,104242585)
 	--	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 	--	Duel.SendtoExtraP(sc,tp,REASON_RULE)

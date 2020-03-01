@@ -9,16 +9,16 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SPECIAL_SUMMON)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(cid.sptg)
+	e1:SetCondition(cid.battlephase)
+	e1:SetTarget(cid.sptg)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_GRAVE)
 	c:RegisterEffect(e2)
 	--draw
@@ -35,6 +35,10 @@ function cid.initial_effect(c)
 end
 function cid.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsAbleToGrave()
+end
+--Summon
+function cid.battlephase(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function cid.sptg(e,c)
 	if c==nil then return true end

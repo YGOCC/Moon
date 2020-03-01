@@ -15,8 +15,8 @@ function cid.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id)
 	e1:SetCondition(cid.condition)
-	e1:SetTarget(cid.target)
-	e1:SetOperation(cid.activate)
+	e1:SetTarget(cid.destg)
+	e1:SetOperation(cid.desop)
 	c:RegisterEffect(e1)
 	--Fragment creation
 	local e2=Effect.CreateEffect(c)
@@ -40,6 +40,23 @@ function cid.cfilter(c)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)
+end
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc~=e:GetHandler() end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
+	end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	
+end
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)
+	if g:GetCount()>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local sg=g:Select(tp,1,2,nil)
+		Duel.HintSelection(sg)
+		Duel.Destroy(sg,REASON_EFFECT)
+	
+end
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

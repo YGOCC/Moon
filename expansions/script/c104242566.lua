@@ -15,6 +15,7 @@ function cid.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id)
+	e1:SetCondition(cid.battlephase)
 	e1:SetTarget(cid.sptg)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
@@ -46,6 +47,10 @@ end
 function cid.spfilter2(c,e,tp,m,f)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x666) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,tp)
+end
+--Fuse
+function cid.battlephase(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
