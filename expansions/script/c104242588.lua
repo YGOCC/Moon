@@ -9,7 +9,7 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),3,true)
+		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),4,true)
 	aux.AddContactFusionProcedure(c,cid.fragment,LOCATION_REMOVED,0,Duel.Exile,REASON_RULE)
 	--cannot target
 	local e2=Effect.CreateEffect(c)

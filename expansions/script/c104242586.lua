@@ -9,7 +9,7 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),2,true)
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),3,true)
 	aux.AddContactFusionProcedure(c,cid.fragment,LOCATION_REMOVED,0,Duel.Exile,REASON_RULE)
 			--Activate
 	local e1=Effect.CreateEffect(c)
@@ -38,21 +38,21 @@ Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(44335251,2))
 		local b=Duel.IsExistingMatchingCard(cid.moondream,tp,LOCATION_ONFIELD,0,1,nil)
 if chk==0 then return a or b end
 if a and b then
-    op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
+	op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
 elseif a then
-    op=0
+	op=0
 elseif b then
-    op=1
+	op=1
 end
 if op==0 then
-    local tc=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)
-    if tc then
-        Duel.Exile(tc,REASON_COST)
-    end
+	local tc=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_COST)
+	end
 end
 if op==1 then
-    local sg=Duel.SelectReleaseGroup(tp,cid.moondream,1,1,nil)
-    Duel.Release(sg,REASON_COST)
+	local sg=Duel.SelectReleaseGroup(tp,cid.moondream,1,1,nil)
+	Duel.Release(sg,REASON_COST)
 	end
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
