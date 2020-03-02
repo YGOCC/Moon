@@ -9,8 +9,8 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x666),2,true)
-	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
+	aux.AddFusionProcFunRep(c,cid.ponyfilter,2,true)
+	aux.AddContactFusionProcedure(c,cid.ponyfilter,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
 	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2956282,0))
@@ -25,6 +25,9 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.distg)
 	e1:SetOperation(cid.disop)
 	c:RegisterEffect(e1)
+end
+function cid.ponyfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsCanBeFusionMaterial()
 end
 function cid.negcostfilter(c)
 	return c:IsSetCard(0x666) and c:IsAbleToRemoveAsCost()

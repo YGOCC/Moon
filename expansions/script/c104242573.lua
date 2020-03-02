@@ -13,8 +13,8 @@ function cid.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(TIMING_END_PHASE,TIMING_END_PHASE)
-	e1:SetCondition(cid.spcon)
+	e1:SetCountLimit(1,id)
+	--e1:SetCondition(cid.spcon)
 	e1:SetTarget(cid.sptg)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
@@ -22,6 +22,7 @@ function cid.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,id+1000)
 	e2:SetCondition(aux.exccon)
 	e2:SetCost(aux.bfgcost)
 	e2:SetOperation(cid.fragop)
@@ -35,27 +36,19 @@ function cid.fragop(e,tp,eg,ep,ev,re,r,rp,chk)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 		Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
 end
-function cid.cfilter(c)
-	return c:IsSetCard(0x666)
-end
-function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)
-end
-function cid.spfilter(c,e,tp,tid)
-	return c:GetTurnID()==tid and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and (c:IsReason(REASON_BATTLE) or c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()==1-tp)
+function cid.spfilter(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,Duel.GetTurnCount()) end
+		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local tg=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp,Duel.GetTurnCount())
-	if ft<1 or #tg<1 then return end
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=tg:Select(tp,ft,ft,nil)
-	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	if #g>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

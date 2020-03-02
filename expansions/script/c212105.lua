@@ -59,12 +59,12 @@ function c212105.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
-function c212105.cfilter(c)
+function c212105.cfilter1(c)
 	return c:IsSetCard(0x258) and c:IsAbleToGraveAsCost()
 end
 function c212105.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c212105.cfilter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,c212105.cfilter,1,1,REASON_COST,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c212105.cfilter1,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,c212105.cfilter1,1,1,REASON_COST,nil)
 end
 function c212105.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsControlerCanBeChanged() end
