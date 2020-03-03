@@ -38,16 +38,6 @@ function s.initial_effect(c)
 	e4:SetCondition(s.chcon4)
 	e4:SetOperation(s.chop2)
 	c:RegisterEffect(e4)
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(id,1))
-	e5:SetCategory(CATEGORY_TOEXTRA)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e5:SetProperty(EFFECT_FLAG_DELAY)
-	e5:SetCode(EVENT_DESTROYED)
-	e5:SetCondition(s.thcon)
-	e5:SetTarget(s.thtg)
-	e5:SetOperation(s.teop)
-	c:RegisterEffect(e5)
 end
 	function s.chainop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
@@ -107,22 +97,5 @@ end
 	if #g>0 then
 		Duel.HintSelection(g)
 		Duel.Destroy(g,REASON_EFFECT)
-	end
-end
-	function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
-end
-	function s.filter(c)
-	return c:IsSetCard(0x10ec) and c:IsAbleToExtra() and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
-end
-	function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,nil,1,tp,LOCATION_DECK)
-end
-	function s.teop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,3))
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoExtraP(g,tp,REASON_EFFECT)
 	end
 end
