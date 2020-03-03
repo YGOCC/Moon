@@ -101,7 +101,7 @@ function c16599465.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c16599465.tdfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,tp)
 	if #g>0 then
 		Duel.HintSelection(g)
-		if Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 and Duel.GetOperatedGroup():GetFirst():IsLocation(LOCATION_DECK) then
+		if Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 and Duel.GetOperatedGroup():GetFirst():IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 			local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,1,nil)
 			if #sg>0 then
