@@ -82,8 +82,8 @@ function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(1-tp,id)>=3 --and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
 end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetDecktopGroup(tp,2)
-	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==2 end
+	local g=Duel.GetDecktopGroup(tp,5)
+	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==5 end
 	Duel.DisableShuffleCheck()
 	Duel.Remove(g,POS_FACEDOWN,REASON_COST)
 end

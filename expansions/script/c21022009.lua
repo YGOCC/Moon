@@ -14,6 +14,7 @@ function cid.initial_effect(c)
                 e0:SetCategory(CATEGORY_REMOVE)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
+                e0:SetCountLimit(1,id)
 	e0:SetTarget(cid.target)
 	e0:SetOperation(cid.activate)
 	c:RegisterEffect(e0)
@@ -36,17 +37,28 @@ function cid.initial_effect(c)
 	e4:SetTarget(cid.thtg)
 	e4:SetOperation(cid.thop)
 	c:RegisterEffect(e4)
+	--remove
+	local e6=Effect.CreateEffect(c)
+	e6:SetCategory(CATEGORY_TODECK+CATEGORY_TOGRAVE)
+	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e6:SetCode(EVENT_PHASE+PHASE_END)
+	e6:SetRange(LOCATION_SZONE)
+                e6:SetCondition(cid.rmcon)
+	e6:SetCountLimit(1)
+	e6:SetTarget(cid.rmtg)
+	e6:SetOperation(cid.rmop)
+	c:RegisterEffect(e6)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetDecktopGroup(tp,3)
-	if chk==0 then return g:FilterCount(Card.IsAbleToRemove,nil,tp,POS_FACEDOWN)==3 end
+	local g=Duel.GetDecktopGroup(tp,5)
+	if chk==0 then return g:FilterCount(Card.IsAbleToRemove,nil,tp,POS_FACEDOWN)==5 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,3,tp,LOCATION_DECK)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local ct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	if ct==0 then return end
-	if ct>3 then ct=3 end
+	if ct>5 then ct=5 end
 	local g=Duel.GetDecktopGroup(tp,ct)
 	Duel.DisableShuffleCheck()
 	Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
@@ -72,10 +84,10 @@ function cid.cfilter(c)
 	return c:IsFacedown() and c:IsAbleToDeckAsCost()
 end
 function cid.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_REMOVED,0,2,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_REMOVED,0,3,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_REMOVED,0,2,2,e:GetHandler())
-	Duel.SendtoDeck(g,nil,2,REASON_COST)
+	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_REMOVED,0,3,3,e:GetHandler())
+	Duel.SendtoDeck(g,nil,3,REASON_COST)
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
@@ -86,5 +98,26 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,c)
+	end
+end
+function cid.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
+function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,e:GetHandler(),1,0,0)
+end
+function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local res=false
+	local g=Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_REMOVED,0,3,nil) 
+	if g then
+	                 local sg=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_REMOVED,0,3,3,e:GetHandler())
+	                 Duel.SendtoDeck(sg,nil,3,REASON_COST)
+		 res=true
+	end
+	if not res and c:IsRelateToEffect(e) then
+		Duel.SendtoGrave(c,REASON_EFFECT)
 	end
 end

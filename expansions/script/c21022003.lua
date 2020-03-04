@@ -76,8 +76,8 @@ function cid.thfilter(c)
 	return c:IsSetCard(0x312) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetDecktopGroup(tp,1)
-	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==1 end
+	local g=Duel.GetDecktopGroup(tp,3)
+	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==3 end
 	Duel.DisableShuffleCheck()
 	Duel.Remove(g,POS_FACEDOWN,REASON_COST)
 end

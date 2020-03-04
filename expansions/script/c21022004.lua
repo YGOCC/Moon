@@ -18,14 +18,15 @@ function cid.initial_effect(c)
 	--remove
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_DRAW)
+	e2:SetCategory(CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id)
                 e2:SetCondition(cid.tdcon1)
-	e2:SetCost(cid.drcost)
-	e2:SetTarget(cid.drtg)
-	e2:SetOperation(cid.drop)
+	e2:SetCost(cid.bcost)
+	e2:SetTarget(cid.btg)
+	e2:SetOperation(cid.bop)
 	c:RegisterEffect(e2)
 	local e2x=e2:Clone()
 	e2x:SetType(EFFECT_TYPE_QUICK_O)
@@ -54,25 +55,31 @@ end
 function cid.splimit(e,se,sp,st)
 	return se:IsHasType(EFFECT_TYPE_ACTIONS)
 end
-function cid.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.cfilter(c)
+	return c:IsFacedown() and c:IsAbleToDeckAsCost()
+end
+function cid.bcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_REMOVED,0,3,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_REMOVED,0,3,3,e:GetHandler())
 	Duel.SendtoDeck(g,nil,3,REASON_COST)
 end
-function cid.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return true end
-    Duel.SetTargetPlayer(tp)
-    Duel.SetTargetParam(1)
-    Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+function cid.btg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsAbleToRemove() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
-function cid.drop(e,tp,eg,ep,ev,re,r,rp)
-    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Draw(p,d,REASON_EFFECT)
+function cid.bop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Remove(tc,POS_FACEDOWN,REASON_EFFECT)
+	end
 end
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetDecktopGroup(tp,2)
-	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==2 end
+	local g=Duel.GetDecktopGroup(tp,5)
+	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==5 end
 	Duel.DisableShuffleCheck()
 	Duel.Remove(g,POS_FACEDOWN,REASON_COST)
 end

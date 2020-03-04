@@ -90,8 +90,8 @@ function cod.actcon(e,tp,eg,ep,ev,re,r,rp)
 end
  
 function cod.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetDecktopGroup(tp,1)
-	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==1 end
+	local g=Duel.GetDecktopGroup(tp,5)
+	if chk==0 then return g:FilterCount(Card.IsAbleToRemoveAsCost,nil,POS_FACEDOWN)==5 end
 	Duel.DisableShuffleCheck()
 	Duel.Remove(g,POS_FACEDOWN,REASON_COST)
 end

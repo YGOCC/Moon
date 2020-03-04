@@ -43,6 +43,7 @@ function cid.initial_effect(c)
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e6:SetCode(EVENT_PHASE+PHASE_END)
 	e6:SetRange(LOCATION_SZONE)
+                e6:SetCondition(cid.rmcon)
 	e6:SetCountLimit(1)
 	e6:SetTarget(cid.rmtg)
 	e6:SetOperation(cid.rmop)
@@ -58,10 +59,14 @@ function cid.actcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cid.cfilter1,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.sdcon(e)
+                local tp=e:GetHandlerPlayer()
 	return not Duel.IsExistingMatchingCard(cid.cfilter1,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.cfilter(c)
 	return c:IsFacedown() and c:IsAbleToDeckAsCost()
+end
+function cid.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
 end
 function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -71,10 +76,10 @@ end
 function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local res=false
-	local g=Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_REMOVED,0,5,nil) 
+	local g=Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_REMOVED,0,3,nil) 
 	if g then
-	                 local sg=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_REMOVED,0,5,5,e:GetHandler())
-	                 Duel.SendtoDeck(sg,nil,5,REASON_COST)
+	                 local sg=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_REMOVED,0,3,3,e:GetHandler())
+	                 Duel.SendtoDeck(sg,nil,3,REASON_COST)
 		 res=true
 	end
 	if not res and c:IsRelateToEffect(e) then
