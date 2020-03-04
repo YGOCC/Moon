@@ -10,7 +10,7 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,cid.ponyfilter,2,true)
-	aux.AddContactFusionProcedure(c,cid.ponyfilter,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
+	aux.AddContactFusionProcedure(c,cid.ponyfilter,LOCATION_REMOVED,0,function(g) Duel.SendtoGrave(g:Filter(Card.IsSetCard,nil,0x666),REASON_MATERIAL) Duel.Exile(g:Filter(Card.IsCode,nil,104242585),REASON_RULE) end)
 	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(2956282,0))
@@ -26,21 +26,27 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.disop)
 	c:RegisterEffect(e1)
 end
-function cid.ponyfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsCanBeFusionMaterial()
+function cid.ponyfilter(c,fc,sub,mg,sg)
+	if c:IsFacedown() or not c:IsCanBeFusionMaterial() then return false end
+	if c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) then
+		return not sg or sg:FilterCount(aux.TRUE,c)==0 or sg:IsExists(Card.IsCode,1,c,104242585)
+	elseif c:IsCode(104242585) then
+		return not sg or not sg:IsExists(Card.IsCode,1,c,104242585)
+	end
+	return false
 end
 function cid.negcostfilter(c)
-	return c:IsSetCard(0x666) and c:IsAbleToRemoveAsCost()
+	return c:IsCode(104242585) and c:IsFaceup()
 end
 function cid.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and rp==1-tp
 		and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end
 function cid.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.negcostfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.negcostfilter,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,cid.negcostfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	local g=Duel.SelectMatchingCard(tp,cid.negcostfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+	Duel.Exile(g,REASON_COST)
 end
 function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
