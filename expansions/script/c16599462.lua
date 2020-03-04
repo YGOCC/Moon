@@ -173,5 +173,5 @@ end
 --act in hand
 function c16599462.quickact(e)
 	local tp=e:GetHandler():GetControler()
-	return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>=Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)+1
+	return Duel.GetTurnPlayer()==tp and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>=Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)+1
 end
