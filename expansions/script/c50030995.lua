@@ -11,7 +11,7 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,nil,6,cid.mfilter1,cid.mfilter2,2,99)  
+	aux.AddEvoluteProc(c,nil,7,cid.mfilter1,cid.mfilter2,2,99)  
 	--spsummon proc
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
