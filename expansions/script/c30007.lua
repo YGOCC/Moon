@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--search
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_TODECK+CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e4:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e4:SetCountLimit(1,id+1000)
@@ -67,21 +67,21 @@ end
 	return Duel.IsExistingMatchingCard(s.confilter1,0,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 end
 	function s.filt(c,tp)
-	return c:IsSetCard(0x10ec) and c:IsFaceup() and c:IsAbleToDeck() and c:IsType(TYPE_PENDULUM)
+	return c:IsSetCard(0x10ec) and c:IsFaceup() and c:IsAbleToDeckAsCost() and c:IsType(TYPE_PENDULUM)
 		and Duel.IsExistingMatchingCard(s.filt2,tp,LOCATION_DECK,0,1,nil,c:GetCode())
 end
 	function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filt,tp,LOCATION_EXTRA,0,1,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filt,tp,LOCATION_EXTRA,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,s.filt,tp,LOCATION_EXTRA,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.filt,tp,LOCATION_EXTRA,0,1,1,nil,tp)
 	e:SetLabel(g:GetFirst():GetCode())
 	Duel.SendtoDeck(g:GetFirst(),nil,2,REASON_COST)
 end
-	function s.filt2(c,code,tp)
+	function s.filt2(c,code)
 	return c:IsSetCard(0x10ec) and c:IsAbleToHand() and not c:IsCode(code)
 end
 	function s.trg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filt2,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 	function s.ope(e,tp,eg,ep,ev,re,r,rp)
@@ -117,16 +117,17 @@ end
 	if a:IsRelateToEffect(e) then
 		Duel.GetControl(a,1-tp)
 			if Duel.GetControl(a,1-tp) and a:IsRelateToEffect(e) and a:IsFaceup() then
-			local e1=Effect.CreateEffect(a)
+			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			e1:SetValue(0)
 			a:RegisterEffect(e1)
 			if a:GetAttack()==0 and Duel.GetMatchingGroupCount(s.gfilter2,tp,LOCATION_MZONE,0,1,nil)>=1 then
 				local g=Duel.GetMatchingGroup(s.gfilter2,tp,LOCATION_MZONE,0,1,nil)
 				local a1=g:GetFirst()
 				while a1 do
-					local e2=Effect.CreateEffect(a1)
+					local e2=Effect.CreateEffect(e:GetHandler())
 					e2:SetType(EFFECT_TYPE_SINGLE)
 					e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 					e2:SetCode(EFFECT_UPDATE_ATTACK)
