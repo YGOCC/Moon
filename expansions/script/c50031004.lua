@@ -1,11 +1,10 @@
 --Sweethard-Powered: Daffa Goose
 local cid,id=GetID()
 function cid.initial_effect(c)
-   aux.AddOrigEvoluteType(c)
+	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,nil,5,cid.filter1,cid.filter2,2,99)  
-
---spsummon proc
+	aux.AddEvoluteProc(c,nil,5,cid.filter1,cid.filter2,2,99)  
+	--spsummon proc
 	local e0=Effect.CreateEffect(c)
 	e0:SetDescription(aux.Stringid(id,0))
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -17,7 +16,7 @@ function cid.initial_effect(c)
 	e0:SetOperation(cid.hspop)
 	e0:SetValue(SUMMON_TYPE_SPECIAL+388)
 	c:RegisterEffect(e0)
-		--deck check
+	--deck check
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -30,7 +29,6 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
 end
-
 function cid.filter1(c,ec,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK)
 end
@@ -92,17 +90,15 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ShuffleDeck(tp)
 	--getting the option and executing
 	if opt==0 then
- local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	if Duel.Draw(p,d,REASON_EFFECT)==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.BreakEffect()
-		Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
+	   local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	   if Duel.Draw(tp,1,REASON_EFFECT)<1 then return end
+	   Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	   local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
+	   if g:GetCount()>0 then
+			Duel.BreakEffect()
+			Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
+		end
 	end
-end
-
-
 	if opt==1 then
 		local c=e:GetHandler()
 		local e1=Effect.CreateEffect(c)
