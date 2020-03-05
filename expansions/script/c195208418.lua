@@ -18,10 +18,13 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.op)
 	c:RegisterEffect(e1)
 end
+function cid.cfilter(c)
+	return c:IsAbleToRemoveAsCost() and c:IsSetCard(0x83e)
+end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsAbleToRemoveAsCost,Card.IsSetCard),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,0x83e) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	Duel.Remove(Duel.SelectMatchingCard(tp,aux.AND(Card.IsAbleToRemoveAsCost,Card.IsSetCard),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,0x83e),POS_FACEUP,REASON_COST)
+	Duel.Remove(Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil),POS_FACEUP,REASON_COST)
 end
 function cid.filter(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0x83e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
