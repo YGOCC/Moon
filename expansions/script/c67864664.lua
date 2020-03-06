@@ -1,7 +1,7 @@
 --VECTOR Legion: Core Commando
 --Scripted by Zerry
 function c67864664.initial_effect(c)
-	--fusion material
+	--Synchro proc
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x2a6),aux.NonTuner(c67864664.sfilter),1)
 	c:EnableReviveLimit()
 	--Equip
@@ -25,7 +25,7 @@ function c67864664.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,67864664)
 	e2:SetHintTiming(0,TIMING_MAIN_END+TIMING_BATTLE_START+TIMING_BATTLE_END)
-	e2:SetCondition(c67864664.spcon)
+	e2:SetCondition(c67864664.descon)
 	e2:SetCost(c67864664.descost)
 	e2:SetTarget(c67864664.destg)
 	e2:SetOperation(c67864664.desop)
