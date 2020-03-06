@@ -9,22 +9,9 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
+	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,cid.ponyfilter,2,true)
-	aux.AddContactFusionProcedure(c,cid.ponyfilter,LOCATION_REMOVED,0,function(g) Duel.SendtoGrave(g:Filter(Card.IsSetCard,nil,0x666),REASON_MATERIAL) Duel.Exile(g:Filter(Card.IsCode,nil,104242585),REASON_RULE) end)
-	--negate
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(2956282,0))
-	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetRange(LOCATION_GRAVE)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e1:SetCode(EVENT_CHAINING)
-	e1:SetCountLimit(1,id)
-	e1:SetCondition(cid.discon)
-	e1:SetCost(cid.discost)
-	e1:SetTarget(cid.distg)
-	e1:SetOperation(cid.disop)
-	c:RegisterEffect(e1)
+	aux.AddContactFusionProcedure(c,cid.ponyfilter,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
 	--banish as punishment
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(39823987,0))
@@ -36,42 +23,11 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.desop)
 	c:RegisterEffect(e2)
 end
-function cid.ponyfilter(c,fc,sub,mg,sg)
-	if c:IsFacedown() or not c:IsCanBeFusionMaterial() then return false end
-	if c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) then
-		return not sg or sg:FilterCount(aux.TRUE,c)==0 or sg:IsExists(Card.IsCode,1,c,104242585)
-	elseif c:IsCode(104242585) then
-		return not sg or not sg:IsExists(Card.IsCode,1,c,104242585)
-	end
-	return false
+function cid.ponyfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsCanBeFusionMaterial()
 end
 function cid.spfilter(c,e,tp)
 	return c:IsCode(id+1) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function cid.negcostfilter(c)
-	return c:IsCode(104242585) and c:IsFaceup()
-end
-function cid.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and rp==1-tp
-		and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
-end
-function cid.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEDOWN,REASON_COST)
-end
-
-function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
-	end
-end
-function cid.disop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(eg,REASON_EFFECT)
-	end
 end
 --banish as punishment
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -81,7 +37,6 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
-	
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		local g=Duel.GetFirstMatchingCard(cid.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
