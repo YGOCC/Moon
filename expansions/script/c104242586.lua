@@ -19,18 +19,33 @@ function cid.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
+	e1:SetCondition(cid.condition)
 	e1:SetCost(cid.cost)
-	e1:SetTarget(cid.target)
-	e1:SetOperation(cid.activate)
+	e1:SetTarget(cid.rmtg)
+	e1:SetOperation(cid.rmop)
 	c:RegisterEffect(e1)
+		--remove
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(32617464,0))
+	e2:SetCategory(CATEGORY_REMOVE)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,id)
+	e2:SetTarget(cid.rmtg)
+	e2:SetOperation(cid.rmop)
+	c:RegisterEffect(e2)
 end
-
 ---Filters
 function cid.fragment(c)
 	return c:IsCode(104242585) and c:IsFaceup()
 end
 function cid.moondream(c)
 	return c:IsSetCard(0x666) and c:IsFaceup()
+end
+--pops
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()~=tp
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(44335251,2))
@@ -55,14 +70,16 @@ if op==1 then
 	Duel.Release(sg,REASON_COST)
 	end
 end
-function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end
-	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,2,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTORY,g,1,0,0)
 end
-function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	Duel.Destroy(g,REASON_EFFECT)
+function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
+	end
 end
