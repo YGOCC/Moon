@@ -11,6 +11,7 @@ function c500310990.initial_effect(c)
 	e1:SetCountLimit(1,500310990)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCondition(c500310990.thcon)
+	 e1:SetCost(c500310990.costxxl)
 	e1:SetTarget(c500310990.thtg)
 	e1:SetOperation(c500310990.thop)
 	c:RegisterEffect(e1)
@@ -40,7 +41,10 @@ end
 function c500310990.matfilter(c)
 	return c:IsSetCard(0xa34) 
 end
-
+function c500310990.costxxl(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
 function c500310990.thfilter(c)
 	return c:IsLevelBelow(4) and c:IsRace(RACE_BEASTWARRIOR) and c:IsAbleToHand()
 end

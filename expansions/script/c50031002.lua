@@ -115,7 +115,7 @@ end
 
 
 function cid.rmfilter(c)
-	return  c:IsFaceup() and c:IsType(TYPE_SPELL) and c:IsAbleToRemove()
+	return  c:IsAbleToRemove()
 end
 function cid.rmfilter2(c)
 	return  c:IsFaceup() and c:IsType(TYPE_TRAP) and c:IsAbleToDeck()
