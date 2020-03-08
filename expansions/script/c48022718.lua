@@ -45,7 +45,7 @@ function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectMatchingCard(tp,aux.AND(Card.CheckUniqueOnField,aux.NOT(Card.IsForbidden)),tp,LOCATION_HAND,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,cid.eqfilter,tp,LOCATION_HAND,0,1,1,nil,tp)
 	local tc=g:GetFirst()
 	if tc then
 		if not Duel.Equip(tp,tc,c) then return end
