@@ -25,6 +25,7 @@ function cid.initial_effect(c)
 	e3:SetCategory(CATEGORY_TOHAND)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SSET)
+                e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,id)
 	e3:SetTarget(cid.thtg)
@@ -37,11 +38,15 @@ function cid.initial_effect(c)
 	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
                 e5:SetCondition(cid.condition)
 	c:RegisterEffect(e5)
-	local e6=e3:Clone()
-	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e6:SetCode(EVENT_FLIP)
-                e6:SetCountLimit(1,id+10000)
+                local e6=e3:Clone()
+	e6:SetCode(EVENT_CHANGE_POS)
+	e6:SetCondition(cid.spcon)
 	c:RegisterEffect(e6)
+	local e7=e3:Clone()
+	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e7:SetCode(EVENT_FLIP)
+                e7:SetCountLimit(1,id+10000)
+	c:RegisterEffect(e7)
 end
 function cid.synop(f1,f2,minct,maxc)
 	return	function(e,tp,eg,ep,ev,re,r,rp,c,smat,mg,min,max)
@@ -51,6 +56,7 @@ function cid.synop(f1,f2,minct,maxc)
 				g:DeleteGroup()
                                                                 Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)
                                                                 Duel.ConfirmCards(1-tp,e:GetHandler())
+                                                                return false
 			end
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
@@ -69,4 +75,10 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
     if g:GetCount()>0 then
         Duel.SendtoHand(g,nil,REASON_EFFECT)
     end
+end
+function cid.cfilter(c,tp)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsFacedown()
+end
+function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(cid.cfilter,1,nil,tp)
 end
