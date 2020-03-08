@@ -108,7 +108,7 @@ end
 	function s.effectfilter(e,ct)
 	local p=e:GetHandler():GetControler()
 	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
-	return p==tp and te:GetHandler().toss_coin and te:GetHandler():IsType(TYPE_MONSTER)
+	return p==tp and te:IsHasCategory(CATEGORY_COIN) and te:GetHandler():IsType(TYPE_MONSTER)
 end
 
 
