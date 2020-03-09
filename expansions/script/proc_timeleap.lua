@@ -74,7 +74,7 @@ Card.GetOriginalLevel=function(c)
 	return get_orig_level(c)
 end
 Card.IsXyzLevel=function(c,xyz,lv)
-	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return 0 end
+	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
 	return is_xyz_level(c,xyz,lv)
 end
 Card.GetPreviousLevelOnField=function(c)
@@ -94,7 +94,6 @@ Card.IsLevelBelow=function(c,lv)
 	return is_level_below(c,lv)
 end
 Card.IsLevelAbove=function(c,lv)
-	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
 	if Auxiliary.Timeleaps[c] and not Auxiliary.Timeleaps[c]() then return false end
 	return is_level_above(c,lv)
 end
@@ -166,6 +165,12 @@ function Auxiliary.AddTimeleapProc(c,futureval,sumcon,filter,customop,...)
 	e2:SetCode(EFFECT_FUTURE)
 	e2:SetValue(Auxiliary.FutureVal(futureval))
 	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e3:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
 end
 function Auxiliary.TimeleapCondition(sumcon,filter,...)
 	local funs={...}
