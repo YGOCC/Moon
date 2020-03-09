@@ -11,7 +11,7 @@ function cm.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOGRAVE)
-	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_TARGET)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,m)
 	e1:SetCondition(cm.sscon)
 	e1:SetTarget(cm.sstg)
@@ -21,6 +21,7 @@ function cm.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
 	e2:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCountLimit(1,m+100)
 	e2:SetCost(cm.thcost)
@@ -63,8 +64,8 @@ function cm.ssop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,c.sfilter,1,e:GetHandler()) end
-	local g=Duel.SelectReleaseGroupEx(tp,c.sfilter,1,1,e:GetHandler())
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,cm.sfilter,1,e:GetHandler()) end
+	local g=Duel.SelectReleaseGroupEx(tp,cm.sfilter,1,1,e:GetHandler())
 	Duel.Release(g,REASON_COST)
 end
 function cm.thfilter(c,tp)

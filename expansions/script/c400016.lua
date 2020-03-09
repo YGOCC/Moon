@@ -21,14 +21,15 @@ end
 function c400016.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
 	if chk==0 then return Duel.IsExistingMatchingCard(c400016.cfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingTarget(nil,tp,0,LOCATION_ONFIELD,1,nil)
+		and Duel.IsExistingTarget(nil,tp,0,LOCATION_MZONE,1,nil)
 		and Duel.GetTurnPlayer()~=tp end
 	local ct=Duel.GetMatchingGroupCount(c400016.cfilter,tp,LOCATION_MZONE,0,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_ONFIELD,1,ct,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,nil,tp,0,LOCATION_MZONE,1,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 end
 function c400016.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
 		if Duel.Destroy(g,REASON_EFFECT,LOCATION_REMOVED) then

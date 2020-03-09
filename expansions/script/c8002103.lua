@@ -5,15 +5,15 @@ local cm=_G["c"..m]
 function cm.initial_effect(c)
 	--time leap procedure
 	aux.AddOrigTimeleapType(c,false)
-	aux.AddTimeleapProc(c,5,cid.sumcon,cid.tlfilter,nil)
+	aux.AddTimeleapProc(c,5,cm.sumcon,cm.tlfilter,nil)
 	c:EnableReviveLimit()
 	--I am protecc by sword
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(cm.eqcon2)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCondition(cm.eqcon2)
 	c:RegisterEffect(e1)
 	--Neg 0 on summon, boi
 	local e2=Effect.CreateEffect(c)
@@ -21,9 +21,9 @@ function cm.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCondition(cid.sscon)
-	e2:SetTarget(cid.sstg)
-	e2:SetOperation(cid.ssop)
+	e2:SetCondition(cm.sscon)
+	e2:SetTarget(cm.sstg)
+	e2:SetOperation(cm.ssop)
 	c:RegisterEffect(e2)
 	--AYAYAYAAAAAAAAAAAAAAAAAAA (He has Pillars. Its a JoJoke.)
 	local e3=Effect.CreateEffect(c)
@@ -31,14 +31,14 @@ function cm.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetCondition(cid.thcon)
-	e3:SetTarget(cid.thtg)
-	e3:SetOperation(cid.thop)
+	e3:SetCondition(cm.thcon)
+	e3:SetTarget(cm.thtg)
+	e3:SetOperation(cm.thop)
 	c:RegisterEffect(e3)
 	end
 function cm.sumcon(e,c)
     local tp=c:GetControler()
-    return Duel.IsExistingMatchingCard(cid.filter1,tp,LOCATION_MZONE,0,3,nil) or Duel.IsExistingMatchingCard(cid.filter2,tp,LOCATION_SZONE,0,1,nil)
+    return Duel.IsExistingMatchingCard(cm.filter1,tp,LOCATION_MZONE,0,3,nil) or Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_SZONE,0,1,nil)
 end
 
 function cm.filter1(c)
@@ -56,15 +56,15 @@ end
 function cm.sscon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_TIMELEAP)
 end
-function cm.ssfilter(c)
-	return c:IsRace(RACE_WARRIOR) and c:IsCanBeSpecialSummoned() and c:IsLevelBelow(4)
+function cm.ssfilter(c,e,tp)
+	return c:IsRace(RACE_WARRIOR) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
 end
 function cm.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(cm.ssfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
-function cm.sumop(e,tp,eg,ep,ev,re,r,rp)
+function cm.ssop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,cm.ssfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
@@ -79,7 +79,7 @@ function cm.thcon(e,tp,eg,ev,re,r,rp)
 return eg:IsExists(cm.confilter,1,nil,tp)
 end
 function cm.thfilter(c)
-	return c:IsType(TYPE_EQUIP) and c:IsType(TYPE_EQUIP) and c:IsAbleToHand()
+	return c:IsType(TYPE_EQUIP) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil) end
