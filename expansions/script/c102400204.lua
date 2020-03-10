@@ -42,6 +42,7 @@ function cid.costop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.AND(cid.filter,Card.IsAbleToDeck),tp,LOCATION_GRAVE,0,nil)
 	if #g==0 or not Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then return end
 	Duel.Hint(HINT_CARD,0,id)
+	Duel.ConfirmCards(1-tp,e:GetHandler())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	Duel.SendtoDeck(g:Select(tp,1,3,nil),nil,2,REASON_EFFECT)
 	local tg=Duel.GetOperatedGroup()

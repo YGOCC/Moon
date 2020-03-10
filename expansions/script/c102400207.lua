@@ -40,6 +40,7 @@ function cid.costop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,e,tp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 or #g==0 or not Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then return end
 	Duel.Hint(HINT_CARD,0,id)
+	Duel.ConfirmCards(1-tp,e:GetHandler())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sg=g:Select(tp,1,1,nil)
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
