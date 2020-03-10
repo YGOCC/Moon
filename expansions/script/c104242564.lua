@@ -68,8 +68,6 @@ end
 --Back Row Cost
 function cid.selflock(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return  Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
-		if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 	local ex=Effect.CreateEffect(e:GetHandler())
 	ex:SetType(EFFECT_TYPE_FIELD)
 	ex:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
@@ -84,6 +82,8 @@ function cid.fragment(e,tp,eg,ep,ev,re,r,rp,chk)
 	--	local sc=Duel.CreateToken(tp,104242585)
 	--	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 	--	Duel.SendtoExtraP(sc,tp,REASON_RULE)
+	    local c=e:GetHandler()
+	    Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 		Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
