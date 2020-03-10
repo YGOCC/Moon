@@ -14,7 +14,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.spfilter(c,e,tp,tg)
-	return (c:IsSetCard(0x70b) or not c:IsType(TYPE_EFFECT)) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,c:IsSetCard(0x70b),false) and Duel.GetLocationCountFromEx(tp,tp,tg)>0
+	return (c:IsSetCard(0xeeb) or not c:IsType(TYPE_EFFECT)) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,c:IsSetCard(0xeeb),false) and Duel.GetLocationCountFromEx(tp,tp,tg)>0
 end
 function cid.filter(c,e,tp,mg)
 	if c:IsFacedown() or not aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_FMATERIAL)
@@ -46,11 +46,11 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(tg) do tc:SetMaterial(mat) end
 	Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 	Duel.BreakEffect()
-	local sc=tg:FilterSelect(tp,Card.IsSetCard,1,1,nil,0x70b):GetFirst()
+	local sc=tg:FilterSelect(tp,Card.IsSetCard,1,1,nil,0xeeb):GetFirst()
 	while sc do
 		Duel.SpecialSummonStep(sc,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)
 		sc:CompleteProcedure()
-		sc=tg:Filter(Card.IsLocation,nil,LOCATION_EXTRA):FilterSelect(tp,Card.IsSetCard,1,1,nil,0x70b):GetFirst()
+		sc=tg:Filter(Card.IsLocation,nil,LOCATION_EXTRA):FilterSelect(tp,Card.IsSetCard,1,1,nil,0xeeb):GetFirst()
 	end
 	for nc in aux.Next(tg:Filter(Card.IsLocation,nil,LOCATION_EXTRA)) do
 		Duel.SpecialSummonStep(nc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)

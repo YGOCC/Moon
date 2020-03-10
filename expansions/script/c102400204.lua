@@ -36,7 +36,7 @@ function cid.lvup(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterEffect(e1)
 end
 function cid.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x70b)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xeeb)
 end
 function cid.costop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.AND(cid.filter,Card.IsAbleToDeck),tp,LOCATION_GRAVE,0,nil)
