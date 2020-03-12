@@ -39,12 +39,12 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	local sel=e:GetLabel()
 	if sel==3 then
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
-		sel=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))+1
+		Duel.Hint(HINT_SELECTMSG,tp,556)
+		sel=Duel.SelectOption(tp,1100,1109)+1
 	elseif sel==1 then
-		Duel.SelectOption(tp,aux.Stringid(id,1))
+		Duel.SelectOption(tp,1100)
 	else
-		Duel.SelectOption(tp,aux.Stringid(id,2))
+		Duel.SelectOption(tp,1109)
 	end
 	e:SetLabel(sel)
 	if sel==1 then

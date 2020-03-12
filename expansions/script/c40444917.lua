@@ -57,7 +57,7 @@ function cid.eqlimit(e,c)
 	return c==e:GetLabelObject()
 end
 function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
-	local g=e:GetHandler():GetEquipTarget()
+	local g=e:GetHandler()
 	local ct=g:GetEquipCount()
 	local fixct=((c:IsDirectAttacked() and 1) or 0)
 	return ct-fixct
