@@ -1,5 +1,6 @@
+--created & coded by Lyris
+--ローマ・キ ー・XXXVI
 local cid,id=GetID()
---Roman Keys - XXXVI
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -24,12 +25,9 @@ function cid.filter(c,e,tp,mg)
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	return mg:CheckSubGroup(function(tg) return sg:CheckSubGroup(function(g) return g:GetSum(Card.GetLevel)<=tg:GetSum(Card.GetLevel) end,1,ft) end)
 end
-function cid.mfilter(c)
-	return c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
-end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local mg=Duel.GetMatchingGroup(cid.mfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,e:GetHandler())
+		local mg=Duel.GetMatchingGroup(aux.AND(Card.IsCanBeFusionMaterial,Card.IsAbleToRemove),tp,LOCATION_GRAVE,LOCATION_GRAVE,e:GetHandler())
 		return mg:IsExists(cid.filter,1,nil,e,tp,mg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
@@ -37,7 +35,7 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
-	local mg=Duel.GetMatchingGroup(cid.mfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
+	local mg=Duel.GetMatchingGroup(aux.AND(Card.IsCanBeFusionMaterial,Card.IsAbleToRemove),tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 	local mat=mg:FilterSelect(tp,cid.filter,1,99,nil,e,tp,mg)
 	if #mat==0 then return end

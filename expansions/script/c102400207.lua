@@ -1,5 +1,6 @@
+--created & coded by Lyris
+--ローマ・キ ー・XXIV
 local cid,id=GetID()
---Roman Keys - XXIV
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)

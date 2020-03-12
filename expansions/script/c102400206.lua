@@ -1,7 +1,7 @@
+--created & coded by Lyris
+--ローマ・キ ー・XVIII
 local cid,id=GetID()
---Roman Keys - XVIII
 function cid.initial_effect(c)
-	--This card's Level is doubled during the turn it is Summoned.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
@@ -13,7 +13,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--(Quick Effect): You can banish this card you control; Fusion Summon any number of "Roman Keys" or non-Effect Fusion monsters from your Extra Deck, using monsters from either field as material, but you cannot Summon monsters whose total Levels exceed the total Levels of the materials this way.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)

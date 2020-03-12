@@ -1,8 +1,8 @@
+--created & coded by Lyris
+--ローマ・キ ー・XXXIII
 local cid,id=GetID()
---Roman Keys - XXXIII
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--Must first be Fusion Summoned with a "Roman Keys" card effect.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -10,7 +10,6 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetValue(aux.FALSE)
 	c:RegisterEffect(e1)
-	--As Chain Link 1 (Quick Effect): You can banish as many monsters on the field as possible (min. 1), except Fusion Monsters; immediately after this effect resolves, skip to the Battle Phase of your next turn. You can only use this effect of "Roman Keys - XXXIII" once per Duel.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)

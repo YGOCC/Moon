@@ -1,7 +1,7 @@
+--created & coded by Lyris
+--ローマ・キ ー・XXX
 local cid,id=GetID()
---Roman Keys - XXX
 function cid.initial_effect(c)
-	--(Quick Effect): You can banish this card from your hand or field; Fusion Summon any number of "Roman Keys" or non-Effect Fusion monsters from your Extra Deck, using monsters from your hand or field as material, but you cannot Summon monsters whose total Levels exceed the total Levels of the materials this way.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)

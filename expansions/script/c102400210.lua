@@ -1,7 +1,7 @@
-local cid,id=GetID()
---Roman Keys - IX
+--created & coded by Lyris
+--ローマ・キ ー・IX
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--Must first be Fusion Summoned with a "Roman Keys" card effect.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -9,7 +9,6 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetValue(aux.FALSE)
 	c:RegisterEffect(e1)
-	--While Summoning this card, you can negate the effects of 1 face-up card currently on the field.
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_SUMMON_COST)
@@ -22,7 +21,6 @@ function cid.initial_effect(c)
 	local e6=e5:Clone()
 	e6:SetCode(EFFECT_FLIPSUMMON_COST)
 	c:RegisterEffect(e6)
-	--(Quick Effect): You can Tribute this card; make both players banish as many monsters they control as possible, until the only monsters they control have their effects negated. (HOpT)
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
@@ -36,28 +34,26 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function cid.costop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,aux.NOT(Card.IsDisabled)),tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,aux.NOT(Card.IsDisabled)),tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if #g==0 or not Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then return end
 	Duel.Hint(HINT_CARD,0,id)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local sg=g:Select(tp,1,1,nil)
-	Duel.HintSelection(sg)
-	local tc=sg:GetFirst()
-	Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetCode(EFFECT_DISABLE)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	tc:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EFFECT_DISABLE_EFFECT)
-	e2:SetValue(RESET_TURN_SET)
-	tc:RegisterEffect(e2)
-	if tc:IsType(TYPE_TRAPMONSTER) then
-		local e3=e1:Clone()
-		e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
-		tc:RegisterEffect(e3)
+	for tc in aux.Next(g) do
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetValue(RESET_TURN_SET)
+		tc:RegisterEffect(e2)
+		if tc:IsType(TYPE_TRAPMONSTER) then
+			local e3=e1:Clone()
+			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+			tc:RegisterEffect(e3)
+		end
 	end
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -69,7 +65,7 @@ function cid.filter(c)
 		and (c:IsFacedown() or not c:IsDisabled())
 end
 function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	if chk==0 then return #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
 end

@@ -1,8 +1,8 @@
+--created & coded by Lyris
+--ローマ・キ ー・XXVII
 local cid,id=GetID()
---Roman Keys - XXVII
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--Must first be Fusion Summoned with a "Roman Keys" card effect.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -10,14 +10,12 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetValue(aux.FALSE)
 	c:RegisterEffect(e1)
-	--While Fusion Summoning this card, gain LP equal to the ATK of all monsters on the field.
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_SPSUMMON_COST)
 	e5:SetCost(aux.TRUE)
 	e5:SetOperation(cid.costop)
 	c:RegisterEffect(e5)
-	--This card can attack while in face-up Defense Position. If it does, apply its DEF for damage calculation.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_DEFENSE_ATTACK)

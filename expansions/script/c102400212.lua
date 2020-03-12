@@ -1,8 +1,8 @@
+--created & coded by Lyris
+--ローマ・キー・XXI
 local cid,id=GetID()
---Roman Keys - XXI
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--Must first be Fusion Summoned with a "Roman Keys" card effect.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -10,7 +10,6 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetValue(aux.FALSE)
 	c:RegisterEffect(e1)
-	--While Summoning this card, you can shuffle 1 monster on the field into the Deck.
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_SUMMON_COST)
@@ -23,7 +22,6 @@ function cid.initial_effect(c)
 	local e6=e5:Clone()
 	e6:SetCode(EFFECT_FLIPSUMMON_COST)
 	c:RegisterEffect(e6)
-	--Once per turn (Quick Effect): You can Special Summon 1 "Roman Keys" monster that you have banished or in the GY, except "Roman Keys - XXI".
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_QUICK_O)

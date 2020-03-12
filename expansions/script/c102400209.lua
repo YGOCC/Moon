@@ -1,5 +1,6 @@
+--created & coded by Lyris
+--ローマ・キ ー・III
 local cid,id=GetID()
---Roman Keys - III
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)

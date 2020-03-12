@@ -1,7 +1,7 @@
+--created & coded by Lyris
+--ローマ・キ ー・VI
 local cid,id=GetID()
---Roman Keys - VI
 function cid.initial_effect(c)
-	--This card's Level is doubled during the turn it is Summoned.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
@@ -13,7 +13,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--While Summoning this card, you can return up to 3 "Roman Keys" monsters from your GY into the Deck, and if you do, apply these effects (simultaneously), based on the number of cards returned to the Deck this way. (below)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_SUMMON_COST)
@@ -47,9 +46,7 @@ function cid.costop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(g:Select(tp,1,3,nil),nil,2,REASON_EFFECT)
 	local tg=Duel.GetOperatedGroup()
 	if tg:FilterCount(Card.IsLocation,nil,LOCATION_DECK)>0 then Duel.ShuffleDeck(tp) end
-	--2+: Draw 1 card.
 	if #tg>=2 and Duel.IsPlayerCanDraw(tp,1) then Duel.Draw(tp,1,REASON_EFFECT) end
-	--3: Add 1 "Roman Keys" monster from your Deck to your hand.
 	local sg=Duel.GetMatchingGroup(aux.AND(cid.filter,Card.IsAbleToHand),tp,LOCATION_DECK,0,nil)
 	if #tg>=3 and #sg>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)

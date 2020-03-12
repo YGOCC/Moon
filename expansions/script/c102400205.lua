@@ -1,7 +1,7 @@
+--created & coded by Lyris
+--ローマ・キ ー・XII
 local cid,id=GetID()
---Roman Keys - XII
 function cid.initial_effect(c)
-	--This card's Level is doubled during the turn it is Summoned.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
@@ -13,7 +13,6 @@ function cid.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--While Summoning this card, you can have all your "Roman Keys" monsters gain 1200 ATK/DEF.
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_SUMMON_COST)
@@ -26,7 +25,6 @@ function cid.initial_effect(c)
 	local e6=e5:Clone()
 	e6:SetCode(EFFECT_FLIPSUMMON_COST)
 	c:RegisterEffect(e6)
-	--"Roman Keys" monsters on the field cannot be targeted or destroyed by your opponent's card effects.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
