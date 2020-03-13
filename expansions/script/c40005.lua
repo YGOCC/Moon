@@ -40,7 +40,7 @@ end
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)>0 end
 	if chk==0 then return ct>0 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_GRAVE) 
-		 Duel.SetOperationInfo(0,CATEGORY_COIN,nil,1,tp,3)
+	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,1,tp,3)
 end
 	function s.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1-tp)

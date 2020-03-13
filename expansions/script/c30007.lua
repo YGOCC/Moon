@@ -58,7 +58,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 	function s.atkval1(e,c)
-	return Duel.GetMatchingGroupCount(Card.IsFacedown,e:GetHandlerPlayer(),LOCATION_SZONE,LOCATION_SZONE,nil)*200
+	return Duel.GetMatchingGroupCount(Card.IsFacedown,e:GetHandlerPlayer(),LOCATION_SZONE,LOCATION_SZONE,nil)*100
 end
 	function s.confilter1(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x10ec) and c:IsSummonType(SUMMON_TYPE_PENDULUM)
