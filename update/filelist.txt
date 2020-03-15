@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	999afaba065f6a27dbb51afb5fc611a7
+﻿expansions/cards-new.cdb	245750fe0b31290bb2dd7592613b8c94
 expansions/lflist.conf	311ce4dffe4e0e128af1ecbfd6545f20
 expansions/strings.conf	e16c9b0c134f125317ea3d845441918c
 expansions/pics/10130500.jpg	4288a07fb917d204bc49a28c5d87596c
@@ -302,7 +302,7 @@ expansions/pics/102400206.png	dc41384598123af3f86c86576ad369fd
 expansions/pics/102400207.png	865480844b99ba8c89fc0d5586d20dc8
 expansions/pics/102400208.png	08bc52cfe52c357e847a216c76864253
 expansions/pics/102400209.png	02815da451703e0a995687f8828eb7ac
-expansions/pics/102400210.png	4dc5e261b385ac37141184db2f8b16fd
+expansions/pics/102400210.png	ea7c89521ec8d334d3a77866051b76b1
 expansions/pics/102400211.png	a15722994d8902ad06cbabe9cfde32bc
 expansions/pics/102400212.png	6ba3a56e4ebffb9e47008b6e3b3bba79
 expansions/pics/102400213.png	98c4010bb472b15c9af0e0a274671531
@@ -3772,7 +3772,7 @@ expansions/script/c102400206.lua	3ee8f8e0838b5f4ac0b26adf22295030
 expansions/script/c102400207.lua	3dc7ffeaec095ef8c27de0cfed139e3b
 expansions/script/c102400208.lua	27aae5dc2f85850e052e1b01acf3b2d3
 expansions/script/c102400209.lua	3883b9636a2ff3e6a774b903890af41b
-expansions/script/c102400210.lua	81273fd431852c33c333414ae749634c
+expansions/script/c102400210.lua	b39bdc6147efb64d3b98458a6d578998
 expansions/script/c102400211.lua	f18485c3133b9b15b2d3257cf536e469
 expansions/script/c102400212.lua	16dcf10391f6b23d3142ad67e8c14d86
 expansions/script/c102400213.lua	6c6206897d0cfe5b58b4360e9499db2f
@@ -6778,6 +6778,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	1249f71fcde7abce2dd55c9c6a8da1c8
+update/filelist.txt	4f4f4bd5702895b5b5bae8e18318c54a
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	3dad967758d6b11e3d3e25fbd472b23a
+update/version.txt	34f21dba5d1daaacacb2bf9968c77f89

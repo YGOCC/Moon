@@ -37,39 +37,34 @@ function cid.costop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,aux.NOT(Card.IsDisabled)),tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if #g==0 or not Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then return end
 	Duel.Hint(HINT_CARD,0,id)
-	for tc in aux.Next(g) do
-		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetValue(RESET_TURN_SET)
-		tc:RegisterEffect(e2)
-		if tc:IsType(TYPE_TRAPMONSTER) then
-			local e3=e1:Clone()
-			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
-			tc:RegisterEffect(e3)
-		end
+	local tc=g:Select(tp,1,1,nil):GetFirst()
+	Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EFFECT_DISABLE)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+	tc:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_DISABLE_EFFECT)
+	e2:SetValue(RESET_TURN_SET)
+	tc:RegisterEffect(e2)
+	if tc:IsType(TYPE_TRAPMONSTER) then
+		local e3=e1:Clone()
+		e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+		tc:RegisterEffect(e3)
 	end
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
-function cid.filter(c)
-	return Duel.IsPlayerCanRemove(c:GetControler()) and c:IsAbleToRemove(c:GetControler(),POS_FACEUP,REASON_RULE)
-		and (c:IsFacedown() or not c:IsDisabled())
-end
 function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+	local g=Duel.GetMatchingGroup(aux.AND(Card.IsDisabled,Card.IsAbleToRemove),tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	if chk==0 then return #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_RULE)
+	local g=Duel.GetMatchingGroup(aux.AND(Card.IsDisabled,Card.IsAbleToRemove),tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 end
