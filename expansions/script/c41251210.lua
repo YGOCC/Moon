@@ -74,15 +74,11 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA,0,1,1,nil):GetFirst()
 	Duel.ConfirmCards(1-tp,tc)
 	Duel.SetTargetCard(tc)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Destroy(Duel.SelectMatchingCard(tp,nil,tp,LOCATION_PZONE,0,1,1,nil),REASON_COST)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_PZONE,0,1,1,nil)
 	local tc=Duel.GetFirstTarget()
-	if #g>0 and Duel.Destroy(g,REASON_EFFECT)==0 and tc:IsRelateToEffect(e) then
-		Duel.BreakEffect()
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-	end
+	if tc:IsRelateToEffect(e) then Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) end
 end

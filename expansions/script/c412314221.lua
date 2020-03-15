@@ -1,13 +1,5 @@
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
---created by Jake, coded by Lyris, art from Cardfight!! Vanguard's Blue Flame Seeker, Taranis
---Dawn Blader - Swordsman of Flame
+--created by Jake, coded by Lyris, art from Cardfight!! Vanguard's "Blue Flame Seeker, Taranis"
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),6,2)

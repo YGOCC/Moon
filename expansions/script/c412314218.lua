@@ -1,19 +1,8 @@
---Drago Miracolo Occhi dell'Alba
---Created by Jake, Script by XGlitchy30
---Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+--created by Jake, coded by Glitchy
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--synchro summon
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsRace,RACE_WARRIOR),1)
 	c:EnableReviveLimit()
-	--wipe field
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
@@ -22,7 +11,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.wptg)
 	e1:SetOperation(cid.wpop)
 	c:RegisterEffect(e1)
-	--disable
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DISABLE)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -34,7 +22,6 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.negop)
 	c:RegisterEffect(e2)
 end
---filters
 function cid.pmfilter(c)
 	return c:IsSetCard(0x613) and c:IsType(TYPE_MONSTER)
 end
@@ -44,7 +31,6 @@ end
 function cid.negfilter(c)
 	return c:IsSetCard(0x613) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
---wipe field
 function cid.wpcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsSummonType(SUMMON_TYPE_SYNCHRO) and c:GetMaterial():IsExists(cid.pmfilter,1,nil)
@@ -58,7 +44,6 @@ function cid.wpop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.wpfilter,tp,0,LOCATION_MZONE,nil)
 	Duel.Destroy(g,REASON_EFFECT)
 end
---disable
 function cid.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if ep~=1-tp or e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainDisablable(ev) then return false end
 	if re:IsHasCategory(CATEGORY_NEGATE) and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end

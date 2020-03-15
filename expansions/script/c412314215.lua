@@ -1,19 +1,8 @@
---Drago Supremo Occhi dell'Alba
---Created by Jake, Script by XGlitchy30
---Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+--created by Jake, coded by Glitchy
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--fusion summon
 	aux.AddFusionProcFunFun(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x614),aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),2,true)
 	c:EnableReviveLimit()
-	--spsummon condition
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
@@ -21,7 +10,6 @@ function cid.initial_effect(c)
 	e0:SetRange(LOCATION_EXTRA)
 	e0:SetValue(cid.splimit)
 	c:RegisterEffect(e0)
-	--inflict damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DAMAGE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
@@ -31,7 +19,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.damtg)
 	e1:SetOperation(cid.damop)
 	c:RegisterEffect(e1)
-	--draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW+CATEGORY_RECOVER)
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -41,7 +28,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.drawtg)
 	e2:SetOperation(cid.drawop)
 	c:RegisterEffect(e2)
-	--wipe field
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
@@ -52,18 +38,15 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.wpop)
 	c:RegisterEffect(e3)
 end
---filters
 function cid.damfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x613)
 end
 function cid.tdfilter(c)
 	return c:IsSetCard(0x613) and c:IsAbleToDeckOrExtraAsCost()
 end
---spsummon condition
 function cid.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
---inflict damage
 function cid.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
@@ -80,7 +63,6 @@ function cid.damop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Damage(p,ct*200,REASON_EFFECT)
 	end
 end
---draw
 function cid.drawcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.tdfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
@@ -109,7 +91,6 @@ function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Recover(tp,ct*500,REASON_EFFECT)
 	end
 end
---wipe field
 function cid.wpcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsSummonType(SUMMON_TYPE_FUSION) and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousLocation(LOCATION_ONFIELD)

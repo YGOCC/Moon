@@ -1,13 +1,5 @@
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
 --created by Jake, coded by Lyris
---Dawn Blader - Dragonic King
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x613),2,true)
@@ -28,7 +20,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.target)
 	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
-	--If this Fusion Summoned card is destroyed: You can Special Summon 1 "Dawn Blader" monster from your Extra Deck (except "Dawn Blader - Dragonic King"), but its effects are negated.
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)

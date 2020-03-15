@@ -1,13 +1,5 @@
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
 --created by Jake, coded by Lyris, art from Cardfight!! Vanguard's "Dragonic Overlord" & "Perdition Emperor Dragon, Dragonic Overlord the Great"
---Dawn-Eyes Violet Dragon
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -98,7 +90,7 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(sg,REASON_COST+REASON_DISCARD)
 end
 function cid.spact(e,tp,eg,ep,ev,re,r,rp)
-	if cid[tp]>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) or Duel.GetLocationCount(tp,LOCATION_MZONE)<cid[tp] then return end
+	if cid[tp]>1 and Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) or Duel.GetLocationCount(tp,LOCATION_MZONE)<cid[tp] then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_HAND,0,nil,0x613):FilterSelect(tp,Card.IsCanBeSpecialSummoned,cid[tp],cid[tp],nil,e,0,tp,false,false)
 	if g:GetCount()>0 then

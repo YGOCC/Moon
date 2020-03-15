@@ -4,6 +4,7 @@ function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigBigbangType(c)
 	aux.AddBigbangProc(c,aux.FilterBoolFunction(Card.IsCode,81455790),1,aux.NOT(aux.FilterEqualFunction(Card.GetVibe,0)),1)
+	aux.AddCodeList(c,81455790)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
@@ -57,32 +58,29 @@ function cid.splimit(e,c)
 	return not c:IsType(TYPE_BIGBANG) and c:IsLocation(LOCATION_EXTRA) and c:IsControler(e:GetHandlerPlayer())
 end
 function cid.cfilter(c)
-	return c:GetOriginalType()&TYPE_MONSTER~=0 or aux.GetOriginalPandemoniumType(c)~=nil and c:GetSequence()<5
+	return (aux.GetOriginalPandemoniumType(c)~=nil and c:GetSequence()<5 or c:GetOriginalType()&TYPE_MONSTER~=0)
+		and c:IsDestructable()
 end
 function cid.thfilter(c)
 	return c:IsSetCard(0xcf11) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cid.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_SZONE,0,nil)
-	if chk==0 then return #g>0
-		and Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>0 end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	local g,dg=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_SZONE,0,nil),Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
+	if chk==0 then return #g>0 and #dg>0 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Destroy(g:Select(tp,1,1,nil),REASON_COST)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,1,0,0)
 end
 function cid.dop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	if Duel.Destroy(Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_SZONE,0,1,1,nil),REASON_EFFECT)==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
-	if #g>0 then
+	if Duel.Destroy(g,REASON_EFFECT)==0 then return end
+	local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.thfilter),tp,LOCATION_GRAVE,0,nil)
+	if #tg>0 and Duel.SelectEffectYesNo(tp,e:GetHandler()) then
+		local tc=tg:Select(tp,1,1,nil)
 		Duel.BreakEffect()
-		if Duel.Destroy(g,REASON_EFFECT)==0 then return end
-		local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.thfilter),tp,LOCATION_GRAVE,0,nil)
-		if #tg>0 and Duel.SelectEffectYesNo(tp,e:GetHandler()) then
-			local tc=tg:Select(tp,1,1,nil)
-			Duel.BreakEffect()
-			Duel.SendtoHand(tc,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,tc)
-		end
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end
 function cid.spfilter(c,e,tp)

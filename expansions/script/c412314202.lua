@@ -1,18 +1,7 @@
---Spadaccino dell'Alba - Cavaliere Celtico
---Created by Jake, Script by XGlitchy30
---Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+--created by Jake, coded by Glitchy
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--splimit
 	local pe1=Effect.CreateEffect(c)
 	pe1:SetType(EFFECT_TYPE_FIELD)
 	pe1:SetRange(LOCATION_PZONE)
@@ -21,7 +10,6 @@ function cid.initial_effect(c)
 	pe1:SetTargetRange(1,0)
 	pe1:SetTarget(cid.splimit)
 	c:RegisterEffect(pe1)
-	--gain lp
 	local pe2=Effect.CreateEffect(c)
 	pe2:SetCategory(CATEGORY_RECOVER)
 	pe2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -32,7 +20,6 @@ function cid.initial_effect(c)
 	pe2:SetTarget(cid.lptg)
 	pe2:SetOperation(cid.lpop)
 	c:RegisterEffect(pe2)
-	--protection
 	local pe3=Effect.CreateEffect(c)
 	pe3:SetType(EFFECT_TYPE_QUICK_O)
 	pe3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -42,7 +29,6 @@ function cid.initial_effect(c)
 	pe3:SetTarget(cid.pttg)
 	pe3:SetOperation(cid.ptop)
 	c:RegisterEffect(pe3)
-	--search
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -50,7 +36,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.thtg)
 	e1:SetOperation(cid.thop)
 	c:RegisterEffect(e1)
-	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_RECOVER)
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -60,7 +45,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.sptg)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
-	--pzone
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
@@ -70,7 +54,6 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.pzop)
 	c:RegisterEffect(e3)
 end
---filters
 function cid.cfilter(c,tp)
 	return c:GetPreviousControler()==tp and c:IsSetCard(0x613)
 end
@@ -83,11 +66,9 @@ end
 function cid.spfilter(c,e,tp)
 	return c:IsSetCard(0x613) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
---splimit
 function cid.splimit(e,c,tp,sumtp,sumpos)
 	return not c:IsRace(RACE_WARRIOR) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
---gain lp
 function cid.lpcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cid.cfilter,1,nil,tp)
 end
@@ -104,7 +85,6 @@ function cid.lpop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Recover(p,d,REASON_EFFECT)
 	end
 end
---protection
 function cid.pttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(cid.filter,tp,LOCATION_MZONE,0,1,nil) end
@@ -124,7 +104,6 @@ function cid.ptop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
 	end
 end
---search
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
@@ -137,7 +116,6 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
---special summon
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
@@ -165,7 +143,6 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---pzone
 function cid.pzcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,0x4040)==0x4040 and re:GetHandler():IsSetCard(0x613) and re:GetHandler()~=e:GetHandler()
 		and e:GetHandler():GetPreviousControler()==tp

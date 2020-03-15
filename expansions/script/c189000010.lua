@@ -112,7 +112,7 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.SendtoHand(tc,1-tp,REASON_EFFECT)
 	end
 end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)

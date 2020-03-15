@@ -1,16 +1,6 @@
---Spadaccino dell'Alba - Jonah il Principe
---Created by Jake, Script by XGlitchy30
---Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+--created by Jake, coded by Glitchy
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -19,7 +9,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.sptg)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
-	--cannot be target
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -32,7 +21,6 @@ function cid.initial_effect(c)
 	e2x:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e2x:SetValue(1)
 	c:RegisterEffect(e2x)
-	--reveal top
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
@@ -43,14 +31,12 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.rtopop)
 	c:RegisterEffect(e3)
 end
---filters
 function cid.spfilter(c,e,tp)
 	return c:IsSetCard(0x613) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.tgfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x613)
 end
---special summon
 function cid.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
@@ -70,11 +56,9 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
---cannot be target
 function cid.tgcon(e)
 	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end
---reveal top
 function cid.rtopcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
 	Duel.ConfirmDecktop(tp,1)

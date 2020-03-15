@@ -1,13 +1,5 @@
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
---created by Jakce, coded by Lyris
---Dawn Blader - The Golden Shadow
+--created by Jake, coded by Lyris
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x613),2)
@@ -98,7 +90,6 @@ function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
 			if c:IsFaceup() and c:IsRelateToEffect(e) then
 				if Duel.Equip(tp,tc,c,false,true) then
-					--Add Equip limit
 					tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,0)
 					local e1=Effect.CreateEffect(c)
 					e1:SetType(EFFECT_TYPE_SINGLE)

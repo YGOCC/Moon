@@ -1,25 +1,10 @@
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
 --created by Jake, coded by Lyris, art from "The Sanctuary in the Sky"
---A Soldier's Resting Place
+local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-	--local e2=Effect.CreateEffect(c)
-	--e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	--e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	--e2:SetRange(LOCATION_FZONE)
-	--e2:SetCondition(cid.damcon)
-	--e2:SetOperation(cid.damop)
-	--c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)

@@ -4,6 +4,7 @@ function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigBigbangType(c)
 	aux.AddBigbangProc(c,aux.FilterBoolFunction(Card.IsCode,81455788),1,aux.NOT(aux.FilterEqualFunction(Card.GetVibe,0)),1)
+	aux.AddCodeList(c,81455788)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
@@ -50,16 +51,15 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.desfilter(c,tp)
 	local ec=c:GetEquipTarget()
-	return ec and ec:IsType(TYPE_BIGBANG) and Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND+LOCATION_ONFIELD,LOCATION_HAND+LOCATION_ONFIELD,1,c)
+	return ec and ec:IsType(TYPE_BIGBANG) and c:IsDestructable() and Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND+LOCATION_ONFIELD,LOCATION_HAND+LOCATION_ONFIELD,1,c)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.desfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,2,0,LOCATION_ONFIELD+LOCATION_HAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	Duel.Destroy(Duel.SelectMatchingCard(tp,cid.desfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil,tp),REASON_COST)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,0,LOCATION_ONFIELD+LOCATION_HAND)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,cid.desfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil,tp)
-	if #g==0 or Duel.Destroy(g,REASON_EFFECT)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local tg=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_HAND+LOCATION_ONFIELD,LOCATION_HAND+LOCATION_ONFIELD,1,1,nil)
 	if #tg>0 then

@@ -1,16 +1,6 @@
---Spadaccino dell'Alba - Bane & Sky
---Created by Jake, Script by XGlitchy30
---Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+--created by Jake, coded by Glitchy
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--special summon proc
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -21,7 +11,6 @@ function cid.initial_effect(c)
 	e1:SetCondition(cid.spsumcon)
 	e1:SetOperation(cid.spsumop)
 	c:RegisterEffect(e1)
-	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -31,7 +20,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.thtg)
 	e2:SetOperation(cid.thop)
 	c:RegisterEffect(e2)
-	--special summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -43,14 +31,12 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.spop)
 	c:RegisterEffect(e3)
 end
---filters
 function cid.spsumfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x613)
 end
 function cid.thfilter(c)
 	return c:IsSetCard(0x613) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
---special summon proc
 function cid.spsumcon(e,c)
 	if c==nil then return true end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and
@@ -61,7 +47,6 @@ function cid.spsumop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectMatchingCard(tp,cid.spsumfilter,tp,LOCATION_HAND,0,1,1,c)
 	Duel.SendtoGrave(g,REASON_DISCARD+REASON_COST)
 end
---tohand
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cid.thfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(cid.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
@@ -75,7 +60,6 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
---special summon
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,0x4040)==0x4040 and re:GetHandler():IsSetCard(0x613) and e:GetHandler():GetPreviousControler()==tp
 end

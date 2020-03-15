@@ -1,15 +1,6 @@
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
 --created by Jake, coded by Lyris
---Dawn Blader - Future King
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--You can Normal or Special Summon this card (from your hand) by discarding 1 "Dawn Blader" monsters (except "Dawn Blader - Future King").
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_SUMMON_COST)

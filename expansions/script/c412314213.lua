@@ -1,15 +1,6 @@
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
 --created by Jake, coded by Lyris, art from Cardfight!! Vanguard's "Battlefield Storm, Sagramore"
---Dawn Blader - Lion
+local cid,id=GetID()
 function cid.initial_effect(c)
-	--If this card is discarded by the effect of, or to activate the effect of, a "Dawn Blader" monster: Special Summon this card.
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e0:SetCode(EVENT_DISCARD)
@@ -19,7 +10,6 @@ function cid.initial_effect(c)
 	e0:SetTarget(cid.sptg)
 	e0:SetOperation(cid.spop)
 	c:RegisterEffect(e0)
-	--This card can be treated as a Level 2 monster when used for a Synchro Summon of a "Dawn Blader" Synchro Monster.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_SYNCHRO_LEVEL)
@@ -27,7 +17,6 @@ function cid.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(cid.slevel)
 	c:RegisterEffect(e2)
-	--A Warrior-Type Synchro Monster that used this card as Synchro Material gains the following effect.(below)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_BE_MATERIAL)
@@ -58,7 +47,6 @@ function cid.matop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
 	local e1=Effect.CreateEffect(rc)
-	--If it would leave the field, you can discard 1 card: Return it to the Extra Deck instead.
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EFFECT_SEND_REPLACE)
 	e1:SetRange(LOCATION_MZONE)
