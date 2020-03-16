@@ -47,21 +47,18 @@ function cid.gycon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function cid.gyfilter(c)
-return c:IsPosition(POS_FACEUP) and c:IsAbleToGrave()
+	return c:IsFaceup() and c:IsAbleToGrave()
 end
 function cid.gytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,cid.gyfilter,tp,0,LOCATION_ONFIELD,1,3,nil)
+	local g=Duel.SelectTarget(tp,aux.AND(Card.IsFaceup,Card.IsAbleToGrave),tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 end
 function cid.gyop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
-	if tg:GetCount()>0 then
-		Duel.SendtoGrave(tg,nil,REASON_EFFECT)
-	end
+	local tg=Duel.GetFirstTarget()
+	if tg:IsRelateToEffect(e) then Duel.SendtoGrave(tg,REASON_EFFECT) end
 end
 function cid.sparkfilter(c)
 return c:IsCode(id-13)

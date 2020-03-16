@@ -44,6 +44,7 @@ function cid.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
 	e5:SetCountLimit(1,id+100)
+	e5:SetCost(cid.cost)
 	e5:SetTarget(cid.negtg)
 	e5:SetOperation(cid.negop)
 	c:RegisterEffect(e5)
@@ -53,7 +54,7 @@ function cid.initial_effect(c)
 end
 function cid.xyzcheck(g)
 	local sg=g:Filter(function(c) return c:GetLevel()==4 end,nil)
-	return sg:GetClassCount(Card.GetRace)>=3 or sg:GetClassCount(Card.GetAttribute)>=3
+	return (sg:GetClassCount(Card.GetRace)>=3 or sg:GetClassCount(Card.GetAttribute)>=3) and sg:IsExists(Card.IsSetCard,1,nil,0x412)
 end
 function cid.sparkfilter(c)
 	return c:IsCode(id-10)
@@ -78,6 +79,11 @@ local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
 local g=Duel.GetMatchingGroup(cid.filter,tp,0,LOCATION_MZONE,nil,c:GetAttack())
 local ct=Duel.Destroy(g,REASON_EFFECT)
+end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:CheckRemoveOverlayCard(tp,2,REASON_COST) end
+	c:RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function cid.negtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and aux.disfilter1(chkc) end

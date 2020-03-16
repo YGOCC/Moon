@@ -2,7 +2,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
 c:SetSPSummonOnce(id)
 	c:EnableReviveLimit()
-	aux.AddXyzProcedureLevelFree(c,cid.mfilter,cid.xyzcheck,2,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x412),4,2,nil,nil,99)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -37,15 +37,8 @@ c:SetSPSummonOnce(id)
 	e4:SetOperation(cid.drop)
 	c:RegisterEffect(e4)
 end
-function cid.mfilter(c,xyzc)
-	return c:GetLevel()==4 
-end
-function cid.xyzcheck(g)
-	local sg=g:Filter(function(c) return c:GetLevel()==4 end,nil)
-	return sg:GetClassCount(Card.GetRace)>=2 or sg:GetClassCount(Card.GetAttribute)>=2
-end
 function cid.sparkfilter(c)
-return c:IsCode(id-8)
+	return c:IsCode(id-8)
 end
 function cid.filter(c,e,tp)
 	if c:IsType(TYPE_MONSTER) then
@@ -81,32 +74,26 @@ function cid.stop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST) end
+	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function cid.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-	if Duel.IsExistingMatchingCard(cid.sparkfilter,tp,LOCATION_GRAVE,0,1,nil) then
-	Duel.SetTargetPlayer(1-tp)
-	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,1-tp,1)   
 end
+function cid.olfilter(c,typ)
+	return c:IsCanOverlay() and c:IsType(typ)
 end
 function cid.drop(e,tp,eg,ep,ev,re,r,rp)
-	local ifclause=false
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT) 
-	if p:GetCount()>0 then 
-	if Duel.Draw(p,d,REASON_EFFECT)>0 and Duel.IsExistingMatchingCard(cid.sparkfilter,tp,LOCATION_GRAVE,0,1,nil) then
-		ifclause=true
+	if Duel.Draw(tp,1,REASON_EFFECT)==0 then return end
+	local dc=Duel.GetOperatedGroup():GetFirst()
+	Duel.ConfirmCards(1-tp,dc)
+	Duel.ShuffleHand(tp)
+	local c=e:GetHandler()
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.olfilter),tp,0,LOCATION_GRAVE,nil,dc:GetType()&0x7)
+	if #g>0 and c:IsRelateToEffect(e) and Duel.SelectEffectYesNo(tp,c) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		local sg=g:Select(tp,1,1,nil)
+		Duel.Overlay(c,sg)
 	end
-	if ifclause then
-		local h=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	local g=Duel.GetFieldGroup(h,LOCATION_HAND,0)
-	local dg=g:RandomSelect(tp,1)
-	Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
-			end
-		end
-end 
+end

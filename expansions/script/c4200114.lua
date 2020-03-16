@@ -1,7 +1,7 @@
 local cid,id=GetID()
 cid.dfc_front_side=id+1
 function cid.initial_effect(c)
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkType,TYPE_EFFECT),3,3,cid.lcheck)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x412),2)
 	c:EnableReviveLimit()
 	c:SetSPSummonOnce(id)
 	local e1=Effect.CreateEffect(c)

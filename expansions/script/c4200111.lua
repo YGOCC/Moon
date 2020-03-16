@@ -1,6 +1,6 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
-	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1,1)
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x412),1,1)
 	c:EnableReviveLimit()
 	c:SetSPSummonOnce(id)
 	local e1=Effect.CreateEffect(c)
