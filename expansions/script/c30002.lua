@@ -46,41 +46,19 @@ end
 	end
 end
 	function s.chainlm(e,rp,tp)
-	return tp==rp
-end
-function s.name(c,e)
-	return c:GetSummonLocation()==LOCATION_EXTRA
-end
-	function s.chcon1(e,tp,eg,ep,ev,re,r,rp)
-	return  ep~=tp
-	and Duel.IsExistingMatchingCard(s.confilter1,tp,LOCATION_MZONE,0,1,nil)
-	and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():GetSummonLocation()==LOCATION_EXTRA 
-end
-	function s.chop1(e,tp,eg,ep,ev,re,r,rp)
-	local g=Group.CreateGroup()
-	Duel.ChangeTargetCard(ev,g)
-	Duel.ChangeChainOperation(ev,s.repop)
+	return tp==rp 
 end
 	function s.confilter1(c)
 	return c:IsFaceup() and c:IsSetCard(0x10ec) and c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
-	function s.repop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
-	if #g>0 then
-		Duel.HintSelection(g)
-		Duel.Destroy(g,REASON_EFFECT)
-	end
-end
 	function s.indfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x10ec) and c:IsLevelAbove(7) and c:IsType(TYPE_PENDULUM)
 end
-	function s.cond(e)
-	return Duel.IsExistingMatchingCard(s.indfilter,0,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	function s.cond(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(s.indfilter,0,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler())
 end
-	 function s.chcon4(e,tp,eg,ep,ev,re,r,rp)
-	return  ep~=tp
-	and Duel.IsExistingMatchingCard(s.confilter1,tp,LOCATION_MZONE,0,1,nil)
+	function s.chcon4(e,tp,eg,ep,ev,re,r,rp)
+	return  ep~=tp and Duel.IsExistingMatchingCard(s.confilter1,tp,LOCATION_MZONE,0,1,e:GetHandler())
 	and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
 end
 	function s.chop2(e,tp,eg,ep,ev,re,r,rp)
