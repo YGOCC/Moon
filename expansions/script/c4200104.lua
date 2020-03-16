@@ -1,3 +1,4 @@
+--created & coded by Swag
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:SetSPSummonOnce(id)

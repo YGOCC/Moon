@@ -1,3 +1,4 @@
+--created & coded by Swag
 local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x412),1,1)

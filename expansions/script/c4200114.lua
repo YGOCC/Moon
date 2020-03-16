@@ -1,3 +1,4 @@
+--created & coded by Swag
 local cid,id=GetID()
 cid.dfc_front_side=id+1
 function cid.initial_effect(c)
