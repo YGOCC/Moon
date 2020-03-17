@@ -24,7 +24,7 @@ function cid.initial_effect(c)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
- --   e2:SetCondition(aux.exccon)
+	e2:SetCondition(cid.sscon)
 	e2:SetCost(cid.thcost)
 	e2:SetTarget(cid.thtg)
 	e2:SetOperation(cid.thop)
@@ -34,10 +34,10 @@ function cid.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function cid.filter1(c,ec,tp)
-	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
+	return c:IsSetCard(0xc50) and not c:IsType(TYPE_TOKEN)
 end
 function cid.filter2(c,ec,tp)
-	return c:IsSetCard(0xc50)
+	return c:IsSetCard(0xc50) and not c:IsType(TYPE_TOKEN)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
@@ -97,7 +97,9 @@ if tc:GetLevel()>0 then
 
 	 end
 end
-
+function cid.sscon(e,tp,eg,ep,ev,re,r,rp)
+return aux.exccon(e) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+end
 function cid.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
