@@ -59,5 +59,5 @@ function c68709342.indtg(e,c)
 	return c:IsSetCard(0xf09)
 end
 function c68709342.indval(e,re,r,rp)
-    return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 and (rp==1-e:GetHandlerPlayer() or not rp==1-e:GetHandlerPlayer())
+    return r&REASON_BATTLE+REASON_EFFECT~=0
 end
