@@ -12,7 +12,8 @@ end
 local scard,s_id=getID()
 
 function scard.initial_effect(c)
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsSetCard,0x8),scard.zhe,true)
+	Card.IsZHERO=Card.IsZHERO or (function(tc) return (tc:GetCode()>30400 and tc:GetCode()<30420) and tc:IsSetCard(0x8) end)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsSetCard,0x8),Card.IsZHERO,true)
 	c:EnableReviveLimit()
 	--spsummon condition
 	local e0=Effect.CreateEffect(c)
@@ -47,29 +48,9 @@ function scard.initial_effect(c)
 	e2:SetOperation(scard.activate)
 	e2:SetHintTiming(0,0x1c0+TIMING_BATTLE_PHASE+TIMING_END_PHASE)
 	c:RegisterEffect(e2)
-	if not scard.global_check then
-		scard.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(scard.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,30000)==0 then 
-		Duel.CreateToken(tp,30000)
-		Duel.CreateToken(1-tp,30000)
-		Duel.RegisterFlagEffect(0,30000,0,0,0)
-	end
 end
 function scard.fufilter(c)
 	return c:IsFaceup()
-end
-function scard.zhe(c)
-	return c:IsZHERO()
 end
 
 function scard.splimit(e,se,sp,st)
@@ -78,12 +59,12 @@ end
 function scard.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		return Duel.IsExistingMatchingCard(scard.fufilter,tp,0,LOCATION_MZONE,1,nil)
-		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(scard.zhe),tp,LOCATION_GRAVE,0,1,nil)
+		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(Card.IsZHERO),tp,LOCATION_GRAVE,0,1,nil)
 		and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
 	end
 end
 function scard.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(aux.NecroValleyFilter(scard.zhe),tp,LOCATION_GRAVE,0,nil)
+	local sg=Duel.GetMatchingGroup(aux.NecroValleyFilter(Card.IsZHERO),tp,LOCATION_GRAVE,0,nil)
 	if sg:GetCount()<1 then return end
 	local tg=sg:Select(tp,1,1,nil)
 	if Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)>0 then

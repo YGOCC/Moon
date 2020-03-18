@@ -12,6 +12,7 @@ end
 local scard,s_id=getID()
 
 function scard.initial_effect(c)
+	Card.IsZHERO=Card.IsZHERO or (function(tc) return (tc:GetCode()>30400 and tc:GetCode()<30420) and tc:IsSetCard(0x8) end)
 	--to defense
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(s_id,0))
@@ -46,23 +47,6 @@ function scard.initial_effect(c)
 	e5:SetCondition(scard.effcon)
 	e5:SetValue(aux.tgoval)
 	c:RegisterEffect(e5)
-	if not scard.global_check then
-		scard.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(scard.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,30000)==0 then 
-		Duel.CreateToken(tp,30000)
-		Duel.CreateToken(1-tp,30000)
-		Duel.RegisterFlagEffect(0,30000,0,0,0)
-	end
 end
 function scard.potg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return e:GetHandler():IsDefensePos() and e:GetHandler():IsFaceup() end

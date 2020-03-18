@@ -11,6 +11,7 @@ end
 local scard,s_id=getID()
 
 function scard.initial_effect(c)
+	Card.IsZHERO=Card.IsZHERO or (function(tc) return (tc:GetCode()>30400 and tc:GetCode()<30420) and tc:IsSetCard(0x8) end)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -36,23 +37,6 @@ function scard.initial_effect(c)
 	e4:SetTarget(scard.thtg)
 	e4:SetOperation(scard.thop)
 	c:RegisterEffect(e4)
-	if not scard.global_check then
-		scard.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(scard.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,30000)==0 then
-		Duel.CreateToken(tp,30000)
-		Duel.CreateToken(1-tp,30000)
-		Duel.RegisterFlagEffect(0,30000,0,0,0)
-	end
 end
 function scard.filter(c)
 	return c:IsZHERO() and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(s_id)

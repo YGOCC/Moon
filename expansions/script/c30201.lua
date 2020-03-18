@@ -13,6 +13,7 @@ local scard,s_id=getID()
 function scard.initial_effect(c)
 	--ONLY 1
 	c:SetUniqueOnField(1,0,s_id)
+	Card.IsMantra=Card.IsMantra or (function(tc) return tc:GetCode()>30200 and tc:GetCode()<30230 end)
 	--Special Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -48,23 +49,6 @@ function scard.initial_effect(c)
 	e4:SetTarget(scard.destg)
 	e4:SetOperation(scard.desop)
 	c:RegisterEffect(e4)
-	if not scard.global_check then
-		scard.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(scard.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function scard.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,30000)==0 then 
-		Duel.CreateToken(tp,30000)
-		Duel.CreateToken(1-tp,30000)
-		Duel.RegisterFlagEffect(0,30000,0,0,0)
-	end
 end
 function scard.spfilter(c)
 	return c:IsMantra() and not c:IsCode(s_id)
