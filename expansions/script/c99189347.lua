@@ -48,25 +48,25 @@ function cid.initial_effect(c)
 end
 --SPECIAL SUMMON
 --filters
-function cid.gfilter(c,ft)
+function cid.gfilter(c,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x5477) and c:IsAbleToRemoveAsCost()
-		and (c:IsLocation(LOCATION_GRAVE) or (c:IsFaceup() and (ft>0 or c:GetSequence()<5)
-		and Duel.IsExistingMatchingCard(cid.gfilter,tp,LOCATION_GRAVE,0,1,c,ft)))
+		and (c:IsLocation(LOCATION_GRAVE) or Duel.IsExistingMatchingCard(cid.gfilter,tp,LOCATION_GRAVE,0,1,c,tp))
 end
 ---------
 function cid.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	return ft>-1 and Duel.IsExistingMatchingCard(cid.gfilter,tp,LOCATION_MZONE,0,1,nil,ft)
+	return ft>0 and Duel.IsExistingMatchingCard(cid.gfilter,tp,LOCATION_HAND,0,1,nil,tp)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local ft,lv=Duel.GetLocationCount(tp,LOCATION_MZONE),0
+	if ft<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,cid.gfilter,tp,LOCATION_MZONE,0,1,1,nil,ft)
+	local g1=Duel.SelectMatchingCard(tp,cid.gfilter,tp,LOCATION_HAND,0,1,1,nil,tp)
 	if g1:GetFirst():GetLevel()>0 then lv=lv+g1:GetFirst():GetLevel() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,cid.gfilter,tp,LOCATION_GRAVE,0,1,1,g1:GetFirst(),ft)
+	local g2=Duel.SelectMatchingCard(tp,cid.gfilter,tp,LOCATION_GRAVE,0,1,1,g1:GetFirst(),tp)
 	if g2:GetFirst():GetLevel()>0 then lv=lv+g2:GetFirst():GetLevel() end
 	g1:Merge(g2)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
