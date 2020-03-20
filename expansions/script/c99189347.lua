@@ -50,8 +50,8 @@ end
 --filters
 function cid.gfilter(c,ft)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x5477) and c:IsAbleToRemoveAsCost()
-		and (c:IsLocation(LOCATION_GRAVE) or (c:IsFaceup() and (ft>0 or c:GetSequence()<5)))
-		and Duel.IsExistingMatchingCard(cid.gfilter,tp,LOCATION_GRAVE,0,1,c,ft)
+		and (c:IsLocation(LOCATION_GRAVE) or (c:IsFaceup() and (ft>0 or c:GetSequence()<5)
+		and Duel.IsExistingMatchingCard(cid.gfilter,tp,LOCATION_GRAVE,0,1,c,ft)))
 end
 ---------
 function cid.spcon(e,c)
