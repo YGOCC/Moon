@@ -25,7 +25,7 @@ function cid.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetCost(cid.cost)
 	e2:SetTarget(cid.target)
-	e2:SetOperation(cid,operation)
+	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
 end
 function cid.tnval(e,c)

@@ -85,6 +85,7 @@ function cid.fragment(e,tp,eg,ep,ev,re,r,rp,chk)
 	--	local sc=Duel.CreateToken(tp,104242585)
 	--	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 	--	Duel.SendtoExtraP(sc,tp,REASON_RULE)
+	if not e:GetHandler():IsRelateToEffect(e) or ((e:GetHandler():IsOnField() and e:GetHandler():IsFacedown()) and not e:GetHandler():IsLocation(LOCATION_HAND)) then return end
 	    local c=e:GetHandler()
 	    Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
 		local sc=Duel.CreateToken(tp,104242585)

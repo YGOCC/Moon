@@ -37,7 +37,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=e:GetLabel()==1 and -1 or 0
 	if chk==0 then
 		e:SetLabel(0)
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>ft and Duel.IsPlayerCanSpecialSummonMonster(tp,id//10,0,0x4011,1200,800,3,RACE_SEASERPENT,ATTRIBUTE_WATER)
+		return Duel.GetLocationCount(tp,LOCATION_MZONE)>ft and Duel.IsPlayerCanSpecialSummonMonster(tp,(id-1)/10,0,0x4011,1200,800,3,RACE_SEASERPENT,ATTRIBUTE_WATER)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
@@ -45,12 +45,12 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>2 then ft=2 end
-	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,id//10,0,0x4011,1200,800,3,RACE_SEASERPENT,ATTRIBUTE_WATER) then return end
+	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,(id-1)/10,0,0x4011,1200,800,3,RACE_SEASERPENT,ATTRIBUTE_WATER) then return end
 	local ctn=true
 	while ft>0 and ctn do
-		Duel.SpecialSummonStep(Duel.CreateToken(tp,id//10),0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonStep(Duel.CreateToken(tp,(id-1)/10),0,tp,tp,false,false,POS_FACEUP)
 		ft=ft-1
-		if ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid(id//10,0)) then ctn=false end
+		if ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid((id-1)/10,0)) then ctn=false end
 	end
 	Duel.SpecialSummonComplete()
 end
