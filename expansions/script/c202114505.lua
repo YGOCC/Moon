@@ -37,7 +37,7 @@ function cid.cfilter(c,tp)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
-	if chk==0 then Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil,tp) end
 	Duel.Remove(Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_MZONE,0,1,1,nil,tp),POS_FACEUP,REASON_COST)
 end
 function cid.filter(c,e,tp)
