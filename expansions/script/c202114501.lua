@@ -54,14 +54,14 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SpecialSummonComplete()
 end
-function cid.cfilter(c)
+function cid.dfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToRemoveAsCost()
 end
 function cid.dcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)
-		and Duel.IsExistingMatchingCard(aux.Tuner(cid.cfilter),tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
+		and Duel.IsExistingMatchingCard(aux.Tuner(cid.dfilter),tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	Duel.Remove(Duel.SelectMatchingCard(tp,aux.Tuner(cid.cfilter),tp,LOCATION_GRAVE,0,1,1,e:GetHandler())+e:GetHandler(),POS_FACEUP,REASON_COST)
+	Duel.Remove(Duel.SelectMatchingCard(tp,aux.Tuner(cid.dfilter),tp,LOCATION_GRAVE,0,1,1,e:GetHandler())+e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function cid.dtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
