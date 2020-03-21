@@ -29,6 +29,13 @@ function cid.initial_effect(c)
 	p1:SetCondition(cid.extracon)
 	p1:SetValue(cid.extraval)
 	c:RegisterEffect(p1)
+	local p1x=Effect.CreateEffect(c)
+	p1x:SetType(EFFECT_TYPE_SINGLE)
+	p1x:SetCode(EFFECT_PANDEMONIUM_SUMMON_AFTERMATH)
+	p1x:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	p1x:SetRange(LOCATION_SZONE)
+	p1x:SetOperation(cid.limitproc)
+	c:RegisterEffect(p1x)
 	--MONSTER EFFECTS
 	--spsummon
 	local e1=Effect.CreateEffect(c)
@@ -61,12 +68,15 @@ end
 function cid.doubtfilter(c)
 	return c:IsFacedown() or c:IsType(TYPE_MONSTER)
 end
+function cid.limfilter(c)
+	return c:GetPreviousLocation()==LOCATION_DECK
+end
 -------------
 function cid.extracon(e)
 	local tp=e:GetHandlerPlayer()
 	local g=Duel.GetFieldGroup(tp,LOCATION_EXTRA+LOCATION_GRAVE,0)
 	return aux.PandActCheck(e) and not Duel.IsExistingMatchingCard(cid.doubtfilter,tp,LOCATION_MZONE,0,1,nil)
-		and #g>0 and not g:IsExists(cid.excfilter,1,nil)
+		and #g>0 and not g:IsExists(cid.excfilter,1,nil) and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)<=1
 end
 function cid.extraval(mode,c,e,tp,lscale,rscale,eset,tg)
 	if not mode then return false end
@@ -74,9 +84,27 @@ function cid.extraval(mode,c,e,tp,lscale,rscale,eset,tg)
 		return LOCATION_DECK
 	elseif mode==1 then
 		return c:IsType(TYPE_MONSTER) and c:IsType(TYPE_PANDEMONIUM)
-	else
+	elseif mode==2 then
 		return {[LOCATION_DECK]=1}
+	elseif mode==3 then
+		return false
+	elseif mode==4 then
+		return function (c) return c:IsLocation(LOCATION_EXTRA) end
 	end
+end
+function cid.limitproc(e,tp,eg,ep,ev,re,r,rp)
+	if eg:IsExists(cid.limfilter,1,nil) then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetTargetRange(1,0)
+		e1:SetCondition(function (e) return Duel.GetCustomActivityCount(id,e:GetHandlerPlayer(),ACTIVITY_SPSUMMON)>=1 end)
+		e1:SetTarget(cid.splimit)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,e:GetHandlerPlayer())
+	end
+	Duel.SendtoGrave(e:GetHandler(),REASON_RULE)
 end
 --SPSUMMON
 function cid.spfilter(c,e,tp)

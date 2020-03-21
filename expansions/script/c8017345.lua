@@ -87,12 +87,6 @@ function cid.acttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	local ct=math.min(2,#g)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct)
-	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
-		Duel.SetChainLimit(cid.chainlm)
-	end
-end
-function cid.chainlm(e,rp,tp)
-	return tp==rp
 end
 function cid.actop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,aux.ExceptThisCard(e))

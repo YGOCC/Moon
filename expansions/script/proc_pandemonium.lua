@@ -314,7 +314,7 @@ function Auxiliary.PandCondition(e,c,og)
 		for _,te in ipairs(egroup) do
 			local locval=te:GetValue()
 			if locval and type(locval)=='function' then
-				local func=locval(0,te,tp)
+				local func=locval(0,c,te,tp,lscale,rscale,eset)
 				loc=loc|func
 			else
 				loc=loc
@@ -346,15 +346,17 @@ function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 		ft=1
 	end
 	local loc=0
-	local loclimit,max_eloc=nil,99
+	local loclimit,max_eloc,locfilter,excfilter=nil,99,nil,nil
 	if c:IsHasEffect(EFFECT_EXTRA_PANDEMONIUM_SUMMON_LOCATION) then
 		local egroup={c:IsHasEffect(EFFECT_EXTRA_PANDEMONIUM_SUMMON_LOCATION)}
 		for _,te in ipairs(egroup) do
 			local locval=te:GetValue()
 			if locval and type(locval)=='function' then
-				local func=locval(0,te,tp)
+				local func=locval(0,c,te,tp,lscale,rscale,eset)
 				loc=loc|func
-				loclimit=locval(2)
+				loclimit=locval(2,c,te,tp,lscale,rscale,eset)
+				locfilter=locval(3,c,te,tp,lscale,rscale,eset)
+				excfilter=locval(4,c,te,tp,lscale,rscale,eset)
 			else
 				loc=loc
 			end
@@ -399,14 +401,21 @@ function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	Auxiliary.GCheckAdditional=aux.PendOperationCheck(ft1,ft2,ft)
 	if type(loclimit)=='table' then
 		for loclim,maxct in pairs(loclimit) do
-			if Duel.SelectYesNo(tp,1) then
-				local exg=tg:FilterSelect(tp,Card.IsLocation,1,maxct,nil,loclim)
+			if Duel.SelectYesNo(tp,aux.Stringid(8017339,2)) then
+				local exg=tg:FilterSelect(tp,Auxiliary.ExtraPandeLocationFilter,1,maxct,nil,loclim,locfilter,e,tp,lscale,rscale,eset,tg)
+				exg:KeepAlive()
 				if #exg>0 then
-					local exclude=tg:Filter(Card.IsLocation,exg,loclim)
+					local exclude=tg:Filter(Auxiliary.ExtraPandeLocationFilter,exg,loclim,locfilter,e,tp,lscale,rscale,eset,tg)
+					if excfilter~=nil then
+						local prv=tg:FilterSelect(tp,Auxiliary.ExtraPandeLocationFilterPreserveFromExclusion,1,1,exg,excfilter,e,tp,lscale,rscale,eset,tg)
+						exg:Merge(prv)
+						local excg=tg:Filter(Auxiliary.ExtraPandeLocationFilterPreserveFromExclusion,exg,excfilter,e,tp,lscale,rscale,eset,tg)
+						exclude:Merge(excg)
+					end
 					tg:Sub(exclude)
 				end
 			else
-				local exclude=tg:Filter(Card.IsLocation,nil,loclim)
+				local exclude=tg:Filter(Auxiliary.ExtraPandeLocationFilter,nil,loclim,locfilter,e,tp,lscale,rscale,eset,tg)
 				tg:Sub(exclude)
 			end
 		end
@@ -489,6 +498,12 @@ function Auxiliary.PandOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 			c:RegisterEffect(e1)
 		end
 	end
+end
+function Auxiliary.ExtraPandeLocationFilter(c,loclim,efilter,e,tp,lscale,rscale,eset,tg)
+	return c:IsLocation(loclim) and (not efilter or efilter(c,e,tp,lscale,rscale,eset,tg))
+end
+function Auxiliary.ExtraPandeLocationFilterPreserveFromExclusion(c,excfilter,e,tp,lscale,rscale,eset,tg)
+	return not excfilter or excfilter(c,e,tp,lscale,rscale,eset,tg)
 end
 function Auxiliary.PaCheckFilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM) and c:GetFlagEffect(726)>0

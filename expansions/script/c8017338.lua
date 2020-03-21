@@ -47,15 +47,15 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and cid.ddfilter(chkc) end
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,2)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
 		and Duel.IsExistingTarget(cid.ddfilter,tp,LOCATION_SZONE,0,1,nil) 
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,cid.ddfilter,tp,LOCATION_SZONE,0,1,1,nil)
 	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(2)
+	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g,p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)

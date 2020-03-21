@@ -41,10 +41,20 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.tgtg)
 	e1:SetValue(aux.tgoval)
 	c:RegisterEffect(e1)
-	--place
+	--add to hand
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetDescription(aux.Stringid(id,1))
+	-- e2:SetCategory(CATEGORY_DESTROY)
+	-- e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	-- e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	-- e2:SetCode(EVENT_DESTROYED)
+	-- e2:SetCountLimit(1,id)
+	-- e2:SetTarget(cid.placetg)
+	-- e2:SetOperation(cid.placeop)
+	-- c:RegisterEffect(e2)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_DESTROYED)
@@ -93,28 +103,34 @@ end
 function cid.placefilter(c)
 	return c:GetSequence()==0 or c:GetSequence()==4
 end
-function cid.pendfilter(c)
-	return c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
+function cid.ufilter(c)
+	return c:IsType(TYPE_PENDULUM+TYPE_PANDEMONIUM) and c:IsAbleToHand() and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
 end
-function cid.pandfilter(c,e,tp,eg,ep,ev,re,r,rp)
-	return c:IsType(TYPE_PANDEMONIUM) and not c:IsForbidden() and aux.PandActCon(nil,c)(e,tp,eg,ep,ev,re,r,rp)
+function cid.ucheck(c,typ)
+	return cid.ufilter(c) and (not typ or not c:IsType(typ))
 end
-function cid.ufilter(c,tp,ctype,ct,sg,e,eg,ep,ev,re,r,rp)
-	if not c:IsType(ctype) or c:IsForbidden() or (c:IsType(TYPE_PANDEMONIUM) and not aux.PandActCon(nil,c)(e,tp,eg,ep,ev,re,r,rp)) then return false end
-	sg:AddCard(c)
-	local typ
-	if ct<2 then typ=TYPE_PENDULUM else typ=TYPE_PANDEMONIUM end
-	local res=(ct>=4 or Duel.IsExistingMatchingCard(cid.ufilter,tp,LOCATION_DECK,0,1,sg,tp,typ,ct+1,sg,e,eg,ep,ev,re,r,rp))
-	sg:RemoveCard(c)
-	ct=ct-1
-	return res
-end
+-- function cid.pendfilter(c)
+	-- return c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
+-- end
+-- function cid.pandfilter(c,e,tp,eg,ep,ev,re,r,rp)
+	-- return c:IsType(TYPE_PANDEMONIUM) and not c:IsForbidden() and aux.PandActCon(nil,c)(e,tp,eg,ep,ev,re,r,rp)
+-- end
+-- function cid.ufilter(c,tp,ctype,ct,sg,e,eg,ep,ev,re,r,rp)
+	-- if not c:IsType(ctype) or c:IsForbidden() or (c:IsType(TYPE_PANDEMONIUM) and not aux.PandActCon(nil,c)(e,tp,eg,ep,ev,re,r,rp)) then return false end
+	-- sg:AddCard(c)
+	-- local typ
+	-- if ct<2 then typ=TYPE_PENDULUM else typ=TYPE_PANDEMONIUM end
+	-- local res=(ct>=4 or Duel.IsExistingMatchingCard(cid.ufilter,tp,LOCATION_DECK,0,1,sg,tp,typ,ct+1,sg,e,eg,ep,ev,re,r,rp))
+	-- sg:RemoveCard(c)
+	-- ct=ct-1
+	-- return res
+-- end
 ----------
 function cid.placetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local sg=Group.CreateGroup()
 		return Duel.IsExistingMatchingCard(cid.placefilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil)
-		and Duel.IsExistingMatchingCard(cid.ufilter,tp,LOCATION_DECK,0,1,nil,tp,TYPE_PENDULUM,1,sg,e,eg,ep,ev,re,r,rp)
+		--and Duel.IsExistingMatchingCard(cid.ufilter,tp,LOCATION_DECK,0,1,nil,tp,TYPE_PENDULUM,1,sg,e,eg,ep,ev,re,r,rp)
 	end
 	local g=Duel.GetMatchingGroup(cid.placefilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
@@ -122,37 +138,79 @@ end
 function cid.placeop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cid.placefilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	if #g<=0 then return end
-	if Duel.Destroy(g,REASON_EFFECT) then
-		if not Duel.IsExistingMatchingCard(cid.ufilter,tp,LOCATION_DECK,0,1,nil,tp,TYPE_PENDULUM,1,Group.CreateGroup(),e,eg,ep,ev,re,r,rp) then return end
-		if Duel.CheckLocation(tp,LOCATION_SZONE,0) and Duel.CheckLocation(tp,LOCATION_SZONE,4) and Duel.CheckLocation(1-tp,LOCATION_SZONE,0) and Duel.CheckLocation(1-tp,LOCATION_SZONE,4) then
-			local exg=Group:CreateGroup()
-			exg:KeepAlive()
-			for times=0,1 do
-				local p
-				if times==0 then p=tp else p=1-tp end
-				Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
-				local tc1=Duel.SelectMatchingCard(tp,cid.pendfilter,tp,LOCATION_DECK,0,1,1,exg):GetFirst()
-				exg:AddCard(tc1)
-				local tc2=Duel.SelectMatchingCard(tp,cid.pandfilter,tp,LOCATION_DECK,0,1,1,exg,e,p,eg,ep,ev,re,r,rp):GetFirst()
-				exg:AddCard(tc2)
-				if not (tc1 and tc2) then return end
-				Duel.MoveToField(tc1,tp,p,LOCATION_SZONE,POS_FACEUP,true)
-				aux.PandAct(tc2,p,0x10|0x200)(e,tp,eg,ep,ev,re,r,rp)
-				local e1=Effect.CreateEffect(e:GetHandler())
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-				e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-				e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
-				e1:SetValue(LOCATION_REMOVED)
-				tc1:RegisterEffect(e1,true)
-				local e2=Effect.CreateEffect(e:GetHandler())
-				e2:SetType(EFFECT_TYPE_SINGLE)
-				e2:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-				e2:SetReset(RESET_EVENT+RESETS_REDIRECT)
-				e2:SetValue(LOCATION_REMOVED)
-				tc2:RegisterEffect(e2,true)
+	local ct=Duel.Destroy(g,REASON_EFFECT)
+	if ct>0 then
+		if Duel.IsExistingMatchingCard(cid.ufilter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,nil,TYPE_PENDULUM+TYPE_PANDEMONIUM) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			local group,typ=Group.CreateGroup(),false
+			group:KeepAlive()
+			for i=1,math.min(ct,2) do
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+				local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.ucheck),tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,1,group,typ)
+				if #sg>0 then
+					typ=bit.band(sg:GetFirst():GetType(),TYPE_PENDULUM+TYPE_PANDEMONIUM)
+					group:Merge(sg)
+				end
+			end
+			if #group>0 then
+				Duel.SendtoHand(group,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-tp,group)
+				local tc=group:GetFirst()
+				while tc do
+					local e1=Effect.CreateEffect(e:GetHandler())
+					e1:SetType(EFFECT_TYPE_FIELD)
+					e1:SetCode(EFFECT_CANNOT_SUMMON)
+					e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+					e1:SetTargetRange(1,0)
+					e1:SetTarget(cid.sumlimit)
+					e1:SetLabel(tc:GetCode())
+					e1:SetReset(RESET_PHASE+PHASE_END)
+					Duel.RegisterEffect(e1,tp)
+					local e2=e1:Clone()
+					e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+					Duel.RegisterEffect(e2,tp)
+					local e4=e1:Clone()
+					e4:SetCode(EFFECT_CANNOT_ACTIVATE)
+					e4:SetValue(cid.aclimit)
+					Duel.RegisterEffect(e4,tp)
+					tc=group:GetNext()
+				end
 			end
 		end
+			-- if Duel.CheckLocation(tp,LOCATION_SZONE,0) and Duel.CheckLocation(tp,LOCATION_SZONE,4) and Duel.CheckLocation(1-tp,LOCATION_SZONE,0) and Duel.CheckLocation(1-tp,LOCATION_SZONE,4) then
+				-- local exg=Group:CreateGroup()
+				-- exg:KeepAlive()
+				-- for times=0,1 do
+					-- local p
+					-- if times==0 then p=tp else p=1-tp end
+					-- Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
+					-- local tc1=Duel.SelectMatchingCard(tp,cid.pendfilter,tp,LOCATION_DECK,0,1,1,exg):GetFirst()
+					-- exg:AddCard(tc1)
+					-- local tc2=Duel.SelectMatchingCard(tp,cid.pandfilter,tp,LOCATION_DECK,0,1,1,exg,e,p,eg,ep,ev,re,r,rp):GetFirst()
+					-- exg:AddCard(tc2)
+					-- if not (tc1 and tc2) then return end
+					-- Duel.MoveToField(tc1,tp,p,LOCATION_SZONE,POS_FACEUP,true)
+					-- aux.PandAct(tc2,p,0x10|0x200)(e,tp,eg,ep,ev,re,r,rp)
+					-- local e1=Effect.CreateEffect(e:GetHandler())
+					-- e1:SetType(EFFECT_TYPE_SINGLE)
+					-- e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+					-- e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+					-- e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+					-- e1:SetValue(LOCATION_REMOVED)
+					-- tc1:RegisterEffect(e1,true)
+					-- local e2=Effect.CreateEffect(e:GetHandler())
+					-- e2:SetType(EFFECT_TYPE_SINGLE)
+					-- e2:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+					-- e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+					-- e2:SetReset(RESET_EVENT+RESETS_REDIRECT)
+					-- e2:SetValue(LOCATION_REMOVED)
+					-- tc2:RegisterEffect(e2,true)
+				-- end
+			-- end
 	end
+end
+function cid.sumlimit(e,c)
+	return c:IsCode(e:GetLabel())
+end
+function cid.aclimit(e,re,tp)
+	return re:GetHandler():IsCode(e:GetLabel()) and not re:IsHasType(EFFECT_TYPE_ACTIVATE)
 end
