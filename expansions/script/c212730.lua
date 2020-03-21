@@ -46,7 +46,7 @@ function c212730.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c212730.cfilter(c)
-	return (c:IsSetCard(0x12b) and c:IsType(TYPE_MONSTER) and c:IsLinkAbove(3)) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
+	return (c:IsSetCard(0x12b) and c:IsType(TYPE_MONSTER) and c:IsLinkAbove(4)) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE))
 end
 function c212730.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c212730.cfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,nil)
