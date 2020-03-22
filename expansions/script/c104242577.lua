@@ -42,9 +42,18 @@ function cid.initial_effect(c)
 	e4:SetOperation(cid.gop)
 	e4:SetCountLimit(1,id)
 	c:RegisterEffect(e4)
+	--activate
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(74665651,0))
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e5:SetCode(EVENT_PHASE+PHASE_END)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetCountLimit(1)
+	e5:SetOperation(cid.frag)
+	c:RegisterEffect(e5)
 end
 function cid.thfilter(c)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsAbleToGrave()
 end
 function cid.gtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
@@ -58,7 +67,10 @@ function cid.gop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if not tc then return end
 	if Duel.SendtoGrave(tc,nil,REASON_EFFECT)>0 and tc:IsLocation(LOCATION_GRAVE) 
-	 then Duel.Recover(tp,500,REASON_EFFECT)
+	 then 	
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
 		end
 	end
 function cid.indfilter(c)
@@ -67,5 +79,10 @@ end
 function cid.cond(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cid.indfilter,tp,LOCATION_FZONE,0,1,nil)
 end
-
-
+function cid.frag(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
+		end

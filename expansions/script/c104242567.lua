@@ -35,7 +35,7 @@ function cid.initial_effect(c)
 end
 --Filters
 function cid.searchfilter(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function cid.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsSetCard(0x666)

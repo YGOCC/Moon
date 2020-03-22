@@ -66,8 +66,8 @@ if op==0 then
 	end
 end
 if op==1 then
-	local sg=Duel.SelectReleaseGroup(tp,cid.moondream,1,1,nil)
-	Duel.Release(sg,REASON_COST)
+	local g=Duel.SelectMatchingCard(tp,cid.moondream,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.Release(g,REASON_COST)
 	end
 end
 function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
