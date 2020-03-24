@@ -49,7 +49,7 @@ function c1242354357.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c1242354357.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() and c1242354357.cfilter(chkc,tp) end
-	if chk==0 then return Duel.IsExistingTarget(c1242354357.cfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+	if chk==0 then return Duel.IsExistingTarget(c1242354357.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tp)
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c1242354357.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,tp)
