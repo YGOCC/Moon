@@ -9,6 +9,7 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
+	aux.AddCodeList(c,8017345)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
@@ -29,7 +30,6 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.spop)
 	c:RegisterEffect(e2)
 end
-cid.card_code_list={8017345}
 --ACTIVATE
 --filters
 function cid.dfilter(c,e)
@@ -120,13 +120,10 @@ end
 --SPSUMMON
 --filters
 function cid.spfilter(c,e,tp)
-	if (c:IsLocation(LOCATION_SZONE) and (not c:IsFaceup() or c:GetFlagEffect(726)<=0)) or not c:IsType(TYPE_RITUAL)
-	or ((c:IsLocation(LOCATION_SZONE) and bit.band(aux.GetOriginalPandemoniumType(c),TYPE_MONSTER+TYPE_RITUAL+TYPE_PANDEMONIUM)==0)
-	or bit.band(c:GetType(),TYPE_MONSTER+TYPE_RITUAL+TYPE_PANDEMONIUM)==0)
-	or ((c:IsLocation(LOCATION_SZONE) and (not c:IsCanBeSpecialSummoned(e,0,tp,true,false) or not Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetCode(),0,aux.GetOriginalPandemoniumType(c)|TYPE_PANDEMONIUM,c:GetTextAttack(),c:GetTextDefense(),c:GetOriginalLevel(),c:GetOriginalRace(),c:GetOriginalAttribute()))) 
-	or not c:IsCanBeSpecialSummoned(e,0,tp,true,false)) then 
-		return false 
-	end
+	if (c:IsLocation(LOCATION_SZONE) and (not c:IsFaceup() or c:GetFlagEffect(726)<=0)) or not c:IsType(TYPE_RITUAL) then return false end
+	if (c:IsLocation(LOCATION_SZONE) and bit.band(aux.GetOriginalPandemoniumType(c),TYPE_MONSTER+TYPE_RITUAL+TYPE_PANDEMONIUM)==0) or bit.band(c:GetType(),TYPE_MONSTER+TYPE_RITUAL+TYPE_PANDEMONIUM)==0 then return false end
+	if c:IsLocation(LOCATION_SZONE) and (not c:IsCanBeSpecialSummoned(e,0,tp,true,false) or not Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetCode(),0,aux.GetOriginalPandemoniumType(c)|TYPE_PANDEMONIUM,c:GetTextAttack(),c:GetTextDefense(),c:GetOriginalLevel(),c:GetOriginalRace(),c:GetOriginalAttribute())) then return false end
+	if not c:IsCanBeSpecialSummoned(e,0,tp,true,false) then return false end
 	return true
 end
 function cid.efilter(e,re)

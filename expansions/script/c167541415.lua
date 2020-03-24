@@ -49,7 +49,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if ct>0 then
 		Duel.ConfirmCards(1-tp,cg)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectTarget(tp,cid.costfilter,tp,0,LOCATION_ONFIELD,ct,ct,e:GetHandler())
+		local g=Duel.SelectTarget(tp,cid.filter,tp,0,LOCATION_ONFIELD,ct,ct,e:GetHandler())
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	end
 end
