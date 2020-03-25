@@ -108,10 +108,10 @@ end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	local ct=g:GetCount()
-	local tg=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local tg=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)
 	if ct>0 and ct>=#tg then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local rg=dg:Select(tp,ct,ct,g)
+		local rg=tg:Select(tp,ct,ct,g)
 		Duel.HintSelection(rg)
 		Duel.Destroy(rg,REASON_EFFECT)
 	end
