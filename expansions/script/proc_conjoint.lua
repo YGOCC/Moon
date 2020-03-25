@@ -68,6 +68,7 @@ function Auxiliary.EnableConjointAttribute(c,ce)
 	e5:SetCode(EFFECT_DESTROY_REPLACE)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e5:SetTarget(Auxiliary.DesRepDisjoint(ce))
+	e5:SetOperation(function(e,tp) local tc=e:GetHandler() tc:RemoveEC(tp,math.min(ce,c:GetEC()),REASON_RULE) tc:RemoveOverlayCard(tp,1,1,REASON_RULE) end)
 	c:RegisterEffect(e5)
 	if c:IsType(TYPE_MONSTER) then
 		e3=Effect.CreateEffect(c)
@@ -235,10 +236,6 @@ function Auxiliary.DesRepDisjoint(ce)
 	return function	(e,tp,eg,ep,ev,re,r,rp,chk)
 				local c=e:GetHandler()
 				if chk==0 then return c:IsReason(REASON_BATTLE+REASON_EFFECT) and not c:IsReason(REASON_REPLACE) and c:CheckRemoveOverlayCard(tp,1,REASON_RULE) end
-				if Duel.SelectEffectYesNo(tp,c,96) then
-				c:RemoveEC(tp,math.min(ce,c:GetEC()),REASON_RULE)
-					c:RemoveOverlayCard(tp,1,1,REASON_RULE)
-					return true
-				else return false end
+				return Duel.SelectEffectYesNo(tp,c,96)
 			end
 end
