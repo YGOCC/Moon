@@ -67,7 +67,7 @@ function cid.gop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if not tc then return end
 	if Duel.SendtoGrave(tc,nil,REASON_EFFECT)>0 and tc:IsLocation(LOCATION_GRAVE) 
-	 then 	
+	 then   
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 		Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
@@ -77,7 +77,7 @@ function cid.indfilter(c)
 	return c:IsFaceup() and c:IsCode(104242571)
 end
 function cid.cond(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(cid.indfilter,tp,LOCATION_FZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(cid.indfilter,e:GetHandlerPlayer(),LOCATION_FZONE,0,1,nil)
 end
 function cid.frag(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

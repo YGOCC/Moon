@@ -29,7 +29,7 @@ function c67864649.stunfilter(c)
 	return c:IsSetCard(0x62a6) and c:IsLevelBelow(4)
 end
 function c67864649.cfilter(c)
-	return c:IsSetCard(0x2a6) and c:IsType(TYPE_MONSTER) and c:IsDiscardable()
+	return c:IsDiscardable()
 end
 function c67864649.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864649.cfilter,tp,LOCATION_HAND,0,1,nil) end

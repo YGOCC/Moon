@@ -37,7 +37,7 @@ end
 	return c:IsType(TYPE_MONSTER) and c.toss_coin and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 	function s.trg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)>0 end
+	if chk==0 then return Duel.GetFieldGroupCount(Card.IsAbleToRemove,tp,LOCATION_GRAVE,0,1-tp)>0 end
 	if chk==0 then return ct>0 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_GRAVE) 
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,1,tp,3)

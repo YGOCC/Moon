@@ -52,7 +52,9 @@ function c67864645.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(g,REASON_COST)
 end
 function c67864645.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x2a6) and re:IsActiveRace(RACE_CYBERSE)
+	if not re then return false end
+	local rc=re:GetHandler()
+	return rc:IsRace(RACE_CYBERSE) and rc:IsSetCard(0x2a6)
 end
 function c67864645.thfilter(c)
 	return c:IsSetCard(0x2a6) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

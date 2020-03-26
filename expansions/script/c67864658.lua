@@ -27,7 +27,7 @@ function c67864658.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
 function c67864658.cfilter(c)
-	return c:IsSetCard(0x2a6) and c:IsType(TYPE_SPELL) and c:IsDiscardable()
+	return c:IsDiscardable()
 end
 function c67864658.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67864658.cfilter,tp,LOCATION_HAND,0,1,nil) end

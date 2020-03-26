@@ -14,14 +14,27 @@ function cid.initial_effect(c)
 	--banish as punishment
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(39823987,0))
-	e2:SetCategory(CATEGORY_REMOVE+CATEGORY_DAMAGE+CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCountLimit(1,id+1000)
 	e2:SetTarget(cid.destg)
 	e2:SetOperation(cid.desop)
 	c:RegisterEffect(e2)
-	
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_DESTROYED)
+	e3:SetOperation(function(e) e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_STANDBY,0,2,Duel.GetTurnCount()) end)
+	c:RegisterEffect(e3)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e1:SetCountLimit(1,id)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetCondition(cid.spcon)
+	e1:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk) if chk==0 then return true end Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE) end)
+	e1:SetOperation(cid.spop)
+	Duel.RegisterEffect(e1,tp)
 end
 --Filters
 function cid.ponyfilter(c)
@@ -33,36 +46,22 @@ end
 --banish as punishment
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local tc=e:GetHandler():GetReasonCard()
-		Duel.SetOperationInfo(0,CATEGORY_REMOVE,tc,1,0,0)
-		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
-		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1000)
+	if not e:GetHandler():IsReason(REASON_BATTLE) then Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler():GetReasonCard(),1,0,0) end
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-		local tc=e:GetHandler():GetReasonCard() or (e:GetHandler():GetReasonEffect() and e:GetHandler():GetReasonEffect():GetHandler())
-			if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 then
-				Duel.Recover(tp,1000,REASON_EFFECT)
-					local sc=Duel.CreateToken(tp,104242585)
-						sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-							Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
+	Duel.Recover(tp,1000,REASON_EFFECT)
+	local sc=Duel.CreateToken(tp,104242585)
+	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+	Duel.Destroy(sc,REASON_EFFECT)
+	if c:IsReason(REASON_BATTLE) then return end
+	Duel.BreakEffect()
+	Duel.Destroy(c:GetReasonCard() or (c:GetReasonEffect() and c:GetReasonEffect():GetHandler()),REASON_EFFECT)
 end
-local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-			e1:SetCountLimit(1)
-			e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-			e1:SetCondition(cid.spcon)
-			e1:SetOperation(cid.spop)
-			e1:SetLabelObject(tc)
-			e1:SetLabel(Duel.GetTurnCount())
-			e1:SetReset(RESET_PHASE+PHASE_STANDBY,2)
-			Duel.RegisterEffect(e1,tp)
-			tc:RegisterFlagEffect(id,RESET_EVENT+PHASE_STANDBY,2,2)
-		end
 function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	return Duel.GetTurnCount()~=e:GetLabel() 
-		and tc:GetFlagEffect(id)~=0 and tc:GetReasonEffect():GetHandler()==e:GetHandler()
+	local tc=e:GetHandler()
+	return tc:GetFlagEffect(id)~=0 and Duel.GetTurnCount()~=tc:GetFlagEffectLabel(id)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return true end

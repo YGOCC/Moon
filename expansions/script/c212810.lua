@@ -16,6 +16,7 @@ function c212810.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,212810)
+	e2:SetCost(c212810.cost)
 	e2:SetTarget(c212810.cttg)
 	e2:SetOperation(c212810.ctop)
 	c:RegisterEffect(e2)
@@ -24,6 +25,13 @@ function c212810.spcon(e,c)
 	if c==nil then return true end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 		and Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)<Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE,nil)
+end
+function c212810.cfilter(c)
+	return c:IsAbleToGraveAsCost()
+end
+function c212810.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c212810.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,c212810.cfilter,1,1,REASON_COST,nil)
 end
 function c212810.ctfilter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND) and c:IsControlerCanBeChanged()
@@ -38,6 +46,6 @@ end
 function c212810.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.GetControl(tc,tp)
+		Duel.GetControl(tc,tp,PHASE_END,1)
 	end
 end
