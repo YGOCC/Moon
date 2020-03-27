@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.AddOrigEvoluteType(c)
-aux.AddEvoluteProc(c,nil,7,cid.filter1,cid.filter2,cid.filter3,1,99)
+aux.AddEvoluteProc(c,nil,7,cid.filter1,cid.filter3,1,99)
 		--destroy replace
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -31,9 +31,6 @@ function cid.filter1(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 
-function cid.filter2(c,ec,tp)
-	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
-end
 function cid.filter3(c,ec,tp)
 	return not c:IsType(TYPE_EFFECT)
 end

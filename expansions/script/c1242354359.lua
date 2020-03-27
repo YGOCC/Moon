@@ -36,21 +36,18 @@ function c1242354359.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	 e5:SetType(EFFECT_TYPE_EQUIP)
 	 e5:SetCode(EFFECT_DISABLE)
-	 e5:SetOperation(c1242354359.neg)
+	 e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	 e5:SetRange(LOCATION_SZONE)
+	 e5:SetCondition(c1242354359.negcon)
 	 c:RegisterEffect(e5)
 	 
    
 end
---Negate eff
-function c1242354359.neg(e,c)
-local tp=e:GetHandlerPlayer()
-local egy=Duel.GetFieldGroupCount(tp,0,LOCATION_GRAVE)*100
-
-
-return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and c:GetAttack()<=egy
-   
- end
-
+--negate
+function c1242354359.negcon(e)
+	local tc=e:GetHandler():GetEquipTarget()
+	return tc and tc:GetAttack()==0
+end
 
 --equip
 function c1242354359.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -110,7 +107,7 @@ function c1242354359.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c1242354359.val(e,c)
-	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_GRAVE,0)*(-100)
+	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_GRAVE)*(-100)
 end
 
 --ritual eff 

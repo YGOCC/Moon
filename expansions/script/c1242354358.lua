@@ -48,7 +48,7 @@ end
 
 
 function c1242354358.afilter(c)
-	return c:IsSetCard(0x786) and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsSetCard(0x786) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsFaceup()
 end
 
 function c1242354358.bfilter(c)

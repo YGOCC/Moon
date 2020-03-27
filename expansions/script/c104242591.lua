@@ -24,7 +24,7 @@ function cid.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_DESTROYED)
-	e3:SetOperation(function(e) e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_STANDBY,0,2,Duel.GetTurnCount()) end)
+	e3:SetOperation(function(e) e:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_STANDBY,0,1,Duel.GetTurnCount()) end)
 	c:RegisterEffect(e3)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -54,7 +54,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(tp,1000,REASON_EFFECT)
 	local sc=Duel.CreateToken(tp,104242585)
 	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-	Duel.Destroy(sc,REASON_EFFECT)
+	Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
 	if c:IsReason(REASON_BATTLE) then return end
 	Duel.BreakEffect()
 	Duel.Destroy(c:GetReasonCard() or (c:GetReasonEffect() and c:GetReasonEffect():GetHandler()),REASON_EFFECT)
@@ -72,7 +72,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		local g=Duel.GetFirstMatchingCard(cid.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
 			if g then
-				Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+				Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
