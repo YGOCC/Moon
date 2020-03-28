@@ -1,4 +1,4 @@
---Moon's Dream: Renewal
+--Moon's Dream: Lunar Cycles
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -19,11 +19,13 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Fragment creation
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCategory(CATEGORY_REMOVE)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id+1000)
-	e2:SetCondition(aux.exccon)
-	e2:SetCost(aux.bfgcost)
+	e2:SetCondition(cid.fragcon)
+	e2:SetTarget(cid.fragtg)
 	e2:SetOperation(cid.fragop)
 	c:RegisterEffect(e2)
 end
@@ -47,13 +49,22 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-
-
+function cid.fragcon(e,tp,eg,ep,ev,re,r,rp)
+	return  tp==Duel.GetTurnPlayer() and Duel.GetTurnCount()~=e:GetHandler():GetTurnID() or e:GetHandler():IsReason(REASON_RETURN)
+end
+function cid.fragtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local c=e:GetHandler()
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,c,1,0,0)
+end
 function cid.fragop(e,tp,eg,ep,ev,re,r,rp,chk)		
 	--	local sc=Duel.CreateToken(tp,104242585)
 	--	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 	--	Duel.SendtoExtraP(sc,tp,REASON_RULE)
+	    local c=e:GetHandler()
+		if Duel.Remove(c,POS_FACEUP,REASON_EFFECT)~=0 then
 		local sc=Duel.CreateToken(tp,104242585)
 		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
 		Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
+end
 end

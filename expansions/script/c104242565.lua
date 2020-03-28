@@ -45,13 +45,9 @@ function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	((bit.band(r,REASON_EFFECT+REASON_MATERIAL)~=0 and re:GetHandler():IsSetCard(0x666)) or (re:GetHandler():IsCode(104242577)))
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc~=e:GetHandler() and chkc:IsControler(1-tp) end
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) 
-	end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
-	
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -61,6 +57,7 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(21502796,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local sg=g:Select(tp,1,1,nil)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
 		Duel.HintSelection(sg)
 		Duel.Destroy(sg,REASON_EFFECT)
 	
