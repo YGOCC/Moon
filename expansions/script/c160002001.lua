@@ -26,6 +26,29 @@ function cid.initial_effect(c)
 	e1:SetCondition(cid.econ)
 	e1:SetValue(cid.efilter)
 	c:RegisterEffect(e1)
+  --to hand
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,id)
+	e2:SetCost(cid.hdcost)
+	e2:SetTarget(cid.destg)
+	e2:SetOperation(cid.desop)
+	c:RegisterEffect(e2)
+  --tohand
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_DELAY)
+	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCountLimit(1,id+20)
+	e4:SetCondition(cid.thcon)
+	e4:SetTarget(cid.thtg)
+	e4:SetOperation(cid.thop)
+	c:RegisterEffect(e4)
 end
 function cid.econ(e)
 	return Duel.IsEnvironment(22702055)
@@ -53,4 +76,43 @@ function cid.hspcon(e,c)
 end
 function cid.efilter(e,te)
 	return te:IsActiveType(TYPE_MONSTER)
+end
+function cid.hdcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST) end
+	e:GetHandler():RemoveEC(tp,2,REASON_COST)
+end
+function cid.thfilter2(c)
+	return aux.IsCodeListed(c,22702055) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
+end
+function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+ if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
+		and Duel.IsExistingMatchingCard(cid.thfilter2,tp,LOCATION_DECK,0,1,nil) end
+end
+function cid.desop(e,tp,eg,ep,ev,re,r,rp)
+		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+	local g=Duel.SelectMatchingCard(tp,cid.thfilter2,tp,LOCATION_DECK,0,1,1,nil)
+	local tc=g:GetFirst()
+Duel.SSet(tp,tc)
+
+end
+
+function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return rp==1-tp and c:IsReason(REASON_EFFECT) and c:IsSummonType(SUMMON_TYPE_FUSION) and c:GetPreviousControler()==tp
+end
+function cid.thfilter(c)
+	return c:IsAttribute(ATTRIBUTE_WATER)  and c:IsLevelAbove(5) and c:IsAbleToHand()
+end
+function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function cid.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
 end
