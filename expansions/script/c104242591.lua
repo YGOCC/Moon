@@ -31,10 +31,11 @@ function cid.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCondition(cid.spcon)
 	e1:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk) if chk==0 then return true end Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE) end)
 	e1:SetOperation(cid.spop)
-	Duel.RegisterEffect(e1,tp)
+	c:RegisterEffect(e1)
 end
 --Filters
 function cid.ponyfilter(c)

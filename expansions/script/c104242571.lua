@@ -42,7 +42,7 @@ function cid.initial_effect(c)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e4:SetCountLimit(1)
-	e4:SetCondition(aux.TargetBoolFunction(aux.AND(aux.OR(cid.thfilter,aux.NOT(Card.IsAbleToHand)),Card.IsFaceup)))
+	e4:SetCondition(function(e) return Duel.IsExistingMatchingCard(aux.AND(aux.OR(cid.thfilter,aux.NOT(Card.IsAbleToHand)),Card.IsFaceup),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) end)
 	e4:SetValue(cid.valcon)
 	c:RegisterEffect(e4)
 	
