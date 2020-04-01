@@ -76,64 +76,65 @@ function c62613310.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	for rc in aux.Next(g) do
 		if rc:GetFlagEffect(62613310)<=0 then
 			rc:RegisterFlagEffect(62613310,RESET_EVENT+EVENT_CUSTOM+62613310,EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE,1)
-			local egroup={rc:IsHasEffect(EFFECT_DEFAULT_CALL)}
-			for _,te1 in ipairs(egroup) do
-				local ce=te1:GetLabelObject()
-				if not ce then
-					te1:Reset()
-				end
-				if ce and ce:GetCode()==EFFECT_SPSUMMON_PROC then
-					local val=ce:GetValue()
-					if aux.CheckKaijuProc(ce) then
-						ce:SetValue(function (e,c)
-										if type(val)~='number' then
-											local a1,seq=val(e,c)
-											if c:IsSetCard(0x6233) then
-												return a1,seq
+			local m=_G["c"..rc:GetOriginalCode()]
+			if not m then return false end
+			local egroup=m.default_call_table
+			if egroup~=nil then
+				for cte=1,#egroup do
+					local ce=egroup[cte]
+					if ce and ce:GetCode()==EFFECT_SPSUMMON_PROC then
+						local val=ce:GetValue()
+						if aux.CheckKaijuProc(ce) then
+							ce:SetValue(function (e,c)
+											if type(val)~='number' then
+												local a1,seq=val(e,c)
+												if c:IsSetCard(0x6233) then
+													return a1,seq
+												else
+													return a1,seq&(~cc:GetLinkedZone(1-c:GetControler()))
+												end
 											else
-												return a1,seq&(~cc:GetLinkedZone(1-c:GetControler()))
-											end
-										else
-											if c:IsSetCard(0x6233) then
-												return val
-											else
-												return val,~cc:GetLinkedZone(1-c:GetControler())
-											end
-										end
-									end
-									)
-					else
-						ce:SetValue(function (e,c)
-										if type(val)~='number' then
-											local a1,seq=val(e,c)
-											if c:IsSetCard(0x6233) then
-												return a1,seq
-											else
-												return a1,seq&(~cc:GetLinkedZone(c:GetControler()))
-											end
-										else
-											if c:IsSetCard(0x6233) then
-												return val
-											else
-												return val,~cc:GetLinkedZone(c:GetControler())
+												if c:IsSetCard(0x6233) then
+													return val
+												else
+													return val,~cc:GetLinkedZone(1-c:GetControler())
+												end
 											end
 										end
-									end
-									)
+										)
+						else
+							ce:SetValue(function (e,c)
+											if type(val)~='number' then
+												local a1,seq=val(e,c)
+												if c:IsSetCard(0x6233) then
+													return a1,seq
+												else
+													return a1,seq&(~cc:GetLinkedZone(c:GetControler()))
+												end
+											else
+												if c:IsSetCard(0x6233) then
+													return val
+												else
+													return val,~cc:GetLinkedZone(c:GetControler())
+												end
+											end
+										end
+										)
+						end
+						local reset=Effect.CreateEffect(cc)
+						reset:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+						reset:SetProperty(EFFECT_FLAG_DELAY)
+						reset:SetCode(EVENT_ADJUST)
+						reset:SetLabel(p)
+						reset:SetCountLimit(1)
+						reset:SetCondition(c62613310.resetcostcon)
+						reset:SetOperation(aux.ResetEffectFunc(ce,'value',val))
+						Duel.RegisterEffect(reset,tp)
+						local reset2=reset:Clone()
+						reset2:SetLabelObject(rc)
+						reset2:SetOperation(c62613310.resetflag)
+						Duel.RegisterEffect(reset2,tp)
 					end
-					local reset=Effect.CreateEffect(cc)
-					reset:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-					reset:SetProperty(EFFECT_FLAG_DELAY)
-					reset:SetCode(EVENT_ADJUST)
-					reset:SetLabel(p)
-					reset:SetCountLimit(1)
-					reset:SetCondition(c62613310.resetcostcon)
-					reset:SetOperation(aux.ResetEffectFunc(ce,'value',val))
-					Duel.RegisterEffect(reset,tp)
-					local reset2=reset:Clone()
-					reset2:SetLabelObject(rc)
-					reset2:SetOperation(c62613310.resetflag)
-					Duel.RegisterEffect(reset2,tp)
 				end
 			end
 		end

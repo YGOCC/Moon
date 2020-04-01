@@ -111,15 +111,22 @@ end
 Card.RegisterEffect=function(c,e,forced)
 	if c:IsStatus(STATUS_INITIALIZING) and not e then return end
 	registereff(c,e,forced)
-	local prop=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE
-	if e:IsHasProperty(EFFECT_FLAG_UNCOPYABLE) then prop=prop|EFFECT_FLAG_UNCOPYABLE end
-	local ex=Effect.CreateEffect(c)
-	ex:SetType(EFFECT_TYPE_SINGLE)
-	ex:SetProperty(prop)
-	ex:SetCode(EFFECT_DEFAULT_CALL)
-	ex:SetLabelObject(e)
-	ex:SetLabel(c:GetOriginalCode())
-	registereff(c,ex,forced)
+	local m=_G["c"..c:GetOriginalCode()]
+	if not m then return false end
+	if not m.default_call_table then
+		m.default_call_table={}
+	end
+	local etable=m.default_call_table
+	table.insert(etable,e)
+	-- local prop=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE
+	-- if e:IsHasProperty(EFFECT_FLAG_UNCOPYABLE) then prop=prop|EFFECT_FLAG_UNCOPYABLE end
+	-- local ex=Effect.CreateEffect(c)
+	-- ex:SetType(EFFECT_TYPE_SINGLE)
+	-- ex:SetProperty(prop)
+	-- ex:SetCode(EFFECT_DEFAULT_CALL)
+	-- ex:SetLabelObject(e)
+	-- ex:SetLabel(c:GetOriginalCode())
+	-- registereff(c,ex,forced)
 end
 Auxiliary.kaiju_procs={}
 Effect.SetTargetRange=function(e,self,oppo)

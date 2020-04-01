@@ -36,39 +36,40 @@ function cid.skillop(e,tp,eg,ep,ev,re,r,rp)
 	for rc in aux.Next(g) do
 		if rc:GetFlagEffect(id)<=0 then
 			rc:RegisterFlagEffect(id,RESET_EVENT+EVENT_CUSTOM+id,EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SET_AVAILABLE,1)
-			local egroup={rc:IsHasEffect(EFFECT_DEFAULT_CALL)}
-			for _,te1 in ipairs(egroup) do
-				local ce=te1:GetLabelObject()
-				if not ce then
-					te1:Reset()
-				end
-				if ce:GetType()==TYPE_FIELD+TYPE_CONTINUOUS then
-					local op=ce:GetOperation()
-					if op then
-						ce:SetOperation(function (e,tp,eg,ep,ev,re,r,rp)
-											if Duel.GetLP(1-e:GetHandlerPlayer())<=1000 and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0)>Duel.GetFieldGroupCount(1-e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0) and Duel.IsPlayerCanDraw(1-e:GetHandlerPlayer(),2) then
-												if Duel.SelectYesNo(1-e:GetHandlerPlayer(),aux.Stringid(id,0)) then
-													Duel.Hint(HINT_CARD,e:GetHandlerPlayer(),id)
-													Duel.Draw(1-e:GetHandlerPlayer(),2,REASON_RULE+1)
-													return
+			local m=_G["c"..rc:GetOriginalCode()]
+			if not m then return false end
+			local egroup=m.default_call_table
+			if egroup~=nil then
+				for cte=1,#egroup do
+					local ce=egroup[cte]
+					if ce:GetType()==TYPE_FIELD+TYPE_CONTINUOUS then
+						local op=ce:GetOperation()
+						if op then
+							ce:SetOperation(function (e,tp,eg,ep,ev,re,r,rp)
+												if Duel.GetLP(1-e:GetHandlerPlayer())<=1000 and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0)>Duel.GetFieldGroupCount(1-e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0) and Duel.IsPlayerCanDraw(1-e:GetHandlerPlayer(),2) then
+													if Duel.SelectYesNo(1-e:GetHandlerPlayer(),aux.Stringid(id,0)) then
+														Duel.Hint(HINT_CARD,e:GetHandlerPlayer(),id)
+														Duel.Draw(1-e:GetHandlerPlayer(),2,REASON_RULE+1)
+														return
+													end
 												end
-											end
-											op(e,tp,eg,ep,ev,re,r,rp)
-										end)
-					end
-				elseif ce:GetCode()==EFFECT_SPSUMMON_PROC_G then
-					local op=ce:GetOperation()
-					if op then
-						ce:SetOperation(function (e,tp,eg,ep,ev,re,r,rp,c)
-											if Duel.GetLP(1-e:GetHandlerPlayer())<=1000 and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0)>Duel.GetFieldGroupCount(1-e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0) and Duel.IsPlayerCanDraw(1-e:GetHandlerPlayer(),2) then
-												if Duel.SelectYesNo(1-e:GetHandlerPlayer(),aux.Stringid(id,0)) then
-													Duel.Hint(HINT_CARD,e:GetHandlerPlayer(),id)
-													Duel.Draw(1-e:GetHandlerPlayer(),2,REASON_RULE+1)
-													return
+												op(e,tp,eg,ep,ev,re,r,rp)
+											end)
+						end
+					elseif ce:GetCode()==EFFECT_SPSUMMON_PROC_G then
+						local op=ce:GetOperation()
+						if op then
+							ce:SetOperation(function (e,tp,eg,ep,ev,re,r,rp,c)
+												if Duel.GetLP(1-e:GetHandlerPlayer())<=1000 and Duel.GetFieldGroupCount(e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0)>Duel.GetFieldGroupCount(1-e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0) and Duel.IsPlayerCanDraw(1-e:GetHandlerPlayer(),2) then
+													if Duel.SelectYesNo(1-e:GetHandlerPlayer(),aux.Stringid(id,0)) then
+														Duel.Hint(HINT_CARD,e:GetHandlerPlayer(),id)
+														Duel.Draw(1-e:GetHandlerPlayer(),2,REASON_RULE+1)
+														return
+													end
 												end
-											end
-											op(e,tp,eg,ep,ev,re,r,rp,c)
-										end)
+												op(e,tp,eg,ep,ev,re,r,rp,c)
+											end)
+						end
 					end
 				end
 			end
