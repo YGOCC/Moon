@@ -10,12 +10,12 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	--to hand
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCondition(cid.thcon)
 	e1:SetCountLimit(1,id)
+	e1:SetCondition(cid.thcon)
 	e1:SetTarget(cid.thtg)
 	e1:SetOperation(cid.thop)
 	c:RegisterEffect(e1)
@@ -25,7 +25,7 @@ function cid.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+1000)
-	e2:SetCost(cid.selflock)
+--	e2:SetCost(cid.selflock)
 	e2:SetOperation(cid.fragment)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
@@ -49,20 +49,22 @@ function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	((bit.band(r,REASON_EFFECT+REASON_MATERIAL)~=0 and re:GetHandler():IsSetCard(0x666)) or (re:GetHandler():IsCode(104242577)))
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
-	Duel.SpecialSummonComplete()
+--	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
+	--Duel.SpecialSummonComplete()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 end
+local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
 end
 end
 --Back Row Cost
