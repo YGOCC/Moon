@@ -100,15 +100,18 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
 end
-function cid.filter1(c)
+function cid.filter1(c,ft)
+	if (c:GetType()&TYPE_EQUIP+TYPE_CONTINUOUS~=0 or c:IsHasEffect(EFFECT_REMAIN_FIELD))
+		and ft<=0 then return false end
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:CheckActivateEffect(false,false,false) and c:IsSetCard(0x8c97)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or Duel.SendtoDeck(c,nil,0,REASON_EFFECT)==0
 		or not c:IsLocation(LOCATION_EXTRA) then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	Duel.Hint(HINT_SELECTMSG,tp,566)
-	local sg=Duel.SelectMatchingCard(tp,cid.filter1,tp,LOCATION_DECK,0,1,1,nil)
+	local sg=Duel.SelectMatchingCard(tp,cid.filter1,tp,LOCATION_DECK,0,1,1,nil,ft)
 	local tc=sg:GetFirst()
 	if not tc then return end
 	Duel.BreakEffect()
@@ -120,12 +123,9 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	e:SetCategory(te:GetCategory())
 	e:SetProperty(te:GetProperty())
 	Duel.ClearTargetCard()
-	if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS)~=0 or tc:IsHasEffect(EFFECT_REMAIN_FIELD) then
-		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-	elseif bit.band(tpe,TYPE_FIELD)~=0 then
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-	end
+	if ft<=0 then Duel.ConfirmCards(1-tp,tc) end
+	Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	tc:CancelToGrave(tpe&TYPE_FIELD~=0)
 	tc:CreateEffectRelation(te)
 	if co then co(te,tp,eg,ep,ev,re,r,rp,1) end
 	if tg then tg(te,tp,eg,ep,ev,re,r,rp,1) end
@@ -135,4 +135,5 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if op then op(te,tp,eg,ep,ev,re,r,rp) end
 	tc:ReleaseEffectRelation(te)
 	if g then for etc in aux.Next(g) do etc:ReleaseEffectRelation(te) end end
+	if not tc:IsOnField() then Duel.SendtoGrave(tc,REASON_RULE) end
 end
