@@ -27,7 +27,7 @@ function cid.initial_effect(c)
 		--remove
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(32617464,0))
-	e2:SetCategory(CATEGORY_REMOVE)
+	e2:SetCategory(CATEGORY_DESTORY)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)

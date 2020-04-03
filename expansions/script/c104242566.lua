@@ -18,27 +18,40 @@ function cid.initial_effect(c)
 	e1:SetCondition(cid.battlephase)
 	e1:SetTarget(cid.sptg)
 	e1:SetOperation(cid.spop)
-	c:RegisterEffect(e1)
+	--c:RegisterEffect(e1)
 	local e1x=e1:Clone()
 	e1x:SetRange(LOCATION_GRAVE)
 	c:RegisterEffect(e1x)
-	--draw
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(7736719,1))
-	e2:SetCategory(CATEGORY_DRAW)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetCountLimit(1,id+1000)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
-	e2:SetTarget(cid.drtg)
-	e2:SetOperation(cid.drop)
+	e2:SetCountLimit(1,id)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp) return eg:IsExists(cid.cfilter,1,nil,tp) end)
+	e2:SetTarget(cid.tg)
+	e2:SetOperation(cid.op)
 	c:RegisterEffect(e2)
+	local e2x=e2:Clone()
+	e2x:SetRange(LOCATION_GRAVE)
+	c:RegisterEffect(e2x)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(32617464,0))
+	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1,id+1000)
+	e3:SetCost(cid.cost)
+	e3:SetTarget(cid.drtg)
+	e3:SetOperation(cid.drop)
+	c:RegisterEffect(e3)
 end
 --Filters
 function cid.mfilter0(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial()
 end
-function cid.mfilter00(c)
+function cid.fragment(c)
 	return c:IsCode(104242585)
 end
 function cid.mfilter2(c,e)
@@ -48,13 +61,55 @@ function cid.spfilter2(c,e,tp,m,f)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x666) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,tp)
 end
+function cid.cfilter(c,tp)
+	return (c:IsPreviousPosition(POS_FACEUP) or c:GetPreviousControler()==tp) and c:IsSetCard(0x666)
+end
+function cid.moondream(c)
+	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsAbleToDeckAsCost()
+end
+--selfsummon
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+		if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
+		Duel.SpecialSummonComplete()
+end
+end
+--Draw
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(44335251,2))
+		local a=Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,1,nil)
+		local b=Duel.IsExistingMatchingCard(cid.moondream,tp,LOCATION_GRAVE,0,3,nil)
+if chk==0 then return a or b end
+if a and b then
+	op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
+elseif a then
+	op=0
+elseif b then
+	op=1
+end
+if op==0 then
+	local tc=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)
+	if tc then
+		Duel.Exile(tc,REASON_COST)
+	end
+end
+if op==1 then
+	local g=Duel.SelectMatchingCard(tp,cid.moondream,tp,LOCATION_GRAVE,0,3,3,nil)
+	Duel.SendtoDeck(g,nil,2,REASON_COST)
+	end
+end
 --Fuse
 function cid.battlephase(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetTurnCount()~=e:GetHandler():GetTurnID() or e:GetHandler():IsReason(REASON_RETURN)) and (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local mg1=Duel.GetMatchingGroup(cid.mfilter00,tp,LOCATION_REMOVED,0,nil)
+		local mg1=Duel.GetMatchingGroup(cid.fragment,tp,LOCATION_REMOVED,0,nil)
 		local res=Duel.IsExistingMatchingCard(cid.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil)
 		if res then return true end
 		local mg2=Duel.GetMatchingGroup(cid.mfilter0,tp,LOCATION_REMOVED,0,nil)
@@ -75,7 +130,7 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-	local mg0=Duel.GetMatchingGroup(cid.mfilter00,tp,LOCATION_REMOVED,0,nil)
+	local mg0=Duel.GetMatchingGroup(cid.fragment,tp,LOCATION_REMOVED,0,nil)
 	local mg2=Duel.GetMatchingGroup(cid.mfilter2,tp,LOCATION_REMOVED,0,nil,e)
 	mg2:Merge(mg0)
 	local sg1=Duel.GetMatchingGroup(cid.spfilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,nil)

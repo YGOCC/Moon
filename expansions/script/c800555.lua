@@ -18,13 +18,15 @@ function s.initial_effect(c)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 		c:RegisterEffect(e2)
+		-- cannot be ef trg
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_FIELD)
-		e3:SetCode(EFFECT_IMMUNE_EFFECT)
+		e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+		e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 		e3:SetRange(LOCATION_MZONE)
 		e3:SetTargetRange(LOCATION_MZONE,0)
 		e3:SetTarget(s.indtg)
-		e3:SetValue(s.efilter)
+		e3:SetValue(aux.tgoval)
 		c:RegisterEffect(e3)
 		--D&B
 		local e4=Effect.CreateEffect(c)
@@ -42,6 +44,7 @@ function s.initial_effect(c)
 		c:RegisterEffect(e4)
 		--place on top
 		local e5=Effect.CreateEffect(c)
+		e5:SetDescription(aux.Stringid(id,1))
 		e5:SetCategory(CATEGORY_TODECK)
 		e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 		e5:SetCode(EVENT_TO_GRAVE)
@@ -84,11 +87,14 @@ end
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsSummonType(SUMMON_TYPE_SYNCHRO)
 		and rp==1-tp and c:GetPreviousControler()==tp
 end
+	function s.floatfilter(c)
+	return c:IsAbleToDeck() and c:IsFaceup()
+end
 	function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:GetControler()==tp and chkc:IsAbleToDeck() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDeck,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
+	if chkc then return chkc:GetLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:GetControler()==tp and s.floatfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.floatfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local sg=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+	local sg=Duel.SelectTarget(tp,s.floatfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,sg,sg:GetCount(),0,0)
 end 
 	function s.tdop(e,tp,eg,ep,ev,re,r,rp)

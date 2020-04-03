@@ -1,4 +1,4 @@
---Moon's Dream: Power MAX
+--Moon's Dream: King of Evil
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -33,11 +33,16 @@ function cid.initial_effect(c)
 	e4:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e4)
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e5:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	e5:SetCondition(cid.damcon)
-	e5:SetOperation(cid.damop)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
+	e5:SetValue(1)
 	c:RegisterEffect(e5)
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e6:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e6:SetCondition(cid.damcon)
+	e6:SetOperation(cid.damop)
+	c:RegisterEffect(e6)
 end
 --summon condition
 function cid.fragment(c)
