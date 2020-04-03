@@ -46,7 +46,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(tg) do tc:SetMaterial(mat) end
 	Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 	Duel.BreakEffect()
-	local sc=tg:FilterSelect(tp,Card.IsSetCard,1,1,nil,0xeeb):GetFirst()
+	local sc=tg:FilterSelect(tp,Card.IsHasEffect,1,1,nil,EFFECT_SPSUMMON_COST):GetFirst()
 	while sc do
 		Duel.SpecialSummonStep(sc,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)
 		sc:CompleteProcedure()
