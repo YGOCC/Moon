@@ -1,8 +1,6 @@
 --HDDNoire
 --coded by Concordia, cred senpaizuri3, Radioboy, Kretin, Moon_Burst, Naab and André
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function c68709331.initial_effect(c)
-	Senya.AddSummonSE(c,aux.Stringid(68709331,0))
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcCodeFun(c,68709327,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf08),1,true,true)
@@ -152,15 +150,15 @@ function c68709331.sp2tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if Duel.IsPlayerAffectedByEffect(tp,59822133) then return false end
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return false end
-		local g=Duel.GetMatchingGroup(c68709331.filter1,tp,LOCATION_DECK,0,nil,e,tp)
+		local g=Duel.GetMatchingGroup(c68709331.filter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
 		return g:IsExists(c68709331.filter2,1,nil,g)
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function c68709331.sp2op(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
-	local g=Duel.GetMatchingGroup(c68709331.filter1,tp,LOCATION_DECK,0,nil,e,tp)
+	local g=Duel.GetMatchingGroup(c68709331.filter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
 	local dg=g:Filter(c68709331.filter2,nil,g)
 	if dg:GetCount()>=1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

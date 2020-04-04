@@ -154,15 +154,15 @@ function c68709330.sp2tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if Duel.IsPlayerAffectedByEffect(tp,59822133) then return false end
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return false end
-		local g=Duel.GetMatchingGroup(c68709330.filter1,tp,LOCATION_DECK,0,nil,e,tp)
+		local g=Duel.GetMatchingGroup(c68709330.filter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
 		return g:IsExists(c68709330.filter2,1,nil,g)
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function c68709330.sp2op(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
-	local g=Duel.GetMatchingGroup(c68709330.filter1,tp,LOCATION_DECK,0,nil,e,tp)
+	local g=Duel.GetMatchingGroup(c68709330.filter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
 	local dg=g:Filter(c68709330.filter2,nil,g)
 	if dg:GetCount()>=1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
