@@ -12,6 +12,7 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1)
+	e1:SetCost(cid.descost)
 	e1:SetTarget(cid.destg)
 	e1:SetOperation(cid.desop)
 	c:RegisterEffect(e1)
@@ -19,7 +20,7 @@ function cid.initial_effect(c)
  --damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCode(EVENT_DESTROYED)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
@@ -35,6 +36,15 @@ end
 function cid.desfilterxx(c)
 	return c:IsFaceup() and c:IsAbleToGrave()
 end
+function cid.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+   local c=e:GetHandler()
+	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,4,REASON_COST) and Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,cid.costfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:GetHandler():RemoveEC(tp,4,REASON_COST)
+	c:RegisterFlagEffect(id,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
+end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_PZONE) and cid.desfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(cid.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) end
@@ -48,7 +58,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local g=Duel.SelectMatchingCard(tp,cid.desfilterxx,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,aux.ExceptThisCard(e))
+		local g=Duel.SelectMatchingCard(tp,cid.desfilterxx,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
 			Duel.SendtoGrave(g,nil,REASON_EFFECT)
@@ -57,12 +67,12 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 
-function cid.filter1(c,tp)
+function cid.filter(c,tp)
 	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsReason(REASON_EFFECT)
 end
 
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
-	local d1=eg:FilterCount(cid.filter1,aux.ExceptThisCard(e),tp)*200
+	local d1=eg:FilterCount(cid.filter,nil,tp)*200
 	Duel.Damage(1-tp,d1,REASON_EFFECT,true)
 	Duel.RDComplete()
 end

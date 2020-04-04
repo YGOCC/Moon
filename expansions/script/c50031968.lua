@@ -12,7 +12,6 @@ function cid.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetCountLimit(1,id)
 	e1:SetTarget(cid.mttg)
 	e1:SetOperation(cid.mtop)
 	c:RegisterEffect(e1)
@@ -39,7 +38,7 @@ function cid.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsType(TYPE_CONJOINT)
 		and Duel.IsExistingMatchingCard(cid.mtfilter,tp,LOCATION_REMOVED,0,1,nil) end
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,tc,1,0,0)
-		if g:IsFaceup() and g:IsType(TYPE_EVOLUTE) then
+		if tc:IsFaceup() and tc:IsType(TYPE_EVOLUTE) then
 			Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1000)
 		end
 end
@@ -50,11 +49,11 @@ function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.mtfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.Overlay(c,g)
-if g:IsLocation(LOCATION_OVERLAY) and g:IsType(TYPE_EVOLUTE) then
+if tc:IsLocation(LOCATION_OVERLAY) and tc:IsType(TYPE_EVOLUTE) then
 			Duel.Recover(tp,1000,REASON_EFFECT)
 end
 	end
-
+end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsCanRemoveEC(tp,4,REASON_COST) end
@@ -71,10 +70,11 @@ function cid.desfilterxx(c)
 	return c:IsFaceup() and c:IsAbleToGrave()
 end
 function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
+local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
-if tc:IsLocation(LOCATION_REMOVED) and tc:IsType(TYPE_MONSTER) and tc:IsRace(RACE_ZOMBIE)  not tc:IsAttribute(ATTRIBUTE_DARK) then
+
+if tc:IsLocation(LOCATION_REMOVED) and tc:IsType(TYPE_MONSTER) and tc:IsRace(RACE_ZOMBIE) and not tc:IsAttribute(ATTRIBUTE_LIGHT) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local g=Duel.SelectMatchingCard(tp,cid.desfilterxx,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,aux.ExceptThisCard(e))
 		if g:GetCount()>0 then
@@ -82,4 +82,5 @@ if tc:IsLocation(LOCATION_REMOVED) and tc:IsType(TYPE_MONSTER) and tc:IsRace(RAC
 			Duel.SendtoGrave(g,nil,REASON_EFFECT)
 		end
 	end
+end
 end
