@@ -34,15 +34,18 @@ end
 		and Duel.IsExistingMatchingCard(s.sprfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 	function s.bfilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c.toss_coin and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_MONSTER) and c.toss_coin and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetMZoneCount(tp)>0
+	and c:IsLocation(LOCATION_REMOVED) and c:IsFaceup()
 end
 	function s.trg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(Card.IsAbleToRemove,tp,LOCATION_GRAVE,0,1-tp)>0 end
 	if chk==0 then return ct>0 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_GRAVE) 
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,1,tp,3)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_REMOVED)
 end
 	function s.op(e,tp,eg,ep,ev,re,r,rp)
+	local g2=Duel.GetMatchingGroup(s.bfilter,tp,LOCATION_REMOVED,0,nil,e,tp)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1-tp)
 	if g:GetCount()==0 then return end
 	local c1,c2,c3=Duel.TossCoin(tp,3)
@@ -52,11 +55,15 @@ end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1-tp,ct,nil)
 		if g:GetCount()>0 and g:IsExists(Card.IsAbleToRemove,1,1-tp) then
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-			if c1+c2+c3==3 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT) and Duel.SelectYesNo(tp,aux.Stringid(40005,1)) then
-			local tc=Duel.SelectMatchingCard(tp,s.bfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
-			Duel.BreakEffect()
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+			if c1+c2+c3==3 then
+			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+				if g2:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(40005,0))  then
+				Duel.BreakEffect()
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+				local sg2=g2:Select(tp,1,1,nil)
+				Duel.SpecialSummon(sg2,0,tp,tp,false,false,POS_FACEUP)
+			end
 		end
 	end
 end

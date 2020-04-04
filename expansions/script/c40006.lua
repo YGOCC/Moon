@@ -34,6 +34,7 @@ c40006.toss_coin=true
 	if chk==0 then return Duel.GetMatchingGroup(nil,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,3)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,0,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_GRAVE)
 end
 	function s.cop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,0,1,nil)
@@ -46,11 +47,14 @@ end
 	local dg=g:Select(tp,1,ct,nil)
 	Duel.HintSelection(dg)
 	Duel.Destroy(dg,REASON_EFFECT)
-		if c1+c2+c3==3 and Duel.SelectYesNo(tp,aux.Stringid(40006,1)) then
-		Duel.BreakEffect()
-		local cg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,0,1-tp,nil)
-			if cg:IsExists(Card.IsAbleToRemove,1,1-tp) then
-			Duel.Remove(cg,POS_FACEDOWN,REASON_EFFECT)
+		if c1+c2+c3==3 then
+		if Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,0,1-tp,nil)<=0 then return end
+			if Duel.SelectYesNo(tp,aux.Stringid(40006,1)) then
+			Duel.BreakEffect()
+			local cg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,0,1-tp,nil)
+				if cg:IsExists(Card.IsAbleToRemove,1,1-tp) then
+				Duel.Remove(cg,POS_FACEDOWN,REASON_EFFECT)
+			end
 		end
 	end
 end 
