@@ -53,7 +53,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.fragcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
-	return not eg:IsContains(e:GetHandler()) and ec:IsSetCard(0x666) and ec:GetPreviousControler()==tp 
+	return  ec:IsSetCard(0x666) and ec:GetPreviousControler()==tp 
 end
 function cid.frag(e,tp,eg,ep,ev,re,r,rp,chk)		
 	--	local sc=Duel.CreateToken(tp,104242585)

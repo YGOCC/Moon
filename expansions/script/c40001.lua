@@ -47,7 +47,7 @@ end
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	Duel.ConfirmDecktop(p,ct)
 	local g=Duel.GetDecktopGroup(p,ct)
-	if g:GetCount()>0 and g:IsExists(s.filter3,1,nil) and Duel.SelectYesNo(p,aux.Stringid(40001,1)) then
+	if g:GetCount()>0 and g:IsExists(s.filter3,1,nil) and Duel.SelectYesNo(p,aux.Stringid(40001,0)) then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_ATOHAND)
 		local sg=g:FilterSelect(p,s.filter3,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)

@@ -25,7 +25,7 @@ function cid.initial_effect(c)
 	local e2x=e2:Clone()
 	e2x:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e2x)
-		--excavate
+	--excavate
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(50005218,0))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)

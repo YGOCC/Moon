@@ -21,7 +21,7 @@ function cid.initial_effect(c)
 	--c:RegisterEffect(e1)
 	local e1x=e1:Clone()
 	e1x:SetRange(LOCATION_GRAVE)
-	c:RegisterEffect(e1x)
+--	c:RegisterEffect(e1x)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -45,13 +45,25 @@ function cid.initial_effect(c)
 	e3:SetCost(cid.cost)
 	e3:SetTarget(cid.drtg)
 	e3:SetOperation(cid.drop)
-	c:RegisterEffect(e3)
+--	c:RegisterEffect(e3)
+	--Fragment creation
+	local e4=Effect.CreateEffect(c)
+	e4:SetCategory(CATEGORY_REMOVE)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1,id+1000)
+--	e4:SetCost(cid.selflock)
+	e4:SetOperation(cid.fragment)
+	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetRange(LOCATION_HAND)
+	c:RegisterEffect(e5)
 end
 --Filters
 function cid.mfilter0(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial()
 end
-function cid.fragment(c)
+function cid.fragmentfilter(c)
 	return c:IsCode(104242585)
 end
 function cid.mfilter2(c,e)
@@ -66,6 +78,18 @@ function cid.cfilter(c,tp)
 end
 function cid.moondream(c)
 	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsAbleToDeckAsCost()
+end
+--fragment
+function cid.fragment(e,tp,eg,ep,ev,re,r,rp,chk)	
+	--	local sc=Duel.CreateToken(tp,104242585)
+	--	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+	--	Duel.SendtoExtraP(sc,tp,REASON_RULE)
+	if not e:GetHandler():IsRelateToEffect(e) or ((e:GetHandler():IsOnField() and e:GetHandler():IsFacedown()) and not e:GetHandler():IsLocation(LOCATION_HAND)) then return end
+	    local c=e:GetHandler()
+	    Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
+		local sc=Duel.CreateToken(tp,104242585)
+		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
+		Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
 end
 --selfsummon
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -82,7 +106,7 @@ end
 --Draw
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(44335251,2))
-		local a=Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,1,nil)
+		local a=Duel.IsExistingMatchingCard(cid.fragmentfilter,tp,LOCATION_REMOVED,0,1,nil)
 		local b=Duel.IsExistingMatchingCard(cid.moondream,tp,LOCATION_GRAVE,0,3,nil)
 if chk==0 then return a or b end
 if a and b then

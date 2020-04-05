@@ -12,7 +12,7 @@ function s.initial_effect(c)
 		c:RegisterEffect(e1)
 		-- final attacks number
 		local e2=Effect.CreateEffect(c)
-		2:SetDescription(aux.Stringid(id,1))
+		e2:SetDescription(aux.Stringid(id,1))
 		e2:SetCategory(CATEGORY_COIN)
 		e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 		e2:SetCountLimit(1,id)

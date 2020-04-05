@@ -16,19 +16,33 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetHintTiming(TIMING_BATTLE_END)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_DUEL)
-	e1:SetCondition(function() return Duel.GetCurrentChain()==0 end)
-	e1:SetCost(cid.cost)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCondition(cid.condition)
+	e1:SetCost(aux.bfgcost)
+	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
 end
 function cid.cfilter(c)
-	return not c:IsType(TYPE_FUSION) and c:IsAbleToRemoveAsCost()
+	return c:IsFaceup() and c:IsSetCard(0xeeb)
 end
-function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.Remove(Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil),POS_FACEUP,REASON_COST)
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetCurrentPhase()~=PHASE_BATTLE or Duel.GetTurnPlayer()~=tp then return false end
+	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
+	return #g>1 and g:FilterCount(cid.cfilter,e:GetHandler())==g:GetCount()-1
+end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,Duel.SelectTarget(tp,cid.cfilter,tp,0,LOCATION_MZONE,1,1,nil),1,0,0)
+	Duel.SetChainLimit(aux.FALSE)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if not tc:IsRelateToEffect(e) or Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)==0
+		or not tc:IsLocation(LOCATION_REMOVED) then return end
+	Duel.BreakEffect()
 	Duel.SkipPhase(tp,PHASE_BATTLE,RESET_PHASE+PHASE_END,1)
 	Duel.SkipPhase(tp,PHASE_MAIN2,RESET_PHASE+PHASE_END,1)
 	Duel.SkipPhase(tp,PHASE_END,RESET_PHASE+PHASE_END,1)
