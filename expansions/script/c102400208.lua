@@ -6,6 +6,7 @@ function cid.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND+LOCATION_MZONE)
+	e1:SetCountLimit(1,id)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetCost(cid.cost)
@@ -38,9 +39,9 @@ function cid.spfilter(c,e,tp)
 end
 function cid.filter(c,e,tp,mg)
 	if (c:IsOnField() and c:IsFacedown()) or not aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_FMATERIAL)
-		or not c:IsSetCard(0xeeb) then return end
+		or not c:IsSetCard(0xeeb) then return false end
 	local sg=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
-	local ft=Duel.GetLocationCountFromEx(tp,tp,c,TYPE_FUSION)
+	local ft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_FUSION)
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	return #sg>0 and mg:CheckSubGroup(function(tg) return sg:CheckSubGroup(function(g) return g:GetSum(Card.GetLevel)<=tg:GetSum(Card.GetLevel) end,1,ft) end)
 end

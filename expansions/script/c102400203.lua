@@ -38,7 +38,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mat=mg:FilterSelect(tp,cid.filter,1,99,nil,e,tp,mg)
 	if #mat==0 then return end
 	local sg=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_EXTRA,0,mat,e,tp)
-	local ft=Duel.GetLocationCountFromEx(tp,tp,mat)
+	local ft=Duel.GetLocationCountFromEx(tp,tp,mat,TYPE_FUSION)
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=sg:SelectSubGroup(tp,function(g) return g:GetSum(Card.GetLevel)<=mat:GetSum(Card.GetLevel) end,false,1,ft)
