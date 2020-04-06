@@ -41,7 +41,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function cid.value(e,c)
-	return Duel.GetMatchingGroupCount(aux.AND(Card.IsFaceup,Card.IsSetCard),0,LOCATION_REMOVED,0,nil,0x83e)*300
+	return Duel.GetMatchingGroupCount(aux.AND(Card.IsFaceup,Card.IsSetCard),LOCATION_REMOVED,LOCATION_REMOVED,0,nil,0x83e)*300
 end
 function cid.cfilter(c)
 	return c:IsSetCard(0x83e) and c:IsAbleToRemoveAsCost()
