@@ -1,7 +1,6 @@
 --coded by Lyris
 local cid,id=GetID()
 function cid.initial_effect(c)
-	c:EnableUnsummonable()
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_QUICK_O)

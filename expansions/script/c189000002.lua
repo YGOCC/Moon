@@ -33,25 +33,25 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e4)
 	c:SetUniqueOnField(1,0,id)
 end
-function card.costfilter(c)
+function cid.costfilter(c)
 	return c:IsType(TYPE_UNION) and c:IsAbleToRemoveAsCost() and c:IsSetCard(0x191)
 end
-function card.equipfilter(c)
+function cid.equipfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x189)
 end
-function card.playcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(card.costfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,card.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+function cid.playcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	local g=Duel.SelectMatchingCard(tp,cid.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function card.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and card.equipfilter(chkc) end
+function cid.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.equipfilter(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingTarget(card.equipfilter,tp,LOCATION_MZONE,0,1,nil) end
+		and Duel.IsExistingTarget(cid.equipfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	Duel.SelectTarget(tp,card.equipfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,cid.equipfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function card.eqop(e,tp,eg,ep,ev,re,r,rp)
+function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
@@ -65,19 +65,19 @@ function card.eqop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_EQUIP_LIMIT)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	e1:SetValue(card.eqlimit)
+	e1:SetValue(cid.eqlimit)
 	c:RegisterEffect(e1)
 end
-function card.eqlimit(e,c)
+function cid.eqlimit(e,c)
 	return c:IsSetCard(0x189)
 end
-function card.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cid.drawtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function card.drawop(e,tp,eg,ep,ev,re,r,rp)
+function cid.drawop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
