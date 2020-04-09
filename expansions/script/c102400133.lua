@@ -67,7 +67,7 @@ function cid.repfilter(c)
 end
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(cid.repfilter,1,nil) and not re:GetHandler():IsCode(id) end
-	return Duel.IsExistingMatchingCard(aux.AND(cid.filter1,aux.FilterBoolFunction(Card.IsDestructable,e),Card.IsStatus),tp,LOCATION_DECK,0,1,nil,STATUS_DESTROY_CONFIRMED)
+	return Duel.IsExistingMatchingCard(aux.AND(cid.filter1,aux.FilterBoolFunction(Card.IsDestructable,e),aux.NOT(Card.IsStatus)),tp,LOCATION_DECK,0,1,nil,STATUS_DESTROY_CONFIRMED)
 end
 function cid.repval(e,c)
 	return cid.repfilter(c)
@@ -75,6 +75,6 @@ end
 function cid.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,aux.AND(cid.filter1,aux.FilterBoolFunction(Card.IsDestructable,e),Card.IsStatus),tp,LOCATION_DECK,0,1,1,nil,STATUS_DESTROY_CONFIRMED)
+	local g=Duel.SelectMatchingCard(tp,aux.AND(cid.filter1,aux.FilterBoolFunction(Card.IsDestructable,e),aux.NOT(Card.IsStatus)),tp,LOCATION_DECK,0,1,1,nil,STATUS_DESTROY_CONFIRMED)
 	Duel.Destroy(g,REASON_EFFECT+REASON_REPLACE)
 end
