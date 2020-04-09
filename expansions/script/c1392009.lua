@@ -13,7 +13,7 @@ function c1392009.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c1392009.cfilter(c)
-	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and c:IsSetCard(0x921)
+	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and (c:IsSetCard(0x921) or c:IsSetCard(0x920))
 end
 function c1392009.condition(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
@@ -22,7 +22,7 @@ function c1392009.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tg and tg:IsExists(c1392009.cfilter,1,nil) and Duel.IsChainNegatable(ev)
 end
 function c1392009.costfilter(c)
-	return c:IsSetCard(0x921) and c:IsAbleToDeckAsCost()
+	return c:IsSetCard(0x920) and c:IsAbleToDeckAsCost()
 end
 function c1392009.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1392009.costfilter,tp,LOCATION_GRAVE,0,1,nil) end

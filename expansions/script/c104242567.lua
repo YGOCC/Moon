@@ -25,7 +25,7 @@ function cid.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+1000)
---	e2:SetCost(cid.selflock)
+	e2:SetCost(cid.selflock)
 	e2:SetOperation(cid.fragment)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
@@ -41,7 +41,7 @@ function cid.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsSetCard(0x666)
 end
 function cid.counterfilter(c)
-	return c:IsSetCard(0x666)
+	return c:IsSetCard(0x666) or (c:GetSummonLocation()~=LOCATION_EXTRA)
 end
 
 function cid.thcon(e,tp,eg,ep,ev,re,r,rp)

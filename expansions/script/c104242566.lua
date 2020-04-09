@@ -52,14 +52,18 @@ function cid.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1,id+1000)
---	e4:SetCost(cid.selflock)
+	e4:SetCost(cid.selflock)
 	e4:SetOperation(cid.fragment)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
 	e5:SetRange(LOCATION_HAND)
 	c:RegisterEffect(e5)
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,cid.counterfilter)
 end
 --Filters
+function cid.counterfilter(c)
+	return c:IsSetCard(0x666) or (c:GetSummonLocation()~=LOCATION_EXTRA)
+end
 function cid.mfilter0(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial()
 end
@@ -80,6 +84,18 @@ function cid.moondream(c)
 	return c:IsSetCard(0x666) and c:IsFaceup() and c:IsAbleToDeckAsCost()
 end
 --fragment
+function cid.selflock(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return  Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
+	local ex=Effect.CreateEffect(e:GetHandler())
+	ex:SetType(EFFECT_TYPE_FIELD)
+	ex:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	ex:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	ex:SetReset(RESET_PHASE+PHASE_END)
+	ex:SetTargetRange(1,0)
+	ex:SetLabelObject(e)
+	ex:SetTarget(cid.splimit)
+	Duel.RegisterEffect(ex,tp)
+end
 function cid.fragment(e,tp,eg,ep,ev,re,r,rp,chk)	
 	--	local sc=Duel.CreateToken(tp,104242585)
 	--	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)

@@ -27,6 +27,9 @@ function cid.initial_effect(c)
 --	e9:SetCode(EVENT_SUMMON_SUCCESS)
 --	c:RegisterEffect(e9)
 end
+function cid.fragment(c)
+	return c:IsCode(104242585) and c:IsFaceup()
+end
 function cid.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
