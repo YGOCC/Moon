@@ -104,7 +104,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,1)
 	local tc=g:GetFirst()
 	Duel.DisableShuffleCheck()
-	if Duel.Destroy(g,REASON_EFFECT)~=0 and tc:IsType(TYPE_MONSTER) and tc:IsSetCard(0x7c4) then
-		Duel.Draw(tp,1,REASON_EFFECT)
-	end
+	if Duel.Destroy(g,REASON_EFFECT)~=0 then
+		if tc:IsType(TYPE_MONSTER) and tc:IsSetCard(0x7c4) then Duel.Draw(tp,1,REASON_EFFECT) end
+	else Duel.ConfirmDecktop(tp,1) end
 end
