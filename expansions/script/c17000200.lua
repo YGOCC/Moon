@@ -3,6 +3,7 @@
 --Grave Squirmer, Salamagreat Spinny, Shaddols, Alviss of th Nordic Alfar, Triggering Wurm
 --Destiny hero diamond dude
 --Dark armed dragon (probably just for incandis)
+--SPYRAL double helix
 function c17000200.initial_effect(c)
    --SS from hand
    local e1=Effect.CreateEffect(c)
@@ -60,7 +61,7 @@ function c17000200.ssop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Excavate
 function c17000200.thfilter(c, e, tp)
-	return c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_FIRE) and c:IsAbleToGrave() or c:IsAbleToRemove()
+	return c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_FIRE) and c:IsAbleToGrave() and c:IsAbleToRemove()
 end
 function c17000200.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 end
@@ -73,7 +74,7 @@ function c17000200.tgybop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(p,3)
 	if g:GetCount()>0 and g:IsExists(c17000200.thfilter,1,nil) and Duel.SelectYesNo(p,aux.Stringid(17000200,1)) then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_OPERATECARD)
-		local sg=g:FilterSelect(p,c17000200.thfilter,1,1,nil)
+      local sg=g:FilterSelect(p,c17000200.thfilter,1,1,nil)
       local tc=sg:GetFirst()
       if tc and tc:IsAbleToGrave() and (not tc:IsAbleToRemove() or Duel.SelectOption(tp,1191,1192)==0) then
          Duel.SendtoGrave(tc,REASON_EFFECT)

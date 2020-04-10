@@ -56,7 +56,7 @@ function c17000500.ssop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Excavate
 function c17000500.thfilter(c, e, tp)
-	return c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_FIRE) and c:IsAbleToGrave() or c:IsAbleToRemove()
+	return c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_FIRE) and c:IsAbleToGrave() and c:IsAbleToRemove()
 end
 function c17000500.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 end
