@@ -1,11 +1,11 @@
 --created & coded by Lyris, art at http://static3.bigstockphoto.com/thumbs/6/5/1/large1500/156160115.jpg
 --S・VINEの姫オサ
 local cid,id=GetID()
-cid.spt_other_space=id+75
+cid.spt_other_space=id+65
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
-	aux.AddSpatialProc(c,nil,4,nil,400,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),2,2)
+	aux.AddSpatialProc(c,nil,4,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),2)
 	local ae1=Effect.CreateEffect(c)
 	ae1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_DRAW)
 	ae1:SetType(EFFECT_TYPE_IGNITION)

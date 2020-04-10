@@ -249,23 +249,30 @@ end
 Duel.Remove=function(cc,pos,r)
 	local cc=Group.CreateGroup()+cc
 	local tg=cc:Clone()
+	local ct=0
 	for c in aux.Next(tg) do
-		if pos&POS_FACEDOWN~=0 and r&REASON_EFFECT~=0 then
-			local ef={c:IsHasEffect(EFFECT_CANNOT_BANISH_FD_EFFECT)}
-			for _,te1 in ipairs(ef) do
-				local cf=te1:GetValue()
-				local typ=aux.GetValueType(cf)
-				if typ=="function" then
-					if cf(te1,c:GetReasonEffect(),c:GetReasonPlayer()) then 
+		if pos&POS_FACEDOWN~=0 then
+			if r&REASON_EFFECT~=0 then
+				local ef={c:IsHasEffect(EFFECT_CANNOT_BANISH_FD_EFFECT)}
+				for _,te1 in ipairs(ef) do
+					local cf=te1:GetValue()
+					local typ=aux.GetValueType(cf)
+					if typ=="function" then
+						if cf(te1,c:GetReasonEffect(),c:GetReasonPlayer()) then 
+							cc=cc-c 
+						end
+					elseif cf>0 then 
 						cc=cc-c 
 					end
-				elseif cf>0 then 
-					cc=cc-c 
 				end
+			end
+			if c:SwitchSpace() then
+				ct=ct+duel_banish(c,POS_FACEUP,r)
+				cc=cc-c
 			end
 		end
 	end
-	return duel_banish(cc,pos,r)
+	return duel_banish(cc,pos,r)+ct
 end
 Card.CheckRemoveOverlayCard=function(c,tp,ct,r)
 	if Duel.IsPlayerAffectedByEffect(tp,25149863) and bit.band(r,REASON_COST)~=0 then

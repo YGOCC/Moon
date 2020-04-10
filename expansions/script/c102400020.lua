@@ -5,7 +5,7 @@ cid.spt_other_space=id+75
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
-	aux.AddSpatialProc(c,cid.mcheck,8,300,nil,aux.FilterBoolFunction(Card.IsSetCard,0x285b),1,1,cid.mfilter,1,1)
+	aux.AddSpatialProc(c,cid.mcheck,8,aux.FilterBoolFunction(Card.IsSetCard,0x285b),1,1,cid.mfilter,1)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)

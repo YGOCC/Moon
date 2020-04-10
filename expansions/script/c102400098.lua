@@ -4,5 +4,5 @@ local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddOrigSpatialType(c)
-	aux.AddSpatialProc(c,nil,8,600,nil,aux.TRUE,2,2)
+	aux.AddSpatialProc(c,nil,8,aux.TRUE,2)
 end

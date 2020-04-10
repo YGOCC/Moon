@@ -21,8 +21,8 @@ table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_SPACE_MATERIAL)
 TYPE_EXTRA						=TYPE_EXTRA|TYPE_SPATIAL
 
 --overwrite functions
-local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, get_orig_type, get_prev_type_field, change_position = 
-	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Duel.ChangePosition
+local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, get_orig_type, get_prev_type_field, change_position, special_summon, special_summon_step = 
+	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Duel.ChangePosition, Duel.SpecialSummon, Duel.SpecialSummonStep
 
 Card.GetRank=function(c)
 	if Auxiliary.Spatials[c] then return 0 end
@@ -86,17 +86,44 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 	if not ad then ad=au end if not du then du=au end if not dd then dd=au end
 	local cc=Group.CreateGroup()+cc
 	local tg=cc:Clone()
+	local ct=0
 	for c in aux.Next(tg) do
-		if ((c:IsPosition(POS_FACEUP_ATTACK) and bit.band(au,POS_FACEDOWN_ATTACK+POS_FACEDOWN_DEFENSE)>0)
-		or (c:IsPosition(POS_FACEUP_DEFENSE) and bit.band(du,POS_FACEDOWN_ATTACK+POS_FACEDOWN_DEFENSE)>0))
-		and c:SwitchSpace() then cc=cc-c end
+		if ((c:IsAttackPos() and bit.band(au,POS_FACEDOWN)>0)
+		or (c:IsPosition(POS_FACEUP_DEFENSE) and bit.band(du,POS_FACEDOWN)>0))
+		and c:SwitchSpace() then
+			if c:IsAttackPos() then ct=ct+change_position(c,POS_FACEUP_DEFENSE,POS_FACEUP_DEFENSE,du,dd) end
+			cc=cc-c
+		end
 	end
-	return change_position(cc,au,ad,du,dd)
+	return change_position(cc,au,ad,du,dd)+ct
+end
+Duel.SpecialSummon=function(cc, st, sp, tp, nocheck, nolimit, pos, zone)
+	if not zone then zone=0xff end
+	local ct=0
+	local cc=Group.CreateGroup()+cc
+	local tg=cc:Clone()
+	for c in aux.Next(tg) do
+		if pos&POS_FACEDOWN>0 and c:SwitchSpace() then
+			if special_summon_step(c,st,sp,tp,nocheck,nolimit,POS_FACEUP_DEFENSE,zone) then ct=ct+1 end
+			cc=cc-c
+		end
+	end
+	ct=ct+special_summon(cc,st,sp,tp,nocheck,nolimit,pos,zone)
+	Duel.SpecialSummonComplete()
+	return ct
+end
+Duel.SpecialSummonStep=function(c, st, sp, tp, nocheck, nolimit, pos, zone)
+	if not zone then zone=0xff end
+	local ct=0
+	if pos&POS_FACEDOWN>0 and c:SwitchSpace() then
+		return special_summon_step(c,st,sp,tp,nocheck,nolimit,(pos&POS_FACEUP)|POS_FACEUP,zone)
+	end
+	return special_summon_step(c,st,sp,tp,nocheck,nolimit,pos,zone)
 end
 
 --Custom Functions
 function Card.SwitchSpace(c)
-	if not Auxiliary.Spatials[c] or not c:IsSummonType(SUMMON_TYPE_SPATIAL) or c:GetFlagEffect(500)==0 then return false end
+	if not Auxiliary.Spatials[c] then return false end
 	Auxiliary.Spatials[c]=nil
 	local mt=_G["c" .. c:GetOriginalCode()]
 	local ospc=mt.spt_other_space
@@ -105,10 +132,6 @@ function Card.SwitchSpace(c)
 	c:SetEntityCode(ospc,true)
 	c:ReplaceEffect(ospc,0,0)
 	Duel.SetMetatable(c,_G["c"..ospc])
-	local ct=c:GetFlagEffectLabel(500)
-	if ct>1 then
-		c:SetFlagEffectLabel(500,ct-1)
-	else c:ResetFlagEffect(500) end
 	return true
 end
 function Card.GetDimensionNo(c)
@@ -124,7 +147,7 @@ function Card.IsDimensionNo(c,djn)
 	return c:GetDimensionNo()==djn
 end
 function Card.IsCanBeSpaceMaterial(c,sptc)
-	if c:IsOnField() and not c:IsFaceup() then return false end
+	if c:IsOnField() and c:IsFacedown() then return false end
 	local tef={c:IsHasEffect(EFFECT_CANNOT_BE_SPACE_MATERIAL)}
 	for _,te in ipairs(tef) do
 		if (type(te:GetValue())=="function" and te:GetValue()(te,spct)) or te:GetValue()==1 then return false end
@@ -137,9 +160,9 @@ function Auxiliary.AddOrigSpatialType(c,isxyz)
 	local isxyz=isxyz==nil and false or isxyz
 	Auxiliary.Spatials[c]=function() return isxyz end
 end
-function Auxiliary.AddSpatialProc(c,sptcheck,djn,adiff,ddiff,...)
-	--sptcheck - extra check after everything is settled, djn - Spatial "level", adiff - max material ATK difference, ddiff - max material DEF difference
-	--... format - any number of materials  use aux.TRUE for generic materials
+function Auxiliary.AddSpatialProc(c,sptcheck,djn,...)
+	--sptcheck - extra check after everything is settled, djn - Spatial "level"
+	--... format - material filter, minimum-of, maximum-of; use aux.TRUE for generic materials
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	local t={...}
 	local list={}
@@ -162,49 +185,42 @@ function Auxiliary.AddSpatialProc(c,sptcheck,djn,adiff,ddiff,...)
 	end
 	local ge1=Effect.CreateEffect(c)
 	ge1:SetType(EFFECT_TYPE_SINGLE)
-	ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	ge1:SetCode(EFFECT_DIMENSION_NUMBER)
 	ge1:SetValue(Auxiliary.DimensionNoVal(djn))
 	c:RegisterEffect(ge1)
 	local ge2=Effect.CreateEffect(c)
 	ge2:SetType(EFFECT_TYPE_FIELD)
 	ge2:SetCode(EFFECT_SPSUMMON_PROC)
-	ge2:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	ge2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 	ge2:SetRange(LOCATION_EXTRA)
-	ge2:SetCondition(Auxiliary.SpatialCondition(sptcheck,adiff,ddiff,table.unpack(list)))
-	ge2:SetTarget(Auxiliary.SpatialTarget(sptcheck,adiff,ddiff,table.unpack(list)))
+	ge2:SetCondition(Auxiliary.SpatialCondition(sptcheck,table.unpack(list)))
+	ge2:SetTarget(Auxiliary.SpatialTarget(sptcheck,table.unpack(list)))
 	ge2:SetOperation(Auxiliary.SpatialOperation)
 	ge2:SetValue(SUMMON_TYPE_SPATIAL)
 	c:RegisterEffect(ge2)
-	local ge3=Effect.CreateEffect(c)
-	ge3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	ge3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	ge3:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-		if c:IsSummonType(SUMMON_TYPE_SPATIAL) then
-			c:RegisterFlagEffect(500,RESET_EVENT+RESETS_STANDARD,0,1,djn)
-		end
-	end)
-	c:RegisterEffect(ge3)
 	local ge4=Effect.CreateEffect(c)
 	ge4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	ge4:SetCode(EFFECT_SEND_REPLACE)
-	ge4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	ge4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	ge4:SetRange(0xdf)
 	ge4:SetTarget(Auxiliary.SpatialToGraveReplace)
+	ge4:SetOperation(Auxiliary.SpatialTGYReplaceOperation)
 	c:RegisterEffect(ge4)
 	local ge5=Effect.CreateEffect(c)
 	ge5:SetType(EFFECT_TYPE_SINGLE)
 	ge5:SetCode(EFFECT_TO_GRAVE_REDIRECT)
-	ge5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	ge5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	ge5:SetValue(LOCATION_REMOVED)
 	c:RegisterEffect(ge5)
 end
 function Auxiliary.SpatialToGraveReplace(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:GetDestination()==LOCATION_GRAVE end
-	Duel.Remove(c,POS_FACEUP,r)
 	return true
+end
+function Auxiliary.SpatialTGYReplaceOperation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Remove(e:GetHandler(),POS_FACEUP,r)
 end
 function Auxiliary.DimensionNoVal(djn)
 	return  function(e,c)
@@ -220,7 +236,8 @@ function Auxiliary.SpaceMatFilter(c,sptc,tp,...)
 	end
 	return false
 end
-function Auxiliary.SptCheckRecursive(c,tp,sg,mg,sptc,ct,djn,sptcheck,adiff,ddiff,...)
+function Auxiliary.SptCheckRecursive(c,tp,sg,mg,sptc,ct,djn,sptcheck,...)
+	if not c:IsLevelAbove(1) and not c:IsRankAbove(1) then return false end
 	sg:AddCard(c)
 	ct=ct+1
 	local funs,max,chk={...},0
@@ -231,49 +248,46 @@ function Auxiliary.SptCheckRecursive(c,tp,sg,mg,sptc,ct,djn,sptcheck,adiff,ddiff
 		end
 	end
 	if max>99 then max=99 end
-	local res=chk and (Auxiliary.SptCheckGoal(tp,sg,sptc,ct,adiff,ddiff,sptcheck,...)
-		or (ct<max and mg:IsExists(Auxiliary.SptCheckRecursive,1,sg,tp,sg,mg,sptc,ct,djn,sptcheck,adiff,ddiff,...)))
+	local res=chk and (Auxiliary.SptCheckGoal(tp,sg,sptc,ct,sptcheck,...)
+		or (ct<max and mg:IsExists(Auxiliary.SptCheckRecursive,1,sg,tp,sg,mg,sptc,ct,djn,sptcheck,...)))
 	sg:RemoveCard(c)
 	ct=ct-1
 	return res
 end
-function Auxiliary.SptCheckGoal(tp,sg,sptc,ct,adiff,ddiff,sptcheck,...)
+function Auxiliary.SptCheckGoal(tp,sg,sptc,ct,sptcheck,...)
 	local funs,min={...},0
 	for i=1,#funs do
 		if not sg:IsExists(funs[i][1],funs[i][2],nil) then return false end
 		min=min+funs[i][2]
 	end
-	return ct>=min and sg:IsExists(Auxiliary.SptMatCheckRecursive,1,nil,sg,Group.CreateGroup(),adiff,ddiff) and (not sptcheck or sptcheck(sg,sptc,tp)) and Duel.GetLocationCountFromEx(tp,tp,sg,sptc)>0
-		and not sg:IsExists(Auxiliary.SpaceUncompatibilityFilter,1,nil,sg,spct,tp)
+	return ct>=min and sg:GetSum(Auxiliary.SpatialValue)>sptc:GetDimensionNo()
+		and sg:IsExists(Auxiliary.SptMatCheck,1,nil,sg,sptc)
+		and (not sptcheck or sptcheck(sg,sptc,tp)) and Duel.GetLocationCountFromEx(tp,tp,sg,sptc)>0
+		and not sg:IsExists(Auxiliary.SpaceUncompatibilityFilter,1,nil,sg,sptc,tp)
 end
-function Auxiliary.SpaceUncompatibilityFilter(c,sg,spct,tp)
+function Auxiliary.SpaceUncompatibilityFilter(c,sg,sptc,tp)
 	local mg=sg:Filter(aux.TRUE,c)
-	return not Auxiliary.SpaceCheckOtherMaterial(c,mg,spct,tp)
+	return not Auxiliary.SpaceCheckOtherMaterial(c,mg,sptc,tp)
 end
-function Auxiliary.SpaceCheckOtherMaterial(c,mg,spct,tp)
+function Auxiliary.SpaceCheckOtherMaterial(c,mg,sptc,tp)
 	local le={c:IsHasEffect(EFFECT_EXTRA_SPACE_MATERIAL,tp)}
 	for _,te in pairs(le) do
 		local f=te:GetValue()
-		if f and type(f)=="function" and not f(te,spct,mg) then return false end
+		if f and type(f)=="function" and not f(te,sptc,mg) then return false end
 	end
 	return true
 end
-function Auxiliary.SptMatCheckRecursive(c,mg,sg,adiff,ddiff,fc)
-	if not adiff and not ddiff then return true end
-	sg:AddCard(c)
-	local res,diff
-	if fc and mg:FilterCount(aux.TRUE,sg)==0 then
-		if adiff then
-			diff=math.abs(c:GetAttack()-fc:GetAttack())
-			res=diff>0 and (not adiff or diff<=adiff)
-		end
-		if ddiff then
-			diff=math.abs(c:GetDefense()-fc:GetDefense())
-			res=(res) or (diff>0 and (not ddiff or diff<=ddiff))
-		end
-	else res=mg:IsExists(Auxiliary.SptMatCheckRecursive,1,sg,mg,sg,adiff,ddiff,c) end
-	sg:RemoveCard(c)
-	return res
+function Auxiliary.SptMatCheck(c,sg,sptc)
+	local djn=sptc:GetDimensionNo()
+	return sg:IsExists(function(tc)
+		local adiff=math.abs(c:GetAttack()-tc:GetAttack())
+		local ddiff=math.abs(c:GetDefense()-tc:GetDefense())
+		local rdiff=100*djn
+		return (adiff>0 and adiff<=rdiff) or (ddiff>0 and ddiff<=rdiff)
+	end,1,c)
+end
+function Auxiliary.SpatialValue(c)
+	return c:IsRankAbove(1) and c:GetRank() or c:GetLevel()
 end
 function Auxiliary.SpaceExtraFilter(c,lc,tp,...)
 	local flist={...}
@@ -293,7 +307,7 @@ function Auxiliary.SpaceExtraFilter(c,lc,tp,...)
 	if c:IsLocation(LOCATION_ONFIELD) and not c:IsFaceup() then return false end
 	return c:IsCanBeSpaceMaterial(lc) and (not flist or #flist<=0 or check)
 end
-function Auxiliary.SpatialCondition(sptcheck,adiff,ddiff,...)
+function Auxiliary.SpatialCondition(sptcheck,...)
 	local funs={...}
 	return  function(e,c)
 				if c==nil then return true end
@@ -307,10 +321,10 @@ function Auxiliary.SpatialCondition(sptcheck,adiff,ddiff,...)
 				if fg:IsExists(aux.MustMaterialCounterFilter,1,nil,mg) then return false end
 				Duel.SetSelectedCard(fg)
 				local sg=Group.CreateGroup()
-				return mg:IsExists(Auxiliary.SptCheckRecursive,1,nil,tp,sg,mg,c,0,djn,sptcheck,adiff,ddiff,table.unpack(funs))
+				return mg:IsExists(Auxiliary.SptCheckRecursive,1,nil,tp,sg,mg,c,0,djn,sptcheck,table.unpack(funs))
 			end
 end
-function Auxiliary.SpatialTarget(sptcheck,adiff,ddiff,...)
+function Auxiliary.SpatialTarget(sptcheck,...)
 	local funs,min,max={...},0,0
 	for i=1,#funs do min=min+funs[i][2] max=max+funs[i][3] end
 	if max>99 then max=99 end
@@ -318,8 +332,9 @@ function Auxiliary.SpatialTarget(sptcheck,adiff,ddiff,...)
 				local mg=Duel.GetMatchingGroup(Card.IsCanBeSpaceMaterial,tp,LOCATION_MZONE,0,nil,c)
 				local mg2=Duel.GetMatchingGroup(Auxiliary.SpaceExtraFilter,tp,0xff,0xff,nil,c,tp,table.unpack(funs))
 				if mg2:GetCount()>0 then mg:Merge(mg2) end
+				local ogmg=mg:Clone()
 				local bg=Group.CreateGroup()
-				local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_BIGBANG_MATERIAL)}
+				local ce={Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SPACE_MATERIAL)}
 				for _,te in ipairs(ce) do
 					local tc=te:GetHandler()
 					if tc then bg:AddCard(tc) end
@@ -332,9 +347,9 @@ function Auxiliary.SpatialTarget(sptcheck,adiff,ddiff,...)
 				sg:Merge(bg)
 				local finish=false
 				local djn=c:GetDimensionNo()
-				while not (sg:GetCount()>=max) do
-					finish=Auxiliary.SptCheckGoal(tp,sg,c,#sg,adiff,ddiff,sptcheck,table.unpack(funs))
-					local cg=mg:Filter(Auxiliary.SptCheckRecursive,sg,tp,sg,mg,c,#sg,djn,sptcheck,adiff,ddiff,table.unpack(funs))
+				while sg:GetCount()<max do
+					finish=Auxiliary.SptCheckGoal(tp,sg,c,#sg,sptcheck,table.unpack(funs))
+					local cg=mg:Filter(Auxiliary.SptCheckRecursive,sg,tp,sg,mg,c,#sg,djn,sptcheck,table.unpack(funs))
 					if #cg==0 then break end
 					local cancel=not finish
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
