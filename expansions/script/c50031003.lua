@@ -101,7 +101,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	  e2:SetTargetRange(0,1)
 	  e2:SetValue(cid.aclimit)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
-  -	 Duel.RegisterEffect(e2,tp)
+	Duel.RegisterEffect(e2,tp)
 		end
 	end
 	if opt==2 then
@@ -116,7 +116,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	  --  e2:SetReset(RESET_PHASE+PHASE_END)
   --	  Duel.RegisterEffect(e2,tp)
 	end
-end
+
 
 
 function cid.aclimit(e,re,tp)
