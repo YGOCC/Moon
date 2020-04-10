@@ -56,7 +56,7 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 --	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
 	--Duel.SpecialSummonComplete()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,cid.searchfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
