@@ -113,5 +113,5 @@ function cid.splimit(e,c)
 	return not c:IsSetCard(0xc50) and c:IsLocation(LOCATION_EXTRA)
 end
 function cid.xxnstg(e,c)
-	return and c:IsType(TYPE_NORMAL) or c:IsType(TYPE_DUAL)
+	return c:IsType(TYPE_NORMAL) or c:IsType(TYPE_DUAL)
 end
