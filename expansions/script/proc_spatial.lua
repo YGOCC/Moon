@@ -123,7 +123,7 @@ end
 
 --Custom Functions
 function Card.SwitchSpace(c)
-	if not Auxiliary.Spatials[c] then return false end
+	if not Auxiliary.Spatials[c] or c:IsLocation(LOCATION_EXTRA) then return false end
 	Auxiliary.Spatials[c]=nil
 	local mt=_G["c" .. c:GetOriginalCode()]
 	local ospc=mt.spt_other_space
