@@ -64,6 +64,9 @@ end
 function cid.counterfilter(c)
 	return c:IsSetCard(0x666) or (c:GetSummonLocation()~=LOCATION_EXTRA)
 end
+function cid.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsSetCard(0x666)
+end
 function cid.mfilter0(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial()
 end

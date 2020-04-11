@@ -47,7 +47,7 @@ function c17000200.sscon(e,c,tp)
    if c==nil then return true end
    local ct=Duel.GetMatchingGroupCount(Card.IsAttribute,tp,LOCATION_GRAVE,0,nil,ATTRIBUTE_FIRE)
     return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and ct>0 and ct>Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_MZONE,0,nil)
+        and ct>Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_MZONE,0,nil)
 end
 function c17000200.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
    if chk==0 then --return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and

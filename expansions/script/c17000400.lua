@@ -28,7 +28,7 @@ function c17000400.initial_effect(c)
 	--banished
 	local e4=Effect.CreateEffect(c)
    e4:SetDescription(aux.Stringid(17000400,2))
-   e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+   e4:SetCategory(CATEGORY_DESTROY)
    e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
    e4:SetCode(EVENT_REMOVE)
    e4:SetCountLimit(1,17000402)
@@ -42,7 +42,7 @@ function c17000400.sscon(e,c,tp)
    if c==nil then return true end
    local ct=Duel.GetMatchingGroupCount(Card.IsAttribute,tp,LOCATION_GRAVE,0,nil,ATTRIBUTE_FIRE)
     return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and ct>0 and ct>Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_MZONE,0,nil)
+        and ct>Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_MZONE,0,nil)
 end
 function c17000400.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
    if chk==0 then --return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and
