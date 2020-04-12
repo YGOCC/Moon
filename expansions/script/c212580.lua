@@ -26,5 +26,5 @@ function c212580.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c212580.target(e,c)
-	return c:IsSetCard(0x2609) and c:IsStatus(STATUS_SUMMON_TURN+STATUS_SPSUMMON_TURN)
+	return c:IsSetCard(0x2609) and c:IsStatus(STATUS_SUMMON_TURN+STATUS_SPSUMMON_TURN+STATUS_FLIP_SUMMON_TURN)
 end
