@@ -10,7 +10,7 @@ local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
 	c:SetUniqueOnField(1,0,id)
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),3,true)
+--	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsCode,104242585),3,true)
 	aux.AddContactFusionProcedure(c,cid.fragment,LOCATION_REMOVED,0,Duel.Exile,REASON_RULE)
 	--atkdown
 	local e8=Effect.CreateEffect(c)
