@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	eb0bcbdd84fe7d495c543bdf38d6164b
+﻿expansions/cards-new.cdb	aac92135d80d682eae0e75e5bd66bb31
 expansions/lflist.conf	a463284f52e1155b7dfe06ba0982503f
 expansions/strings.conf	3063cd572b379f873724d24c8fe9083c
 expansions/pics/10130500.jpg	4288a07fb917d204bc49a28c5d87596c
@@ -7100,6 +7100,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	b382f2b426c05cdb6e72f30016411c11
+update/filelist.txt	ac2f3e65b48976bf38a03920c049b223
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	61f3946ea27ccfdf7fdc034ea47aba04
+update/version.txt	4f058885df588f9e60f9eb9d24bd6699
