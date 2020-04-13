@@ -44,7 +44,6 @@ function Auxiliary.EnableRunicPower(c)
 
 end
 function Auxiliary.runicreg(e,tp,eg,ep,ev,re,r,rp)
-	local token=Duel.CreateToken(tp,557,nil,nil,nil,nil,nil,nil)		
-	Duel.MoveToField(token,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	local token=Duel.CreateToken(tp,557)
 	Duel.Remove(token,POS_FACEUP,REASON_RULE)
 end
