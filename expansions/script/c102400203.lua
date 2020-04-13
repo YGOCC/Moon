@@ -15,7 +15,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.spfilter(c,e,tp)
-	return (c:IsSetCard(0xeeb) or not c:IsType(TYPE_EFFECT)) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,c:IsSetCard(0xeeb),false)
+	return c:IsSetCard(0xeeb) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,true,false)
 end
 function cid.filter(c,e,tp,mg)
 	if (c:IsOnField() and c:IsFacedown()) or not aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_FMATERIAL)
@@ -46,7 +46,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 	Duel.BreakEffect()
 	for nc in aux.Next(tg) do
-		Duel.SpecialSummonStep(nc,SUMMON_TYPE_FUSION,tp,tp,nc:IsSetCard(0xeeb),false,POS_FACEUP)
+		Duel.SpecialSummonStep(nc,SUMMON_TYPE_FUSION,tp,tp,true,false,POS_FACEUP)
 		nc:CompleteProcedure()
 	end
 	Duel.SpecialSummonComplete()
