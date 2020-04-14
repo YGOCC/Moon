@@ -20,7 +20,7 @@ function c67864641.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetHintTiming(TIMING_DAMAGE_STEP)
-	e2:SetCountLimit(1,67864641)
+	e2:SetCountLimit(1,68864641)
 	e2:SetCost(c67864641.spcost)
 	e2:SetTarget(c67864641.sptg)
 	e2:SetOperation(c67864641.spop)
@@ -42,7 +42,7 @@ function c67864641.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c67864641.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() end
+	if chk==0 then return e:GetHandler():IsReleasable() and Duel.CheckLPCost(tp,1000) end
 	Duel.Release(e:GetHandler(),REASON_COST)
 	Duel.PayLPCost(tp,1000)
 end
@@ -61,7 +61,7 @@ function c67864641.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)	
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)   
 		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		e1:SetTargetRange(1,0)
