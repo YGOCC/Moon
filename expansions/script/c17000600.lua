@@ -39,11 +39,10 @@ function c17000600.initial_effect(c)
    c:RegisterEffect(e4)
 end
 --SS condition (you control fewer monsters than there are FIRE monsters in GY)
-function c17000600.sscon(e,c,tp)
-   if c==nil then return true end
-   local ct=Duel.GetMatchingGroupCount(Card.IsAttribute,tp,LOCATION_GRAVE,0,nil,ATTRIBUTE_FIRE)
-    return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and ct>Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_MZONE,0,nil)
+function c17000600.sscon(e,tp,eg,ep,ev,re,r,rp)
+   return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and
+         Duel.GetMatchingGroupCount(Card.IsAttribute,tp,LOCATION_GRAVE,0,nil,ATTRIBUTE_FIRE)
+            >Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_MZONE,0,nil)
 end
 function c17000600.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
    if chk==0 then --return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and
