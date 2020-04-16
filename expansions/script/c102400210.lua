@@ -66,7 +66,6 @@ function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
 end
-function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.AND(Card.IsDisabled,Card.IsAbleToRemove),tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+function cid.rmop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Remove(Duel.GetMatchingGroup(aux.AND(Card.IsDisabled,Card.IsAbleToRemove),tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil),POS_FACEUP,REASON_EFFECT)
 end
