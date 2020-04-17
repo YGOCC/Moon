@@ -10,7 +10,7 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.sslimit)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(TYPE_FIELD)
+	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
 	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
@@ -30,14 +30,15 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.spop)
 	c:RegisterEffect(e3)
 end
-	function cid.sslimit(e,c,sump,sumtype,sumpos,targetp,se)
+function cid.sslimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0x412)
 end
 function cid.cfilter(c)
 	return c:IsCode(id-2)
 end
 function cid.ispcon(e,c)
-	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE,0,1,nil)
+	if c==nil then return true end
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cid.ispop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

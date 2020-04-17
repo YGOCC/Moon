@@ -30,7 +30,7 @@ function cid.initial_effect(c)
 	e3:SetTarget(cid.settg)
 	e3:SetOperation(cid.setop)
 	c:RegisterEffect(e3)
-	end
+end
 function cid.sslimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0x412)
 end
@@ -50,29 +50,27 @@ function cid.setfilter(c)
 	return c:IsSetCard(0x412) and c:IsType(TYPE_SPELL) and c:IsSSetable()
 end
 function cid.sparkfilter(c)
-return c:IsCode(id-6)
+	return c:IsCode(id-6)
 end
-function cid.setcon(e,c)
+function cid.setcon(e)
 	return Duel.IsExistingMatchingCard(cid.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cid.settg(e,tp,eg,ep,ev,re,r,rp,chk)
-  if chk==0 then return Duel.IsExistingMatchingCard(cid.setfilter,tp,LOCATION_GRAVE,0,1,nil) end
-  local sg=Duel.SelectTarget(tp,cid.setfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.setfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,Duel.SelectTarget(tp,cid.setfilter,tp,LOCATION_GRAVE,0,1,1,nil),1,0,0)
+end
 function cid.setop(e,tp,eg,ep,ev,re,r,rp)
-	local ifclause=false
-Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.setfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-Duel.SSet(tp,c)
-Duel.ConfirmCards(1-tp,c)
-	local e1=Effect.CreateEffect(c)
-e1:SetType(EFFECT_TYPE_SINGLE)
-e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
-e1:SetValue(LOCATION_REMOVED)
-c:RegisterEffect(e1)
+	local g=Duel.GetFirstTarget()
+	if g:IsRelateToEffect(e) then
+		Duel.SSet(tp,g)
+		Duel.ConfirmCards(1-tp,g)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
+		e1:SetValue(LOCATION_REMOVED)
+		g:RegisterEffect(e1)
 	end
 end
-	

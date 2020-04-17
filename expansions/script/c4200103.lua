@@ -48,7 +48,7 @@ function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 	end
 end
-function cm.op(e,tp,eg,ep,ev,re,r,rp)
+function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ifclause=false
 	local g=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_HAND,0,1,1,nil)
 	if g:GetCount()>0 then

@@ -30,15 +30,15 @@ c:SetSPSummonOnce(id)
 	e3:SetTarget(cid.gytg)
 	e3:SetOperation(cid.gyop)
 	c:RegisterEffect(e3)
-	end
-		function cid.sslimit(e,c,sump,sumtype,sumpos,targetp,se)
+end
+function cid.sslimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0x412)
 end
 	function cid.ssfilter(c)
 	return c:IsSetCard(0x412) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned() and not c:IsCode(id)
 end
 function cid.sparkfilter(c)
-return c:IsCode(id-5)
+	return c:IsCode(id-5)
 end
 function cid.filter(c)
 	return c:IsSetCard(0x412) and c:IsAbleToGrave()
@@ -54,7 +54,7 @@ end
 function cid.ssop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.ssfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,cid.ssfilter1,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end

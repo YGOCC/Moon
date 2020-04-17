@@ -62,7 +62,7 @@ end
 function cid.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local bc=e:GetLabelObject()
 	if bc:IsRelateToBattle() then
-		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
+		Duel.SendtoDeck(bc,nil,2,REASON_EFFECT)
 	end
 end
 function cid.indcost(e,tp,eg,ep,ev,re,r,rp,chk)

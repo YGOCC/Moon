@@ -28,7 +28,7 @@ function cid.initial_effect(c)
 	e4:SetDescription(1104)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCategory(CATEGORY_TOHAND)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e4:SetCondition(cid.gycon)
 	e4:SetTarget(cid.gytg)
@@ -62,7 +62,7 @@ function cid.gyop(e,tp,eg,ep,ev,re,r,rp)
 	if tg:IsRelateToEffect(e) then Duel.SendtoGrave(tg,REASON_EFFECT) end
 end
 function cid.sparkfilter(c)
-return c:IsCode(id-13)
+	return c:IsCode(id-13)
 end
 function cid.atkcon(e,c)
 	return Duel.IsExistingMatchingCard(cid.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
@@ -72,7 +72,7 @@ function cid.atkfilter(c)
 end
 function cid.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.atkfilter,tp,LOCATION_DECK,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,cid.atkfilter,tp,LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.atkfilter,tp,LOCATION_DECK,0,1,1,nil)
 	e:SetLabel(g:GetFirst():GetAttack())
 	Duel.SendtoGrave(g,REASON_COST)
 end
