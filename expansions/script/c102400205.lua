@@ -1,5 +1,5 @@
 --created & coded by Lyris
---ローマ・キ ー・XII
+--ローマ・キー・XII
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

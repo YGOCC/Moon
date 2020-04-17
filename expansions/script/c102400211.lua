@@ -1,5 +1,5 @@
 --created & coded by Lyris
---ローマ・キ ー・XV
+--ローマ・キー・XV
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
