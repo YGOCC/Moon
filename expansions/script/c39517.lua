@@ -30,6 +30,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetCost(s.atkcost)
+	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
 end
@@ -75,12 +76,17 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
+function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.GetAttacker():CreateEffectRelation(e)
+	if Duel.GetAttackTarget()~=nil then Duel.GetAttackTarget():CreateEffectRelation(e) end
+end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetAttackTarget()
+	local tc=Duel.GetAttacker()
 	if Duel.NegateAttack() then
 		Duel.BreakEffect()
 		local c=e:GetHandler()
-		if c:IsFaceup() and c:IsRelateToEffect(e) and tc then
+		if c:IsFaceup() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
 			local atk=math.max(tc:GetBaseAttack(),0)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
