@@ -51,7 +51,7 @@ function c16000129.splimit(e,c,sump,sumtype,sumpos,targetp)
 end
 
 function c16000129.counterfilter(c)
-	return c:GetSummonLocation()~=LOCATION_EXTRA
+  return c:GetSummonLocation()~=LOCATION_EXTRA or c:IsSetCard(0x85a)
 end
 -- SpecialSummon from hand
 function c16000129.cfilter(c)

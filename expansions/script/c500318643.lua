@@ -21,10 +21,10 @@ function c500318643.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c500318643.filter0(c,e)
-	return c:IsOnField() and c:IsAbleToRemove()
+	return c:IsOnField()  and c:IsCanBeFusionMaterial() and c:IsAbleToRemove()
 end
 function c500318643.filter1(c,e)
-	return c:IsOnField() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e)
+	return c:IsOnField() and c:IsAbleToRemove()  and c:IsCanBeFusionMaterial()  and not c:IsImmuneToEffect(e)
 end
 function c500318643.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and  c:IsSetCard(0x85a) and (not f or f(c))
