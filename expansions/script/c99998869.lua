@@ -85,7 +85,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc97) and c:IsType(TYPE_MONSTER)
-	end
+end
 function cid.atkval(e,c)
-	return Duel.GetMatchingGroupCount(cid.atkfilter,c:GetControler(),LOCATION_REMOVED,0,nil)*-100
+	return Duel.GetMatchingGroupCount(cid.atkfilter,e:GetHandler():GetControler(),LOCATION_REMOVED,0,nil)*-100
 end
