@@ -18,7 +18,7 @@ function cid.spfilter(c,e,tp)
 	return c:IsSetCard(0xeeb) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,true,false)
 end
 function cid.filter(c,e,tp,mg)
-	if (c:IsOnField() and c:IsFacedown()) or not aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_FMATERIAL)
+	if not aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_FMATERIAL) or c:GetLevel()<=0
 		or not c:IsSetCard(0xeeb) or not c:IsCanBeFusionMaterial() then return end
 	local sg=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	local ft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_FUSION)
