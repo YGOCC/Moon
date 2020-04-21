@@ -100,16 +100,18 @@ function cid.cost3(e,tp,eg,ep,ev,re,r,rp,chk)
    if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,3,REASON_COST)
 end
-function cid.target3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	  if chkc then return chkc:IsOnField() and Card.IsAbleToGrave(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,c)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+function cid.target3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)   
+  if chkc then return chkc:IsLocation(LOCATION_MZONE)  end
+	if chk==0 then return Duel.IsExistingTarget(IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectTarget(tp,IsAbleToGrave,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,0)
 end
 
 function cid.operation3(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=tg:Filter(Card.IsRelateToEffect,nil,e)
-	Duel.SendtoGrave(sg,REASON_EFFECT)
+local tc=Duel.GetFirstTarget()
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+		Duel.SendtoGrave(tc,REASON_EFFECT)
+	end
 end
+
