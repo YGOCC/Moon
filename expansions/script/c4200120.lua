@@ -6,7 +6,7 @@ function cid.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_SPSUMMON)
 	e2:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-	e2:SetCondition(aux.AND(cid.condition1,cid.con))
+	e2:SetCondition(cid.condition1)
 	e2:SetTarget(cid.target1)
 	e2:SetOperation(cid.activate1)
 	c:RegisterEffect(e2)
@@ -15,7 +15,7 @@ function cid.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-	e1:SetCondition(aux.AND(cid.condition,cid.con))
+	e1:SetCondition(cid.condition)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
@@ -26,11 +26,14 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.operation)
 	c:RegisterEffect(e3)
 end
+function cid.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x412)
+end
 function cid.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x421)
+	return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.condition1(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0
+	return cid.con(e,tp,eg,ep,ev,re,r,rp) and ep==1-tp and Duel.GetCurrentChain()==0
 end
 function cid.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -42,7 +45,7 @@ function cid.activate1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(eg,REASON_EFFECT)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
+	return re:IsActiveType(TYPE_MONSTER) and rp==1-tp and Duel.IsChainNegatable(ev) and cid.con(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -56,11 +59,11 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
-function cid.filter(c)
-	return c:GetSummonLocation()&LOCATION_EXTRA~=0
+function cid.filter2(c)
+	return c:GetSummonLocation()&LOCATION_EXTRA~=0 and cid.filter(c)
 end
 function cid.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsChainNegatable(ev) and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard,cid.filter),tp,LOCATION_MZONE,0,1,nil,0x421)
+	return Duel.IsChainNegatable(ev) and rp==1-tp and Duel.IsExistingMatchingCard(cid.filter2,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

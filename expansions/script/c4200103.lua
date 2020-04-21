@@ -17,11 +17,11 @@ c:SetSPSummonOnce(4200103)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetTarget(cm.sptg)
 	e2:SetOperation(cm.spop)
 	c:RegisterEffect(e2)
-		local e3=e2:Clone()
+	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
 	end
@@ -32,7 +32,7 @@ function cm.filter(c,e,tp)
 	return c:IsSetCard(0x412) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.addfilter(c)
-return c:IsSetCard(0x412) and c:IsAbleToHand()
+return c:IsSetCard(0x412) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cm.sparkfilter(c)
 return c:IsCode(4200100)
@@ -42,7 +42,7 @@ function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 		if Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil) then
-		local g=Duel.GetMatchingGroup(cm.addfilter,tp,0,LOCATION_GRAVE,nil,TYPE_MONSTER)
+		local g=Duel.GetMatchingGroup(cm.addfilter,tp,0,LOCATION_GRAVE,nil)
 		if #g>0 then
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 		end
@@ -50,14 +50,14 @@ function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ifclause=false
-	local g=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)~=0 and Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil) then
 			ifclause=true
 		end
 		Duel.ConfirmCards(1-tp,g)
-		if ifclause and Duel.IsExistingMatchingCard(cm.sparkfilter,tp,0,LOCATION_GRAVE,1,nil,TYPE_MONSTER) then
-			local sg=Duel.SelectMatchingCard(tp,cm.sparkfilter,tp,0,LOCATION_GRAVE,1,1,nil,TYPE_MONSTER)
+		if ifclause and Duel.IsExistingMatchingCard(cm.addfilter,tp,0,LOCATION_GRAVE,1,nil) then
+			local sg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cm.addfilter),tp,0,LOCATION_GRAVE,1,1,nil)
 			if #sg>0 then
 				Duel.HintSelection(sg)
 				Duel.SendToHand(sg,nil,REASON_EFFECT)
