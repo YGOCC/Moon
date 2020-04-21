@@ -62,7 +62,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c)
-	return c:IsFaceup() and not c:IsAbleToHandAsCost() and not c:IsType(TYPE_EFFECT)
+	return c:IsFaceup() and not c:IsAbleToHandAsCost() and  c:IsType(TYPE_EFFECT)
 end
 function cid.sprcon(e,c)
 	if c==nil then return true end
