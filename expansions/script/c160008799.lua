@@ -39,7 +39,7 @@ function c160008799.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function c160008799.filter(c,e,tp)
-	return  c:IsAttribute (ATTRIBUTE_DARK) and c:IsRace(RACE_FAIRY) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return  c:IsSetCard(0xab5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c160008799.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
@@ -69,10 +69,10 @@ function c160008799.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c160008799.matfilter(c)
-	return c:IsLinkRace(RACE_FAIRY) or c:IsLinkAttribute(ATTRIBUTE_DARK)
+	return c:IsSetCard(0xab5)
 end
 function c160008799.hhfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EVOLUTE) and c:IsCanAddCounter(0x88,3)
+	return c:IsFaceup() and c:IsSetCard(0xab5) and c:IsType(TYPE_EVOLUTE) and c:IsCanAddCounter(0x88,3)
 end
 function c160008799.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c160008799.filter(chkc) end
