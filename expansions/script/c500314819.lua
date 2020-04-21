@@ -3,7 +3,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
- aux.AddEvoluteProc(c,nil,8,cid.filter1,cid.filter1)
+ aux.AddEvoluteProc(c,nil,8,aux.FilterBoolFunction(Card.IsSetCard,0xc50),2,2)
  local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
@@ -48,9 +48,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 
-function cid.filter1(c,ec,tp)
-	return  c:IsSetCard(0xc50)
-end
+
 function cid.filter2(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end

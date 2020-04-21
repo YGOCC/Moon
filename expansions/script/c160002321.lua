@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
  aux.AddOrigEvoluteType(c)
-  aux.AddEvoluteProc(c,nil,5,cid.filter1,2,99)
+  aux.AddEvoluteProc(c,nil,5,aux.FilterBoolFunction(Card.IsType,TYPE_NORMAL),2,99)
 	c:EnableReviveLimit()
 		--atk
 	local e99=Effect.CreateEffect(c)
@@ -30,38 +30,11 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.target2)
 	e2:SetOperation(cid.operation2)
 	c:RegisterEffect(e2)
-	  -- if not c50031668.global_check then
-	   -- c50031668.global_check=true
-	   -- local ge2=Effect.CreateEffect(c)
-	   -- ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	   -- ge2:SetCode(EVENT_ADJUST)
-	   -- ge2:SetCountLimit(1)
-	   -- ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-	   -- ge2:SetOperation(c50031668.chk)
-	   -- Duel.RegisterEffect(ge2,0)
-	--end
-end
---c50031668.evolute=true
---c50031668.material1=function(mc) return  mc:IsFaceup() end
---c50031668.material2=function(mc) return mc:IsFaceup() and mc:IsType(TYPE_NORMAL)  end
---function c50031668.chk(e,tp,eg,ep,ev,re,r,rp)
-  --  Duel.CreateToken(tp,388)
-   -- Duel.CreateToken(1-tp,388)
-		--c50031668.stage_o=5
---c50031668.stage=c50031668.stage_o
---end
 
-function cid.checku(sg,ec,tp)
-return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
-function cid.filter1(c,ec,tp)
-	return c:IsType(TYPE_NORMAL)
-end
-function cid.filter2(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsRace(RACE_FAIRY) 
-end
+
 function cid.costfilter(c)
-	return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_NORMAL) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
+	return c:IsAbleToRemoveAsCost() and not c:IsType(TYPE_EFFECT) and (c:IsType(TYPE_PENDULUM) and c:IsFaceup())
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,2,REASON_COST)  and Duel.IsExistingMatchingCard(cid.costfilter,tp,LOCATION_EXTRA,0,1,c) end
