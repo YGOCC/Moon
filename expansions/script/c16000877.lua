@@ -97,9 +97,10 @@ function c16000877.mtop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	rc:RegisterFlagEffect(0,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(16000877,0))
 	Duel.RegisterFlagEffect(tp,16000877,RESET_PHASE+PHASE_END,0,1)
+	Duel.RaiseSingleEvent(rc,EVENT_SPSUMMON_SUCCESS,re,r,rp,tp,0)
 end
 function c16000877.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+388)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_EVOLUTE)
 end
 function c16000877.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0xab5)
