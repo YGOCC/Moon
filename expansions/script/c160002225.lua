@@ -2,7 +2,7 @@
 	local cid,id=GetID()
 function cid.initial_effect(c)
 		aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,nil,6,cid.filter1,2,99)
+	aux.AddEvoluteProc(c,nil,6,aux.FilterBoolFunction(Card.IsRace,RACE_PLANT),2,99)
 	c:EnableReviveLimit() 
 		--destroy
 	local e1=Effect.CreateEffect(c)
@@ -35,10 +35,6 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 
-
-function cid.filter1(c,ec,tp)
-	return c:IsRace(RACE_PLANT) 
-end
 function cid.valcheck(e,c)
    local ct=e:GetHandler():GetMaterial():FilterCount(Card.IsRace,nil,RACE_PLANT) and e:GetHandler():GetMaterial():GetClassCount(Card.GetAttribute)
 	e:GetLabelObject():SetLabel(ct)

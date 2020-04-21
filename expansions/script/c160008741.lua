@@ -3,7 +3,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,8,cid.filter1,2,99)
+  aux.AddEvoluteProc(c,nil,8,aux.FilterBoolFunction(Card.IsSetCard,0xc50),2,99)
 	--destroy
   local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,0))
@@ -40,13 +40,7 @@ function cid.initial_effect(c)
 	e5:SetValue(cid.atkval)
 	c:RegisterEffect(e5)
  end
---filters
-function cid.filter1(c,ec,tp)
-	return  c:IsSetCard(0xc50)
-end
-function cid.filter2(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsRace(RACE_FAIRY) 
-end
+
 
 
 function cid.costfilter(c)

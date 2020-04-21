@@ -2,9 +2,9 @@
 function c160002424.initial_effect(c)
 	  --evolute procedure
 	aux.AddOrigEvoluteType(c)
-	aux.AddEvoluteProc(c,nil,6,c160002424.filter1,c160002424.filter1,2,99)
+	aux.AddEvoluteProc(c,nil,6,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),2,99)
 	c:EnableReviveLimit()
-	  --atk down
+
 --to deck
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(160002424,0))
@@ -31,20 +31,6 @@ function c160002424.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 
-function c160002424.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT)
-end
-
-
-function c160002424.atktg(e,c)
-	return c:IsType(TYPE_EFFECT)
-end
---function c160002424.val(e,c)
-  --   return Duel.GetMatchingGroupCount(c160002424.ctfilter,e:GetHandler():GetControler(),LOCATION_REMOVED+-LOCATION_GRAVE+LOCATION_EXTRA,0,nil)*-100
---end
---function c160002424.ctfilter(c)
- --   return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_EFFECT)
---end
 function c160002424.hdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveEC(tp,3,REASON_COST) end
 	e:GetHandler():RemoveEC(tp,3,REASON_COST)

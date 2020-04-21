@@ -2,7 +2,7 @@
 function c16000873.initial_effect(c)
 		aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,3,c16000873.filter2,c16000873.filter2,1,99)
+  aux.AddEvoluteProc(c,nil,3,aux.FilterBoolFunction(Card.IsRace,RACE_PLANT),1,99)
 	--to hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(16000873,0))
@@ -28,9 +28,7 @@ end
 
 
 
-function c16000873.filter2(c,ec,tp)
-	return c:IsRace(RACE_PLANT)
-end
+
 function c16000873.filter(c)
 	return c:IsRace(RACE_PLANT) and (c:IsAbleToHand() or c:IsAbleToGrave())
 end

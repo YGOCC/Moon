@@ -3,7 +3,7 @@
 function cid.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,8,cid.filter1,2,99)  
+  aux.AddEvoluteProc(c,nil,8,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_FIRE),2,99)  
    --destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -24,9 +24,6 @@ function cid.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
-end
-function cid.filter1(c,ec,tp)
-	return  c:IsAttribute(ATTRIBUTE_FIRE)
 end
 
 function cid.desfilter(c)

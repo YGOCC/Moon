@@ -3,7 +3,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
 		   aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,1,cid.filter2,1,1)  
+  aux.AddEvoluteProc(c,nil,1,aux.FilterBoolFunction(Card.IsSetCard,0x185a),1,1)  
    local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -24,9 +24,7 @@ function cid.initial_effect(c)
 	e5:SetCode(EFFECT_NO_EFFECT_DAMAGE)
 	c:RegisterEffect(e5)
 end
-function cid.filter2(c,ec,tp)
-	return c:IsSetCard(0x185a)
-end
+
 function cid.effcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp and bit.band(r,REASON_EFFECT)~=0
 end
