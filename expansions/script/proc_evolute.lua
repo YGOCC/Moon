@@ -392,6 +392,16 @@ function Auxiliary.EvoluteOperation(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 		else
 			Duel.SendtoGrave(g,REASON_MATERIAL+REASON_EVOLUTE)
 		end
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+		e1:SetOperation(function() Duel.RaiseSingleEvent(tc,EVENT_BE_MATERIAL,e,REASON_EVOLUTE,tp,tp,0) e1:Reset() e2:Reset() end)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EVENT_SPSUMMON_NEGATED)
+		e2:SetOperation(function() e1:Reset() e2:Reset() end)
+		tc:RegisterEffect(e2)
 		tc=g:GetNext()
 	end
 	--Set Maximum for Convergents

@@ -88,7 +88,7 @@ function c16000666.splimit(e,c)
 end
 function c16000666.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetReasonCard()
-	return ec:GetMaterial():IsExists(c16000666.ffilter,1,nil) and r==REASON_EVOLUTE ~=0
+	return ec:GetMaterial():IsExists(c16000666.ffilter,1,nil) and r==REASON_EVOLUTE
 end
 function c16000666.operation2(e,tp,eg,ep,ev,re,r,rp)
   if Duel.GetFlagEffect(tp,16000666)~=0 then return end

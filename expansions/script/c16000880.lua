@@ -65,7 +65,7 @@ function c16000880.ffilter(c)
 end
 function c16000880.mtcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetReasonCard()
-	return  ec:GetMaterial():IsExists(c16000880.ffilter,1,nil) and  r==REASON_EVOLUTE ~=0
+	return  ec:GetMaterial():IsExists(c16000880.ffilter,1,nil) and  r==REASON_EVOLUTE
 end
 function c16000880.mtop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,16000880)~=0 then return end

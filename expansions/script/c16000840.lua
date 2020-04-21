@@ -48,7 +48,7 @@ end
 
 function c16000840.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetReasonCard()
-	return ec:GetMaterial():IsExists(c16000840.ffilter,1,nil) and  r==REASON_EVOLUTE ~=0
+	return ec:GetMaterial():IsExists(c16000840.ffilter,1,nil) and  r==REASON_EVOLUTE
 end
 function c16000840.operation2(e,tp,eg,ep,ev,re,r,rp)
   if Duel.GetFlagEffect(tp,16000840)~=0 then return end
