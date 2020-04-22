@@ -66,7 +66,7 @@ function cid.repfilter(c)
 	return (c:IsFaceup() or not c:IsOnField()) and c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER) and not c:IsReason(REASON_REPLACE)
 end
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(cid.repfilter,1,nil) and not re:GetHandler():IsCode(id) end
+	if chk==0 then return eg:IsExists(cid.repfilter,1,nil) and not (re and re:GetHandler():IsCode(id)) end
 	return Duel.IsExistingMatchingCard(aux.AND(cid.filter1,aux.FilterBoolFunction(Card.IsDestructable,e),aux.NOT(Card.IsStatus)),tp,LOCATION_DECK,0,1,nil,STATUS_DESTROY_CONFIRMED)
 end
 function cid.repval(e,c)

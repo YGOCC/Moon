@@ -55,7 +55,7 @@ end
 function c19772586.lockop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsFacedown() and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsFacedown() and tc:IsRelateToEffect(e) then
 		c:SetCardTarget(tc)
 		e:SetLabelObject(tc)
 		local e1=Effect.CreateEffect(c)
