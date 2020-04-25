@@ -65,8 +65,8 @@ function c17000300.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c17000300.tgybop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	Duel.ConfirmDecktop(p,3)
-	local g=Duel.GetDecktopGroup(p,3)
+	Duel.ConfirmDecktop(p,5)
+	local g=Duel.GetDecktopGroup(p,5)
 	if g:GetCount()>0 and g:IsExists(c17000300.thfilter,1,nil) and Duel.SelectYesNo(p,aux.Stringid(17000300,1)) then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_OPERATECARD)
 		local sg=g:FilterSelect(p,c17000300.thfilter,1,1,nil)

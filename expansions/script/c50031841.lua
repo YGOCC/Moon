@@ -41,7 +41,7 @@ end
 function c50031841.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsControler(tp)
-		and tc:IsType(TYPE_MONSTER) and tc:IsSetCard(0x885a) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and tc:IsType(TYPE_MONSTER)  and tc:IsLocation(LOCATION_HAND) and tc:IsSetCard(0x885a) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(50031841,1))
 	then Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) end
 	end
@@ -59,7 +59,7 @@ end
 
 function c50031841.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local res=r&(REASON_FUSION+REASON_EVOLUTE)
-	return res==REASON_FUSION or res==REASON_EVOLUTE
+	return res==REASON_FUSION or res==REASON_EVOLUTE  
 end
 function c50031841.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
