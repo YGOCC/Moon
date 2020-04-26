@@ -98,6 +98,7 @@ function c249000644.rcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==e:GetHandler():GetControler() and bit.band(r,REASON_COST)~=0 and re:IsHasType(0x7e0) and ev < 3
 end
 function c249000644.rop(e,tp,eg,ep,ev,re,r,rp)
+	return ev
 end
 function c249000644.spfilter(c)
 	return c:IsSetCard(0x1E2) and c:IsAbleToRemoveAsCost()

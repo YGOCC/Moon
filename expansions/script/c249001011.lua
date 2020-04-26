@@ -74,10 +74,10 @@ function c249001011.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		local g=Duel.SelectMatchingCard(tp,c249001011.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
-	if Duel.GetLP(tp) < 4000 then
+	if Duel.GetLP(tp) < 2000 then
 		Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 	else
-		Duel.PayLPCost(tp,2000)
+		Duel.PayLPCost(tp,1000)
 	end
 end
 function c249001011.activate(e,tp,eg,ep,ev,re,r,rp)

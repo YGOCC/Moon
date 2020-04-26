@@ -20,13 +20,13 @@ function c249000937.condition(e,tp,eg,ep,ev,re,r,rp)
 	return ct>2
 end
 function c249000937.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,1000) end
-	Duel.PayLPCost(tp,1000)
+	if chk==0 then return Duel.CheckLPCost(tp,2000) end
+	Duel.PayLPCost(tp,2000)
 end
 function c249000937.filter4(c,e,tp)
 	if not (c:GetLevel() > 0) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
 	local mg=Duel.GetMatchingGroup(c249000937.filter5,tp,LOCATION_GRAVE+LOCATION_HAND,0,nil)
-	return mg:CheckWithSumGreater(Card.GetLevel,math.ceil(c:GetLevel()*1.5),c)
+	return mg:CheckWithSumGreater(Card.GetLevel,c:GetLevel(),c)
 end
 function c249000937.filter5(c)
 	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
@@ -42,7 +42,7 @@ function c249000937.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=tg:GetFirst()
 	if tc then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local mat=mg:SelectWithSumGreater(tp,Card.GetLevel,math.ceil(tc:GetLevel()*1.5),tc)	
+		local mat=mg:SelectWithSumGreater(tp,Card.GetLevel,tc:GetLevel(),tc)	
 		Duel.Remove(mat,POS_FACEUP,REASON_EFFECT)
 		Duel.BreakEffect()
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
