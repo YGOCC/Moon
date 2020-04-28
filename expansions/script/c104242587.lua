@@ -9,7 +9,7 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
---		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x666),2,true)
+		aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x666),2,true)
 	aux.AddContactFusionProcedure(c,cid.spcfilter2,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
 	--special summon
 --	local e1=Effect.CreateEffect(c)

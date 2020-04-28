@@ -1,4 +1,4 @@
---Moon's Dream, React!
+--Moon's Dream: Escape!
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -8,110 +8,76 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-		--Gy effect
-	local exxx=Effect.CreateEffect(c)
-	exxx:SetDescription(aux.Stringid(33731070,0))
-	exxx:SetCategory(CATEGORY_TOHAND)
-	exxx:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	exxx:SetCode(EVENT_TO_GRAVE)
-	exxx:SetProperty(EFFECT_FLAG_DELAY)
-	exxx:SetCountLimit(1,id+2000)
-	exxx:SetCondition(cid.exxxcon)
-	exxx:SetTarget(cid.exxxtg)
-	exxx:SetOperation(cid.exxxop)
-	c:RegisterEffect(exxx)
-	--recursion
-	local exx=Effect.CreateEffect(c)
-	exx:SetCategory(CATEGORY_TOHAND)
-	exx:SetType(EFFECT_TYPE_IGNITION)
-	exx:SetRange(LOCATION_GRAVE)
-	exx:SetCountLimit(1,id+1000)
-	exx:SetCondition(cid.recurcon)
-	exx:SetTarget(cid.recurtg)
-	exx:SetOperation(cid.recurop)
-	c:RegisterEffect(exx)
-	--Activate
+ 	--activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-    e1:SetCountLimit(1,id)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCountLimit(1,id)
+	e1:SetCondition(cid.condition)
+	e1:SetCost(cid.cost)
 	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
 end
---Filters
-function cid.exxxfilter(c)
-	return c:IsSetCard(0x666) and c:IsDiscardable()
-end
-function cid.spfilter(c,e,tp)
-    return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function cid.fragment(c)
+	return c:IsCode(104242585) and c:IsFaceup()
 end
 function cid.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666)
 end
-function cid.ponybackfilter(c)
-    return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x666) and c:IsAbleToGrave()
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
---Gy effect
-function cid.exxxcon(e,tp,eg,ep,ev,re,r,rp)
-	   return (bit.band(r,REASON_EFFECT)~=0 or bit.band(r,REASON_COST)~=0) and re:GetHandler():IsSetCard(0x666) and re:GetLabel()~=999
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(1)
+	return true
 end
-function cid.exxxtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+function cid.costfilter(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
 end
-function cid.exxxop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SendtoHand(c,nil,REASON_EFFECT)
-	end
-		local sc=Duel.CreateToken(tp,104242585)
-		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
---		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
---		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+function cid.filter(c)
+	return (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup()) and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
---Activate
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chkc then return chkc:IsOnField() end
-    local b1=Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)
-    local b2=Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
-    if chk==0 then return b1 or b2 end
-    local op=0
-    if b1 and b2 then
-        op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
-    elseif b1 then
-        op=Duel.SelectOption(tp,aux.Stringid(id,0))
-    else
-        op=Duel.SelectOption(tp,aux.Stringid(id,1))+1
-    end
-	
-	
-	
-	
-    if op==0 then
-        e:SetCategory(CATEGORY_REMOVE)
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_MZONE,0,nil)
-		e:SetOperation(cid.remop)
-		e:SetLabel(999)
-		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
-    else
-        e:SetCategory(CATEGORY_SPECIAL_SUMMON)
-        e:SetOperation(cid.spop)
-        Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
-    end
-end
-function cid.spop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and cid.filter(chkc) end
+	if chk==0 then
+		if e:GetLabel()==1 then
+			e:SetLabel(0)
+			return Duel.IsExistingTarget(cid.costfilter,tp,LOCATION_MZONE,0,1,e:GetHandler())
+		else return false end
 	end
-		local sc=Duel.CreateToken(tp,104242585)
-		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
---		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
---		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)	
+	e:SetLabel(0)
+	local rt=Duel.GetTargetCount(cid.cfilter,tp,LOCATION_MZONE,0,e:GetHandler())
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+	local cg=Duel.SelectMatchingCard(tp,cid.fragment,tp,LOCATION_REMOVED,0,nil,rt-1,nil)
+	local ct=cg:GetCount()
+	if ct>0 and Duel.RemoveCards then
+		Duel.RemoveCards(cg,nil,REASON_EFFECT+REASON_RULE)
+		Duel.Remove(cg,POS_FACEUP,REASON_COST+REASON_RULE) end
+			if cg and not Duel.RemoveCards then 
+			Duel.Exile(cg,REASON_COST+REASON_RULE)
+			end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectTarget(tp,cid.cfilter,tp,LOCATION_MZONE,0,ct+1,ct+1,nil,e,tp)
+		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
+	end
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
+	local tc=sg:GetFirst()
+				while tc do
+		 Duel.Remove(tc,tc:GetPosition(),REASON_EFFECT+REASON_TEMPORARY)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+			e1:SetCode(EVENT_PHASE+PHASE_END)
+			e1:SetLabelObject(tc)
+			e1:SetCountLimit(1)
+			e1:SetOperation(cid.retop)
+			Duel.RegisterEffect(e1,tp)
+		    tc=sg:GetNext()
+end
 end
 
 
@@ -127,17 +93,29 @@ end
 
 
 
-
-
-
-
-function cid.remop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.HintSelection(g)
-		local tc=g:GetFirst()
-		if Duel.Remove(tc,tc:GetPosition(),REASON_EFFECT+REASON_TEMPORARY)~=0 then
+function cid.dodgetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp)  end
+	if chk==0 then return Duel.IsExistingTarget(cid.cfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE) 
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,cid.cfilter,tp,LOCATION_MZONE,0,1,ft,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
+end
+function cid.sgfilter(c,p)
+	return c:IsLocation(LOCATION_REMOVED) and c:IsControler(p)
+end
+function cid.dodgeop(e,c,tp,eg,ep,ev,re,r,rp)
+		local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
+	local ft=Duel.GetMatchingGroupCount(cid.fragment,tp,LOCATION_REMOVED,0,c)
+	if sg:GetCount()==0  then return end
+	if sg:GetCount()>ft then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		sg=sg:Select(tp,ft,ft+1,nil)
+	end
+	 		local tc=sg:GetFirst()
+				while tc do
+		 Duel.Remove(tc,tc:GetPosition(),REASON_EFFECT+REASON_TEMPORARY)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 			e1:SetCode(EVENT_CHAIN_END)
@@ -145,54 +123,30 @@ function cid.remop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCountLimit(1)
 			e1:SetOperation(cid.retop)
 			Duel.RegisterEffect(e1,tp)
-			if Duel.IsExistingMatchingCard(cid.ponybackfilter,tp,LOCATION_DECK,0,1,nil,e,tp) and 
-		Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,nil) and
-		Duel.SelectEffectYesNo(tp,e:GetHandler(),nil) then
-		local g=Duel.GetFirstMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,1,1,nil)
-		--if g:GetCount()==1 then
-		if Duel.Exile(g,REASON_RULE)>=0 then
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local g=Duel.SelectMatchingCard(tp,cid.ponybackfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
-		if Duel.SendtoGrave(g,REASON_EFFECT)>=0 then
-		end 
-		end
-		end
-		end
-		end
-	end
-		local sc=Duel.CreateToken(tp,104242585)
-		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-		Duel.Remove(sc,POS_FACEUP,REASON_RULE)
---		sc:SetCardData(CARDDATA_TYPE, sc:GetType()+TYPE_SPELL)
---		Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		    tc=sg:GetNext()
+	if sg:GetCount()==0 or Duel.Remove(sg,REASON_EFFECT)==0 then return end
+	local oc=Duel.GetOperatedGroup():FilterCount(cid.sgfilter,nil,tp)
+	if oc==0 then return end
+	local og=Duel.SelectMatchingCard(tp,cid.fragment,tp,LOCATION_REMOVED,0,oc,oc,nil)
+	 Duel.Exile(og,REASON_EFFECT+REASON_RULE) 
+--	local cost=:sg()-1
+	Duel.SetLP(tp,Duel.GetLP(tp)-sg*1000)
+	
 end
+end
+
+
+
+
+
+
+
+
+
+
+
+
 function cid.retop(e,tp,eg,ep,ev,re,r,rp)
     Duel.ReturnToField(e:GetLabelObject())
 	e:Reset()
-end
---recursion
-function cid.recurfilter(c)
-	return c:IsCode(104242585) and c:IsFaceup()
-end
-function cid.recurcon(e,c)
-	if c==nil then return true end
-	return Duel.IsExistingMatchingCard(cid.recurfilter,tp,LOCATION_REMOVED,0,3,nil)
-end
-function cid.recurtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToHand() end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
-end
-function cid.recurop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,cid.recurfilter,tp,LOCATION_REMOVED,0,3,3,nil)
-	if g:GetCount()==3 then
-	if Duel.Exile(g,REASON_RULE) then
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,Group.FromCards(c))
-	end
-	end
-	end
 end

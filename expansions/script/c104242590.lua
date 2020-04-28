@@ -9,7 +9,8 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
---	aux.AddFusionProcFunRep(c,cid.ponyfilter,2,true)
+	c:EnableReviveLimit()
+	aux.AddFusionProcFunRep(c,cid.ponyfilter,2,true)
 	aux.AddContactFusionProcedure(c,cid.ponyfilter,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
 	--banish as punishment
 	local e2=Effect.CreateEffect(c)

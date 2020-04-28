@@ -9,8 +9,15 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
---	aux.AddFusionProcFunRep(c,cid.ponyfilter,2,true)
-	aux.AddContactFusionProcedure(c,cid.ponyfilter,LOCATION_REMOVED,0,Duel.SendtoGrave,REASON_MATERIAL)
+	--special summon
+	local ponysummon=Effect.CreateEffect(c)
+	ponysummon:SetType(EFFECT_TYPE_FIELD)
+	ponysummon:SetCode(EFFECT_SPSUMMON_PROC)
+	ponysummon:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	ponysummon:SetRange(LOCATION_EXTRA)
+	ponysummon:SetCondition(cid.sstg)
+	ponysummon:SetOperation(cid.ssop)
+	c:RegisterEffect(ponysummon)
 	--banish as punishment
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(39823987,0))
@@ -36,6 +43,18 @@ function cid.initial_effect(c)
 	e1:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk) if chk==0 then return true end Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE) end)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
+end
+function cid.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
+--	if c==nil then return true end
+	local c=e:GetHandler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(cid.ponyfilter,tp,LOCATION_MZONE+LOCATION_EXTRA,0,2,c)
+end
+function cid.ssop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local g=Duel.SelectMatchingCard(tp,cid.ponyfilter,tp,LOCATION_MZONE+LOCATION_EXTRA,0,2,2,nil)
+	Duel.SendtoGrave(g,REASON_COST+REASON_MATERIAL)
 end
 --Filters
 function cid.ponyfilter(c)

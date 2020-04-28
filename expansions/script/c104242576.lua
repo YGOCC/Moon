@@ -17,38 +17,53 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
-	--Fragment creation
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_REMOVE)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,id+1000)
-	e2:SetCondition(cid.fragcon)
-	e2:SetTarget(cid.fragtg)
-	e2:SetOperation(cid.fragop)
-	c:RegisterEffect(e2)
+
 end
 --Filters
+function cid.lpfilter(c)
+	return c:IsSetCard(0x666) 
+end
 function cid.filter(c)
 	return c:IsSetCard(0x666) and c:IsAbleToDeck()
 end
 function cid.cfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsAbleToHand() --or c:IsAbleToGrave())
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsAbleToHand() 
+end
+function cid.fragment(c)
+return c:IsCode(104242585) and c:IsFaceup()
 end
 --effect 1
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE,0,2,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_GRAVE,0,2,2,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
+		Duel.BreakEffect()
+	if	Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		Duel.BreakEffect()
+		local frag=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)
+		if frag and Duel.RemoveCards then
+		Duel.RemoveCards(frag,nil,REASON_EFFECT+REASON_RULE)
+		Duel.Remove(frag,POS_FACEUP,REASON_EFFECT) 
+			
+	end
+		if frag and not Duel.RemoveCards then 
+		Duel.Exile(frag,REASON_EFFECT+REASON_RULE)
+	
+	end
+			Duel.SetTargetPlayer(tp)
+			local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+			local dam=Duel.GetMatchingGroupCount(cid.lpfilter,tp,LOCATION_GRAVE,0,nil)*500
+			Duel.Recover(p,dam,REASON_EFFECT)
+		end
 	end
 end
+
 function cid.fragcon(e,tp,eg,ep,ev,re,r,rp)
 	return  tp==Duel.GetTurnPlayer() and Duel.GetTurnCount()~=e:GetHandler():GetTurnID() or e:GetHandler():IsReason(REASON_RETURN)
 end

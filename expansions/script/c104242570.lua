@@ -1,4 +1,4 @@
---Moon's Dream: The Summoner
+--Moon's Dream, The Summoner
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
 	str=string.sub(str,1,string.len(str)-4)
@@ -8,58 +8,140 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
+	--special summon
+	local ponysummon=Effect.CreateEffect(c)
+	ponysummon:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	ponysummon:SetType(EFFECT_TYPE_IGNITION)
+	ponysummon:SetCode(EVENT_FREE_CHAIN)
+	ponysummon:SetRange(LOCATION_HAND)
+	ponysummon:SetCountLimit(1,id)
+	ponysummon:SetTarget(cid.fragmenttg)	
+	ponysummon:SetOperation(cid.fragment)
+	c:RegisterEffect(ponysummon)
+	--to hand
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_SPECIAL_SUMMON)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_HAND+LOCATION_GRAVE)
-	e1:SetCountLimit(1,id)
-	e1:SetCondition(cid.battlephase)
-	e1:SetTarget(cid.sptg)
-	e1:SetOperation(cid.spop)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_DRAW)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetCode(EVENT_TO_GRAVE)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCountLimit(1,id+1000)
+	e1:SetCondition(cid.thcon)
+	e1:SetTarget(cid.drtg)
+	e1:SetOperation(cid.drop)
 	c:RegisterEffect(e1)
-	--draw
+	--gy effect
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(88523882,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id+1000)
-	e2:SetCondition(cid.fragcon)
-	e2:SetOperation(cid.frag)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_TODECK+CATEGORY_RECOVER)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCountLimit(1,id+2000)
+	e2:SetCondition(aux.exccon)
+	e2:SetTarget(cid.sftg)
+	e2:SetOperation(cid.sfop)
 	c:RegisterEffect(e2)
 end
-function cid.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsAbleToGrave()
+--Filters
+function cid.selfsummonfilter(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and not c:IsCode(id)
 end
---Summon
-function cid.battlephase(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
+function cid.lpfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER)
 end
-function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
-	and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_REMOVED,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_REMOVED)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+--On grave, search monster
+function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return (e:GetHandler():IsPreviousLocation(LOCATION_OVERLAY) and  bit.band(r,REASON_COST)~=0)
+	or
+	(e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and  bit.band(r,REASON_COST+REASON_MATERIAL+REASON_BATTLE+REASON_EFFECT)~=0)
 end
-function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+function cid.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function cid.drop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
+end
+--Pony summon proc
+function cid.fragmenttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+local c=e:GetHandler()
+	if chkc then return chkc:IsLocation(LOCATION_DECK) and chkc:IsControler(tp) and cid.selfsummonfilter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(cid.selfsummonfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+end
+function cid.fragment(e,c,tp,eg,ep,ev,re,r,rp,chk)  
 	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_REMOVED,0,1,1,nil,tp)
-	if g:GetCount()>0 and Duel.SendtoGrave(g,REASON_EFFECT)~=0 and g:GetFirst():IsLocation(LOCATION_GRAVE) and c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	local tp=c:GetControler()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(cid.selfsummonfilter,tp,LOCATION_DECK,0,1,c) end
+	local g=Duel.SelectMatchingCard(tp,cid.selfsummonfilter,tp,LOCATION_DECK,0,1,1,c)
+	if Card.Type then 
+		local tc=g:GetFirst()
+			Card.Type(tc,TYPE_PENDULUM) 
+				Duel.RemoveCards(tc,nil,REASON_EFFECT+REASON_RULE)
+					Duel.SendtoExtraP(tc,POS_FACEUP,REASON_RULE+REASON_RETURN)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_ADJUST)
+	e1:SetOperation(function() if not tc:IsLocation(LOCATION_EXTRA) then Card.Type(tc,TYPE_EFFECT+TYPE_MONSTER) Card.Race(tc,RACE_BEAST)  e1:Reset() e1:GetLabelObject():Reset() end end)
+	Duel.RegisterEffect(e1,tp)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_CHAIN_SOLVED)
+	Duel.RegisterEffect(e2,tp)
+	e1:SetLabelObject(e2)
+	else
+	local tc=g:GetFirst()
+			tc:SetCardData(CARDDATA_TYPE,tc:GetType()+TYPE_PENDULUM)
+				Duel.Exile(tc,REASON_EFFECT+REASON_RULE)
+					Duel.SendtoExtraP(tc,POS_FACEUP,REASON_RULE+REASON_RETURN)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_ADJUST)
+	e1:SetOperation(function() if not tc:IsLocation(LOCATION_EXTRA) then tc:SetCardData(CARDDATA_TYPE,tc:GetType()-TYPE_PENDULUM) e1:Reset() e1:GetLabelObject():Reset() end end)
+	Duel.RegisterEffect(e1,tp)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_CHAIN_SOLVED)
+	Duel.RegisterEffect(e2,tp)
+	e1:SetLabelObject(e2)
+	end
+			local sc=Duel.CreateToken(tp,104242585)
+				if Card.Type then 
+					Card.Type(sc,TYPE_PENDULUM)
+						Duel.Remove(sc,POS_FACEUP,REASON_COST) 
+	else
+					sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN) 
+						Duel.Remove(sc,POS_FACEUP,REASON_COST+REASON_RULE)  
+						end
+	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
+		Duel.SpecialSummonComplete()
+end
+end
+--GY effect
+function cid.sftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.lpfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cid.lpfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local g=Duel.SelectTarget(tp,cid.lpfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local rec=g:GetFirst():GetBaseAttack()
+	Duel.SetTargetParam(rec)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,rec)
+end
+function cid.sfop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e)  then
+		local g=Group.FromCards(c,tc)
+		Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
+		Duel.BreakEffect()
+		local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
+	Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)
 	end
 end
-function cid.fragcon(e,tp,eg,ep,ev,re,r,rp)
-	local ec=eg:GetFirst()
-	return  ec:IsSetCard(0x666) and ec:GetPreviousControler()==tp 
 end
-function cid.frag(e,tp,eg,ep,ev,re,r,rp,chk)		
-	--	local sc=Duel.CreateToken(tp,104242585)
-	--	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-	--	Duel.SendtoExtraP(sc,tp,REASON_RULE)
-		local sc=Duel.CreateToken(tp,104242585)
-		sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-		Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
 end
