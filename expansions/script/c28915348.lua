@@ -13,7 +13,7 @@ function ref.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_RECOVER)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(TIMING_MAIN_END+TIMING_END_PHASE)
@@ -46,30 +46,37 @@ end
 function ref.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(ref.rmcfilter,tp,LOCATION_GRAVE,0,1,nil)
+		--and Duel.IsExistingMatchingCard(ref.rmcfilter,tp,LOCATION_GRAVE,0,1,nil)
 	end
 	e:SetLabel(c:GetAttack())
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,ref.rmcfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	g:AddCard(c)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	--Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	--local g=Duel.SelectMatchingCard(tp,ref.rmcfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	--g:AddCard(c)
+	Duel.Remove(c,POS_FACEUP,REASON_COST)
 end
-function ref.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function ref.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
-	if chk==0 then return true end
+	if chkc then return ref.rmcfilter(chkc) and chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) end
+	if chk==0 then return Duel.IsExistingTarget(ref.rmfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	local val=e:GetLabel()/2
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectTarget(tp,ref.rmfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.SetTargetParam(val)
 	Duel.SetTargetPlayer(tp)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,nil,tp,val)
 end
 function ref.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local val=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
-	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-	Duel.Recover(p,val,REASON_EFFECT)
-	Duel.GainRP(p,val,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
+		local val=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+		local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+		Duel.Recover(p,val,REASON_EFFECT)
+		Duel.GainRP(p,val,REASON_EFFECT)
+	end
 end
 
-function ref.get_zone(c,lc)
+function ref.get_zone(c,lc,tp)
 	local seq=c:GetSequence()
 	local zone=0
 	if c:GetControler()==lc:GetControler() then
@@ -82,7 +89,7 @@ function ref.get_zone(c,lc)
 end
 function ref.zoneloop(c,lc,e)
 	local zone=e:GetLabel()
-	local val=ref.get_zone(c,lc)
+	local val=ref.get_zone(c,lc,e:GetHandlerPlayer())
 	zone=bit.bor(zone,val)
 	e:SetLabel(zone)
 end
@@ -106,6 +113,14 @@ function ref.ssop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE) and c:IsRelateToEffect(e) then
 		e:SetLabel(0)
 		g:ForEach(ref.zoneloop,c,e)
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP,e:GetLabel())
+		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP,e:GetLabel())>0 then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+			e1:SetValue(1)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			c:RegisterEffect(e1,true)
+		end
 	end
 end

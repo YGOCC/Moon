@@ -8,15 +8,17 @@ function c249000646.initial_effect(c)
 	e1:SetTarget(c249000646.target)
 	e1:SetOperation(c249000646.activate)
 	c:RegisterEffect(e1)
-	--material
+	--tohand
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(19310321,0))
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetDescription(aux.Stringid(30786387,2))
+	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCost(c249000646.cost)
-	e2:SetTarget(c249000646.target2)
-	e2:SetOperation(c249000646.operation2)
+	e2:SetCondition(aux.exccon)
+	e2:SetCost(aux.bfgcost)
+	e2:SetTarget(c249000646.thtg)
+	e2:SetOperation(c249000646.thop)
 	c:RegisterEffect(e2)
 end
 function c249000646.filter(c)
@@ -34,32 +36,19 @@ function c249000646.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function c249000646.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+function c249000646.thfilter(c)
+	return c:IsSetCard(0x1E2) and not c:IsCode(249000646) and (c:IsFaceup() or not c:IsLocation(LOCATION_REMOVED)) and c:IsAbleToHand()
 end
-function c249000646.filter1(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ)
+function c249000646.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and c249000646.thfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c249000646.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local sg=Duel.SelectTarget(tp,c249000646.thfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,1,0,0)
 end
-function c249000646.filter2(c)
-	return c:IsSetCard(0x1E2)
-end
-function c249000646.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(c249000646.filter1,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingTarget(c249000646.filter2,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(19310321,1))
-	local g1=Duel.SelectTarget(tp,c249000646.filter1,tp,LOCATION_MZONE,0,1,1,nil)
-	e:SetLabelObject(g1:GetFirst())
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(19310321,2))
-	local g2=Duel.SelectTarget(tp,c249000646.filter2,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g2,1,0,0)
-end
-function c249000646.operation2(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,tc,e)
-	if g:GetCount()>0 then
-		Duel.Overlay(tc,g)
+function c249000646.thop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end

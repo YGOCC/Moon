@@ -52,14 +52,14 @@ function c249000645.filter2(c,e,tp,lv)
 end
 function c249000645.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c249000645.filter1,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e,tp)
-		and e:GetHandler():IsAbleToRemoveAsCost() end
+		and e:GetHandler():IsAbleToRemove() and Duel.GetLocationCount(tp,LOCATION_MZONE) < 0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_GRAVE)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetHandler(),1,0,0)
 end
 function c249000645.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE) > 1 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE) < 1 then return end
 	local g=Duel.SelectMatchingCard(tp,c249000645.filter1,tp,LOCATION_GRAVE,0,1,1,c,e,tp)
 	if g:GetCount()>0 then
 		Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
