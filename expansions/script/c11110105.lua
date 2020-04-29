@@ -1,15 +1,17 @@
 --Princess Destroyer Zetta
 function c11110105.initial_effect(c)
+aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),aux.NonTuner(Card.IsSetCard,0x222),1)
+ c:EnableReviveLimit()
 	--synchro summon
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e1:SetRange(LOCATION_EXTRA)
-	e1:SetCondition(c11110105.syncon)
-	e1:SetOperation(c11110105.synop)
-	e1:SetValue(SUMMON_TYPE_SYNCHRO)
-	c:RegisterEffect(e1)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_SPSUMMON_PROC)
+	e5:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e5:SetRange(LOCATION_EXTRA)
+	e5:SetCondition(c11110105.syncon)
+	e5:SetOperation(c11110105.synop)
+	e5:SetValue(SUMMON_TYPE_SYNCHRO)
+--	c:RegisterEffect(e5)
 	--Special Sum
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(11110105,0))
@@ -20,7 +22,7 @@ function c11110105.initial_effect(c)
 	e2:SetCondition(c11110105.spcon)
 	e2:SetTarget(c11110105.sptg)
 	e2:SetOperation(c11110105.spop)
-	c:RegisterEffect(e2)
+--	c:RegisterEffect(e2)
 	--multiatk
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(11110105,1))
@@ -31,6 +33,24 @@ function c11110105.initial_effect(c)
 	e3:SetTarget(c11110105.atktg)
 	e3:SetOperation(c11110105.atkop)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+    e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+    e4:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+    e4:SetCondition(c11110105.damcon)
+    e4:SetOperation(c11110105.damop)
+    c:RegisterEffect(e4)
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(11110105,2))
+	e5:SetCategory(CATEGORY_DESTROY)
+	e5:SetType(EFFECT_TYPE_QUICK_O)
+	e5:SetCode(EVENT_FREE_CHAIN)
+	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCountLimit(1,id)
+	e5:SetCost(c11110105.cost)
+	e5:SetTarget(c11110105.tgtg)
+	e5:SetOperation(c11110105.tgop)
+	c:RegisterEffect(e5)
 end
 function c11110105.matfilter1(c,syncard)
 	return c:IsType(TYPE_TUNER) and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsCanBeSynchroMaterial(syncard)
@@ -208,6 +228,9 @@ end
 function c11110105.spfilter(c,e,tp)
 	return c:IsSetCard(0x222) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function c11110105.tributefilter(c,e,tp)
+	return c:IsSetCard(0x222) and c:IsCanBeTributed()
+end
 function c11110105.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c11110105.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
@@ -221,13 +244,13 @@ function c11110105.spop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_CHANGE_LEVEL)
-		e1:SetValue(8)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
+		local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetType(EFFECT_TYPE_SINGLE)
+		e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e5:SetCode(EFFECT_CHANGE_LEVEL)
+		e5:SetValue(8)
+		e5:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e5)
 		end
 	end
 end
@@ -248,13 +271,13 @@ end
 function c11110105.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_PIERCE)
-		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e1)
+		local e5=Effect.CreateEffect(c)
+		e5:SetType(EFFECT_TYPE_SINGLE)
+		e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e5:SetCode(EFFECT_PIERCE)
+		e5:SetValue(1)
+		e5:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e5)
 	end
 	e:GetHandler():RegisterFlagEffect(11110105,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
 end
@@ -265,3 +288,21 @@ end
 function c11110105.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(ep,ev*2)
 end
+function c11110105.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckReleaseGroupEx(tp,Card.IsType,1,e:GetHandler(),TYPE_MONSTER) end
+	local g=Duel.SelectReleaseGroupEx(tp,Card.IsType,1,1,e:GetHandler(),TYPE_MONSTER)
+	Duel.Release(g,REASON_COST)
+end
+function c11110105.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTORY)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTORY,g,1,0,0)
+end
+function c11110105.tgop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and tc:IsControler(1-tp) then
+		Duel.Destroy(tc,REASON_EFFECT)
+	end
+end	

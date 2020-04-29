@@ -13,7 +13,7 @@ function c249000939.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c249000939.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_ONFIELD+LOCATION_REMOVED+LOCATION_GRAVE,0,1,nil,0x47) and Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_ONFIELD+LOCATION_REMOVED+LOCATION_GRAVE,0,1,nil,0x47) and (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
 end
 function c249000939.filter(c)
 	return c:IsFaceup() and (Duel.GetCurrentPhase()~=PHASE_DAMAGE or c~=Duel.GetAttacker() or Duel.GetAttackTarget())
