@@ -14,6 +14,7 @@ function cid.initial_effect(c)
 	else if not Card.Type then
     aux.AddXyzProcedure(c,cid.mfilter,2,2,cid.ovfilter,aux.Stringid(id,0),2,cid.xyzop)
 	end
+	end
 	--special summon
 	local selfsummon=Effect.CreateEffect(c)
 	selfsummon:SetType(EFFECT_TYPE_FIELD)
@@ -25,10 +26,11 @@ function cid.initial_effect(c)
 --	c:RegisterEffect(selfsummon)
 	--to grave
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(32302078,0))
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_HANDES+CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,id)
 	e1:SetCost(cid.cost)
@@ -37,9 +39,10 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 	--bounce
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(32302078,0))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+1000)
 	e2:SetCondition(cid.bcon)
@@ -47,7 +50,7 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.bop)
 	c:RegisterEffect(e2)
 end
-end
+
 function cid.xyzcheck(g,tp,xyz)
 	local mg=g:Filter(function(c) return not c:IsHasEffect(511001175) end,nil)
 	return mg:GetClassCount(Card.GetRace)~=0
@@ -145,7 +148,7 @@ function cid.dop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 	
-		if Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,1,nil) and c:IsFaceup() and 
+		if Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,1,nil) and c:IsFaceup() and c:IsRelateToEffect(e) and 
 		Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
 		local frag=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)

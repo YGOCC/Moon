@@ -13,7 +13,7 @@ function cid.initial_effect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,id)
+--	e1:SetCountLimit(1,id)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
@@ -48,8 +48,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		local frag=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)
 		if frag and Duel.RemoveCards then
-		Duel.RemoveCards(frag,nil,REASON_EFFECT+REASON_RULE)
-		Duel.Remove(frag,POS_FACEUP,REASON_EFFECT) 
+		Duel.RemoveCards(frag,nil,REASON_EFFECT+REASON_RULE) 
 			
 	end
 		if frag and not Duel.RemoveCards then 

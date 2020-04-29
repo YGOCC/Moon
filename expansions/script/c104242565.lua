@@ -119,7 +119,7 @@ function cid.fragment(e,c,tp,eg,ep,ev,re,r,rp,chk)
 	else
 					sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN) 
 						Duel.Remove(sc,POS_FACEUP,REASON_COST+REASON_RULE)  
-						end
+						end						
 	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
 		Duel.SpecialSummonComplete()
 end
