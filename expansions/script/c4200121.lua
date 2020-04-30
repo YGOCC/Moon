@@ -31,7 +31,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.cfilter(chkc,e,tp) end
 	if chk==0 then return true end
 	local g=Duel.GetMatchingGroup(aux.AND(cid.cfilter,Card.IsCanBeEffectTarget),tp,LOCATION_MZONE,0,nil,e,tp)
-	if #g>0 and Duel.SelectEffectYesNo(tp,c) then
+	if #g>0 and Duel.SelectEffectYesNo(tp,e:GetHandler()) then
 		e:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
@@ -65,6 +65,7 @@ function cid.arop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RACE)
 	e1:SetValue(Duel.AnnounceRace(tp,1,RACE_ALL))
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 	tc:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_CHANGE_ATTRIBUTE)

@@ -68,11 +68,13 @@ end
 function ref.sscon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	local c=e:GetHandler()
-	return re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()==LOCATION_MZONE
+	local seq=re:GetActivateSequence()
+	return re:IsActivated()
+		and re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()==LOCATION_MZONE
 		and (c:IsLocation(LOCATION_HAND) or c:GetFlagEffect(1)>0)
 		and rc:IsRelateToEffect(re)
 		and rc:IsLocation(LOCATION_MZONE)
-		and rc:GetSequence()~=5 and rc:GetSequence()~=6
+		and seq~=5 and seq~=6
 end
 function ref.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rc=re:GetHandler()
