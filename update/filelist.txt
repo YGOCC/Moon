@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	11be73db1c2f613100a05f16dd16bcfa
+﻿expansions/cards-new.cdb	ff769f5e6b293649253ff5e7cc75c2ab
 expansions/lflist.conf	a463284f52e1155b7dfe06ba0982503f
 expansions/strings.conf	3063cd572b379f873724d24c8fe9083c
 expansions/pics/100000710.jpg	5f925a97b1c60d7d69acb8f229938263
@@ -4077,6 +4077,7 @@ expansions/pics/99998878.jpg	002c6f76b511dfcb21fe35b17cd388a7
 expansions/pics/99998879.jpg	4188aa67a0fb21e6cc884db6e3989a26
 expansions/pics/99998880.jpg	bc307e1c2230bae5d1590b870b691509
 expansions/pics/insite the pot.png	a35fd5df66e26120f6bfea7602ae20e7
+expansions/pics/17000800.jpg	fd5c154800cd930c64363fd53e481d3b
 expansions/pics/field/100000711.JPG	7a10d7f634b8f146ab113305cefd8505
 expansions/pics/field/100000717.png	3b002c3143d1b085f2165aa341fa8bc6
 expansions/pics/field/100000736.jpg	9ce2918e1a53f421780a9b1d7af90ed3
@@ -6279,16 +6280,16 @@ expansions/script/c300011.lua	d87775478f53b517c654afad4b4a8912
 expansions/script/c30002.lua	e145c6c6f10f22536341af08862bc992
 expansions/script/c30003.lua	14c6655da4b9620c78011ae4a0a54582
 expansions/script/c30007.lua	63ed01356e1df5fb1e28ae44addc8ce7
-expansions/script/c30039201.lua	f3ae61c1ed16bc5198e111d9d9025026
-expansions/script/c30039202.lua	9e1d5e023daa55b59bdf388d80c5b260
-expansions/script/c30039203.lua	2f3c491f51770e7001332ada4cb9f674
-expansions/script/c30039204.lua	7775ed231cfc9a51c587424be751f9a0
-expansions/script/c30039205.lua	4f08856b3ae979e2d2e27620f01d57dc
-expansions/script/c30039206.lua	b548e5cb828a4cd1c2f835c7b00eaf9d
-expansions/script/c30039207.lua	87b52e0a8f639c80316ddb4b83977c1f
-expansions/script/c30039208.lua	cac1b71abefb93fa8cf362e90b53ef24
-expansions/script/c30039209.lua	3b4de8e7d177ad146f1da27118f13bac
-expansions/script/c30039210.lua	f20b5b08b32551d765fabb0f65cb42df
+expansions/script/c30039201.lua	634d87736b9cdb5d6852ba11b2da9b86
+expansions/script/c30039202.lua	55b706b8106b345f351dd1f93a1bcc30
+expansions/script/c30039203.lua	e8aed90e7f684bfb39a0cd39755cb207
+expansions/script/c30039204.lua	7baf60f0a2fc9c56f8f6328c44896916
+expansions/script/c30039205.lua	c205b7ae5b1deffda5eb2d48422bdd78
+expansions/script/c30039206.lua	00e12f19e0640d5866d7a9aafcf3b769
+expansions/script/c30039207.lua	0342af136828ce4ed61620a04c6d0349
+expansions/script/c30039208.lua	3d2d1fd3b1b3abaf11e3a431f166be5a
+expansions/script/c30039209.lua	455ecb6c45cbe644d96051ed67f2dace
+expansions/script/c30039210.lua	b3140dcb861279e100273b8b261ab100
 expansions/script/c30201.lua	a14cbe87ae0609461e4c6f92726b4ace
 expansions/script/c30202.lua	d5f4b60004562cd9ac6373ebe78bd383
 expansions/script/c30203.lua	5dbd7905cb03e74cefbbd99cbd8fd648
@@ -6683,7 +6684,7 @@ expansions/script/c33700744.lua	60c36c6566446f33e84a8bf114f94762
 expansions/script/c33700745.lua	e3274c3f23bc0cf84e132629cad7211a
 expansions/script/c33700746.lua	ecec9566b64e18d3876837753fc77d85
 expansions/script/c33700747.lua	42123a1c4b15685fbc3ae23b34f34880
-expansions/script/c33700750.lua	02c3d29cf0f1084d21b55b877a6194a0
+expansions/script/c33700750.lua	6025e67a483b78155cc6178e25e91c2f
 expansions/script/c33700751.lua	76f711a2bd320711e9f567246445effa
 expansions/script/c33700752.lua	a3eab16ef6b1bab0131af93919128c21
 expansions/script/c33700754.lua	e67355708fd0c9fe012e40cc2dfca763
@@ -8017,6 +8018,7 @@ expansions/script/proc_skill.lua	cbaa68f0971f731a81abf7bd080276b2
 expansions/script/proc_spatial.lua	7f557de97a6b4fd701d8d0de6f1b2220
 expansions/script/proc_timeleap.lua	15dd4efd42ea0bbb03635089dc2b7dc1
 expansions/script/proc_toxia.lua	a10d0095f34a3e87ae013bc2f973587c
+expansions/script/c17000800.lua	9f53703575120ad0eb867d3752340b63
 sound/BGM/custom/akarihasarrived.mp3	3833294a82eeb5fb18a46893f95d1b4f
 sound/BGM/custom/Bad Apple.mp3	d311848fb68c40452d5a19b65b35f47d
 sound/BGM/custom/BudCrannMor.mp3	7ea22651d385024cc1b0fcfd9c8470e4
@@ -8089,7 +8091,7 @@ sound/custom/suzaku_summon.wav	047cba54e35639aef7cdf66ec0121e37
 sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
-update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	bbea4970f3e5b4b7874aafda53f9b4c5
+update/version.txt	bdbaf39773bce5fa693023a798b929ee
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	5c26615efb54c737667cfdca7cdc6d2b
+update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
+update/filelist.txt	4d14c4ad3e478f8e5da11998fbbdbe8c

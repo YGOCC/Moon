@@ -30,7 +30,7 @@ end
 
 
 function c30039202.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x12F)
+	return c:IsFaceup() and c:IsSetCard(0x13F)
 end
 function c30039202.spcon(e,c)
 	if c==nil then return true end
