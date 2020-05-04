@@ -38,21 +38,27 @@ function ref.actloop(e,con1,con2,con3)
 	local val=e:GetLabel()
 	local optdesc={}
 	local optbit={}
+	local optct=0
 	if con1 and (bit.band(val,ref.var1)~=ref.var1) then
 		table.insert(optdesc,aux.Stringid(id,0))
 		table.insert(optbit,ref.var1)
+		optct=optct+1
 	end
 	if con2 and (bit.band(val,ref.var2)~=ref.var2) then
 		table.insert(optdesc,aux.Stringid(id,1))
 		table.insert(optbit,ref.var2)
+		optct=optct+1
 	end
 	if con3 and (bit.band(val,ref.var3)~=ref.var3) then
 		table.insert(optdesc,aux.Stringid(id,2))
 		table.insert(optbit,ref.var3)
+		optct=optct+1
 	end
-	local opt=Duel.SelectOption(e:GetHandlerPlayer(),table.unpack(optdesc))
-	val=bit.bor(val,optbit[opt+1])
-	e:SetLabel(val)
+	if optct > 0 then
+		local opt=Duel.SelectOption(e:GetHandlerPlayer(),table.unpack(optdesc))
+		val=bit.bor(val,optbit[opt+1])
+		e:SetLabel(val)
+	end
 end
 function ref.acttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local con1 = Duel.GetCurrentPhase()~=PHASE_DAMAGE and Duel.IsExistingTarget(ref.rmfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil)
@@ -125,7 +131,7 @@ function ref.actop(e,tp,eg,ep,ev,re,r,rp)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
 			if (bit.band(e:GetCategory(),CATEGORY_DISABLE)==CATEGORY_DISABLE) and tc:IsAttribute(Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)) then
 				Duel.NegateRelatedChain(tc,RESET_TURN_SET)

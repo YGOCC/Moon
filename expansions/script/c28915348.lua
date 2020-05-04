@@ -37,7 +37,7 @@ function ref.initial_effect(c)
 
 end
 function ref.matgfilter(g,lc,tp)
-	return g:GetClassCount(Card.GetLinkRace,lc)==1 and g:GetClassCount(Card.GetLinkAttribute,lc)==#g
+	return g:GetClassCount(Card.GetLinkRace,tp)==1 and g:GetClassCount(Card.GetLinkAttribute,lc)==#g
 end
 
 function ref.rmcfilter(c)
@@ -87,9 +87,9 @@ function ref.get_zone(c,lc,tp)
 	zone=bit.bor(zone,column)
 	return zone
 end
-function ref.zoneloop(c,lc,e)
+function ref.zoneloop(c,lc,e,tp)
 	local zone=e:GetLabel()
-	local val=ref.get_zone(c,lc,e:GetHandlerPlayer())
+	local val=ref.get_zone(c,lc,tp)
 	zone=bit.bor(zone,val)
 	e:SetLabel(zone)
 end
@@ -101,7 +101,7 @@ function ref.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(ref.sstfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if 0>=#g then return false end
 	e:SetLabel(0)
-	g:ForEach(ref.zoneloop,c,e)
+	g:ForEach(ref.zoneloop,c,e,tp)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,e:GetLabel())
 	end
@@ -112,7 +112,7 @@ function ref.ssop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(ref.sstfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE) and c:IsRelateToEffect(e) then
 		e:SetLabel(0)
-		g:ForEach(ref.zoneloop,c,e)
+		g:ForEach(ref.zoneloop,c,e,tp)
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP,e:GetLabel())>0 then
 			local e1=Effect.CreateEffect(c)
 			e1:SetDescription(aux.Stringid(id,0))
@@ -122,6 +122,11 @@ function ref.ssop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(1)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			c:RegisterEffect(e1,true)
+			local e2=Effect.CreateEffect(c)
+			e2:SetDescription(aux.Stringid(id,1))
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
+			c:RegisterEffect(e2)
 		end
 	end
 end
