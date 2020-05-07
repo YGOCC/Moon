@@ -51,10 +51,11 @@ function cid.initial_effect(c)
 	e3:SetTarget(cid.revtg)
 	e3:SetOperation(cid.revop)
 	c:RegisterEffect(e3)
-	end
-	function cid.sumcon(e,tp,eg,ep,ev,re,r,rp)
+end
+function cid.sumcon(e,c)
+	local tp=c:GetControler()
 	return Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0
-	end
+end
 	function cid.tlfilter(c,e,mg)
 	return c:IsAttribute(ATTRIBUTE_FIRE) and c:GetLevel()==e:GetHandler():GetFuture()-1
 end
