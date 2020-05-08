@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	9ff67f406efdc19e7b1dd84ddaeb9087
+﻿expansions/cards-new.cdb	4db3946d6cc8d24d43c10f585d869e49
 expansions/lflist.conf	a463284f52e1155b7dfe06ba0982503f
 expansions/strings.conf	fefd4c660fe4b1b829b01a05215d9ae0
 expansions/pics/100000710.jpg	5f925a97b1c60d7d69acb8f229938263
@@ -2023,6 +2023,8 @@ expansions/pics/221812206.jpg	e082a4c333d281cbae1658ee035a3cb9
 expansions/pics/221812208.jpg	a90eb15ce48f97bd3e20dd7176132cd6
 expansions/pics/221812209.jpg	9e77fd3ff21a160d978064372be1524c
 expansions/pics/221812210.jpg	b075c4bf6d4945e7f5c5c59b5cd62941
+expansions/pics/22446600.jpg	12e426f1137eb4579ac5a90a564708fd
+expansions/pics/22446602.jpg	051cac711d4af2f3009b43b05703b48d
 expansions/pics/231862001.jpg	7ea10b068be5a586013dd4bf11318e11
 expansions/pics/231862002.jpg	61c4bb27cd51402ee65132681c303be6
 expansions/pics/231862003.jpg	f91fef2cf75f4285f94fa7722754811b
@@ -6055,6 +6057,8 @@ expansions/script/c221812206.lua	db8de582ddfc3d8a4822333c53714c00
 expansions/script/c221812208.lua	ee635f3a4addc10e5daad364fdb2a8b6
 expansions/script/c221812209.lua	8d4644fc898a56dc69198c4133e89cfa
 expansions/script/c221812210.lua	bdc16bbf9b3699e09cca3c839dccbd00
+expansions/script/c22446600.lua	acd2235a5d6ac3ee6184669efefae8a4
+expansions/script/c22446602.lua	af7bda9d1cb14501636b6e75924b3889
 expansions/script/c231862001.lua	e3a5804a23ccdeec2b0594773aa6ea26
 expansions/script/c231862002.lua	cc6dc5a655cf582a07ad6d41f63db87c
 expansions/script/c231862003.lua	fba1dab58b0056e7d730762b397ebbba
@@ -8189,6 +8193,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	009c0e8c668fb84018604b7c14abfcb6
+update/filelist.txt	e4f5ad6d8e45f43132a7c6bb308d1255
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	dec6674f9d88db7e9fc0d829cb5c676e
+update/version.txt	b88758aeac05987795980de1365b34b9
