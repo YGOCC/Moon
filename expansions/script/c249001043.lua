@@ -1,115 +1,149 @@
---Armor of Justice Chain Mistress
+--Number S90: Neo Galaxy-Eyes Photon Lord
 function c249001043.initial_effect(c)
-	aux.EnableDualAttribute(c)
-	c:EnableCounterPermit(0x26)
-	--special summon (to hand)
+	--xyz summon
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),8,3,c249001043.ovfilter,aux.Stringid(51543904,0),3,c249001043.xyzop)
+	c:EnableReviveLimit()
+	--negate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(67225377,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCode(EVENT_TO_HAND)
-	e1:SetCountLimit(1,249001043)
-	e1:SetCondition(c249001043.spcon)
-	e1:SetCost(c249001043.spcost1)
-	e1:SetTarget(c249001043.sptg1)
-	e1:SetOperation(c249001043.spop1)
+	e1:SetDescription(aux.Stringid(39272762,0))
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c249001043.negcon)
+	e1:SetOperation(c249001043.negop)
 	c:RegisterEffect(e1)
-	--summon success
+	--attack up
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(7200041,0))
-	e2:SetCategory(CATEGORY_COUNTER)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetCondition(aux.IsDualState)
-	e2:SetTarget(c249001043.addct)
-	e2:SetOperation(c249001043.addc)
+	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetDescription(aux.Stringid(39272762,1))
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCountLimit(1)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCost(c249001043.atcost)
+	e2:SetTarget(c249001043.attg)
+	e2:SetOperation(c249001043.atop)
 	c:RegisterEffect(e2)
-	--destroy replace
+	--summon ngepd
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetCode(EFFECT_DESTROY_REPLACE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetTarget(c249001043.reptg)
+	e3:SetDescription(aux.Stringid(74892653,2))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_LEAVE_FIELD)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_DELAY)
+	e3:SetCondition(c249001043.spcon)
+	e3:SetTarget(c249001043.sptg)
+	e3:SetOperation(c249001043.spop)
 	c:RegisterEffect(e3)
-	--position
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(41147577,0))
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
-	e4:SetCountLimit(1)
-	e4:SetCondition(aux.IsDualState)
-	e4:SetTarget(c249001043.postg)
-	e4:SetOperation(c249001043.posop)
-	c:RegisterEffect(e4)
 end
-function c249001043.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not (r==REASON_RULE)
+c249001043.xyz_number=90
+function c249001043.cfilter(c)
+	return (c:IsSetCard(0x55) or c:IsSetCard(0x7B)) and c:IsDiscardable()
 end
-function c249001043.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not e:GetHandler():IsPublic() end
+function c249001043.ovfilter(c)
+	return c:IsFaceup() and c:IsCode(8165596)
 end
-function c249001043.spfilter1(c,e,tp)
-	return c:IsLevelBelow(4) and c:IsSetCard(0x205) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c249001043.xyzop(e,tp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c249001043.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,c249001043.cfilter,1,1,REASON_COST+REASON_DISCARD)
 end
-function c249001043.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c249001043.spfilter1,tp,LOCATION_HAND,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+function c249001043.negcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,93717133)
 end
-function c249001043.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
+function c249001043.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
-end
-function c249001043.spop1(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c249001043.spfilter1,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	end
-end
-function c249001043.addct(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x26)
-end
-function c249001043.addc(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		e:GetHandler():AddCounter(0x26,2)
-	end
-end
-function c249001043.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return aux.IsDualState(e) and (e:GetHandler():IsCanRemoveCounter(tp,0x26,1,REASON_COST) or e:GetHandler():IsAbleToHand()) and not e:GetHandler():IsReason(REASON_REPLACE) end
-	if e:GetHandler():IsCanRemoveCounter(tp,0x26,1,REASON_COST) then e:GetHandler():RemoveCounter(tp,0x26,1,REASON_EFFECT) else Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT) end
-	return true
-end
-function c249001043.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsCanChangePosition() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsCanChangePosition,tp,0,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,Card.IsCanChangePosition,tp,0,LOCATION_MZONE,1,1,nil)
-end
-function c249001043.posop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
-		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-		local e1=Effect.CreateEffect(e:GetHandler())
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+	local tc=g:GetFirst()
+	while tc do
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
+		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
-		e2:SetValue(RESET_TURN_SET)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
+		if tc:IsType(TYPE_TRAPMONSTER) then
+			local e3=Effect.CreateEffect(c)
+			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+			e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e3)
+		end
+		tc=g:GetNext()
 	end
+end
+function c249001043.atcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+end
+function c249001043.atfilter(c)
+	return c:IsPreviousLocation(LOCATION_EXTRA) and c:IsSummonType(SUMMON_TYPE_SPECIAL)
+end
+function c249001043.attg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetOverlayCount(tp,0,1)~=0 or Duel.GetMatchingGroupCount(c249001043.atfilter,tp,0,LOCATION_MZONE,nil)>0 end
+end
+function c249001043.atop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetOverlayGroup(tp,0,1)
+	if g:GetCount()==0 then return end
+	Duel.SendtoGrave(g,REASON_EFFECT)
+	local c=e:GetHandler()
+	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
+	local ct=Duel.GetMatchingGroupCount(c249001043.atfilter,tp,0,LOCATION_MZONE,nil)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(ct*500)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_DISABLE+RESET_PHASE+PHASE_END)
+	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetCode(EFFECT_EXTRA_ATTACK)
+	e2:SetValue(ct)
+	e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+	c:RegisterEffect(e2)
+end
+function c249001043.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return (c:IsReason(REASON_BATTLE) or (c:GetReasonPlayer()==1-tp and c:IsReason(REASON_EFFECT)))
+		and c:IsPreviousPosition(POS_FACEUP) and c:GetOverlayGroup():IsExists(Card.IsCode,1,nil,93717133)
+end
+function c249001043.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return (c:IsReason(REASON_BATTLE) or (c:GetReasonPlayer()==1-tp and c:IsReason(REASON_EFFECT)))
+		and c:IsPreviousPosition(POS_FACEUP) and c:GetOverlayGroup():IsExists(Card.IsCode,1,nil,93717133)
+end
+function c249001043.filter(c,e,tp)
+	return c:IsCode(39272762) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
+end
+function c249001043.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_SMATERIAL)
+		and Duel.IsExistingMatchingCard(c249001043.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+end
+function c249001043.spop(e,tp,eg,ep,ev,re,r,rp)
+	if not aux.MustMaterialCheck(nil,tp,EFFECT_MUST_BE_XMATERIAL) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c249001043.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
+	if tc then
+		local e1=Effect.CreateEffect(tc)
+		e1:SetDescription(aux.Stringid(39272762,0))
+		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+		e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+		e1:SetCondition(c249001043.negcon2)
+		e1:SetOperation(c249001043.negop)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		Duel.SpecialSummon(tc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
+		tc:CompleteProcedure()
+		local tc2=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
+		if tc2 then
+			Duel.Overlay(tc,tc2)
+		end
+	end
+end
+function c249001043.negcon2(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end

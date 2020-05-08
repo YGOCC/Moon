@@ -101,7 +101,7 @@ end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.Remove(g,REASON_EFFECT)
+		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
 end
 	function s.atktg3(e,tp,eg,ep,ev,re,r,rp,chk)

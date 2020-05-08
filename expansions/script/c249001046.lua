@@ -1,108 +1,107 @@
---Armor of Justice Silver Raptor
+--Heroic Rebirth
 function c249001046.initial_effect(c)
-	aux.EnableDualAttribute(c)
-	c:EnableCounterPermit(0x26)
-	--special summon (to hand)
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(67225377,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCode(EVENT_TO_HAND)
-	e1:SetCountLimit(1,249001046)
-	e1:SetCondition(c249001046.spcon)
-	e1:SetCost(c249001046.spcost1)
-	e1:SetTarget(c249001046.sptg1)
-	e1:SetOperation(c249001046.spop1)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetTarget(c249001046.target)
+	e1:SetOperation(c249001046.operation)
 	c:RegisterEffect(e1)
-	--summon success
+	--Destroy
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(7200041,0))
-	e2:SetCategory(CATEGORY_COUNTER)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetCondition(aux.IsDualState)
-	e2:SetTarget(c249001046.addct)
-	e2:SetOperation(c249001046.addc)
+	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e2:SetCode(EVENT_LEAVE_FIELD)
+	e2:SetOperation(c249001046.desop)
 	c:RegisterEffect(e2)
-	--destroy replace
+	--draw
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetCode(EFFECT_DESTROY_REPLACE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetTarget(c249001046.reptg)
+	e3:SetDescription(1108)
+	e3:SetCategory(CATEGORY_DRAW)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetCondition(c249001046.drcon)
+	e3:SetTarget(c249001046.drtg)
+	e3:SetOperation(c249001046.drop)
 	c:RegisterEffect(e3)
-	--negate
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(88619463,0))
-	e5:SetCategory(CATEGORY_NEGATE)
-	e5:SetType(EFFECT_TYPE_QUICK_O)
-	e5:SetCode(EVENT_CHAINING)
-	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetCountLimit(1)
-	e5:SetCondition(c249001046.discon)
-	e5:SetTarget(c249001046.distg)
-	e5:SetOperation(c249001046.disop)
-	c:RegisterEffect(e5)
+	--remove overlay replace
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(13032689,0))
+	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_OVERLAY_REMOVE_REPLACE)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCondition(c249001046.rcon)
+	e4:SetOperation(c249001046.rop)
+	c:RegisterEffect(e4)
 end
-function c249001046.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not (r==REASON_RULE)
+function c249001046.filter(c,e,tp)
+	return c:IsSetCard(0x6F) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c249001046.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not e:GetHandler():IsPublic() end
-end
-function c249001046.spfilter1(c,e,tp)
-	return c:IsLevelBelow(5) and c:IsSetCard(0x205) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function c249001046.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c249001046.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c249001046.filter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c249001046.spfilter1,tp,LOCATION_HAND,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
-end
-function c249001046.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
-end
-function c249001046.spop1(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		and Duel.IsExistingTarget(c249001046.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c249001046.spfilter1,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	local g=Duel.SelectTarget(tp,c249001046.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
+end
+function c249001046.eqlimit(e,c)
+	return e:GetOwner()==c
+end
+function c249001046.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
+		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
+		Duel.Equip(tp,c,tc)
+		--Add Equip limit
+		local e1=Effect.CreateEffect(tc)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EQUIP_LIMIT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e1:SetValue(c249001046.eqlimit)
+		c:RegisterEffect(e1)
+		if tc:IsType(TYPE_XYZ) then
+			--ATK
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_UPDATE_ATTACK)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+			e2:SetValue(1000)
+			tc:RegisterEffect(e2)
+		end
 	end
 end
-function c249001046.addct(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x26)
-end
-function c249001046.addc(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		e:GetHandler():AddCounter(0x26,2)
+function c249001046.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=c:GetFirstCardTarget()
+	if c:IsReason(REASON_DESTROY) and tc and tc:IsLocation(LOCATION_MZONE) then
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function c249001046.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return aux.IsDualState(e) and (e:GetHandler():IsCanRemoveCounter(tp,0x26,1,REASON_COST) or e:GetHandler():IsAbleToHand()) and not e:GetHandler():IsReason(REASON_REPLACE) end
-	if e:GetHandler():IsCanRemoveCounter(tp,0x26,1,REASON_COST) then e:GetHandler():RemoveCounter(tp,0x26,1,REASON_EFFECT) else Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT) end
-	return true
+function c249001046.drcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=c:GetPreviousEquipTarget()
+	return c:IsReason(REASON_LOST_TARGET) and c:IsReason(REASON_DESTROY) and tc:IsLocation(LOCATION_OVERLAY)
 end
-function c249001046.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and aux.IsDualState(e)
-		and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP) and Duel.IsChainNegatable(ev)
+function c249001046.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c249001046.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
-	end
+function c249001046.drop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
-function c249001046.disop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsFacedown() or not e:GetHandler():IsRelateToEffect(e) then return end
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(eg,REASON_EFFECT)
-	end
+function c249001046.rcon(e,tp,eg,ep,ev,re,r,rp)
+	return bit.band(r,REASON_COST)~=0 and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_XYZ)
+		and ep==e:GetOwnerPlayer() and e:GetHandler():GetEquipTarget()==re:GetHandler() and re:GetHandler():GetOverlayCount()>=ev-1
+end
+function c249001046.rop(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end

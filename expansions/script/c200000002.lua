@@ -33,9 +33,9 @@ function cid.initial_effect(c)
 end
 --If grave by not battle or effects; shuffle card to deck
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-    return bit.band(e:GetHandler():GetPreviousLocation(),LOCATION_ONFIELD)>0
-        and not (bit.band(r,REASON_BATTLE+REASON_DESTROY)==REASON_BATTLE+REASON_DESTROY) 
-        and not ((bit.band(r,REASON_EFFECT)==REASON_EFFECT) and rp==tp)
+	return bit.band(e:GetHandler():GetPreviousLocation(),LOCATION_ONFIELD)>0
+		and not (bit.band(r,REASON_BATTLE+REASON_DESTROY)==REASON_BATTLE+REASON_DESTROY) 
+		and not ((bit.band(r,REASON_EFFECT)==REASON_EFFECT) and rp==tp)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE)  end
@@ -71,7 +71,7 @@ function cid.spfilter(c)
 end
 function cid.hspcon(e,c)
 	if c==nil then return true end
-		return Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_MZONE+LOCATION_SZONE,0,1,e:GetHandler())
+		return Duel.IsExistingMatchingCard(cid.spfilter,c:GetControler(),LOCATION_MZONE+LOCATION_SZONE,0,1,e:GetHandler())
 end
 function cid.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>=0 then

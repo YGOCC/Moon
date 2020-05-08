@@ -69,8 +69,11 @@ end
 end
 	function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-		if Duel.Destroy(eg,REASON_EFFECT) and re:GetHandler():IsRelateToEffect(re) and e:GetLabelObject():IsSetCard(0xb23) then
-		Duel.NegateActivation(ev,REASON_EFFECT)
+		if not e:GetLabelObject():IsSetCard(0xb23) then return end
+		if Duel.NegateActivation(ev) and e:GetLabelObject():IsSetCard(0xb23) then
+		Duel.Destroy(eg,REASON_EFFECT)
+	else
+		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
 	function s.texfilter(c)

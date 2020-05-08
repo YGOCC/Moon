@@ -69,7 +69,7 @@ function ref.sscon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	local c=e:GetHandler()
 	local seq=re:GetActivateSequence()
-	return re:IsActivated()
+	return Duel.GetTurnPlayer()==tp and re:IsActivated()
 		and re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()==LOCATION_MZONE
 		and (c:IsLocation(LOCATION_HAND) or c:GetFlagEffect(1)>0)
 		and rc:IsRelateToEffect(re)

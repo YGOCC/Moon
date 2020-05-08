@@ -1,108 +1,92 @@
---Armor of Justice Golden Eagle
+--Heroic Champion Masamune
 function c249001047.initial_effect(c)
-	aux.EnableDualAttribute(c)
-	c:EnableCounterPermit(0x26)
-	--special summon (to hand)
+	--xyz summon
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),4,3)
+	c:EnableReviveLimit()
+	c:SetSPSummonOnce(249001047)
+	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(67225377,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCode(EVENT_TO_HAND)
-	e1:SetCountLimit(1,249001047)
-	e1:SetCondition(c249001047.spcon)
-	e1:SetCost(c249001047.spcost1)
-	e1:SetTarget(c249001047.sptg1)
-	e1:SetOperation(c249001047.spop1)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetTarget(c249001047.sptg)
+	e1:SetOperation(c249001047.spop)
 	c:RegisterEffect(e1)
-	--summon success
+	--immune to spells/traps
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(7200041,0))
-	e2:SetCategory(CATEGORY_COUNTER)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetCondition(aux.IsDualState)
-	e2:SetTarget(c249001047.addct)
-	e2:SetOperation(c249001047.addc)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EFFECT_IMMUNE_EFFECT)
+	e2:SetCondition(c249001047.imcon)
+	e2:SetValue(c249001047.efilter)
 	c:RegisterEffect(e2)
-	--destroy replace
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetCode(EFFECT_DESTROY_REPLACE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetTarget(c249001047.reptg)
-	c:RegisterEffect(e3)
-	--negate
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(88619463,0))
-	e5:SetCategory(CATEGORY_NEGATE)
-	e5:SetType(EFFECT_TYPE_QUICK_O)
-	e5:SetCode(EVENT_CHAINING)
-	e5:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetCountLimit(1)
-	e5:SetCondition(c249001047.discon)
-	e5:SetTarget(c249001047.distg)
-	e5:SetOperation(c249001047.disop)
-	c:RegisterEffect(e5)
+	--destroy
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(56921677,0))
+	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_DELAY)
+	e4:SetCode(EVENT_BATTLED)
+	e4:SetTarget(c249001047.destg)
+	e4:SetOperation(c249001047.desop)
+	c:RegisterEffect(e4)
 end
-function c249001047.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return not (r==REASON_RULE)
+function c249001047.filter(c,e,tp)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x6F) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c249001047.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not e:GetHandler():IsPublic() end
-end
-function c249001047.spfilter1(c,e,tp)
-	return c:IsLevelBelow(6) and c:IsSetCard(0x205) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
-function c249001047.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c249001047.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c249001047.filter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c249001047.spfilter1,tp,LOCATION_HAND,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
-end
-function c249001047.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
-end
-function c249001047.spop1(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		and Duel.IsExistingTarget(c249001047.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c249001047.spfilter1,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c249001047.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function c249001047.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		local g1=c:GetOverlayGroup()
+		if tc:IsType(TYPE_XYZ) and g1:GetCount()>0 then
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(47660516,0))
+			local mg2=g1:Select(tp,1,1,nil)
+			local oc=mg2:GetFirst()
+			Duel.Overlay(tc,mg2)
+			Duel.RaiseSingleEvent(oc,EVENT_DETACH_MATERIAL,e,0,0,0,0)
+		end
+	end
+end
+function c249001047.imcon(e)
+	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0x6F)
+end
+function c249001047.efilter(e,te)
+	return (te:IsActiveType(TYPE_SPELL) or te:IsActiveType(TYPE_TRAP)) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
+end
+function c249001047.desfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x6F)
+end
+function c249001047.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+local c=e:GetHandler()
+	if chk==0 then
+		local ct=Duel.GetMatchingGroupCount(c249001047.descfilter,tp,LOCATION_MZONE,0,nil)
+		e:SetLabel(ct)
+		return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_ONFIELD,1,nil)
+	end
+	local ct=e:GetLabel()
+	local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_ONFIELD,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,ct,0,0)
+end
+function c249001047.desop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=Duel.GetMatchingGroupCount(c249001047.descfilter,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_ONFIELD,nil)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	end
-end
-function c249001047.addct(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x26)
-end
-function c249001047.addc(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		e:GetHandler():AddCounter(0x26,2)
-	end
-end
-function c249001047.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return aux.IsDualState(e) and (e:GetHandler():IsCanRemoveCounter(tp,0x26,1,REASON_COST) or e:GetHandler():IsAbleToHand()) and not e:GetHandler():IsReason(REASON_REPLACE) end
-	if e:GetHandler():IsCanRemoveCounter(tp,0x26,1,REASON_COST) then e:GetHandler():RemoveCounter(tp,0x26,1,REASON_EFFECT) else Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT) end
-	return true
-end
-function c249001047.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and aux.IsDualState(e)
-		and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and Duel.IsChainNegatable(ev)
-end
-function c249001047.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
-	end
-end
-function c249001047.disop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsFacedown() or not e:GetHandler():IsRelateToEffect(e) then return end
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(eg,REASON_EFFECT)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local sg=g:Select(tp,1,ct,nil)
+		Duel.HintSelection(sg)
+		Duel.Destroy(sg,REASON_EFFECT)
 	end
 end

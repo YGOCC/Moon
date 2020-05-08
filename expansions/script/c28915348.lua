@@ -17,6 +17,7 @@ function ref.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(TIMING_MAIN_END+TIMING_END_PHASE)
+	e1:SetLabel(0)
 	e1:SetCost(ref.rmcost)
 	e1:SetTarget(ref.rmtg)
 	e1:SetOperation(ref.rmop)
@@ -48,17 +49,18 @@ function ref.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c:IsAbleToRemoveAsCost()
 		--and Duel.IsExistingMatchingCard(ref.rmcfilter,tp,LOCATION_GRAVE,0,1,nil)
 	end
-	e:SetLabel(c:GetAttack())
+	--e:SetLabel(c:GetAttack())
 	--Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	--local g=Duel.SelectMatchingCard(tp,ref.rmcfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	--g:AddCard(c)
 	Duel.Remove(c,POS_FACEUP,REASON_COST)
 end
 function ref.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
+	--local c=e:GetHandler()
 	if chkc then return ref.rmcfilter(chkc) and chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) end
 	if chk==0 then return Duel.IsExistingTarget(ref.rmfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	local val=e:GetLabel()/2
+	--if e:GetLabel()==0 then e:SetLabel(e:GetHandler():GetAttack()) end
+	local val=(e:GetHandler():GetPreviousAttackOnField())/2
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,ref.rmfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.SetTargetParam(val)
@@ -74,6 +76,7 @@ function ref.rmop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Recover(p,val,REASON_EFFECT)
 		Duel.GainRP(p,val,REASON_EFFECT)
 	end
+	e:SetLabel(0)
 end
 
 function ref.get_zone(c,lc,tp)
