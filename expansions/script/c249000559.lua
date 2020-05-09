@@ -24,7 +24,7 @@ function c249000559.initial_effect(c)
 	end
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunFun(c,aux.FilterBoolFunction(Card.IsType,TYPE_MONSTER),aux.FilterBoolFunction(Card.IsFusionSetCard,0x1CE),2,true)
+	aux.AddFusionProcFunFunRep(c,aux.TRUE,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1CD),2,2,true)
 	aux.AddContactFusionProcedure(c,Card.IsReleasable,LOCATION_MZONE,0,Duel.Release,REASON_COST+REASON_MATERIAL)
 	--negate
 	local e1=Effect.CreateEffect(c)
@@ -98,56 +98,8 @@ function c249000559.disop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
-function c249000559.cfilter(c)
-	return c:IsType(TYPE_MONSTER)
-		and c:IsCanBeFusionMaterial() and c:IsReleasable()
-end
-function c249000559.fcheck(c,sg)
-	return c:IsType(TYPE_MONSTER) and sg:IsExists(c249000559.fcheck2,2,c)
-end
-function c249000559.fcheck2(c)
-	return c:IsFusionSetCard(0x1CD) and c:IsType(TYPE_MONSTER)
-end
-function c249000559.fselect(c,tp,mg,sg)
-	sg:AddCard(c)
-	local res=false
-	if sg:GetCount()<3 then
-		res=mg:IsExists(c249000559.fselect,1,sg,tp,mg,sg)
-	elseif Duel.GetLocationCountFromEx(tp,tp,sg)>0 then
-		res=sg:IsExists(c249000559.fcheck,1,nil,sg)
-	end
-	sg:RemoveCard(c)
-	return res
-end
-function c249000559.sprcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local mg=Duel.GetMatchingGroup(c249000559.cfilter,tp,LOCATION_ONFIELD,0,nil)
-	local sg=Group.CreateGroup()
-	return mg:IsExists(c249000559.fselect,1,nil,tp,mg,sg)
-end
-function c249000559.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	local mg=Duel.GetMatchingGroup(c249000559.cfilter,tp,LOCATION_ONFIELD,0,nil)
-	local sg=Group.CreateGroup()
-	while sg:GetCount()<3 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local g=mg:FilterSelect(tp,c249000559.fselect,1,1,sg,tp,mg,sg)
-		sg:Merge(g)
-	end
-	local cg=sg:Filter(Card.IsFacedown,nil)
-	if cg:GetCount()>0 then
-		Duel.ConfirmCards(1-tp,cg)
-	end
-	Duel.Release(sg,REASON_COST)
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0xFF,0xFF,nil)
-	local tc=g:GetFirst()
-	while tc do
-		local temp=Duel.CreateToken(tp,tc:GetOriginalCode())
-		local code=temp:GetOriginalCode()
-		local cardstruct=_G["c" .. code]
-		if cardstruct.initial_effect then cardstruct.initial_effect(temp) end
-		tc=g:GetNext()
-	end
+function c249000559.splimit(e,se,sp,st)
+	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c249000559.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
@@ -272,7 +224,4 @@ function c249000559.tokenop(e,tp,eg,ep,ev,re,r,rp)
 		if cardstruct.initial_effect then cardstruct.initial_effect(temp) end
 		tc=g:GetNext()
 	end
-end
-function c249000559.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
