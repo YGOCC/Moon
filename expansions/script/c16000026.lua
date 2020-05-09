@@ -171,7 +171,7 @@ function c16000026.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c16000026.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) and not c:IsFaceup() then return end
 	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) then
 		Duel.SendtoGrave(c,REASON_RULE)
@@ -191,12 +191,15 @@ function c16000026.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function c16000026.spop2(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+if c:IsFaceup() then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c16000026.xfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+end
 end
 function c16000026.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
@@ -227,6 +230,7 @@ function c16000026.ftarget(e,c)
 end
 function c16000026.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+if c:IsFaceup() then
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_EXTRA_ATTACK)
@@ -245,6 +249,7 @@ function c16000026.drop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetOperation(c16000026.desop)
 	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
 	c:RegisterEffect(e2)
+end
 end
 function c16000026.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

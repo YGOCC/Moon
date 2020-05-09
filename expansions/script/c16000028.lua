@@ -162,7 +162,7 @@ function c16000028.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c16000028.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) and c:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
@@ -192,6 +192,8 @@ function c16000028.datarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,ATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c16000028.dab(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+if c:IsFaceup() then
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	Duel.ConfirmDecktop(p,3)
 	local g=Duel.GetDecktopGroup(p,3)
@@ -205,4 +207,5 @@ function c16000028.dab(e,tp,eg,ep,ev,re,r,rp)
 		end
 		Duel.ShuffleDeck(p)
 	end
+end
 end

@@ -136,6 +136,8 @@ function c16000044.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function c16000044.spop2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+if c:IsFaceup() then
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local tg=Duel.GetMatchingGroup(c16000044.spfilter,tp,LOCATION_REMOVED,0,nil,e,tp)
 	if ft<=0 or tg:GetCount()==0 then return end
@@ -164,5 +166,5 @@ function c16000044.spop2(e,tp,eg,ep,ev,re,r,rp)
 		tc=g:GetNext()
 	end
 	Duel.SpecialSummonComplete()
-	
+	end
 end

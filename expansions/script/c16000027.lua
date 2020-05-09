@@ -51,12 +51,12 @@ function c16000027.initial_effect(c)
 	c:RegisterEffect(e5)
 	
 	   local e6=Effect.CreateEffect(c)
-    e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-    e6:SetRange(LOCATION_SZONE)
-    e6:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-    e6:SetCondition(c16000027.rdcon)
-    e6:SetOperation(c16000027.rdop)
-    c:RegisterEffect(e6)
+	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e6:SetRange(LOCATION_SZONE)
+	e6:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e6:SetCondition(c16000027.rdcon)
+	e6:SetOperation(c16000027.rdop)
+	c:RegisterEffect(e6)
 	
 	--eqlimit
 	local e7=Effect.CreateEffect(c)
@@ -133,7 +133,7 @@ function c16000027.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c16000027.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) and not c:IsFaceup() then return end
 	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) then
 		Duel.SendtoGrave(c,REASON_RULE)
@@ -151,11 +151,11 @@ function c16000027.spconx(e,c)
 		Duel.IsExistingMatchingCard(c16000027.waifufilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function c16000027.rdcon(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local eqc=c:GetEquipTarget()
-    return ep~=tp and eqc==Duel.GetAttacker() and Duel.GetAttackTarget()==nil
-        and eqc:GetEffectCount(EFFECT_DIRECT_ATTACK)<2 and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
+	local c=e:GetHandler()
+	local eqc=c:GetEquipTarget()
+	return ep~=tp and eqc==Duel.GetAttacker() and Duel.GetAttackTarget()==nil
+		and eqc:GetEffectCount(EFFECT_DIRECT_ATTACK)<2 and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 end
 function c16000027.rdop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.ChangeBattleDamage(ep,ev/2)
+	Duel.ChangeBattleDamage(ep,ev/2)
 end

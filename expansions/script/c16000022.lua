@@ -146,7 +146,7 @@ function c16000022.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c16000022.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) and not c:IsFaceup()  then return end
 	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) then
 		Duel.SendtoGrave(c,REASON_RULE)
@@ -170,8 +170,9 @@ function c16000022.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c16000022.spop2(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc:IsRelateToEffect(e) and c:IsFaceup()  then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

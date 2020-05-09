@@ -131,7 +131,7 @@ function c16000030.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c16000030.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) and not c:IsFaceup() then return end
 	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) then
 		Duel.SendtoGrave(c,REASON_RULE)
@@ -155,12 +155,15 @@ function c16000030.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c16000030.spop2(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+if c:IsFaceup() then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c16000030.xfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+end
 end
 function c16000030.spconxxx(e,c)
 	if c==nil then return true end
