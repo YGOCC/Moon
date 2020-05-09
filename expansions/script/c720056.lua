@@ -53,7 +53,7 @@ end
 	Duel.ConfirmDecktop(tp,1)
 	local g=Duel.GetDecktopGroup(tp,1)
 	local tc=g:GetFirst()
-		if tc:IsType(TYPE_SPELL) and tc:IsType(TYPE_FIELD+TYPE_CONTINUOUS) and g2:GetCount()>0 then
+		if tc:IsType(TYPE_SPELL) and tc:IsType(TYPE_FIELD+TYPE_CONTINUOUS) then
 		local g2=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
 		Duel.HintSelection(g2)
 		Duel.Destroy(g2,REASON_EFFECT)
