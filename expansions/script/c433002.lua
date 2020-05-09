@@ -69,7 +69,7 @@ end
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_TIMELEAP)
 end
 	function cid.buffop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(function (c) return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER) end,tp,LOCATION_MZONE,0,nil,)
+	local g=Duel.GetMatchingGroup(function (c) return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WATER) end,tp,LOCATION_MZONE,0,nil)
 	local tc=g:GetFirst()
 	while tc do
 		local e1=Effect.CreateEffect(e:GetHandler())
