@@ -33,8 +33,7 @@ function cid.initial_effect(c)
 end
 --If grave by not battle or effects; shuffle card to deck
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(e:GetHandler():GetPreviousLocation(),LOCATION_ONFIELD)>0
-		and not (bit.band(r,REASON_BATTLE+REASON_DESTROY)==REASON_BATTLE+REASON_DESTROY) 
+	return not (bit.band(r,REASON_BATTLE+REASON_DESTROY)==REASON_BATTLE+REASON_DESTROY) 
 		and not ((bit.band(r,REASON_EFFECT)==REASON_EFFECT) and rp==tp)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
