@@ -2,34 +2,46 @@
 --フェイツ・デーンティー・ダイヤガル
 local cid,id=GetID()
 function cid.initial_effect(c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_CHAIN_SOLVING)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetOperation(cid.activate)
-	c:RegisterEffect(e1)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_CHAINING)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetOperation(cid.chainop)
-	c:RegisterEffect(e1)
+	c:EnableReviveLimit()
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DESTROY)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetTarget(cid.target)
+	e2:SetOperation(cid.activate)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetRange(LOCATION_HAND)
+	e3:SetCondition(function(e,tp) return not Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil) end)
+	e3:SetCountLimit(1,id)
+	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e4:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0xf7a))
+	e4:SetValue(1)
+	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	c:RegisterEffect(e5)
 end
-function cid.tfilter(c)
-	return (c:IsFaceup() or not c:IsLocation(LOCATION_ONFIELD+LOCATION_REMOVED)) and c:IsSetCard(0xf7a)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.cfilter(chkc) end
+	local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
+	if chk==0 then return Duel.IsExistingTarget(cid.cfilter,tp,LOCATION_GRAVE,0,1,nil)
+		and #g>0 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,Duel.SelectTarget(tp,cid.cfilter,tp,LOCATION_GRAVE,0,1,1,nil),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return end
-	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if not g or not g:IsExists(cid.tfilter,1,e:GetHandler()) or not g:IsExists(Card.IsAbleToHand,1,nil)
-		or not Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then return end
-	Duel.Hint(HINT_CARD,0,id)
-	if Duel.SendtoHand(g,nil,REASON_EFFECT)==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
-	if #g>0 then
-		Duel.HintSelection(g)
-		if Duel.SendtoDeck(g,nil,2,REASON_EFFECT)==0 then return end
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local tg=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if #tg>0 then
@@ -40,7 +52,4 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.cfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xf7a) and c:IsAbleToDeck() and not c:IsCode(id)
-end
-function cid.chainop(e,tp,eg,ep,ev,re,r,rp)
-	if re:GetHandler():IsSetCard(0xf7a) then Duel.SetChainLimit(function(e,rp,tp) return tp==rp end) end
 end

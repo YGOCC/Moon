@@ -12,16 +12,19 @@ end
 function c249000636.cfilter(c)
 	return c:IsFaceup() and c:IsCode(249000634)
 end
+function c249000636.spfilter(c,e,tp)
+	return c:IsCode(249000634) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
 function c249000636.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return (Duel.IsExistingMatchingCard(c249000636.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 		and Duel.IsExistingTarget(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()))
-		or Duel.CheckReleaseGroup(tp,nil,1,nil) end
+		or (Duel.CheckReleaseGroup(tp,nil,1,nil) and Duel.IsExistingMatchingCard(c249000636.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp)) end
 	local option
-	if Duel.CheckReleaseGroup(tp,nil,1,nil) then option=0 end
+	if Duel.CheckReleaseGroup(tp,nil,1,nil) and Duel.IsExistingMatchingCard(c249000636.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp) then option=0 end
 	if (Duel.IsExistingMatchingCard(c249000636.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())) then option=1 end
-	if Duel.CheckReleaseGroup(tp,nil,1,nil) and (Duel.IsExistingMatchingCard(c249000636.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
-		and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())) then
+	if Duel.CheckReleaseGroup(tp,nil,1,nil) and Duel.IsExistingMatchingCard(c249000636.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp) and Duel.IsExistingMatchingCard(c249000636.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) then
 		option=Duel.SelectOption(tp,500,503)
 	end
 	if option==0 then
@@ -31,13 +34,10 @@ function c249000636.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if option==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-		local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+		local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,2,e:GetHandler())
 		e:SetLabel(1)
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 	end
-end
-function c249000636.spfilter(c,e,tp)
-	return c:IsCode(249000634) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c249000636.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then

@@ -9,6 +9,7 @@ function c249001043.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(c249001043.negcon)
+	e1:SetTarget(c249001043.negtg)
 	e1:SetOperation(c249001043.negop)
 	c:RegisterEffect(e1)
 	--attack up
@@ -47,6 +48,15 @@ function c249001043.xyzop(e,tp,chk)
 end
 function c249001043.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,93717133)
+end
+function c249001043.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local g=Duel.GetMatchingGroup(aux.disfilter1,tp,0,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,g:GetCount(),0,0)
+	Duel.SetChainLimit(c249001043.chainlm)
+end
+function c249001043.chainlm(e,rp,tp)
+	return not e:GetHandler():IsType(TYPE_MONSTER)
 end
 function c249001043.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -126,6 +136,7 @@ function c249001043.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 		e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 		e1:SetCondition(c249001043.negcon2)
+		e1:SetTarget(c249001043.negtg)
 		e1:SetOperation(c249001043.negop)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)

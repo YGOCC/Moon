@@ -9,7 +9,7 @@ function c249000635.initial_effect(c)
 	c:RegisterEffect(e1)
 	--summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetCondition(c249000635.condition)
