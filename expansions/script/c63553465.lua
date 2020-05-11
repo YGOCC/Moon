@@ -46,9 +46,9 @@ end
 function c63553465.thcfilter(c,lg)
 	return lg:IsContains(c)
 end
-function c63553465.fdfilter(c,e,tp)
+function c63553465.fdfilter(c,e,tp,eg,ep,ev,re,r,rp)
 	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM
-		and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:GetActivateEffect():IsActivatable(tp))
+		and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or (c:GetActivateEffect():GetCondition(e,tp,eg,ep,ev,re,r,rp) and c:GetActivateEffect():GetTarget(e,tp,eg,ep,ev,re,r,rp,0)))
 end
 function c63553465.excfilter(c)
 	return c:GetType()&TYPE_PANDEMONIUM==TYPE_PANDEMONIUM and c:IsFaceup()
@@ -92,7 +92,7 @@ function c63553465.fdcon(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(c) and eg:FilterCount(c63553465.thcfilter,nil,lg)==2
 end
 function c63553465.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.GetLocationCount(tp,LOCATION_SZONE)>0) and Duel.IsExistingMatchingCard(c63553465.fdfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.GetLocationCount(tp,LOCATION_SZONE)>0) and Duel.IsExistingMatchingCard(c63553465.fdfilter,tp,LOCATION_DECK,0,1,nil,e,tp,eg,ep,ev,re,r,rp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c63553465.fdop(e,tp,eg,ep,ev,re,r,rp)
@@ -100,12 +100,12 @@ function c63553465.fdop(e,tp,eg,ep,ev,re,r,rp)
 	local ft2=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	if ft1<=0 and ft2<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(22499034,3))
-	local g=Duel.SelectMatchingCard(tp,c63553465.fdfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c63553465.fdfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		local b1=tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		local b2=tc:GetActivateEffect():IsActivatable(tp)
-		if (b1 and ft1>0) and (not b2 or ft2<=0 or Duel.SelectYesNo(tp,aux.Stringid(63553465,2)) or Duel.IsExistingMatchingCard(c63553465.excfilter,tp,LOCATION_SZONE,0,1,nil)) then
+		local b2=tc:GetActivateEffect():GetCondition(e,tp,eg,ep,ev,re,r,rp) and tc:GetActivateEffect():GetTarget(e,tp,eg,ep,ev,re,r,rp,0)
+		if (b1 and ft1>0) and (not b2 or ft2<=0 or Duel.IsExistingMatchingCard(c63553465.excfilter,tp,LOCATION_SZONE,0,1,nil) or Duel.SelectYesNo(tp,aux.Stringid(63553465,2))) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		else
 			tc:SetCardData(CARDDATA_TYPE,TYPE_TRAP+TYPE_CONTINUOUS)

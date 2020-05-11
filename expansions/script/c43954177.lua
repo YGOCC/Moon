@@ -32,9 +32,10 @@ function cid.initial_effect(c)
 	e2:SetOperation(cid.thop)
 	c:RegisterEffect(e2)
 end
+cid.FELGRAND={1639384,3954901,6075801,33460840,60681103}
 --ACTIVATE
 function cid.filter(c)
-	return (c:IsSetCard(0xfe9) or c:IsCode(table.unpack(c43954163.FELGRAND))) and c:IsDiscardable()
+	return (c:IsSetCard(0xfe9) or c:IsCode(table.unpack(cid.FELGRAND))) and c:IsType(TYPE_MONSTER) and c:IsDiscardable()
 end
 ----------
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)

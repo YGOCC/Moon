@@ -20,7 +20,6 @@ function cid.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,id)
-	e1:SetCondition(cid.atkcon)
 	e1:SetTarget(cid.atktg)
 	e1:SetOperation(cid.atkop)
 	c:RegisterEffect(e1)
@@ -42,9 +41,10 @@ function cid.initial_effect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetCode(EVENT_RELEASE)
 		ge1:SetOperation(cid.regop)
-		c:RegisterEffect(ge1)
+		Duel.RegisterEffect(ge1,0)
 	end
 end
+cid.FELGRAND={1639384,3954901,6075801,33460840,60681103}
 --REGISTER TRIBUTES
 function cid.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=eg:GetFirst()
@@ -57,7 +57,7 @@ function cid.regop(e,tp,eg,ep,ev,re,r,rp)
 end
 --COPY EFFECT
 function cid.atkfilter(c)
-	return (c:IsSetCard(0xfe9) or c:IsCode(table.unpack(c43954163.FELGRAND))) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_EFFECT) and c:GetFlagEffect(id)>0
+	return (c:IsSetCard(0xfe9) or c:IsCode(table.unpack(cid.FELGRAND))) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_EFFECT) and c:GetFlagEffect(id)>0
 end
 -------------
 function cid.atktg(e,tp,eg,ep,ev,re,r,rp,chk)

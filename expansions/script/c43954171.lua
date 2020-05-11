@@ -50,12 +50,15 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 --FILTERS
+function cid.afilter(c)
+	return c:GetAttack()>0
+end
 function cid.ffilter(c,fc)
 	return c:IsFusionSetCard(0xfe9) or c:IsFusionCode(table.unpack(c43954163.FELGRAND))
 end
 --CHANGE ATK
 function cid.atkfilter(c)
-	return c:GetAttack()>0 or c:GetColumnGroup():IsExists(function (cc) return cc:GetAttack()>0 end,1,c)
+	return c:GetAttack()>0 or c:GetColumnGroup():IsExists(cid.afilter,1,nil)
 end
 ------------
 function cid.atkcon(e,tp,eg,ep,ev,re,r,rp)
@@ -73,7 +76,8 @@ function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not tc or not tc:IsRelateToEffect(e) then return end
-	local g=tc:GetColumnGroup():Filter(function (cc) return cc:GetAttack()>0 end,nil)
+	local g=tc:GetColumnGroup():Filter(cid.afilter,nil)
+	if not g:IsContains(tc) then g:AddCard(tc) end
 	if #g>0 and c:IsRelateToEffect(e) and c:IsFaceup() then
 		local tg,val=g:GetFirst(),math.ceil(c:GetAttack()/2)
 		while tg do

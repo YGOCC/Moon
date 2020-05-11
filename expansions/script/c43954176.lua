@@ -34,9 +34,10 @@ function cid.initial_effect(c)
 	e3:SetOperation(cid.operation)
 	c:RegisterEffect(e3)
 end
+cid.FELGRAND={1639384,3954901,6075801,33460840,60681103}
 --ATK/DEF
 function cid.valfilter(c)
-	return c:IsSetCard(0xfe9) or c:IsCode(table.unpack(c43954163.FELGRAND))
+	return c:IsSetCard(0xfe9) or c:IsCode(table.unpack(cid.FELGRAND))
 end
 ---------
 function cid.val(e,c)
