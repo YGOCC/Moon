@@ -27,7 +27,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cid.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x421)
+	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x412)
 end
 function cid.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and ep~=tp
@@ -60,7 +60,7 @@ function cid.filter(c)
 	return c:GetSummonLocation()&LOCATION_EXTRA~=0
 end
 function cid.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsChainNegatable(ev) and rp~=tp and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard,cid.filter),tp,LOCATION_MZONE,0,1,nil,0x421)
+	return Duel.IsChainNegatable(ev) and rp~=tp and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard,cid.filter),tp,LOCATION_MZONE,0,1,nil,0x412)
 end
 function cid.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

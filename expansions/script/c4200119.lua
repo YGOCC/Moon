@@ -1,8 +1,6 @@
---Clear Crystalline Gem - Enveloping Godspark
+--created by Swag, coded by Lyris
 local cid,id=GetID()
 function cid.initial_effect(c)
-	--You can only use each effect of "Clear Crystalline Gem - Enveloping Godspark" once per turn.
-	--If you control a "Godspark" monster that was Special Summoned from the Extra Deck: Target 1 monster your opponent controls; equip it with this card.
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -14,7 +12,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.target)
 	e1:SetOperation(cid.operation)
 	c:RegisterEffect(e1)
-	--You can send this card you control to the GY; gain control over the equipped monster until the End Phase.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -25,7 +22,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.cttg)
 	e2:SetOperation(cid.ctop)
 	c:RegisterEffect(e2)
-	--You can banish this card from your GY, except the turn it was sent there; Shuffle all of your banished "Godspark" cards into your Deck, except "Clear Crystalline Gem - Enveloping Godspark".
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
@@ -42,7 +38,7 @@ function cid.cfilter(c)
 	return c:GetSummonLocation()&LOCATION_EXTRA~=0
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard,cid.cfilter),tp,LOCATION_MZONE,0,1,nil,0x421)
+	return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard,cid.cfilter),tp,LOCATION_MZONE,0,1,nil,0x412)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -84,7 +80,6 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,c,tc)
-		--The equipped monster has it's effects negated, cannot attack, and cannot be targeted for an attack.2
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_EQUIP)
 		e1:SetCode(EFFECT_DISABLE)
@@ -96,7 +91,6 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
 		e3:SetValue(aux.imval1)
 		c:RegisterEffect(e3)
-		--Equip limit
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_EQUIP_LIMIT)
@@ -125,7 +119,7 @@ function cid.ctop(e,tp,eg,ep,ev,re,r,rp)
 	if ec:IsLocation(LOCATION_MZONE) then Duel.GetControl(ec,tp) end
 end
 function cid.filter(c)
-	return c:IsSetCard(0x421) and c:IsAbleToDeck() and not c:IsCode(id)
+	return c:IsSetCard(0x412) and c:IsAbleToDeck() and not c:IsCode(id)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_REMOVED,0,nil)
