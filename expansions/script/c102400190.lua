@@ -36,8 +36,9 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,cid.cpfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil)
-	Duel.HintSelection(g)
+	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil)
+	Duel.HintSelection(g:Filter(Card.IsLocation,nil,LOCATION_GRAVE))
+	Duel.ConfirmCards(1-tp,g:Filter(Card.IsLocation,nil,LOCATION_HAND))
 	local tc=g:GetFirst()
 	if #g==0 or Duel.SendtoDeck(g,nil,2,REASON_EFFECT)==0 then return end
 	Duel.ShuffleDeck(tp)

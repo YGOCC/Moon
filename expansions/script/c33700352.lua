@@ -77,7 +77,7 @@ function cm.spcon(e,c)
 	local tp=c:GetControler()
 	local g=Duel.GetReleaseGroup(tp):Filter(cm.spfilter,nil,c)
 	local g2=Duel.GetReleaseGroup(1-tp):Filter(cm.spfilter_,nil,c)
-	g1:Merge(g2)
+	g:Merge(g2)
 	return g:IsExists(cm.spfilter1,1,nil,tp,g)
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp,c)

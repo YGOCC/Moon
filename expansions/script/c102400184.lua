@@ -25,14 +25,14 @@ function cid.filter1(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0xf7a) and c:IsAbleToDeck() and not c:IsCode(id)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter1,tp,LOCATION_REMOVED,0,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter1,tp,LOCATION_GRAVE,0,1,nil)
 		and Duel.IsExistingMatchingCard(aux.disfilter1,tp,0,LOCATION_ONFIELD,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,1-tp,LOCATION_ONFIELD)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g1=Duel.SelectMatchingCard(tp,cid.filter1,tp,LOCATION_REMOVED,0,1,1,nil)
+	local g1=Duel.SelectMatchingCard(tp,cid.filter1,tp,LOCATION_GRAVE,0,1,1,nil)
 	if #g1==0 or Duel.SendtoDeck(g1,nil,2,REASON_EFFECT)==0
 		or g1:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)==0 then return end
 	Duel.ShuffleDeck(tp)

@@ -16,10 +16,16 @@ function cid.initial_effect(c)
 	e3:SetRange(LOCATION_HAND)
 	e3:SetCondition(function(e,tp) return not Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil) end)
 	e3:SetCountLimit(1,id)
+	e3:SetCost(cid.cost)
 	c:RegisterEffect(e3)
 end
 function cid.cfilter(c)
 	return c:GetSequence()<5
+end
+function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsDiscardable() end
+	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil) end

@@ -28,7 +28,7 @@ function cid.initial_effect(c)
 end
 function cid.cpfilter(c,e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsSetCard(0xf7a) or not c:IsAbleToDeck() or c:IsCode(id) then return false end
-	local et={c:IsHasEffect(EVENT_FREE_CHAIN)}
+	local et=global_card_effect_table[c]
 	for _,ef in ipairs(et) do
 		if ef:IsHasType(EFFECT_TYPE_QUICK_O) then
 			local tg=ef:GetTarget()
@@ -45,19 +45,21 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,cid.cpfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
 	Duel.HintSelection(g)
+	if #g==0 then return end
 	local tc=g:GetFirst()
-	if #g==0 or Duel.SendtoDeck(g,nil,2,REASON_EFFECT)==0 then return end
-	Duel.ShuffleDeck(tp)
-	Duel.BreakEffect()
-	local et,te={tc:IsHasEffect(EVENT_FREE_CHAIN)}
+	local et,te=global_card_effect_table[tc]
 	for _,ef in ipairs(et) do
-		if ef:IsHasType(EFFECT_TYPE_QUICK_O) then te=ef end
+		if ef:IsHasType(EFFECT_TYPE_QUICK_O) then te=ef:Clone() end
 	end
 	tc:CreateEffectRelation(e)
 	local tg=te:GetTarget()
 	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 	local op=te:GetOperation()
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
+	if tc:IsRelateToEffect(e) then
+		Duel.BreakEffect()
+		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+	end
 end
 function cid.val(e,re,dam,r,rp,rc)
 	return dam/2
