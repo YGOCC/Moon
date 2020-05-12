@@ -17,7 +17,6 @@ function cid.initial_effect(c)
 	e2:SetCountLimit(1,id)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCondition(cid.ispcon)
-	e2:SetOperation(cid.ispop)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
@@ -38,13 +37,8 @@ function cid.cfilter(c)
 end
 function cid.ispcon(e,c)
 	if c==nil then return true end
+	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE,0,1,nil)
-end
-function cid.ispop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-	end
 end
 function cid.filter(c,e,tp)
 	return c:IsSetCard(0x412) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)

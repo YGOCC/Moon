@@ -14,7 +14,7 @@ function cm.initial_effect(c)
 	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
 	--Race-based Milling
-	local e2=Effect.CreateEffect
+	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOGRAVE)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -37,29 +37,29 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.cfilter(c)
-    return c:IsSetCard(0x412) and c:IsDiscardable()
+	return c:IsSetCard(0x412) and c:IsDiscardable()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return true end
-    if Duel.IsPlayerCanDraw(tp,2) and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-        e:SetCategory(CATEGORY_DRAW)
-        e:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-        e:SetOperation(cid.activate)
-        if Duel.DiscardHand(tp,cid.cfilter,1,1,REASON_COST+REASON_DISCARD)>0 then
-            Duel.SetTargetPlayer(tp)
-            Duel.SetTargetParam(2)
-            Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
-        end
-    else
-        e:SetCategory(0)
-        e:SetProperty(0)
-        e:SetOperation(nil)
-    end
+	if chk==0 then return true end
+	if Duel.IsPlayerCanDraw(tp,2) and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		e:SetCategory(CATEGORY_DRAW)
+		e:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e:SetOperation(cid.activate)
+		if Duel.DiscardHand(tp,cid.cfilter,1,1,REASON_COST+REASON_DISCARD)>0 then
+			Duel.SetTargetPlayer(tp)
+			Duel.SetTargetParam(2)
+			Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
+		end
+	else
+		e:SetCategory(0)
+		e:SetProperty(0)
+		e:SetOperation(nil)
+	end
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-    if not e:GetHandler():IsRelateToEffect(e) then return end
-    local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-    Duel.Draw(p,d,REASON_EFFECT)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
 function cm.seqcfilter(c,tp)
    return c:IsFaceup() and c:IsSetCard(0x412) and c:IsType(TYPE_MONSTER) and c:IsControler(tp)
