@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	e7316dc274037a343612fcd314703a45
+﻿expansions/cards-new.cdb	92f9166790383b9d696fea2d740279de
 expansions/lflist.conf	a463284f52e1155b7dfe06ba0982503f
 expansions/strings.conf	fefd4c660fe4b1b829b01a05215d9ae0
 expansions/pics/100000710.jpg	5f925a97b1c60d7d69acb8f229938263
@@ -6221,7 +6221,7 @@ expansions/script/c249000556.lua	f994c4c09b7f884dd679d98f4c2d23a4
 expansions/script/c249000557.lua	37e7eb7eb1d958fd8f68520ec19eebf6
 expansions/script/c249000558.lua	351a43e050700c7bde6f4244e42b0180
 expansions/script/c249000559.lua	f51aa03678a4a9150699c9a713a01f72
-expansions/script/c249000634.lua	db1749066610c62f3cc5ae81e440978d
+expansions/script/c249000634.lua	c9473df9c826c8630d895ec295b4b65a
 expansions/script/c249000635.lua	0f065492ea8ca1dc5320b9982af76cec
 expansions/script/c249000636.lua	1646e4d250009705e862408083e14121
 expansions/script/c249000644.lua	b090940b4ce0fdebe6699b14c668a6df
@@ -6293,8 +6293,8 @@ expansions/script/c249001050.lua	bfe88ed3c17fcae3f9be8cf5b901336d
 expansions/script/c249001051.lua	4c29bd69b3f231473bde8bc86fb820cd
 expansions/script/c249001052.lua	0a0040ef952ec5a99cf994fef76ead5f
 expansions/script/c249001053.lua	09e29b1c7558b09813d2647a00616e0c
-expansions/script/c249001054.lua	7a36c2ce037b64425eecc948e6905e4b
-expansions/script/c249001055.lua	bbefabb0472726142b76da04d43aa8f6
+expansions/script/c249001054.lua	9760f72440a2d9d841f4d675acb642c6
+expansions/script/c249001055.lua	de01f41e07e5d4cb04e28fc341075e76
 expansions/script/c25386871.lua	0527022fb9dd23eaa0abfdcd18285cb3
 expansions/script/c25386872.lua	95b4526e6be1d6ab6e5259ff0408c7e0
 expansions/script/c25386873.lua	cfc1c9272c4c4b7b0a9f9fe449f2a4f4
@@ -8259,6 +8259,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	de9c4614ac69ded23993569b9777c687
+update/filelist.txt	efa354d69264dadab1a4b5a942352bde
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	80660d82f02a7d9184f539a088a9efaf
+update/version.txt	7a57ad7a36eba7848706e15dc677768b

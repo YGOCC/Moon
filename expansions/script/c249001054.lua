@@ -25,7 +25,7 @@ function c249001054.confilter(c)
 	return c:IsSetCard(0x225) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and not c:IsCode(249001054)
 end
 function c249001054.con(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_RITUAL and Duel.IsExistingMatchingCard(c249001054.confilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+	return e:GetHandler():IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and r==REASON_RITUAL and Duel.IsExistingMatchingCard(c249001054.confilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 end
 function c249001054.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
