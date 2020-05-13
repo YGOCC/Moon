@@ -40,12 +40,12 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_GRAVE)
 end
-function cid.filter(c)
+function cid.tdfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x613) and c:IsAbleToDeck()
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cid.tdfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.HintSelection(g)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_DECK) then
