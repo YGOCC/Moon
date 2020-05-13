@@ -37,10 +37,6 @@ end
 function cid.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsType(TYPE_CONJOINT)
 		and Duel.IsExistingMatchingCard(cid.mtfilter,tp,LOCATION_REMOVED,0,1,nil) end
-		Duel.SetOperationInfo(0,CATEGORY_REMOVE,tc,1,0,0)
-		if tc:IsFaceup() and tc:IsType(TYPE_EVOLUTE) then
-			Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1000)
-		end
 end
 function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -49,9 +45,10 @@ function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.mtfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.Overlay(c,g)
-if tc:IsLocation(LOCATION_OVERLAY) and tc:IsType(TYPE_EVOLUTE) then
+		local tc=g:GetFirst()
+		if tc:IsLocation(LOCATION_OVERLAY) and tc:IsType(TYPE_EVOLUTE) then
 			Duel.Recover(tp,1000,REASON_EFFECT)
-end
+		end
 	end
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)

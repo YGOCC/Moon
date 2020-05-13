@@ -34,6 +34,7 @@ function c249001043.initial_effect(c)
 	e3:SetTarget(c249001043.sptg)
 	e3:SetOperation(c249001043.spop)
 	c:RegisterEffect(e3)
+	Duel.AddCustomActivityCounter(249001043,ACTIVITY_CHAIN,c249001043.chainfilter)
 end
 c249001043.xyz_number=90
 function c249001043.cfilter(c)
@@ -48,6 +49,7 @@ function c249001043.xyzop(e,tp,chk)
 end
 function c249001043.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,93717133)
+		and Duel.GetCustomActivityCount(249001043,tp,ACTIVITY_CHAIN)==0
 end
 function c249001043.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -88,8 +90,6 @@ function c249001043.attg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c249001043.atop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetOverlayGroup(tp,0,1)
-	if g:GetCount()==0 then return end
-	Duel.SendtoGrave(g,REASON_EFFECT)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	local ct=Duel.GetMatchingGroupCount(c249001043.atfilter,tp,0,LOCATION_MZONE,nil)
@@ -106,6 +106,7 @@ function c249001043.atop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetValue(ct)
 	e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e2)
+	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 function c249001043.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -150,4 +151,7 @@ function c249001043.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c249001043.negcon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
+end
+function c249001043.chainfilter(re,tp,cid)
+	return not (re:IsActiveType(TYPE_MONSTER) and not re:GetHandler():IsSetCard(0x55) and not re:GetHandler():IsSetCard(0x7B))
 end
