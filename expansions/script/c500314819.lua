@@ -12,7 +12,7 @@ function cid.initial_effect(c)
 	e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	   if chk==0 then return true end
 	Duel.Hint(HINT_MUSIC,0,aux.Stringid(500314819,6))
-	end)
+	end
 	c:RegisterEffect(e0)
  local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
