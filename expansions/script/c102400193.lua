@@ -23,7 +23,7 @@ function cid.chainop(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandler():IsSetCard(0xf7a) then Duel.SetChainLimit(function(e,rp,tp) return tp==rp end) end
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,nil,0xf7a)
+	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,e:GetHandler(),0xf7a)
 	local c=e:GetHandler()
 	for tc in aux.Next(g) do
 		local e1=Effect.CreateEffect(c)
