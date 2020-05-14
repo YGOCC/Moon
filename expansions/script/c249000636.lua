@@ -21,7 +21,7 @@ function c249000636.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		or (Duel.CheckReleaseGroup(tp,nil,1,nil) and Duel.IsExistingMatchingCard(c249000636.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp)) end
 	local option
 	if Duel.CheckReleaseGroup(tp,nil,1,nil) and Duel.IsExistingMatchingCard(c249000636.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp) then option=0 end
-	if (Duel.IsExistingMatchingCard(c249000636.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	if (Duel.IsExistingMatchingCard(c249000636.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 		and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())) then option=1 end
 	if Duel.CheckReleaseGroup(tp,nil,1,nil) and Duel.IsExistingMatchingCard(c249000636.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA,0,1,nil,e,tp) and Duel.IsExistingMatchingCard(c249000636.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 		and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) then
