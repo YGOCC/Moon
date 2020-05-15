@@ -65,7 +65,7 @@ function cid.rettg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cid.retop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) tp
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
