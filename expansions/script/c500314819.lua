@@ -8,11 +8,11 @@ function cid.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e0:SetCondition(c34945480.sumcon)
+	e0:SetCondition(cid.sumcon)
 	e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	   if chk==0 then return true end
 	Duel.Hint(HINT_MUSIC,0,aux.Stringid(500314819,6))
-	end
+ 
 	c:RegisterEffect(e0)
  local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
