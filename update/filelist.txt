@@ -1,4 +1,4 @@
-﻿expansions/cards-new.cdb	dc40675419575e452fbdb1f2195bfd5b
+﻿expansions/cards-new.cdb	f1e65801b8e4814053f154f14081b6a9
 expansions/lflist.conf	a463284f52e1155b7dfe06ba0982503f
 expansions/strings.conf	fefd4c660fe4b1b829b01a05215d9ae0
 expansions/pics/100000710.jpg	5f925a97b1c60d7d69acb8f229938263
@@ -681,7 +681,7 @@ expansions/pics/102400177.png	08ce5f60cdcc5fef773729a7b7c3ec76
 expansions/pics/102400178.png	e574c9a628a235935f744816505b2844
 expansions/pics/102400179.png	915b160f5480b8afc7317e66c0f1ef04
 expansions/pics/102400180.png	63c17972f237024321cbd81993dc3956
-expansions/pics/102400181.png	340d979612e6a09a22884e4059f95f00
+expansions/pics/102400181.png	041a5501159db6e264c898d28473c13b
 expansions/pics/102400182.png	2ca0f512dde7cd6c120fb0c9e6dedd91
 expansions/pics/102400183.png	a3bddf188c07352cf8f06ce478f53e0e
 expansions/pics/102400184.png	9ba713e8767bd84a636d71db440e0ab4
@@ -4908,7 +4908,7 @@ expansions/script/c102400177.lua	e8ca9335c0c9ed989987da394d12bfa2
 expansions/script/c102400178.lua	524a1cd2fb98c9d1910fc7e93e496a57
 expansions/script/c102400179.lua	c6aea23aeea755d011df808c6d3e25c4
 expansions/script/c102400180.lua	6d24bdd263e3cf81c3161bd0a812fb2a
-expansions/script/c102400181.lua	258c870cbf38797a48f5b43db68afd86
+expansions/script/c102400181.lua	1cddef6a85d22de4f4a4940b15ce5ca5
 expansions/script/c102400182.lua	be83280819c3b1055b7210169f8e43f6
 expansions/script/c102400183.lua	0a3655c567073d822f808429dd00a97e
 expansions/script/c102400184.lua	7812f750a6d6c61a63d8ab15c4ad9b9e
@@ -8282,6 +8282,6 @@ sound/custom/yata_battle.wav	da8f0e30d6c23c066be364993f3dbc92
 sound/custom/yata_effe01.wav	edf949c75a32c7b91f6029a6e6640ea6
 sound/custom/yata_summon.wav	17b569892284748d19f441e6972d6cce
 update/delete.txt	bcae307f6039207f11b4daa83f17c0ec
-update/filelist.txt	6ef2d0e229d6161b24357553ff8ea7e5
+update/filelist.txt	026d1d80e7ce40e769823af38e90978b
 update/rename.txt	c509c33cdee4e36b1cfaaed4315f2886
-update/version.txt	e9d37c098b9a766396f7df0ca1da5ced
+update/version.txt	8f8bd9fb79e70d2a294dc4eb183557d6
