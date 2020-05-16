@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end 
 	function s.filter(c)
-	return c:IsType(TYPE_SPELL)
+	return c:IsType(TYPE_SPELL) and c:IsFaceup()
 end
 	function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsFaceup() and chkc:IsControler(tp) and s.filter(chkc) end
