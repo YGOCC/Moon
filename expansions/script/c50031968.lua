@@ -46,7 +46,7 @@ function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.Overlay(c,g)
 		local tc=g:GetFirst()
-		if tc:IsLocation(LOCATION_OVERLAY) and tc:IsType(TYPE_EVOLUTE) then
+		if tc:IsLocation(LOCATION_OVERLAY) and tc:GetOriginalType()&TYPE_EVOLUTE~=0 then
 			Duel.Recover(tp,1000,REASON_EFFECT)
 		end
 	end
