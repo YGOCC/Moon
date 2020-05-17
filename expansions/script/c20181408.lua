@@ -36,7 +36,7 @@ function cid.matfilter(c)
 	return c:IsLinkType(TYPE_EFFECT) and not c:IsLinkType(TYPE_LINK)
 end
 function cid.lcheck(g,lc)
-	return g:IsExists(Card.IsLinkType,1,nil,TYPE_PANDEMONIUM)
+	return g:IsExists(Card.IsType,1,nil,TYPE_PANDEMONIUM,lc,SUMMON_TYPE_LINK)
 end
 function cid.tefilter(c)
 	return c:IsType(TYPE_PANDEMONIUM) and c:IsSetCard(0x9b5) and not c:IsForbidden()
@@ -81,7 +81,7 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectMatchingCard(tp,aux.PandSSetFilter(cid.filter,c:GetOriginalCode(),LOCATION_DECK,0),tp,LOCATION_DECK,0,1,1,nil,e:GetLabel())
+	local g=Duel.SelectMatchingCard(tp,aux.PandSSetFilter(cid.filter,e:GetLabel(),LOCATION_DECK,0),tp,LOCATION_DECK,0,1,1,nil,e:GetLabel())
 	if #g>0 then
 		aux.PandSSet(g,REASON_EFFECT,aux.GetOriginalPandemoniumType(g:GetFirst()))(e,tp,eg,ep,ev,re,r,rp,nil)
 		Duel.ConfirmCards(1-tp,g)
