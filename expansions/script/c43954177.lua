@@ -31,16 +31,31 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.thtg)
 	e2:SetOperation(cid.thop)
 	c:RegisterEffect(e2)
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,cid.counterfilter)
 end
 cid.FELGRAND={1639384,3954901,6075801,33460840,60681103}
 --ACTIVATE
 function cid.filter(c)
 	return (c:IsSetCard(0xfe9) or c:IsCode(table.unpack(cid.FELGRAND))) and c:IsType(TYPE_MONSTER) and c:IsDiscardable()
 end
+function cid.counterfilter(c)
+	return c:IsRace(RACE_DRAGON) or c:IsSetCard(0xfe9) or c:IsCode(table.unpack(cid.FELGRAND))
+end
+function cid.splimit(e,c)
+	return not c:IsRace(RACE_DRAGON) and not c:IsSetCard(0xfe9) and not c:IsCode(table.unpack(cid.FELGRAND))
+end
 ----------
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,cid.filter,1,1,REASON_COST+REASON_DISCARD)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(cid.splimit)
+	Duel.RegisterEffect(e1,tp)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end

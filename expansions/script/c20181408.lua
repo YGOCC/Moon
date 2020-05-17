@@ -9,7 +9,7 @@ function cid.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,id)
 	e1:SetCategory(CATEGORY_TOEXTRA)
-	e1:SetCondition(function(e) return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK) end)
+	e1:SetCondition(cid.tecon)
 	e1:SetTarget(cid.tetg)
 	e1:SetOperation(cid.teop)
 	c:RegisterEffect(e1)
@@ -36,10 +36,13 @@ function cid.matfilter(c)
 	return c:IsLinkType(TYPE_EFFECT) and not c:IsLinkType(TYPE_LINK)
 end
 function cid.lcheck(g,lc)
-return g:IsExists(Card.IsLinkType,1,nil,TYPE_PANDEMONIUM)
+	return g:IsExists(Card.IsLinkType,1,nil,TYPE_PANDEMONIUM)
 end
 function cid.tefilter(c)
 	return c:IsType(TYPE_PANDEMONIUM) and c:IsSetCard(0x9b5) and not c:IsForbidden()
+end
+function cid.tecon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function cid.tetg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.tefilter,tp,LOCATION_DECK,0,1,nil) end
@@ -53,8 +56,9 @@ function cid.teop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.cfilter(c,tp)
-	return c:IsAbleToGraveAsCost() and (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsType(TYPE_PANDEMONIUM)))
-		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode())
+	return c:IsType(TYPE_PANDEMONIUM) and c:IsAbleToGraveAsCost() and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
+		and Duel.IsExistingMatchingCard(aux.PandSSetFilter(cid.filter,c:GetOriginalCode(),LOCATION_DECK,0),tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode())
+		--and aux.PandSSetCon(cid.filter,nil,c:GetOriginalCode(),LOCATION_DECK,0)(nil,e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.filter(c,code)
 	return c:IsCode(code) and c:IsType(TYPE_PANDEMONIUM)
@@ -67,8 +71,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		e:SetLabel(0)
-		return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and aux.PandSSetCon(cid.filter,nil,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp)
-			and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,tp)
+		return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,nil,tp)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,1,1,nil,tp)
@@ -76,11 +79,11 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not aux.PandSSetCon(cid.filter,nil,LOCATION_DECK)(nil,e,tp,eg,ep,ev,re,r,rp) then return end
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
-	local g=Duel.SelectMatchingCard(tp,aux.PandSSetFilter(cid.filter),tp,LOCATION_DECK,0,1,1,nil,e:GetLabel())
+	local g=Duel.SelectMatchingCard(tp,aux.PandSSetFilter(cid.filter,c:GetOriginalCode(),LOCATION_DECK,0),tp,LOCATION_DECK,0,1,1,nil,e:GetLabel())
 	if #g>0 then
-		aux.PandSSet(g,REASON_EFFECT,aux.GetOriginalPandemoniumType(g:GetFirst()))(e,tp,eg,ep,ev,re,r,rp)
+		aux.PandSSet(g,REASON_EFFECT,aux.GetOriginalPandemoniumType(g:GetFirst()))(e,tp,eg,ep,ev,re,r,rp,nil)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
@@ -98,8 +101,7 @@ function cid.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.BreakEffect()
-		Duel.SendtoHand(g,tp,REASON_EFFECT)
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end

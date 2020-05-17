@@ -590,6 +590,7 @@ function Auxiliary.PandSSetCon(tc,player,...)
 						elseif params[pc]=="re" then eparams[pc]=re
 						elseif params[pc]=="r" then eparams[pc]=r
 						elseif params[pc]=="rp" then eparams[pc]=rp
+						else eparams[pc]=params[pc]
 						end
 					end
 				end
@@ -635,6 +636,7 @@ function Auxiliary.PandSSetFilter(tc,...)
 						elseif params[pc]=="re" then eparams[pc]=re
 						elseif params[pc]=="r" then eparams[pc]=r
 						elseif params[pc]=="rp" then eparams[pc]=rp
+						else eparams[pc]=params[pc]
 						end
 					end
 				end
