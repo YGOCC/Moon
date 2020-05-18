@@ -101,12 +101,35 @@ function cid.btg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil,tp)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
+
 function cid.bop(e,tp,eg,ep,ev,re,r,rp)
 if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-		Duel.Destroy(tc,REASON_EFFECT) 
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	local option
+	if not tc:IsDisabled() then option=0 end
+	if tc:IsDestructable() then option=1 end
+	if not tc:IsDisabled() and tc:IsDestructable() then
+		option=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1)) end
+	if option==0 then 
+		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
+		local e2=Effect.CreateEffect(tc)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e2)
+		local e3=Effect.CreateEffect(tc)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_DISABLE_EFFECT)
+		e3:SetValue(RESET_TURN_SET)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e3)
+	end
+	if option==1 then
+		Duel.Destroy(tc,REASON_EFFECT)
+	end
 end
-
+end
 --Battle bonus
 function cid.battlecon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()

@@ -53,8 +53,9 @@ function cid.searchfilter(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) 
 end
 function cid.cfilter(c,tp)
-	return c:IsPreviousControler(tp) and c:IsPreviousSetCard(0x666)
+	return c:GetPreviousControler()==tp and c:IsPreviousSetCard(0x666)
 end
+
 --destroy replace
 function cid.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsReason(REASON_REPLACE+REASON_RULE)
@@ -70,6 +71,7 @@ function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(ct)
 	return ct>0
 end
+
 function cid.xtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.searchfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOEXTRA,nil,1,tp,LOCATION_DECK)
