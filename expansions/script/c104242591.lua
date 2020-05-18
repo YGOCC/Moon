@@ -9,15 +9,23 @@ end
 local id,cid=getID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--special summon
-	local ponysummon=Effect.CreateEffect(c)
-	ponysummon:SetType(EFFECT_TYPE_FIELD)
-	ponysummon:SetCode(EFFECT_SPSUMMON_PROC)
-	ponysummon:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	ponysummon:SetRange(LOCATION_EXTRA)
-	ponysummon:SetCondition(cid.sstg)
-	ponysummon:SetOperation(cid.ssop)
-	c:RegisterEffect(ponysummon)
+	if Card.Type then 
+	Fusion.AddProcMixN(c,true,true,cid.pony,2,nil)
+	Fusion.AddContactProc(c,cid.contactfil,cid.contactop)
+	else if not Card.Type then
+	aux.AddFusionProcFunRep(c,cid.pony,2,true)
+	aux.AddContactFusionProcedure(c,cid.contactfil,LOCATION_ONFIELD+LOCATION_EXTRA,0,cid.contactop)
+	end
+	end
+	--nerf on summon
+	local nerf=Effect.CreateEffect(c)
+	nerf:SetCategory(CATEGORY_ATKCHANGE)
+	nerf:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	nerf:SetCode(EVENT_SPSUMMON_SUCCESS)
+	nerf:SetProperty(EFFECT_FLAG_DELAY)
+	nerf:SetTarget(cid.atktg)
+	nerf:SetOperation(cid.atkop)
+	c:RegisterEffect(nerf)
 	--banish as punishment
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(39823987,0))
@@ -43,25 +51,31 @@ function cid.initial_effect(c)
 	e1:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk) if chk==0 then return true end Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE) end)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
+	--negate
+	local neg=Effect.CreateEffect(c)
+	neg:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	neg:SetCode(EVENT_CHAIN_SOLVING)
+	neg:SetRange(LOCATION_MZONE)
+	neg:SetCountLimit(1)
+	neg:SetCondition(cid.negcon)
+	neg:SetOperation(cid.negop)
+	c:RegisterEffect(neg)
 end
-function cid.sstg(e,tp,eg,ep,ev,re,r,rp,chk)
---	if c==nil then return true end
-	local c=e:GetHandler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(cid.ponyfilter,tp,LOCATION_MZONE+LOCATION_EXTRA,0,2,c)
+function cid.contactop(g,tp)
+	Duel.SendtoGrave(g,nil,2,REASON_COST+REASON_MATERIAL)
 end
-function cid.ssop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	local g=Duel.SelectMatchingCard(tp,cid.ponyfilter,tp,LOCATION_MZONE+LOCATION_EXTRA,0,2,2,nil)
-	Duel.SendtoGrave(g,REASON_COST+REASON_MATERIAL)
+function cid.contactfil(tp)
+	return Duel.GetMatchingGroup(function(c) return c:IsType(TYPE_MONSTER) and c:IsFaceup() end,tp,LOCATION_ONFIELD+LOCATION_EXTRA,0,nil)
 end
 --Filters
-function cid.ponyfilter(c)
+function cid.pony(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x666) and c:IsCanBeFusionMaterial()
 end
 function cid.spfilter(c,e,tp)
 	return c:IsCode(id-1) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function cid.cfilter(c)
+	return c:IsFaceup() and c:IsCode(104242590)
 end
 --banish as punishment
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -72,9 +86,6 @@ end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Recover(tp,1000,REASON_EFFECT)
-	local sc=Duel.CreateToken(tp,104242585)
-	sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN)
-	Duel.Remove(sc,POS_FACEUP,REASON_EFFECT)
 	if c:IsReason(REASON_BATTLE) then return end
 	Duel.BreakEffect()
 	Duel.Destroy(c:GetReasonCard() or (c:GetReasonEffect() and c:GetReasonEffect():GetHandler()),REASON_EFFECT)
@@ -96,4 +107,36 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-
+--negate
+function cid.negcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)
+		and rp==1-tp and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainDisablable(ev) 
+end
+function cid.negop(e,tp,eg,ep,ev,re,r,rp)
+	local rc=re:GetHandler()
+	if Duel.NegateEffect(ev) and rc:IsRelateToEffect(re) then
+		Duel.Destroy(rc,REASON_EFFECT)
+	end
+end
+--nerf on summon
+function cid.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
+end
+function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+	local tc=g:GetFirst()
+	local ct=Duel.GetMatchingGroupCount(cid.atkfilter,tp,LOCATION_REMOVED,0,nil)
+	while tc do
+		local nerf=Effect.CreateEffect(e:GetHandler())
+		nerf:SetType(EFFECT_TYPE_SINGLE)
+		nerf:SetCode(EFFECT_UPDATE_ATTACK)
+		nerf:SetValue(-500)
+		nerf:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		nerf:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(nerf)
+		local e2=nerf:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		tc:RegisterEffect(e2)
+		tc=g:GetNext()
+	end
+end

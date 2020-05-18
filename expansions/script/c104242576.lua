@@ -44,12 +44,12 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 		Duel.BreakEffect()
-	if	Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+	if	Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,1,nil) and Duel.IsExistingMatchingCard(cid.lpfilter,tp,LOCATION_GRAVE,0,1,nil) and  Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 		Duel.BreakEffect()
 		local frag=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)
 		if frag and Duel.RemoveCards then
 		Duel.RemoveCards(frag,nil,REASON_EFFECT+REASON_RULE) 
-			
+			Duel.Remove(frag,POS_FACEUP,REASON_EFFECT) 
 	end
 		if frag and not Duel.RemoveCards then 
 		Duel.Exile(frag,REASON_EFFECT+REASON_RULE)

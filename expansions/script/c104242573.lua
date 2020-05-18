@@ -8,93 +8,71 @@ local function getID()
 end
 local id,cid=getID()
 function cid.initial_effect(c)
-	--Activate
+--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetTarget(cid.target)
+	e1:SetOperation(cid.activate)
 	c:RegisterEffect(e1)
-	--draw
+	--destroy replace
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(50005218,0))
-	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetCountLimit(1)
-	e2:SetTarget(cid.btg)
-	e2:SetOperation(cid.bop)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EFFECT_DESTROY_REPLACE)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetTarget(cid.reptg)
+	e2:SetValue(cid.repval)
+	e2:SetOperation(cid.repop)
 	c:RegisterEffect(e2)
-	--banish
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(88523882,0))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1)
-	e3:SetCondition(cid.fragcon)
-	e3:SetTarget(cid.thtg)
-	e3:SetOperation(cid.thop)
-	c:RegisterEffect(e3)	
 end
-function cid.cfilter(c,tp,e)
-	return c:IsSetCard(0x666) and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER)
+function cid.filter(c,e,tp)
+	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function cid.Tcfilter(c,e)
-	return c:IsSetCard(0x666) and c:IsAbleToDeck() 
-end
-function cid.btg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.cfilter(chkc) and cid.Tcfilter(chkc)  end
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) and 
-		Duel.IsExistingTarget(cid.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
-	and Duel.IsExistingTarget(cid.Tcfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,3,nil,e,tp)	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g1=Duel.SelectTarget(tp,cid.cfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cid.filter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(cid.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g2=Duel.SelectTarget(tp,cid.Tcfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,2,2,g1,e,tp)
-	g1:Merge(g2)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,2,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	local g=Duel.SelectTarget(tp,cid.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function cid.bop(e,tp,eg,ep,ev,re,r,rp)
-if not e:GetHandler():IsRelateToEffect(e) then return end
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-		if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)==0 then return end
-			Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-				local g=Duel.GetOperatedGroup()
-					if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-						local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-							if ct>=1 then
-								Duel.BreakEffect()
-									Duel.Draw(tp,1,REASON_EFFECT)
-								end
-end
-
-function cid.fragcon(e,tp,eg,ep,ev,re,r,rp)
-	local ec=eg:GetFirst()
-	return not eg:IsContains(e:GetHandler()) and ec:IsSetCard(0x666) and ec:GetPreviousControler()==tp  and ec:IsType(TYPE_FUSION)
-end
-function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=3 end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,LOCATION_DECK)
-end
-function cid.thfilter(c)
-	return c:IsSetCard(0x666) and c:IsAbleToRemove()
-end
-function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.ConfirmDecktop(tp,3)
-	local g=Duel.GetDecktopGroup(tp,3)
-	if g:GetCount()>0 then
-		if g:IsExists(Card.IsSetCard,1,nil,0x666) then
-			if g:IsExists(cid.thfilter,1,nil) then
-				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_REMOVE)
-				local sg=g:FilterSelect(tp,cid.thfilter,1,1,nil)
-				Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
-				
-			end
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.BreakEffect()
+		local frag=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)
+		if frag and Duel.RemoveCards then
+		Duel.RemoveCards(frag,nil,REASON_EFFECT+REASON_RULE)
+		Duel.Remove(frag,POS_FACEUP,REASON_EFFECT) 
 		end
-		Duel.ShuffleDeck(tp)
+			if frag and not Duel.RemoveCards then 
+			Duel.Exile(frag,REASON_EFFECT+REASON_RULE)
+			end
+		for tc in aux.Next(g) do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+		e1:SetValue(1)
+		e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
+		tc:RegisterEffect(e1)
+		
 	end
+end
+end
+function cid.repfilter(c,tp)
+	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) 
+		and not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
+end
+function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(cid.repfilter,1,nil,tp) end
+	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
+end
+function cid.repval(e,c)
+	return cid.repfilter(c,e:GetHandlerPlayer())
+end
+function cid.repop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 end

@@ -18,63 +18,45 @@ function cid.initial_effect(c)
 	ponysummon:SetTarget(cid.fragmenttg)	
 	ponysummon:SetOperation(cid.fragment)
 	c:RegisterEffect(ponysummon)
-	--to hand
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TODECK+CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e1:SetCode(EVENT_TO_GRAVE)
-	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCountLimit(1,id+1000)
-	e1:SetCondition(cid.thcon)
-	e1:SetTarget(cid.thtg)
-	e1:SetOperation(cid.thop)
-	c:RegisterEffect(e1)
-		--gy effect
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetCategory(CATEGORY_TODECK)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCountLimit(1,id+2000)
-	e2:SetCondition(aux.exccon)
-	e2:SetTarget(cid.sftg)
-	e2:SetOperation(cid.sfop)
-	c:RegisterEffect(e2)
-
+	--destroy
+	local ponyignition=Effect.CreateEffect(c)
+	ponyignition:SetDescription(aux.Stringid(id,0))
+	ponyignition:SetCategory(CATEGORY_DESTROY)
+	ponyignition:SetType(EFFECT_TYPE_IGNITION)
+	ponyignition:SetRange(LOCATION_MZONE)
+	ponyignition:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	ponyignition:SetCode(EVENT_FREE_CHAIN)
+	ponyignition:SetCountLimit(1,id+1000)
+	ponyignition:SetTarget(cid.sttg)
+	ponyignition:SetOperation(cid.stop)
+	c:RegisterEffect(ponyignition)
+	local ponygy=ponyignition:Clone()
+	ponygy:SetRange(LOCATION_GRAVE)
+	ponygy:SetCost(cid.tdcost)
+	c:RegisterEffect(ponygy)
 end
 --Filters
 function cid.selfsummonfilter(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and not c:IsCode(id)
 end
-function cid.tohandfilter(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+function cid.stfilter(c)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGrave()
 end
-function cid.protfilter(c,e,tp)
-	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
+--Send S/T to GY
+function cid.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToDeckAsCost() end
+	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_COST)
 end
---On grave, search S/T
-function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return (e:GetHandler():IsPreviousLocation(LOCATION_OVERLAY) and  bit.band(r,REASON_COST)~=0)
-	or
-	(e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and  bit.band(r,REASON_COST+REASON_MATERIAL+REASON_BATTLE+REASON_EFFECT)~=0)
+function cid.sttg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.stfilter,tp,0,LOCATION_SZONE,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,0,0)
 end
-function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
-end
-function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
---	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
-	--Duel.SpecialSummonComplete()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.tohandfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-end
+function cid.stop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.SelectMatchingCard(tp,cid.stfilter,tp,0,LOCATION_SZONE,1,1,nil)
+	if #g>0 then
+		Duel.HintSelection(g)
+		Duel.SendtoGrave(g,REASON_EFFECT)
+	end
 end
 --Pony summon proc
 function cid.fragmenttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -91,7 +73,7 @@ function cid.fragment(e,c,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,cid.selfsummonfilter,tp,LOCATION_DECK,0,1,1,c)
 	if Card.Type then 
 		local tc=g:GetFirst()
-			Card.Type(tc,TYPE_PENDULUM) 
+			Card.Type(tc,TYPE_PENDULUM+TYPE_MONSTER+TYPE_EFFECT) 
 				Duel.RemoveCards(tc,nil,REASON_EFFECT+REASON_RULE)
 					Duel.SendtoExtraP(tc,POS_FACEUP,REASON_RULE+REASON_RETURN)
 	local e1=Effect.CreateEffect(c)
@@ -126,36 +108,11 @@ function cid.fragment(e,c,tp,eg,ep,ev,re,r,rp,chk)
 					sc:SetCardData(CARDDATA_TYPE,sc:GetType()-TYPE_TOKEN) 
 						Duel.Remove(sc,POS_FACEUP,REASON_COST+REASON_RULE)  
 						end						
-	if c:IsRelateToEffect(e) and Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
-		Duel.SpecialSummonComplete()
-end
-end
---GY effect
-function cid.sftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.protfilter(chkc,e,tp) and chkc~=e:GetHandler() end
-	if chk==0 then return e:GetHandler():IsAbleToDeck() and Duel.IsExistingTarget(cid.protfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,cid.protfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
-end
-function cid.sfop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsRelateToEffect(e)  then
-		local g=Group.FromCards(c,tc)
-		Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
-		Duel.BreakEffect()
-		local tc=Duel.GetFirstTarget()
-		if tc:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		tc:RegisterEffect(e2)
-	end
+	if Card.Type then
+		if c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsRelateToEffect(e) 
+		then Duel.SendtoDeck(c,nil,-2,REASON_EFFECT) Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) end	
+			else
+		if c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsRelateToEffect(e) 
+		then Duel.Exile(c,REASON_EFFECT+REASON_RULE) Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) end	
 end
 end
