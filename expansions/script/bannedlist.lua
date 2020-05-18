@@ -1,125 +1,146 @@
 if not banned_list_table then banned_list_table={} end
 local string=require'string'
 local ls=[[
-#[2020.1 YGOCC+2019.10 TCG]
+#[2020.5 YGOCC+2020.4 TCG]
 
-!2020.3 YGOCC
+!2020.5.16 YGOCC
 #Forbidden YGOCC
 --							MAIN DECK MONSTERS
-33700750 0 -- Anifriend
-33700072 0 -- Anifriend
-33700093 0 -- Anifriend
-33700186 0 -- Anifriend
-33700079 0 -- Anifriend
-33700747 0 -- Anifriend
-33700745 0 -- Anifriend
---							EXTRA DECK MONSTERS
-33700083 0 -- Anifriend
-33700085 0 -- Anifriend
-33700082 0 -- Anifriend
-91672800 0 -- Percival, Paladawn Light
-28915253 0 -- Shadowflame Calvary (New, was semi-limited)
+33700093 0 -- Anifriends Aardwolf
+33700072 0 -- Anifriends Beaver and Prairie
+33700747 0 -- Anifriends Black-Backed Jackal
+33700745 0 -- Anifriends Forest Owlet
+33700186 0 -- Anifriends Kyushu Owl
+33700750 0 -- Anifriends Reindeer
+33700079 0 -- Anifriends Small-clawed Otter
+33700751 0 -- Anifriends Tanuki
+57460651 0 -- Burn Point Alchemist
+31157205 0 -- Mezka Melodia
 195208400 0 -- Spectre Magician & Dark Light
-
---							SPELLS CARDS
---							TRAPS CARDS
-
-#Limited YGOCC
-171000121 1 --Amethyst-Winged Kuriboh				MAIN DECK MONSTERS
-160005445 1 -- Paintress Di Vica
-11000533 1 -- Shya Shadowlord
-16000233 1 -- Paintress Gorgia
-33700054 1 -- Anifriend Red Fox
-33700304 1 -- GearGal Veno 
-33700065 1 -- Anifriend 
-17029601 1 -- Psychether Dreamer 
-79854524 1 -- Woodland Wing 
-33700746 1 -- Anifriends Sky Impulse 
-33700744 1 -- Anifriends Gentoo
-53313934 1 -- Mysterious Luster 
-500311592 1 -- Power Portrait's Cursed Portait Trap 
+16599458 0 -- Telum of the Angel Organization, Zagar
+28916163 0 -- V-Idol Meiko
+--							RITUAL
+37564909 0 -- Sayuri - Scarlet Moon
+500316972 0 -- Twin-Venuses Fiber VINE Dragon
+--							PENDULUM
+19772590 0 -- Advocate of Justice - Ivoric
+--							PANDEMONIUM
+20181405 0 -- Terradication Geryonarsenal
+--
 --							EXTRA DECK MONSTERS
-#16000045 3 -- ESPergear Knight : Gladiator 
-33700311 1 -- NEXTGal G
-80347321 1 -- Metalfoes Mercuryrider
-210424272 1 -- Moon Burst: The Bad Dream
-19772604 1 -- Flaric Ebona (new, was banned)
---							SPELL CARDS
+--							FUSION
+33700083 0 -- Anifriends Suzaku of the South
+63553466 0 -- Universe marshal
+--							SYNCHRO
+102400004 0 -- Accel Burst Dragon
+33700085 0 -- Anifriends Byakko of the West
+56642464 0 -- Holy Noble Knight Crusader, Artorgius
+202114501 0 -- Sireknight
+--							XYZ
+63553469 0 -- Atom marshal
+500314234 0 -- Hime, Ultimate Queen of Magnificient VINE
+--							LINK
+33700082 0 -- Anifriends Seiryu of the East
+75977701 0 -- Infected knight of Ivory
+32904930 0 -- Jaden the Aeonbreaker’s Alchemist
+80347321 0 -- Metalfoes Mercuryrider
+56642463 0 -- Noble Knight Mordred
+79854547 0 -- Verdant Illusion
+160000786 0 -- Yuzu, Guardian of Magnificent VINE
+--							EVOLUTE
+500316971 0 -- Buttercup of Fiber VINE
+16000969 0 -- Cybersian Judgeman
+16000130 0 -- Oak Gardna of Fiber Vine
+--
+--							SPELLS CARDS
+19772596 0 -- The Advocate of Justice’s Summoning
+195208413 0 -- False Reality Distortion
+79854546 0 -- Numbing Winter jewel
+10130500 0 -- Pendulum Advance
 23251031 0 -- Pharaohnic Papyrus of Patience
-#23251004 3 -- Moon Over the Desert 
+17029608 0 -- Psychether priestess, Joan
+28915253 0 -- Shadowflame Calvary
+500311692 0 -- VINE Sunflower of Greed
+99998878 0 -- Voidictator Rune - Greater Gating Art
+--
+--							TRAPS CARDS
+--
+#Limited YGOCC
+--							MAIN DECK MONSTERS
+171000121 1 -- Amethyst-Winged Kuriboh
+33700744 1 -- Anifriends "Ikkaku"
+33700181 1 -- Anifriends Caracal
+33700054 1 -- Anifriends Ezo Red Fox
+33700065 1 -- Anifriends PPP Gentoo
+77585595 1 -- Forgalgia Emperor Jinzo
+33700304 1 -- GearGal Veno
+50031699 1 -- Mana, Sharpshooter of Fiber VINE
+32904923 1 -- Serene the Aeonbreaker's Sword
+11000533 1 -- Shya Shadowlord
+221594305 1 -- Voidictator Servant - Knight of Corvus
+221594304 1 -- Voidictator Servant - Rune Artist
+99998880 1 -- Voidictator Servant - Shield of Corvus
+79854524 1 -- Woodland Wing
+--							RITUAL
+--							PENDULUM
+33700746 1 -- Anifriends Sky Impulse
+102400114 1 -- Blitzkrieg Dragon - Steel
+102400102 1 -- Bitzkrieg Meklight - Dawn
+160005445 1 -- Paintress Da Vinca
+16000233 1 -- Paintress Gorgia
+17029601 1 -- Psychether Dreamer, Iman
+--							PANDEMONIUM
+53313934 1 -- Mysterious Luster Dragon
+--
+--							EXTRA DECK MONSTERS
+--							FUSION
+32904936 1 -- Arisa, the Aeonbreaker's Defender
+--							SYNCHRO
+63553468 1 -- Proxima Marshall
+--							XYZ
+19772604 1 -- The Grand Witch of the Advocate of Justice - Flaric Ebona
+--							LINK
+50031786 1 -- Lana, Whiptail Girl of Magnificent VINE
+210424272 1 -- Moon Burst: The Bad Dream
+33700311 1 -- NEXTGal G
+--							EVOLUTE
+--							BIGBANG
+48022718 1 -- Space-Time Wizard
+--
+--							SPELL CARDS
+19772610 1 -- The Advocate of Justice's Door
+32904931 1 -- Aeonbreaker Fusion
+102400133 1 -- Blitzkrieg Sky
 33700316 1 -- GearGal Abort
-63553459 1 -- Nethergear Unit
-#84607229 3 -- Spiritualist Calling (new, unlimited)
+33700058 1 -- Miracle of the Sandstar
 160004532 1 -- The Miscomposition of Power Portrait
-#28915261 3 -- Shadows Ablaze (new, unlimited)
+15747847 1 -- Mythos Valor
+63553459 1 -- Nethergear Unit
+37564903 1 -- Sayuri - ALICE
+37564902 1 -- Sayuri - GRAZE
+96212378 1 -- Spiral Drill Formation
+20181413 1 -- Terradication Living Fortress
+99998875 1 -- Voidictator Rune - Lesser Gating Art
+221594311 1 -- Voidictator Rune - Zanyris's Realm
+--
 --							TRAP CARDS
-
+500311592 1 -- Power Portrait's Cursed Portait Trap
+--
 #Semi-limited YGOCC
 --							MAIN DECK MONSTERS
-32904921 2 -- Aeonbreaker's Bow (new, was limited)
-32904923 2 -- Aeonbreaker's Sword (new, was limited)
+16000128 2 -- Ivy Butterfly of Fiber VINE
+32904921 2 -- Laura the Aeonbreaker's Bow
+--
 --							EXTRA DECK MONSTERS
 --
 --							SPELL CARDS
 53313927 2 -- Mysterious Dimension
+15747835 2 -- Mythos paradox
 210424266 2 -- Battle in the Storm
-
+--
 --							TRAP CARDS
-
---NEW 3/13/2020
-102400004 0 -- Accel Burst Dragon
-10130500 0 -- Pendulum Advance
-500314234 0 -- Hime, Ultimate Queen of Magnificient VINE
-37564909 0 -- Sayuri - Scarlet Moon
-57460651 0 -- Burn point alchemist
-48022718 1 -- Space-Time Wizard
-33700058 1 -- Anifriend
-33700181 1 -- Anifriend
-16000128 2  -- Ivy Butterfly of Fiber VINE
-#16000231 3 Leaf, Private of Fiber VINE
-#53313907 3 Mysterious Starquid
-
---NEW 1/25/2020
-63553469 0  -- Atom marshal
-19772590 0  -- Advocate of Justice - Ivoric
-500316971 0 -- Buttercup of Fiber VINE
-16000969 0  -- Cybersian Judgeman
-56642464 0  -- Holy Noble Knight Crusader, Artorgius
-75977701 0  -- Infected knight of Ivory
-32904930 0  -- Jaden the Aeonbreaker’s Alchemist
-16000231 0  -- Leaf Private of Fiber VINE
-80347321 0  -- Metalfoes Mercuryrider
-79854546 0  -- Numbing Winter jewel
-56642463 0  -- Noble Knight Mordred
-16000130 0  -- Oak Gardna of Fiber Vine
-23251031 0  -- Pharaohnic Papyrus of patience
-17029608 0  -- Psychether priestess, Joan
-37564902 0  -- Sayuri - GRAZE
-16599458 0  -- Telum of the Angel Organization, Zagar
-20181405 0  -- Terradication Geryonarsenal
-19772596 0  -- The Advocate of Justice’s Summoning 
-500316972 0 -- Twin-Venuses Fiber VINE Dragon
-63553466 0  -- Universe marshal
-79854547 0  -- Verdant illusion
-500311692 0 -- VINE Sunflower of Greed
-160000786 0 -- Yuzu, guardian of magnificent VINE
-32904931 1  -- Serene, the Aeonbreaker's Sword
-32904936 1  -- Arisa, the Aeonbreaker's Defender
-102400102 1 -- Aeonbreaker Fusion
-102400133 1 -- Blitzkrieg Meklight - Dawn
-50031786 1  -- Blitzkrieg Sky
-50031699 1  -- Lana, whiptail girl of Magnificient VINE
-15747847 1  -- Mana, Cactunner of Fiber VINE
-63553468 1  -- Mythos Valor
-32904923 1  -- Proxima Marshall
-16000128 1  -- Serpenterfly of Fiber VINE
-20181413 1  -- Terradication living fortress
-19772610 1  -- The Advocate of Justice’s Door
-15747835 2  -- Mythos paradox
-#23251004 3 -- Moon Over the Desert
-#84607234 3 -- Spiritualist Thalia
-
-#FORBIDDEN TCG						===Forbidden===
+--
+#FORBIDDEN TCG					===Forbidden===
 76794549 0 --Astrograph Sorcerer
 09929398 0 --Blackwing - Gofu the Vague Shadow
 53804307 0 --Blaster, Dragon Ruler of Infernos
