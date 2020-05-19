@@ -42,6 +42,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		if	Duel.IsExistingMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,1,nil) and  Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 		Duel.BreakEffect()
 		local frag=Duel.GetFirstMatchingCard(cid.fragment,tp,LOCATION_REMOVED,0,nil,e,tp)
 		if frag and Duel.RemoveCards then
@@ -51,7 +52,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 			if frag and not Duel.RemoveCards then 
 			Duel.Exile(frag,REASON_EFFECT+REASON_RULE)
 			end
-		for tc in aux.Next(g) do
+	
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
@@ -59,9 +60,11 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
 		tc:RegisterEffect(e1)
 		
+		
 	end
 end
 end
+
 function cid.repfilter(c,tp)
 	return c:IsFaceup() and c:IsSetCard(0x666) and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) 
 		and not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT+REASON_BATTLE)

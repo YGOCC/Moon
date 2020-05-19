@@ -103,6 +103,7 @@ function cid.btg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 
 function cid.bop(e,tp,eg,ep,ev,re,r,rp)
+local c=e:GetHandler()
 if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
@@ -112,18 +113,16 @@ if not e:GetHandler():IsRelateToEffect(e) then return end
 	if not tc:IsDisabled() and tc:IsDestructable() then
 		option=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1)) end
 	if option==0 then 
-		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
-		local e2=Effect.CreateEffect(tc)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_DISABLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
-		local e3=Effect.CreateEffect(tc)
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetCode(EFFECT_DISABLE_EFFECT)
-		e3:SetValue(RESET_TURN_SET)
-		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e3)
 	end
 	if option==1 then
 		Duel.Destroy(tc,REASON_EFFECT)
