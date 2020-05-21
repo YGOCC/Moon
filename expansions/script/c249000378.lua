@@ -72,9 +72,8 @@ function c249000378.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c249000378.condition(e,tp,eg,ep,ev,re,r,rp)
-	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
-	return tc and tc:IsSetCard(0x1B7)
+	return Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_PZONE,0,1,e:GetHandler(),0x1B7)
+end
 end
 function c249000378.filter2(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsSetCard(0x1B7)

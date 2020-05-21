@@ -79,7 +79,7 @@ function c249001064.splimit(e,se,sp,st)
 end
 function c249001064.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct
-	if re:IsActiveType(TYPE_MONSTER) then ct=re:GetHandler():GetAttack() else ct=1000 end
+	if r==REASON_BATTLE then ct=e:GetHandler():GetBattleTarget():GetAttack() elseif re:IsActiveType(TYPE_MONSTER) then ct=re:GetHandler():GetAttack() else ct=1000 end
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x26,ct,REASON_EFFECT) end
 	e:GetHandler():RemoveCounter(tp,0x26,ct,REASON_EFFECT)
 	return true
@@ -120,7 +120,7 @@ function c249001064.deckop(e,tp,eg,ep,ev,re,r,rp)
 				Duel.SendtoHand(g2,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,g2)
 			end			
-		elseif (tc:GetType()==0x2 or tc:GetType()==0x4 or tc:IsType(TYPE_SPELL+TYPE_QUICKPLAY)) and Duel.IsExistingMatchingCard(c249001064.filter2,tp,LOCATION_GRAVE,0,1,nil,tc:GetType())
+		elseif (tc:GetType()==0x2 or tc:GetType()==0x4 or tc:GetType()==0x10002) and Duel.IsExistingMatchingCard(c249001064.filter2,tp,LOCATION_GRAVE,0,1,nil,tc:GetType())
 		and Duel.SelectYesNo(tp,1161) then
 			local g2=Duel.SelectMatchingCard(tp,c249001064.filter2,tp,LOCATION_GRAVE,0,1,1,nil,tc:GetType())
 			tc=g2:GetFirst()
