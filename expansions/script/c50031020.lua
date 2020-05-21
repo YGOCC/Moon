@@ -4,6 +4,13 @@ function cid.initial_effect(c)
 	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
 	aux.AddEvoluteProc(c,nil,8,cid.filter1,cid.filter2,3,99)
+	--allow evolutes as materials
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_EXTRA_EVOLUTE_MATERIAL)
+	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
+	e0:SetValue(cid.evofilter)
+	c:RegisterEffect(e0) 
 	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -21,9 +28,8 @@ function cid.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_SPSUMMON_PROC)
-	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e3:SetRange(LOCATION_EXTRA)
-	e3:SetCountLimit(1,id)
 	e3:SetCondition(cid.hspcon)
 	e3:SetOperation(cid.hspop)
 	e3:SetValue(SUMMON_TYPE_SPECIAL+388)
@@ -36,12 +42,14 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 
-
+function cid.evofilter(e,c)
+	return c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)
+end
 function cid.filter1(c,ec,tp)
-	return c:IsAttribute(ATTRIBUTE_DARK)
+	return c:IsAttribute(ATTRIBUTE_DARK) and not c:IsType(TYPE_EVOLUTE)
 end
 function cid.filter2(c,ec,tp)
-	return c:IsRace(RACE_BEASTWARRIOR)
+	return c:IsRace(RACE_BEASTWARRIOR) and not c:IsType(TYPE_EVOLUTE)
 end
 function cid.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xa34)
@@ -67,34 +75,33 @@ function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) and Duel.SelectYesNo(tp,aux.Stringid(id,0))  then
-  local ct=math.min(5,Duel.GetFieldGroupCount(tp,LOCATION_DECK,0))
-	if ct==0 then return end
-	local t={}
-	for i=1,ct do
-		t[i]=i
+		local ct=math.min(5,Duel.GetFieldGroupCount(tp,LOCATION_DECK,0))
+		if ct==0 then return end
+		local t={}
+		for i=1,ct do
+			t[i]=i
+		end
+		local ac=1
+		if ct>1 then
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
+			ac=Duel.AnnounceNumber(tp,table.unpack(t))
+		end
+		Duel.SortDecktop(tp,tp,ac)
 	end
-	local ac=1
-	if ct>1 then
-		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
-		ac=Duel.AnnounceNumber(tp,table.unpack(t))
-	end
-	Duel.SortDecktop(tp,tp,ac)
 end
-end
-function cid.spfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)
+function cid.spfilter(c,ec,tp)
+	return c:IsFaceup() and c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE) and c:IsCanBeEvoluteMaterial(ec) 
+		and Duel.GetLocationCountFromEx(tp,tp,c,ec)>0 and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_EVOLUTE_MATERIAL)
 end
 function cid.hspcon(e,c)
-  if c==nil then return true end
+	if c==nil then return true end
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_MZONE,0,1,nil)
-		
+	return Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_MZONE,0,1,nil,c,tp)
 end
 function cid.hspop(e,tp,eg,ep,ev,re,r,rp,c)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_MATERIAL)
-	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_MZONE,0,1,1,nil)
-   Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_MATERIAL)
+	local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_MZONE,0,1,1,nil,c,tp)
+    Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
 	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end

@@ -157,12 +157,18 @@ function Duel.RemoveEC(p,s,o,ct,r)
 	if ct>0 then Duel.RemoveCounter(p,s,o,0x1088,ct,r) end
 end
 function Card.IsCanBeEvoluteMaterial(c,ec)
-	if c:IsControler(1-ec:GetControler()) or not c:IsLocation(LOCATION_MZONE) then
+	if c:IsControler(1-ec:GetControler()) or not c:IsLocation(LOCATION_MZONE) or (not c:IsHasEffect(EFFECT_EVOLUTE_LEVEL) and c:GetLevel()<=0 and c:GetRank()<=0 and not c:IsStatus(STATUS_NO_LEVEL)) then
 		local tef1={c:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL,tp)}
+		local tef1alt={ec:IsHasEffect(EFFECT_EXTRA_EVOLUTE_MATERIAL,tp)}
 		local ValidSubstitute=false
 		for _,te1 in ipairs(tef1) do
 			local con=te1:GetCondition()
-			if (not con or con(c,ec,1)) then ValidSubstitute=true end
+			local val=te1:GetValue()
+			if (not con or con(c,ec,1)) and (not val or type(val)=="number" or (type(val)=="function" and val(te1,ec))) then ValidSubstitute=true end
+		end
+		for _,te1alt in ipairs(tef1alt) do
+			local val=te1alt:GetValue()
+			if not val or type(val)=="number" or (type(val)=="function" and val(te1alt,c)) then ValidSubstitute=true end
 		end
 		if not ValidSubstitute then return false end
 	else
@@ -175,7 +181,6 @@ function Card.IsCanBeEvoluteMaterial(c,ec)
 			if tev(te2,ec) then return false end
 		elseif tev~=0 then return false end
 	end
-	if not c:IsHasEffect(EFFECT_EVOLUTE_LEVEL) and c:GetLevel()<=0 and c:GetRank()<=0 and not c:IsStatus(STATUS_NO_LEVEL) then return false end
 	return true
 end
 function Auxiliary.AddOrigEvoluteType(c,isxyz)

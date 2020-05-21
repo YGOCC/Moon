@@ -44,20 +44,20 @@ end
 function cid.mfilter2(c,ec,tp)
 	return c:IsRace(RACE_BEASTWARRIOR)
 end
-function cid.spfilter(c)
-	return c:IsFaceup() and c:IsCode(50030993) 
+function cid.spfilter(c,ec,tp)
+	return c:IsFaceup() and c:IsCode(50030993) and c:IsCanBeEvoluteMaterial(ec)
+		and Duel.GetLocationCountFromEx(tp,tp,c,ec)>0 and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_EVOLUTE_MATERIAL)
 end
 --spsummon proc
 function cid.hspcon(e,c)
   if c==nil then return true end
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_MZONE,0,1,nil)  and Duel.GetLocationCountFromEx(tp,tp,g,c)>0
+	return Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_MZONE,0,1,nil,c,tp) 
 end
-function cid.hspop(e,tp,eg,ep,ev,re,r,rp)
+function cid.hspop(e,tp,eg,ep,ev,re,r,rp,c)
   Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_MATERIAL)
-  local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_MZONE,0,1,1,nil)
+  local g=Duel.SelectMatchingCard(tp,cid.spfilter,tp,LOCATION_MZONE,0,1,1,nil,c,tp)
   Duel.SendtoGrave(g,REASON_MATERIAL+0x10000000)
   Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
