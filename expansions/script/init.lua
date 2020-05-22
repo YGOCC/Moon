@@ -59,8 +59,8 @@ function GetID()
 	return scard,s_id
 end
 --overwrite functions
-local is_type, card_remcounter, duel_remcounter, registereff, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv, duel_overlay, duel_set_lp, duel_select_target, duel_banish, card_check_remove_overlay_card, is_reason, duel_check_tribute, select_tribute = 
-	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Card.RegisterEffect, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.CheckRemoveOverlayCard, Card.IsReason, Duel.CheckTribute, Duel.SelectTribute
+local is_type, card_remcounter, duel_remcounter, effect_set_target_range, add_xyz_proc, add_xyz_proc_nlv, duel_overlay, duel_set_lp, duel_select_target, duel_banish, card_check_remove_overlay_card, is_reason, duel_check_tribute, select_tribute = 
+	Card.IsType, Card.RemoveCounter, Duel.RemoveCounter, Effect.SetTargetRange, Auxiliary.AddXyzProcedure, Auxiliary.AddXyzProcedureLevelFree, Duel.Overlay, Duel.SetLP, Duel.SelectTarget, Duel.Remove, Card.CheckRemoveOverlayCard, Card.IsReason, Duel.CheckTribute, Duel.SelectTribute
 
 dofile("expansions/script/proc_evolute.lua") --Evolutes
 dofile("expansions/script/proc_conjoint.lua") --Conjoints
@@ -121,26 +121,26 @@ Duel.RemoveCounter=function(p,s,o,typ,ct,r,rp)
 		return n-Duel.GetCounter(p,0,o,typ)
 	end
 end
-Card.RegisterEffect=function(c,e,forced)
-	if c:IsStatus(STATUS_INITIALIZING) and not e then return end
-	registereff(c,e,forced)
-	local m=_G["c"..c:GetOriginalCode()]
-	if not m then return false end
-	if not m.default_call_table then
-		m.default_call_table={}
-	end
-	local etable=m.default_call_table
-	table.insert(etable,e)
-	-- local prop=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE
-	-- if e:IsHasProperty(EFFECT_FLAG_UNCOPYABLE) then prop=prop|EFFECT_FLAG_UNCOPYABLE end
-	-- local ex=Effect.CreateEffect(c)
-	-- ex:SetType(EFFECT_TYPE_SINGLE)
-	-- ex:SetProperty(prop)
-	-- ex:SetCode(EFFECT_DEFAULT_CALL)
-	-- ex:SetLabelObject(e)
-	-- ex:SetLabel(c:GetOriginalCode())
-	-- registereff(c,ex,forced)
-end
+-- Card.RegisterEffect=function(c,e,forced)
+	-- if c:IsStatus(STATUS_INITIALIZING) and not e then return end
+	-- registereff(c,e,forced)
+	-- local m=_G["c"..c:GetOriginalCode()]
+	-- if not m then return false end
+	-- if not m.default_call_table then
+		-- m.default_call_table={}
+	-- end
+	-- local etable=m.default_call_table
+	-- table.insert(etable,e)
+	-- -- local prop=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE
+	-- -- if e:IsHasProperty(EFFECT_FLAG_UNCOPYABLE) then prop=prop|EFFECT_FLAG_UNCOPYABLE end
+	-- -- local ex=Effect.CreateEffect(c)
+	-- -- ex:SetType(EFFECT_TYPE_SINGLE)
+	-- -- ex:SetProperty(prop)
+	-- -- ex:SetCode(EFFECT_DEFAULT_CALL)
+	-- -- ex:SetLabelObject(e)
+	-- -- ex:SetLabel(c:GetOriginalCode())
+	-- -- registereff(c,ex,forced)
+-- end
 Auxiliary.kaiju_procs={}
 Effect.SetTargetRange=function(e,self,oppo)
 	if e:GetCode()==EFFECT_SPSUMMON_PROC or e:GetCode()==EFFECT_SPSUMMON_PROC_G then
