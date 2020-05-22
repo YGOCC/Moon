@@ -101,7 +101,7 @@ function c249001064.decktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,1)
 end
 function c249001064.filter(c,lv,race,att)
-	return c:IsLevelBelow(lv) and c:IsRace(race) and c:IsAttribute(att) and c:IsAbleToHand()
+	return c:GetLevel()==lv and c:IsRace(race) and c:IsAttribute(att) and c:IsAbleToHand()
 end
 function c249001064.filter2(c,type)
 	return c:GetType()==type and c:CheckActivateEffect(false,false,false) and c:IsAbleToDeck()

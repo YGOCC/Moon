@@ -20,7 +20,7 @@ function c213005.initial_effect(c)
 	e3:SetCategory(CATEGORY_REMOVE)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_TO_GRAVE)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1,213005)
 	e3:SetCondition(c213005.addcon)
 	e3:SetTarget(c213005.addtg)
@@ -34,10 +34,8 @@ function c213005.spfilter2(c)
 	return c:IsSetCard(0x2700) and c:IsType(TYPE_MONSTER)
 end
 function c213005.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		local g=Duel.GetMatchingGroup(c213005.spfilter1,tp,LOCATION_DECK,0,nil,e,tp)
-		return g:GetCount()>=3
-	end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c213005.spfilter,tp,LOCATION_DECK,0,3,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_DECK)
 end
 function c213005.spop(e,tp,eg,ep,ev,re,r,rp)

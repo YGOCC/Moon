@@ -1,8 +1,9 @@
 --Anna, Archer of Eternna
 function c213010.initial_effect(c)
-	--search
+	--to hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(213010,0))
+	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
@@ -19,7 +20,7 @@ function c213010.initial_effect(c)
 	e3:SetCategory(CATEGORY_REMOVE)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_TO_GRAVE)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1,213010)
 	e3:SetCondition(c213010.addcon)
 	e3:SetTarget(c213010.addtg)
@@ -27,23 +28,21 @@ function c213010.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c213010.thfilter(c)
-	return c:IsSetCard(0x2700) and c:IsSSetable() and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsSetCard(0x2700) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function c213010.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE+LOCATION_FZONE)>0
-		and Duel.IsExistingMatchingCard(c213010.thfilter,tp,LOCATION_DECK,0,3,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c213010.thfilter,tp,LOCATION_DECK,0,3,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c213010.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c213010.thfilter,tp,LOCATION_DECK,0,nil)
 	if g:GetCount()>=3 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g:Select(tp,3,3,nil)
 		Duel.ConfirmCards(1-tp,sg)
-		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SET)
 		local tg=sg:RandomSelect(1-tp,1)
-		Duel.ShuffleDeck(tp)
-		Duel.SSet(tp,tg,tp,false)
+		Duel.SendtoHand(tg,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tg)
 	end
 end
 function c213010.addcon(e,tp,eg,ep,ev,re,r,rp)

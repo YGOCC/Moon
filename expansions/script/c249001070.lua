@@ -56,9 +56,9 @@ function c249001070.filter(c)
 end
 function c249001070.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c249001071.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c249001071.filter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c249001070.filter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c249001071.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,c249001070.filter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c249001070.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -77,6 +77,6 @@ function c249001070.operation2(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 end
-function c249001070.atkcon(e,tp,eg,ep,ev,re,r,rp)
+function c249001070.actcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetBattleTarget()~=nil
 end

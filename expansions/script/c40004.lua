@@ -46,11 +46,10 @@ end
 	end
 end
 	function s.refilter(c)
-	return (c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_MACHINE) and c:IsAbleToHand() and not c:IsCode(40004)) or (c.toss_coin and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand())
+	return (c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_MACHINE) and c:IsAbleToHand() and c:IsFaceup() and not c:IsCode(40004)) or (c.toss_coin and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsFaceup() and c:IsAbleToHand())
 end
 	function s.trg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return false end
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and s.refilter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and s.refilter(chkc) and chkc:IsFaceup() end
 	if chk==0 then return Duel.IsExistingTarget(s.refilter,tp,LOCATION_REMOVED,0,1,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectTarget(tp,s.refilter,tp,LOCATION_REMOVED,0,1,1,e:GetHandler())

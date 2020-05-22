@@ -18,16 +18,24 @@ function c213070.initial_effect(c)
 	e1:SetOperation(c213070.disop)
 	c:RegisterEffect(e1)
 	--atkup
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(213070,2))
+	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,213071)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCost(c213070.atkcost)
+	e2:SetTarget(c213070.atktg)
+	e2:SetOperation(c213070.atkop)
+	c:RegisterEffect(e2)
+	--splimit
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(213070,2))
-	e3:SetCategory(CATEGORY_ATKCHANGE)
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,213071)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCost(c213070.atkcost)
-	e3:SetTarget(c213070.atktg)
-	e3:SetOperation(c213070.atkop)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCondition(c213070.regcon)
+	e3:SetOperation(c213070.regop)
 	c:RegisterEffect(e3)
 end
 function c213070.ovfilter(c)
@@ -78,7 +86,21 @@ function c213070.atkop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
-
-
+function c213070.regcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
+end
+function c213070.regop(e,tp,eg,ep,ev,re,r,rp)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetTarget(c213070.splimit)
+	Duel.RegisterEffect(e1,tp)
+end
+function c213070.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return c:IsCode(213070) and bit.band(sumtype,SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ
+end
 
 
