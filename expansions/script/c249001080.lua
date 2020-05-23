@@ -38,10 +38,13 @@ function c249001080.initial_effect(c)
 	--cannot negate effect
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD)
-	e6:SetCode(EFFECT_CANNOT_DISEFFECT)
+	e6:SetCode(EFFECT_CANNOT_DISABLE)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCondition(c249001080.condition)
 	e6:SetValue(c249001080.efilter)
+	local e7=e6:Clone()
+	e7:SetCode(EFFECT_CANNOT_DISEFFECT)
+	c:RegisterEffect(e7)
 end
 c249001080.xyz_number=197
 function c249001080.splimit(e,se,sp,st)

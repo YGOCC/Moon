@@ -58,7 +58,7 @@ function c249001073.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c249001073.spfilter1(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0xC048)
+	return c:IsFaceup() and c:IsSetCard(0xC048) and not c:IsType(TYPE_XYZ)
 end
 function c249001073.spfilter2(c,e,tp,mc,race,rk)
 	return aux.IsCodeListed(c,mc:GetCode()) and c:IsSetCard(0xC048) and mc:IsCanBeXyzMaterial(c)

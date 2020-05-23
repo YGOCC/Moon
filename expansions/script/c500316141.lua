@@ -47,7 +47,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e8)
 end
 function cid.filter3(c,ec,tp)
-	return not c:IsType(TYPE_EFFECT)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) or c:IsRace(RACE_FAIRY)
 end
 
 function cid.costfilter(c)

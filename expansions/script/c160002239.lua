@@ -44,9 +44,6 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 
-function cid.checku(sg,ec,tp)
-return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
-end
 function cid.filter1(c,ec,tp)
 	return c:IsRace(RACE_FAIRY) or c:IsAttribute(ATTRIBUTE_LIGHT)
 end

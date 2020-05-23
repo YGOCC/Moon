@@ -15,7 +15,7 @@ function c249001085.initial_effect(c)
     e1:SetTargetRange(0,LOCATION_MZONE)
     e1:SetCode(EFFECT_UPDATE_ATTACK)
     e1:SetValue(-800)
-    c:RegisterEffect(e2)
+    c:RegisterEffect(e1)
 	--activate limit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -41,6 +41,13 @@ c249001085.xyz_number=59
 function c249001085.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
+function c249001085.condition(e)
+	local ph=Duel.GetCurrentPhase()
+	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and  e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,249001084)
+end
+function c249001085.aclimit(e,re,tp)
+	return re:IsActiveType(TYPE_MONSTER)
+end
 function c249001085.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
@@ -49,11 +56,4 @@ function c249001085.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetOverlayCount()>0 then
 		c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 	end
-end
-function c249001085.condition(e)
-	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE and  e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,249001084)
-end
-function c249001085.aclimit(e,re,tp)
-	return re:IsActiveType(TYPE_MONSTER)
 end

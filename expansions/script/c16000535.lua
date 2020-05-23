@@ -3,7 +3,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
    aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-  aux.AddEvoluteProc(c,nil,6,cid.filter1,2,99)
+  aux.AddEvoluteProc(c,nil,6,aux.FilterBoolFunction(Card.IsSetCard,0xc50),2,99)
 	--attack up
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_CONTROL+CATEGORY_DISABLE)
@@ -34,7 +34,7 @@ function cid.checku(sg,ec,tp)
 return sg:IsExists(Card.IsType,1,nil,TYPE_NORMAL)
 end
 function cid.filter1(c,ec,tp)
-	return c:IsSetCard(0xc50) and not c:IsType(TYPE_TOKEN)
+	return  c:IsType(TYPE_TOKEN)
 end
 
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)

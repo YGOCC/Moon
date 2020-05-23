@@ -29,7 +29,6 @@ function c249001056.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetCountLimit(1)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetCost(c249001056.cost)
 	e5:SetTarget(c249001056.target)
 	e5:SetOperation(c249001056.operation)
 	c:RegisterEffect(e5)
@@ -68,10 +67,6 @@ function c249001056.spop1(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function c249001056.matlimit(e,tp,eg,ep,ev,re,r,rp)
 	aux.CannotBeEDMaterial(e:GetHandler(),nil,LOCATION_MZONE,false,RESETS_STANDARD+RESET_PHASE+PHASE_END)
-end
-function c249001056.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
-	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c249001056.spfilter(c,e,tp)
 	return c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
