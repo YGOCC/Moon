@@ -3,7 +3,7 @@ local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.AddOrigEvoluteType(c)
 	c:EnableReviveLimit()
-	aux.AddEvoluteProc(c,nil,8,cid.filter1,cid.filter2,3,99)
+	aux.AddEvoluteProc(c,nil,8,cid.filter1,cid.filter2,3,99,cid.checkfilter)
 	--allow evolutes as materials
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
@@ -41,7 +41,9 @@ function cid.initial_effect(c)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
 end
-
+function cid.checkfilter(c,tp,sg,ec,ct,minc,maxc)
+	return not sg:IsExists(Card.IsType,1,nil,TYPE_EVOLUTE)
+end
 function cid.evofilter(e,c)
 	return c:IsSetCard(0xa34) and c:IsType(TYPE_EVOLUTE)
 end
