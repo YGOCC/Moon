@@ -27,7 +27,7 @@ function c213020.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2700)
 end
 function c213020.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c213020.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(c213020.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c213020.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

@@ -2,9 +2,10 @@
 function c212565.initial_effect(c)
 	--synchro summon
 	c:EnableReviveLimit()
-	aux.AddSynchroMixProcedure(c,c212565.matfilter1,nil,nil,aux.NonTuner(nil),1,99)
+	aux.AddSynchroMixProcedure(c,c212565.matfilter1,nil,nil,aux.NonTuner(Card.IsSetCard,0x2609),1,99)
 	--return
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(212565,2))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -30,8 +31,8 @@ function c212565.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_TO_DECK)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
-	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,212566)
+	e3:SetCondition(c212565.rtcon)
 	e3:SetTarget(c212565.settg)
 	e3:SetOperation(c212565.setop)
 	c:RegisterEffect(e3)
@@ -77,6 +78,12 @@ function c212565.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
+end
+function c212565.rtfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x2609)
+end
+function c212565.rtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c212565.rtfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function c212565.filter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)

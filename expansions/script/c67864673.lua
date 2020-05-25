@@ -50,15 +50,8 @@ function cod.checkzone(tp)
 	end
 	return bit.band(zone,0x1f)
 end
-function cod.cfilter2(c,lg1)
-	return lg1:IsSetCard(0x2a6)
-end
 function cod.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local lg1=Duel.GetLinkedGroup(tp,1,1)
-	local lg2=Duel.GetLinkedGroup(1-tp,1,1)
-	local zone=cod.checkzone(tp)
-	lg1:Merge(lg2)
-	return lg1 and eg and lg1:IsContains(e:GetHandler()) and eg:IsExists(cod.cfilter2,1,nil,lg1)
+	return 2^e:GetHandler():GetSequence()&cod.checkzone(tp)~=0
 end
 function cod.spfilter(c,e,tp)
 	return c:IsSetCard(0x2a6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)

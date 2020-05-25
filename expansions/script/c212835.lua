@@ -28,7 +28,7 @@ function c212835.mfilter(c)
 	return c:IsLinkSetCard(0x26eb)
 end
 function c212835.filter(c,e,tp)
-	return c:IsCode(212830) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x26eb) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c212835.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

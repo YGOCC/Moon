@@ -20,6 +20,13 @@ function c212805.initial_effect(c)
 	e2:SetTarget(c212805.cttg)
 	e2:SetOperation(c212805.ctop)
 	c:RegisterEffect(e2)
+	--cannot special summon
+	local e3=Effect.CreateEffect(c)
+	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetRange(LOCATION_DECK)
+	e3:SetCode(EFFECT_SPSUMMON_CONDITION)
+	c:RegisterEffect(e3)
 end
 function c212805.spcon(e,c)
 	if c==nil then return true end

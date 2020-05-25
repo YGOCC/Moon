@@ -34,14 +34,11 @@ function c212545.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c212545.filter1(c)
-	return c:IsFaceup() and c:IsSetCard(0x2609) and c:IsType(TYPE_MONSTER)
-end
-function c212545.filter2(c)
-	return c:IsFaceup() and c:IsSetCard(0x2609) and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsFaceup() and c:IsSetCard(0x2609) 
 end
 function c212545.condition(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and Duel.IsExistingMatchingCard(c212545.filter1,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(c212545.filter2,tp,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingMatchingCard(c212545.filter1,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c212545.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
@@ -49,13 +46,13 @@ function c212545.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c212545.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=Duel.GetMatchingGroup(c212545.filter2,tp,LOCATION_ONFIELD,0,nil)
+	local g=Duel.GetMatchingGroup(c212545.filter1,tp,LOCATION_ONFIELD,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c212545.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,c212545.filter2,tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c212545.filter1,tp,LOCATION_ONFIELD,0,1,1,nil)
 	if #g>0 and Duel.Destroy(g,REASON_EFFECT)~=0 then
 		Duel.NegateActivation(ev)
 	end

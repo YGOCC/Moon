@@ -59,13 +59,13 @@ end
 function c213040.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker()
 end
-function c213040.cfilter(c)
+function c213040.cffilter(c)
 	return c:IsSetCard(0x2700) and not c:IsPublic()
 end
 function c213040.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c213015.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c213040.cffilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,c213015.cfilter,tp,LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c213040.cffilter,tp,LOCATION_HAND,0,1,1,nil)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.ShuffleHand(tp)
 end

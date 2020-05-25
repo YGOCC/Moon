@@ -2,9 +2,10 @@
 function c212570.initial_effect(c)
 	--synchro summon
 	c:EnableReviveLimit()
-	aux.AddSynchroMixProcedure(c,c212570.matfilter1,nil,nil,aux.NonTuner(nil),1,99)
+	aux.AddSynchroMixProcedure(c,c212570.matfilter1,nil,nil,aux.NonTuner(Card.IsSetCard,0x2609),1,99)
 	--return
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(212570,2))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -30,8 +31,8 @@ function c212570.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_TO_DECK)
-	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,212571)
+	e3:SetCondition(c212570.rtcon)
 	e3:SetTarget(c212570.cttg)
 	e3:SetOperation(c212570.ctop)
 	c:RegisterEffect(e3)
@@ -92,6 +93,12 @@ function c212570.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 end
+function c212570.rtfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x2609)
+end
+function c212570.rtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c212570.rtfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+end
 function c212570.ctfilter(c)
 	return c:IsControlerCanBeChanged()
 end
@@ -105,6 +112,6 @@ end
 function c212570.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.GetControl(tc,tp)
+		Duel.GetControl(tc,tp,PHASE_END,2) 
 	end
 end

@@ -22,11 +22,6 @@ function cid.initial_effect(c)
 	eb:SetCondition(function(e) return e:GetHandler():GetCounter(0x1015)>0 end)
 	eb:SetValue(cid.ctval)
 	c:RegisterEffect(eb)
-	local ed=Effect.CreateEffect(c)
-	ed:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	ed:SetCode(EVENT_CONTROL_CHANGED)
-	ed:SetOperation(function(e) local tc=e:GetHandler() if tc:GetCounter(0x1015)==0 then tc:ResetEffect(RESET_TURN_SET,RESET_EVENT) end end)
-	c:RegisterEffect(ed)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UNRELEASABLE_SUM)
@@ -36,7 +31,7 @@ function cid.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_UNRELEASABLE_NONSUM)
 	c:RegisterEffect(e2)
-	aux.CannotBeEDMaterial(c,aux.TRUE)
+	aux.CannotBeEDMaterial(c,aux.TRUE,LOCATION_MZONE)
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_SINGLE)
 	e7:SetRange(LOCATION_MZONE)
@@ -54,7 +49,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e8)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsCanAddCounter(0x1015,1) end
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsCanAddCounter(0x1015,1) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,nil,0x1015,1) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x1015,1)
@@ -69,7 +64,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	tc:SetFlagEffectLabel(id,1-p)
 end
 function cid.ctval(e,c)
-	return e:GetLabel()
+	return c:GetFlagEffectLabel(id)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x1015,1,REASON_COST) end

@@ -17,7 +17,7 @@ function c212540.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,212540)
 	e2:SetCondition(c212540.condition)
-	e2:SetCost(aux.bfgcost)
+	e2:SetCost(c212540.cost)
 	e2:SetOperation(c212540.operation)
 	c:RegisterEffect(e2)
 	--summon
@@ -33,6 +33,11 @@ function c212540.initial_effect(c)
 end
 function c212540.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and (Duel.IsAbleToEnterBP() or (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE))
+end
+function c212540.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsAbleToDeckAsCost() end
+	Duel.SendtoDeck(c,nil,2,REASON_COST)
 end
 function c212540.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetAttacker() then Duel.NegateAttack()

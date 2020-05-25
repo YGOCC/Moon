@@ -2,7 +2,7 @@
 function c212550.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,nil,2,2)
+	aux.AddLinkProcedure(c,nil,2,2,c212550.lcheck)
 	--draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(212550,0))
@@ -22,17 +22,22 @@ function c212550.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_TO_DECK)
 	e2:SetCountLimit(1,212551)
+	e2:SetCondition(c212550.rtcon)
 	e2:SetTarget(c212550.sptg)
 	e2:SetOperation(c212550.spop)
 	c:RegisterEffect(e2)
 	--return
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(212550,2))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e3:SetCondition(c212550.condition)
 	e3:SetOperation(c212550.regop)
 	c:RegisterEffect(e3)
+end
+function c212550.lcheck(g,lc)
+	return g:IsExists(Card.IsLinkSetCard,1,nil,0x2609)
 end
 function c212550.tdfilter(c)
 	return c:IsSetCard(0x2609) and c:IsAbleToDeck()
@@ -57,6 +62,12 @@ function c212550.drop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
+end
+function c212550.rtfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x2609)
+end
+function c212550.rtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c212550.rtfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function c212550.spfilter(c,e,tp)
 	return c:IsSetCard(0x2609) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

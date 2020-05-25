@@ -2,9 +2,10 @@
 function c212560.initial_effect(c)
 	--synchro summon
 	c:EnableReviveLimit()
-	aux.AddSynchroMixProcedure(c,c212560.matfilter1,nil,nil,aux.NonTuner(nil),1,99)
+	aux.AddSynchroMixProcedure(c,c212560.matfilter1,nil,nil,aux.NonTuner(Card.IsSetCard,0x2609),1,99)
 	--return
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(212560,2))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -32,6 +33,7 @@ function c212560.initial_effect(c)
 	e3:SetCode(EVENT_TO_DECK)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e3:SetCountLimit(1,212561)
+	e3:SetCondition(c212560.rtcon)
 	e3:SetTarget(c212560.negtg)
 	e3:SetOperation(c212560.negop)
 	c:RegisterEffect(e3)
@@ -81,6 +83,12 @@ function c212560.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(0)
 		tc:RegisterEffect(e1)
 	end
+end
+function c212560.rtfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x2609)
+end
+function c212560.rtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c212560.rtfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 end
 function c212560.negfilter(c)
 	return c:IsType(TYPE_MONSTER) and aux.disfilter1(c)
