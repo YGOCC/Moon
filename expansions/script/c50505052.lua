@@ -50,6 +50,16 @@ function cid.initial_effect(c)
     e8:SetTarget(cid.tgtg)
     e8:SetOperation(cid.tgop)
     c:RegisterEffect(e8)
+	--Revive Nightmare
+	local e9=Effect.CreateEffect(c)
+	e9:SetDescription(aux.Stringid(id,0))
+	e9:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e9:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e9:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e9:SetCode(EVENT_RELEASE)
+	e9:SetTarget(cid.sptg)
+	e9:SetOperation(cid.spop)
+	c:RegisterEffect(e9)
 end
 function cid.aclimit1(e,tp,eg,ep,ev,re,r,rp)
 	if ep~=tp or not (re:IsActiveType(TYPE_SPELL) or re:IsActiveType(TYPE_TRAP)) then return end
@@ -90,4 +100,21 @@ function cid.tgop(e,tp,eg,ep,ev,re,r,rp)
     if #g>0 then
         Duel.ChangeTargetCard(ev,g)
     end
+end
+function cid.spfilter(c,e,tp)
+	return c:IsType(TYPE_RITUAL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.spfilter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+function cid.spop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

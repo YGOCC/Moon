@@ -19,7 +19,7 @@ function cid.spfilter(c,e,tp)
 end
 function cid.filter(c,e,tp,ft,mg)
 	if (c:IsOnField() and c:IsFacedown()) or not aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_FMATERIAL)
-		or c:GetLevel()<=0 or (c:IsControler(1-tp) and not c:IsSetCard(0xeeb)) then return false end
+		or c:GetLevel()<=0 or (c:IsControler(tp) and not c:IsSetCard(0xeeb)) then return false end
 	local sg=Duel.GetMatchingGroup(cid.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if not ft then ft=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_FUSION) end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end

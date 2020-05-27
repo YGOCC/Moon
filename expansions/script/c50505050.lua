@@ -43,9 +43,9 @@ function cid.filter2(c)
 end
 function cid.filter(c,tp)
 	return c:IsAbleToHand() and c:IsCode(50505051)
-		and Duel.IsExistingMatchingCard(cid.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c)
+		and Duel.IsExistingMatchingCard(cid.filter3,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c)
 end
-function cid.filter2(c,mc)
+function cid.filter3(c,mc)
 	return c:IsAbleToHand() and c:IsSetCard(0x505) and c:IsType(TYPE_RITUAL)
 end
 function cid.adtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -77,7 +77,7 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,tp)
 	if g:GetCount()>0 then
-		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.filter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,nil,g:GetFirst())
+		local mg=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.filter3),tp,LOCATION_DECK+LOCATION_GRAVE,0,nil,g:GetFirst())
 		if mg:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local sg=mg:Select(tp,1,1,nil)

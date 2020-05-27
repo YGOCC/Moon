@@ -29,6 +29,15 @@ function cid.initial_effect(c)
 	e2:SetTargetRange(0,LOCATION_MZONE)
 	e2:SetTarget(cid.atktarget)
 	c:RegisterEffect(e2)
+	--Undo Nightmare
+	local e9=Effect.CreateEffect(c)
+	e9:SetCategory(CATEGORY_TODECK)
+	e9:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e9:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e9:SetCode(EVENT_RELEASE)
+	e9:SetCondition(cid.target)
+	e9:SetOperation(cid.activate)
+	c:RegisterEffect(e9)
 end
 function cid.atktarget(e,c)
 	return c:IsType(TYPE_SPIRIT)
@@ -95,4 +104,12 @@ end
 function cid.retop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.SendtoHand(tc,nil,REASON_EFFECT)
+end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED)
+end
+function cid.activate(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(tp,LOCATION_REMOVED,LOCATION_REMOVED)
+	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 end

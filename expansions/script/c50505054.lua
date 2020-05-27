@@ -26,6 +26,14 @@ function cid.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(cid.descon)
 	c:RegisterEffect(e2)
+	--Protect Nightmare
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e9:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e9:SetCode(EVENT_RELEASE)
+	e9:SetCondition(cid.indcon)
+	e9:SetOperation(cid.atop)
+	c:RegisterEffect(e9)
 end
 function cid.descon(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(e:GetHandler()) and eg:IsExists(Card.IsControler,1,nil,1-tp)
@@ -56,4 +64,26 @@ end
 function cid.disop(e,tp)
     local dis1=bit.lshift(0x1,e:GetLabel())
     return dis1
-end 
+end
+function cid.indcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingTarget(cid.filter2,tp,LOCATION_MZONE,0,1,nil,tp)
+end
+function cid.filter2(c)
+	return c:IsFaceup() and c:IsType(TYPE_RITUAL)
+end
+function cid.atop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(cid.filter2,tp,LOCATION_MZONE,0,nil)
+	local tc=g:GetFirst()
+	local c=e:GetHandler()
+	while tc do
+		--indes
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+		e2:SetRange(LOCATION_MZONE)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e2:SetValue(1)
+		tc:RegisterEffect(e2)
+		tc=g:GetNext()
+	end
+end
