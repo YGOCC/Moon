@@ -57,8 +57,8 @@ end
 function cid.dfilter(c)
 	return c:IsSetCard(0x777) and c:GetAttack()>=(c:GetBaseAttack()+2100)
 end
-function cid.afilter(c)
-	return c:IsSetCard(0x777) and c:GetAttack()>=(c:GetBaseAttack()+2800)
+function cid.afilter(c,tp)
+	return c and c:IsSetCard(0x777) and c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsControler(tp) and c:GetAttack()>=(c:GetBaseAttack()+2800)
 end
 function cid.descon(e)
 	local tp=e:GetHandlerPlayer()
@@ -66,7 +66,7 @@ function cid.descon(e)
 end
 function cid.actcon(e)
 	local tp=e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(cid.afilter,tp,LOCATION_MZONE,0,1,nil,c) and Duel.GetAttacker():IsSetCard(0x777)
+	return cid.afilter(Duel.GetAttacker(),tp) or cid.afilter(Duel.GetAttackTarget(),tp)
 end
 function cid.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x777)
