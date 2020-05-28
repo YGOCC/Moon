@@ -49,7 +49,7 @@ function c400016.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400016.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(400016)~=0 and Duel.GetCustomActivityCount(400016,tp,ACTIVITY_CHAIN)>3
+	return e:GetHandler():GetFlagEffect(400016)~=0 and Duel.GetCustomActivityCount(400015,tp,ACTIVITY_CHAIN)>3
 end
 function c400016.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c400016.filter,tp,LOCATION_DECK,0,1,nil) end

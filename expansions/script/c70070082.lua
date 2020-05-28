@@ -59,7 +59,7 @@ function cid.spfilter1(c)
 	return c:IsSetCard(0x777) and c:IsFaceup()
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then return Duel.IsExistingTarget(cid.thfilter,tp,LOCATION_MZONE,0,1,nil) end
+    if chk==0 then return Duel.IsExistingTarget(cid.thfilter,tp,0,LOCATION_MZONE,1,nil) end
     local g=Duel.SelectTarget(tp,cid.thfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
     Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,0,tp,1)

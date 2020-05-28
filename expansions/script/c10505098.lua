@@ -6,6 +6,7 @@ function c10505098.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,10505098)
+	e1:SetTarget(c10505098.actg)
 	e1:SetOperation(c10505098.activate)
 	c:RegisterEffect(e1)
 	--extra summon
@@ -29,6 +30,10 @@ function c10505098.initial_effect(c)
 end
 function c10505098.tgfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1a4) and c:IsAbleToGrave()
+end
+function c10505098.actg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c10505098.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function c10505098.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
