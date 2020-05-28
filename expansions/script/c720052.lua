@@ -63,17 +63,18 @@ end
 	function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-		if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) and e:GetLabelObject():IsSetCard(0xb23) then
+		if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,re:GetHandler(),1,0,0)
+			if e:GetLabelObject():IsSetCard(0xb23) then
+			Duel.SetOperationInfo(0<CATEGORY_NEGATE,re:GetHandler(),1,0,0)
+		end
 	end
 end
 	function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-		if not e:GetLabelObject():IsSetCard(0xb23) then return end
-		if Duel.NegateActivation(ev) and e:GetLabelObject():IsSetCard(0xb23) then
-		Duel.Destroy(eg,REASON_EFFECT)
-	else
-		Duel.Destroy(eg,REASON_EFFECT)
+	Duel.Destroy(eg,REASON_EFFECT)
+		if e:GetLabelObject():IsSetCard(0xb23) then
+		Duel.NegateActivation(ev)
 	end
 end
 	function s.texfilter(c)
