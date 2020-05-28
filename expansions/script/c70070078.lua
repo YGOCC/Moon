@@ -66,7 +66,7 @@ function cid.descon(e)
 end
 function cid.actcon(e)
 	local tp=e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(cid.afilter,tp,LOCATION_MZONE,0,1,nil) and Duel.GetAttacker():IsSetCard(0x777)
+	return Duel.IsExistingMatchingCard(cid.afilter,tp,LOCATION_MZONE,0,1,nil,c) and Duel.GetAttacker():IsSetCard(0x777)
 end
 function cid.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x777)

@@ -49,7 +49,7 @@ function cid.initial_effect(c)
 	local e9=Effect.CreateEffect(c)
 	e9:SetType(EFFECT_TYPE_SINGLE)
 	e9:SetCode(EFFECT_ATTACK_ALL)
-	e9:SetCodition(cid.atk(6100))
+	e9:SetCondition(cid.atk(6100))
 	e9:SetValue(1)
 	c:RegisterEffect(e9)
 	--cannot be target

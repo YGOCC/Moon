@@ -14,10 +14,10 @@ function c400014.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c400014.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(function(c)return c:IsFaceup() and c:IsSetCard(0x146) end,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(function(c)return c:IsFaceup() and c:IsSetCard(0x147) end,tp,LOCATION_MZONE,0,1,nil)
 end
 function c400014.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x146)
+	return c:IsFaceup() and c:IsSetCard(0x147)
 end
 function c400014.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c400014.filter(chkc) end
@@ -38,7 +38,7 @@ function c400014.activate(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 		tc:RegisterEffect(e3)
 		if Duel.IsExistingMatchingCard(c400014.thfilter,tp,LOCATION_DECK,0,1,nil)
-		and Duel.IsExistingMatchingCard(function(c)return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY) and c:GetCode()~=400014 end,tp,LOCATION_GRAVE,0,1,nil)
+		and Duel.IsExistingMatchingCard(function(c)return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY) and c:GetCode()~=400014 end,tp,LOCATION_GRAVE,0,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(400013,0)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -51,5 +51,5 @@ function c400014.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400014.thfilter(c)
-	return c:IsSetCard(0x146) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x147) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end

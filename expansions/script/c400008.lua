@@ -16,7 +16,7 @@ function c400008.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x146))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x147))
 	e3:SetTargetRange(LOCATION_HAND,0)
 	c:RegisterEffect(e3)
 	--token
@@ -52,7 +52,7 @@ function c400008.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(g,REASON_COST)
 end
 function c400008.thfilter(c)
-	return c:IsSetCard(0x146) and c:IsType(TYPE_QUICKPLAY)
+	return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY)
 		and c:IsAbleToHand()
 end
 function c400008.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -76,14 +76,14 @@ function c400008.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c400008.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetLinkedZone(tp)~=0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,400009,0x146,0x4011,1700,1000,4,RACE_FAIRY,ATTRIBUTE_WATER) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,400009,0x147,0x4011,1700,1000,4,RACE_FAIRY,ATTRIBUTE_WATER) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
 function c400008.operation(e,tp,eg,ep,ev,re,r,rp)
 	local zone=e:GetHandler():GetLinkedZone(tp)
 	if zone==0 then return end
-	if Duel.IsPlayerCanSpecialSummonMonster(tp,400009,0x146,0x4011,1700,1000,4,RACE_FAIRY,ATTRIBUTE_WATER) then
+	if Duel.IsPlayerCanSpecialSummonMonster(tp,400009,0x147,0x4011,1700,1000,4,RACE_FAIRY,ATTRIBUTE_WATER) then
 		local token=Duel.CreateToken(tp,400009)
 		Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP,zone)
 	end
