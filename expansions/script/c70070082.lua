@@ -37,7 +37,7 @@ function cid.efilter(c)
 end
 function cid.drcon(e,tp,eg,ep,ev,re,r,rp)
 	local tp=e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(cid.efilter,tp,LOCATION_MZONE,0,1,nil) and Duel.GetCurrentPhase()==PHASE_BATTLE_START
+	return Duel.IsExistingMatchingCard(cid.efilter,tp,LOCATION_MZONE,0,1,nil) and Duel.GetCurrentPhase()==PHASE_BATTLE_START and Duel.GetTurnPlayer()==tp
 end
 function cid.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
