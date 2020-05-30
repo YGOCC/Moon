@@ -68,14 +68,20 @@ end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 			local sg=tr:Select(tp,1,1,nil)
 			local sc=sg:GetFirst()
-			Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-			Duel.ShuffleDeck(tp)
-		local te=sc:GetActivateEffect()
-			Duel.BreakEffect()
+				if sc and sc:IsType(TYPE_CONTINUOUS) then
+				Duel.MoveToField(sc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+				Duel.ShuffleDeck(tp)
+			local te=sc:GetActivateEffect()
+				Duel.SendtoDeck(tc,nil,0,REASON_EFFECT+REASON_REVEAL)
+			elseif sc and sc:IsType(TYPE_FIELD) then
+				Duel.MoveToField(sc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
+				Duel.ShuffleDeck(tp)
+			local te=sc:GetActivateEffect()
+				Duel.SendtoDeck(tc,nil,0,REASON_EFFECT+REASON_REVEAL)
+			else
+				Duel.DisableShuffleCheck()
+				Duel.SendtoDeck(tc,nil,0,REASON_EFFECT+REASON_REVEAL)
+			end
 		end
-			Duel.SendtoDeck(tc,nil,0,REASON_EFFECT+REASON_REVEAL)
-		else
-			Duel.DisableShuffleCheck()
-			Duel.SendtoDeck(tc,nil,0,REASON_EFFECT+REASON_REVEAL)
 	end
 end

@@ -15,7 +15,7 @@ function c84607225.initial_effect(c)
 	--PlaceIntoPendZone
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(84607225,1))
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e2:SetCategory(CATEGORY_LEAVE_GRAVE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -86,21 +86,20 @@ end
 function c84607225.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_RITUAL)==SUMMON_TYPE_RITUAL or bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
-function c84607225.filter(c)
-	return c:IsSetCard(0x7ce) and c:IsType(TYPE_PENDULUM)  and not c:IsForbidden()
+function c84607225.pfilter(c)
+	return c:IsSetCard(0x7ce) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 end
 function c84607225.pentg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c84607225.filter(chkc) end
-	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7))
-		and Duel.IsExistingTarget(c84607225.filter,tp,LOCATION_GRAVE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c84607225.pfilter(chkc) end
+	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
+		and Duel.IsExistingTarget(c84607225.pfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(84607225,2))
-	local g=Duel.SelectTarget(tp,c84607225.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,c84607225.pfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 end
 function c84607225.penop(e,tp,eg,ep,ev,re,r,rp)
-	if not (Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7))
-		or not e:GetHandler():IsRelateToEffect(e) then return end
+	if not (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end

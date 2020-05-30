@@ -86,20 +86,20 @@ end
 function c84607223.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_RITUAL)==SUMMON_TYPE_RITUAL or bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
-function c84607223.thfilter2(c,e,tp)
-	return c:IsSetCard(0x7ce) and c:IsType(TYPE_MONSTER) and (not c:IsCode(84607223)) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c84607223.thfilter2(c,e,tp,mc)
+	return (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsSetCard(0x7ce)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(84607223)
+		and (c:IsLocation(LOCATION_GRAVE) and Duel.GetMZoneCount(tp,mc)>0
+			or c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0)
 end
 function c84607223.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c84607223.thfilter2,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c84607223.thfilter2,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil,e,tp,e:GetHandler()) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_EXTRA)
 end
 function c84607223.tgop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c84607223.thfilter2,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
-	if g:GetCount()>0 and not g:GetFirst():IsHasEffect(EFFECT_NECRO_VALLEY) then
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c84607223.thfilter2),tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp,nil)
+	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

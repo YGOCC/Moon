@@ -68,7 +68,7 @@ end
 	function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	return bc and not bc:IsAttribute(ATTRIBUTE_LIGHT)
+	return bc and bc:IsFaceup() and not bc:IsAttribute(ATTRIBUTE_LIGHT)
 end
 	function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -130,10 +130,3 @@ end
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 end
-
-
-
-
-
-
-
