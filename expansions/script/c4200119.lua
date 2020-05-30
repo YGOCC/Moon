@@ -116,7 +116,7 @@ function cid.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetLabelObject()
-	if ec:IsLocation(LOCATION_MZONE) then Duel.GetControl(ec,tp) end
+	if ec:IsLocation(LOCATION_MZONE) then Duel.GetControl(ec,tp,PHASE_END) end
 end
 function cid.filter(c)
 	return c:IsSetCard(0x412) and c:IsAbleToDeck() and not c:IsCode(id)
