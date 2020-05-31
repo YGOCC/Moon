@@ -66,7 +66,7 @@ end
 		if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,re:GetHandler(),1,0,0)
 			if e:GetLabelObject():IsSetCard(0xb23) then
-			Duel.SetOperationInfo(0<CATEGORY_NEGATE,re:GetHandler(),1,0,0)
+			Duel.SetOperationInfo(0,CATEGORY_NEGATE,re:GetHandler(),1,0,0)
 		end
 	end
 end
