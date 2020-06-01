@@ -61,10 +61,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if ct==1 then
 		if Duel.GetMatchingGroupCount(cid.cfilter,tp,LOCATION_GRAVE,0,e:GetHandler())==0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
-			Duel.SendtoGrave(g,REASON_EFFECT)
-		end
+		Duel.SendtoGrave(Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil),REASON_EFFECT)
 	else
 		local tc=Duel.GetFirstTarget()
 		if tc and tc:IsRelateToEffect(e) then

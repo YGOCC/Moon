@@ -45,10 +45,7 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	end
+	Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp),0,tp,tp,false,false,POS_FACEUP)
 end
 function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -59,6 +56,5 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
-	local rg=e:GetHandler():GetBattleTarget()
-	Duel.Destroy(rg,POS_FACEUP,REASON_EFFECT)
+	Duel.Destroy(e:GetHandler():GetBattleTarget(),POS_FACEUP,REASON_EFFECT)
 end

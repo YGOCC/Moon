@@ -46,9 +46,7 @@ function cid.op1(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsSetCard,nil,0x285b):Filter(aux.NOT(Card.IsCode),nil,id)
 	if g:GetCount()<2 or not Duel.IsPlayerAffectedByEffect(tp,id) then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		local tc=g:GetFirst()
-		local ct=0
-		while tc do
+		for tc in aux.Next(g) do
 			if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
@@ -57,11 +55,9 @@ function cid.op1(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 				e1:SetValue(RACE_FAIRY)
 				tc:RegisterEffect(e1)
-				ct=ct+1
 			end
-			tc=g:GetNext()
 		end
-		if ct>0 then Duel.SpecialSummonComplete() end
+		Duel.SpecialSummonComplete()
 	end
 end
 function cid.con2(e,tp,eg,ep,ev,re,r,rp)

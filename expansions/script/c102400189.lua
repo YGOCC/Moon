@@ -35,6 +35,5 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp)
-	if #g>0 then Duel.SpecialSummon(g,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP) end
+	Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp),SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
 end

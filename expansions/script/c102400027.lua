@@ -46,8 +46,5 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,cid.filter2,tp,LOCATION_DECK,0,1,e:GetLabel(),nil)
-	if g:GetCount()>0 then
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-	end
+	Duel.Remove(Duel.SelectMatchingCard(tp,cid.filter2,tp,LOCATION_DECK,0,1,e:GetLabel(),nil),POS_FACEUP,REASON_EFFECT)
 end

@@ -49,12 +49,11 @@ end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,aux.ExceptThisCard(e),tp)
-	if #g>0 then Duel.Destroy(g,REASON_EFFECT) end
+	Duel.Destroy(Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,aux.ExceptThisCard(e),tp),REASON_EFFECT)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local dg=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	Duel.HintSelection(dg)
 	if #dg>0 then
-		Duel.HintSelection(dg)
 		Duel.BreakEffect()
 		if Duel.Destroy(dg,nil,REASON_EFFECT)==0 then return end
 		local p=dg:GetFirst():GetPreviousControler()

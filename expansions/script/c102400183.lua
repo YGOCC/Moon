@@ -34,10 +34,8 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK+LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,tp,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+	Duel.SendtoHand(g,tp,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,g)
 end
 function cid.filter(c)
 	return c:GetType()&0x82==0x82 and (c:IsFaceup() and c:IsLocation(LOCATION_REMOVED) or c:IsSetCard(0xf7a)) and c:IsAbleToHand()

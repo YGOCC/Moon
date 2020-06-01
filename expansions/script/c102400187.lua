@@ -44,10 +44,8 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) and Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local tg=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
-		if #tg>0 then
-			Duel.HintSelection(tg)
-			Duel.Destroy(tg,REASON_EFFECT)
-		end
+		Duel.HintSelection(tg)
+		Duel.Destroy(tg,REASON_EFFECT)
 	end
 end
 function cid.cfilter(c)

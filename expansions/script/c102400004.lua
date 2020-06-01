@@ -69,8 +69,7 @@ end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	if #g>0 then Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) end
+	Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp),0,tp,tp,false,false,POS_FACEUP)
 end 
 function cid.spfilter(c,e,tp)
 	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:GetOwner()==tp and c:IsCanBeSpecialSummoned(e,0,tp,false,true)

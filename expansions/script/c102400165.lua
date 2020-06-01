@@ -41,10 +41,8 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if ct==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_MZONE,1,ct,nil)
-	if #g>0 then
-		Duel.HintSelection(g)
-		Duel.Destroy(g,REASON_EFFECT)
-	end
+	Duel.HintSelection(g)
+	Duel.Destroy(g,REASON_EFFECT)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsType(TYPE_LINK) end

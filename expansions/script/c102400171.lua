@@ -40,10 +40,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local ct=#Duel.GetMatchingGroup(cid.lfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
 	if ct==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1,ct,nil)
-	if #g>0 then
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-	end
+	Duel.Remove(Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1,ct,nil),POS_FACEUP,REASON_EFFECT)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsType(TYPE_LINK) end

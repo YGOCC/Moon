@@ -25,14 +25,12 @@ end
 function cid.penop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local dg=Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_PZONE,0,1,1,nil)
-	if dg:GetCount()>0 then
-		Duel.HintSelection(dg)
-		if Duel.Destroy(dg,REASON_EFFECT)==0 then return end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		local g=Duel.SelectMatchingCard(tp,cid.penfilter,tp,LOCATION_DECK,0,1,1,nil)
-		local tc=g:GetFirst()
-		if tc then
-			if not Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true) then Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) end
-		end
+	Duel.HintSelection(dg)
+	if Duel.Destroy(dg,REASON_EFFECT)==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+	local g=Duel.SelectMatchingCard(tp,cid.penfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local tc=g:GetFirst()
+	if tc then
+		if not Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true) then Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true) end
 	end
 end

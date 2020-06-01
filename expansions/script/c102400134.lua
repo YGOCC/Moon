@@ -36,8 +36,7 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(cid.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.Destroy(g,REASON_EFFECT)
+	Duel.Destroy(Duel.GetMatchingGroup(cid.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil),REASON_EFFECT)
 end
 function cid.cfilter(c,tp)
 	return c:IsReason(REASON_BATTLE+REASON_EFFECT)
@@ -58,8 +57,5 @@ end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-	end
+	Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp),0,tp,tp,false,false,POS_FACEUP)
 end

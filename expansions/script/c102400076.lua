@@ -34,13 +34,11 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE+LOCATION_HAND,0,3,3,nil)
-	if g:GetCount()>0 then
-		Duel.ConfirmCards(1-tp,g)
-		if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then Duel.ShuffleHand(tp) end
-		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
-		if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
-		if g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)==3 then
-			Duel.Draw(tp,1,REASON_EFFECT)
-		end
+	Duel.ConfirmCards(1-tp,g)
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then Duel.ShuffleHand(tp) end
+	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
+	if g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)==3 then
+		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end

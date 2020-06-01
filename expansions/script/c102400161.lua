@@ -45,10 +45,7 @@ function cid.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,aux.AND(cid.filter,Card.IsAbleToGrave),tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		Duel.SendtoGrave(g,REASON_EFFECT)
-	end
+	Duel.SendtoGrave(Duel.SelectMatchingCard(tp,aux.AND(cid.filter,Card.IsAbleToGrave),tp,LOCATION_DECK,0,1,1,nil),REASON_EFFECT)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and chkc:IsAbleToDeck() and cid.filter(chkc) end

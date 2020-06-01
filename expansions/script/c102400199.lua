@@ -86,8 +86,6 @@ end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local mg=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	if #mg>0 then
-		Duel.SendtoHand(mg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,mg)
-	end
+	Duel.SendtoHand(mg,nil,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,mg)
 end

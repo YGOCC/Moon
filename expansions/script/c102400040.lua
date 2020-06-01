@@ -58,8 +58,5 @@ function cid.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,function(c) return cid.filter(c) and not c:IsCode(id) end,tp,LOCATION_DECK,0,1,1,nil)
-	if #g>0 then
-		Duel.Destroy(g,REASON_EFFECT)
-	end
+	Duel.Destroy(Duel.SelectMatchingCard(tp,function(c) return cid.filter(c) and not c:IsCode(id) end,tp,LOCATION_DECK,0,1,1,nil),REASON_EFFECT)
 end

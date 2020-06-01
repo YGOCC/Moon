@@ -86,10 +86,7 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.desfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
-		if #g>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		end
+		Duel.SpecialSummon(Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(cid.desfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp),0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
@@ -111,9 +108,7 @@ function cid.filter(c,tp)
 end
 function cid.acop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:FilterCount(cid.filter,e:GetHandler(),tp)
-	if ct>0 then
-		e:GetHandler():AddCounter(0x921,ct,true)
-	end
+	if ct>0 then e:GetHandler():AddCounter(0x921,ct,true) end
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

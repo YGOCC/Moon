@@ -30,10 +30,8 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+	Duel.SendtoHand(g,nil,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,g)
 end
 function cid.desfilter1(c,tp,ec)
 	return Duel.IsExistingMatchingCard(cid.desfilter2,tp,LOCATION_ONFIELD,0,1,c,ec)
@@ -54,8 +52,6 @@ function cid.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not c:IsRelateToEffect(e) or not tc:IsRelateToEffect(e) then return end
 	local g=Duel.SelectMatchingCard(tp,cid.dfilter,tp,LOCATION_ONFIELD,0,1,1,tc,c)
-	if g:GetCount()>0 then
-		Duel.HintSelection(g)
-		Duel.Destroy(g+tc,REASON_EFFECT)
-	end
+	Duel.HintSelection(g)
+	Duel.Destroy(g+tc,REASON_EFFECT)
 end

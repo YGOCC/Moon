@@ -74,10 +74,7 @@ function cid.operation1(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,cid.sfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,tc:GetCode())
-		if sg:GetCount()>0 then
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-		end
+		Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.sfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,tc:GetCode()),0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function cid.condition2(e,tp,eg,ep,ev,re,r,rp)
@@ -104,10 +101,7 @@ function cid.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,cid.sfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,tc:GetCode())
-		if sg:GetCount()>0 then
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-		end
+		Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.sfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp,tc:GetCode()),0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function cid.tg(e,c)

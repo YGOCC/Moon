@@ -29,9 +29,7 @@ end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,cid.dfilter,tp,LOCATION_ONFIELD,0,1,1,aux.ExceptThisCard(e))
-	if g:GetCount()>0 then
-		Duel.HintSelection(g)
-		if Duel.Destroy(g,REASON_EFFECT)==0 then return end
-		Duel.NegateEffect(ev)
-	end
+	Duel.HintSelection(g)
+	if Duel.Destroy(g,REASON_EFFECT)==0 then return end
+	Duel.NegateEffect(ev)
 end

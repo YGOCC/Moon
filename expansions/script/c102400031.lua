@@ -75,7 +75,6 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil):RandomSelect(tp,1)
 	if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and tc:GetFirst():IsLevelAbove(1) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,e,tp)
-		if g:GetCount()>0 then Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP) end
+		Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,e,tp),0,tp,tp,false,false,POS_FACEUP)
 	end
 end

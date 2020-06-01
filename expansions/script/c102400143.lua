@@ -45,10 +45,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.SelectMatchingCard(tp,cid.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,tc:GetRank(),tc:GetRace())
 	local sc=sg:GetFirst()
 	if sc then
-		local og=tc:GetOverlayGroup()
-		if og:GetCount()>0 then
-			Duel.Overlay(sc,og)
-		end
+		Duel.Overlay(sc,tc:GetOverlayGroup())
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.BreakEffect()
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)

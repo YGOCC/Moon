@@ -76,8 +76,6 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) or Duel.SendtoGrave(c,REASON_EFFECT+REASON_RETURN)==0 or not c:IsLocation(LOCATION_GRAVE) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_REMOVED+LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+	Duel.SendtoHand(g,nil,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,g)
 end

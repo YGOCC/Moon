@@ -61,8 +61,6 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroupCount(aux.AND(Card.IsSetCard,Card.IsFaceup),tp,LOCATION_MZONE,0,1,nil,0x5cd)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local sg=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_MZONE,1,#g,nil)
-	if #sg>0 then
-		Duel.HintSelection(sg)
-		Duel.Destroy(sg,REASON_EFFECT)
-	end
+	Duel.HintSelection(sg)
+	Duel.Destroy(sg,REASON_EFFECT)
 end

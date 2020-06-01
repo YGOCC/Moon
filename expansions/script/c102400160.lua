@@ -27,13 +27,11 @@ function cid.filter(c)
 	return c:IsSetCard(0x7c4) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and (c:IsFaceup() and c:IsType(TYPE_PENDULUM) or c:IsLocation(LOCATION_GRAVE))
 end
 function cid.skillop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA+LOCATION_GRAVE,0,1,1,nil)
-	if #g>0 then
-		Duel.Hint(HINT_CARD,0,id)
-		if Duel.SendtoDeck(g,nil,2,REASON_EFFECT)==0 or not g:GetFirst():IsLocation(LOCATION_DECK) then return end
-		Duel.ShuffleDeck(tp)
-		Duel.RegisterFlagEffect(tp,1,RESET_CHAIN,0,1)
-	end
+	if Duel.SendtoDeck(g,nil,2,REASON_EFFECT)==0 or not g:GetFirst():IsLocation(LOCATION_DECK) then return end
+	Duel.ShuffleDeck(tp)
+	Duel.RegisterFlagEffect(tp,1,RESET_CHAIN,0,1)
 end
 function cid.cfilter(c)
 	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:IsSetCard(0x7c4) and c:IsDestructable()

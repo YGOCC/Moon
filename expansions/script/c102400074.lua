@@ -23,8 +23,5 @@ function cid.op2(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local g=Duel.GetOverlayGroup(tp,1,0)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=g:FilterSelect(tp,cid.filter,1,1,nil,e,tp)
-	if sg:GetCount()>0 then
-		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-	end
+	Duel.SpecialSummon(g:FilterSelect(tp,cid.filter,1,1,nil,e,tp),0,tp,tp,false,false,POS_FACEUP)
 end

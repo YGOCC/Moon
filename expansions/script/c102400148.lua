@@ -31,10 +31,8 @@ function cid.cfilter(c,tp)
 	return c:GetOriginalType()&TYPE_MONSTER~=0 and c:GetPreviousControler()==tp
 end
 function cid.acop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,id)
 	local ct=eg:Filter(cid.cfilter,nil,tp):GetMaxGroup(Card.GetTextAttack)
-	if #ct>0 then
-		Duel.Hint(HINT_CARD,0,id)
-		if #ct>1 then ct=ct:RandomSelect(tp,1) end
-		Duel.Recover(tp,ct:GetFirst():GetTextAttack(),REASON_EFFECT)
-	end
+	if #ct>1 then ct=ct:RandomSelect(tp,1) end
+	Duel.Recover(tp,ct:GetFirst():GetTextAttack(),REASON_EFFECT)
 end

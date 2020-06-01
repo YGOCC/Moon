@@ -126,10 +126,7 @@ function cid.fdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if e:GetLabel()~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,cid.trfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
-			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-		end
+		Duel.Remove(Duel.SelectMatchingCard(tp,cid.trfilter,tp,LOCATION_DECK,0,1,1,nil),POS_FACEUP,REASON_EFFECT)
 		if c:GetFlagEffect(id)==0 then
 			c:RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1,0x1)
 		else
@@ -138,10 +135,8 @@ function cid.fdop(e,tp,eg,ep,ev,re,r,rp)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-		if g:GetCount()>0 then
-			Duel.SendtoHand(g,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,g)
-		end
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 		if c:GetFlagEffect(id)==0 then
 			c:RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1,0x2)
 		else
