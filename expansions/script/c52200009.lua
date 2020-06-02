@@ -127,7 +127,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
-	if tc:GetHandler():IsRelateToEffect(e) and Duel.NegateAttack(tc) then
+	if Duel.NegateAttack(tc) then
 		Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)
 		Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE_STEP,1)
 	end
