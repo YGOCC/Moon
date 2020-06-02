@@ -46,6 +46,16 @@ function c97569832.initial_effect(c)
 	e6:SetTarget(c97569832.thtg)
 	e6:SetOperation(c97569832.thop)
 	c:RegisterEffect(e6)
+	--act in hand
+	local e7=Effect.CreateEffect(c)
+	e7:SetCategory(CATEGORY_EQUIP)
+	e7:SetType(EFFECT_TYPE_ACTIVATE+EFFECT_TYPE_QUICK_O)
+	e7:SetCode(EVENT_FREE_CHAIN)
+	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e7:SetCondition(c97569832.condition)
+	e7:SetTarget(c97569832.target)
+	e7:SetOperation(c97569832.operation)
+	c:RegisterEffect(e7)
 end
 function c97569832.eqlimit(e,c)
 	return c:IsSetCard(0xd0a1)
@@ -83,4 +93,7 @@ function c97569832.thop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) then
 		Duel.SendtoHand(c,nil,REASON_EFFECT)
 	end
+end
+function c97569832.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsPlayerAffectedByEffect(tp,97569819)
 end

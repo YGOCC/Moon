@@ -11,16 +11,14 @@ function cid.initial_effect(c)
 	--link summon
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x522),2,2)
-	--shuffle
+	--pierce
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_TODECK)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetCountLimit(1,id)
-	e1:SetCondition(cid.tdcon)
-	e1:SetTarget(cid.tdtg)
-	e1:SetOperation(cid.tdop)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_PIERCE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x522))
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	--sset
 	local e4=Effect.CreateEffect(c)
@@ -97,9 +95,8 @@ function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e3)
 			--Icarus Attack
 			local e3=Effect.CreateEffect(tc)
-			e3:SetCategory(CATEGORY_DESTROY)
+			e3:SetCategory(CATEGORY_REMOVE)
 			e3:SetType(EFFECT_TYPE_ACTIVATE)
-			e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 			e3:SetCode(EVENT_FREE_CHAIN)
 			e3:SetCondition(function(ef) return ef:GetHandler():GetFlagEffect(id)>0 end)
 			e3:SetCost(cid.actcost)
@@ -118,40 +115,23 @@ function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --Icarus Attack
+function cid.costfilter(c)
+	return c:IsSetCard(0x522)
+end
 function cid.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	e:SetLabel(1)
-	return true
+	if chk==0 then return Duel.CheckReleaseGroup(tp,cid.costfilter,1,nil) end
+	local g=Duel.SelectReleaseGroup(tp,cid.costfilter,1,1,nil)
+	Duel.Release(g,REASON_COST)
 end
-function cid.desfilter(c,tc,ec)
-	return c:GetEquipTarget()~=tc and c~=ec
-end
-function cid.costfilter(c,ec,tp)
-	if not c:IsSetCard(0x522) and c:IsType(TYPE_MONSTER) then return false end
-	return Duel.IsExistingTarget(cid.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,c,c,ec)
-end
-function cid.acttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
-	if chkc then return chkc:IsOnField() and chkc~=c end
-	if chk==0 then
-		if e:GetLabel()==1 then
-			e:SetLabel(0)
-			return Duel.CheckReleaseGroup(tp,cid.costfilter,1,c,c,tp)
-		else
-			return Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,c)
-		end
-	end
-	if e:GetLabel()==1 then
-		e:SetLabel(0)
-		local sg=Duel.SelectReleaseGroup(tp,cid.costfilter,1,1,c,c,tp)
-		Duel.Release(sg,REASON_COST)
-	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,2,c)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
-	e:Reset()
+function cid.acttg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,0)
 end
 function cid.act(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	Duel.Destroy(sg,REASON_EFFECT)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.HintSelection(g)
+		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	end
 end

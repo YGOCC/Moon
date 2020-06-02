@@ -44,10 +44,10 @@ function cid.spcost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function cid.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(2)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function cid.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
@@ -101,7 +101,7 @@ function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 	local e4=Effect.CreateEffect(tc)
 	e4:SetType(EFFECT_TYPE_ACTIVATE)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e4:SetCondition(function(ef) return ef:GetHandler():GetFlagEffect(id)>0 and cid.condition end)
+	e4:SetCondition(cid.condition)
 	e4:SetCost(cid.cost)
 	e4:SetOperation(cid.operation)
 	tc:RegisterEffect(e4,true)
@@ -118,7 +118,7 @@ function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Negate Attack
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp
+	return Duel.GetAttacker():GetControler()~=tp and e:GetHandler():GetFlagEffect(id)>0
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,nil,0x522) end
@@ -126,7 +126,9 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(g,REASON_COST)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) and Duel.NegateAttack() then
+	local tc=Duel.GetAttacker()
+	if tc:GetHandler():IsRelateToEffect(e) and Duel.NegateAttack(tc) then
+		Duel.Recover(tp,tc:GetAttack(),REASON_EFFECT)
 		Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE_STEP,1)
 	end
 end
