@@ -103,7 +103,7 @@ function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 			e4:SetType(EFFECT_TYPE_ACTIVATE)
 			e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 			e4:SetCode(EVENT_CHAINING)
-			e4:SetCondition(function(ef) return ef:GetHandler():GetFlagEffect(id)>0 and cid.negcon end)
+			e4:SetCondition(cid.negcon)
 			e4:SetCost(cid.negcost)
 			e4:SetTarget(cid.negtg)
 			e4:SetOperation(cid.negop)
@@ -121,7 +121,7 @@ function cid.setop(e,tp,eg,ep,ev,re,r,rp)
 end
 --Negate Spell/Trap
 function cid.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and Duel.IsChainNegatable(ev) and e:GetHandler():GetFlagEffect(id)>0
 end
 function cid.costfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x522) and (c:IsControler(tp) or c:IsFaceup())
