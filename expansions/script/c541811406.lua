@@ -22,7 +22,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.cfilter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_REPTILE) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and Duel.GetMZoneCount(tp,c)>0
+	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_REPTILE) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and Duel.GetMZoneCount(tp,c)>0 and c:IsAbleToRemoveAsCost()
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,0,1,nil,tp) end
@@ -31,7 +31,6 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,id)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,1,RACE_REPTILE,ATTRIBUTE_EARTH) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
