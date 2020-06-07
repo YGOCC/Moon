@@ -139,12 +139,12 @@ function c62613316.actop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(62613316,3))
 	local tc=Duel.SelectMatchingCard(tp,c62613316.fieldfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
 	if tc then
-		local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+		local fc=Duel.GetFieldCard(tp,LOCATION_FZONE,0)
 		if fc then
 			Duel.SendtoGrave(fc,REASON_RULE)
 			Duel.BreakEffect()
 		end
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 		local te=tc:GetActivateEffect()
 		te:UseCountLimit(tp,1,true)
 		local tep=tc:GetControler()
