@@ -1,4 +1,4 @@
-created by NTA, coded by Remnance
+--created by NTA, coded by Remnance
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e1=Effect.CreateEffect(c)

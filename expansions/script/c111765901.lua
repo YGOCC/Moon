@@ -1,4 +1,4 @@
-created by NTA, coded by Lyris
+--created by NTA, coded by Lyris
 local cid,id=GetID()
 function cid.initial_effect(c)
 	local e3=Effect.CreateEffect(c)

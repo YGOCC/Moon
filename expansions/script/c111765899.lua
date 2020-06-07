@@ -1,4 +1,4 @@
-created by NTA, coded by Remnance & Lyris
+--created by NTA, coded by Remnance & Lyris
 local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.AddSynchroMixProcedure(c,aux.NonTuner(Card.IsSynchroType,TYPE_SYNCHRO),nil,nil,aux.Tuner(Card.IsRace,RACE_FAIRY),2,99)

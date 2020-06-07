@@ -1,4 +1,4 @@
-created by NTA, coded by Remnance
+--created by NTA, coded by Remnance
 local cid,id=GetID()
 function cid.initial_effect(c)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.NonTuner(nil),1)
