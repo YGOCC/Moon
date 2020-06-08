@@ -46,7 +46,7 @@ function cid.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	local g=Duel.SelectTarget(tp,cid.posfilter,tp,0,LOCATION_MZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,#g,0,0)
 end
 function cid.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

@@ -64,8 +64,7 @@ function cid.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingTarget(cid.eqfilter,tp,0,LOCATION_REMOVED,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectTarget(tp,cid.eqfilter,tp,0,LOCATION_REMOVED,1,1,nil,tp)
-	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,Duel.SelectTarget(tp,cid.eqfilter,tp,0,LOCATION_REMOVED,1,1,nil,tp),1,0,0)
 end
 function cid.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

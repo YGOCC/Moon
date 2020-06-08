@@ -42,8 +42,8 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local g1=Duel.SelectTarget(tp,cid.desfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g2=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,1,0,0)
-		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g2,1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,#g1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g2,#g2,0,0)
 	end
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)

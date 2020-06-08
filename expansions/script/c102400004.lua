@@ -79,8 +79,7 @@ function cid.sttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil,e,tp),1,0,0)
 end
 function cid.stop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

@@ -56,11 +56,9 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_REMOVED,0,1,nil,e,tp)
 		and Duel.IsExistingTarget(Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g1=Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g1,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,Duel.SelectTarget(tp,cid.spfilter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp),1,0,0)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g2,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,nil),1,0,0)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

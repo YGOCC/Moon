@@ -60,8 +60,7 @@ end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return true end
-	local sg=Duel.GetMatchingGroup(cid.thfilter,tp,0,LOCATION_ONFIELD,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,sg,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,Duel.GetMatchingGroup(cid.thfilter,tp,0,LOCATION_ONFIELD,nil),1,0,0)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local dir=Duel.GetAttackTarget()==nil

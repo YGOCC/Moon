@@ -58,8 +58,7 @@ function cid.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rc=re:GetHandler()
 	if chk==0 then return rc:IsDestructable() and Duel.IsExistingMatchingCard(cid.filter,tp,0,LOCATION_MZONE,1,rc) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
-	local g=Duel.GetMatchingGroup(cid.filter,tp,0,LOCATION_MZONE,eg:GetFirst())
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,Duel.GetMatchingGroup(cid.filter,tp,0,LOCATION_MZONE,eg:GetFirst()),1,0,0)
 end
 function cid.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -85,8 +84,7 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.sfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(cid.sfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,cid.sfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,Duel.SelectTarget(tp,cid.sfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp),1,0,0)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

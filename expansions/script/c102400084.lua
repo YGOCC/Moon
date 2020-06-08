@@ -48,8 +48,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		e:SetProperty(0)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local g=Duel.SelectTarget(tp,cid.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-		Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_TODECK,Duel.SelectTarget(tp,cid.thfilter,tp,LOCATION_GRAVE,0,1,1,nil),#g,0,0)
 		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	end
 end
