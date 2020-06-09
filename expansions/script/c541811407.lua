@@ -21,7 +21,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(aux.TargetBoolFunction(aux.NOT(Card.IsRace)),RACE_REPTILE)
+	e1:SetTarget(aux.NOT(aux.TargetBoolFunction(Card.IsRace),RACE_REPTILE))
 	Duel.RegisterEffect(e1,tp)
 end
 function cid.cfilter(c,tp)

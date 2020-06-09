@@ -31,29 +31,27 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT)
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,1,RACE_REPTILE,ATTRIBUTE_EARTH) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,2,RACE_REPTILE,ATTRIBUTE_DARK) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,2,RACE_REPTILE,ATTRIBUTE_DARK) then
+		for i=1,2 do
+			local token=Duel.CreateToken(tp,id)
+			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
+		end
+		Duel.SpecialSummonComplete()
+	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(cid.splimit)
+	e1:SetTarget(aux.NOT(aux.TargetBoolFunction(Card.IsRace,RACE_REPTILE)))
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) or Duel.GetLocationCount(tp,LOCATION_MZONE)<2
-		or not Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,1,RACE_REPTILE,ATTRIBUTE_EARTH) then return end
-	for i=1,2 do
-		local token=Duel.CreateToken(tp,id)
-		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
-	end
-	Duel.SpecialSummonComplete()
-end
-function cid.splimit(e,c)
-	return not c:IsRace(RACE_REPTILE)
 end
 function cid.thfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_REPTILE) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
