@@ -30,13 +30,13 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(Duel.SelectMatchingCard(tp,cid.cfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,0,1,1,nil,tp),POS_FACEUP,REASON_COST)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,id)
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT)
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,1,RACE_REPTILE,ATTRIBUTE_EARTH) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(c)
+	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
@@ -44,7 +44,7 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetTarget(cid.splimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-	if Duel.IsPlayerAffectedByEffect(tp,id) or Duel.GetLocationCount(tp,LOCATION_MZONE)<2
+	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) or Duel.GetLocationCount(tp,LOCATION_MZONE)<2
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,1,RACE_REPTILE,ATTRIBUTE_EARTH) then return end
 	for i=1,2 do
 		local token=Duel.CreateToken(tp,id)
