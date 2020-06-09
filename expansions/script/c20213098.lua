@@ -1,12 +1,10 @@
 --created by Meedogh, coded by Lyris
 local cid,id=GetID()
 function cid.initial_effect(c)
-	--activate
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e0)
-	--atk and def up
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -18,23 +16,19 @@ function cid.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e2)
-	--equip from deck
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_EQUIP)
 	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_ONFIELD)
+	e3:SetRange(LOCATION_FZONE)
 	e3:SetCountLimit(1)
 	e3:SetCost(cid.cost)
 	e3:SetTarget(cid.eqtg)
 	e3:SetOperation(cid.eqop)
 	c:RegisterEffect(e3)
-	--equip instead of grave
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
---	e4:SetCode(EFFECT_TO_GRAVE_REDIRECT_CB)
 	e4:SetCode(EFFECT_DESTROY_REPLACE)
 	e4:SetRange(LOCATION_FZONE)
---	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e4:SetTarget(cid.reptg)
 	e4:SetValue(cid.repval)
 	e4:SetOperation(cid.repop)
@@ -89,12 +83,7 @@ end
 function cid.repfilter(c,tp)
 	return c:IsReason(REASON_EFFECT+REASON_BATTLE) and not c:IsReason(REASON_REPLACE)
 		and c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
---		and Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsType),tp,LOCATION_MZONE,0,1,c,TYPE_BIGBANG)
 end
---function cid.repcon(e,tp,eg,ep,ev,re,r,rp)
---	return eg:IsExists(cid.repfilter,1,nil,tp) 
---		and eg:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>eg:GetCount()-1
---end
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(cid.repfilter,1,nil,tp)
 		and Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil) end

@@ -36,7 +36,7 @@ function cid.matfilter(c)
 	return c:IsLinkType(TYPE_EFFECT) and not c:IsLinkType(TYPE_LINK)
 end
 function cid.lcheck(g,lc)
-	return g:IsExists(Card.IsType,1,nil,TYPE_PANDEMONIUM,lc,SUMMON_TYPE_LINK)
+	return g:IsExists(Card.IsLinkType,1,nil,TYPE_PANDEMONIUM,lc,SUMMON_TYPE_LINK)
 end
 function cid.tefilter(c)
 	return c:IsType(TYPE_PANDEMONIUM) and c:IsSetCard(0x9b5) and not c:IsForbidden()
@@ -58,7 +58,6 @@ end
 function cid.cfilter(c,tp)
 	return c:IsType(TYPE_PANDEMONIUM) and c:IsAbleToGraveAsCost() and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
 		and Duel.IsExistingMatchingCard(aux.PandSSetFilter(cid.filter,c:GetOriginalCode(),LOCATION_DECK,0),tp,LOCATION_DECK,0,1,nil,c:GetOriginalCode())
-		--and aux.PandSSetCon(cid.filter,nil,c:GetOriginalCode(),LOCATION_DECK,0)(nil,e,tp,eg,ep,ev,re,r,rp)
 end
 function cid.filter(c,code)
 	return c:IsCode(code) and c:IsType(TYPE_PANDEMONIUM)
