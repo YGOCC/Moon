@@ -23,6 +23,7 @@ CARD_INLIGHTENED_PSYCHIC_HELMET		=102400006
 CARD_NEBULA_TOKEN					=218201917
 CARD_DRAGON_EGG_TOKEN				=20157305
 CARD_BLACK_GARDEN					=71645242
+CARD_EVIL_DRAGON_ANANTA				=8400623
 
 --Custom Type Tables
 Auxiliary.Customs={} --check if card uses custom type, indexing card
@@ -30,19 +31,6 @@ Auxiliary.CannotBeEDMatCodes = {}
 
 --overwrite constants
 TYPE_EXTRA							=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK
-
---tournament use
--- local e1=Effect.GlobalEffect()
--- e1:SetType(EFFECT_TYPE_FIELD)
--- e1:SetCode(EFFECT_CHANGE_DAMAGE)
--- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
--- e1:SetTargetRange(1,1)
--- e1:SetCondition(function() return Duel.GetTurnCount()<4 end)
--- e1:SetValue(0)
--- Duel.RegisterEffect(e1,0)
--- local e2=e1:Clone()
--- e2:SetCode(EFFECT_NO_EFFECT_DAMAGE)
--- Duel.RegisterEffect(e2,0)
 
 --Custom Functions
 function Card.IsCustomType(c,tpe,scard,sumtype,p)

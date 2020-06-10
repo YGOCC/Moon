@@ -25,7 +25,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function cid.cfilter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_REPTILE) and c:IsSetCard(0xe80) and c:IsDiscardable()
+	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_REPTILE) and (c:IsSetCard(0xe80) or c:IsCode(CARD_EVIL_DRAGON_ANANTA)) and c:IsDiscardable()
 		and Duel.IsExistingMatchingCard(aux.AND(Card.IsRace,Card.IsAbleToGrave),tp,LOCATION_DECK,0,c:GetLevel(),nil,RACE_REPTILE)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
