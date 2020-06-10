@@ -28,7 +28,7 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)
-	if not c:IsRelateToEffect(e) or Duel.Remove(c,REASON_EFFECT)==0 or not c:IsLocation(LOCATION_REMOVED)
+	if not c:IsRelateToEffect(e) or Duel.Remove(c,POS_FACEUP,REASON_EFFECT)==0 or not c:IsLocation(LOCATION_REMOVED)
 		or not Duel.IsPlayerCanDiscardDeck(tp,ct) or not Duel.SelectYesNo(tp,aux.Stringid(id,0)) then return end
 	local t={1}
 	if Duel.IsPlayerCanDiscardDeck(tp,ct*2) then table.insert(t,2) end

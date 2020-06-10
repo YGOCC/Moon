@@ -36,16 +36,14 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RemoveCounter(tp,0x83e,5,REASON_COST)
 end
 function cid.filter(c,e,tp)
-	return c:IsSetCard(0x83e) and c:IsCanBeSpecialSummoned(e,0,tp,tp,true,false) and Duel.GetLocationCountFromEx(tp,nil,nil,c)
+	return c:IsSetCard(0x83e) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and Duel.GetLocationCountFromEx(tp,nil,nil,c)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
-		and Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	if #g>0 then Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP) end
+	Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp),0,tp,tp,true,false,POS_FACEUP)
 end

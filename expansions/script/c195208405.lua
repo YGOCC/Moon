@@ -82,7 +82,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.retop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Remove(e:GetHandler(),nil,REASON_EFFECT)
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_DECK,0,1,nil) end
