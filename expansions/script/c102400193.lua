@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Destiny HERO - Dreamer"
+--created & coded by Lyris
 --フェイツ・イリュージョンガイ
 local cid,id=GetID()
 function cid.initial_effect(c)

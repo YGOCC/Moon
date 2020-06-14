@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "A Hero Emerges"
+--created & coded by Lyris
 --フェイツ出会い
 local cid,id=GetID()
 function cid.initial_effect(c)

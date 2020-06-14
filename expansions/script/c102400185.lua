@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Destiny HERO - Double Dude"
+--created & coded by Lyris
 --フェイツ・ドゥオガイ
 local cid,id=GetID()
 function cid.initial_effect(c)

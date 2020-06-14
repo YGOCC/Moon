@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Judge Man"
+--created & coded by Lyris
 --フェイツ・ジュリーガイ
 local cid,id=GetID()
 function cid.initial_effect(c)

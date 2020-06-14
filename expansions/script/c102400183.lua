@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Arcana Force I - The Magician"
+--created & coded by Lyris
 --フェイツ・マジガイ
 local cid,id=GetID()
 function cid.initial_effect(c)
@@ -38,5 +38,5 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmCards(1-tp,g)
 end
 function cid.filter(c)
-	return c:GetType()&0x82==0x82 and (c:IsFaceup() and c:IsLocation(LOCATION_REMOVED) or c:IsSetCard(0xf7a)) and c:IsAbleToHand()
+	return c:IsType(TYPE_SPELL) and ((c:IsFaceup() and c:IsLocation(LOCATION_REMOVED) and c:IsType(TYPE_RITUAL)) or (c:IsSetCard(0xf7a) and c:GetActivateEffect():IsHasCategory(CATEGORY_SPECIAL_SUMMON))) and c:IsAbleToHand()
 end

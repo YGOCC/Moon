@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Destiny HERO - Dusktopia"
+--created & coded by Lyris
 --フェイツ・希ダスク望ガイ
 local cid,id=GetID()
 function cid.initial_effect(c)
@@ -36,7 +36,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
 function cid.filter(c)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsSetCard(0xf7a) and c:GetType()&0x82==0x82 and c:IsSSetable()
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsSetCard(0xf7a) and c:IsType(TYPE_SPELL) and c:IsSSetable()
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0

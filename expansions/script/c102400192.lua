@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Destiny HERO - Disk Commander"
+--created & coded by Lyris
 --フェイツ・ディサイズガイ
 local cid,id=GetID()
 function cid.initial_effect(c)

@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Destiny HERO - Plasma"
+--created & coded by Lyris
 --フェイツ・ブルーＬｉｇｈｔ－９
 local cid,id=GetID()
 function cid.initial_effect(c)
