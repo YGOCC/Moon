@@ -220,7 +220,23 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	--r1:SetCode(EFFECT_CANNOT_TURN_SET)
 	---r1:SetRange(LOCATION_MZONE)
 	--c:RegisterEffect(r1)
-	
+	local e0a=Effect.CreateEffect(c)
+	e0a:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e0a:SetCode(EVENT_FLIP)
+	e0a:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0a:SetOperation(Auxiliary.RestoreEC)
+	c:RegisterEffect(e0a)
+	local e0b=Effect.CreateEffect(c)
+	e0b:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e0b:SetCode(EVENT_ADJUST)
+	e0b:SetRange(LOCATION_MZONE)
+	e0b:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0b:SetLabelObject(e0a)
+	e0b:SetOperation(Auxiliary.StoreEC)
+	c:RegisterEffect(e0b)
+	local e0c=e0b:Clone()
+	e0c:SetCode(EVENT_CHAIN_SOLVED)
+	c:RegisterEffect(e0c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -237,7 +253,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	e2:SetOperation(Auxiliary.EvoluteOperation)
 	e2:SetValue(SUMMON_TYPE_EVOLUTE)
 	c:RegisterEffect(e2)
-	if (type(echeck)=='string') and echeck=="Convergent" then
+	if type(echeck)=='string' and echeck=="Convergent" then
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_CONVERGENT_EVOLUTE)
@@ -255,7 +271,7 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 		ge2:SetType(EFFECT_TYPE_FIELD)
 		ge2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE+EFFECT_FLAG_IGNORE_IMMUNE)
 		ge2:SetCode(EFFECT_COUNTER_PERMIT+0x88)
-		ge2:SetTarget(function(e,c)return c:IsType(TYPE_EVOLUTE) end)
+		ge2:SetTarget(function(e,c) return c:IsType(TYPE_EVOLUTE) end)
 		ge2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 		ge2:SetValue(LOCATION_MZONE)
 		Duel.RegisterEffect(ge2,0)
@@ -277,8 +293,18 @@ function Auxiliary.AddEvoluteProc(c,echeck,stage,...)
 	end
 end
 --Cannot be Summoned Face-down
-function Auxiliary.FaceDownEvoluteLimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return (c:IsType(TYPE_EVOLUTE) and (sumpos==POS_FACEDOWN_ATTACK or sumpos==POS_FACEDOWN_DEFENSE))
+-- function Auxiliary.FaceDownEvoluteLimit(e,c,sump,sumtype,sumpos,targetp,se)
+-- return (c:IsType(TYPE_EVOLUTE) and (sumpos==POS_FACEDOWN_ATTACK or sumpos==POS_FACEDOWN_DEFENSE))
+-- end
+function Auxiliary.StoreEC(e)
+	local c=e:GetHandler()
+	if c:IsFaceup() then
+		e:GetLabelObject():SetLabel(c:GetEC())
+	end
+end
+function Auxiliary.RestoreEC(e)
+	local v=e:GetLabel()
+	if v>0 then e:GetHandler():AddEC(v,tp) end
 end
 --E-C Replace
 function Auxiliary.ECounterUseCon(e,tp,eg,ep,ev,re,r,rp)
