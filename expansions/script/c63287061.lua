@@ -115,6 +115,8 @@ function cid.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.tg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(2)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
 function cid.op2(e,tp,eg,ep,ev,re,r,rp)
@@ -130,5 +132,6 @@ function cid.op2(e,tp,eg,ep,ev,re,r,rp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e2)
-	Duel.Draw(tp,2,REASON_EFFECT)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end
