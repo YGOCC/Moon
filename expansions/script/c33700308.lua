@@ -85,7 +85,7 @@ function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	   local atk=g:GetFirst():GetBaseAttack()
 	   local dg=Duel.GetMatchingGroup(cm.cfilter,tp,0,LOCATION_MZONE,nil)
 	   if dg:GetCount()>0 then
-		  for tc in aux.Next(dg) do
+		  for tc in aux.Next(g) do
 			  local e1=Effect.CreateEffect(e:GetHandler())
 			  e1:SetType(EFFECT_TYPE_SINGLE)
 			  e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -107,7 +107,7 @@ function cm.penop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
 function cm.spfilter(c,fc)
