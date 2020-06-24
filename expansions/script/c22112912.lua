@@ -7,7 +7,7 @@ function cid.initial_effect(c)
 	e1:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetTarget(cid.target)
-	e1:SetOperation(function(e,tp) aux.PerformFusionSummon(aux.FilterBoolFunction(Card.IsSetCard,0xa88),e,tp) end)
+	e1:SetOperation(function(e,tp) aux.PerformFusionSummon(aux.FilterBoolFunction(Card.IsSetCard,0x88a),e,tp) end)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -22,11 +22,11 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return aux.IsCanFusionSummon(aux.FilterBoolFunction(Card.IsSetCard,0xa88),e,tp) end
+	if chk==0 then return aux.IsCanFusionSummon(aux.FilterBoolFunction(Card.IsSetCard,0x88a),e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cid.filter(c,e)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xa88) and c:IsAbleToDeck() and c:IsCanBeEffectTarget(e)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x88a) and c:IsAbleToDeck() and c:IsCanBeEffectTarget(e)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

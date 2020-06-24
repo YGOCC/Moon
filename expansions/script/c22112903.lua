@@ -30,7 +30,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xa88) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x88a) and c:IsAbleToHand()
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -43,7 +43,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmCards(1-tp,g)
 end
 function cid.cfilter(c)
-	return c:IsAbleToRemoveAsCost() and not c:IsAttribute(ATTRIBUTE_WIND) and c:IsSetCard(0xa88) and c:IsType(TYPE_MONSTER)
+	return c:IsAbleToRemoveAsCost() and not c:IsAttribute(ATTRIBUTE_WIND) and c:IsSetCard(0x88a) and c:IsType(TYPE_MONSTER)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_GRAVE,0,1,nil) end

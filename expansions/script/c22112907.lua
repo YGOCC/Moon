@@ -22,10 +22,10 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.mfilter(c)
-	return c:IsSetCard(0xa88) and c:IsAttribute(ATTRIBUTE_DARK)
+	return c:IsSetCard(0x88a) and c:IsAttribute(ATTRIBUTE_DARK)
 end
 function cid.hspfilter(c,e,tp)
-	return c:IsSetCard(0xa88) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,e:GetHandler():GetLinkedZone())
+	return c:IsSetCard(0x88a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,e:GetHandler():GetLinkedZone())
 end
 function cid.hsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -38,7 +38,7 @@ function cid.hspop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(Duel.SelectMatchingCard(tp,cid.hspfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp),0,tp,tp,false,false,POS_FACEUP,e:GetHandler():GetLinkedZone())
 end
 function cid.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa88) and c:GetAttribute()~=ATTRIBUTE_DARK
+	return c:IsFaceup() and c:IsSetCard(0x88a) and c:GetAttribute()~=ATTRIBUTE_DARK
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

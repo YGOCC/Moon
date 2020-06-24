@@ -6,7 +6,7 @@ function cid.initial_effect(c)
 	e0:SetRange(LOCATION_HAND)
 	e0:SetCountLimit(1,id+200)
 	e0:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e0:SetCondition(function(e,tp) return Duel.IsExistingMatchingCard(function(tc) return tc:IsSetCard(0xa88) and tc:GetOriginalAttribute()~=ATTRIBUTE_DARK end,tp,LOCATION_MZONE,0,1,nil) end)
+	e0:SetCondition(function(e,tp) return Duel.IsExistingMatchingCard(function(tc) return tc:IsSetCard(0x88a) and tc:GetOriginalAttribute()~=ATTRIBUTE_DARK end,tp,LOCATION_MZONE,0,1,nil) end)
 	e0:SetTarget(cid.tg)
 	e0:SetOperation(cid.op)
 	c:RegisterEffect(e0)
@@ -45,7 +45,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) then Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) end
 end
 function cid.hspfilter(c,e,tp)
-	return c:IsSetCard(0xa88) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
+	return c:IsSetCard(0x88a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
 end
 function cid.hsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

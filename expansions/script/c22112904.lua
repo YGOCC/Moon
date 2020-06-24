@@ -26,7 +26,7 @@ function cid.cfilter(c,tp)
 	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetPreviousControler()==tp
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0xa88) and eg:IsExists(cid.cfilter,1,e:GetHandler(),tp)
+	return re and re:GetHandler():IsSetCard(0x88a) and eg:IsExists(cid.cfilter,1,e:GetHandler(),tp)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -39,7 +39,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) then Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) end
 end
 function cid.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa88) and c:GetAttribute()~=ATTRIBUTE_WATER
+	return c:IsFaceup() and c:IsSetCard(0x88a) and c:GetAttribute()~=ATTRIBUTE_WATER
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

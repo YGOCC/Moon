@@ -27,8 +27,8 @@ function cid.condition2(e,tp,eg,ep,ev,re,r,rp)
 	if phase~=PHASE_DAMAGE or Duel.IsDamageCalculated() then return false end
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return d~=nil and d:IsFaceup() and ((a:GetControler()==tp and a:IsSetCard(0xa88) and a:IsRelateToBattle())
-		or (d:GetControler()==tp and d:IsSetCard(0xa88) and d:IsRelateToBattle()))
+	return d~=nil and d:IsFaceup() and ((a:GetControler()==tp and a:IsSetCard(0x88a) and a:IsRelateToBattle())
+		or (d:GetControler()==tp and d:IsSetCard(0x88a) and d:IsRelateToBattle()))
 end
 function cid.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end

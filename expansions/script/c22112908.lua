@@ -24,10 +24,10 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.mfilter(c)
-	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsSetCard(0xa88)
+	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsSetCard(0x88a)
 end
 function cid.tfilter(c,tp)
-	return c:IsSetCard(0xa88) and c:IsControler(tp)
+	return c:IsSetCard(0x88a) and c:IsControler(tp)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	if rp==tp or e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
@@ -47,7 +47,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa88) and c:GetAttribute()~=ATTRIBUTE_WATER
+	return c:IsFaceup() and c:IsSetCard(0x88a) and c:GetAttribute()~=ATTRIBUTE_WATER
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
