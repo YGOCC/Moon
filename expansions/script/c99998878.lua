@@ -20,7 +20,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.filter(c,e,tp)
-	return c:IsSetCard(0x1c97) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevel(4)
+	return c:IsSetCard(0x3c97) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevel(4)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

@@ -119,7 +119,7 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	if not e:GetHandler():IsRelateToEffect(e) or Duel.Recover(p,d,REASON_EFFECT)<1
-		or not e:GetLabelObject():IsSetCard(0x2c97,0x4c97) then return end
+		or not e:GetLabelObject():IsSetCard(0x6c97,0x9c97) then return end
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.thfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil)
 	if #g>0 and Duel.SelectYesNo(tp,1109) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)

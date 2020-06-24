@@ -19,7 +19,7 @@ function cid.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTarget(cid.rmtarget)
 	e2:SetTargetRange(0xff,0xff)
-	e2:SetCondition(function(e,tp) return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x2c97,0x4c97) end)
+	e2:SetCondition(function(e,tp) return Duel.IsExistingMatchingCard(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x6c97,0x9c97) end)
 	e2:SetValue(LOCATION_REMOVED)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
@@ -36,7 +36,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(Duel.SelectMatchingCard(tp,aux.AND(Card.IsAbleToDeckAsCost,Card.IsSetCard),tp,LOCATION_HAND,0,1,1,nil,0xc97),nil,2,REASON_COST)
 end
 function cid.thfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x8c97) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsSetCard(0xac97) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and cid.thfilter(chkc) end
@@ -52,7 +52,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.rmtarget(e,c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x8c97)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0xac97)
 end
 function cid.rmfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemove()

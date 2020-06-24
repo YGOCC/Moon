@@ -47,10 +47,10 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.tg(e,c)
-	return c~=e:GetHandler() and c:IsFaceup() and c:IsSetCard(0x1c97)
+	return c~=e:GetHandler() and c:IsFaceup() and c:IsSetCard(0x3c97)
 end
 function cid.cfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x2c97) or c:IsSetCard(0x4c97))
+	return c:IsFaceup() and (c:IsSetCard(0x6c97) or c:IsSetCard(0x9c97))
 end
 function cid.damcon(e)
 	return Duel.IsExistingMatchingCard(cid.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)

@@ -21,10 +21,10 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsSetCard(0x1c97) and chkc:IsAbleToHand() end
-	if chk==0 then return Duel.IsExistingTarget(aux.AND(Card.IsAbleToHand,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x1c97) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsSetCard(0x3c97) and chkc:IsAbleToHand() end
+	if chk==0 then return Duel.IsExistingTarget(aux.AND(Card.IsAbleToHand,Card.IsSetCard),tp,LOCATION_MZONE,0,1,nil,0x3c97) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,aux.AND(Card.IsAbleToHand,Card.IsSetCard),tp,LOCATION_MZONE,0,1,1,nil,0x1c97)
+	local g=Duel.SelectTarget(tp,aux.AND(Card.IsAbleToHand,Card.IsSetCard),tp,LOCATION_MZONE,0,1,1,nil,0x3c97)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)

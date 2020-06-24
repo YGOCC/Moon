@@ -46,7 +46,7 @@ function cid.tglimit(e,c)
 	return c:IsFaceup() and c:IsSetCard(0xc97) and (c:IsLocation(LOCATION_PZONE) or c:IsType(TYPE_PANDEMONIUM))
 end
 function cid.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x1c97) and c:IsType(TYPE_PANDEMONIUM+TYPE_PENDULUM) and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsSetCard(0x3c97) and c:IsType(TYPE_PANDEMONIUM+TYPE_PENDULUM) and c:IsAbleToHand()
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_EXTRA,0,1,nil) end

@@ -21,7 +21,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x2c97,0x4c97) and c:IsAbleToRemove()
+	return c:IsFaceup() and c:IsSetCard(0x6c97,0x9c97) and c:IsAbleToRemove()
 end
 function cid.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.filter(chkc) end

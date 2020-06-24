@@ -11,7 +11,7 @@ function cid.initial_effect(c)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(cid.sumlimit)
 	c:RegisterEffect(e1)
-	c:SetUniqueOnField(1,0,aux.FilterBoolFunction(Card.IsSetCard,0x4c97))
+	c:SetUniqueOnField(1,0,aux.FilterBoolFunction(Card.IsSetCard,0x9c97))
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_DISABLE)
@@ -51,7 +51,7 @@ function cid.disable(e,c)
 	return (c:IsType(TYPE_EFFECT) or bit.band(c:GetOriginalType(),TYPE_EFFECT)==TYPE_EFFECT) and c:IsType(TYPE_LINK)
 end
 function cid.nsfilter(c)
-	return c:IsSetCard(0x1c97) and c:IsSummonable(true,nil)
+	return c:IsSetCard(0x3c97) and c:IsSummonable(true,nil)
 end
 function cid.nstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.nsfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -64,7 +64,7 @@ function cid.nsop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then Duel.Summon(tp,tc,true,nil) end
 end
 function cid.tgfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x1c97)
+	return c:IsFaceup() and c:IsSetCard(0x3c97)
 end
 function cid.tgcon(e)
 	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
@@ -73,7 +73,7 @@ function cid.efilter(e,re)
 	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
 function cid.filter(c,e,tp)
-	return (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsSetCard(0x1c97) and c:IsType(TYPE_PANDEMONIUM+TYPE_PENDULUM) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsFaceup() or c:IsLocation(LOCATION_DECK)) and c:IsSetCard(0x3c97) and c:IsType(TYPE_PANDEMONIUM+TYPE_PENDULUM) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

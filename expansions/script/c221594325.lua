@@ -28,7 +28,7 @@ function cid.initial_effect(c)
 	e5:SetTargetRange(1,0)
 	e5:SetTarget(cid.sumlimit)
 	c:RegisterEffect(e5)
-	c:SetUniqueOnField(1,0,aux.FilterBoolFunction(Card.IsSetCard,0x2c97))
+	c:SetUniqueOnField(1,0,aux.FilterBoolFunction(Card.IsSetCard,0x6c97))
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -66,7 +66,7 @@ function cid.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0xc97)
 end
 function cid.tgfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x1c97)
+	return c:IsFaceup() and c:IsSetCard(0x3c97)
 end
 function cid.tgcon(e)
 	return Duel.IsExistingMatchingCard(cid.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
@@ -83,7 +83,7 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RemoveEC(tp,2,REASON_COST)
 end
 function cid.filter(c)
-	return c:IsSetCard(0x8c97) and c:IsSSetable()
+	return c:IsSetCard(0xac97) and c:IsSSetable()
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and cid.cfilter(chkc) end
@@ -103,7 +103,7 @@ end
 function cid.filter1(c,ft)
 	if (c:GetType()&TYPE_EQUIP+TYPE_CONTINUOUS~=0 or c:IsHasEffect(EFFECT_REMAIN_FIELD))
 		and ft<=0 then return false end
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:CheckActivateEffect(false,false,false) and c:IsSetCard(0x8c97)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:CheckActivateEffect(false,false,false) and c:IsSetCard(0xac97)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

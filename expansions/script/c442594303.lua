@@ -70,7 +70,7 @@ function cid.spcon(e,tp,eg,ep,ev,re,r,rp)
 	and c:IsPreviousPosition(POS_FACEUP)
 end
 function cid.cafilter(c)
-	return c:IsSetCard(0x1c97) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x3c97) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cafilter,tp,LOCATION_DECK,0,2,nil) end

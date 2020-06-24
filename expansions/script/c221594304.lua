@@ -24,7 +24,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cid.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x8c97) and c:IsAbleToHand()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0xac97) and c:IsAbleToHand()
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
