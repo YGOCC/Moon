@@ -23,7 +23,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.cfilter(c,tp)
-	return c:IsReason(REASON_EFFECT) and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetPreviousControler()==tp
+	return c:IsReason(REASON_EFFECT) and c:GetPreviousControler()==tp
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x88a) and eg:IsExists(cid.cfilter,1,e:GetHandler(),tp)
