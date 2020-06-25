@@ -22,5 +22,5 @@ end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,cid.filter,tp,LOCATION_GRAVE,0,2,2,nil)
-	if #g==2 then Duel.HintSelection(g) Duel.SendtoDeck(g,nil,2,REASON_EFFECT) end
+	if #g>0 then Duel.HintSelection(g) Duel.SendtoDeck(g,nil,2,REASON_EFFECT) end
 end
