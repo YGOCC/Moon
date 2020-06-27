@@ -17,6 +17,7 @@ function cid.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCondition(cid.spcon2)
 	c:RegisterEffect(e2)
 	--negate
@@ -55,16 +56,15 @@ end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0 then
-		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1,Duel.GetTurnCount())
+		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 		e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
-		e2:SetLabel(Duel.GetTurnCount())
+		e2:SetLabel(Duel.GetTurnCount()+1)
 		e2:SetLabelObject(c)
 		e2:SetCondition(cid.tdcon)
 		e2:SetOperation(cid.tdop)
-		e2:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
 		e2:SetCountLimit(1)
 		Duel.RegisterEffect(e2,tp)
 	end
@@ -78,8 +78,12 @@ function cid.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,id)
 	Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 end
+function cid.cfilter1(c)
+	return c:IsCode(911630827)
+end
 function cid.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttackTarget()
+	return Duel.IsExistingMatchingCard(cid.cfilter1,e:GetHandler():GetControler(),LOCATION_GRAVE,0,1,nil)
+		and Duel.GetAttackTarget()
 		and (Duel.GetAttacker():IsControler(tp) and Duel.GetAttacker():GetOriginalRace()==RACE_ZOMBIE
 		or Duel.GetAttackTarget():IsControler(tp) and Duel.GetAttackTarget():GetOriginalRace()==RACE_ZOMBIE)
 end
