@@ -14,7 +14,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.cfilter(c)
-	return c:IsFaceup()
+	return c:IsFaceup() and c:IsSetCard(0x2e7)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)

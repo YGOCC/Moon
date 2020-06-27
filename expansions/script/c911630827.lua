@@ -14,7 +14,7 @@ function cid.initial_effect(c)
 	--tograve
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOGRAVE)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
