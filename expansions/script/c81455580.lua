@@ -20,10 +20,13 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cid.ctfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xCF11)
+	return c:IsFaceup() and c:IsSetCard(0xcf11)
 end
-function cid.schfilter(c,n)
-	return c:IsSetCard(0xCF11) and (not n and c:IsType(TYPE_MONSTER) or c:IsCode(52460549)) and c:IsAbleToHand()
+function cid.schfilter(c)
+	return c:IsSetCard(0xcf11) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
+function cid.schfilter1(c)
+	return c:IsCode(52460549) and c:IsAbleToHand()
 end
 function cid.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
@@ -77,12 +80,12 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.schtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(cid.schfilter,tp,LOCATION_DECK,0,1,nil,0) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cid.schfilter1,tp,LOCATION_DECK,0,1,nil,0) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function cid.schop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,cid.schfilter,tp,LOCATION_DECK,0,1,1,nil,0)
+	local g=Duel.SelectMatchingCard(tp,cid.schfilter1,tp,LOCATION_DECK,0,1,1,nil,0)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
