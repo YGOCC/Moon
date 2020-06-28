@@ -1,13 +1,6 @@
 --Obstacle Ennigmaterial
 --Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
@@ -28,7 +21,7 @@ function cid.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(0,LOCATION_MZONE)
 	e2:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
-	e2:SetValue(cid)
+	e2:SetValue(aux.TargetBoolFunction(aux.NOT(Card.IsCode),id))
 	c:RegisterEffect(e2)
 	local e2x=Effect.CreateEffect(c)
 	e2x:SetType(EFFECT_TYPE_FIELD)
@@ -36,7 +29,7 @@ function cid.initial_effect(c)
 	e2x:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e2x:SetRange(LOCATION_MZONE)
 	e2x:SetTargetRange(LOCATION_MZONE,0)
-	e2x:SetTarget(cid)
+	e2x:SetTarget(aux.TargetBoolFunction(aux.NOT(Card.IsCode),id))
 	e2x:SetValue(aux.tgoval)
 	c:RegisterEffect(e2x)
 	--double def

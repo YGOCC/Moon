@@ -1,13 +1,6 @@
---Rank-Up-Magic Ennigmatic Force
+local cid,id=GetID()--Rank-Up-Magic Ennigmatic Force
 --Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=getID()
 function cid.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -27,9 +20,7 @@ function cid.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,id)
-	e2:SetCondition(cid.xyzcon)
 	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(cid.xyztg)
 	e2:SetOperation(cid.xyzop)
 	c:RegisterEffect(e2)
 end
@@ -42,18 +33,15 @@ function cid.filter1(c,e,tp)
 		and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL)
 end
 function cid.filter2(c,e,tp,mc,rk)
-	if c:GetOriginalCode()==6165656 and mc:GetCode()~=48995978 then return false end
+	--
 	return (c:IsRank(rk+1) or c:IsRank(rk+2)) and c:IsType(TYPE_XYZ) and c:IsSetCard(0x2ead)
 		and mc:IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function cid.checkr(c,rc)
 	return c:IsReason(REASON_BATTLE) and c:IsType(TYPE_MONSTER) and c:GetReasonCard()==rc and c~=rc and not c:IsReason(REASON_REPLACE)
 end
-function cid.flagchk(c)
-	return c:GetFlagEffect(id)>0
-end
 function cid.xyzfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x2ead)
 end
 --Activate
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -84,36 +72,23 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --attach
-function cid.xyzcon(e,tp,eg,ep,ev,re,r,rp)
-	local ph=Duel.GetCurrentPhase()
-	return (ph==PHASE_MAIN1 or phase==PHASE_MAIN2) and Duel.GetTurnPlayer()==tp
-end
-function cid.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.xyzfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(cid.xyzfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,cid.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil)
-end
+--You can banish this card from your GY; until the End Phase, if a monster your opponent controls is destroyed by battle, you can attach it to an "Ennigmatrix" Xyz Monster you control instead of sending it to the GY.
 function cid.xyzop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsImmuneToEffect(e) then
-		tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_UNCOPYABLE,1)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_BATTLED)
-		e1:SetLabelObject(tc)
-		e1:SetOperation(cid.redirect)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
-	end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_BATTLED)
+	e1:SetOperation(cid.redirect)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end
 function cid.redirect(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetLabelObject()
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	local b1=a and not a:IsType(TYPE_TOKEN) and a:IsStatus(STATUS_BATTLE_DESTROYED) and a:IsControler(1-tp) and d and d==c and d:GetFlagEffect(id)>0
-	local b2=d and not d:IsType(TYPE_TOKEN) and d:IsStatus(STATUS_BATTLE_DESTROYED) and d:IsControler(1-tp) and a==c and a:GetFlagEffect(id)>0
-	if (not b1 and not b2) or not c:IsOnField() or c:IsFacedown() or c:IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return end
+	local b1=a and not a:IsType(TYPE_TOKEN) and a:IsStatus(STATUS_BATTLE_DESTROYED) and a:IsControler(1-tp) and d
+	local b2=d and not d:IsType(TYPE_TOKEN) and d:IsStatus(STATUS_BATTLE_DESTROYED) and d:IsControler(1-tp)
+	if (not b1 and not b2) or not Duel.IsExistingMatchingCard(cid.xyzfilter,tp,LOCATION_MZONE,0,1,nil) or not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local c=Duel.SelectMatchingCard(tp,cid.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil):GetFirst()
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetCode(EFFECT_SEND_REPLACE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -130,7 +105,7 @@ end
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:GetDestination()==LOCATION_GRAVE and c:IsReason(REASON_BATTLE)
-		and c:GetReasonCard()==e:GetLabelObject() and c:GetReasonCard():GetFlagEffect(id)>0 
+		and c:GetReasonCard()==e:GetLabelObject()
 	end
 	return true
 end

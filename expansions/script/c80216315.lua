@@ -1,4 +1,4 @@
---Ennigmatic Aura
+local cid,id=GetID()--Ennigmatic Aura
 --Script by XGlitchy30
 local function getID()
 	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
@@ -72,20 +72,23 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local plus=0
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local g=Duel.SelectMatchingCard(tp,cid.rvfilter,tp,LOCATION_HAND,0,1,1,nil)
 	Duel.ConfirmCards(1-tp,g)
-	if g:GetFirst():IsSetCard(0xead) then
-		plus=1
-	end
 	if Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 then
 		if g:GetFirst():IsLocation(LOCATION_DECK+LOCATION_EXTRA) then
 			if g:GetFirst():IsLocation(LOCATION_DECK) then
 				Duel.ShuffleDeck(tp)
 			end
 			local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-			Duel.Draw(p,d+plus,REASON_EFFECT)
+			if Duel.Draw(p,d,REASON_EFFECT)>0 then
+				local tc=Duel.GetOperatedGroup():GetFirst()
+				if tc:IsSetCard(0xead) and not tc:IsPublic() and Duel.IsPlayerCanDraw(tp,1) then
+					Duel.BreakEffect()
+					Duel.ConfirmCards(1-tp,tc)
+					Duel.Draw(p,1,REASON_EFFECT)
+				end
+			end
 		end
 	end
 end

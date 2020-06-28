@@ -1,25 +1,18 @@
 --Ripper Ennigmaterial
 --Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	--spsummon (Double Check?)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_TRIGGER_F+EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_DESTROYED)
-	e1:SetCondition(IsSetCard(0xead))
-	e1:SetOperation(cid.effectop)
+	e1:SetCondition(function(e,tp,eg) return eg:IsExists(Card.IsSetCard,1,nil,0xead) end)
+	e1:SetTarget(cid.tg)
+	e1:SetOperation(cid.op)
 	c:RegisterEffect(e1)
-
 	--gain eff
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
@@ -35,6 +28,15 @@ function cid.initial_effect(c)
 	local e2y=e2:Clone()
 	e2y:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e2x)
+end
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
+end
+function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP) end
 end
 --filters
 function cid.filter(c)

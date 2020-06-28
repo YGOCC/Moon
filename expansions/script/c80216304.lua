@@ -1,13 +1,6 @@
 --Dedicated Ennigmaterial
 --Script by XGlitchy30
-local function getID()
-	local str=string.match(debug.getinfo(2,'S')['source'],"c%d+%.lua")
-	str=string.sub(str,1,string.len(str)-4)
-	local cod=_G[str]
-	local id=tonumber(string.sub(str,2))
-	return id,cod
-end
-local id,cid=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
@@ -34,7 +27,7 @@ function cid.initial_effect(c)
 	local e2x=e2:Clone()
 	e2x:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2x)
-
+end
 --filters
 function cid.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xead) and c:IsType(TYPE_MONSTER) and not c:IsCode(id)
