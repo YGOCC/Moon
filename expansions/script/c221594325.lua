@@ -124,7 +124,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	e:SetProperty(te:GetProperty())
 	Duel.ClearTargetCard()
 	if ft<=0 then Duel.ConfirmCards(1-tp,tc) end
-	Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	Duel.MoveToField(tc,tp,tp,tc:IsType(TYPE_FIELD) and LOCATION_FZONE or LOCATION_SZONE,POS_FACEUP,true)
 	tc:CancelToGrave(tpe&TYPE_FIELD~=0)
 	tc:CreateEffectRelation(te)
 	if co then co(te,tp,eg,ep,ev,re,r,rp,1) end
