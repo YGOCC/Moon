@@ -41,7 +41,7 @@ function cid.ffilter(c,fc,sub,mg,sg)
 	return c:IsRace(RACE_ZOMBIE) and (not sg or sg:IsExists(Card.IsFusionSetCard,1,nil,0x2e7))
 end
 function cid.aclimit(e,re,tp)
-	return re:GetHandler():IsRace(RACE_ZOMBIE) and re:IsActiveType(TYPE_MONSTER)
+	return re:GetActivateLocation()==LOCATION_MZONE and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsRace(RACE_ZOMBIE)
 end
 function cid.cfilter(c)
 	return c:IsCode(911630827)
