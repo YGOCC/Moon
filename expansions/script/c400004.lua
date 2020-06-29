@@ -25,9 +25,9 @@ function c400004.initial_effect(c)
 end
 function c400004.filter(c,bool)
 	if bool then
-		return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToHand()
+		return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToHand()
 	else
-		return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY)
+		return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY)
 	end
 end
 function c400004.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -44,10 +44,10 @@ function c400004.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400004.halfilter(c)
-	return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY)
+	return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY)
 end
 function c400004.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x147) and rp==tp
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x246) and rp==tp
 end
 function c400004.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD,1,nil) end

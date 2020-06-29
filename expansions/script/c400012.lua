@@ -17,10 +17,10 @@ function c400012.filter(c)
 	return c:IsType(TYPE_MONSTER)and c:IsFaceup() 
 end
 function c400012.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x147)
+	return c:IsFaceup() and c:IsSetCard(0x246)
 end
 function c400012.dfilter(c,self)
-return c:IsSetCard(0x147) and c:IsLocation(LOCATION_GRAVE) and c:IsType(TYPE_QUICKPLAY) and not c:IsCode(400012)
+return c:IsSetCard(0x246) and c:IsLocation(LOCATION_GRAVE) and c:IsType(TYPE_QUICKPLAY) and not c:IsCode(400012)
 end
 function c400012.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c400012.cfilter,tp,LOCATION_MZONE,0,1,nil)

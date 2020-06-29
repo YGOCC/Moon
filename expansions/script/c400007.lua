@@ -25,7 +25,7 @@ function c400007.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c400007.cfilter(c)
-	return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY)
+	return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY)
 end
 function c400007.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c400007.cfilter,tp,LOCATION_GRAVE,0,3,nil)
@@ -49,10 +49,10 @@ function c400007.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400007.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x147) and rp==tp
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x246) and rp==tp
 end
 function c400007.spfilter(c,e,tp)
-	return c:IsSetCard(0x147) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return c:IsSetCard(0x246) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function c400007.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

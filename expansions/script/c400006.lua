@@ -36,7 +36,7 @@ function c400006.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c400006.spfilter(c)
-	return c:IsType(TYPE_QUICKPLAY) and c:IsSetCard(0x147) and c:IsAbleToGraveAsCost()
+	return c:IsType(TYPE_QUICKPLAY) and c:IsSetCard(0x246) and c:IsAbleToGraveAsCost()
 end
 function c400006.spcon(e,c)
 	if c==nil then return true end
@@ -50,7 +50,7 @@ function c400006.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c400006.drfilter(c)
-	return c:IsSetCard(0x147) and c:IsAbleToDeck() and c:IsType(TYPE_QUICKPLAY)
+	return c:IsSetCard(0x246) and c:IsAbleToDeck() and c:IsType(TYPE_QUICKPLAY)
 end
 function c400006.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetMatchingGroup(c400006.drfilter,tp,LOCATION_GRAVE,0,nil)
@@ -78,7 +78,7 @@ function c400006.drop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400006.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x147) and rp==tp
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x246) and rp==tp
 end
 function c400006.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(1-tp) and chkc:IsAbleToRemove() end

@@ -11,7 +11,7 @@ function c400017.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x147))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x246))
 	e2:SetValue(c400017.val)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
@@ -40,17 +40,17 @@ function c400017.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c400017.atk(c)
-	return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY)
+	return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY)
 end
 function c400017.val(e,c)
 	return Duel.GetMatchingGroupCount(c400017.atk,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil)*100
 end
 function c400017.filter(c,e,tp)
-	return c:IsSetCard(0x147) and (c:GetLevel()<=4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x246) and (c:GetLevel()<=4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c400017.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(function(c)return c:IsType(TYPE_QUICKPLAY) and c:IsSetCard(0x147) end,tp,LOCATION_GRAVE,0,1,nil)
+		and Duel.IsExistingMatchingCard(function(c)return c:IsType(TYPE_QUICKPLAY) and c:IsSetCard(0x246) end,tp,LOCATION_GRAVE,0,1,nil)
 		and Duel.IsExistingMatchingCard(c400017.filter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
 end
@@ -66,11 +66,11 @@ function c400017.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x146) and rp==tp
 end
 function c400017.filter1(c)
-	return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToGrave()
+	return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToGrave()
 		and Duel.IsExistingMatchingCard(c400017.filter2,c:GetControler(),LOCATION_DECK,0,1,c,c:GetCode())
 end
 function c400017.filter2(c,code)
-	return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToHand()
+	return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY) and c:IsAbleToHand()
 		and not c:IsCode(code)
 end
 function c400017.target(e,tp,eg,ep,ev,re,r,rp,chk)

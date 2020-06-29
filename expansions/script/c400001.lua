@@ -35,7 +35,7 @@ function c400001.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c400001.setfilter(c)
-return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY) and c:IsSSetable()
+return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY) and c:IsSSetable()
 end
 function c400001.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c400001.setfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -59,10 +59,10 @@ function c400001.setop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c400001.halfilter(c)
-return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY)
+return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY)
 end
 function c400001.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x147) and rp==tp
+	return Duel.GetTurnPlayer()~=tp and re:GetHandler():IsType(TYPE_QUICKPLAY) and re:GetHandler():IsSetCard(0x246) and rp==tp
 end
 function c400001.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then 
@@ -86,7 +86,7 @@ function c400001.operation(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c400001.tgfilter(c,tp)
-	return c:IsSetCard(0x147) and c:IsAbleToGrave()
+	return c:IsSetCard(0x246) and c:IsAbleToGrave()
 end
 function c400001.gytg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c400001.tgfilter,tp,LOCATION_DECK,0,1,nil) end

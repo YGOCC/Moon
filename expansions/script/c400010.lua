@@ -17,7 +17,7 @@ function c400010.counterfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WATER)
 end
 function c400010.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(function(c)return c:IsFaceup() and c:IsSetCard(0x147) end,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(function(c)return c:IsFaceup() and c:IsSetCard(0x246) end,tp,LOCATION_MZONE,0,1,nil)
 end
 function c400010.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(400010,tp,ACTIVITY_SPSUMMON)==0 end
@@ -35,7 +35,7 @@ function c400010.splimit(e,c)
 	return not c:IsAttribute(ATTRIBUTE_WATER)
 end
 function c400010.filter(c,e,tp)
-	return c:IsSetCard(0x147) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x246) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c400010.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -48,8 +48,8 @@ function c400010.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c400010.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)==0 then return end
-		if Duel.IsPlayerCanSpecialSummonMonster(tp,400009,0x147,0x4011,1700,1000,4,RACE_FAIRY,ATTRIBUTE_WATER)
-		and Duel.IsExistingMatchingCard(function(c)return c:IsSetCard(0x147) and c:IsType(TYPE_QUICKPLAY) and c:GetCode()~=400013 end,tp,LOCATION_GRAVE,0,1,nil)
+		if Duel.IsPlayerCanSpecialSummonMonster(tp,400009,0x246,0x4011,1700,1000,4,RACE_FAIRY,ATTRIBUTE_WATER)
+		and Duel.IsExistingMatchingCard(function(c)return c:IsSetCard(0x246) and c:IsType(TYPE_QUICKPLAY) and c:GetCode()~=400013 end,tp,LOCATION_GRAVE,0,1,nil)
 		and Duel.SelectYesNo(tp,aux.Stringid(400010,0)) then
 			Duel.BreakEffect()
 			local token=Duel.CreateToken(tp,400009)
