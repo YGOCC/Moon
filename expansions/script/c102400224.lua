@@ -59,7 +59,5 @@ function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 then
-		Duel.ConfirmCards(1-tp,tc)
-	end
+	if tc:IsRelateToEffect(e) then Duel.SendtoHand(tc,nil,REASON_EFFECT) end
 end
