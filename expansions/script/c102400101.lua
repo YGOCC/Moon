@@ -12,16 +12,6 @@ function cid.initial_effect(c)
 	e0:SetTarget(cid.destg)
 	e0:SetOperation(cid.desop)
 	c:RegisterEffect(e0)
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e4:SetCode(EVENT_DAMAGE_STEP_END)
-	e4:SetCondition(function(e) return Duel.GetAttacker()==e:GetHandler() end)
-	e4:SetOperation(cid.atop)
-	c:RegisterEffect(e4)
-end
-function cid.atop(e)
-	local c=e:GetHandler()
-	if c:IsRelateToBattle() then Duel.Destroy(c,REASON_EFFECT) end
 end
 function cid.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

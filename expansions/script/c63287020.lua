@@ -12,14 +12,6 @@ function cid.initial_effect(c)
 	c:EnableCounterPermit(0xb9a)
 	c:SetCounterLimit(0xb9a,10)
 	c:EnableReviveLimit()
-	--change name
-	local stmt0=Effect.CreateEffect(c)
-	stmt0:SetType(EFFECT_TYPE_SINGLE)
-	stmt0:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	stmt0:SetCode(EFFECT_ADD_CODE)
-	stmt0:SetRange(LOCATION_ONFIELD)
-	stmt0:SetValue(69537999)
-	c:RegisterEffect(stmt0)
 	--spsummon rule
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -136,7 +128,7 @@ function cid.cttg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if #ct>0 then
 		local lv=Duel.AnnounceNumber(tp,table.unpack(ct))
 		e:GetHandler():RemoveCounter(tp,0xb9a,lv,REASON_COST)
-		e:SetLabel(lv*300)
+		e:SetLabel(lv*200)
 	end
 	if e:GetLabel()>0 then
 		Duel.SetTargetPlayer(1-tp)
@@ -146,26 +138,15 @@ function cid.cttg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.ctop2(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Damage(p,d,REASON_EFFECT)
+	if Duel.Damage(p,d,REASON_EFFECT)<1 or not Duel.CheckLPCost(tp,1000)
+		or not Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil)
+		or not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
 	Duel.BreakEffect()
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE+PHASE_END)
-	e1:SetCountLimit(1)
-	e1:SetCondition(cid.thcon)
-	e1:SetOperation(cid.thop)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-end
-function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(cid.thfilter,tp,LOCATION_DECK,0,1,nil)
-end
-function cid.thop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.SelectYesNo(tp,aux.Stringid(id,2)) then return end
-	Duel.Hint(HINT_CARD,0,id)
+	Duel.PayLPCost(tp,1000)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cid.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
+		Duel.BreakEffect()
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end

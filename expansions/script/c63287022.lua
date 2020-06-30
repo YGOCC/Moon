@@ -31,7 +31,7 @@ function cid.initial_effect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DAMAGE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
+	e3:SetCountLimit(1,id)
 	e3:SetTarget(cid.sptg)
 	e3:SetOperation(cid.spop)
 	c:RegisterEffect(e3)
@@ -55,7 +55,7 @@ function cid.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(cid.cfilter,tp,LOCATION_GRAVE,0,nil)
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g>=4 and g:GetClassCount(Card.GetCode)>=4
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g>=4
 end
 --ACT LIMIT
 function cid.chainop(e,tp,eg,ep,ev,re,r,rp)
@@ -77,7 +77,6 @@ function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(cid.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,500)
 end
 function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
@@ -91,7 +90,8 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_CANNOT_ATTACK)
 			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
-			Duel.Damage(1-tp,500,REASON_EFFECT)
+			local e2=e1:Clone()
+			e:GetHandler():RegisterEffect(e2)
 		end
 	end
 end

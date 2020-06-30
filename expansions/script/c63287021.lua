@@ -53,11 +53,11 @@ function cid.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_DAMAGE)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e4:SetCode(EVENT_PHASE+PHASE_END)
+	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCountLimit(1)
 	e4:SetCondition(cid.sccon)
+	e4:SetCost(cid.sccost)
 	e4:SetTarget(cid.sctg)
 	e4:SetOperation(cid.scop)
 	c:RegisterEffect(e4)
@@ -68,6 +68,7 @@ function cid.initial_effect(c)
 	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e5:SetValue(cid.eqlimit)
 	c:RegisterEffect(e5)
+	c:SetUniqueOnField(1,0,id,LOCATION_SZONE)
 end
 --SPSUMMON PROC
 function cid.cfilter(c)
@@ -135,12 +136,16 @@ end
 --SEARCH
 --filters
 function cid.scfilter(c)
-	return c:IsSetCard(0x32) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x32) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(id)
 end
 ---------
 function cid.sccon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
 	return ec and ec:IsControler(tp)
+end
+function cid.sccost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLPCost(tp,800) end
+	Duel.PayLPCost(tp,800)
 end
 function cid.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.scfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -155,7 +160,7 @@ function cid.scop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:Filter(Card.IsLocation,nil,LOCATION_HAND)
 		if #sg>0 then
 			Duel.ConfirmCards(1-tp,sg)
-			Duel.Damage(1-tp,500,REASON_EFFECT)
+			Duel.Damage(1-tp,200,REASON_EFFECT)
 		end
 	end
 end
