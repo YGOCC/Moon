@@ -1,7 +1,8 @@
 --Paintress Nadia
 local cid,id=GetID()
-function cid.initial_effect(c)
 	local ref=_G['c'..id]
+function cid.initial_effect(c)
+
  
 	--hand 
 	local e1=Effect.CreateEffect(c)
@@ -58,11 +59,11 @@ function cid.thcon(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsPreviousLocation(LOCATION_ONFIELD) then e:SetLabel(1) end
 	return c:IsLocation(LOCATION_GRAVE) and c:IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND) and r==REASON_EVOLUTE and c:GetReasonCard():IsSetCard(0xc50)
 end
-function cid.thfilter(c,e,tp)
+function cid.spfilter(c,e,tp)
 	return c:IsType(TYPE_EVOLUTE) and c:IsSetCard(0xc50) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cid.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and cid.spfilter(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cid.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(cid.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -74,6 +75,6 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
-	tc:AddECounter(tp,4)
+	tc:AddEC(4)
 	end
 end
