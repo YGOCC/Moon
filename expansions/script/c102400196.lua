@@ -2,7 +2,7 @@
 --フェイツ儀式
 local cid,id=GetID()
 function cid.initial_effect(c)
-	aux.AddRitualProcGreater(c,aux.FilterBoolFunction(Card.IsSetCard,0xf7a),LOCATION_HAND+LOCATION_DECK):SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	aux.AddRitualProcGreater(c,aux.FilterBoolFunction(Card.IsSetCard,0xf7a))
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_GRAVE)
