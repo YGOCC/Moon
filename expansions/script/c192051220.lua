@@ -44,7 +44,7 @@ function cid.lkfilter(c,lc)
 end
 function cid.lkcon(e,c)
 	if c==nil then return true end
-	if (c:IsType(TYPE_PENDULUM) or not Card.IsTypeCustom or c:IsTypeCustom("Pandemonium") or c:IsTypeCustom("Relay")) and c:IsFaceup() then return false end
+	if (c:IsType(TYPE_PENDULUM+TYPE_PANDEMONIUM+TYPE_RELAY)) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
 	local mg=Duel.GetMatchingGroup(cid.lkfilter,tp,LOCATION_MZONE,0,nil,c)
 	return mg:CheckWithSumEqual(Card.GetLevel,12,4,4)

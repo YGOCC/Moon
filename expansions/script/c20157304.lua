@@ -51,7 +51,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function cid.mfilter(c)
-	return c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_FIRE)
+	return c:IsLinkRace(RACE_DRAGON) and c:IsLinkAttribute(ATTRIBUTE_FIRE)
 end
 function cid.splimit(e,c)
 	return not c:IsRace(RACE_DRAGON) or not c:IsAttribute(ATTRIBUTE_FIRE)

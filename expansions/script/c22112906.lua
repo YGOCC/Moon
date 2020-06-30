@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x88a),2,2,cid.mcheck)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLinkSetCard,0x88a),2,2,cid.mcheck)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -22,7 +22,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.mcheck(g)
-	return g:IsExists(function(c) return c:IsAttribute(ATTRIBUTE_DARK) and g:IsExists(Card.IsAttribute,1,c,ATTRIBUTE_FIRE) end,1,nil)
+	return g:IsExists(function(c) return c:IsLinkAttribute(ATTRIBUTE_DARK) and g:IsExists(Card.IsLinkAttribute,1,c,ATTRIBUTE_FIRE) end,1,nil)
 end
 function cid.hspfilter(c,e,tp)
 	return c:IsSetCard(0x88a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,e:GetHandler():GetLinkedZone())

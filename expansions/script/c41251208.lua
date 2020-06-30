@@ -27,7 +27,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.mfilter(c)
-	return c:IsRace(RACE_PLANT) and not c:IsType(TYPE_EFFECT)
+	return c:IsLinkRace(RACE_PLANT) and not c:IsLinkType(TYPE_EFFECT)
 end
 function cid.filter(c,e,tp)
 	return c:IsControler(tp) and c:IsPosition(POS_FACEUP) and (not e or c:IsRelateToEffect(e)) and not c:IsRace(RACE_PLANT)

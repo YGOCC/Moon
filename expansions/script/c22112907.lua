@@ -22,7 +22,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.mfilter(c)
-	return c:IsSetCard(0x88a) and c:IsAttribute(ATTRIBUTE_DARK)
+	return c:IsLinkSetCard(0x88a) and c:IsLinkAttribute(ATTRIBUTE_DARK)
 end
 function cid.hspfilter(c,e,tp)
 	return c:IsSetCard(0x88a) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,e:GetHandler():GetLinkedZone())

@@ -22,7 +22,7 @@ end
 function cid.ctfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xcf11)
 end
-function cid.schfilter(c)
+function cid.schfilter(c,n)
 	return c:IsSetCard(0xcf11) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cid.schfilter1(c)
