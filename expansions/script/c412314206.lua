@@ -29,7 +29,7 @@ function cid.initial_effect(c)
 end
 function cid.nacost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_COST+REASON_DISCARD)
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function cid.natg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -45,9 +45,9 @@ end
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsFaceup() and c:GetReasonPlayer()~=tp and not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT)
-		and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0 end
+		and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil,REASON_EFFECT) end
 	if Duel.SelectEffectYesNo(tp,c,96) then
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT+REASON_DISCARD,nil,REASON_EFFECT)
 		return true
 	else return false end
 end

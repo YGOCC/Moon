@@ -1,11 +1,8 @@
-local cid,id=GetID()--Light in The Darkness, Scarlet Red Apocrypha
+--created by Swag, coded by Lyris
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--mat=5+ Zombie monsters in your GY - "Scarlet Red" monster
-	--Monsters used to Time Leap Summon this card are sent to the GY instead of being banished.
 	aux.AddTimeleapProc(c,8,function(e,tc) return Duel.IsExistingMatchingCard(cid.mfilter,tc:GetControler(),LOCATION_GRAVE,0,5,nil) end,aux.FilterBoolFunction(Card.IsSetCard,0xd78),cid.sumop)
-	--You can only use each effect of "Light in The Darkness, Scarlet Red Apocrypha" once per turn.
-	--If this card is Time Leap Summoned: You can look at the top 7 cards of your Deck, Special Summon up to 1 "Scarlet Red" monster from among them and send up 1 card from among them to the GY, then shuffle the rest into the Deck.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -15,7 +12,6 @@ function cid.initial_effect(c)
 	e1:SetTarget(cid.sptg)
 	e1:SetOperation(cid.spop)
 	c:RegisterEffect(e1)
-	--If your opponent activates a monster effect (Quick Effect): You can send the top 3 cards of your Deck to the GY, and if you do, if there was a Level 5 or higher "Scarlet Red" monster among them, negate that effect.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
@@ -27,7 +23,6 @@ function cid.initial_effect(c)
 	e2:SetTarget(cid.target)
 	e2:SetOperation(cid.operation)
 	c:RegisterEffect(e2)
-	--During your opponent's End Phase: Send the top card of your Deck to the GY, then, if you have 40 or more cards in your GY, you win the duel.
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DECKDES)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)

@@ -50,10 +50,9 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_DECK) then
 		Duel.ShuffleDeck(tp)
-		local dg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
-		if #dg>0 and Duel.SelectYesNo(tp,1108) then
+		if Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil,REASON_EFFECT) and Duel.SelectYesNo(tp,1108) then
 			Duel.BreakEffect()
-			Duel.DiscardHand(tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD)
+			Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT+REASON_DISCARD,nil,REASON_EFFECT)
 		end
 	end
 end

@@ -40,9 +40,10 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		local ct=math.floor(og:GetCount()/2)
 		local ct2=ct
-		if Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)<ct then ct=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0) end
-		if Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)<ct2 then ct2=Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0) end
-		Duel.DiscardHand(tp,aux.TRUE,ct,ct,REASON_EFFECT+REASON_DISCARD,nil)
-		Duel.DiscardHand(1-tp,aux.TRUE,ct2,ct2,REASON_EFFECT+REASON_DISCARD,nil)
+		local ct3,ct4=Duel.GetMatchingGroupCount(Card.IsDiscardable,tp,LOCATION_HAND,0,nil,REASON_EFFECT),Duel.GetMatchingGroupCount(Card.IsDiscardable,1-tp,LOCATION_HAND,0,nil,REASON_EFFECT)
+		if ct3<ct then ct=ct3 end
+		if ct4<ct2 then ct2=ct4 end
+		Duel.DiscardHand(tp,Card.IsDiscardable,ct,ct,REASON_EFFECT+REASON_DISCARD,nil,REASON_EFFECT)
+		Duel.DiscardHand(1-tp,Card.IsDiscardable,ct2,ct2,REASON_EFFECT+REASON_DISCARD,nil,REASON_EFFECT)
 	end
 end

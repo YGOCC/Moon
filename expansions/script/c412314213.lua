@@ -66,9 +66,9 @@ end
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsLocation(LOCATION_MZONE) and c:IsAbleToExtra() and not c:IsReason(REASON_REPLACE)
-		and Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0 end
+		and Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil,REASON_EFFECT) end
 	if Duel.SelectEffectYesNo(tp,c,96) then
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
+		Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_EFFECT+REASON_DISCARD,nil,REASON_EFFECT)
 		return true
 	else return false end
 end

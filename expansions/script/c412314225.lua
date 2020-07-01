@@ -97,7 +97,7 @@ end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=e:GetLabel()
 	if chk==0 then return Duel.GetMatchingGroupCount(Card.IsDiscardable,tp,LOCATION_HAND,0,nil)>=ct end
-	Duel.DiscardHand(tp,aux.TRUE,ct,ct,REASON_COST+REASON_DISCARD)
+	Duel.DiscardHand(tp,Card.IsDiscardable,ct,ct,REASON_COST+REASON_DISCARD)
 	local n=e:GetHandler():GetFlagEffectLabel(id)
 	if not n then
 		e:GetHandler():RegisterFlagEffect(id,RESET_PHASE+PHASE_END+RESET_EVENT+RESET_TOFIELD+RESET_TURN_SET,0,1,1)

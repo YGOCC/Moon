@@ -39,8 +39,8 @@ function cid.chainop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.mtop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-		Duel.DiscardHand(tp,nil,1,1,REASON_COST+REASON_DISCARD)
+	if Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 	else
 		Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 	end

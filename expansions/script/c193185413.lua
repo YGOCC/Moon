@@ -1,9 +1,8 @@
-local cid,id=GetID()--Rushing to the Light, Scarlet Red Dawn
+--created by Swag, coded by Lyris
+local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	--3 or more Level 5 or higher Zombie monsters in your GY - "Scarlet Red" monster
 	aux.AddTimeleapProc(c,9,cid.sumcon,aux.FilterBoolFunction(Card.IsSetCard,0xd78),cid.sumop)
-	--You can also Time Leap Summon this card using a Future 8 "Scarlet Red" Time Leap Monster you control, also, monsters used to Time Leap Summon this card are sent to the GY instead of being banished.
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -13,7 +12,6 @@ function cid.initial_effect(c)
 	e1:SetOperation(cid.hspop)
 	e1:SetValue(SUMMON_TYPE_TIMELEAP)
 	c:RegisterEffect(e1)
-	--Can't be targeted by card effects.
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
@@ -21,8 +19,6 @@ function cid.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
-	--You can only use each effect of "Rushing to the Light, Scarlet Red Dawn" once per turn.
-	--If this card is Time Leap Summoned: You can look at the top 10 cards of your Deck, add 1 "Scarlet Red" card among them to your hand and send up to 2 Zombie monsters among them to the GY, then shuffle the rest into your Deck.
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_IGNITION)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -32,7 +28,6 @@ function cid.initial_effect(c)
 	e3:SetTarget(cid.tg)
 	e3:SetOperation(cid.op)
 	c:RegisterEffect(e3)
-	--If your opponent activates a Spell/Trap (Quick Effect): You can send the top 3 cards of your Deck to the GY, and if you do, if there was a Level 5 or higher "Scarlet Red" monster among them, negate the activation.
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
