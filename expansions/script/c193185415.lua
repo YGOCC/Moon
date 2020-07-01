@@ -28,7 +28,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 	end
 	function cm.cfilter(c)
-	return c:SetCard(0xd78) and (c:IsAbleToHand() or c:IsAbleToGrave()) and not c:IsCode(m)
+	return c:IsSetCard(0xd78) and (c:IsAbleToHand() or c:IsAbleToGrave()) and not c:IsCode(m)
 end
 function cm.setg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_DECK,0,1,nil) end
