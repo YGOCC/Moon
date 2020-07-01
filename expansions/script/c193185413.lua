@@ -1,0 +1,114 @@
+local cid,id=GetID()--Rushing to the Light, Scarlet Red Dawn
+function cid.initial_effect(c)
+	c:EnableReviveLimit()
+	--3 or more Level 5 or higher Zombie monsters in your GY - "Scarlet Red" monster
+	aux.AddTimeleapProc(c,9,cid.sumcon,aux.FilterBoolFunction(Card.IsSetCard,0xd78),cid.sumop)
+	--You can also Time Leap Summon this card using a Future 8 "Scarlet Red" Time Leap Monster you control, also, monsters used to Time Leap Summon this card are sent to the GY instead of being banished.
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_EXTRA)
+	e1:SetCondition(cid.hspcon)
+	e1:SetOperation(cid.hspop)
+	e1:SetValue(SUMMON_TYPE_TIMELEAP)
+	c:RegisterEffect(e1)
+	--Can't be targeted by card effects.
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetValue(1)
+	c:RegisterEffect(e2)
+	--You can only use each effect of "Rushing to the Light, Scarlet Red Dawn" once per turn.
+	--If this card is Time Leap Summoned: You can look at the top 10 cards of your Deck, add 1 "Scarlet Red" card among them to your hand and send up to 2 Zombie monsters among them to the GY, then shuffle the rest into your Deck.
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_IGNITION)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCountLimit(1,id)
+	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND+CATEGORY_DECKDES)
+	e3:SetCondition(function(e) return e:GetHandler():IsSummonType(SUMMON_TYPE_TIMELEAP) end)
+	e3:SetTarget(cid.tg)
+	e3:SetOperation(cid.op)
+	c:RegisterEffect(e3)
+	--If your opponent activates a Spell/Trap (Quick Effect): You can send the top 3 cards of your Deck to the GY, and if you do, if there was a Level 5 or higher "Scarlet Red" monster among them, negate the activation.
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetCode(EVENT_CHAINING)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1,id+100)
+	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e4:SetCategory(CATEGORY_DECKDES+CATEGORY_NEGATE)
+	e4:SetCondition(cid.condition)
+	e4:SetTarget(cid.target)
+	e4:SetOperation(cid.operation)
+	c:RegisterEffect(e4)
+end
+function cid.mfilter(c)
+	return c:IsLevelAbove(5) and c:IsRace(RACE_ZOMBIE) and c:IsType(TYPE_MONSTER)
+end
+function cid.sumcon(e,c)
+	return Duel.IsExistingMatchingCard(cid.mfilter,c:GetControler(),LOCATION_GRAVE,0,3,nil)
+end
+function cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
+	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_TIMELEAP)
+end
+function cid.hspfilter(c,tp)
+	return c:IsFuture(8) and c:IsSetCard(0xd78) and c:IsType(TYPE_TIMELEAP) and c:IsAbleToGraveAsCost()
+		and Duel.GetLocationCountFromEx(tp,tp,c,TYPE_TIMELEAP)>0
+end
+function cid.hspcon(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.IsExistingMatchingCard(cid.hspfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+end
+function cid.hspop(e,tp,eg,ep,ev,re,r,rp,c)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,cid.hspfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	c:SetMaterial(g)
+	cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
+end
+function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) and Duel.GetFieldGroupCount(tp,LOCATION_DECK)>9 end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,0,tp,LOCATION_DECK)
+end
+function cid.filter(c)
+	return c:IsRace(RACE_ZOMBIE) and c:IsType(TYPE_MONSTER)
+end
+function cid.op(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.IsPlayerCanDiscardDeck(tp,1) then return end
+	local g=Duel.GetDecktopGroup(tp,10)
+	Duel.ConfirmCards(tp,g)
+	local tg=g:Filter(aux.AND(Card.IsAbleToGrave,Card.IsRace),nil,RACE_ZOMBIE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local sg=g:FilterSelect(tp,Card.IsSetCard,1,1,nil):GetFirst()
+	if sg and sg:IsAbleToHand() then
+		Duel.SendtoHand(sg,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,sg)
+		Duel.ShuffleHand(tp)
+		tg:Sub(sg)
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local gg=tg:Select(tp,1,2,nil)
+	if Duel.SendtoGrave(gg,REASON_EFFECT)>0 and not gg:IsExists(aux.NOT(Card.IsLocation),nil,LOCATION_GRAVE) then Duel.BreakEffect() end
+	Duel.ShuffleDeck(tp)
+end
+function cid.condition(e,tp,eg,ep,ev,re,r,rp)
+	return ep~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
+		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+end
+function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+end
+function cid.cfilter(c)
+	return c:IsLocation(LOCATION_GRAVE) and c:IsSetCard(0xd78) and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(5)
+end
+function cid.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if Duel.GetCurrentChain()~=ev+1 or c:IsStatus(STATUS_BATTLE_DESTROYED) then return end
+	Duel.DiscardDeck(tp,3)
+	local ct=Duel.GetOperatedGroup():FilterCount(cid.cfilter,nil)
+	if ct>0 then Duel.NegateActivation(ev) end
+end
