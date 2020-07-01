@@ -2,6 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
+	aux.AddOrigTimeleapType(c)
 	aux.AddTimeleapProc(c,5,function(e,tc) return Duel.IsExistingMatchingCard(cid.mfilter,tc:GetControler(),LOCATION_GRAVE,0,1,nil) end,aux.FilterBoolFunction(Card.IsSetCard,0xd78),cid.sumop)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
@@ -29,6 +30,7 @@ function cid.mfilter(c)
 end
 function cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_TIMELEAP)
+	Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<2 then return end

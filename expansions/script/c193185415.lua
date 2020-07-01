@@ -49,7 +49,7 @@ function cm.seop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.milcon(e,tp,eg,ep,ev,re,r,rp)
-	return (re:GetHandler():IsSetCard(0xd78) and bit.band(r,REASON_EFFECT)~=0)
+	return e:GetHandler():IsReason(REASON_EFFECT) and re and re:GetHandler():IsSetCard(0xd78)
 end
 function cm.miltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2 end

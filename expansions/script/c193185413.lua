@@ -2,6 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
+	aux.AddOrigTimeleapType(c)
 	aux.AddTimeleapProc(c,9,cid.sumcon,aux.FilterBoolFunction(Card.IsSetCard,0xd78),cid.sumop)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -48,6 +49,7 @@ function cid.sumcon(e,c)
 end
 function cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_TIMELEAP)
+	Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
 end
 function cid.hspfilter(c,tp)
 	return c:IsFuture(8) and c:IsSetCard(0xd78) and c:IsType(TYPE_TIMELEAP) and c:IsAbleToGraveAsCost()
@@ -65,7 +67,7 @@ function cid.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) and Duel.GetFieldGroupCount(tp,LOCATION_DECK)>9 end
+	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>9 end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,0,tp,LOCATION_DECK)
 end
 function cid.filter(c)

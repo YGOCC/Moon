@@ -2,6 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
+	aux.AddOrigTimeleapType(c)
 	aux.AddTimeleapProc(c,8,function(e,tc) return Duel.IsExistingMatchingCard(cid.mfilter,tc:GetControler(),LOCATION_GRAVE,0,5,nil) end,aux.FilterBoolFunction(Card.IsSetCard,0xd78),cid.sumop)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -39,6 +40,7 @@ function cid.mfilter(c)
 end
 function cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_TIMELEAP)
+	Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>6 and Duel.IsPlayerCanDiscardDeck(tp,1) end
@@ -82,7 +84,7 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetCurrentChain()~=ev+1 or c:IsStatus(STATUS_BATTLE_DESTROYED) then return end
-	Duel.DiscardDeck(tp,3)
+	Duel.DiscardDeck(tp,3,REASON_EFFECT)
 	local ct=Duel.GetOperatedGroup():FilterCount(cid.cfilter,nil)
 	if ct>0 then Duel.NegateEffect(ev) end
 end
