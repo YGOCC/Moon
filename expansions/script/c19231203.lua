@@ -52,7 +52,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	else Duel.Destroy(c,REASON_EFFECT) end
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0xa44)
+	return re and re:GetHandler():IsSetCard(0xa44) and Duel.GetCurrentChain>0
 end
 function cid.sfilter(c,e,tp)
 	return c:IsSetCard(0xa44) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
