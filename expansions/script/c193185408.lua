@@ -40,7 +40,7 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,1) or #g<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	aux.GCheckAdditional=cid.lvcheck
-	local res=g:SelectSubGroup(tp,aux.TRUE,false,2,2)
+	local sg=g:SelectSubGroup(tp,aux.TRUE,false,2,2)
 	aux.GCheckAdditional=nil
 	Duel.ConfirmCards(1-tp,sg)
 	local tc=sg:Select(1-tp,1,1,nil):GetFirst()

@@ -58,7 +58,8 @@ end
 function cid.hspcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(cid.hspfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+	return cid.sumcon(e,c) and Duel.IsExistingMatchingCard(cid.hspfilter,tp,LOCATION_MZONE,0,1,nil,tp)
+		and Duel.GetFlagEffect(tp,828)<=0
 end
 function cid.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
@@ -88,7 +89,7 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local gg=tg:Select(tp,1,2,nil)
-	if Duel.SendtoGrave(gg,REASON_EFFECT)>0 and not gg:IsExists(aux.NOT(Card.IsLocation),nil,LOCATION_GRAVE) then Duel.BreakEffect() end
+	if Duel.SendtoGrave(gg,REASON_EFFECT)>0 and not gg:IsExists(aux.NOT(Card.IsLocation),1,nil,LOCATION_GRAVE) then Duel.BreakEffect() end
 	Duel.ShuffleDeck(tp)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
@@ -105,7 +106,7 @@ end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetCurrentChain()~=ev+1 or c:IsStatus(STATUS_BATTLE_DESTROYED) then return end
-	Duel.DiscardDeck(tp,3)
+	Duel.DiscardDeck(tp,3,REASON_EFFECT)
 	local ct=Duel.GetOperatedGroup():FilterCount(cid.cfilter,nil)
 	if ct>0 then Duel.NegateActivation(ev) end
 end
