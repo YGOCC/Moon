@@ -52,7 +52,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	else Duel.Destroy(c,REASON_EFFECT) end
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0xa44) and Duel.GetCurrentChain>0
+	return re and re:GetHandler():IsSetCard(0xa44) and re:IsHasType(EFFECT_TYPE_ACTIONS)
 end
 function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsType(TYPE_SPELL+TYPE_TRAP) end
