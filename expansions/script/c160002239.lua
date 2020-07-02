@@ -70,6 +70,6 @@ function cid.psop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cid.psfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	local tc=g:GetFirst()
 	if g:GetCount()>0 then
-		Duel.MoveToField(g:GetFirst(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		Duel.MoveToField(g:GetFirst(),tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
