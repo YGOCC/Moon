@@ -25,10 +25,10 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xa88) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0xa44) and c:IsType(TYPE_MONSTER)
 end
 function cid.con(e,tp)
-	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function cid.condition(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
