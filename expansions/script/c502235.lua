@@ -85,7 +85,7 @@ end
 	Duel.RegisterEffect(e1,tp)
 end
 	function s.filt1(c,e,tp)
-	return c:IsRace(RACE_WARRIOR) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_WARRIOR) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(502235)
 end
 	function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.filt1),tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)

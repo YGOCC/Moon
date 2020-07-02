@@ -55,14 +55,12 @@ end
 	return re:GetHandler()==e:GetHandler() and (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE) and not re:IsHasType(EFFECT_TYPE_ACTIVATE)
 end
 	function s.desop2(e,tp,eg,ep,ev,re,r,rp)
-	local g1=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil)
+	local g1=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,nil)
 	local g2=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
 	if g1:GetCount()==0 or g2:GetCount()==0 then return end
-	Duel.ConfirmCards(tp,g1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local tc=g1:Select(tp,1,1,nil):GetFirst()
 	Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
-	Duel.ShuffleHand(1-tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local tc1=g2:Select(tp,1,1,nil):GetFirst()
 	Duel.Remove(tc1,POS_FACEUP,REASON_EFFECT)
