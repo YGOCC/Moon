@@ -29,7 +29,7 @@ function cid.filter(c)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,1) then return end
-	local g=Duel.GetDecktopGroup(tp,3)
+	local g=Duel.GetDecktopGroup(tp,5)
 	Duel.ConfirmCards(tp,g)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local sg=g:FilterSelect(tp,cid.filter,1,1,nil)
