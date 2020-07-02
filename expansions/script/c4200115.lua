@@ -37,7 +37,7 @@ c:RegisterEffect(e3)
 local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCategory(CATEGORY_DESTROY)
-	e4;SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCode(EFFECT_TYPE_QUICK_O)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(2,m)
@@ -87,7 +87,7 @@ function cm.sparkfilter(c)
 return c:IsCode(4200100)
 end
 function cm.tucon(e,c)
-    return Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cm.tucost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -109,7 +109,7 @@ function cm.tuop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.bancon(e,c)
-    return Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cm.bancost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -130,7 +130,7 @@ function cm.banop(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function cm.negcon(e,c)
-    return Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cm.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
