@@ -30,7 +30,7 @@ function cid.mfilter(c)
 end
 function cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_TIMELEAP)
-	Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
+	aux.TimeleapHOPT(tp)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<2 then return end

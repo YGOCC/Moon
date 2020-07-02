@@ -49,7 +49,7 @@ function cid.sumcon(e,c)
 end
 function cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_TIMELEAP)
-	Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
+	aux.TimeleapHOPT(tp)
 end
 function cid.hspfilter(c,tp)
 	return c:IsFuture(8) and c:IsSetCard(0xd78) and c:IsType(TYPE_TIMELEAP) and c:IsAbleToGraveAsCost()

@@ -40,7 +40,7 @@ function cid.mfilter(c)
 end
 function cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_TIMELEAP)
-	Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
+	aux.TimeleapHOPT(tp)
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>6 and Duel.IsPlayerCanDiscardDeck(tp,1) end

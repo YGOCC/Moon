@@ -31,7 +31,7 @@ function cid.mfilter(c)
 end
 function cid.sumop(e,tp,eg,ep,ev,re,r,rp,c,g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_TIMELEAP)
-	Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
+	aux.TimeleapHOPT(tp)
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsSetCard,Card.IsDiscardable),tp,LOCATION_HAND,0,1,nil,0xd78) end

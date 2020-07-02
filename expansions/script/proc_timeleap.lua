@@ -220,7 +220,7 @@ function Auxiliary.TimeleapMaterialFilter(c,filter,e,tp,sg,mg,bc,ct,...)
 	sg:AddCard(c)
 	ct=ct+1
 	local funs,max,chk={...},1
-	if (not filter or filter(c,e,mg)) then
+	if (not filter or filter(c,e,mg)) and c:GetLevel()==bc:GetFuture()-1 then
 		chk=true
 	end
 	if #funs>0 then
@@ -335,6 +335,7 @@ function Auxiliary.TimeleapTarget(filter,...)
 				end
 				if finish then
 					if exsumcheck~=nil then
+						Duel.RegisterFlagEffect(tp,829,RESET_PHASE+PHASE_END,0,1)
 						Duel.Hint(HINT_CARD,0,exsumcheck:GetOwner():GetOriginalCode())
 						exsumcheck:Reset()
 					end
@@ -350,13 +351,26 @@ function Auxiliary.TimeleapOperation(customop)
 				c:SetMaterial(g)
 				if not customop then
 					Duel.Remove(g,POS_FACEUP,REASON_MATERIAL+0x10000000000)
-					Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
+					if Duel.GetFlagEffect(tp,829)<=0 then
+						Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
+					else
+						Duel.ResetFlagEffect(tp,829)
+					end
 				else
 					customop(e,tp,eg,ep,ev,re,r,rp,c,g)
 				end
 				g:DeleteGroup()
 			end
 end
+
+function Auxiliary.TimeleapHOPT(tp)
+	if Duel.GetFlagEffect(tp,829)<=0 then
+		Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
+	else
+		Duel.ResetFlagEffect(tp,829)
+	end
+end
+
 function Card.GetFuture(c)
 	if not Auxiliary.Timeleaps[c] then return 0 end
 	local te=c:IsHasEffect(EFFECT_FUTURE)
