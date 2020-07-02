@@ -39,7 +39,7 @@ function cid.check(g)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and cid.filter(chkc,e) end
-	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_REMOVED,0,nil)
+	local g=Duel.GetMatchingGroup(cid.filter,tp,LOCATION_REMOVED,0,nil,e)
 	if chk==0 then
 		aux.GCheckAdditional=cid.check
 		local res=g:CheckSubGroup(aux.TRUE,1,5)
