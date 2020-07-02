@@ -20,7 +20,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.chainop(e,tp,eg,ep,ev,re,r,rp)
-	if re:GetHandler():IsSetCard(0xf7a) then Duel.SetChainLimit(function(e,rp,tp) return tp==rp and e:GetHandler():IsFaceup() and e:GetHandler():IsOnField() end) end
+	if re:GetHandler():IsSetCard(0xf7a) then Duel.SetChainLimit(function(e,rp,tp) return tp==rp or e:GetHandler():IsFaceup() and e:GetHandler():IsOnField() end) end
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsSetCard),tp,LOCATION_MZONE,0,e:GetHandler(),0xf7a)
