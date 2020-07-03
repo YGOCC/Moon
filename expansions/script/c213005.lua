@@ -59,7 +59,7 @@ function c213005.addcon(e,tp,eg,ep,ev,re,r,rp)
 		and re:GetHandler():IsType(TYPE_XYZ)
 end
 function c213005.thfilter1(c)
-	return c:IsSetCard(0x2700) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x2700) and c:IsType(TYPE_MONSTER)  and not c:IsCode(213005) and c:IsAbleToHand()
 end
 function c213005.addtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c213005.thfilter1(chkc) end
