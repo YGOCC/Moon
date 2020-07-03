@@ -35,7 +35,7 @@ function c213080.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c213080.target(e,c)
-	return c:IsSetCard(0x2700) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x2700)
 end
 function c213080.indct(e,re,r,rp)
 	if bit.band(r,REASON_BATTLE)~=0 then
@@ -48,7 +48,7 @@ function c213080.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	if not bc then return false end
 	if bc:IsControler(1-tp) then bc=tc end
 	e:SetLabelObject(bc)
-	return bc:IsFaceup() and bc:IsSetCard(0x2700) and c:IsType(TYPE_MONSTER)
+	return bc:IsFaceup() and bc:IsSetCard(0x2700)
 end
 function c213080.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
