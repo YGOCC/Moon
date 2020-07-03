@@ -6,6 +6,7 @@ EFFECT_MUST_BE_TIMELEAP_MATERIAL	=826
 EFFECT_FUTURE						=827
 EFFECT_EXTRA_TIMELEAP_MATERIAL		=828
 EFFECT_EXTRA_TIMELEAP_SUMMON		=829
+EFFECT_IGNORE_TIMELEAP_HOPT			=830
 TYPE_TIMELEAP						=0x10000000000
 TYPE_CUSTOM							=TYPE_CUSTOM|TYPE_TIMELEAP
 CTYPE_TIMELEAP						=0x100
@@ -179,6 +180,7 @@ function Auxiliary.TimeleapCondition(sumcon,filter,...)
 				if c==nil then return true end
 				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
+				
 				local eset={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_TIMELEAP_SUMMON)}
 				local exsumcheck=false
 				for _,te in ipairs(eset) do
@@ -186,6 +188,7 @@ function Auxiliary.TimeleapCondition(sumcon,filter,...)
 						exsumcheck=true
 					end
 				end
+				
 				local mg=Duel.GetMatchingGroup(Card.IsCanBeTimeleapMaterial,tp,LOCATION_MZONE,0,nil,c)
 				local mg2=Duel.GetMatchingGroup(Auxiliary.TimeleapExtraFilter,tp,0xff,0xff,nil,f,c,tp,table.unpack(funs))
 				if mg2:GetCount()>0 then mg:Merge(mg2) end
@@ -193,7 +196,7 @@ function Auxiliary.TimeleapCondition(sumcon,filter,...)
 				if fg:IsExists(aux.MustMaterialCounterFilter,1,nil,mg) then return false end
 				Duel.SetSelectedCard(fg)
 				return (not sumcon or sumcon(e,c))
-					and (Duel.GetFlagEffect(tp,828)<=0 or exsumcheck)
+					and (Duel.GetFlagEffect(tp,828)<=0 or (exsumcheck and Duel.GetFlagEffect(tp,830)<=0) or c:IsHasEffect(EFFECT_IGNORE_TIMELEAP_HOPT))
 					and mg:IsExists(Auxiliary.TimeleapMaterialFilter,1,nil,filter,e,tp,Group.CreateGroup(),mg,c,0,table.unpack(funs))
 			end
 end
@@ -337,7 +340,7 @@ function Auxiliary.TimeleapTarget(filter,...)
 					if exsumcheck~=nil then
 						Duel.RegisterFlagEffect(tp,829,RESET_PHASE+PHASE_END,0,1)
 						Duel.Hint(HINT_CARD,0,exsumcheck:GetOwner():GetOriginalCode())
-						exsumcheck:Reset()
+						--exsumcheck:Reset()
 					end
 					sg:KeepAlive()
 					e:SetLabelObject(sg)
@@ -355,6 +358,7 @@ function Auxiliary.TimeleapOperation(customop)
 						Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
 					else
 						Duel.ResetFlagEffect(tp,829)
+						Duel.RegisterFlagEffect(tp,830,RESET_PHASE+PHASE_END,0,1)
 					end
 				else
 					customop(e,tp,eg,ep,ev,re,r,rp,c,g)
@@ -368,6 +372,7 @@ function Auxiliary.TimeleapHOPT(tp)
 		Duel.RegisterFlagEffect(tp,828,RESET_PHASE+PHASE_END,0,1)
 	else
 		Duel.ResetFlagEffect(tp,829)
+		Duel.RegisterFlagEffect(tp,830,RESET_PHASE+PHASE_END,0,1)
 	end
 end
 
