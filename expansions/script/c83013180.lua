@@ -32,7 +32,7 @@ function cod.initial_effect(c)
     e2:SetType(EFFECT_TYPE_QUICK_O)
     e2:SetCode(EVENT_CHAINING)
     e2:SetCountLimit(1)
-    e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+    e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
     e2:SetRange(LOCATION_MZONE)
     e2:SetCondition(cod.discon)
     e2:SetCost(cod.discost)
@@ -76,7 +76,8 @@ end
 
 --Negate
 function cod.discon(e,tp,eg,ep,ev,re,r,rp)
-    return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
+	return re:GetHandler()~=e:GetHandler() and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+		and (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(ev)
 end
 function cod.ecfilter(c,tc)
 	return c:IsFaceup() and c:IsSetCard(0x33F) and c:GetEquipTarget()==tc
@@ -88,16 +89,16 @@ function cod.discost(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.Destroy(g,REASON_EFFECT)
 end
 function cod.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return true end
-    Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-    if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
-        Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
-    end
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+	end
 end
 function cod.disop(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-        Duel.Destroy(eg,REASON_EFFECT)
-    end
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+		Duel.Destroy(eg,REASON_EFFECT)
+	end
 end
 
 --Special Summon
