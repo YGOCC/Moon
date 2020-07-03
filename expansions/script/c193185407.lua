@@ -56,10 +56,6 @@ function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e1,true)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sc=g:Select(tp,1,1,nil):GetFirst()
-			local tg=Group.FromCards(tc)
-			for _,ef in ipairs(global_card_effect_table[sc]) do
-				if ef:GetCode()==EFFECT_SPSUMMON_PROC then ef:SetLabelObject(tg) break end
-			end
 			Duel.SpecialSummonRule(tp,sc)
 			e1:Reset()
 		end
