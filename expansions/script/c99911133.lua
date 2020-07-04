@@ -22,7 +22,7 @@ end
 function cid.thfilter(c)
 	return (c:IsSetCard(0x2ed) or c:IsCode(table.unpack(c99911130.ACEFTD))) and c:IsAbleToHand()
 end
-function cid.filter(c)
+function cid.cfilter(c)
 	return c:IsFaceup() and c:IsCode(71200730)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
