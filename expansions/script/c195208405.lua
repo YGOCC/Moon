@@ -59,7 +59,7 @@ function cid.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
@@ -75,14 +75,12 @@ function cid.op(e,tp,eg,ep,ev,re,r,rp)
 		e0:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 		e0:SetRange(LOCATION_MZONE)
 		e0:SetCode(EVENT_PHASE+PHASE_END)
-		e0:SetOperation(cid.retop)
+		e0:SetOperation(function() Duel.Remove(tc,POS_FACEUP,REASON_EFFECT) end)
 		e0:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		e0:SetCountLimit(1)
 		tc:RegisterEffect(e0,true)
 	end
-end
-function cid.retop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
+	Duel.SpecialSummonComplete()
 end
 function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cid.cfilter,tp,LOCATION_DECK,0,1,nil) end
