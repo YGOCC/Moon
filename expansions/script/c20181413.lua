@@ -24,7 +24,7 @@ end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(cid.tgfilter,tp,LOCATION_DECK,0,nil)
-	if #g>0 and Duel.SelectEffectYesNo(tp,e:GetHandler(),aux.Stringid(id,0)) then
+	if #g>0 and Duel.SelectYesNo(tp,1190) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local sg=g:Select(tp,1,1,nil)
 		Duel.SendtoGrave(sg,REASON_EFFECT)

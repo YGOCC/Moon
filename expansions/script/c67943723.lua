@@ -76,7 +76,7 @@ function cid.dop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if Duel.Destroy(g,REASON_EFFECT)==0 then return end
 	local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.thfilter),tp,LOCATION_GRAVE,0,nil)
-	if #tg>0 and Duel.SelectEffectYesNo(tp,e:GetHandler()) then
+	if #tg>0 and Duel.SelectYesNo(tp,1190) then
 		local tc=tg:Select(tp,1,1,nil)
 		Duel.BreakEffect()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)

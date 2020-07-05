@@ -39,7 +39,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.SendtoGrave(tc,REASON_EFFECT+REASON_RETURN)~=0
 		and tc:IsAttribute(ATTRIBUTE_EARTH) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.SelectEffectYesNo(tp,c)
+		and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.SelectYesNo(tp,1152)
 		and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)

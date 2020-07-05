@@ -65,7 +65,7 @@ function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,1) then return end
 	local g=Duel.GetDecktopGroup(tp,5)
 	Duel.ConfirmCards(tp,g)
-	if g:FilterCount(Card.IsSetCard,nil,0xd78)>0 and Duel.SelectEffectYesNo(tp,e:GetHandler()) then
+	if g:FilterCount(Card.IsSetCard,nil,0xd78)>0 and Duel.SelectYesNo(tp,1191) then
 		local tg=g:FilterSelect(tp,Card.IsSetCard,1,2,nil,0xd78)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local tc=tg:Select(tp,1,1,nil):GetFirst()

@@ -58,7 +58,7 @@ function cid.thop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,1) then return end
 	local g=Duel.GetDecktopGroup(tp,4)
 	Duel.ConfirmCards(tp,g)
-	if Duel.SelectEffectYesNo(tp,e:GetHandler()) then
+	if Duel.SelectYesNo(tp,1191) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local tc=g:Select(tp,1,1,nil):GetFirst()
 		if tc and tc:IsAbleToGrave() then

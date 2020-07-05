@@ -50,7 +50,7 @@ function cid.hdop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_REMOVED) then
 		local sg=Duel.GetMatchingGroup(aux.AND(Card.IsFaceup,Card.IsSetCard,Card.IsAbleToHand),tp,LOCATION_REMOVED,0,nil,0x83e)
-		if #sg==0 or Duel.GetFlagEffect(tp,id)~=0 or not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
+		if #sg==0 or Duel.GetFlagEffect(tp,id)~=0 or not Duel.SelectYesNo(tp,1190) then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sc=sg:Select(tp,1,1,nil)
 		Duel.SendtoHand(sc,nil,REASON_EFFECT)

@@ -133,7 +133,7 @@ end
 function cid.op(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.filter),tp,LOCATION_GRAVE+LOCATION_EXTRA,0,nil)
-	if #g==0 or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not Duel.SelectEffectYesNo(tp,e:GetHandler()) then return end
+	if #g==0 or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or not Duel.SelectYesNo(tp,1068) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	local tc=g:Select(tp,1,1,nil):GetFirst()
 	Duel.Equip(tp,tc,ec,true)

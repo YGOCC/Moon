@@ -31,7 +31,7 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cid.cfilter(chkc,e,tp) end
 	if chk==0 then return true end
 	local g=Duel.GetMatchingGroup(aux.AND(cid.cfilter,Card.IsCanBeEffectTarget),tp,LOCATION_MZONE,0,nil,e,tp)
-	if #g>0 and Duel.SelectEffectYesNo(tp,e:GetHandler()) then
+	if #g>0 and Duel.SelectYesNo(tp,1152) then
 		e:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
