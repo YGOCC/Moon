@@ -48,7 +48,7 @@ function cid.filter(c,e,tp)
 		return c:IsSSetable(true) and (c:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0)
 	end
 end
-function cid.stcon(e)
+function cid.stcon(e,tp)
 	return Duel.IsExistingMatchingCard(cid.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cid.sttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
