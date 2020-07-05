@@ -64,7 +64,7 @@ function cid.sumop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cid.splimit(e,c)
-	return not c:IsType(TYPE_SYNCHRO) and c:IsLocation(LOCATION_EXTRA)
+	return not c:IsRace(RACE_REPTILE) and c:IsLocation(LOCATION_EXTRA)
 end
 function cid.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_MZONE)
