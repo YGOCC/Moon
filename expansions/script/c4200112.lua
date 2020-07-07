@@ -26,7 +26,7 @@ function cm.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_CANNOT_REMOVE)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetTargetRange(LOCATION_GRAVE,0)
+	e3:SetTargetRange(LOCATION_GRAVE,LOCATION_GRAVE)
 	e3:SetCondition(cm.noorcon)
 	c:RegisterEffect(e3)
 	--Spooky Dooky Battle Search
@@ -46,7 +46,7 @@ function cm.sparkfilter(c)
 return c:IsCode(4200100)
 end
 function cm.noorcon(e,c)
-    return Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(cm.sparkfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cm.addcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker()==e:GetHandler() and aux.bdcon(e,tp,eg,ep,ev,re,r,rp)

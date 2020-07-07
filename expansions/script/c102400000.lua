@@ -52,12 +52,12 @@ function cid.atop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	Duel.DisableShuffleCheck()
 	Duel.Overlay(tc,g)
-	local ap=0x0+p+0x1
+	local ap=1<<p
 	local ct=c:GetFlagEffectLabel(id)
 	if not ct then
 		c:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1,ap)
 	else
-		c:SetFlagEffectLabel(id,bit.bor(ap,ct))
+		c:SetFlagEffectLabel(id,ap|ct)
 	end
 end
 function cid.sdcon(e)

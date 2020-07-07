@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Ignister Prominence, the Blasting Dracoslayer"
+--created & coded by Lyris
 --機光襲雷竜－イグニスター
 local cid,id=GetID()
 function cid.initial_effect(c)

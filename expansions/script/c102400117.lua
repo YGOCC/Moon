@@ -74,6 +74,7 @@ function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.Destroy(g,r,tc:GetDestination())
 		tc=g:GetNext()
 	end
+	return true
 end
 function cid.repval(e,c)
 	return cid.repfilter(c)

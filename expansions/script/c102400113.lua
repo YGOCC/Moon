@@ -58,7 +58,7 @@ end
 function cid.pftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
-		if not c:IsAbleToRemove() then return end
+		if not c:IsAbleToRemove() or c:IsLocation(LOCATION_REMOVED) then return end
 		local chkf=tp
 		local mg1=Duel.GetFusionMaterial(tp):Filter(cid.pffilter1,nil)
 		mg1:Merge(Duel.GetMatchingGroup(cid.mffilter0,tp,LOCATION_EXTRA,0,nil)+c)

@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Overload Fusion" and "Shockwave"
+--created & coded by Lyris
 --フュージョン・ブーマー
 local cid,id=GetID()
 function cid.initial_effect(c)

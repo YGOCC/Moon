@@ -1,4 +1,4 @@
---created & coded by Lyris, art from "Light and Darkness Dragon" & http://images.clipartlogo.com/files/images///zebra-print-vector-pattern_f.jpg
+--created & coded by Lyris, art from Cardfight!! Vanguard's "Amber Dragon Eclipse"
 --機夜光襲雷竜－エクリプス
 local cid,id=GetID()
 function cid.initial_effect(c)
