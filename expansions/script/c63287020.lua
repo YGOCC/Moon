@@ -68,38 +68,30 @@ end
 --ADD COUNTER
 --filters
 function cid.tgcfilter(c)
-	return c:IsSetCard(0x32) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and (not c:IsOnField() or c:IsFaceup())
+	return c:IsSetCard(0x32) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave() and (not c:IsOnField() or c:IsFaceup())
 end
 ---------
-function cid.ctcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	e:SetLabel(100)
-	if chk==0 then return true end
-end
 function cid.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		if e:GetLabel()~=100 then return false end
-		e:SetLabel(0)
 		return Duel.IsExistingMatchingCard(cid.tgcfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_MZONE,0,1,e:GetHandler()) and e:GetHandler():IsCanAddCounter(0xb9a,1)
 	end
-	e:SetLabel(0)
+end
+function cid.ctop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not e:GetHandler():IsCanAddCounter(0xb9a,1) then return end
 	local maxct=1
 	if e:GetHandler():IsCanAddCounter(0xb9a,2) then maxct=2 end
 	if e:GetHandler():IsCanAddCounter(0xb9a,3) then maxct=3 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,cid.tgcfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_MZONE,0,1,maxct,e:GetHandler())
 	if #g>0 then
-		Duel.SendtoGrave(g,REASON_COST)
-		local sg=g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
-		e:SetLabel(sg)
-		if e:GetLabel()+e:GetHandler():GetCounter(0xb9a)>10 then e:SetLabel(10-e:GetHandler():GetCounter(0xb9a)) end
-		Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,e:GetLabel(),0,0xb9a)
-	end
-end
-function cid.ctop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local ct=e:GetLabel()
-	if c:IsRelateToEffect(e) and c:IsCanAddCounter(0xb9a,ct) then
-		c:AddCounter(0xb9a,ct)
+		Duel.SendtoGrave(g,REASON_EFFECT)
+		local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
+		if ct+e:GetHandler():GetCounter(0xb9a)>10 then ct=10-e:GetHandler():GetCounter(0xb9a) end
+		if c:IsRelateToEffect(e) then
+			Duel.BreakEffect()
+			c:AddCounter(0xb9a,ct)
+		end
 	end
 end
 --DAMAGE
