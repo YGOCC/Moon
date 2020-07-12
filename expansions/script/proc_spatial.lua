@@ -21,8 +21,8 @@ table.insert(aux.CannotBeEDMatCodes,EFFECT_CANNOT_BE_SPACE_MATERIAL)
 TYPE_EXTRA						=TYPE_EXTRA|TYPE_SPATIAL
 
 --overwrite functions
-local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, get_orig_type, get_prev_type_field, change_position, special_summon, special_summon_step = 
-	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Duel.ChangePosition, Duel.SpecialSummon, Duel.SpecialSummonStep
+local get_rank, get_orig_rank, prev_rank_field, is_rank, is_rank_below, is_rank_above, get_type, get_orig_type, get_prev_type_field, change_position, special_summon, special_summon_step, move_to_field, send_to_deck, spell_set, send_to_hand = 
+	Card.GetRank, Card.GetOriginalRank, Card.GetPreviousRankOnField, Card.IsRank, Card.IsRankBelow, Card.IsRankAbove, Card.GetType, Card.GetOriginalType, Card.GetPreviousTypeOnField, Duel.ChangePosition, Duel.SpecialSummon, Duel.SpecialSummonStep, Duel.MoveToField, Duel.SendtoDeck, Duel.SSet, Duel.SendtoHand
 
 Card.GetRank=function(c)
 	if Auxiliary.Spatials[c] then return 0 end
@@ -89,10 +89,10 @@ Duel.ChangePosition=function(cc, au, ad, du, dd)
 	local ct=0
 	for c in aux.Next(tg) do
 		if ((c:IsAttackPos() and bit.band(au,POS_FACEDOWN)>0)
-		or (c:IsPosition(POS_FACEUP_DEFENSE) and bit.band(du,POS_FACEDOWN)>0))
-		and c:SwitchSpace() then
+			or (c:IsPosition(POS_FACEUP_DEFENSE) and bit.band(du,POS_FACEDOWN)>0))
+			and c:SwitchSpace() then
 			if c:IsAttackPos() then ct=ct+change_position(c,POS_FACEUP_DEFENSE,POS_FACEUP_DEFENSE,du,dd) end
-			cc=cc-c
+			cc:RemoveCard(c)
 		end
 	end
 	return change_position(cc,au,ad,du,dd)+ct
@@ -103,9 +103,9 @@ Duel.SpecialSummon=function(cc, st, sp, tp, nocheck, nolimit, pos, zone)
 	local cc=Group.CreateGroup()+cc
 	local tg=cc:Clone()
 	for c in aux.Next(tg) do
-		if pos&POS_FACEDOWN>0 and c:SwitchSpace() then
-			if special_summon_step(c,st,sp,tp,nocheck,nolimit,POS_FACEUP_DEFENSE,zone) then ct=ct+1 end
-			cc=cc-c
+		if (c:IsLocation(LOCATION_EXTRA) or pos&POS_FACEDOWN>0) and c:SwitchSpace() then
+			if special_summon_step(c,st,sp,tp,nocheck,nolimit,pos>>(c:IsLocation(LOCATION_EXTRA) and 0 or 1),zone) then ct=ct+1 end
+			cc:RemoveCard(c)
 		end
 	end
 	ct=ct+special_summon(cc,st,sp,tp,nocheck,nolimit,pos,zone)
@@ -114,16 +114,65 @@ Duel.SpecialSummon=function(cc, st, sp, tp, nocheck, nolimit, pos, zone)
 end
 Duel.SpecialSummonStep=function(c, st, sp, tp, nocheck, nolimit, pos, zone)
 	if not zone then zone=0xff end
-	local ct=0
-	if pos&POS_FACEDOWN>0 and c:SwitchSpace() then
-		return special_summon_step(c,st,sp,tp,nocheck,nolimit,(pos&POS_FACEUP)|POS_FACEUP,zone)
+	if (c:IsLocation(LOCATION_EXTRA) or pos&POS_FACEDOWN>0) and c:SwitchSpace() then
+		return special_summon_step(c,st,sp,tp,nocheck,nolimit,pos>>(c:IsLocation(LOCATION_EXTRA) and 0 or 1),zone)
 	end
 	return special_summon_step(c,st,sp,tp,nocheck,nolimit,pos,zone)
+end
+Duel.MoveToField=function(c,sp,tp,dest,pos,enabled)
+	if (c:IsLocation(LOCATION_EXTRA) or pos&POS_FACEDOWN>0) and c:SwitchSpace() then
+		return move_to_field(c,sp,tp,dest,pos>>(c:IsLocation(LOCATION_EXTRA) and 0 or 1),enabled)
+	end
+	return move_to_field(c,sp,tp,dest,pos,enabled)
+end
+Duel.SendtoDeck=function(cc,tp,seq,r)
+	local ct=0
+	local cc=Group.CreateGroup()+cc
+	local tg=cc:Clone()
+	for c in aux.Next(tg) do if c:SwitchSpace() then
+		ct=ct+Duel.SendtoExtraP(c,tp,r)
+		cc:RemoveCard(c)
+	end end
+	ct=ct+send_to_deck(cc,tp,seq,r)
+	return ct
+end
+Duel.SSet=function(sp,cc,tp,confirm)
+	if not tp then tp=sp end
+	if Auxiliary.GetValueType(cc)=="Card" then
+		if cc then
+			Duel.MoveToField(cc,sp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
+			return
+		end
+	else
+		local ct=0
+		local cc=Group.CreateGroup()+cc
+		local tg=cc:Clone()
+		for c in aux.Next(tg) do
+			if Auxiliary.Spatials[c] and Duel.MoveToField(c,sp,tp,LOCATION_SZONE,POS_FACEDOWN,true) then
+				ct=ct+1
+				cc:RemoveCard(c)
+			end
+		end
+		ct=ct+spell_set(sp,cc,tp,confirm)
+		return ct
+	end
+	return spell_set(sp,cc,tp,confirm)
+end
+Duel.SendtoHand=function(cc,tp,r)
+	local ct=0
+	local cc=Group.CreateGroup()+cc
+	local tg=cc:Clone()
+	for c in aux.Next(tg) do if c:SwitchSpace() then
+		ct=ct+Duel.SendtoExtraP(c,tp,r)
+		cc:RemoveCard(c)
+	end end
+	ct=ct+send_to_hand(cc,tp,r)
+	return ct
 end
 
 --Custom Functions
 function Card.SwitchSpace(c)
-	if not Auxiliary.Spatials[c] or c:IsLocation(LOCATION_EXTRA) then return false end
+	if not Auxiliary.Spatials[c] then return false end
 	Auxiliary.Spatials[c]=nil
 	local mt=_G["c" .. c:GetOriginalCode()]
 	local ospc=mt.spt_other_space
@@ -189,6 +238,20 @@ function Auxiliary.AddSpatialProc(c,sptcheck,djn,...)
 	ge1:SetCode(EFFECT_DIMENSION_NUMBER)
 	ge1:SetValue(Auxiliary.DimensionNoVal(djn))
 	c:RegisterEffect(ge1)
+	local ge4=Effect.CreateEffect(c)
+	ge4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	ge4:SetCode(EVENT_PHASE_START+PHASE_DRAW)
+	ge4:SetRange(LOCATION_EXTRA)
+	ge4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	ge4:SetOperation(function()
+		if c:IsLocation(LOCATION_EXTRA) and c:IsPosition(POS_FACEDOWN) then
+			if not Duel.Exile or Duel.Exile(c,REASON_RULE)==0 then
+				Duel.SendtoDeck(c,nil,-2,REASON_RULE)
+			end
+			Duel.SendtoExtraP(c,nil,REASON_RULE)
+		end
+	end)
+	c:RegisterEffect(ge4)
 	local ge2=Effect.CreateEffect(c)
 	ge2:SetType(EFFECT_TYPE_FIELD)
 	ge2:SetCode(EFFECT_SPSUMMON_PROC)
@@ -199,28 +262,16 @@ function Auxiliary.AddSpatialProc(c,sptcheck,djn,...)
 	ge2:SetOperation(Auxiliary.SpatialOperation)
 	ge2:SetValue(SUMMON_TYPE_SPATIAL)
 	c:RegisterEffect(ge2)
-	local ge4=Effect.CreateEffect(c)
-	ge4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	ge4:SetCode(EFFECT_SEND_REPLACE)
-	ge4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	ge4:SetRange(0xdf)
-	ge4:SetTarget(Auxiliary.SpatialToGraveReplace)
-	ge4:SetOperation(Auxiliary.SpatialTGYReplaceOperation)
-	c:RegisterEffect(ge4)
-	local ge5=Effect.CreateEffect(c)
-	ge5:SetType(EFFECT_TYPE_SINGLE)
-	ge5:SetCode(EFFECT_TO_GRAVE_REDIRECT)
-	ge5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	ge5:SetValue(LOCATION_REMOVED)
-	c:RegisterEffect(ge5)
-end
-function Auxiliary.SpatialToGraveReplace(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:GetDestination()==LOCATION_GRAVE end
-	return true
-end
-function Auxiliary.SpatialTGYReplaceOperation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Remove(e:GetHandler(),POS_FACEUP,r)
+	if not spatial_check then
+		spatial_check=true
+		local ge5=Effect.CreateEffect(c)
+		ge5:SetType(EFFECT_TYPE_FIELD)
+		ge5:SetCode(EFFECT_TO_GRAVE_REDIRECT)
+		ge5:SetTargetRange(0xff,0xff)
+		ge5:SetTarget(function(e,tc) return Auxiliary.Spatials[tc] end)
+		ge5:SetValue(LOCATION_REMOVED)
+		Duel.RegisterEffect(ge5,0)
+	end
 end
 function Auxiliary.DimensionNoVal(djn)
 	return  function(e,c)
@@ -311,7 +362,7 @@ function Auxiliary.SpatialCondition(sptcheck,...)
 	local funs={...}
 	return  function(e,c)
 				if c==nil then return true end
-				if (c:IsType(TYPE_PENDULUM) or c:IsType(TYPE_PANDEMONIUM)) and c:IsFaceup() then return false end
+				if c:IsType(TYPE_PENDULUM+TYPE_PANDEMONIUM) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local djn=c:GetDimensionNo()
 				local mg=Duel.GetMatchingGroup(Card.IsCanBeSpaceMaterial,tp,LOCATION_MZONE,0,nil,c)
