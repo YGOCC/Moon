@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddSynchroProcedure(c,cid.tfilter,aux.NonTuner(Card.IsRace,RACE_REPTILE),2)
+	aux.AddSynchroProcedure(c,cid.tfilter,aux.NonTuner(Card.IsRace,RACE_REPTILE),1)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SET_ATTACK)
@@ -33,6 +33,9 @@ function cid.initial_effect(c)
 	e3:SetTarget(cid.sptg)
 	e3:SetOperation(cid.spop)
 	c:RegisterEffect(e3)
+end
+function cid.tfilter(c)
+	return c:IsRace(RACE_REPTILE) and (c:IsSetCard(0xe80) or c:IsCode(CARD_EVIL_DRAGON_ANANTA))
 end
 function cid.cfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_REPTILE) and c:IsAbleToRemoveAsCost()

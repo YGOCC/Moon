@@ -31,15 +31,15 @@ function cid.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT)
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,2,RACE_REPTILE,ATTRIBUTE_DARK) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//10,0xe80,0x4011,0,0,2,RACE_REPTILE,ATTRIBUTE_DARK) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//100,0xe80,0x4011,0,0,2,RACE_REPTILE,ATTRIBUTE_DARK) then
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id//10,0xe80,0x4011,0,0,2,RACE_REPTILE,ATTRIBUTE_DARK) then
 		for i=1,2 do
-			local token=Duel.CreateToken(tp,id)
+			local token=Duel.CreateToken(tp,id//10)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		end
 		Duel.SpecialSummonComplete()
