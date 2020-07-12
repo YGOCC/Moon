@@ -49,7 +49,8 @@ function cid.spfilter(c,e,tp)
 end
 function cid.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(cid.spfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,nil,e,tp)
-	if not Duel.RemoveOverlayCard(tp,1,0,2,2,REASON_COST) or #g==0 or not Duel.SelectYesNo(tp,1152) then return end
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or c:RemoveOverlayCard(tp,2,2,REASON_COST)~=2 or #g==0 or not Duel.SelectYesNo(tp,1152) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	Duel.SpecialSummon(g:Select(tp,1,1,nil),0,tp,tp,false,false,POS_FACEUP)
 end
