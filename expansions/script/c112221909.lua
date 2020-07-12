@@ -56,7 +56,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(aux.TargetBoolFunction(aux.IsCodeListed,id-9))
+	e1:SetTarget(aux.TargetBoolFunction(aux.NOT(aux.IsCodeListed),id-9))
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
