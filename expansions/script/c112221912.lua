@@ -55,15 +55,14 @@ function cid.initial_effect(c)
 end
 function cid.matcheck(e,c)
 	local tc=c:GetMaterial():Filter(Card.IsCode,nil,id-12):GetFirst()
-	if not tc then return end
-	local g=tc:GetEquipGroup():Filter(Card.IsSetCard,nil,0xcda)
-	g:KeepAlive()
-	e:SetLabelObject(g)
+	e:SetLabelObject(tc)
+end
+function cid.filter(c,tc)
+	return c:IsSetCard(0xcda) and c:GetPreviousEquipTarget()==tc
 end
 function cid.regtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=e:GetLabelObject():GetLabelObject()
+	local g=Duel.GetMatchingGroup(cid.filter,tp,0xf3,0xf3,nil,e:GetLabelObject():GetLabelObject())
 	local qg=g:Clone()
-	g:DeleteGroup()
 	if chk==0 then return true end
 	Duel.SetTargetCard(qg)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,qg,#qg,0,0)
@@ -133,6 +132,6 @@ function cid.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cid.negop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
-		Duel.Destroy(eg,REASON_EFFECT)
+		Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)
 	end
 end
