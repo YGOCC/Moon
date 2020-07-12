@@ -23,7 +23,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cid.cfilter(c)
-	return c:IsFacedown() or not c:IsSetCard(0xcda) and not c:IsCode(id-7)
+	return c:IsFacedown() or not (c:IsSetCard(0xcda) or c:IsCode(id-7))
 end
 function cid.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

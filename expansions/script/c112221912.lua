@@ -62,14 +62,12 @@ function cid.matcheck(e,c)
 end
 function cid.regtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetLabelObject():GetLabelObject()
-	if chk==0 then
-		g:DeleteGroup()
-		return true
-	end
-	Duel.SetTargetCard(g:Clone())
-	local tg=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
+	local qg=g:Clone()
 	g:DeleteGroup()
-	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,#g,0,0)
+	if chk==0 then return true end
+	Duel.SetTargetCard(qg)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,qg,#qg,0,0)
+	local tg=qg:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
 	if #tg>0 then Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,tg,#tg,0,0) end
 end
 function cid.regop(e,tp,eg,ep,ev,re,r,rp)

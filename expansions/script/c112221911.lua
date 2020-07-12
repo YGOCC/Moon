@@ -2,7 +2,7 @@
 local cid,id=GetID()
 function cid.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddXyzProcedureLevelFree(c,aux.FilterBoolFunction(aux.AND(Card.IsFaceup,Card.IsXyzLevel),4),function(g) return g:IsExists(Card.IsSetCard,1,nil,0xcda) end,2,2)
+	aux.AddXyzProcedureLevelFree(c,aux.FilterBoolFunction(aux.AND(Card.IsFaceup,Card.IsXyzLevel),c,4),function(g) return g:IsExists(Card.IsSetCard,1,nil,0xcda) end,2,2)
 	c:SetUniqueOnField(1,0,id)
 	aux.AddCodeList(c,id-11)
 	local e1=Effect.CreateEffect(c)
