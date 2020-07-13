@@ -57,7 +57,6 @@ function cid.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(aux.TargetBoolFunction(aux.NOT(Card.IsSetCard),0xead))
-	e1:SetLabel(tc:GetCode())
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 	local e2=e1:Clone()
@@ -95,7 +94,7 @@ end
 function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and e:GetHandler():IsLocation(LOCATION_HAND+LOCATION_MZONE) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and e:GetHandler():IsRelateToEffect(e) then
 		Duel.Overlay(tc,Group.FromCards(e:GetHandler()))
 		if tc:GetOverlayGroup():IsContains(e:GetHandler()) then
 			local e1=Effect.CreateEffect(e:GetHandler())

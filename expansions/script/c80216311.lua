@@ -85,7 +85,7 @@ function cid.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 --destroy replace
 function cid.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,id)<=0 and e:GetHandler():IsAbleToRemove() and eg:IsExists(cid.repfilter,1,nil,tp) end
+	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(cid.repfilter,1,nil,tp) end
 	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end
 function cid.repval(e,c)
@@ -93,11 +93,10 @@ function cid.repval(e,c)
 end
 function cid.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 end
 --send replace
 function cid.reptg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,id)<=0 and e:GetHandler():IsAbleToRemove() and bit.band(r,REASON_EFFECT)~=0 and eg:IsExists(cid.repfilter2,1,nil,tp) end
+	if chk==0 then return e:GetHandler():IsAbleToRemove() and bit.band(r,REASON_EFFECT)~=0 and eg:IsExists(cid.repfilter2,1,nil,tp) end
 	return Duel.SelectYesNo(tp,aux.Stringid(id,1))
 end
 function cid.repval2(e,c)

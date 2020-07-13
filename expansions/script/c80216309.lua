@@ -63,8 +63,7 @@ function cid.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 --attach
 function cid.xyzcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) and e:GetHandler():GetPreviousControler()==tp
-		and e:GetHandler():IsReason(REASON_DESTROY)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function cid.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 and Duel.IsExistingMatchingCard(cid.xyzfilter,tp,LOCATION_MZONE,0,1,nil) end

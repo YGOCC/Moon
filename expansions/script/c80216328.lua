@@ -14,7 +14,7 @@ function cid.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cid.filter(c,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xcfd) and Duel.IsExistingMatchingCard(cid.xfilter,tp,LOCATION_MZONE,0,1,nil) and c:IsCanOverlay()
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xead) and Duel.IsExistingMatchingCard(cid.xfilter,tp,LOCATION_MZONE,0,1,nil) and c:IsCanOverlay()
 end
 function cid.xfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x2ead)

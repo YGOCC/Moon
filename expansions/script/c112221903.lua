@@ -114,8 +114,9 @@ function cid.equip(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function cid.count(e,tp,eg,ep,ev,re,r,rp)
-	local plp,clp=e:GetLabel(),Duel.GetLP(tp)
+	local p=e:GetOwnerPlayer()
+	local plp,clp=e:GetLabel(),Duel.GetLP(p)
 	e:SetLabel(clp)
 	if plp<=clp then return end
-	Duel.RaiseEvent(Group.CreateGroup(),EVENT_CUSTOM+id,re,r,rp,tp,plp-clp)
+	Duel.RaiseEvent(Group.CreateGroup(),EVENT_CUSTOM+id,re,r,rp,p,plp-clp)
 end

@@ -24,9 +24,11 @@ function cid.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id+100)
+	e2:SetCost(cid.xyzcost)
 	e2:SetTarget(cid.xyztg)
 	e2:SetOperation(cid.xyzop)
 	c:RegisterEffect(e2)
+	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,aux.FilterBoolFunction(Card.IsSetCard,0xead))
 end
 --filters
 function cid.filter(c,tp)
@@ -99,6 +101,17 @@ function cid.athop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --xyz summon
+function cid.xyzcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(aux.TargetBoolFunction(aux.NOT(Card.IsSetCard),0xead))
+	Duel.RegisterEffect(e1,tp)
+end
 function cid.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 and Duel.GetLocationCountFromEx(tp,tp,e:GetHandler(),TYPE_XYZ)>0 and aux.MustMaterialCheck(e:GetHandler(),tp,EFFECT_MUST_BE_XMATERIAL)
 			and Duel.IsExistingMatchingCard(cid.xyzspfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end

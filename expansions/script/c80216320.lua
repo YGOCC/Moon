@@ -1,6 +1,6 @@
-local cid,id=GetID()--Rank-Up-Magic Ennigmatic Force
+--Rank-Up-Magic Ennigmatic Force
 --Script by XGlitchy30
-local cid,id=getID()
+local cid,id=GetID()
 function cid.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -28,7 +28,7 @@ end
 function cid.filter1(c,e,tp)
 	local rk=c:GetRank()
 	return rk>0 and c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x2ead)
-		and Duel.IsExistingMatchingCard(cid.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank())
+		and Duel.IsExistingMatchingCard(cid.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,rk)
 		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 		and aux.MustMaterialCheck(c,tp,EFFECT_MUST_BE_XMATERIAL)
 end
@@ -52,8 +52,6 @@ function cid.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cid.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if Duel.GetLocationCountFromEx(tp,tp,tc)<=0 or not aux.MustMaterialCheck(tc,tp,EFFECT_MUST_BE_XMATERIAL) then return end
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
