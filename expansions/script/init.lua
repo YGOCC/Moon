@@ -755,6 +755,7 @@ function Card.GLGetSetCard(c)
 	return setcode
 end
 
+
 function Card.GLGetLevel(c)
 	if c:IsType(TYPE_XYZ) then return c:GetRank()
 	elseif c:IsType(TYPE_LINK) then return c:GetLink()
